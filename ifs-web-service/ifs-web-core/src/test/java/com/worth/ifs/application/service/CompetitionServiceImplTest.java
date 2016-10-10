@@ -2,7 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
@@ -135,12 +134,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getLiveCompetitions() throws Exception {
-        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
-        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
-        CompetitionResource resource3 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
-        when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2, resource3)));
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getLiveCompetitions();
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", 123, "12/02/2016", CompetitionResource.Status.OPEN);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", 123, "12/02/2016", CompetitionResource.Status.OPEN);
+        CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", 123, "12/02/2016", CompetitionResource.Status.IN_ASSESSMENT);
+
+        when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(asList(resource1, resource2, resource3)));
+
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getLiveCompetitions();
 
         assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource1));
         assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource2));
@@ -150,11 +151,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getProjectSetupCompetitions() throws Exception {
-        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
-        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP).build();
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", 123, "12/02/2016", CompetitionResource.Status.PROJECT_SETUP);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", 123, "12/02/2016", CompetitionResource.Status.PROJECT_SETUP);
         when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getProjectSetupCompetitions();
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
 
         assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource1));
         assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource2));
@@ -163,11 +164,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getUpcomingCompetitions() throws Exception {
-        CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
-        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN).build();
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", 123, "12/02/2016", CompetitionResource.Status.COMPETITION_SETUP);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", 123, "12/02/2016", CompetitionResource.Status.READY_TO_OPEN);
         when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getUpcomingCompetitions();
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getUpcomingCompetitions();
 
         assertTrue(result.get(CompetitionResource.Status.COMPETITION_SETUP).contains(resource1));
         assertTrue(result.get(CompetitionResource.Status.READY_TO_OPEN).contains(resource2));

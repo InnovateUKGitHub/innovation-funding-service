@@ -5,22 +5,25 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.mapper.*;
+import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
+import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +88,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private CostCategoryRepository costCategoryRepository;
 
+    @Autowired
+    private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
@@ -93,11 +102,27 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
+               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-               })
+               }))
         );
+    }
+
+    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
+                financeCheckProcessRepository.findOneByTargetId(po.getId()));
+
+        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
+                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
+
+        if (!existingNonApprovedFinanceCheck.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
+        }
     }
 
     @Override
@@ -197,8 +222,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
+
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
+            resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
+            resource.setGeneratedDate(profile.getGeneratedDate());
             return resource;
         });
     }
@@ -289,8 +317,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
 
-        SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
-                projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Optional<SpendProfile> spendProfileOptional = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        if(!spendProfileOptional.isPresent()){
+            return serviceFailure(SPEND_PROFILE_DOES_NOT_EXIST);
+        }
+
+        SpendProfile spendProfile = spendProfileOptional.get();
 
         spendProfile.setMarkedAsComplete(markAsComplete);
 
@@ -340,7 +373,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
-            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
@@ -372,9 +405,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                andOnSuccess( spendProfileCostCategorySummaries ->
-                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries )));
+        Calendar now = Calendar.getInstance();
+
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId ->
+                getCurrentlyLoggedInUser().andOnSuccess(user ->
+                spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
@@ -382,19 +419,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
-            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries ) {
+            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries,
+            User generatedBy,
+            Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation));
+                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
     }
 
-    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation) {
-            List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
-            List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
-            CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-            SpendProfile spendProfile = new SpendProfile(organisation, project,  costCategoryType, eligibleCosts, spendProfileCosts, false);
-            spendProfileRepository.save(spendProfile);
-            return serviceSuccess();
+    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
+        List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
+        spendProfileRepository.save(spendProfile);
+        return serviceSuccess();
     }
 
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
@@ -487,7 +527,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private Map<Long, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
-                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {

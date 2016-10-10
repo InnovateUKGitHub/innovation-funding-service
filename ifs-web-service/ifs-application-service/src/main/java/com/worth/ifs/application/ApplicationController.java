@@ -269,7 +269,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
 
-        Optional<SectionResource> currentSection = getSectionByIds(competition.getId(), competition.getSections(), sectionId, false);
+        Optional<SectionResource> currentSection = getSectionByIds(competition.getId(), sectionId, false);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);

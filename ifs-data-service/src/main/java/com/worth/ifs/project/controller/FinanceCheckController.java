@@ -2,6 +2,7 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -36,7 +37,7 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(value = FINANCE_CHECK_PATH, method = POST)
-    public RestResult<Void> updateSpendProfile(@RequestBody FinanceCheckResource financeCheckResource) {
+    public RestResult<Void> updateFinanceCheck(@RequestBody FinanceCheckResource financeCheckResource) {
         return financeCheckService.save(financeCheckResource).toPostResponse();
     }
 
@@ -48,5 +49,10 @@ public class FinanceCheckController {
     @RequestMapping(value = "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH + "/status", method = GET)
     public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
         return financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}" + FINANCE_CHECK_PATH)
+    public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
+        return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
     }
 }

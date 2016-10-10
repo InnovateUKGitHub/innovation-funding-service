@@ -32,11 +32,6 @@ public class ProcessRoleController {
         return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
-    @RequestMapping("/findByIds/{ids}")
-    public RestResult<List<ProcessRoleResource>> findByIds(@PathVariable("ids") final Long[] processRoleIds) {
-        return usersRolesService.getProcessRolesByIds(processRoleIds).toGetResponse();
-    }
-
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
     public RestResult<ProcessRoleResource> findByUserApplication(@PathVariable("userId") final Long userId,
                                                          @PathVariable("applicationId") final Long applicationId) {

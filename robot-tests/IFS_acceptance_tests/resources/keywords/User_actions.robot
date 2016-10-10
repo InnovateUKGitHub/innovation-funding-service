@@ -381,11 +381,6 @@ The user goes back to the previous page
 browser validations have been disabled
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');jQuery('[maxlength]').removeAttr('maxlength');
 
-The user verifies their email
-    [Arguments]    ${verify_link}
-    Go To    ${verify_link}
-    Page Should Contain    Account verified
-
 the user can remove the uploaded file
     [Arguments]    ${file_name}
     Reload Page
@@ -397,111 +392,6 @@ the user can remove the uploaded file
 The element should be disabled
     [Arguments]    ${ELEMENT}
     Element Should Be Disabled    ${ELEMENT}
-
-the user opens the mailbox and verifies the email from
-    [Arguments]    ${receiver}
-    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}
-    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}
-
-the user opens the mailbox and verifies the remote email from
-    [Arguments]    ${receiver}
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Please verify your email address
-    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
-    log    ${EMAIL_MATCH}
-    Should Not Be Empty    ${EMAIL_MATCH}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
-    log    ${LINK}
-    ${VERIFY_EMAIL} =    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the mailbox and verifies the local email from
-    [Arguments]    ${receiver}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Please verify your email address
-    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
-    log    ${EMAIL_MATCH}
-    Should Not Be Empty    ${EMAIL_MATCH}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
-    log    ${LINK}
-    ${VERIFY_EMAIL} =    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the mailbox and verifies the email
-    run keyword if    ${docker}==1    the user opens the local mailbox and verifies the email
-    run keyword if    ${docker}!=1    the user opens the remote mailbox and verifies the email
-
-the user opens the remote mailbox and verifies the email
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the local mailbox and verifies the email
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the mailbox and accepts the invitation to collaborate
-    run keyword if    ${docker}==1    the user opens the local mailbox and accepts the invitation to collaborate
-    run keyword if    ${docker}!=1    the user opens the remote mailbox and accepts the invitation to collaborate
-
-the user opens the remote mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${IFS_LINK}=    Get From List    ${LINK}    1
-    log    ${IFS_LINK}
-    go to    ${IFS_LINK}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the local mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${IFS_LINK}=    Get From List    ${LINK}    1
-    log    ${IFS_LINK}
-    go to    ${IFS_LINK}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
 
 the user downloads the file from the link
     [Arguments]    ${filename}    ${download_link}
@@ -536,73 +426,6 @@ the user cannot see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
     the user should not see the text in the page    Upload
-
-Delete the emails from both test mailboxes
-    run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
-
-delete the emails from both remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
-    Delete All Emails
-    close mailbox
-
-Delete the emails from the main test mailbox
-    run keyword if    ${docker}==1    delete the emails from the local test mailbox
-    run keyword if    ${docker}!=1    delete the emails from the main remote test mailbox
-
-delete the emails from the main remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    Delete All Emails
-    close mailbox
-
-delete the emails from the local test mailbox
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    Delete All Emails
-    close mailbox
-
-Delete the emails from both main test mailboxes
-    run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both main remote test mailboxes
-
-delete the emails from both main remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
-    Delete All Emails
-    close mailbox
-
-the user should get a confirmation email
-    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
-    run keyword if    ${docker}==1    the user should get a local confirmation email    ${receiver}    ${content}    ${subject}
-    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${receiver}    ${password}    ${content}    ${subject}
-
-the user should get a remote confirmation email
-    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
-    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${password}
-    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=${subject}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
-    log    ${MATCHES1}
-    Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
-    close mailbox
-
-the user should get a local confirmation email
-    [Arguments]    ${receiver}    ${content}    ${subject}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=${subject}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
-    log    ${MATCHES1}
-    Should Not Be Empty    ${MATCHES1}
-    #    Delete All Emails
-    close mailbox
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
@@ -750,32 +573,3 @@ invite a new academic
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save Changes")
-
-Open mailbox and confirm received email
-    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
-    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${receiver}    ${PATTERN}    ${subject}
-    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
-
-open remote mailbox and confirm received email
-    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
-    [Documentation]    This Keyword searches the correct email using regex
-    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    wait for email    subject=${subject}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
-    log    ${EMAIL_MATCH}
-    Should Not Be Empty    ${EMAIL_MATCH}
-    close mailbox
-
-open local mailbox and confirm received email
-    [Arguments]    ${receiver}    ${PATTERN}    ${subject}
-    [Documentation]    This Keyword searches the correct email using regex
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH_EMAIL}=    wait for email    subject=${subject}
-    ${HTML}=    get email body    ${WHICH EMAIL}
-    log    ${HTML}
-    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
-    log    ${EMAIL_MATCH}
-    Should Not Be Empty    ${EMAIL_MATCH}
-    close mailbox

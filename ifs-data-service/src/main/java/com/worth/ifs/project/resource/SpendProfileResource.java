@@ -1,8 +1,12 @@
 package com.worth.ifs.project.resource;
 
 import com.worth.ifs.project.finance.resource.CostGroupResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Calendar;
 
 public class SpendProfileResource {
 
@@ -19,6 +23,10 @@ public class SpendProfileResource {
     private CostGroupResource spendProfileFigures;
 
     private boolean markedAsComplete;
+
+    private UserResource generatedBy;
+
+    private Calendar generatedDate;
 
     public Long getId() {
         return id;
@@ -68,6 +76,22 @@ public class SpendProfileResource {
         this.spendProfileFigures = spendProfileFigures;
     }
 
+    public UserResource getGeneratedBy() {
+        return generatedBy;
+    }
+
+    public void setGeneratedBy(UserResource generatedBy) {
+        this.generatedBy = generatedBy;
+    }
+
+    public Calendar getGeneratedDate() {
+        return generatedDate;
+    }
+
+    public void setGeneratedDate(Calendar generatedDate) {
+        this.generatedDate = generatedDate;
+    }
+
     public boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
@@ -92,6 +116,8 @@ public class SpendProfileResource {
                 .append(costCategoryType, that.costCategoryType)
                 .append(eligibleCosts, that.eligibleCosts)
                 .append(spendProfileFigures, that.spendProfileFigures)
+                .append(generatedBy, that.generatedBy)
+                .append(generatedDate, that.generatedDate)
                 .isEquals();
     }
 
@@ -105,6 +131,23 @@ public class SpendProfileResource {
                 .append(eligibleCosts)
                 .append(spendProfileFigures)
                 .append(markedAsComplete)
+                .append(generatedBy)
+                .append(generatedDate)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("organisation", organisation)
+                .append("project", project)
+                .append("costCategoryType", costCategoryType)
+                .append("eligibleCosts", eligibleCosts)
+                .append("spendProfileFigures", spendProfileFigures)
+                .append("markedAsComplete", markedAsComplete)
+                .append("generatedBy", generatedBy)
+                .append("generatedDate", generatedDate)
+                .toString();
     }
 }

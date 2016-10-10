@@ -3,6 +3,7 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -22,12 +23,10 @@ import static junit.framework.TestCase.fail;
 
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
 
-
     @Test
-    public void testGetFinanceCheck() {
+    public void testGetFinanceCheckByProjectAndOrganisation() {
         assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
     }
-
 
     @Test
     public void testSaveFinanceCheck() {
@@ -35,13 +34,18 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGenerateFinanceCheck() {
-        assertInternalRolesCanPerform(() -> classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L)));
+    public void testApproveFinanceCheck() {
+        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
     }
 
     @Test
-    public void testApproveFinanceCheck() {
-        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
+    public void testGetFinanceCheckApprovalStatus(){
+        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L));
+    }
+
+    @Test
+    public void testGetFinanceCheckSummary(){
+        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L));
     }
 
     private void assertInternalRolesCanPerform(Runnable actionFn) {
@@ -84,17 +88,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<Void> approve(Long projectId, Long organisationId) {
             return null;
         }
 
         @Override
         public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
             return null;
         }
     }

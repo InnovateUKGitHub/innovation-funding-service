@@ -167,21 +167,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
+        PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
+                withOrganisation(organisation).
+                withLeadOrganisation(true).
+                build();
+
         Project savedProject = newProject().withApplication(application).
-                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).build();
+                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
+                withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
+                build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
-        Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
+        Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
+        when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
+
+        verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
+        verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
     }
 
     @Test
@@ -1134,7 +1145,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(spendProfile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(Optional.of(spendProfile));
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(1).getId())).thenReturn(Optional.of(spendProfile));
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(2).getId())).thenReturn(Optional.of(spendProfile));
 
         MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
         when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
@@ -1171,9 +1184,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(org.getProject().getId(),
                     org.getOrganisation().getId())).thenReturn(org));
 
-        when(financeCheckWorkflowHandler.isApproved(partnerOrganisations.get(0))).thenReturn(false);
-        when(financeCheckWorkflowHandler.isApproved(partnerOrganisations.get(1))).thenReturn(false);
-        when(financeCheckWorkflowHandler.isApproved(partnerOrganisations.get(2))).thenReturn(true);
+        when(financeCheckWorkflowHandlerMock.isApproved(partnerOrganisations.get(0))).thenReturn(false);
+        when(financeCheckWorkflowHandlerMock.isApproved(partnerOrganisations.get(1))).thenReturn(false);
+        when(financeCheckWorkflowHandlerMock.isApproved(partnerOrganisations.get(2))).thenReturn(true);
 
         ProjectLeadStatusResource expectedLeadPartnerOrganisationStatus = newProjectLeadStatusResource().
                 withName(organisations.get(0).getName()).
@@ -1199,7 +1212,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withFinanceChecksStatus(ACTION_REQUIRED, COMPLETE).
-                withSpendProfileStatus(NOT_STARTED, PENDING).
+                withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
@@ -1223,7 +1236,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withMonitoringOfficerStatus(NOT_REQUIRED).
                 withBankDetailsStatus(NOT_REQUIRED).
                 withFinanceChecksStatus(COMPLETE).
-                withSpendProfileStatus(PENDING).
+                withSpendProfileStatus(ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
                 build(1);
@@ -1352,7 +1365,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(fileServiceMock).deleteFile(fileToDelete.getId());
     }
 
-    private Project createProjectExpectationsFromOriginalApplication(Application application) {
+    private Project createProjectExpectationsFromOriginalApplication() {
 
         assertFalse(application.getProcessRoles().isEmpty());
 
@@ -1377,6 +1390,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
+
+            List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+            assertEquals(1, partnerOrganisations.size());
+            assertEquals(project, partnerOrganisations.get(0).getProject());
+            assertEquals(organisation, partnerOrganisations.get(0).getOrganisation());
+            assertTrue(partnerOrganisations.get(0).isLeadOrganisation());
         });
     }
 

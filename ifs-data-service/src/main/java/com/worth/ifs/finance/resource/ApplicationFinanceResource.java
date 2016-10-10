@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
@@ -169,10 +168,6 @@ public class ApplicationFinanceResource {
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
     }
 
-    @JsonIgnore
-    public Log getLog() {
-        return this.LOG;
-    }
 
     @Override
     public boolean equals(Object o) {

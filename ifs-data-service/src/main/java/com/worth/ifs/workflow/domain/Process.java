@@ -24,7 +24,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     protected ActivityState activityState;
 
     @Version
@@ -41,7 +41,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     @ManyToOne
     @JoinColumn(name="internal_participant_id", referencedColumnName = "id")
-    private User internalParticipant;
+    protected User internalParticipant;
 
     public Process() {
     }

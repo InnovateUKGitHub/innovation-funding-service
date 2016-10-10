@@ -1,11 +1,6 @@
 package com.worth.ifs.project.finance.domain;
 
-import com.worth.ifs.util.CollectionFunctions;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import javax.persistence.*;
-import java.util.SortedMap;
 
 /**
  * Entity representing a Category against which costs can be recorded e.g. Labour, Materials etc
@@ -23,7 +18,7 @@ public class CostCategory {
     @Column(nullable = true)
     private String label;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cost_category_group_id", nullable = false)
     private CostCategoryGroup costCategoryGroup;
 
