@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -161,6 +162,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccessReturn(profile -> {
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
+            resource.setMarkedAsComplete(profile.isMarkedAsComplete());
             return resource;
         });
     }
@@ -179,6 +181,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
         }
+    }
+
+    @Override
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSpendProfileSubmittedDate() != null) {
+                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+            }
+
+            if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
+                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+            }
+
+            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -247,6 +265,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
                 projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+        }
 
         spendProfile.setMarkedAsComplete(markAsComplete);
 

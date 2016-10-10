@@ -14,12 +14,14 @@ public class ProjectSpendProfileProjectManagerViewModel {
     private String projectName;
     private Map<String, Boolean> partnerSpendProfileProgress;
     private List<OrganisationResource> partnerOrganisations;
+    private boolean submitted;
 
-    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress, List<OrganisationResource> partnerOrganisations) {
+    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress, List<OrganisationResource> partnerOrganisations, boolean submitted) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
+        this.submitted = submitted;
     }
 
     public Long getProjectId() {
@@ -58,5 +60,9 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return partnerSpendProfileProgress.values()
                 .stream()
                 .allMatch(markAsComplete -> markAsComplete);
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
     }
 }
