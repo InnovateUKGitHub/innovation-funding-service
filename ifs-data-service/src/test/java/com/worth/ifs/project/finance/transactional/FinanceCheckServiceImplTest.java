@@ -1,29 +1,44 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.builder.CostGroupResourceBuilder;
-import com.worth.ifs.project.builder.CostResourceBuilder;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.domain.PartnerOrganisation;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
+import com.worth.ifs.project.finance.domain.FinanceCheckProcess;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
-import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.workflow.domain.ActivityState;
+import com.worth.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.project.builder.CostBuilder.newCost;
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
@@ -33,13 +48,18 @@ import static com.worth.ifs.project.builder.FinanceCheckBuilder.newFinanceCheck;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
+import static com.worth.ifs.project.finance.builder.FinanceCheckProcessBuilder.newFinanceCheckProcess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_FINANCE_CHECKS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
 
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
@@ -213,11 +233,39 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertTrue(result.getFailure().is(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
-
-
     @Test
     public void testGetFinanceCheckSummary(){
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
+        Organisation organisation = newOrganisation().build();
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withProject(project).withOrganisation(organisation).build(3);
+        User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
+        Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
+        List<ApplicationFinanceResource> applicationFinanceResourceList = newApplicationFinanceResource().build(3);
+        ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
+        FinanceCheckProcess process = newFinanceCheckProcess().withModifiedDate(new GregorianCalendar()).build();
+        ActivityState pendingState = new ActivityState(PROJECT_SETUP_FINANCE_CHECKS, State.PENDING);
+        process.setActivityState(pendingState);
+        ProjectUserResource projectUser = newProjectUserResource().build();
+        UserResource user = newUserResource().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getId())).thenReturn(spendProfile);
+        when(financeRowServiceMock.financeTotals(application.getId())).thenReturn(serviceSuccess(applicationFinanceResourceList));
+        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(0).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(1).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(2).getId())).thenReturn(process);
+        when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
+        when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
+
+        ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
+        assertTrue(result.isSuccess());
     }
 
     @Override
