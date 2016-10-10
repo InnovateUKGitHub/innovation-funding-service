@@ -70,7 +70,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
 
         when(userService.updateProfile(1L, profile)).thenReturn(serviceSuccess(user));
 
-        mockMvc.perform(post("/registration/skills")
+        mockMvc.perform(post("/profile/skills")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("skillAreas", skillAreas)
                 .param("assessorType", businessType.name()))
