@@ -66,7 +66,7 @@ Create assessor account: Contact details server-side validations
 
 Create assessor account: Contact details client-side validations
     [Documentation]    INFUND-4916
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     When the user enters text to a text field    id=firstName    T
     And the user moves focus away from the element    id=firstName
     Then The user should not see the text in the page    Please enter a first name
