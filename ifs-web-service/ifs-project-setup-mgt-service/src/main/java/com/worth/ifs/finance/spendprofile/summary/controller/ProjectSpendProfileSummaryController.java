@@ -16,6 +16,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,11 +56,13 @@ public class ProjectSpendProfileSummaryController {
     @Autowired
     private FinanceService financeService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/generate", method = POST)
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute ProjectSpendProfileForm form,

@@ -3,7 +3,6 @@ package com.worth.ifs.project.sections;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static java.util.Arrays.asList;
 
 /**
  * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionInternalUser} to
@@ -33,8 +32,8 @@ class ProjectSetupProgressChecker {
         return PENDING.equals(projectStatus.getBankDetailsStatus());
     }
 
-    public boolean isSpendProfileGenerated() {
-        return asList(COMPLETE, ACTION_REQUIRED).contains(projectStatus.getSpendProfileStatus());
+    public boolean isSpendProfileSubmitted() {
+        return COMPLETE.equals(projectStatus.getSpendProfileStatus());
     }
 
     public boolean isOrganisationRequiringFunding() {

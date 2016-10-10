@@ -54,7 +54,11 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
-        return NOT_ACCESSIBLE;
+        if(!projectSetupProgressChecker.isSpendProfileSubmitted()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
     }
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {

@@ -50,6 +50,12 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksSection);
     }
 
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A internal can access the Spend Profile " +
+            "section when the lead partner submits the project spendprofile")
+    public boolean internalCanAccessSpendProfileSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessSpendProfileSection);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 

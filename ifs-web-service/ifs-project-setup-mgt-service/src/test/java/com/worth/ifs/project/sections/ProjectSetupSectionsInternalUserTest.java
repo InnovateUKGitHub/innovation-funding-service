@@ -14,7 +14,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ProjectSetupSectionsPartnerInternalUserTest extends BaseUnitTest {
+public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Mock
     private ProjectSetupProgressChecker projectSetupProgressCheckerMock;
@@ -78,6 +78,22 @@ public class ProjectSetupSectionsPartnerInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToFinanceChecksSectionButProjectDetailsSectionIncomplete() {
         assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(null));
+    }
+
+    @Test
+    public void testCheckAccessToSpendProfileSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(null));
+
+        verifyInteractions(
+                mock -> mock.isSpendProfileSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToSpendProfileSectionButSpendProfileSectionIsNotSubmitted() {
+        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
     }
 
 
