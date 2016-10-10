@@ -4,10 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -19,8 +16,7 @@ import java.util.concurrent.Future;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.lang.String.format;
 
@@ -125,11 +121,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRolesByIds(List<Long> processRoleIds) {
-        return getWithRestResult(processRoleRestURL + "/findByIds/" + simpleJoiner(processRoleIds, ","), processRoleResourceListType());
-    }
-
-    @Override
     public RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId) {
         return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleResourceListType());
     }
@@ -179,6 +170,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         return postWithRestResultAnonymous(url, user, UserResource.class);
     }
+
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null);
@@ -200,5 +192,15 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> updateProfile(Long id, ProfileResource profile) {
         return putWithRestResult(format("%s/id/%s/updateProfile", userRestURL, id), profile, UserResource.class);
+    }
+
+    @Override
+    public RestResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
+        return getWithRestResult(format("%s/id/%s/getUserAffiliations", userRestURL, userId), affiliationResourceListType());
+    }
+
+    @Override
+    public RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
+        return putWithRestResult(format("%s/id/%s/updateUserAffiliations", userRestURL, userId), affiliations, Void.class);
     }
 }

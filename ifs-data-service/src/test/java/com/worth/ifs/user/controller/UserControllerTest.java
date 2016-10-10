@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -17,21 +18,22 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICA
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.time.LocalDateTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -163,12 +165,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andDo(document("user/update-password",
-                    pathParameters(
-                        parameterWithName("hash").description("The hash to validate the legitimacy of the request")
-                    )
+                        pathParameters(
+                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
+                        )
                 ));
     }
-
 
     @Test
     public void verifyEmail() throws Exception {
@@ -181,11 +182,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
                 .andDo(document("user/verify-email",
-                                pathParameters(
-                                        parameterWithName("hash").description("The hash to validate the legitimacy of the request")
-                                ))
+                        pathParameters(
+                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
+                        ))
                 );
     }
+
 
     @Test
     public void verifyEmailNotFound() throws Exception {
@@ -267,11 +269,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updateUserProfile() throws Exception {
-        UserResource user = newUserResource().build();
         ProfileResource profile = newProfileResource().build();
         Long userId = 1L;
 
-        when(userServiceMock.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(userProfileServiceMock.updateProfile(userId, profile)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
@@ -279,8 +279,37 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .content(new ObjectMapper().writeValueAsString(profile)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, times(1)).updateProfile(userId, profile);
-        verifyNoMoreInteractions(userServiceMock);
-        verifyNoMoreInteractions(userProfileServiceMock);
+        verify(userProfileServiceMock, only()).updateProfile(userId, profile);
+    }
+
+    @Test
+    public void getUserAffiliations() throws Exception {
+        Long userId = 1L;
+        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
+
+        when(userProfileServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(affiliations));
+
+        mockMvc.perform(get("/user/id/{id}/getUserAffiliations", userId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(content().string(toJson(affiliations)));
+
+        verify(userProfileServiceMock, only()).getUserAffiliations(userId);
+    }
+
+    @Test
+    public void updateUserAffiliations() throws Exception {
+        Long userId = 1L;
+        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
+
+        when(userProfileServiceMock.updateUserAffiliations(userId, affiliations)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateUserAffiliations", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(affiliations)))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
     }
 }

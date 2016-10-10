@@ -78,6 +78,7 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -94,6 +95,9 @@ import org.mockito.MockitoAnnotations;
  * annotation.
  */
 public abstract class BaseUnitTestMocksTest extends BaseTest {
+
+    @Mock
+    protected AffiliationMapper affiliationMapperMock;
 
     @Mock
     protected AlertService alertServiceMock;

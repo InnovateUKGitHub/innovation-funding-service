@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
@@ -25,6 +27,8 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     private UserPermissionRules rules;
     private UserLookupStrategies userLookupStrategies;
 
+    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
+
     @Before
     public void lookupPermissionRules() {
         rules = getMockPermissionRulesBean(UserPermissionRules.class);
@@ -32,11 +36,34 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Test
-    public void testUpdateProfile() {
+    public void updateProfile() {
         when(userLookupStrategies.findById(1L)).thenReturn(newUserResource().build());
 
         assertAccessDenied(() -> classUnderTest.updateProfile(1L, newProfileResource().build()), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(isA(UserResource.class), isA(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void getUserAffilliations() {
+        long userId = 1L;
+
+        classUnderTest.getUserAffiliations(userId);
+        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
+        verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void updateUserAffiliations() {
+        Long userId = 1L;
+        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliations), () -> {
+            verify(rules).usersCanUpdateTheirOwnAffiliations(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -59,12 +86,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<List<AffiliationResource>> getAffiliationsByUserId(Long userId) {
-            return null;
+        public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
+            return serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<Void> updateUserAffilliations(long userId, List<AffiliationResource> userProfile) {
+        public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
             return null;
         }
     }

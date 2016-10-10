@@ -2,7 +2,7 @@ CREATE TABLE affiliation (
     id BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     user_id BIGINT(20) NOT NULL,
     affiliation_type ENUM('EMPLOYER', 'PROFESSIONAL', 'PERSONAL', 'PERSONAL_FINANCIAL', 'FAMILY', 'FAMILY_FINANCIAL') NOT NULL,
-    affiliation_exists TINYINT(1),
+    affiliation_exists TINYINT(1) NOT NULL,
     relation VARCHAR(255),
     organisation VARCHAR(255),
     position VARCHAR(255),

@@ -64,7 +64,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Void> updateDetails(UserResource userResource) {
-        if(userResource!=null) {
+        if (userResource != null) {
             return userService.findByEmail(userResource.getEmail())
                     .andOnSuccess(existingUser ->
                             updateUser(existingUser, userResource));
@@ -74,16 +74,20 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<AffiliationResource>> getAffiliationsByUserId(Long userId) {
+    public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
     }
 
     @Override
-    public ServiceResult<Void> updateUserAffilliations(long userId, List<AffiliationResource> affiliations) {
+    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
             targetAffiliations.clear();
-            affiliationMapper.mapToDomain(affiliations).forEach(targetAffiliations::add);
+            affiliationMapper.mapToDomain(affiliations)
+                    .forEach(affiliation -> {
+                        affiliation.setUser(user);
+                        targetAffiliations.add(affiliation);
+                    });
             userRepository.save(user);
             return serviceSuccess();
         });

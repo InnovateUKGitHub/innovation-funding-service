@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
@@ -36,6 +37,7 @@ public class UserResourceBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Long expectedEthnicity = 1L;
+        ProfileResource expectedProfile = newProfileResource().build();
 
         UserResource user = newUserResource()
                 .withId(expectedId)
@@ -54,6 +56,7 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
+                .withProfile(expectedProfile)
                 .build();
 
         assertEquals(expectedId, user.getId());
@@ -92,6 +95,7 @@ public class UserResourceBuilderTest {
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Long[] expectedEthnicities = {1L, 2L};
+        ProfileResource[] expectedProfiles = newProfileResource().buildArray(2, ProfileResource.class);
 
         List<UserResource> users = newUserResource()
                 .withId(expectedIds)
@@ -110,6 +114,7 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
+                .withProfile(expectedProfiles)
                 .build(2);
 
 
@@ -131,6 +136,7 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
+        assertEquals(expectedProfiles[0], first.getProfile());
 
         UserResource second = users.get(1);
 
@@ -150,6 +156,7 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
+        assertEquals(expectedProfiles[1], second.getProfile());
     }
 
 }
