@@ -14,7 +14,7 @@ public class CompetitionFunder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 

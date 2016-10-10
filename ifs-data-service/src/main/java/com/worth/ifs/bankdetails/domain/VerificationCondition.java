@@ -14,7 +14,7 @@ public class VerificationCondition {
     private Integer code;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bankDetailsId" , referencedColumnName = "id")
     private BankDetails bankDetails;
 

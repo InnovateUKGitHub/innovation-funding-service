@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
@@ -33,18 +34,18 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> findLiveCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/live", competitionResourceListType());
+    public RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/live", competitionSearchResultItemListType());
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionResourceListType());
+    public RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType());
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> findUpcomingCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/upcoming", competitionResourceListType());
+    public RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/upcoming", competitionSearchResultItemListType());
     }
 
     @Override
