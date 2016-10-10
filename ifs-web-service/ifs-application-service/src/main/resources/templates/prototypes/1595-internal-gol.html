@@ -44,7 +44,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status == null}">
-		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project setup.</p>
+		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
@@ -60,7 +60,7 @@
 
 		<th:block th:if="${param.status == null}">
 		
-			<p>The grant offer letter has been created from the information supplied by the applicants.</p>
+			<!--<p>The grant offer letter has been created from the information supplied by the applicants.</p>-->
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
 				<a href="#">Grant offer letter 2016-04-28a.PDF</a> 
