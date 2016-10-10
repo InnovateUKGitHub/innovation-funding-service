@@ -29,7 +29,6 @@ IFS.application.loadOrder = {
     init : function(){
       IFS.application.repeatableRows.init();
       IFS.application.financeSpecifics.init();
-      IFS.application.application_form.init();
     }
   },
   'app-details' : {

@@ -80,13 +80,11 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
 
     @Test
     public void testGetByIds() throws Exception {
-        Long id1 = 1L;
-        Long id2 = 2L;
-        List<Long> ids = Lists.newArrayList(id1, id2);
-        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
-        when(userRestService.findProcessRolesByIds(ids)).thenReturn(restSuccess(resources));
 
-        List<ProcessRoleResource> returnedResources = service.getByIds(ids);
+        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
+        when(userRestService.findProcessRole(123L)).thenReturn(restSuccess(resources));
+
+        List<ProcessRoleResource> returnedResources = service.getByApplicationId(123L);
 
         assertEquals(resources, returnedResources);
     }

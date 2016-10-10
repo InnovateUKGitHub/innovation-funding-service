@@ -15,15 +15,13 @@ public class QuestionResource {
     private String name;
     private String shortName;
     private String description;
-    private final List<Long> formInputs = new ArrayList<>();
+    private List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
     private Integer priority;
     private Long competition;
     private Long section;
-    private List<Long> questionStatuses;
-    private List<Long> costs;
     private String questionNumber;
     private QuestionType type;
     private Integer assessorMaximumScore;
@@ -48,20 +46,12 @@ public class QuestionResource {
         return this.description;
     }
 
-    public List<Long> getQuestionStatuses() {
-        return this.questionStatuses;
-    }
-
     public Long getCompetition() {
         return this.competition;
     }
 
     public Long getSection() {
         return this.section;
-    }
-
-    public void setQuestionStatuses(List<Long> questionStatusIds) {
-        this.questionStatuses = questionStatusIds;
     }
 
     public Boolean isMarkAsCompletedEnabled() {
@@ -113,10 +103,6 @@ public class QuestionResource {
         return this.formInputs;
     }
 
-    public List<Long> getCosts() {
-        return this.costs;
-    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -154,10 +140,6 @@ public class QuestionResource {
         this.section = section;
     }
 
-    public void setCosts(List<Long> costs) {
-        this.costs = costs;
-    }
-
     public void setQuestionNumber(String questionNumber) {
         this.questionNumber = questionNumber;
     }
@@ -172,6 +154,10 @@ public class QuestionResource {
 
     public void setAssessorMaximumScore(Integer assessorMaximumScore) {
         this.assessorMaximumScore = assessorMaximumScore;
+    }
+
+    public void setFormInputs(List<Long> formInputs) {
+        this.formInputs = formInputs;
     }
 
     @Override
@@ -198,8 +184,6 @@ public class QuestionResource {
                 .append(priority, that.priority)
                 .append(competition, that.competition)
                 .append(section, that.section)
-                .append(questionStatuses, that.questionStatuses)
-                .append(costs, that.costs)
                 .append(questionNumber, that.questionNumber)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
@@ -219,8 +203,6 @@ public class QuestionResource {
                 .append(priority)
                 .append(competition)
                 .append(section)
-                .append(questionStatuses)
-                .append(costs)
                 .append(questionNumber)
                 .append(assessorMaximumScore)
                 .toHashCode();

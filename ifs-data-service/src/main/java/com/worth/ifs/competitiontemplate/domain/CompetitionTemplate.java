@@ -1,16 +1,10 @@
 package com.worth.ifs.competitiontemplate.domain;
 
+import com.worth.ifs.competition.domain.CompetitionType;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-
-import com.worth.ifs.competition.domain.CompetitionType;
 
 /**
  * Template for creating new competitions.
@@ -21,7 +15,7 @@ public class CompetitionTemplate {
     @Id
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
     private CompetitionType competitionType;
     

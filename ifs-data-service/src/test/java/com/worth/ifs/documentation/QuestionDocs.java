@@ -4,7 +4,6 @@ import com.worth.ifs.application.builder.QuestionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class QuestionDocs {
@@ -18,11 +17,9 @@ public class QuestionDocs {
             fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses"),
             fieldWithPath("priority").description("priority of the question, used for rendering purposes only"),
             fieldWithPath("formInputs").description("list of the inputs used to answer the question"),
-            fieldWithPath("questionStatuses").description("List of question statuses"),
             fieldWithPath("questionNumber").description("number of the question"),
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition"),
-            fieldWithPath("costs").description("List of ids of the costs related to the finance questions").optional(),
             fieldWithPath("type").description("The type of question"),
             fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor")
     };
@@ -35,8 +32,6 @@ public class QuestionDocs {
             .withPriority(1)
             .withCompetition(1L)
             .withSection(1L)
-            .withQuestionStatuses(asList(1L, 2L))
-            .withCosts(asList(1L))
             .withQuestionNumber("1")
             .withAssessorMaximumScore(10);
 }

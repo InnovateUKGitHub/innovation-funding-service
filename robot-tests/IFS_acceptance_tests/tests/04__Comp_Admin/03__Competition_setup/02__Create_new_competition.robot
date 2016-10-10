@@ -36,6 +36,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
 ...
 ...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
+...
+...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -159,6 +161,7 @@ Initial details should not allow dates in the past
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2015
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should not see the element    jQuery=.button:contains("Edit")
     [Teardown]    the user enters text to a text field    id=openingDateYear    2017
@@ -170,6 +173,7 @@ Initial details mark as done
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Competition Executive Two
     And the user should see the text in the page    1/12/2017
@@ -256,6 +260,7 @@ Funding information client-side validations
 
 Funding information Autosave
     [Documentation]    INFUND-4581
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Funding Information
     Then the user should see the correct details in the funding information form
@@ -277,6 +282,7 @@ Funding informations calculations
 Funding Information can be saved
     [Documentation]    INFUND-3182
     [Tags]    HappyPath
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    FunderName
     And the user should see the text in the page    £20,000
@@ -291,6 +297,7 @@ Funding Information can be edited
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    testFunder
 
@@ -326,6 +333,7 @@ Eligibility server-side validations
     [Tags]    HappyPath
     [Setup]
     Given the user selects the radio button    multipleStream    yes
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
@@ -344,17 +352,17 @@ Eligibility client-side validations
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field    id=streamName    Test stream name
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     And the user should not see the text in the page    A stream name is required
     And the user selects the radio button    resubmission    no
     And the user should not see the text in the page    Please select a resubmission option
@@ -485,10 +493,20 @@ Application questions: Client side validations
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
+Application questions: Autosave
+    [Documentation]    INFUND-4586
+    [Tags]    Pending
+    # Pending due to INFUND-5538
+    Given the user moves focus and waits for autosave
+    When the user clicks the button/link    link=Competition set up
+    And The user clicks the button/link    link=Application Questions
+    Then the user should see the correct inputs in the Applications questions form
+
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
     [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
+    Given the user moves focus and waits for autosave
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
     And the user should see the text in the page    Subtitle test
@@ -531,8 +549,9 @@ User should be able to Save the competition as open
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
-the user moves focus to a different part of the page and waits for autosave
+the user moves focus and waits for autosave
     focus    link=Sign out
+    sleep    500ms
     Wait For Autosave
 
 the user should not see the error any more
@@ -557,6 +576,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+    the user moves focus and waits for autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -768,3 +788,15 @@ the user should see the correct inputs in the Milestones form
     Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(1)    Sun
     Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(1)    Mon
     Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(1)    Tue
+
+the user should see the correct inputs in the Applications questions form
+    ${input_value} =    Get Value    id=question.title
+    Should Be Equal    ${input_value}    Test title
+    ${input_value} =    Get Value    id=question.subTitle
+    Should Be Equal    ${input_value}    Subtitle test
+    ${input_value} =    Get Value    id=question.guidanceTitle
+    Should Be Equal    ${input_value}    Test guidance title
+    ${input_value} =    Get Value    css=.editor
+    Should Be Equal    ${input_value}    Guidance text test
+    ${input_value} =    Get Value    id=question.maxWords
+    Should Be Equal    ${input_value}    150
