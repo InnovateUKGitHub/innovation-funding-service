@@ -36,12 +36,12 @@ public class AssessorProfileSkillsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @RequestMapping(value = "skills", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String getSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
         return doViewYourSkills(model);
     }
 
-    @RequestMapping(value = "skills", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,

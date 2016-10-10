@@ -59,7 +59,7 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<List<AffiliationResource>> getAffiliationsByUserId(Long userId) {
+        public ServiceResult<List<AffiliationResource>> getUserAffilliations(Long userId) {
             return null;
         }
 

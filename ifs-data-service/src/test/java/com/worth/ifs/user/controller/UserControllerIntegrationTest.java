@@ -7,6 +7,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,8 +19,12 @@ import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.resource.AffiliationType.*;
+import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,6 +44,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
     }
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -217,9 +225,67 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
+    @Ignore
     public void testResendEmailVerificationNotification() {
         loginSystemRegistrationUser();
         final RestResult<Void> restResult = controller.resendEmailVerificationNotification("ewan+1@hiveit.co.uk");
         assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void testGetUserAffiliations() throws Exception {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        // Save some existing Affiliations
+        user.setAffiliations(newAffiliation()
+                .withId(null, null)
+                .withAffiliationType(EMPLOYER, PERSONAL_FINANCIAL)
+                .withExists(TRUE, TRUE)
+                .withUser(user, user)
+                .build(2));
+        userRepository.save(user);
+
+        List<AffiliationResource> response = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        assertEquals(2, response.size());
+
+        assertEquals(EMPLOYER, response.get(0).getAffiliationType());
+        assertEquals(PERSONAL_FINANCIAL, response.get(1).getAffiliationType());
+    }
+
+    @Test
+    public void testUpdateUserAffiliations() throws Exception {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        // Save some existing Affiliations
+        user.setAffiliations(newAffiliation()
+                .withId(null, null)
+                .withAffiliationType(EMPLOYER, PERSONAL_FINANCIAL)
+                .withExists(TRUE, TRUE)
+                .withUser(user, user)
+                .build(2));
+        userRepository.save(user);
+
+        List<AffiliationResource> getAfterSaveResponse = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        assertEquals(2, getAfterSaveResponse.size());
+
+        RestResult<Void> updateResponse = controller.updateUserAffiliations(userId, newAffiliationResource()
+                .withId(null, null)
+                .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
+                .withExists(TRUE, TRUE)
+                .withUser(userId, userId)
+                .build(2));
+
+        assertTrue(updateResponse.isSuccess());
+
+        List<AffiliationResource> getAfterUpdateResponse = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        assertEquals(2, getAfterUpdateResponse.size());
+        assertEquals(PROFESSIONAL, getAfterUpdateResponse.get(0).getAffiliationType());
+        assertEquals(FAMILY_FINANCIAL, getAfterUpdateResponse.get(1).getAffiliationType());
     }
 }

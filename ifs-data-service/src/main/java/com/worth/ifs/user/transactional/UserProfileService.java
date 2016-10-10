@@ -22,7 +22,7 @@ public interface UserProfileService {
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<AffiliationResource>> getAffiliationsByUserId(Long userId);
+    ServiceResult<List<AffiliationResource>> getUserAffilliations(Long userId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateUserAffilliations(long userId, List<AffiliationResource> userProfile);

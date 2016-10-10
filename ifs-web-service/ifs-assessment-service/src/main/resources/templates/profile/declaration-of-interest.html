@@ -248,7 +248,7 @@
                     </span>
                     <label class="block-label">
                         <input type="checkbox" th:field="*{accurateAccount}" />
-                        I confirm that for the financial year ended 31 March 2017 that the above represents an accurate account of my interests outside Innovate UK
+                        <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                     </label>
                 </div>
 
