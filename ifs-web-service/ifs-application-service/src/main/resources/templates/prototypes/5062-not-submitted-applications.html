@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	
+
+
+	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
+		<style>
+			#application-list tbody tr{
+				display: none;
+			}
+			.pagination{
+				display: none;
+			}
+			#application-list tbody tr.filtered-result{
+				display: table-row;
+			}
+		</style>
+	</div>
+
+</head>
+
+<body class="comp-assessors full-width show-applications">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Competition closed'})" th:remove="tag" />
+
+	<h2 class="heading-large" id="current-assessors">Applications not submitted</h2>
+
+		<section class="boxed">
+			
+			 <div class="grid-row">
+
+				<div class="column-quarter"> 	
+				 	<p><span class="heading-large">4</span> applications submitted</p>
+				</div>
+
+				<div class="column-quarter">
+				 	<p><span class="heading-large">18</span> applications not submitted</p>
+				</div>
+
+			 </div>
+
+		</section>
+
+		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	
+			
+			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='notSubmittedApplications'" th:remove="tag" />
+			
+			<div class="table-overflow">
+				<table id="application-list">
+					<thead>
+						<tr>
+							<th scope="col">Application no</th>
+							<th scope="col">Project title</th>
+							<th scope="col">Lead</th>
+							<th scope="col">Area</th>
+							<th scope="col" class="alignright">Percentage complete</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						<tr class="filtered-result">
+							<th scope="col">
+								<a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194735</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">89</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194736</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">86</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194737</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">86</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194738</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">84</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194739</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">85</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194740</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">83</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194741</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">82</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194742</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">81</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194743</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">76</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194744</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">75</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194745</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">70</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194746</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">67</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194747</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">65</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194748</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">60</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194749</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">59</td>
+						</tr>
+
+						<tr class="filtered-result">
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194750</a></th>
+							<td>Example application</td>
+							<td>Example lead</td>
+							<td>HVM</td>
+							<td class="alignright">50</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+			
+			<div th:if="${param.filterStatus == null}" th:remove="tag">
+			
+				<!-- <ul class="pagination">
+				    <li class="next">
+				        <a href="#" rel="next" title="Navigate to next part">
+				            <span class="pagination-label">Next</span>
+				            <span class="pagination-part-title">1 of 2</span>
+				        </a>
+				    </li>
+				</ul> -->
+			
+			</div>
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>
