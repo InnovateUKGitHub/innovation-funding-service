@@ -20,6 +20,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean projectDetailsSubmitted;
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
+    private boolean grantOfferLetterSubmitted;
     private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
     private BankDetailsResource bankDetails;
@@ -37,7 +38,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
                                        Optional<BankDetailsResource> bankDetails, Long organisationId,
-                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean spendProfileSubmitted,
+                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -52,6 +53,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.bankDetails = bankDetails.orElse(null);
         this.organisationId = organisationId;
+        this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
         this.leadPartner = leadPartner;
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
@@ -102,6 +104,10 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public Long getOrganisationId() {
         return organisationId;
+    }
+
+    public boolean isGrantOfferLetterSubmitted() {
+        return grantOfferLetterSubmitted;
     }
 
     public boolean isLeadPartner() {

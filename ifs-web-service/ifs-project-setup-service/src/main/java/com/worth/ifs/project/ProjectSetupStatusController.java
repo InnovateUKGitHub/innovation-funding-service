@@ -92,6 +92,7 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+        boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
@@ -101,7 +102,7 @@ public class ProjectSetupStatusController {
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails,
-                organisation.getId(), projectDetailsSubmitted, leadPartner, spendProfilesSubmitted,
+                organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),
