@@ -40,7 +40,7 @@
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<div class="success-alert extra-margin-bottom">
-			<p><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
+			<p><strong>All project spend profiles have been submitted to Innovate UK.</strong></p>
 		</div>
 	</div>
 
@@ -73,7 +73,7 @@
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 		<h2 class="heading-medium">Partner project costs</h2>
-		<p class="form-hint">These are the project costs for your partners on the project</p>
+		<p class="form-hint">These are the project costs for your partners on the project.</p>
 
 		<table id="partner-totals">
 			<thead>
@@ -120,7 +120,7 @@
 	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project - Spend profile</h2>
+		<h2 class="heading-medium">Project spend profile</h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
