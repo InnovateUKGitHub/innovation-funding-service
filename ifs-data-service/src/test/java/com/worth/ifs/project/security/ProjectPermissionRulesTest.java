@@ -86,6 +86,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testProjectFinanceUserCanAcceptOrRejectOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testProjectFinanceUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();

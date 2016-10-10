@@ -306,12 +306,12 @@
                     <h2 class="heading-small" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                     <h2 class="heading-small" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
-                    <p>You can invite people on your list either individually or as a group.</p>
+                    <p>You can invite people on your list individually or as a group.</p>
                 </div>
             </div>
 
             <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
-                <summary><span class="summary">Add non-registered assessor to your list</span></summary>
+                <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
                 <div class="panel-indent">
                     <form th:action="${#httpServletRequest.requestURI}">
                         <fieldset>

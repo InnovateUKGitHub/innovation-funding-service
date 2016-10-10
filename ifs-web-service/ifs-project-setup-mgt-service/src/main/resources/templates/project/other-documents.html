@@ -2,9 +2,6 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Other documents'" th:remove="tag"/>
-    <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-    <div th:include="fragments/modals :: modal-accept-docs" th:remove="tag"/>
-    <div th:include="fragments/modals :: modal-reject-docs" th:remove="tag"/>
 </head>
 <body>
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
@@ -12,54 +9,64 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"
+         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
          th:remove="tag"/>
 
-    <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
-             th:remove="tag"/>
-        <h1 class="heading-xlarge">Other documents</h1>
-    </div>
-    <hr/>
+    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+        <div class="page-title">
+            <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
+                 th:remove="tag"/>
+            <h1 class="heading-xlarge">Other documents</h1>
+        </div>
+        <hr/>
+        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+            <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+        <div class="success-alert" th:if="${model.approved == true}">
+            <p class="heading-small no-margin-top">The documents provided have been approved.</p>
+        </div>
 
-    <div class="success-alert" th:if="${model.approved == true}">
-        <p class="heading-small no-margin-top">The documents provided have been approved.</p>
-    </div>
+        <div class="warning-alert" th:if="${model.approved == false}">
+            <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
+        </div>
 
-    <div class="warning-alert" th:if="${model.approved == false}">
-        <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
-    </div>
+        <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.projectId,8)} + ': ' + ${model.projectName} "/>
+        <ul class="list-bullet">
+            <li th:text="${model.leadPartnerOrganisationName}" />
+            <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+              <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+            </th:block>
+        </ul>
+        <p>
+            <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
+            <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
+            <th:block th:text="${model.projectManagerTelephone}"/>
+        </p>
 
-    <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.projectId,8)} + ': ' + ${model.projectName} "/>
-    <ul class="list-bullet">
-        <li th:text="${model.leadPartnerOrganisationName}" />
-        <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
-          <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+        <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
+
+            <h2 class="heading-medium">Collaboration Agreement</h2>
+            <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+             class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+
+            <h2 class="heading-medium">Exploitation plan</h2>
+            <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
+             class="uploaded-file"
+             th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+
+            <h2 class="heading-medium">Review documents</h2>
+            <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+            <button data-js-modal="modal-accept-docs" class="button large">Accept documents</button>
+            <button data-js-modal="modal-reject-docs" class="button button-warning large">Reject documents</button>
+            <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+            <div th:include="fragments/modals :: modal-accept-docs" th:remove="tag"/>
+            <div th:include="fragments/modals :: modal-reject-docs" th:remove="tag"/>
+
         </th:block>
-    </ul>
-    <p>
-        <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
-        <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
-        <th:block th:text="${model.projectManagerTelephone}"/>
-    </p>
-
-    <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
-
-      <h2 class="heading-medium">Collaboration Agreement</h2>
-      <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-         class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-
-      <h2 class="heading-medium">Exploitation plan</h2>
-      <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
-         class="uploaded-file"
-         th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-
-      <h2 class="heading-medium">Review documents</h2>
-      <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
-      <button data-js-modal="modal-accept-docs" class="button large">Accept documents</button>
-      <button data-js-modal="modal-reject-docs" class="button button-warning large">Reject documents</button>
-
-    </th:block>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>

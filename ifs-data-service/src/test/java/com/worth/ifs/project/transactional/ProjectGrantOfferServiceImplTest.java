@@ -171,16 +171,16 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
         Assert.assertFalse(result.isSuccess());
-        Assert.assertThat(project.getDocumentsSubmittedDate(), nullValue());
+        Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
     }
 
     @Test
     public void testSubmitGrantOfferLetterSuccess() {
-        project.setGrantOfferLetter(mock(FileEntry.class));
+        project.setSignedGrantOfferLetter(mock(FileEntry.class));
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
         Assert.assertTrue(result.isSuccess());
-        Assert.assertThat(project.getDocumentsSubmittedDate(), notNullValue());
+        Assert.assertThat(project.getOfferSubmittedDate(), notNullValue());
     }
 
     @Override

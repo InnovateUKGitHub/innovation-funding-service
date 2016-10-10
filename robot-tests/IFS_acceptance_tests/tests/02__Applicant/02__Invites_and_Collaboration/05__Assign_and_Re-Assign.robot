@@ -21,6 +21,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Lead applicant can assign a question
@@ -236,7 +237,7 @@ Lead applicant should be able to remove the registered partner
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
-    Input Text    css=#form-input-12 .editor    collaborator's text
+    The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
     sleep    1s
     sleep    1s

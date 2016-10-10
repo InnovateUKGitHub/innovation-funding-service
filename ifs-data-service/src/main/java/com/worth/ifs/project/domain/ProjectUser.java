@@ -19,11 +19,11 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
@@ -31,11 +31,11 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     @Column(name = "project_role")
     private ProjectParticipantRole role;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
     private ProjectInvite invite;
 

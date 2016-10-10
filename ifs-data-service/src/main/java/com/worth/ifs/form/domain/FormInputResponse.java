@@ -26,19 +26,19 @@ public class FormInputResponse {
     private String value;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="updatedById", referencedColumnName="id")
     private ProcessRole updatedBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="formInputId", referencedColumnName="id")
     private FormInput formInput;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fileEntryId", referencedColumnName="id")
     private FileEntry fileEntry;
 

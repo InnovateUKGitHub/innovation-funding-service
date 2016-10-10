@@ -13,6 +13,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Password from the blacklist
@@ -46,7 +47,7 @@ Password all lower case
 
 Password all upper case
     [Documentation]    INFUND-1147
-    [Tags]    Pending   # TODO
+    [Tags]    Pending    # TODO
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -174,11 +175,11 @@ the user cannot login with the invalid password
     The user navigates to the page    ${LOGIN_URL}
     Input Text    id=username    ewan+40@hiveit.co.uk
     Input Password    id=password    ${invalid_password}
-    Click Button    css=button[name="_eventId_proceed"]
+    The user clicks the button/link    css=button[name="_eventId_proceed"]
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your username/password combination doesn't seem to work
+    The user should see the text in the page    css=button[name="_eventId_proceed"]
+    The user should see the text in the page    ${unsuccessful_login_message}
+    The user should see the text in the page    Your username/password combination doesn't seem to work
 
 the user accepts the terms and conditions
     Run Keyword And Ignore Error    Select Checkbox    termsAndConditions

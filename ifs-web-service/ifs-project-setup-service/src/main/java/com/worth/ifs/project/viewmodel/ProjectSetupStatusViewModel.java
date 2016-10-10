@@ -21,6 +21,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
     private boolean grantOfferLetterSubmitted;
+    private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
     private BankDetailsResource bankDetails;
     private Long organisationId;
@@ -37,7 +38,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
                                        Optional<BankDetailsResource> bankDetails, Long organisationId,
-                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted,
+                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -62,6 +63,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.spendProfileSection = spendProfileSection;
         this.otherDocumentsSection = otherDocumentsSection;
         this.grantOfferLetterSection = grantOfferLetterSection;
+        this.spendProfileSubmitted = spendProfileSubmitted;
     }
 
     public Long getProjectId() {
@@ -146,5 +148,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public SectionAccess getGrantOfferLetterSection() {
         return grantOfferLetterSection;
+    }
+
+    public boolean isSpendProfileSubmitted() {
+        return spendProfileSubmitted;
     }
 }

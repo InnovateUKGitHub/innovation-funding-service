@@ -12,17 +12,18 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -152,15 +153,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
+        Competition competition = newCompetition().build();
         when(queryResponse.getTotalElements()).thenReturn(totalElements);
         when(queryResponse.getTotalPages()).thenReturn(totalPages);
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
-        when(queryResponse.getContent()).thenReturn(competitions);
+        when(queryResponse.getContent()).thenReturn(singletonList(competition));
         when(competitionRepository.search(searchLike, pageRequest)).thenReturn(queryResponse);
-        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
 
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
 
@@ -168,6 +167,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(totalPages, response.getTotalPages());
         assertEquals(page, response.getNumber());
         assertEquals(size, response.getSize());
-        assertEquals(resources, response.getContent());
+
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(), competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type");
+        assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 }

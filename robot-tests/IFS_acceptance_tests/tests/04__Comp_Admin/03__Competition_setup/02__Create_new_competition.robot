@@ -289,7 +289,6 @@ Funding Information can be saved
 Funding Information can be edited
     [Documentation]    INFUND-3002
     [Tags]
-    #TODO neAnd The user should see the elemented to enable this And The user should see the elementtest when the INFUND-5111 is fixed
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -416,7 +415,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
-    [Tags]    Pending
+    [Tags]
     #TODO INFUND-3873
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
@@ -432,6 +431,7 @@ Milestones: Client side validations
 
 Milestones: Autosave
     [Tags]    Pending
+    #TODO INFUND-3873
     When the user clicks the button/link    link=Competition set up
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
@@ -582,45 +582,45 @@ The competition should show in the correct section
     Element should contain    ${SECTION}    ${COMP_NAME}
 
 the user fills the milestones with invalid data
-    input text    name=milestoneEntries[OPEN_DATE].day    15
-    input text    name=milestoneEntries[OPEN_DATE].month    1
-    input text    name=milestoneEntries[OPEN_DATE].year    2019
-    input text    name=milestoneEntries[BRIEFING_EVENT].day    14
-    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
-    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
-    input text    name=milestoneEntries[SUBMISSION_DATE].day    13
-    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
-    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    12
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    10
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    9
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    input text    name=milestoneEntries[LINE_DRAW].day    8
-    input text    name=milestoneEntries[LINE_DRAW].month    1
-    input text    name=milestoneEntries[LINE_DRAW].year    2019
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    7
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
-    input text    name=milestoneEntries[PANEL_DATE].day    6
-    input text    name=milestoneEntries[PANEL_DATE].month    1
-    input text    name=milestoneEntries[PANEL_DATE].year    2019
-    input text    name=milestoneEntries[FUNDERS_PANEL].day    5
-    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
-    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
-    input text    name=milestoneEntries[NOTIFICATIONS].day    4
-    input text    name=milestoneEntries[NOTIFICATIONS].month    1
-    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    333
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    15
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].day    14
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].month    1
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    13
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    12
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    10
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    9
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    8
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    7
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    6
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    5
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    4
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    3
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
@@ -634,48 +634,48 @@ Validation summary should be visible
     And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
     And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
     And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a valid date
+    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
 
 the user fills the milestones with valid data
-    input text    name=milestoneEntries[OPEN_DATE].day    10
-    input text    name=milestoneEntries[OPEN_DATE].month    1
-    input text    name=milestoneEntries[OPEN_DATE].year    2019
-    input text    name=milestoneEntries[BRIEFING_EVENT].day    11
-    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
-    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
-    input text    name=milestoneEntries[SUBMISSION_DATE].day    12
-    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
-    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    input text    name=milestoneEntries[LINE_DRAW].day    17
-    input text    name=milestoneEntries[LINE_DRAW].month    1
-    input text    name=milestoneEntries[LINE_DRAW].year    2019
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    18
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
-    input text    name=milestoneEntries[PANEL_DATE].day    19
-    input text    name=milestoneEntries[PANEL_DATE].month    1
-    input text    name=milestoneEntries[PANEL_DATE].year    2019
-    input text    name=milestoneEntries[FUNDERS_PANEL].day    20
-    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
-    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
-    input text    name=milestoneEntries[NOTIFICATIONS].day    21
-    input text    name=milestoneEntries[NOTIFICATIONS].month    1
-    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].day    11
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].month    1
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    17
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    18
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    19
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    21
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    22
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 

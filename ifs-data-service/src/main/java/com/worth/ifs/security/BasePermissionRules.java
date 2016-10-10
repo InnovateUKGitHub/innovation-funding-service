@@ -3,6 +3,7 @@ package com.worth.ifs.security;
 import java.util.List;
 
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -47,6 +48,9 @@ public abstract class BasePermissionRules {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected ProcessOutcomeRepository processOutcomeRepository;
 
     @Autowired
     protected AssessmentRepository assessmentRepository;

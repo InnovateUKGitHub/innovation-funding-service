@@ -18,13 +18,13 @@ public class OrganisationAddress {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Organisation organisation;
     @Valid
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="address_type_id", referencedColumnName="id")
     private AddressType addressType;
 
