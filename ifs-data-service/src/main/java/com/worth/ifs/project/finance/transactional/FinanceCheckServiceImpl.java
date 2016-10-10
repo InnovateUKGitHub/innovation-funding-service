@@ -82,15 +82,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         FinanceCheck toSave = mapToDomain(financeCheckResource);
         financeCheckRepository.save(toSave);
 
-        return getCurrentlyLoggedInUser().andOnSuccess(user ->
-                getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).andOnSuccessReturn(partnerOrganisation ->
-                        financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).andOnSuccess(workflowResult ->
-                workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
-    }
-
-    @Override
-    public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
-        throw new UnsupportedOperationException();
+        return getCurrentlyLoggedInUser().
+                andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
+                        andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
+                andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Override
@@ -229,7 +224,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     /*
-    //TODO: Andy to check if we need to switch over calcuations to use updated eligibility values or not, if so we can use finance checks here
+    //TODO: INFUND-5508 - totals need to be switched to look at updated FC costs
     //List<FinanceCheck> financeChecks = financeCheckRepository.findByProjectId(projectId);
     public BigDecimal getTotal(List<FinanceCheck> financeChecks) {
         if (financeChecks == null) {

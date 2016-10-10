@@ -24,7 +24,7 @@ import static junit.framework.TestCase.fail;
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
 
     @Test
-    public void testGetFinanceCheck() {
+    public void testGetFinanceCheckByProjectAndOrganisation() {
         assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
     }
 
@@ -34,13 +34,18 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGenerateFinanceCheck() {
-        assertInternalRolesCanPerform(() -> classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L)));
+    public void testApproveFinanceCheck() {
+        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
     }
 
     @Test
-    public void testApproveFinanceCheck() {
-        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
+    public void testGetFinanceCheckApprovalStatus(){
+        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L));
+    }
+
+    @Test
+    public void testGetFinanceCheckSummary(){
+        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L));
     }
 
     private void assertInternalRolesCanPerform(Runnable actionFn) {
@@ -79,11 +84,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<Void> save(FinanceCheckResource toUpdate) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
             return null;
         }
 

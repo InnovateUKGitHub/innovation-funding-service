@@ -20,6 +20,7 @@ import static com.worth.ifs.project.builder.CostBuilder.newCost;
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
 import static com.worth.ifs.project.builder.FinanceCheckBuilder.newFinanceCheck;
+import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -81,10 +82,46 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccessObject().getCostGroup().getCosts().get(0).getCostCategory().getId());
     }
 
+    @Test
+    public void testSaveFinanceCheck(){
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        User loggedInUser = newUser().build();
+        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().withProject(projectId).withOrganisation(organisationId).build();
+        FinanceCheck financeCheck = newFinanceCheck().withOrganisation(newOrganisation().withId(organisationId).build()).withProject(newProject().withId(projectId).build()).build();
+        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
+        when(financeCheckWorkflowHandlerMock.financeCheckFiguresEdited(partnerOrganisation, loggedInUser)).thenReturn(true);
+        when(financeCheckRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(financeCheck);
+        setLoggedInUser(loggedInUserResource);
+
+        ServiceResult result = service.save(financeCheckResource);
+
+        assertTrue(result.isSuccess());
+    }
 
     @Test
-    public void testGetFinanceCheck() {
-        // TODO RP
+    public void testSaveFinanceCheckWhenWorkflowStepFails(){
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        User loggedInUser = newUser().build();
+        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().withProject(projectId).withOrganisation(organisationId).build();
+        FinanceCheck financeCheck = newFinanceCheck().withOrganisation(newOrganisation().withId(organisationId).build()).withProject(newProject().withId(projectId).build()).build();
+        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
+        when(financeCheckWorkflowHandlerMock.financeCheckFiguresEdited(partnerOrganisation, loggedInUser)).thenReturn(false);
+        when(financeCheckRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(financeCheck);
+        setLoggedInUser(loggedInUserResource);
+
+        ServiceResult<Void> result = service.save(financeCheckResource);
+
+        assertTrue(result.getFailure().is(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Test
@@ -122,6 +159,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertTrue(result.getFailure().is(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
+
+
+    @Test
+    public void testGetFinanceCheckSummary(){
+
+    }
 
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
