@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle='Declaration of interest'" th:remove="tag"></div>
     </head>
 
-    <body th:with="context='assessment'">
+    <body th:with="context='assessment'" class="declaration-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
         <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
@@ -82,36 +82,67 @@
                                 No
                             </label>
                         </div>
+                    </fieldset>
 
-                        <div class="panel-indent js-hidden" id="toggle-appointments">
-                            <div class="grid-row" th:each="appointment,appointmentStat: *{appointments}">
-                                <div class="column-half">
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
-                                        <label class="form-label-bold">Organisation
-                                            <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}" th:text="${err}" />
-                                            </span>
-                                        </label>
-                                        <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].organisation}" />
-                                    </div>
-                                </div>
-                                <div class="column-half">
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
-                                        <label class="form-label-bold">Position
-                                            <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}" th:text="${err}" />
-                                            </span>
-                                        </label>
-                                        <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].position}" />
-                                    </div>
-                                </div>
+                    <div class="panel-indent js-hidden" id="toggle-appointments">
+                        <table id="position-table">
+                            <thead>
+                                <tr>
+                                    <th id="aria-position-org">Organisation</th>
+                                    <th id="aria-position-pos">Position</th>
+                                    <th><span class="visuallyhidden">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="appointment,appointmentStat: *{appointments}">
+                                    <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
+                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}" th:text="${err}" />
+                                        </span>
+                                        <input aria-labelledby="aria-position-org" class="form-control width-full" type="text" th:errorclass="field-error" th:field="*{appointments[__${appointmentStat.index}__].organisation}" />
+                                    </td>
+                                    <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
+                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}" th:text="${err}" />
+                                        </span>
+                                        <input aria-labelledby="aria-position-pos" class="form-control width-full" type="text" th:errorclass="field-error" th:field="*{appointments[__${appointmentStat.index}__].position}" />
+                                    </td>
+                                    <td>
+                                        <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                                <p class="alignright"><button class="buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button></p>
+                        <!--div class="grid-row" th:each="appointment,appointmentStat: *{appointments}">
+                            <div class="column-half">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
+                                    <label class="form-label-bold">Organisation
+                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}" th:text="${err}" />
+                                        </span>
+                                    </label>
+                                    <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].organisation}" />
+                                </div>
+                            </div>
+                            <div class="column-half">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
+                                    <label class="form-label-bold">Position
+                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}" th:text="${err}" />
+                                        </span>
+                                    </label>
+                                    <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].position}" />
+                                </div>
                             </div>
 
-                            <p class="alignright extra-margin"><button class="buttonlink" name="addAppointment" type="submit">Add another position</button></p>
-                        </div>
-                    </fieldset>
+                            <p class="alignright"><button class="buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button></p>
+                        </div-->
+
+                        <p class="alignright extra-margin">
+                            <button class="buttonlink" data-repeatable-rowcontainer="#position-table tbody" name="addAppointment" type="submit">Add another position</button>
+                        </p>
+                    </div>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')}? error">
@@ -168,46 +199,80 @@
                                 No
                             </label>
                         </div>
-
-                        <div class="panel-indent js-hidden" id="toggle-family-appointments">
-                            <div class="grid-row extra-margin" th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
-                                <div class="column-third">
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
-                                        <label class="form-label-bold">Relation
-                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
-                                            </span>
-                                        </label>
-                                        <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}" />
-                                    </div>
-                                </div>
-                                    <div class="column-third">
-                                        <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
-                                            <label class="form-label-bold">Organisation
-                                                <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
-                                                    <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
-                                                </span>
-                                            </label>
-                                            <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}" />
-                                        </div>
-                                    </div>
-                                <div class="column-third">
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
-                                        <label class="form-label-bold">Position
-                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
-                                            </span>
-                                        </label>
-                                        <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}" />
-                                    </div>
-                                </div>
-
-                                <p class="alignright"><button class="buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button></p>
-                            </div>
-
-                            <p class="alignright"><button class="buttonlink" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
-                        </div>
                     </fieldset>
+
+                    <div class="panel-indent js-hidden" id="toggle-family-appointments">
+                        <table id="family-table">
+                            <thead>
+                                <tr>
+                                    <th id="aria-family-rel">Relation</th>
+                                    <th id="aria-family-org">Organisation</th>
+                                    <th id="aria-family-pos">Position</th>
+                                    <th><span class="visuallyhidden">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
+                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
+                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
+                                        </span>
+                                        <input aria-labelledby="aria-family-rel" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}" />
+                                    </td>
+                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
+                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
+                                        </span>
+                                        <input aria-labelledby="aria-family-org" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}" />
+                                    </td>
+                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
+                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
+                                        </span>
+                                        <input aria-labelledby="aria-family-pos" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}" />
+                                    </td>
+                                    <td>
+                                        <button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!--div class="grid-row extra-margin" th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
+                            <div class="column-third">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
+                                    <label class="form-label-bold">Relation
+                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
+                                        </span>
+                                    </label>
+                                    <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}" />
+                                </div>
+                            </div>
+                                <div class="column-third">
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
+                                        <label class="form-label-bold">Organisation
+                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
+                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
+                                            </span>
+                                        </label>
+                                        <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}" />
+                                    </div>
+                                </div>
+                            <div class="column-third">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
+                                    <label class="form-label-bold">Position
+                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
+                                        </span>
+                                    </label>
+                                    <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}" />
+                                </div>
+                            </div>
+                        </div -->
+
+                        <p class="alignright extra-margin"><button class="buttonlink" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
+                    </div>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')}? error">
@@ -254,6 +319,7 @@
 
                 <button class="button button-large extra-margin" type="submit">Save and continue</button>
             </form>
+            <input type="hidden" id="cacheTest" value="" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
