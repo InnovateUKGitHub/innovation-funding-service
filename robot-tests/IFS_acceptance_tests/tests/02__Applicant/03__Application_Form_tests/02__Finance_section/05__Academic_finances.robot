@@ -1,13 +1,11 @@
 *** Settings ***
-Documentation     INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
+Documentation     INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections    #TODO Pending INFUND-5218
 ...
 ...
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 ...
 ...
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
-...
-...               #TODO Pending INFUND-5218
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    the user closes the browser
 Force Tags        Email    Applicant    Pending
@@ -17,6 +15,7 @@ Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    #TODO it seems not possible to mark the finances as complete as Academic. Have created ticket INFUND-4747
+Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 
@@ -157,16 +156,16 @@ Academic finance overview
 *** Keywords ***
 the academic partner fills the finances
     [Documentation]    INFUND-2399
-    Input Text    id=incurred-staff    999.999
-    Input Text    id=travel    999.999
-    Input Text    id=other    999.999
-    Input Text    id=investigators    999.999
-    Input Text    id=estates    999.999
-    Input Text    id=other-direct    999.999
-    Input Text    id=indirect    999.999
-    Input Text    id=exceptions-staff    999.999
-    Input Text    id=exceptions-other-direct    999.999
-    Input Text    id=tsb-ref    123123
+    The user enters text to a text field    id=incurred-staff    999.999
+    The user enters text to a text field    id=travel    999.999
+    The user enters text to a text field    id=other    999.999
+    The user enters text to a text field    id=investigators    999.999
+    The user enters text to a text field    id=estates    999.999
+    The user enters text to a text field    id=other-direct    999.999
+    The user enters text to a text field    id=indirect    999.999
+    The user enters text to a text field    id=exceptions-staff    999.999
+    The user enters text to a text field    id=exceptions-other-direct    999.999
+    The user enters text to a text field    id=tsb-ref    123123
     Mouse Out    css=input
     Sleep    300ms
 
@@ -181,19 +180,19 @@ the academic partner uploads a file
     Sleep    500ms
 
 the finance table should be correct
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
     Given guest user log-in    steve.smith@empire.com    Passw0rd
     The user navigates to the academic application finances
     the user selects the radio button    financePosition-organisationSize    SMALL
-    Input Text    id=cost-financegrantclaim    20
+    The user enters text to a text field    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
@@ -211,16 +210,16 @@ the user can see the link for more JeS details
     the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
 
 the applicant enters invalid inputs
-    Input Text    id=incurred-staff    100£
-    Input Text    id=travel    -89
-    Input Text    id=other    999.999
-    Input Text    id=investigators    999.999
-    Input Text    id=estates    999.999
-    Input Text    id=other-direct    999.999
-    Input Text    id=indirect    999.999
-    Input Text    id=exceptions-staff    999.999
-    Input Text    id=exceptions-other-direct    999.999
-    Input Text    id=tsb-ref    ${EMPTY}
+    The user enters text to a text field    id=incurred-staff    100£
+    The user enters text to a text field    id=travel    -89
+    The user enters text to a text field    id=other    999.999
+    The user enters text to a text field    id=investigators    999.999
+    The user enters text to a text field    id=estates    999.999
+    The user enters text to a text field    id=other-direct    999.999
+    The user enters text to a text field    id=indirect    999.999
+    The user enters text to a text field    id=exceptions-staff    999.999
+    The user enters text to a text field    id=exceptions-other-direct    999.999
+    The user enters text to a text field    id=tsb-ref    ${EMPTY}
 
 the field should not contain the currency symbol
     Textfield Value Should Be    id=incurred-staff    100

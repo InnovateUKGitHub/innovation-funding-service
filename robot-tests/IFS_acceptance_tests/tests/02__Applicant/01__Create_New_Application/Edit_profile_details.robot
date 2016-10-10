@@ -24,7 +24,7 @@ View and edit profile link redirects to the Your profile page
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]    HappyPath     SmokeTest
+    [Tags]    HappyPath    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=View and edit your profile details
     And the user clicks the button/link    link=Edit your details
@@ -97,30 +97,30 @@ Display errors for invalid inputs of the Phone field
 the user enters profile details
     the user should see the element    id=title
     Select From List By Index    id=title    4
-    Input Text    id=firstName    Chris
-    Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    +-0123456789
+    The user enters text to a text field    id=firstName    Chris
+    The user enters text to a text field    id=lastName    Brown
+    The user enters text to a text field    id=phoneNumber    +-0123456789
     the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the first name
     [Arguments]    ${first name}
-    Input Text    id=firstName    ${first_name}
-    Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    0123456789
+    The user enters text to a text field    id=firstName    ${first_name}
+    The user enters text to a text field    id=lastName    Brown
+    The user enters text to a text field    id=phoneNumber    0123456789
     the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the last name
     [Arguments]    ${Last_name}
-    Input Text    id=firstName    Chris
-    Input Text    id=lastName    ${Last_name}
-    Input Text    id=phoneNumber    0123456789
+    The user enters text to a text field    id=firstName    Chris
+    The user enters text to a text field    id=lastName    ${Last_name}
+    The user enters text to a text field    id=phoneNumber    0123456789
     the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the phone field
     [Arguments]    ${phone_field}
-    Input Text    id=firstName    Chris
-    Input Text    id=lastName    Brown
-    Input Text    id=phoneNumber    ${phone_field}
+    The user enters text to a text field    id=firstName    Chris
+    The user enters text to a text field    id=lastName    Brown
+    The user enters text to a text field    id=phoneNumber    ${phone_field}
     the user clicks the button/link    css=[name="create-account"]
 
 the user can change their details back again
@@ -133,13 +133,13 @@ the user can change their details back again
 the user enters their old profile details
     the user should see the element    id=title
     Select From List By Index    id=title    4
-    Input Text    id=firstName    Steve
-    Input Text    id=lastName    Smith
-    Input Text    id=phoneNumber    +-0123456789
+    The user enters text to a text field    id=firstName    Steve
+    The user enters text to a text field    id=lastName    Smith
+    The user enters text to a text field    id=phoneNumber    +-0123456789
     the user clicks the button/link    css=[name="create-account"]
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user
     Guest user log-in    &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
-    page should contain    Chris Brown
+    The user should see the text in the page    Chris Brown

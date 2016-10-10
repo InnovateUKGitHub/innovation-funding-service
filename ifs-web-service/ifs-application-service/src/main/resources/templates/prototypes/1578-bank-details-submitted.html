@@ -20,11 +20,11 @@
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
 	<div class="success-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'review'}">
-		<p><strong>Your bank details have been approved</strong></p>
+		<p><strong>Your bank details have been approved.</strong></p>
 	</div>
 
 	<p th:unless="${param.status != null and param.status[0] == 'review'}">
-		Your organisation's details have been verified and will be used for grant claims for this project.
+		Your details have been verified and can be used for this project.
 	</p>
 
 	<p th:unless="${param.status == null or param.status[0] != 'review'}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>

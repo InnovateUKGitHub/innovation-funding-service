@@ -48,12 +48,13 @@
 
 	<h2 class="heading-medium">Assign Assessors</h2>
 
-	<div th:include="prototypes/fragments/assign-assessors :: prototype-assessors-list-table" th:with="type='assigned'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='assigned'" th:remove="tag" />
 
 	<h2 class="heading-medium">Available Assessors</h2>
-	<div th:include="prototypes/fragments/assign-assessors :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/assign-assessors :: prototype-assessors-list-table" th:with="type='available'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='available'" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

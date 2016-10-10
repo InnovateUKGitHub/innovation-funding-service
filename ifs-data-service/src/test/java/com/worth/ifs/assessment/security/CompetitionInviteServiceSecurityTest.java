@@ -60,7 +60,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         setLoggedInUser(assessorUserResource);
 
-        classUnderTest.acceptInvite("hash");
+        classUnderTest.acceptInvite("hash", getLoggedInUser());
 
         verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
         verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
@@ -70,7 +70,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void acceptInvite_notLoggedIn() {
         setLoggedInUser(null);
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash"),
+                () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
                     verifyZeroInteractions(competitionParticipantPermissionRules);
@@ -96,7 +96,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash"),
+                () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
                     verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
@@ -119,7 +119,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash not exists"),
+                () -> classUnderTest.acceptInvite("hash not exists", getLoggedInUser()),
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash not exists");
                     verifyZeroInteractions(competitionParticipantPermissionRules);
@@ -138,7 +138,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash, UserResource userResource) {
             return null;
         }
 

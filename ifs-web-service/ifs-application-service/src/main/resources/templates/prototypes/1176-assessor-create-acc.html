@@ -145,17 +145,18 @@
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="password">
-						<span class="form-label-bold">Password</span>
-						<span class="form-hint">
-						Your password is case-sensitive and needs to:<br />
+						<span class="form-label-bold">Create password</span>
+					</label>
+					<div class="form-hint" id="password-hint">
+						<p>Your password is case-sensitive and needs to:</p>
 						<ul class="list-bullet">
 							<li>be between 10 and 30 characters long</li>
 							<li>contain at least 1 capital letter</li>
 							<li>contain at least 1 number</li>
 						</ul>
-					</span>
-					</label>
-					<input class="form-control" id="password" name="password" type="password" />
+						<p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+					</div>
+					<input class="form-control" id="password" name="password" type="password" aria-describedby="password-hint" />
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="retype-password">
