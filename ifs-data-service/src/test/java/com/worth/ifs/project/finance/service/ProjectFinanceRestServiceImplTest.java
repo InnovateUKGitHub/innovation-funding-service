@@ -2,10 +2,12 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -84,6 +86,29 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<SpendProfileCSVResource> result = service.getSpendProfileCSV(projectId, organisationId);
 
         assertTrue(result.isSuccess());
+    }
 
+    @Test
+    public void acceptOrRejectSpendProfile() {
+        Long projectId = 1L;
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/spend-profile/approval/" + ApprovalType.APPROVED,
+                OK);
+
+        RestResult<Void> result = service.acceptOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectId() {
+        Long projectId = 1L;
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/spend-profile/approval",
+                ApprovalType.class,
+                ApprovalType.APPROVED,
+                OK);
+
+        RestResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
+        assertTrue(result.isSuccess());
+        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
     }
 }
