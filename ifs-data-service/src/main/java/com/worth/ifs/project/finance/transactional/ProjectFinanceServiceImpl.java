@@ -85,6 +85,25 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        updateApprovalOfSpendProfile(projectId, approvalType);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+
+        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+           return serviceSuccess(ApprovalType.REJECTED);
+        } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
+           return serviceSuccess(ApprovalType.APPROVED);
+        }
+
+        return serviceSuccess(ApprovalType.UNSET);
+    }
+
+    @Override
     public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
         return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
@@ -266,6 +285,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+
+        spendProfileRepository.save(spendProfiles);
+    }
+
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
@@ -333,7 +359,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
             List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
 
-            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
+            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false, ApprovalType.UNSET);
             spendProfileRepository.save(spendProfile);
         });
     }
@@ -379,6 +405,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
+    }
 
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,
                                                                 ProjectOrganisationCompositeId projectOrganisationCompositeId) throws IOException {

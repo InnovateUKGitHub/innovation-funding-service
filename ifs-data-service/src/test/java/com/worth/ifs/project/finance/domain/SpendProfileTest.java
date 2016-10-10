@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class SpendProfileTest {
         Organisation organisation = newOrganisation().withName("My Org").build();
         Project project = newProject().with(name("My Proj")).build();
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false, ApprovalType.UNSET);
 
         assertEquals(organisation, spendProfile.getOrganisation());
         assertEquals(project, spendProfile.getProject());

@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -22,6 +23,16 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
         return projectFinanceRestService.generateSpendProfile(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        return projectFinanceRestService.acceptOrRejectSpendProfile(projectId, approvalType).toServiceResult();
+    }
+
+    @Override
+    public ApprovalType getSpendProfileStatusByProjectId(Long projectId) {
+        return projectFinanceRestService.getSpendProfileStatusByProjectId(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
