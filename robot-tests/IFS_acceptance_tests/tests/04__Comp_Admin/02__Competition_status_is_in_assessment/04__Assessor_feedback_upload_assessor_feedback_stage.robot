@@ -72,15 +72,6 @@ Upload a file to an unsuccessful application
     And the user uploads the file    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
 
-Download the file
-    [Documentation]    INFUND-2602
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
-
 *** Keywords ***
 the user uploads the file
     [Arguments]    ${upload_filename}

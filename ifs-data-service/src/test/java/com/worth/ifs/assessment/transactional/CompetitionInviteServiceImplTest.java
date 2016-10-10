@@ -42,6 +42,9 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     private CompetitionInviteService competitionInviteService = new CompetitionInviteServiceImpl();
 
     private CompetitionParticipant competitionParticipant;
+    private UserResource userResource;
+    private User user;
+
 
     @Before
     public void setUp() {
@@ -50,6 +53,9 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         competitionParticipant = new CompetitionParticipant(competition, competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
+        userResource = newUserResource().withId(7L).build();
+        user = newUser().withId(7L).build();
+
 
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
@@ -59,6 +65,8 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         when(competitionParticipantRepositoryMock.getByInviteHash("inviteHash")).thenReturn(competitionParticipant);
 
         when(rejectionReasonRepositoryMock.findOne(1L)).thenReturn(rejectionReason);
+
+        when(userRepositoryMock.findOne(7L)).thenReturn(user);
     }
 
     @Test
@@ -127,13 +135,16 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         competitionInviteService.openInvite("inviteHash");
 
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
+        assertNull(competitionParticipant.getUser());
 
-        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.ACCEPTED, competitionParticipant.getStatus());
+        assertEquals(user, competitionParticipant.getUser());
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, userRepositoryMock);
+        inOrder.verify(userRepositoryMock, calls(1)).findOne(7L);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).save(competitionParticipant);
 
@@ -142,7 +153,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_hashNotExists() {
-        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHashNotExists");
+        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHashNotExists", userResource);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
@@ -157,7 +168,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
-        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "my competition")));
@@ -174,12 +185,12 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         // accept the invite
-        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.ACCEPTED, competitionParticipant.getStatus());
 
         // accept a second time
-        serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, "my competition")));
@@ -208,7 +219,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
 
         // accept the invite
-        serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "my competition")));
@@ -295,7 +306,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         // accept the invite
-        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
+        ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.ACCEPTED, competitionParticipant.getStatus());
 

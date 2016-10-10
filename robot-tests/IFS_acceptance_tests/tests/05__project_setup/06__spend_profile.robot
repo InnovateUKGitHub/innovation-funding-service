@@ -29,6 +29,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
 #    Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -61,10 +62,10 @@ Lead Partner can see Spend profile summary
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=div.grid-container table
-    Then the user sees the text in the element                     jQuery=div.grid-container table tr:nth-child(1) td:nth-child(2)    £ 29,667
-    And the user sees the text in the element                      jQuery=div.grid-container table tr:nth-child(2) td:nth-child(2)    £ 118,740
-    And the user sees the text in the element                      jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 118,740
-    And the user sees the text in the element                      jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 89,055
+    Then the user sees the text in the element      jQuery=div.grid-container table tr:nth-child(1) td:nth-child(2)    £ 29,667
+    And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(2) td:nth-child(2)    £ 118,740
+    And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 118,740
+    And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 89,055
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
@@ -98,7 +99,7 @@ Lead partner can edit his spend profile with valid values
     [Tags]
     Given the user navigates to the page                 ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element         css=table a[type="number"]
+    And the user should not see the element              css=table a[type="number"]
     Then the text box should be editable                 css=#row-Labour-0
     When the user enters text to a text field            css=#row-Labour-24    2000
     And the user moves focus to the element              css=#row-Labour-25
@@ -116,8 +117,8 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]
     Given the user navigates to the page             ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     Then the user should see the text in the page    Project costs for financial year
-    And the user sees the text in the element                       jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 117,841
-    And the user sees the text in the element                       jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 88,834
+    And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 117,841
+    And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 88,834
 
 Lead partner submits Spend Profile
     [Documentation]    INFUND-3765
@@ -138,6 +139,7 @@ Non-lead partner can view spend profile page
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Ludlow - Spend profile
 
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970

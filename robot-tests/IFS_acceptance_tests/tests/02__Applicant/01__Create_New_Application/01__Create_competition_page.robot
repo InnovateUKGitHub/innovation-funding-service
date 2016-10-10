@@ -40,5 +40,5 @@ Apply button disable when competion is in assessment
 the new window should have the competition brief
     sleep    500ms
     Select Window    url=https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief
-    Page Should Contain    Dates and deadlines
-    Page Should Contain    How to apply
+    The user should see the text in the page    Dates and deadlines
+    The user should see the text in the page    How to apply

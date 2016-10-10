@@ -247,10 +247,7 @@
             <div class="column-half">
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
-            <form class="column-half alignright-button"
-                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
-                <button class="button large" name="approved" value="true">Accept Documents</button>
-            </form>
+            <button class="button large" name="approved" value="true">Accept Documents</button>
         </div>
 
     </div>
@@ -269,9 +266,7 @@
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
             <div class="column-half alignright-button">
-              <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
                 <button class="button large button-warning" name="approved" value="false">Reject Documents</button>
-              </form>
             </div>
         </div>
     </div>

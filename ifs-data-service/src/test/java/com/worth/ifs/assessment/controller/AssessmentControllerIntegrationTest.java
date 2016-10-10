@@ -17,6 +17,7 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static java.util.Collections.nCopies;
@@ -141,8 +142,8 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), processOutcome);
         assertTrue(result.isSuccess());
 
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.REJECTED, assessmentResult.getAssessmentState());
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
     }
 
     @Test
@@ -184,10 +185,10 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), processOutcome);
         assertTrue(result.isSuccess());
 
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.REJECTED, assessmentResult.getAssessmentState());
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
 
         // Now reject the assessment again
-        assertTrue(controller.rejectInvitation(assessmentResource.getId(), processOutcome).isFailure());
+        assertTrue(controller.rejectInvitation(assessmentId, processOutcome).isFailure());
     }
 }

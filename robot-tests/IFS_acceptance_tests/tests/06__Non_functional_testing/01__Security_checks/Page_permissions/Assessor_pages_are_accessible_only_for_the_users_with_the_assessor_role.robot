@@ -58,7 +58,7 @@ Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]    Pending
     [Setup]
-    # pending INFUND-4746
+    # Todo pending due to INFUND-4746
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
 
 Applicant can't access the assessor's review application page
@@ -68,9 +68,8 @@ Applicant can't access the assessor's review application page
 
 Applicant can't access the assessor's review application page (outside the question range)
     [Documentation]    INFUND-4568
-    [Tags]    Pending
+    [Tags]
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    You do not have the necessary permissions for your request
-
 
 Applicant can't access the review summary page
     [Documentation]    INFUND-1683
@@ -87,7 +86,7 @@ First Assessor shouldn't be able to see second assessor's assessments
 
 First assessor shouldn't be able to access second assessor's application questions
     [Documentation]    INFUND-4568
-    [Tags]    Pending
+    [Tags]
     When the user navigates to the assessor page    ${ASSESSOR_ASSESSMENT_QUESTIONS_11}
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
@@ -104,12 +103,6 @@ Second assessor shouldn't be able to access first assessor's application questio
     [Tags]
     When the user navigates to the assessor page    ${Application_question_url}
     Then The user should see permissions error message
-
-Application rejected by assessor using Reject option from Overview shouldn't be able to access it later
-    [Documentation]    INFUND-4568
-    [Tags]    Pending
-    # Pending due to INFUND-5188
-    When the user navigates to the page    ${Assessment_overview_11}
-    Then The user should see permissions error message
+    [Teardown]    the user closes the browser
 
 *** Keywords ***

@@ -1,5 +1,6 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -57,6 +58,9 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -190,6 +194,9 @@ public class ProjectSpendProfileController {
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
+
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
@@ -199,7 +206,7 @@ public class ProjectSpendProfileController {
         BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
         BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
 
-        return new ProjectSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, summary,
+        return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals);
     }

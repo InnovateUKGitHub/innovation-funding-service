@@ -4,11 +4,13 @@ import com.worth.ifs.assessment.builder.CompetitionInviteBuilder;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.builder.RejectionReasonBuilder;
+import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
 
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Optional.empty;
 import static org.junit.Assert.*;
 
@@ -29,31 +31,42 @@ public class CompetitionParticipantTest {
     @Test
     public void accept() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
+        User user = newUser().build();
+
         invite.open();
-        competitionParticipant.accept();
+
+        competitionParticipant.acceptAndAssignUser(user);
         assertEquals(ParticipantStatus.ACCEPTED, competitionParticipant.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
     public void accept_unopened() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
-        competitionParticipant.accept();
+        User user = newUser().build();
+
+        competitionParticipant.acceptAndAssignUser(user);
     }
 
     @Test(expected = IllegalStateException.class)
     public void accept_alreadyAccepted() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
+        User user = newUser().build();
+
         invite.open();
-        competitionParticipant.accept();
-        competitionParticipant.accept();
+
+        competitionParticipant.acceptAndAssignUser(user);
+        competitionParticipant.acceptAndAssignUser(user);
     }
 
     @Test(expected = IllegalStateException.class)
     public void accept_alreadyRejected() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
+        User user = newUser().build();
+
         invite.open();
+
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
-        competitionParticipant.accept();
+        competitionParticipant.acceptAndAssignUser(user);
     }
 
     @Test
@@ -75,8 +88,11 @@ public class CompetitionParticipantTest {
     @Test(expected = IllegalStateException.class)
     public void reject_alreadyAccepted() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
+        User user = newUser().build();
+
         invite.open();
-        competitionParticipant.accept();
+
+        competitionParticipant.acceptAndAssignUser(user);
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
     }
 

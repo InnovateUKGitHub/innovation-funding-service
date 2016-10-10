@@ -49,9 +49,11 @@ Non-registered assessor: Reject invitation
     And the assessor fills in all fields
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
+    # TODO remove the comment after 5165 is ready to test
+    # And the user shouldn't be able to reject the rejected competition
 
 *** Keywords ***
 the assessor fills in all fields
     Select From List By Index    id=rejectReason    3
     The user should not see the text in the page    This field cannot be left blank
-    Input Text    id=rejectComment    Unable to assess this application.
+    The user enters text to a text field    id=rejectComment    Unable to assess this application.

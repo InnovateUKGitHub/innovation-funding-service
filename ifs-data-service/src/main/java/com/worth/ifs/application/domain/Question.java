@@ -5,8 +5,6 @@ import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.form.domain.FormInput;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<FormInput> formInputs = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competitionId", referencedColumnName = "id")
     private Competition competition;
 
@@ -210,57 +208,5 @@ public class Question {
     
     public boolean isType(QuestionType queriedType) {
     	return queriedType.equals(type);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Question question = (Question) o;
-
-        return new EqualsBuilder()
-                .append(id, question.id)
-                .append(name, question.name)
-                .append(shortName, question.shortName)
-                .append(description, question.description)
-                .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
-                .append(assignEnabled, question.assignEnabled)
-                .append(multipleStatuses, question.multipleStatuses)
-                .append(priority, question.priority)
-                .append(formInputs, question.formInputs)
-                .append(competition, question.competition)
-                .append(section, question.section)
-                .append(questionStatuses, question.questionStatuses)
-                .append(costs, question.costs)
-                .append(questionNumber, question.questionNumber)
-                .append(assessorMaximumScore, question.assessorMaximumScore)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(shortName)
-                .append(description)
-                .append(markAsCompletedEnabled)
-                .append(assignEnabled)
-                .append(multipleStatuses)
-                .append(priority)
-                .append(formInputs)
-                .append(competition)
-                .append(section)
-                .append(questionStatuses)
-                .append(costs)
-                .append(questionNumber)
-                .append(assessorMaximumScore)
-                .toHashCode();
     }
 }
