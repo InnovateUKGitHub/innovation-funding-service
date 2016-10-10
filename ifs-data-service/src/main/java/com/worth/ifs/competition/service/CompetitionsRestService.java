@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> getAll();
-    RestResult<List<CompetitionResource>> findLiveCompetitions();
-    RestResult<List<CompetitionResource>> findProjectSetupCompetitions();
-    RestResult<List<CompetitionResource>> findUpcomingCompetitions();
+    RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
+    RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
+    RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);

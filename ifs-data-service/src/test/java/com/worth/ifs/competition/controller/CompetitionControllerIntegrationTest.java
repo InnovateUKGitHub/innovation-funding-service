@@ -380,7 +380,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionSearchResult pageOneResult = controller.search(specialChar, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(pageOneResult.getNumber(), equalTo(pageOne));
         assertThat(pageOneResult.getTotalElements(), equalTo(1L));
-        assertThat(pageOneResult.getContent().get(0).getName(), equalTo(specialChar));
+        assertEquals(comp.getId(), pageOneResult.getContent().get(0).getId());
     }
 
 
@@ -478,7 +478,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.initialiseForm(competitionId, competitionTypeId);
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
-        assertEquals(Boolean.TRUE, competitionsResult.getSuccessObject().getQuestions().size() > 0);
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
     }
 

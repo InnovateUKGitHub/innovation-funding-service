@@ -67,7 +67,7 @@ public class User implements Serializable {
     @Enumerated(STRING)
     private Disability disability;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 

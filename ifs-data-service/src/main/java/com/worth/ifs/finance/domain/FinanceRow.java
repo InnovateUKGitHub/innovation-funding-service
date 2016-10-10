@@ -39,12 +39,12 @@ public class FinanceRow {
     @OneToMany(mappedBy="financeRow")
     private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationFinanceId", referencedColumnName="id")
     private ApplicationFinance applicationFinance;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
