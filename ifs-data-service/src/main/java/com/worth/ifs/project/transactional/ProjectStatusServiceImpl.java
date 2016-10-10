@@ -38,28 +38,31 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
 
-        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> {
-            ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
-            return new ProjectStatusResource(
-                    project.getName(),
-                    project.getId(),
-                    project.getFormattedId(),
-                    project.getApplication().getId(),
-                    project.getApplication().getFormattedId(),
-                    getProjectPartnerCount(project.getId()),
-                    project.getApplication().getLeadOrganisation().getName(),
-                    getProjectDetailsStatus(project),
-                    getBankDetailsStatus(project),
-                    getFinanceChecksStatus(project),
-                    getSpendProfileStatus(project),
-                    getMonitoringOfficerStatus(project, projectDetailsStatus),
-                    getOtherDocumentsStatus(project),
-                    getGrantOfferLetterStatus(project));
-        });
+        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> getProjectStatusResourceByProject(project));
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
+    }
+
+    @Override
+    public ProjectStatusResource getProjectStatusResourceByProject(Project project) {
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
+        return new ProjectStatusResource(
+                project.getName(),
+                project.getId(),
+                project.getFormattedId(),
+                project.getApplication().getId(),
+                project.getApplication().getFormattedId(),
+                getProjectPartnerCount(project.getId()),
+                null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
+                getProjectDetailsStatus(project),
+                getBankDetailsStatus(project),
+                getFinanceChecksStatus(project),
+                getSpendProfileStatus(project),
+                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getOtherDocumentsStatus(project),
+                getGrantOfferLetterStatus(project));
     }
 
     private Integer getProjectPartnerCount(Long projectId){

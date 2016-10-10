@@ -14,6 +14,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -298,5 +299,10 @@ public class ProjectController {
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
                                                                @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/status", method = GET)
+    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId){
+        return projectService.getProjectStatus(projectId).toGetResponse();
     }
 }

@@ -10,6 +10,19 @@ include::{snippets}/project/get-project-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/get-project-by-id/curl-request.adoc[]
 
+=== Get project status by id
+==== Request
+include::{snippets}/project/get-status/http-request.adoc[]
+include::{snippets}/project/get-status/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-status/http-response.adoc[]
+include::{snippets}/project/get-status/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-status/curl-request.adoc[]
+
+
 === Find all projects
 ==== Request
 include::{snippets}/project/project-find-all/http-request.adoc[]
