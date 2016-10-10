@@ -56,6 +56,11 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessSpendProfileSection);
     }
 
+    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A internal can access the Other Documents " +
+            "section when the lead partner submits the documents")
+    public boolean internalCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessOtherDocumentsSection);
+    }
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 

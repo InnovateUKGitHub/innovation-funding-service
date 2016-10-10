@@ -62,7 +62,12 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
-        return NOT_ACCESSIBLE;
+        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
+    }
     }
 
     private SectionAccess fail(String message) {

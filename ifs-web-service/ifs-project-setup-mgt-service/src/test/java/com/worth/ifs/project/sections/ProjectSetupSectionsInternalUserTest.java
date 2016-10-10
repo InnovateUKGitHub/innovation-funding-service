@@ -96,6 +96,21 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
     }
 
+    @Test
+    public void testCheckAccessToOtherDocumentsSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+
+        verifyInteractions(
+                mock -> mock.isOtherDocumentsSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToOtherDocumentsSectionButSpendProfileSectionIsNotSubmitted() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+    }
 
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
