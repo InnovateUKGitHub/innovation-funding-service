@@ -79,7 +79,12 @@
 											<span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
 									</th:block>
 							  </label>
-							  <input type="tel" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a phone number" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}" />
+							  <input type="tel" th:errorclass="field-error" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}"
+									 required="required" minlength="8" maxlength="20"
+									 th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(0,0,8)},
+									  data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
+									  data-tel-errormessage=#{validation.standard.phonenumber.format},
+									  data-required-errormessage=#{validation.standard.phonenumber.required}" />
 						  </div>
 
 						  <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">

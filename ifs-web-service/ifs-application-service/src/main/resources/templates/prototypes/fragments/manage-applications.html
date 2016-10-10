@@ -27,15 +27,13 @@
                     </div>
 
                     <div class="column-half">
-                        <div class="form-group">
+                        <div th:unless="${type=='Assessors'}" class="form-group">
                             <label class="form-label" for="filterType">Type</label>
                             <select class="form-control" id="filterType" name="filterType">
-
-                                <option selected="selected">---</option>
-                                <option value="Industry">Industry</option>
-                                <option value="Academic">Academic</option>
-                                <option value="International">International</option>
-
+                                    <option selected="selected">---</option>
+                                    <option value="Industry">Industry</option>
+                                    <option value="Academic">Academic</option>
+                                    <option value="International">International</option>
                             </select>
                         </div>
                         <div class="column-half extra-margin">
@@ -63,16 +61,19 @@
                 <label for="sort-by">Sort by</label>
                 <select th:if="${type=='Applications'}" name="sort-by" id="sort-by" class="form-control">
                     <option value="Application no.">Application no.</option>
-                    <option value="Lead organisation">Lead organisation</option>
                     <option value="Title">Title</option>
-                    <option value="Assigned assessors">Assigned assessors</option>
                     <option value="Innovation area">Innovation area</option>
+                    <option value="Lead organisation">Lead organisation</option>
+                    <option value="Assigned assessors">Assigned assessors</option>
                 </select>
 
                 <select th:if="${type=='Assessors'}" name="sort-by" id="sort-by" class="form-control">
                     <option value="Title">Assessor Name</option>
-                    <option value="Assigned assessors">Number of applications</option>
-                    <option value="Innovation area">Type</option>
+                    <option value="Employer">Employer</option>
+                    <option value="Type">Type</option>
+                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Total applications">Total applications</option>
+                    <option value="Applications this competition">Applications this competition</option>
                 </select>
             </div>
         </div>
@@ -89,7 +90,7 @@
             <thead>
                 <tr>
                     <th scope="col">App No</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Title</th>
                     <th scope="col">Innovation Area</th>
                     <th scope="col">Lead Organisation</th>
                     <th scope="col">Assigned Assessors</th>
@@ -306,12 +307,12 @@
                     <td colspan="6" class="aligncentre"><span class="heading-small">There are currently no assessors assigned to the application</span></td>
                 </tr>
                 <tr id="assessor-assigned">
-                    <td>Bill Knightly</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
                     <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
-                    <td class="aligncentre">5</td>
-                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">6</td>
+                    <td class="aligncentre">2</td>
                     <td>
                         <a href="#" id="remove-assessor" class="button-secondary">Remove</a>
                     </td>
@@ -319,7 +320,7 @@
             </tbody>
             <tbody th:if="${type == 'available'}">
                 <tr id="assessor-available">
-                    <td>Bill Knightly</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
                     <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
@@ -330,7 +331,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Oliver Romero</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
                     <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
@@ -341,7 +342,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Jeffrey Carlson</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
                     <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
@@ -352,7 +353,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Bill Limp</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
                     <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
@@ -363,7 +364,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Dave Smith</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
@@ -374,7 +375,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Irving Wolfe</td>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
@@ -407,7 +408,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#">Bill Knightly</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
                     <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
@@ -419,7 +420,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Oliver Romero</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
                     <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
@@ -431,7 +432,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Jeffrey Carlson</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
                     <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
@@ -443,7 +444,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Bill Limp</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
                     <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
@@ -455,7 +456,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Dave Smith</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
@@ -467,7 +468,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Irving Wolfe</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
@@ -502,7 +503,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#">Oliver Romero</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">6</td>
@@ -515,7 +516,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="#">Dave Smith</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
@@ -548,7 +549,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#">Irving Wolfe</a></td>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">6</td>
