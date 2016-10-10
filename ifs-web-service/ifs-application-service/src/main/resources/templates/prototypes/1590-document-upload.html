@@ -35,7 +35,7 @@
 	</th:block>
 	
 	<th:block th:if="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'submitted' and param.user != null and param.user[0] == 'nonLead'}">
-		<p>The documents submitted below are now being reviewed. We will contact the project manager if we need any further information.</p>
+		<p>The documents submitted below are now being reviewed. We will contact the Project Manager if we need any further information.</p>
 	</th:block>
 
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
@@ -211,7 +211,7 @@
 
 					<h2 class="heading-medium no-margin">Submit documents</h2>
 
-					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the project manager.</p>
+					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the Project Manager.</p>
 
 					<hr />
 
