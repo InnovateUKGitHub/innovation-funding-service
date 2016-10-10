@@ -134,10 +134,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getLiveCompetitions() throws Exception {
-
-//        CompetitionSearchResultItem(Long id, String name, String innovationAreaName, Integer numberOfApplications, String startDateDisplay, Status competitionStatus, String competitionTypeName) {
-
-
         CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionResource.Status.OPEN, "Special");
         CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionResource.Status.OPEN, "Special");
         CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", "innovation area 3", 123, "12/02/2016", CompetitionResource.Status.IN_ASSESSMENT, "Special");
