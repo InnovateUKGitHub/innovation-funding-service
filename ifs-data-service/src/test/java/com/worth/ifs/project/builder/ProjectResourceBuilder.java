@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -82,6 +83,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
+    }
+
+    public ProjectResourceBuilder withDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {

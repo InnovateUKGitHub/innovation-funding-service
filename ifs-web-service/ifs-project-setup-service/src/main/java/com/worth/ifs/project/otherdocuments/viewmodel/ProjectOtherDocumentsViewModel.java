@@ -64,7 +64,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isEditable() {
-        return leadPartner && !otherDocumentsSubmitted && !approved;
+        return leadPartner && !otherDocumentsSubmitted && approved == null;
     }
 
     public boolean isShowSubmitDocumentsButton() {
