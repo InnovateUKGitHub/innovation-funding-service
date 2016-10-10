@@ -3,6 +3,7 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -37,6 +38,7 @@ import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -44,6 +46,7 @@ import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
@@ -82,14 +85,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
+        return validate(financeCheckResource).andOnSuccess(() -> {
+            FinanceCheck toSave = mapToDomain(financeCheckResource);
+            financeCheckRepository.save(toSave);
 
-        FinanceCheck toSave = mapToDomain(financeCheckResource);
-        financeCheckRepository.save(toSave);
-
-        return getCurrentlyLoggedInUser().
-                andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
-                        andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
-                andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
+            return getCurrentlyLoggedInUser().
+                    andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
+                            andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
+                    andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
+        });
     }
 
     @Override
@@ -227,37 +231,36 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
     }
 
-    private ServiceResult<Void> validate(FinanceCheckResource toSave){
-        List<CostResource> costs = toSave.getCostGroup().getCosts();
-        // TODO RP
+    ServiceResult<Void> validate(FinanceCheckResource toSave) {
+        List<BigDecimal> costs = simpleMap(toSave.getCostGroup().getCosts(), CostResource::getValue);
+        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+    }
+
+    private ServiceResult<Void> costFractional(List<BigDecimal> costs) {
+        for (BigDecimal cost : costs) {
+            if (cost != null && cost.remainder(ONE).compareTo(ZERO) != 0) {
+                return serviceFailure(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST, HttpStatus.BAD_REQUEST));
+            }
+        }
         return serviceSuccess();
     }
 
-    private Optional<Error> costFractional(List<BigDecimal> costs) {
+    private ServiceResult<Void> costLessThanZeroErrors(List<BigDecimal> costs) {
         for (BigDecimal cost : costs) {
-            if (cost != null && cost.scale() > 0) {
-                return Optional.of(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST, HttpStatus.BAD_REQUEST));
+            if (cost != null && cost.compareTo(ZERO) < 0) {
+                return serviceFailure(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
             }
         }
-        return Optional.empty();
+        return serviceSuccess();
     }
 
-    private Optional<Error> costLessThanZeroErrors(List<BigDecimal> costs) {
-        for (BigDecimal cost : costs) {
-            if (cost != null && cost.compareTo(ZERO) > 0) {
-                return Optional.of(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Error> costNull(List<BigDecimal> costs) {
+    private ServiceResult<Void> costNull(List<BigDecimal> costs) {
         for (BigDecimal cost : costs) {
             if (cost == null) {
-                return Optional.of(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
+                return serviceFailure(new Error(FINANCE_CHECKS_COST_NULL, HttpStatus.BAD_REQUEST));
             }
         }
-        return Optional.empty();
+        return serviceSuccess();
     }
 
 
