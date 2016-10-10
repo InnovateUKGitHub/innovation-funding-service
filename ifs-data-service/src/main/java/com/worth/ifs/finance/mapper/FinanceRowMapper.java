@@ -6,6 +6,8 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.FinanceRowResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -24,4 +26,11 @@ public abstract class FinanceRowMapper extends BaseMapper<FinanceRow, FinanceRow
                 return object.getId();
         }
 
+        @Mappings({
+                @Mapping(target = "question", ignore = true),
+                @Mapping(target = "costValues", ignore = true),
+                @Mapping(target = "applicationFinance", ignore = true)
+        })
+        @Override
+        public abstract FinanceRow mapToDomain(FinanceRowResource resource);
 }

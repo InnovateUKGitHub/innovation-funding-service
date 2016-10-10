@@ -1,20 +1,19 @@
 package com.worth.ifs.application.builder;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource, ApplicationResourceBuilder> {
 
@@ -59,10 +58,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((date, application) -> application.setStartDate(date), dates);
     }
 
-    public ApplicationResourceBuilder withProcessRoles(List<Long>... processRolesLists) {
-        return withArray((processRoles, application) -> application.setProcessRoles(processRoles), processRolesLists);
-    }
-
     public ApplicationResourceBuilder withName(String name) {
         return with(application -> application.setName(name));
     }
@@ -75,16 +70,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((duration, address) -> setField("durationInMonths", duration, address), durations);
     }
 
-    public ApplicationResourceBuilder withApplicationFinance(List<Long>... applicationFinances) {
-        return withArray((applicationFinance, address) -> setField("applicationFinances", applicationFinance, address), applicationFinances);
-    }
-
     public ApplicationResourceBuilder withCompetitionName(String... competitionNames) {
         return withArray((competitionName, address) -> setField("competitionName", competitionName, address), competitionNames);
-    }
-
-    public ApplicationResourceBuilder withInviteList(List<Long>... inviteLists) {
-        return withArray((inviteList, address) -> setField("invites", inviteList, address), inviteLists);
     }
 
     public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {

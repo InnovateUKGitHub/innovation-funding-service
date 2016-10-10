@@ -99,10 +99,10 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
     the user should see the text in the page    Subcontractor name
-    Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    2000
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
+    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    2000
+    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
+    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
+    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
     Mouse Out    css=input
     focus    css=.app-submit-btn
 

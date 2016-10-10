@@ -2,18 +2,18 @@ package com.worth.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.resource.PageResource;
-import com.worth.ifs.competition.domain.Competition;
 
 import java.util.List;
 import java.util.Map;
 
-public class CompetitionSearchResult extends PageResource<CompetitionResource> {
+public class CompetitionSearchResult extends PageResource<CompetitionSearchResultItem> {
 
-    private Map<CompetitionResource.Status, List<CompetitionResource>> mappedCompetitions;
+    private Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mappedCompetitions;
 
     @JsonIgnore
-    public Map<CompetitionResource.Status, List<CompetitionResource>> getMappedCompetitions() {
+    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getMappedCompetitions() {
         return mappedCompetitions;
     }
-    public void setMappedCompetitions(Map<CompetitionResource.Status, List<CompetitionResource>> mappedCompetitions) { this.mappedCompetitions = mappedCompetitions; }
+
+    public void setMappedCompetitions(Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mappedCompetitions) { this.mappedCompetitions = mappedCompetitions; }
 }
