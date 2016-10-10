@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.competition.domain.Competition;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,7 +33,7 @@ public class Section implements Comparable<Section> {
 
     private boolean questionGroup;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
@@ -201,44 +198,4 @@ public class Section implements Comparable<Section> {
     public SectionType getType() {
 		return type;
 	}
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        Section rhs = (Section) obj;
-        return new EqualsBuilder()
-            .append(this.id, rhs.id)
-            .append(this.name, rhs.name)
-            .append(this.description, rhs.description)
-            .append(this.assessorGuidanceDescription, rhs.assessorGuidanceDescription)
-            .append(this.priority, rhs.priority)
-            .append(this.competition, rhs.competition)
-            .append(this.childSections, rhs.childSections)
-            .append(this.displayInAssessmentApplicationSummary, rhs.displayInAssessmentApplicationSummary)
-            .append(this.type, rhs.type)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(id)
-            .append(name)
-            .append(description)
-            .append(assessorGuidanceDescription)
-            .append(priority)
-            .append(competition)
-            .append(childSections)
-            .append(displayInAssessmentApplicationSummary)
-            .append(type)
-            .toHashCode();
-    }
 }

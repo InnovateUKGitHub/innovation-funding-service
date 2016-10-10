@@ -2,7 +2,6 @@ package com.worth.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -18,12 +16,9 @@ public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    private static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private Long id;
-    private List<Long> applications = new ArrayList<>();
-    private List<Long> questions = new ArrayList<>();
-    private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
 
@@ -73,9 +68,6 @@ public class CompetitionResource {
 
     public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
-        this.applications = applications;
-        this.questions = questions;
-        this.sections = sections;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
@@ -103,27 +95,12 @@ public class CompetitionResource {
         this.competitionStatus = competitionStatus;
     }
 
-    public List<Long> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<Long> sections) {
-        this.sections = sections;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void addApplication(ApplicationResource... apps) {
-        if (applications == null) {
-            applications = new ArrayList<>();
-        }
-        this.applications.addAll(Arrays.asList(apps).stream().map(ApplicationResource::getId).collect(Collectors.toList()));
     }
 
     public Long getId() {
@@ -231,24 +208,6 @@ public class CompetitionResource {
     @JsonIgnore
     public long getAssessmentDaysLeftPercentage() {
         return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
-    }
-
-    @JsonIgnore
-    public List<Long> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(List<Long> applications) {
-        this.applications = applications;
-    }
-
-    @JsonIgnore
-    public List<Long> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Long> questions) {
-        this.questions = questions;
     }
 
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {

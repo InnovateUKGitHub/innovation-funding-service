@@ -5,17 +5,18 @@ import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class ProjectDetailsProcess extends Process<ProjectUser, Project, ProjectDetailsState> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", referencedColumnName = "id")
     private ProjectUser participant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
