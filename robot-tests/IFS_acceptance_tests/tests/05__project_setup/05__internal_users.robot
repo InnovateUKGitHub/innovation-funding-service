@@ -48,6 +48,16 @@ Other internal users cannot see Bank details
     And the user should not see the element       jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Vitruvius Stonework Limited")
     [Teardown]  Logout as user
 
+Project Finance user can view the Project setup status page
+    [Documentation]    INFUND-5516
+    [Tags]
+    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page          ${server}/project-setup-management/project/1/partner/documents
+    And the user clicks the link                  link=Project setup status
+    Then the user should not see an error in the page
+    And the user should see the text in the page   Projects in setup
+    [Teardown]  Logout as user
+
 
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049
