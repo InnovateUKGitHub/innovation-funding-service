@@ -296,3 +296,67 @@
         </div>
     </div>
 </div>
+
+<div th:fragment="modal-confirm-grant-offer-letter">
+    <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Confirm submission</h2>
+        <p>After your submission of the signed Grant offer letter Innovate UK will review signed document</p>
+        <hr/>
+        <div class="alignright-button">
+            <button type="button" class="js-close button buttonlink large">Cancel</button>
+            <button class="button large" name="confirmSubmit">Confirm Submission</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm submit of all spend profiles. -->
+<div th:fragment="modal-confirm-spend-profile-totals (projectId)">
+    <div class="modal-confirm-spend-profile-totals" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Submit project spend profile</h2>
+        <p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+        <div>
+            <input type="submit" tabindex="0" class="button large" value="Submit"/>
+            <button type="button" tabindex="1" class="js-close button buttonlink large">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation on approving spend profiles -->
+<th:block th:fragment="modal-accept-profile">
+    <div class="modal-accept-profile" role="dialog" aria-hidden="true">
+      <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div>
+            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
+            <p>The project spend profile has been approved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <hr />
+            <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" type="submit">Accept documents</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="modal-reject-profile">
+    <div class="modal-reject-profile" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <h2 class="heading-medium no-margin">Reject spend profile</h2>
+        <p>Rejecting will return access to this section to all project partners.</p>
+        <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+        <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
+          <hr />
+          <div class="column-half">
+              <button type="button" class="js-close buttonlink large">Cancel</button>
+          </div>
+          <div class="column-half alignright-button">
+              <button class="button button-warning large" type="submit">Reject spend profile</button>
+          </div>
+        </form>
+    </div>
+</th:block>

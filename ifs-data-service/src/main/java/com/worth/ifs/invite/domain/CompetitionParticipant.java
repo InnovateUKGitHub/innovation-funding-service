@@ -3,11 +3,8 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
-
 import java.util.Optional;
 
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
@@ -25,11 +22,11 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -37,7 +34,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @JoinColumn(name = "invite_id")
     private CompetitionInvite invite;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rejection_reason_id")
     private RejectionReason rejectionReason;
 
@@ -140,39 +137,5 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         setStatus(REJECTED);
 
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CompetitionParticipant that = (CompetitionParticipant) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(id, that.id)
-                .append(competition.getId(), that.competition.getId())
-                .append(user, that.user)
-                .append(invite, that.invite)
-                .append(rejectionReason, that.rejectionReason)
-                .append(rejectionReasonComment, that.rejectionReasonComment)
-                .append(role, that.role)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(id)
-                .append(competition.getId())
-                .append(user)
-                .append(invite)
-                .append(rejectionReason)
-                .append(rejectionReasonComment)
-                .append(role)
-                .toHashCode();
     }
 }

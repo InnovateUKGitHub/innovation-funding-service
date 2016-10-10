@@ -172,8 +172,6 @@ public class ProjectOtherDocumentsController {
         return "project/other-documents";
     }
 
-
-
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);

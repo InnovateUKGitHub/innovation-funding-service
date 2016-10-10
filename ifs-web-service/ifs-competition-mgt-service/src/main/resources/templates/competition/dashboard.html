@@ -7,21 +7,30 @@
             <h1 class="heading-large">All competitions</h1>
         </div>
         <div class="column-half alignright">
-          <div class="form-search">
-            <label class="visuallyhidden" for="searchQuery">Search for:</label>
-            <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query" placeholder="Search competitions" />
-            <input type="submit" id="searchsubmit" value="Search" class="btn" />
-          </div>
+            <div class="form-search">
+                <label class="visuallyhidden" for="searchQuery">Search for:</label>
+                <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query"
+                       placeholder="Search competitions"/>
+                <input type="submit" id="searchsubmit" value="Search" class="btn"/>
+            </div>
         </div>
     </div>
 </div>
 
 <div th:fragment="comp-dashboard-navigation(tab, counts)">
     <ul class="inline-nav cf">
-        <li id="section-1" th:class="${tab == 'live' ? 'selected' : ''}"><a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'"></a></li>
-        <li id="section-2" th:class="${tab == 'projectSetup' ? 'selected' : ''}"><a th:href="@{'/dashboard/projectSetup'}" th:text="'Project set up ('+${counts.projectSetupCount}+')'"></a></li>
-        <li id="section-3" th:class="${tab == 'upcoming' ? 'selected' : ''}"><a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'"></a></li>
-        <li id="section-4" th:class="${tab == 'complete' ? 'selected' : ''}"><a th:href="@{'/dashboard/complete'}" th:text="'Complete ('+${counts.completedCount}+')'"></a></li>
+        <li id="section-1" th:class="${tab == 'live' ? 'selected' : ''}"><a th:href="@{'/dashboard/live'}"
+                                                                            th:text="'Live ('+${counts.liveCount}+')'"></a>
+        </li>
+        <li id="section-2" th:class="${tab == 'projectSetup' ? 'selected' : ''}"><a
+                th:href="@{'/dashboard/projectSetup'}" th:text="'Project set up ('+${counts.projectSetupCount}+')'"></a>
+        </li>
+        <li id="section-3" th:class="${tab == 'upcoming' ? 'selected' : ''}"><a th:href="@{'/dashboard/upcoming'}"
+                                                                                th:text="'Upcoming ('+${counts.upcomingCount}+')'"></a>
+        </li>
+        <li id="section-4" th:class="${tab == 'complete' ? 'selected' : ''}"><a th:href="@{'/dashboard/complete'}"
+                                                                                th:text="'Complete ('+${counts.completedCount}+')'"></a>
+        </li>
     </ul>
 </div>
 
@@ -31,8 +40,8 @@
             <a th:href="@{'/competition/setup/'+${competition.id}}" th:if="${
                 (competition.competitionStatus.name() == 'COMPETITION_SETUP') or
                 (competition.competitionStatus.name() == 'READY_TO_OPEN')}">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>
             <a th:href="@{'/competition/'+${competition.id}}" th:if="${
                 (competition.competitionStatus.name() == 'OPEN') or
@@ -40,15 +49,15 @@
                 (competition.competitionStatus.name() == 'FUNDERS_PANEL') or
                 (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')
               }">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>
             <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}" th:if="${
                 (competition.competitionStatus.name() == 'PROJECT_SETUP') or
                 (competition.competitionStatus.name() == 'CLOSED')
               }">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>
         </h3>
     </div>

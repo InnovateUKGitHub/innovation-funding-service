@@ -31,11 +31,12 @@ public class ProjectSpendProfileViewModel {
     private List<BigDecimal> totalForEachMonth;
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
+    private boolean submitted;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
-                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
+                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -49,6 +50,7 @@ public class ProjectSpendProfileViewModel {
         this.totalForEachMonth = totalForEachMonth;
         this.totalOfAllActualTotals = totalOfAllActualTotals;
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
+        this.submitted = submitted;
     }
 
     public Long getProjectId() {
@@ -163,29 +165,34 @@ public class ProjectSpendProfileViewModel {
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
     }
 
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileViewModel viewModel = (ProjectSpendProfileViewModel) o;
+        ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
-                .append(objectErrors, viewModel.objectErrors)
-                .append(projectId, viewModel.projectId)
-                .append(organisationId, viewModel.organisationId)
-                .append(projectName, viewModel.projectName)
-                .append(organisationName, viewModel.organisationName)
-                .append(targetProjectStartDate, viewModel.targetProjectStartDate)
-                .append(durationInMonths, viewModel.durationInMonths)
-                .append(summary, viewModel.summary)
-                .append(table, viewModel.table)
-                .append(markedAsComplete, viewModel.markedAsComplete)
-                .append(categoryToActualTotal, viewModel.categoryToActualTotal)
-                .append(totalForEachMonth, viewModel.totalForEachMonth)
-                .append(totalOfAllActualTotals, viewModel.totalOfAllActualTotals)
-                .append(totalOfAllEligibleTotals, viewModel.totalOfAllEligibleTotals)
+                .append(submitted, that.submitted)
+                .append(objectErrors, that.objectErrors)
+                .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
+                .append(projectName, that.projectName)
+                .append(organisationName, that.organisationName)
+                .append(targetProjectStartDate, that.targetProjectStartDate)
+                .append(durationInMonths, that.durationInMonths)
+                .append(summary, that.summary)
+                .append(table, that.table)
+                .append(markedAsComplete, that.markedAsComplete)
+                .append(categoryToActualTotal, that.categoryToActualTotal)
+                .append(totalForEachMonth, that.totalForEachMonth)
+                .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
                 .isEquals();
     }
 
@@ -196,6 +203,7 @@ public class ProjectSpendProfileViewModel {
                 .append(projectId)
                 .append(organisationId)
                 .append(projectName)
+                .append(organisationName)
                 .append(targetProjectStartDate)
                 .append(durationInMonths)
                 .append(summary)
@@ -205,6 +213,7 @@ public class ProjectSpendProfileViewModel {
                 .append(totalForEachMonth)
                 .append(totalOfAllActualTotals)
                 .append(totalOfAllEligibleTotals)
+                .append(submitted)
                 .toHashCode();
     }
 
@@ -225,6 +234,7 @@ public class ProjectSpendProfileViewModel {
                 .append("totalForEachMonth", totalForEachMonth)
                 .append("totalOfAllActualTotals", totalOfAllActualTotals)
                 .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
+                .append("submitted", submitted)
                 .toString();
     }
 }
