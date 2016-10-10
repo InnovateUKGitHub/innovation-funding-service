@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -21,6 +22,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.util.GraphBuilderContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,12 +30,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -41,6 +44,7 @@ import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
 
@@ -120,7 +124,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeRowService.financeTotals(application.getId()).getSuccessObject();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
-        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
+        BigDecimal totalFundingSought = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
@@ -139,7 +143,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
     }
 
-    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations){
+    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations) {
         return mapWithIndex(partnerOrganisations, (i, org) -> {
                     FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org.getProject().getId(), org.getOrganisation().getId()).getSuccessObject();
                     boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
@@ -211,17 +215,52 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
-        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
+        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
 
-        if (projectTotal.equals(BigDecimal.ZERO)) {
-            return BigDecimal.ZERO;
+        if (projectTotal.equals(ZERO)) {
+            return ZERO;
         }
 
         return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
     }
+
+    private ServiceResult<Void> validate(FinanceCheckResource toSave){
+        List<CostResource> costs = toSave.getCostGroup().getCosts();
+        // TODO RP
+        return serviceSuccess();
+    }
+
+    private Optional<Error> costFractional(List<BigDecimal> costs) {
+        for (BigDecimal cost : costs) {
+            if (cost != null && cost.scale() > 0) {
+                return Optional.of(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST, HttpStatus.BAD_REQUEST));
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Error> costLessThanZeroErrors(List<BigDecimal> costs) {
+        for (BigDecimal cost : costs) {
+            if (cost != null && cost.compareTo(ZERO) > 0) {
+                return Optional.of(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Error> costNull(List<BigDecimal> costs) {
+        for (BigDecimal cost : costs) {
+            if (cost == null) {
+                return Optional.of(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
+            }
+        }
+        return Optional.empty();
+    }
+
+
 
     /*
     //TODO: INFUND-5508 - totals need to be switched to look at updated FC costs
