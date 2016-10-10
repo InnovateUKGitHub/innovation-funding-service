@@ -12,7 +12,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
             fieldWithPath("id").description("Id of the competitionResource"),
-            fieldWithPath("sections").description("List of section ids belonging to the competition"),
             fieldWithPath("name").description("name of the competition"),
             fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
@@ -50,7 +49,6 @@ public class CompetitionResourceDocs {
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
             .withId(1L)
-            .withSections(asList(1L, 2L, 3L))
             .withName("competition name")
             .withDescription("competition description")
             .withStartDate(LocalDateTime.now())

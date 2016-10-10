@@ -10,7 +10,7 @@ public class OrganisationType {
     private Long id;
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType parentOrganisationType;
 
     public OrganisationType(String name, OrganisationType parentOrganisationType) {

@@ -2,6 +2,7 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -27,6 +29,17 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/spend-profile/approval/{approvalType}", method = POST)
+    public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
+                                                        @PathVariable("approvalType") final ApprovalType approvalType) {
+        return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/spend-profile/approval", method = GET)
+    public RestResult<ApprovalType> getSpendProfileStatusByProjectId(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.getSpendProfileStatusByProjectId(projectId).toGetResponse();
     }
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")

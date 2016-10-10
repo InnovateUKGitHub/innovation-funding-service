@@ -1,10 +1,6 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,17 +65,17 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionResource>>getLiveCompetitions() {
+    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>>getLiveCompetitions() {
         return mapToStatus(competitionsRestService.findLiveCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionResource>> getProjectSetupCompetitions() {
+    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
         return mapToStatus(competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionResource>> getUpcomingCompetitions() {
+    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
         return mapToStatus(competitionsRestService.findUpcomingCompetitions().getSuccessObjectOrThrowException());
     }
 
@@ -95,8 +91,8 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
     }
 
-    private Map<CompetitionResource.Status, List<CompetitionResource>> mapToStatus(List<CompetitionResource> resources) {
-        return resources.stream().collect(Collectors.groupingBy(CompetitionResource::getCompetitionStatus));
+    private Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
+        return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
     }
 
     @Override
