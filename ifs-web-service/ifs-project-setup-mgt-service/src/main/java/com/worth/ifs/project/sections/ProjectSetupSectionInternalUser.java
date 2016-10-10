@@ -26,7 +26,11 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessProjectDetailsSection(UserResource userResource) {
-        return NOT_ACCESSIBLE;
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+            return fail("Unable to access Project Details section until Project Details are submitted");
+        }
+
+        return ACCESSIBLE;
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(UserResource userResource) {
@@ -55,10 +59,6 @@ public class ProjectSetupSectionInternalUser {
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
         return NOT_ACCESSIBLE;
-    }
-
-    public boolean isProjectDetailsSubmitted() {
-        return projectSetupProgressChecker.isProjectDetailsSubmitted();
     }
 
     private SectionAccess fail(String message) {

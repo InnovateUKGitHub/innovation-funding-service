@@ -29,13 +29,18 @@ public class ProjectSetupSectionsPermissionRules {
     @Autowired
     private ProjectService projectService;
 
+    @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A internal user can access the Project Details section when submitted by Partners (Individual)")
+    public boolean internalCanAccessProjectDetailsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessProjectDetailsSection);
+    }
+
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A internal user can access after project details are submitted by the lead")
     public boolean internalCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessMonitoringOfficerSection);
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A internal can access the Bank Details " +
-            "section when submitted by Partners (Individual).")
+            "section when submitted by Partners (Individual)")
     public boolean internalCanAccessBankDetailsSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessBankDetailsSection);
     }

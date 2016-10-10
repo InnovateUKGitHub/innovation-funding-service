@@ -25,6 +25,22 @@ public class ProjectSetupSectionsPartnerInternalUserTest extends BaseUnitTest {
     private OrganisationResource organisation = newOrganisationResource().build();
 
     @Test
+    public void testCheckAccessToProjectDetailsSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
+
+        verifyInteractions(
+                mock -> mock.isProjectDetailsSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToProjectDetailsSectionButProjectDetailsSectionIncomplete() {
+        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
+    }
+
+    @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
@@ -40,6 +56,24 @@ public class ProjectSetupSectionsPartnerInternalUserTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
     }
 
+    @Test
+    public void testCheckAccessToBankDetailsSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
+
+        verifyInteractions(
+                mock -> mock.isBankDetailsApproved(),
+                mock -> mock.isBankDetailsActionRequired()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToBankDetailsSectionButProjectDetailsSectionIncomplete() {
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
+    }
 
 
     @SafeVarargs
