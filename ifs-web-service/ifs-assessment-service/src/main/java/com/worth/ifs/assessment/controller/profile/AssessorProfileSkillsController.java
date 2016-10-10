@@ -37,19 +37,21 @@ public class AssessorProfileSkillsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
-        return doViewYourSkills(model);
+    public String getSkills(Model model,
+                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
+                            BindingResult bindingResult) {
+        return doViewYourSkills(loggedInUser, model, form, bindingResult);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
-                               @SuppressWarnings("unused") BindingResult bindingResult,
-                               ValidationHandler validationHandler
-    ) {
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewYourSkills(model);
+        Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ProfileResource profile = new ProfileResource();
@@ -59,11 +61,20 @@ public class AssessorProfileSkillsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
-
     }
 
-    private String doViewYourSkills(Model model) {
+    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorRegistrationSkillsForm form, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            populateFormWithExistingValues(loggedInUser, form);
+        }
         model.addAttribute("model", assessorSkillsModelPopulator.populateModel());
         return "profile/innovation-areas";
+    }
+
+    private void populateFormWithExistingValues(UserResource loggedInUser, AssessorRegistrationSkillsForm form) {
+        if (loggedInUser.getProfile() != null) {
+            form.setAssessorType(loggedInUser.getProfile().getBusinessType());
+            form.setSkillAreas(loggedInUser.getProfile().getSkillsAreas());
+        }
     }
 }
