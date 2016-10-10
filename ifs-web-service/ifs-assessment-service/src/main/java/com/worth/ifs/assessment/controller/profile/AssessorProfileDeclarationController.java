@@ -77,7 +77,7 @@ public class AssessorProfileDeclarationController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliatonsFromForm(form));
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> "redirect:/profile/terms");
+                    .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
     }
 
@@ -196,7 +196,7 @@ public class AssessorProfileDeclarationController {
     }
 
     private AffiliationResource getFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(PERSONAL_FINANCIAL).setExists(TRUE).setDescription(form.getFinancialInterests()).createAffiliationResource();
+        return new AffiliationResourceBuilder().setAffiliationType(PERSONAL_FINANCIAL).setExists(form.getHasFinancialInterests()).setDescription(form.getHasFinancialInterests() ? form.getFinancialInterests() : null).createAffiliationResource();
     }
 
     private Boolean hasFamilyAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
@@ -231,7 +231,7 @@ public class AssessorProfileDeclarationController {
     }
 
     private AffiliationResource getFamilyFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(FAMILY_FINANCIAL).setExists(TRUE).setDescription(form.getFamilyFinancialInterests()).createAffiliationResource();
+        return new AffiliationResourceBuilder().setAffiliationType(FAMILY_FINANCIAL).setExists(form.getHasFamilyFinancialInterests()).setDescription(form.getHasFamilyFinancialInterests() ? form.getFamilyFinancialInterests() : null).createAffiliationResource();
     }
 
     private Map<AffiliationType, List<AffiliationResource>> getAffiliationsMap(List<AffiliationResource> affiliations) {
