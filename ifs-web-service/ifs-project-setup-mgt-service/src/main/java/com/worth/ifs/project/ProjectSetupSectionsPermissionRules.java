@@ -3,9 +3,9 @@ package com.worth.ifs.project;
 import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionInternalUser;
 import com.worth.ifs.project.sections.SectionAccess;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -13,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
@@ -35,21 +34,27 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessMonitoringOfficerSection);
     }
 
+    @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A internal can access the Bank Details " +
+            "section when submitted by Partners (Individual).")
+    public boolean internalCanAccessBankDetailsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessBankDetailsSection);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
-        ProjectTeamStatusResource teamStatus;
+        ProjectStatusResource projectStatusResource;
 
         if (!isCompAdminOrFinanceTeam(user)) {
             return false;
         }
 
         try {
-            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+            projectStatusResource = projectService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
             LOG.error("Internal user  is not allowed to access this project " + projectId);
             return false;
         }
 
-        ProjectSetupSectionInternalUser sectionAccessor = new ProjectSetupSectionInternalUser(teamStatus);
+        ProjectSetupSectionInternalUser sectionAccessor = new ProjectSetupSectionInternalUser(projectStatusResource);
 
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }

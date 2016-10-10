@@ -1,6 +1,5 @@
 package com.worth.ifs.project.sections;
 
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -22,10 +21,6 @@ public class ProjectSetupSectionInternalUser {
         this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectStatusResource);
     }
 
-    public ProjectSetupSectionInternalUser(ProjectTeamStatusResource projectTeamStatusResource) {
-        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatusResource);
-    }
-
     public SectionAccess canAccessCompaniesHouseSection(UserResource userResource) {
         return NOT_ACCESSIBLE;
     }
@@ -43,7 +38,11 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
-        return NOT_ACCESSIBLE;
+        if(!projectSetupProgressChecker.isBankDetailsApproved()
+                && !projectSetupProgressChecker.isBankDetailsActionRequired()) {
+            return NOT_ACCESSIBLE;
+        }
+        return ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {

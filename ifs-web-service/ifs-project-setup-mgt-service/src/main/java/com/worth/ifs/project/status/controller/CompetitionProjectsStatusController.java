@@ -40,6 +40,12 @@ public class CompetitionProjectsStatusController {
 
         Map<Long, ProjectStatusPermission> projectStatusPermissionMap = new HashMap<>();
 
+        if(null == competitionProjectsStatusResource.getProjectStatusResources()) {
+            return new CompetitionProjectStatusViewModel(
+                    competitionProjectsStatusResource, projectStatusPermissionMap
+            );
+        }
+
         competitionProjectsStatusResource.getProjectStatusResources().forEach(projectStatusResource -> {
             ProjectSetupSectionInternalUser internalUser = new ProjectSetupSectionInternalUser(projectStatusResource);
 
