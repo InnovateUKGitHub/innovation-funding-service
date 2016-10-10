@@ -27,15 +27,14 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileCSVFields;
-import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
-import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.*;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -74,6 +73,41 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile information is being generated")
+                        )
+                ));
+    }
+
+    @Test
+    public void approveOrRejectSpendProfile() throws Exception {
+
+        when(projectFinanceServiceMock.approveOrRejectSpendProfile(any(Long.class), any(ApprovalType.class)))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the " +
+                                        "Spend Profile information is being approved or rejected"),
+                                parameterWithName("approvalType").description("New approval or rejection of the " +
+                                        "Spend profile in this project")
+                        )
+                ));
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectId() throws Exception {
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(any(Long.class)))
+                .thenReturn(serviceSuccess(ApprovalType.APPROVED));
+
+        mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(ApprovalType.APPROVED)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the " +
+                                        "Spend Profile status is requested")
                         )
                 ));
     }
