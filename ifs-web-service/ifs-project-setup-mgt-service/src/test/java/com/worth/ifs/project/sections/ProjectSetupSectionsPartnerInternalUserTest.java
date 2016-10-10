@@ -75,6 +75,11 @@ public class ProjectSetupSectionsPartnerInternalUserTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
     }
 
+    @Test
+    public void testCheckAccessToFinanceChecksSectionButProjectDetailsSectionIncomplete() {
+        assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(null));
+    }
+
 
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {

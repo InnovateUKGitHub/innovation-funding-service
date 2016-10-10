@@ -50,7 +50,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return NOT_ACCESSIBLE;
+        return ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {

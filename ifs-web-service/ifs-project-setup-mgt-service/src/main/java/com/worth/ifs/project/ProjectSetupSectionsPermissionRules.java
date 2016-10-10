@@ -45,6 +45,11 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessBankDetailsSection);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "A internal can always access the Finance checks section")
+    public boolean internalCanAccessFinanceChecksSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksSection);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
