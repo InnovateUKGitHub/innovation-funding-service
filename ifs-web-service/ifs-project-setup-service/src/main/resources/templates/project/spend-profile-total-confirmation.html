@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm spend profile submit'"  th:remove="tag" />
+</head>
+<body th:with="context='applicant'" class="app-confirm-submit">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:remove="tag" />
+
+    <form  th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
+        <h2 class="heading-medium no-margin">Submit project spend profile</h2>
+        <p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+        <input type="submit" class="button large" value="Submit"/>
+    </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

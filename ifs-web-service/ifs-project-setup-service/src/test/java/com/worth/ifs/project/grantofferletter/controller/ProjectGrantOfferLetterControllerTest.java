@@ -21,9 +21,11 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -145,6 +147,25 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 andExpect(view().name("redirect:/project/123/offer"));
     }
 
+    @Test
+    public void testConfirmationView() throws Exception {
+        mockMvc.perform(get("/project/123/offer/confirmation")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-confirmation"));
+    }
+
+    @Test
+    public void testSubmitOfferLetter() throws Exception {
+        long projectId = 123L;
+
+        when(projectService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/offer").
+                param("confirmSubmit", "")).
+                andExpect(status().is3xxRedirection());
+
+        verify(projectService).submitGrantOfferLetter(projectId);
+    }
 
     @Override
     protected ProjectGrantOfferLetterController supplyControllerUnderTest() {

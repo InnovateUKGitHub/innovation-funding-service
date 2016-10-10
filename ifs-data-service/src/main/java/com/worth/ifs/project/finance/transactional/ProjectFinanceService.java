@@ -36,4 +36,7 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
+
+    @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
+    ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 }

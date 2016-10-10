@@ -59,4 +59,9 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
         return projectFinanceRestService.markSpendProfile(projectId, organisationId, complete).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+        return projectFinanceRestService.completeSpendProfilesReview(projectId).toServiceResult();
+    }
 }

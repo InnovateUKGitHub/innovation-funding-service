@@ -2,6 +2,8 @@ package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.user.domain.Organisation;
@@ -9,6 +11,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +26,10 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
@@ -157,6 +163,24 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 project::getSignedGrantOfferLetter,
                 (fileToUpdate, inputStreamSupplier) ->
                         service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetterFailure() {
+
+        ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        Assert.assertFalse(result.isSuccess());
+        Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetterSuccess() {
+        project.setSignedGrantOfferLetter(mock(FileEntry.class));
+        ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        Assert.assertTrue(result.isSuccess());
+        Assert.assertThat(project.getOfferSubmittedDate(), notNullValue());
     }
 
     @Override
