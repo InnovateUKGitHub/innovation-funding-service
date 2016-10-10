@@ -247,10 +247,7 @@
             <div class="column-half">
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
-            <form class="column-half alignright-button"
-                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
-                <button class="button large" name="approved" value="true">Accept Documents</button>
-            </form>
+            <button class="button large" name="approved" value="true">Accept Documents</button>
         </div>
 
     </div>
@@ -269,9 +266,7 @@
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
             <div class="column-half alignright-button">
-              <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
                 <button class="button large button-warning" name="approved" value="false">Reject Documents</button>
-              </form>
             </div>
         </div>
     </div>
@@ -301,3 +296,42 @@
         </div>
     </div>
 </div>
+
+<!-- Confirmation on approving spend profiles -->
+<th:block th:fragment="modal-accept-profile">
+    <div class="modal-accept-profile" role="dialog" aria-hidden="true">
+      <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div>
+            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
+            <p>The project spend profile has been approved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <hr />
+            <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" type="submit">Accept documents</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirmation on rejecting spend profiles -->
+<th:block th:fragment="modal-reject-profile">
+    <div class="modal-reject-profile" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <h2 class="heading-medium no-margin">Reject spend profile</h2>
+        <p>Rejecting will return access to this section to all project partners.</p>
+        <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+        <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
+          <hr />
+          <div class="column-half">
+              <button type="button" class="js-close buttonlink large">Cancel</button>
+          </div>
+          <div class="column-half alignright-button">
+              <button class="button button-warning large" type="submit">Reject spend profile</button>
+          </div>
+        </form>
+    </div>
+</th:block>

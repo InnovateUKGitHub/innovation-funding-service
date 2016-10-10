@@ -8,6 +8,8 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3829 As a Competitions team member I want a dashboard that displays all competitions in different states so I can manage and keep track of them
 ...
 ...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
+...
+...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -17,9 +19,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-
-*** Variables ***
-@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
+Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 
 *** Test Cases ***
 Live Competitions
@@ -35,17 +35,15 @@ Live Competitions
 
 Live competition calculations
     [Documentation]    INFUND-3830
-    Then the calculations should be correct    Open    //section[1]/ul/li
-    And the calculations should be correct    Closed    //section[2]/ul/li
-    And the calculations should be correct    In assessment    //section[3]/ul/li
-    And the calculations should be correct    Panel    //section[4]/ul/li
-    And the calculations should be correct    Inform    //section[5]/ul/li
-    And the calculations should be correct    Live    //section/ul/li
+    Then the total calculation in dashboard should be correct    Open    //section[1]/ul/li
+    And the total calculation in dashboard should be correct    Closed    //section[2]/ul/li
+    And the total calculation in dashboard should be correct    In assessment    //section[3]/ul/li
+    And the total calculation in dashboard should be correct    Panel    //section[4]/ul/li
+    And the total calculation in dashboard should be correct    Inform    //section[5]/ul/li
+    And the total calculation in dashboard should be correct    Live    //section/ul/li
 
 Project setup Competitions
-    [Documentation]    INFUND-3831
-    ...
-    ...    INFUND-3003
+    [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610
     When the user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the text in the page    Project set up
     And the user should see the text in the page    Killer Riffs
@@ -53,8 +51,32 @@ Project setup Competitions
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
-    Then the calculations should be correct    Project set up    //section[1]/ul/li
-    And the calculations should be correct    Project set up    //section/ul/li
+    Then the total calculation in dashboard should be correct    Project set up    //section[1]/ul/li
+    And the total calculation in dashboard should be correct    Project set up    //section/ul/li
+
+PS projects title and lead
+    [Documentation]    INFUND-2610
+    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user should see the element    link=Killer Riffs
+    When the user clicks the button/link    link=Killer Riffs
+    Then the user should see the element    jQuery=h2:contains("Projects in setup")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("best riffs")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("better riffs")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("awesome riffs")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
+
+PS projects status
+    [Documentation]    INFUND-2610
+    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link    link=Killer Riffs
+    Then the user should see the element    jQuery=tr:nth-child(1):contains("best riffs")
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    [Teardown]    The user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions
     [Documentation]    INFUND-3832
@@ -67,9 +89,9 @@ Upcoming competitions calculations
     ...
     ...    INFUND-3003
     ...    INFUND-3876
-    Then the calculations should be correct    In preparation    //section[1]/ul/li
-    And the calculations should be correct    Ready to open    //section[2]/ul/li
-    And the calculations should be correct    Upcoming    //ul[@class="list-overview"]
+    Then the total calculation in dashboard should be correct    In preparation    //section[1]/ul/li
+    And the total calculation in dashboard should be correct    Ready to open    //section[2]/ul/li
+    And the total calculation in dashboard should be correct    Upcoming    //ul[@class="list-overview"]
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003
@@ -81,7 +103,7 @@ Competition Opens automatically on date
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     And The competition is ready to open
-    When the Open date changes in the database to one day before
+    When Change the open date of the Sarcasm Stipendousnss in the database to one day before
     And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
     And The competition should be open
@@ -106,12 +128,6 @@ Clearing filters should show all the competitions
     Then The user should see the element    jQuery=a:contains(Live)
 
 *** Keywords ***
-the calculations should be correct
-    [Arguments]    ${Status}    ${Section_Xpath}
-    [Documentation]    This keyword uses 2 arguments. The first one is about the status of the competition and the second is about the Xpath of the section.
-    ${NO_OF_COMP}=    Get Matching Xpath Count    ${Section_Xpath}
-    Page Should Contain    ${Status} (${NO_OF_COMP})
-
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page
     ${pagination}    ${VALUE}=    run keyword and ignore error    Element Should Be Visible    name=page
@@ -135,19 +151,8 @@ check calculations on one page
     ${length_summary}=    Get text    css=.heading-xlarge    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
 
-get yesterday
-    ${today} =    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    [Return]    ${yesterday}
-
 The competition is ready to open
     Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
-
-The Open date changes in the database to one day before
-    ${yesterday} =    get yesterday
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
-    And the user reloads the page
-    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
 
 The competition should be open
     And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness

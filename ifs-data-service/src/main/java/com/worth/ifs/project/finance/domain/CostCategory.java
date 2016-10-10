@@ -18,7 +18,7 @@ public class CostCategory {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cost_category_group_id", nullable = false)
     private CostCategoryGroup costCategoryGroup;
 

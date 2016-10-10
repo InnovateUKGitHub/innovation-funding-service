@@ -76,8 +76,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    private boolean useSearchResultAddress = false;
-
     public String getTitle() {
         return title;
     }
@@ -158,13 +156,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
         this.phoneNumber = phoneNumber;
     }
 
-    public boolean isUseSearchResultAddress() {
-        return useSearchResultAddress;
-    }
-
-    public void setUseSearchResultAddress(boolean useSearchResultAddress) {
-        this.useSearchResultAddress = useSearchResultAddress;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -175,7 +166,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
         AssessorRegistrationForm that = (AssessorRegistrationForm) o;
 
         return new EqualsBuilder()
-                .append(useSearchResultAddress, that.useSearchResultAddress)
                 .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
@@ -202,7 +192,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(disability)
                 .append(addressForm)
                 .append(phoneNumber)
-                .append(useSearchResultAddress)
                 .toHashCode();
     }
 }

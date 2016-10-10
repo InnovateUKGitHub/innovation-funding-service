@@ -471,25 +471,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWhenProjectDetailsAlreadySubmitted() {
-
-        Project project = newProject().withId(123L).build();
-
-        assertTrue(project.getProjectUsers().isEmpty());
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
-
-        verify(projectRepositoryMock).findOne(123L);
-        assertTrue(project.getProjectUsers().isEmpty());
-    }
-
-    @Test
     public void testInviteProjectManagerWhenProjectNotInDB() {
 
         Long projectId = 1L;

@@ -16,12 +16,12 @@ public class FinanceRowMetaValue {
     private String value;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="finance_row_id")
     private FinanceRow financeRow;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="finance_row_meta_field_id")
     private FinanceRowMetaField financeRowMetaField;
 

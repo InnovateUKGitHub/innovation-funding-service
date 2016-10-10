@@ -1,6 +1,9 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.application.builder.ApplicationResourceBuilder;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -39,11 +42,16 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
 
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1", "Org2", "Org3").build(3);
 
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
+                .withCompetition(1L)
+                .build();
+
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
@@ -56,6 +64,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         assertEquals("Dave Smith", model.getProjectManagerName());
         assertEquals("01234123123", model.getProjectManagerTelephone());
         assertEquals("d@d.com", model.getProjectManagerEmail());
+        assertEquals(Long.valueOf(1L), model.getCompetitionId());
 
         List<String> testOrgList= new ArrayList<String>(Arrays.asList("Org1", "Org2", "Org3"));
         assertEquals(asList(testOrgList), asList(model.getPartnerOrganisationNames()));
@@ -109,12 +118,16 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 .withName("My Project")
                 .withOtherDocumentsApproved(true)
                 .build();
+        boolean approved = true;
 
-        setupViewOtherDocumentsTestExpectations (project);
+        setupViewOtherDocumentsTestExpectations(project);
 
-        MvcResult result = mockMvc.perform(post("/project/123/partner/documents")).
-                andExpect(view().name("project/other-documents")).
-                andReturn();
+        when(projectService.acceptOrRejectOtherDocuments(projectId, approved)).thenReturn(ServiceResult.serviceSuccess());
+
+        MvcResult result = mockMvc.perform(post("/project/123/partner/documents")
+                .param("approved", String.valueOf(approved)))
+                .andExpect(view().name("project/other-documents"))
+                .andReturn();
 
         ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 

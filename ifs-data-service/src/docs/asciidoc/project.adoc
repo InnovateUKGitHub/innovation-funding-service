@@ -322,13 +322,37 @@ include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]
 
 ==== Request
 include::{snippets}/project/generate-spend-profile/http-request.adoc[]
-include::{snippets}/project/generate-spend-profile/request-parameters.adoc[]
+include::{snippets}/project/generate-spend-profile/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/project/generate-spend-profile/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/generate-spend-profile/curl-request.adoc[]
+
+=== Get approval status for Spend Profile by Project
+
+==== Request
+include::{snippets}/project/get-spend-profile-status-by-project-id/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-status-by-project-id/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-spend-profile-status-by-project-id/curl-request.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+=== Approve or reject Spend Profile during Project Setup
+
+==== Request
+include::{snippets}/project/approve-or-reject-spend-profile/http-request.adoc[]
+include::{snippets}/project/approve-or-reject-spend-profile/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/approve-or-reject-spend-profile/curl-request.adoc[]
 
 === Is Partner Documents Submit Allowed
 ==== Success
@@ -478,3 +502,26 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fiel
 ===== Curl Example
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+
+
+=== Get Spend Profile CSV
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile-csv/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-csv/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile-csv/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-csv/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile-csv/curl-request.adoc[]
+
+==== Failures
+===== Spend Profile data does not yet exist
+include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in-db/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in-db/response-fields.adoc[]
+
+===== Exception thrown when generating the Spend Profile CSV
+include::{snippets}/project/get-spend-profile-csv-when-io-exception/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-csv-when-io-exception/response-fields.adoc[]

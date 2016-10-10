@@ -51,11 +51,11 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy="application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationStatusId", referencedColumnName="id")
     private ApplicationStatus applicationStatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition", referencedColumnName="id")
     private Competition competition;
 
@@ -65,7 +65,7 @@ public class Application implements ProcessActivity {
     @Enumerated(EnumType.STRING)
     private FundingDecisionStatus fundingDecision;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assessorFeedbackFileEntryId", referencedColumnName="id")
     private FileEntry assessorFeedbackFileEntry;
     

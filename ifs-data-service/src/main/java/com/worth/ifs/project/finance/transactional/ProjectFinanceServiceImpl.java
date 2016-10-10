@@ -1,30 +1,37 @@
 package com.worth.ifs.project.finance.transactional;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -43,11 +50,19 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ProjectFinanceServiceImpl extends BaseTransactionalService implements ProjectFinanceService {
 
+    private static final String CSV_MONTH = "Month";
+    private static final String CSV_TOTAL = "TOTAL";
+    private static final String CSV_ELIGIBLE_COST_TOTAL = "Eligible Costs Total";
+    private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
+
     @Autowired
     private ProjectService projectService;
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private SpendProfileRepository spendProfileRepository;
@@ -67,6 +82,25 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                })
         );
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        updateApprovalOfSpendProfile(projectId, approvalType);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+
+        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+           return serviceSuccess(ApprovalType.REJECTED);
+        } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
+           return serviceSuccess(ApprovalType.APPROVED);
+        }
+
+        return serviceSuccess(ApprovalType.UNSET);
     }
 
     @Override
@@ -111,12 +145,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         });
     }
 
-    private List<Cost> findMultipleMatchingCostsByCategory(CostGroup spendProfileFigures, CostCategory category) {
-        return simpleFilter(spendProfileFigures.getCosts(), f -> f.getCostCategory().equals(category));
-    }
-
-    private Cost findSingleMatchingCostByCategory(CostGroup eligibleCosts, CostCategory category) {
-        return simpleFindFirst(eligibleCosts.getCosts(), f -> f.getCostCategory().equals(category)).get();
+    @Override
+    public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        SpendProfileTableResource spendProfileTableResource = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+        try {
+            return serviceSuccess(generateSpendProfileCSVData(spendProfileTableResource, projectOrganisationCompositeId));
+        } catch (IOException ioe) {
+            return serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE);
+        }
     }
 
     @Override
@@ -249,6 +285,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+
+        spendProfileRepository.save(spendProfiles);
+    }
+
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
@@ -316,7 +359,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
             List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
 
-            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
+            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false, ApprovalType.UNSET);
             spendProfileRepository.save(spendProfile);
         });
     }
@@ -362,4 +405,96 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
+    }
+
+    private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,
+                                                                ProjectOrganisationCompositeId projectOrganisationCompositeId) throws IOException {
+        Map<String, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
+        List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
+        BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
+        BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
+        Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+
+        StringWriter stringWriter = new StringWriter();
+        CSVWriter csvWriter = new CSVWriter(stringWriter);
+        ArrayList<String[]> rows = new ArrayList<>();
+        ArrayList<String> monthsRow = new ArrayList<>();
+        monthsRow.add(CSV_MONTH);
+        spendProfileTableResource.getMonths().forEach(
+                value -> monthsRow.add(value.getLocalDate().toString()));
+        monthsRow.add(CSV_TOTAL);
+        monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
+        rows.add(monthsRow.stream().toArray(String[]::new));
+
+        ArrayList<String> byCategory = new ArrayList<>();
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+            byCategory.add(category);
+            values.forEach(val -> {
+                byCategory.add(val.toString());
+            });
+            byCategory.add(categoryToActualTotal.get(category).toString());
+            byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
+            rows.add(byCategory.stream().toArray(String[]::new));
+            byCategory.clear();
+        });
+
+        ArrayList<String> totals = new ArrayList<>();
+        totals.add(CSV_TOTAL);
+        totalForEachMonth.forEach(value -> totals.add(value.toString()));
+        totals.add(totalOfAllActualTotals.toString());
+        totals.add(totalOfAllEligibleTotals.toString());
+        rows.add(totals.stream().toArray(String[]::new));
+        csvWriter.writeAll(rows);
+        csvWriter.close();
+
+        SpendProfileCSVResource spendProfileCSVResource = new SpendProfileCSVResource();
+        spendProfileCSVResource.setCsvData(stringWriter.toString());
+        spendProfileCSVResource.setFileName(generateSpendProfileFileName(organisation.getName()));
+
+        return spendProfileCSVResource;
+    }
+
+    private String generateSpendProfileFileName(String organisationName) {
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        return String.format(CSV_FILE_NAME_FORMAT, organisationName, dateFormat.format(date));
+    }
+
+    private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
+        return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
+                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+    }
+
+    private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        totalForEachMonth.forEach(totalForThisMonth -> {
+            int index = atomicInteger.getAndIncrement();
+            monthlyCostsPerCategoryMap.forEach((category, value) -> {
+                BigDecimal costForThisMonthForCategory = value.get(index);
+                if (totalForEachMonth.get(index) != null) {
+                    totalForEachMonth.set(index, totalForEachMonth.get(index).add(costForThisMonthForCategory));
+                } else {
+                    totalForEachMonth.set(index, costForThisMonthForCategory);
+                }
+            });
+        });
+        return totalForEachMonth;
+    }
+
+    private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
+        return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+    }
+
+    private List<Cost> findMultipleMatchingCostsByCategory(CostGroup spendProfileFigures, CostCategory category) {
+        return simpleFilter(spendProfileFigures.getCosts(), f -> f.getCostCategory().equals(category));
+    }
+
+    private Cost findSingleMatchingCostByCategory(CostGroup eligibleCosts, CostCategory category) {
+        return simpleFindFirst(eligibleCosts.getCosts(), f -> f.getCostCategory().equals(category)).get();
+    }
 }
