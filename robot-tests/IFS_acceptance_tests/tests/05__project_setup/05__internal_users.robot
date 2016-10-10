@@ -16,7 +16,7 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Variables ***
 
 *** Test Cases ***
-Project Finance can see Summary Overview
+Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821
     [Tags]  HappyPath
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
@@ -47,6 +47,46 @@ Other internal users cannot see Bank details
     And the user should see the text in the page  each partner has submitted their bank details
     And the user should not see the element       jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Vitruvius Stonework Limited")
     [Teardown]  Logout as user
+
+
+Project Finance user can see the internal project summary page
+    [Documentation]    INFUND-4049
+    [Tags]
+    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page    ${internal_project_summary}
+    Then the user should see the text in the page    best riffs
+    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/monitoring-officer')]
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/review-all-bank-details')]
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/partner/documents')]
+    And the user should not see an error in the page
+    [Teardown]    logout as user
+
+
+Comp Admin user cannot see the finance check summary page
+    [Documentation]    INFUND-4821
+    [Tags]
+    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/spend-profile/summary    You do not have the necessary permissions for your request
+
+Comp Admin user can see the internal project summary page
+    [Documentation]    INFUND-4049
+    [Tags]
+    Given the user navigates to the page    ${internal_project_summary}
+    Then the user should see the text in the page    best riffs
+    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/monitoring-officer')]
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link   xpath=//a[contains(@href, '/project-setup-management/project/1/review-all-bank-details')]
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/partner/documents')]
+    And the user should not see an error in the page
+    [Teardown]    logout as user
+
 
 
 *** Keywords ***

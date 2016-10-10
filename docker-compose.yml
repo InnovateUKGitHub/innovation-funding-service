@@ -84,12 +84,7 @@ services:
       - smtp:rw
     expose:
       - 143
-    ports:
-      - "9876:143"
     networks:
-      front-tier:
-        aliases:
-          - imap
       back-tier:
         aliases:
           - imap
@@ -106,6 +101,23 @@ services:
       back-tier:
         aliases:
           - webmail
+
+
+  imap-ssl:
+    image: purplebooth/nginx-ssl-terminator
+    ports:
+      - "9876:443"
+    environment:
+      UPSTREAM: imap:143
+    depends_on:
+      - imap
+    networks:
+      back-tier:
+        aliases:
+          - imap-ssl
+      front-tier:
+        aliases:
+          - imap
 
 networks:
   front-tier:
