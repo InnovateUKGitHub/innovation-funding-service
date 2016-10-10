@@ -1,5 +1,6 @@
 package com.worth.ifs.project.viewmodel;
 
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -27,15 +28,20 @@ public class ProjectSpendProfileViewModel {
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
     private Boolean markedAsComplete;
-    private Map<String, BigDecimal> categoryToActualTotal;
+    private Boolean research;
+    private Map<Long, BigDecimal> categoryToActualTotal;
     private List<BigDecimal> totalForEachMonth;
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
+    private Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap;
+    private Map<Long, CostCategoryResource> costCategoryResourceMap;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
-                                        Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
-                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
+                                        Map<Long, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
+                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals,
+                                        Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
+                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -49,6 +55,9 @@ public class ProjectSpendProfileViewModel {
         this.totalForEachMonth = totalForEachMonth;
         this.totalOfAllActualTotals = totalOfAllActualTotals;
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
+        this.costCategoryGroupMap = costCategoryGroupMap;
+        this.costCategoryResourceMap = costCategoryResourceMap;
+        this.research = research;
     }
 
     public Long getProjectId() {
@@ -119,7 +128,7 @@ public class ProjectSpendProfileViewModel {
         this.organisationId = organisationId;
     }
 
-    public Map<String, BigDecimal> getCategoryToActualTotal() {
+    public Map<Long, BigDecimal> getCategoryToActualTotal() {
         return categoryToActualTotal;
     }
 
@@ -147,7 +156,7 @@ public class ProjectSpendProfileViewModel {
         return markedAsComplete;
     }
 
-    public void setCategoryToActualTotal(Map<String, BigDecimal> categoryToActualTotal) {
+    public void setCategoryToActualTotal(Map<Long, BigDecimal> categoryToActualTotal) {
         this.categoryToActualTotal = categoryToActualTotal;
     }
 
@@ -161,6 +170,22 @@ public class ProjectSpendProfileViewModel {
 
     public void setTotalOfAllEligibleTotals(BigDecimal totalOfAllEligibleTotals) {
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
+    }
+
+    public Boolean getResearch() {
+        return research;
+    }
+
+    public void setResearch(Boolean research) {
+        this.research = research;
+    }
+
+    public Map<Long, CostCategoryResource> getCostCategoryResourceMap() {
+        return costCategoryResourceMap;
+    }
+
+    public void setCostCategoryResourceMap(Map<Long, CostCategoryResource> costCategoryResourceMap) {
+        this.costCategoryResourceMap = costCategoryResourceMap;
     }
 
     @Override

@@ -287,24 +287,24 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 ));
     }
 
-    private Map<String, BigDecimal> buildEligibleCostPerCategoryMap() {
+    private Map<Long, BigDecimal> buildEligibleCostPerCategoryMap() {
 
-        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
+        Map<Long, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
 
-        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
-        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
-        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
+        eligibleCostPerCategoryMap.put(1L, new BigDecimal("240"));
+        eligibleCostPerCategoryMap.put(2L, new BigDecimal("190"));
+        eligibleCostPerCategoryMap.put(3L, new BigDecimal("149"));
 
         return eligibleCostPerCategoryMap;
     }
 
-    private Map<String, List<BigDecimal>> buildSpendProfileCostsPerCategoryMap() {
+    private Map<Long, List<BigDecimal>> buildSpendProfileCostsPerCategoryMap() {
 
-        Map<String, List<BigDecimal>> spendProfileCostsPerCategoryMap = new LinkedHashMap<>();
+        Map<Long, List<BigDecimal>> spendProfileCostsPerCategoryMap = new LinkedHashMap<>();
 
-        spendProfileCostsPerCategoryMap.put("LabourCost", asList(new BigDecimal("100"), new BigDecimal("120"), new BigDecimal("20")));
-        spendProfileCostsPerCategoryMap.put("CapitalCost", asList(new BigDecimal("90"), new BigDecimal("50"), new BigDecimal("50")));
-        spendProfileCostsPerCategoryMap.put("OtherCost", asList(new BigDecimal("0"), new BigDecimal("0"), new BigDecimal("149")));
+        spendProfileCostsPerCategoryMap.put(1L, asList(new BigDecimal("100"), new BigDecimal("120"), new BigDecimal("20")));
+        spendProfileCostsPerCategoryMap.put(2L, asList(new BigDecimal("90"), new BigDecimal("50"), new BigDecimal("50")));
+        spendProfileCostsPerCategoryMap.put(3L, asList(new BigDecimal("0"), new BigDecimal("0"), new BigDecimal("149")));
 
         return spendProfileCostsPerCategoryMap;
     }
@@ -338,7 +338,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
-            byCategory.add(category);
+            byCategory.add(String.valueOf(category));
             values.forEach(val -> {
                 byCategory.add(val.toString());
             });

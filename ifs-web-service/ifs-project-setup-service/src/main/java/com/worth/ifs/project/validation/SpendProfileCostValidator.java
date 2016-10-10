@@ -19,10 +19,10 @@ public class SpendProfileCostValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         SpendProfileTableResource table = (SpendProfileTableResource) target;
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            String category = entry.getKey();
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             int index = 0;
@@ -33,7 +33,7 @@ public class SpendProfileCostValidator implements Validator {
         }
     }
 
-    private void isValid(BigDecimal cost, String category, int index, Errors errors) {
+    private void isValid(BigDecimal cost, Long category, int index, Errors errors) {
 
         String partialErrorKey = String.format("Cost for category: %s and Month#: %d", category, index + 1);
 
@@ -44,7 +44,7 @@ public class SpendProfileCostValidator implements Validator {
         checkCostGreaterThanOrEqualToMillion(cost, category, index, errors, partialErrorKey);
     }
 
-    private void checkFractionalCost(BigDecimal cost, String category, int index, Errors errors, String partialErrorKey) {
+    private void checkFractionalCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_FRACTIONAL: " + partialErrorKey;
         if (cost.scale() > 0) {
@@ -54,7 +54,7 @@ public class SpendProfileCostValidator implements Validator {
         }
     }
 
-    private void checkCostLessThanZero(BigDecimal cost, String category, int index, Errors errors, String partialErrorKey) {
+    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_LESS_THAN_ZERO: " + partialErrorKey;
         if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
@@ -63,7 +63,7 @@ public class SpendProfileCostValidator implements Validator {
         }
     }
 
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, String category, int index, Errors errors, String partialErrorKey) {
+    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_MILLION_OR_MORE: " + partialErrorKey;
         if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more

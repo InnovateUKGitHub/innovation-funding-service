@@ -8,10 +8,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
+import com.worth.ifs.project.finance.mapper.*;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.*;
@@ -20,6 +21,7 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,6 +80,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private CostCategoryTypeMapper costCategoryTypeMapper;
 
     @Autowired
+    private CostCategoryMapper costCategoryMapper;
+
+    @Autowired
     private CostCategoryRepository costCategoryRepository;
 
 
@@ -102,20 +107,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
 
             List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-
+            Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
             CostGroup eligibleCosts = spendProfile.getEligibleCosts();
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
-            Map<String, BigDecimal> eligibleCostsPerCategory =
+            Map<Long, BigDecimal> eligibleCostsPerCategory =
                     simpleToLinkedMap(
                             costCategories,
-                            CostCategory::getName,
+                            CostCategory::getId,
                             category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<String, List<Cost>> spendProfileCostsPerCategory =
+            Map<Long, List<Cost>> spendProfileCostsPerCategory =
                     simpleToLinkedMap(
                             costCategories,
-                            CostCategory::getName,
+                            CostCategory::getId,
                             category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
             LocalDate startDate = spendProfile.getProject().getTargetStartDate();
@@ -124,17 +129,58 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
             List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
-            Map<String, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
+            Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
                     simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
             SpendProfileTableResource table = new SpendProfileTableResource();
+            table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
             table.setMonths(monthResources);
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             checkTotalForMonthsAndAddToTable(table);
+
+           boolean isRearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
+            if (isRearch) {
+                table.setCostCategoryGroupMap(groupCategories(table));
+            }
+
             return serviceSuccess(table);
         });
+    }
+
+    private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
+        Map<Long, CostCategoryResource> returnMap = new HashMap<>();
+        costCategories.forEach(costCategory -> {
+            CostCategoryResource cr = new CostCategoryResource();
+            cr.setId(costCategory.getId());
+            cr.setName(costCategory.getName());
+            cr.setLabel(costCategory.getLabel());
+            returnMap.put(costCategory.getId(), cr);
+         });
+        return returnMap;
+    }
+
+
+    private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
+        Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+            CostCategory costCategory = costCategoryRepository.findOne(category);
+            if (costCategory.getLabel() != null) {
+                if (catGroupMap.get(costCategory.getLabel()) != null) {
+                    Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                    tempRow.put(category, values);
+                    catGroupMap.get(costCategory.getLabel()).add(tempRow);
+                } else {
+                    List<Map<Long, List<BigDecimal>>> newList = new ArrayList<>();
+                    Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                    tempRow.put(category, values);
+                    newList.add(tempRow);
+                    catGroupMap.put(costCategory.getLabel(), newList);
+                }
+            }
+        });
+        return catGroupMap;
     }
 
     @Override
@@ -192,12 +238,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
         List<Error> incorrectCosts = new ArrayList<>();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            String category = entry.getKey();
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             int index = 0;
@@ -211,7 +257,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return incorrectCosts;
     }
 
-    private void isCostValid(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void isCostValid(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         checkFractionalCost(cost, category, index, incorrectCosts);
 
@@ -220,21 +266,21 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
     }
 
-    private void checkFractionalCost(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (cost.scale() > 0) {
             incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostLessThanZero(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
             incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
             incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
@@ -257,11 +303,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private void updateSpendProfileCosts(SpendProfile spendProfile, SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
 
-            String category = entry.getKey();
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             updateSpendProfileCostsForCategory(category, monthlyCosts, spendProfile);
@@ -269,10 +315,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private void updateSpendProfileCostsForCategory(String category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
+    private void updateSpendProfileCostsForCategory(Long category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
 
         List<Cost> filteredAndSortedCostsToUpdate = spendProfile.getSpendProfileFigures().getCosts().stream()
-                .filter(cost -> cost.getCostCategory().getName().equalsIgnoreCase(category))
+                .filter(cost -> cost.getCostCategory().getId() == category)
                 .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
                 .collect(Collectors.toList());
 
@@ -285,20 +331,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
-        Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
 
         List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            String category = entry.getKey();
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
-                categoriesWithIncorrectTotal.add(fieldError(category, actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
+                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
             }
         }
 
@@ -388,7 +434,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,
                                                                 ProjectOrganisationCompositeId projectOrganisationCompositeId) throws IOException {
-        Map<String, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
+        Map<Long, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
         List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
         BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
         BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
@@ -407,7 +453,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
-            byCategory.add(category);
+            byCategory.add(String.valueOf(category));
             values.forEach(val -> {
                 byCategory.add(val.toString());
             });
@@ -439,13 +485,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return String.format(CSV_FILE_NAME_FORMAT, organisationName, dateFormat.format(date));
     }
 
-    private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
+    private Map<Long, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
                 (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
     }
 
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
         AtomicInteger atomicInteger = new AtomicInteger(0);
         totalForEachMonth.forEach(totalForThisMonth -> {
@@ -462,7 +508,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return totalForEachMonth;
     }
 
-    private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
+    private BigDecimal buildTotalOfTotals(Map<Long, BigDecimal> input) {
         return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
     }
 
