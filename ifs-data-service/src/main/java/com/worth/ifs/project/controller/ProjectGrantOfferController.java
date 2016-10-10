@@ -33,26 +33,20 @@ public class ProjectGrantOfferController {
 
 
     @RequestMapping(value = "/{projectId}/signed-grant-offer", method = GET)
-    public
-    @ResponseBody
-    ResponseEntity<Object> getGrantOfferLetterFileContents(
+    public @ResponseBody ResponseEntity<Object> getGrantOfferLetterFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
         return handleFileDownload(() -> projectGrantOfferService.getSignedGrantOfferLetterFileAndContents(projectId));
     }
 
     @RequestMapping(value = "/{projectId}/grant-offer", method = GET)
-    public
-    @ResponseBody
-    ResponseEntity<Object> getGeneratedGrantOfferLetterFileContents(
+    public @ResponseBody ResponseEntity<Object> getGeneratedGrantOfferLetterFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
         return handleFileDownload(() -> projectGrantOfferService.getGrantOfferLetterFileAndContents(projectId));
     }
 
 
     @RequestMapping(value = "/{projectId}/additional-contract", method = GET)
-    public
-    @ResponseBody
-    ResponseEntity<Object> getAdditionalContractFileContents(
+    public @ResponseBody ResponseEntity<Object> getAdditionalContractFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
         return handleFileDownload(() -> projectGrantOfferService.getAdditionalContractFileAndContents(projectId));
     }
