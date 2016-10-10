@@ -195,6 +195,18 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+        assertTrue(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, user2));
+    }
+
+    @Test
+    public void projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+        assertTrue(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, user2));
+    }
+
+    @Test
     public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
 
         //
@@ -220,6 +232,38 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                         assertTrue(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     } else {
                         assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    }
+                }
+            });
+        });
+    }
+
+
+    @Test
+    public void projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState() {
+        //
+        // For each possible Competition Status...
+        //
+        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+
+            //
+            // For each possible role
+            //
+            allGlobalRoleUsers.forEach(user -> {
+
+                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
+
+                // if the user is not a Comp Admin, immediately fail
+                if (!user.equals(projectFinanceUser())) {
+                    assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
+
+                } else {
+
+                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                        assertTrue(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    } else {
+                        assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     }
                 }
             });
