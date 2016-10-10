@@ -59,6 +59,16 @@ public class ProjectFinanceServiceImplTest {
     }
 
     @Test
+    public void testCompleteSpendProfileReview() {
+        Long projectId = 1L;
+        when(projectFinanceRestService.completeSpendProfilesReview(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void approveOrRejectSpendProfile() {
         Long projectId = 201L;
 
