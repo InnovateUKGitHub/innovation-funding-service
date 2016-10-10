@@ -28,6 +28,7 @@ public class ProjectResource {
     private Long additionalContractFile;
     private boolean offerRejected;
     private Boolean otherDocumentsApproved;
+    private LocalDateTime spendProfileSubmittedDate;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -173,5 +174,13 @@ public class ProjectResource {
 
     public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
+    public LocalDateTime getSpendProfileSubmittedDate() {
+        return spendProfileSubmittedDate;
+    }
+
+    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+        this.spendProfileSubmittedDate = spendProfileSubmittedDate;
     }
 }

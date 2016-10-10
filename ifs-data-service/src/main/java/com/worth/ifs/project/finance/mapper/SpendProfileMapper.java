@@ -7,6 +7,8 @@ import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
         config = GlobalMapperConfig.class,
