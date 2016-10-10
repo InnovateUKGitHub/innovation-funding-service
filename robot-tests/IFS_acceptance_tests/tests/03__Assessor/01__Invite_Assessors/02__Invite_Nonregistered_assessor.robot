@@ -45,7 +45,7 @@ Register as an assessor
 
 Create assessor account: Contact details server-side validations
     [Documentation]    INFUND-4916
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     And The user should be redirected to the correct page    ${Create_account_contact_details_assessor3}
     When Then the user clicks the button/link    jQuery=button:contains("Continue")
