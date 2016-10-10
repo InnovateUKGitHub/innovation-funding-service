@@ -12,6 +12,7 @@ import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -46,18 +47,18 @@ public class Competition implements ProcessActivity {
     @Column( length = 5000 )
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
     private CompetitionType competitionType;
 
     @OneToMany(mappedBy = "competition")
     private List<Milestone> milestones = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="executiveUserId", referencedColumnName="id")
     private User executive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="leadTechnologistUserId", referencedColumnName="id")
     private User leadTechnologist;
 
@@ -490,6 +491,17 @@ public class Competition implements ProcessActivity {
 
     public void setFunders(List<CompetitionFunder> funders) {
         this.funders = funders;
+    }
+
+    public String startDateDisplay() {
+        return displayDate(getStartDate(), CompetitionResource.START_DATE_FORMAT);
+    }
+
+    private String displayDate(LocalDateTime date, DateTimeFormatter formatter) {
+        if (date != null) {
+            return date.format(formatter);
+        }
+        return "";
     }
 }
 

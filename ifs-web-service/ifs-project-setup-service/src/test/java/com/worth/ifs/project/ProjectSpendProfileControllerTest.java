@@ -9,6 +9,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.util.SpendProfileTableCalculator;
 import com.worth.ifs.project.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
@@ -19,6 +20,7 @@ import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -50,6 +52,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileController> {
     @Mock
     public SpendProfileCostValidator spendProfileCostValidator;
+    @Spy
+    public SpendProfileTableCalculator spendProfileTableCalculator;
 
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {
@@ -321,7 +325,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

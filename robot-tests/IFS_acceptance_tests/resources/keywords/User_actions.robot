@@ -7,7 +7,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
-#    Wait for autosave
+    Wait for autosave
     wait until keyword succeeds    30s    30s    Go To    ${TARGET_URL}
     Run Keyword And Ignore Error    Confirm Action
     # Error checking
@@ -268,7 +268,7 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     wait until keyword succeeds  30s    30s    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
-#    Wait for autosave
+    Wait for autosave
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
@@ -296,7 +296,7 @@ The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
-#    wait for autosave
+    wait for autosave
     wait until keyword succeeds  30s    30s     click element    ${BUTTON}
 
 The user should see the text in the page

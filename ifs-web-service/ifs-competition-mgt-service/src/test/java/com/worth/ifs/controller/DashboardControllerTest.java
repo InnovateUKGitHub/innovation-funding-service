@@ -6,8 +6,8 @@ import com.worth.ifs.competition.controller.DashboardController;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,7 +54,7 @@ public class DashboardControllerTest {
     @Test
     public void liveDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> competitions = new HashMap<>();
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getLiveCompetitions()).thenReturn(competitions);
@@ -70,7 +70,7 @@ public class DashboardControllerTest {
     @Test
     public void projectSetupDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> competitions = new HashMap<>();
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
@@ -86,7 +86,7 @@ public class DashboardControllerTest {
     @Test
     public void upcomingDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionResource>> competitions = new HashMap<>();
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getUpcomingCompetitions()).thenReturn(competitions);
