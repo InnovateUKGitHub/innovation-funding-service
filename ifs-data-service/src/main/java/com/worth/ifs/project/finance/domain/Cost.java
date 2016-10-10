@@ -20,14 +20,14 @@ public class Cost {
     @Column(precision = 14, scale = COST_SCALE)
     private BigDecimal value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cost_group_id")
     private CostGroup costGroup;
 
     @OneToOne(cascade = ALL, mappedBy = "cost", orphanRemoval = true)
     private CostTimePeriod costTimePeriod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "cost_categorization",
             joinColumns = @JoinColumn(name = "cost_id"),

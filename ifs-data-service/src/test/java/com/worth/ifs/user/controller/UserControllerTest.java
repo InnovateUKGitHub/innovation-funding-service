@@ -287,7 +287,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         Long userId = 1L;
         List<AffiliationResource> affiliations = newAffiliationResource().build(2);
 
-        when(userProfileServiceMock.getUserAffilliations(userId)).thenReturn(serviceSuccess(affiliations));
+        when(userProfileServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(affiliations));
 
         mockMvc.perform(get("/user/id/{id}/getUserAffiliations", userId)
                 .contentType(APPLICATION_JSON))
@@ -295,7 +295,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(toJson(affiliations)));
 
-        verify(userProfileServiceMock, only()).getUserAffilliations(userId);
+        verify(userProfileServiceMock, only()).getUserAffiliations(userId);
     }
 
     @Test
@@ -303,13 +303,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         Long userId = 1L;
         List<AffiliationResource> affiliations = newAffiliationResource().build(2);
 
-        when(userProfileServiceMock.updateUserAffilliations(userId, affiliations)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateUserAffiliations(userId, affiliations)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateUserAffiliations", userId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(affiliations)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateUserAffilliations(userId, affiliations);
+        verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
     }
 }

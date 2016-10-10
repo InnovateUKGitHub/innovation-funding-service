@@ -1,18 +1,10 @@
 package com.worth.ifs.competitiontemplate.domain;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class FormInputTemplate {
@@ -20,7 +12,7 @@ public class FormInputTemplate {
     @Id
     private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formInputTypeId", referencedColumnName = "id")
     private FormInputType formInputType;
 

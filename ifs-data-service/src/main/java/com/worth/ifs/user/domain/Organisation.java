@@ -26,7 +26,7 @@ public class Organisation {
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
     @OneToMany(mappedBy="organisation")

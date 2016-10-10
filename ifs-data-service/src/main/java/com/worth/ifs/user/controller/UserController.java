@@ -167,12 +167,12 @@ public class UserController {
 
     @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)
     public RestResult<List<AffiliationResource>> getUserAffiliations(@PathVariable("userId") Long userId) {
-        return userProfileService.getUserAffilliations(userId).toGetResponse();
+        return userProfileService.getUserAffiliations(userId).toGetResponse();
     }
 
     @RequestMapping(value = "/id/{userId}/updateUserAffiliations", method = PUT)
     public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
                                                    @RequestBody List<AffiliationResource> affiliations) {
-        return userProfileService.updateUserAffilliations(userId, affiliations).toPutResponse();
+        return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
 }

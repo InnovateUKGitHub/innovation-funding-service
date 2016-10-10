@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public abstract class AuditableEntity implements Auditable {
 
     @CreatedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="createdBy", referencedColumnName="id")
     private User createdBy;
 
@@ -38,7 +38,7 @@ public abstract class AuditableEntity implements Auditable {
     private LocalDateTime createdOn;
 
     @LastModifiedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="modifiedBy", referencedColumnName="id")
     private User modifiedBy;
 

@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
 
 public class ApplicationResourceTest {
     ApplicationResource applicationResource;
@@ -46,13 +44,9 @@ public class ApplicationResourceTest {
         applicationResource = newApplicationResource()
             .withCompetition(competition.getId())
             .withName(name)
-            .withProcessRoles(
-                asList(1L,2L,3L)
-            )
             .withApplicationStatus(applicationStatus)
             .withId(id)
             .build();
-        applicationResource.setApplicationFinances(simpleMap(applicationFinances,ApplicationFinance::getId));
     }
 
     @Test
@@ -60,9 +54,7 @@ public class ApplicationResourceTest {
         Assert.assertEquals(applicationResource.getId(), id);
         Assert.assertEquals(applicationResource.getName(), name);
         Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus.getId());
-        Assert.assertEquals(applicationResource.getProcessRoles(), simpleMap(processRoles, ProcessRole::getId));
         Assert.assertEquals(applicationResource.getCompetition(), competition.getId());
-        Assert.assertEquals(applicationResource.getApplicationFinances(), simpleMap(applicationFinances, ApplicationFinance::getId));
     }
 
     @Test

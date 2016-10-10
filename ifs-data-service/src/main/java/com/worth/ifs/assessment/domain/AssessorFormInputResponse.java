@@ -19,12 +19,12 @@ public class AssessorFormInputResponse {
     private Long id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assessmentId", referencedColumnName = "id")
     private Assessment assessment;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formInputId", referencedColumnName = "id")
     private FormInput formInput;
 

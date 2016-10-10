@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
 
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         for(final ProcessRoleResource processRole : userApplicationRoles){
             if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
-		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
 		return userApplicationRoles.stream()
 				.filter(prr -> organisation.equals(prr.getOrganisation()))
 				.collect(Collectors.toList());
@@ -79,14 +79,14 @@ public class UserServiceImpl implements UserService {
 		if(leadProcessRole == null) {
 			return new ArrayList<>();
 		}
-		return processRoleService.getByIds(application.getProcessRoles()).stream()
+		return processRoleService.getByApplicationId(application.getId()).stream()
 				.filter(pr -> leadProcessRole.getOrganisation().equals(pr.getOrganisation()))
 				.collect(Collectors.toList());
 	}
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
-        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<UserResource>(a)).getSuccessObjectOrThrowException();
+        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<>(a)).getSuccessObjectOrThrowException();
     }
 
     @Override

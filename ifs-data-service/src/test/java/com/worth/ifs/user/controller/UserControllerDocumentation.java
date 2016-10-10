@@ -147,7 +147,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void getUserAffiliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> responses = affiliationResourceBuilder.build(2);
-        when(userProfileServiceMock.getUserAffilliations(userId)).thenReturn(serviceSuccess(responses));
+        when(userProfileServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(responses));
 
         mockMvc.perform(get("/user/id/{id}/getUserAffiliations", userId))
                 .andExpect(status().isOk())
@@ -166,7 +166,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         Long userId = 1L;
         List<AffiliationResource> affiliations = affiliationResourceBuilder
                 .build(2);
-        when(userProfileServiceMock.updateUserAffilliations(userId, affiliations)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateUserAffiliations(userId, affiliations)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateUserAffiliations", userId)
                 .contentType(APPLICATION_JSON)

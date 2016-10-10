@@ -79,7 +79,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void updateUserAffilliations() throws Exception {
+    public void updateUserAffiliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> affiliationResources = newAffiliationResource().build(2);
         List<Affiliation> affiliations = newAffiliation().build(2);
@@ -89,7 +89,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
 
         when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
-        when(affilliationMapperMock.mapToDomain(affiliationResources)).thenReturn(affiliations);
+        when(affiliationMapperMock.mapToDomain(affiliationResources)).thenReturn(affiliations);
 
         User userWithAffiliationsExpectation = createLambdaMatcher(user -> {
             assertEquals(affiliations, user.getAffiliations());
@@ -97,26 +97,26 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         when(userRepositoryMock.save(userWithAffiliationsExpectation)).thenReturn(newUser().build());
 
-        ServiceResult<Void> response = service.updateUserAffilliations(userId, affiliationResources);
+        ServiceResult<Void> response = service.updateUserAffiliations(userId, affiliationResources);
         assertTrue(response.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, affilliationMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(affilliationMapperMock).mapToDomain(affiliationResources);
+        inOrder.verify(affiliationMapperMock).mapToDomain(affiliationResources);
         inOrder.verify(userRepositoryMock).save(isA(User.class));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void getUserAffilliations() throws Exception {
+    public void getUserAffiliations() throws Exception {
         Long userId = 1L;
 
         List<Affiliation> affiliations = newAffiliation().build(2);
 
         List<AffiliationResource> affiliationResources = newAffiliationResource().build(2);
 
-        when(affilliationMapperMock.mapToResource(affiliations.get(0))).thenReturn(affiliationResources.get(0));
-        when(affilliationMapperMock.mapToResource(affiliations.get(1))).thenReturn(affiliationResources.get(1));
+        when(affiliationMapperMock.mapToResource(affiliations.get(0))).thenReturn(affiliationResources.get(0));
+        when(affiliationMapperMock.mapToResource(affiliations.get(1))).thenReturn(affiliationResources.get(1));
 
         User user = newUser()
                 .withAffiliations(affiliations)
@@ -124,12 +124,12 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        List<AffiliationResource> response = service.getUserAffilliations(userId).getSuccessObject();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObject();
         assertEquals(affiliationResources, response);
 
-        InOrder inOrder = inOrder(userRepositoryMock, affilliationMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(affilliationMapperMock, times(2)).mapToResource(isA(Affiliation.class));
+        inOrder.verify(affiliationMapperMock, times(2)).mapToResource(isA(Affiliation.class));
         inOrder.verifyNoMoreInteractions();
     }
 }

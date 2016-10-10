@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.Application;
 import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -341,7 +340,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ValidationMessages errors = new ValidationMessages();
         SectionResource selectedSection = null;
         if (sectionId != null) {
-            selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            selectedSection = sectionService.getById(sectionId);
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
@@ -451,7 +450,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (errorsSoFar.hasErrors()) {
             messages.addError(fieldError("formInput[cost]", "", "application.validation.MarkAsCompleteFailed"));
         } else {
-            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            SectionResource selectedSection = sectionService.getById(sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request);
 
             if (collectValidationMessages(financeErrorsMark).hasErrors()) {
@@ -522,18 +521,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private boolean isMarkSectionAsCompleteRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_SECTION_AS_COMPLETE);
-    }
-
-    private boolean isSubmitSectionRequest(@NotNull Map<String, String[]> params){
-        return params.containsKey(SUBMIT_SECTION);
-    }
-
-    private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
-        return sectionIds.stream()
-                .map(sectionService::getById)
-                .filter(x -> x.getId().equals(sectionId))
-                .findFirst()
-                .get();
     }
 
     private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, ValidationMessages errorsSoFar) {
