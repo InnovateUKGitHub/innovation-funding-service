@@ -41,4 +41,7 @@ public interface ProjectFinanceService {
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId);
+
+    @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
+    ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 }

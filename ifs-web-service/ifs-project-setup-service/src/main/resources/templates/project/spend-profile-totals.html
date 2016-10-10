@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag" />
+</head>
+<body class="spend-profile">
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+
+<main id="content" class="no-grid" th:with="project=${model.project}">
+    <div class="grid-container">
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+
+        <div class="page-title">
+                <div th:include="fragments/elements :: project-title (projectId=${project.id}, projectName=${project.name})"
+                 th:remove="tag"/>
+            <h1 class="heading-xlarge">Spend profile</h1>
+        </div>
+
+        <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
+            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <h2 class="heading-medium error-summary-heading">
+                    Unable to submit spend profiles.
+                </h2>
+                Please review
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+            <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+            <div th:include="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" th:remove="tag"/>
+        </form>
+        <div class="centralise">
+            <dl class="standard-definition-list">
+                <dt>Project start date</dt>
+                <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+                <dt>Duration</dt>
+                <dd th:text="${project.durationInMonths + ' months'}"></dd>
+            </dl>
+        </div>
+        <h2 class="heading-medium">Project - Spend profile</h2>
+        <p>This is the proposed spend profile for your project.</p>
+    </div>
+
+    <div class="spend-profile-table">
+        <div class="flex-table-before"></div>
+        <div class="flex-table-wrap">
+            <table>
+                <colgroup >
+                    <col />
+                    <th:block th:each="month : ${model.table.getMonths()}">
+                        <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
+                    </th:block>
+                    <col class="total" />
+                </colgroup>
+                <thead>
+                <tr>
+                    <th scope="row" class="fix-left" id="month">Month</th>
+                    <th:block th:each="month,stats : ${model.table.getMonths()}">
+                        <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
+                    </th:block>
+                    <th scope="col" class="fix-right">Total</th>
+                    <th scope="col" class="fix-right" >Eligible project cost</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="form-group-row">
+                    <th scope="row" class="fix-left">
+                        <span th:text="${row.key}" />
+                    </th>
+                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'COMMA')}" />
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'COMMA')}" />
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr class="form-group-row">
+                    <th scope="row" class="fix-left">Total</th>
+                    <th:block  th:each="monthTotal,status : ${model.table.totalForEachMonth}">
+                        <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}" />
+                    </th:block>
+                    <td class="fix-right">
+                        <input th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'COMMA')}"
+                               readonly="readonly"
+                               id="spend-profile-total-total" />
+                    </td>
+                    <td class="fix-right">
+                        <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'COMMA')}" />
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="flex-table-after"></div>
+    </div>
+    <div class="grid-container">
+        <h2 class="heading-medium">Project costs for financial year</h2>
+        <p>The spend profile that you submit will be used as the base for your project spend over the following financial years.</p>
+        <table class="extra-margin-bottom" style="width: 50%;">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 50%">Financial year (April to March)</th>
+                <th scope="col" style="width: 50%">Project spend</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${model.summary.years}">
+                <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                <td th:text="${'£ '+#numbers.formatInteger(item.amount,1,'COMMA')}"
+                    th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                          .may-'+item.year+',
+                                                          .jun-'+item.year+',
+                                                          .jul-'+item.year+',
+                                                          .aug-'+item.year+',
+                                                          .sep-'+item.year+',
+                                                          .oct-'+item.year+',
+                                                          .nov-'+item.year+',
+                                                          .dec-'+item.year+',
+                                                          .jan-'+(item.year+1)+',
+                                                          .feb-'+(item.year+1)+',
+                                                          .mar-'+(item.year+1)}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
+           class="button extra-margin" data-js-modal="modal-confirm-spend-profile-totals">Submit project spend profile</a>
+    </div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+
+</body>
+</html>

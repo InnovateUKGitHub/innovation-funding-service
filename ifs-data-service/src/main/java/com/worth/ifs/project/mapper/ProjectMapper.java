@@ -5,6 +5,8 @@ import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.mapper.SpendProfileMapper;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import org.mapstruct.Mapper;
@@ -28,7 +30,8 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
             @Mapping(target = "organisations", ignore = true),
             // TODO DW - for now, exclude partner organisations from mapper - include later though as will be really
             // useful
-            @Mapping(target = "partnerOrganisations", ignore = true)
+            @Mapping(target = "partnerOrganisations", ignore = true),
+            @Mapping(target = "spendProfiles", ignore = true)
     })
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);

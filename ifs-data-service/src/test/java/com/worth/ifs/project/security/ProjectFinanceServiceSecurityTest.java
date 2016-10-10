@@ -174,6 +174,17 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 });
     }
 
+    @Test
+    public void testCompleteSpendProfilesReview() {
+        Long projectId = 1L;
+
+        assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId),
+                () -> {
+                    verify(projectFinancePermissionRules).projectManagerCanCompleteSpendProfile(projectId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
     @Override
     protected Class<TestProjectFinanceService> getClassUnderTest() {
         return TestProjectFinanceService.class;
@@ -216,6 +227,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
             return null;
         }
 
+        public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
             return null;
         }
