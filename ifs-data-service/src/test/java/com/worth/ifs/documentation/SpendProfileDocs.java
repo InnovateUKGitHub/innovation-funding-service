@@ -11,7 +11,7 @@ public class SpendProfileDocs {
             fieldWithPath("monthlyCostsPerCategoryMap").description("Map which holds costs per month per category on the Spend Profile page"),
             fieldWithPath("months").description("List of months covered in the Spend Profile"),
             fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
-            fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table")
+            fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table"),
     };
 
     public static final FieldDescriptor[] spendProfileCSVFields = {
@@ -26,6 +26,7 @@ public class SpendProfileDocs {
             fieldWithPath("costCategoryType").description("Cost Category Type Id of the Spend Profile"),
             fieldWithPath("eligibleCosts").description("Eligible costs for each category of the Spend Profile"),
             fieldWithPath("spendProfileFigures").description("Spend Profile Figures for each month, for each category of the Spend Profile"),
-            fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not")
+            fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
+            fieldWithPath("approval").description("If the spend profile is approved or rejected")
     };
 }

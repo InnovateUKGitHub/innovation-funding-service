@@ -54,11 +54,11 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
     private FileEntry collaborationAgreement;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
