@@ -327,12 +327,30 @@ CompAdmin approves other documents
     When the user clicks the button/link              jQuery=button:contains("Accept documents")
     And the user clicks the button/link               jQuery=.modal-accept-docs .button:contains("Accept Documents")
     Then the user should see the text in the page     The documents provided have been approved.
+    [Teardown]  Logout as user
+
+Project Finance is able to Approve and Reject
+    [Documentation]  INFUND-4621, INFUND-5440
+    [Tags]
+    [Setup]  Log in as user                           project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
+    Then the user should see the text in the page     Other documents
+    And the user should see the element               jQuery=button:contains("Accept documents")
+    And the user should see the element               jQuery=button:contains("Reject documents")
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=.modal-accept-docs button:contains("Cancel")
+    Then the user should not see an error in the page
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
+    Then the user should not see an error in the page
+    [Teardown]  logout as user
 
 #TODO INFUND-5424 Partners should be able to see documents approved
 
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
     [Tags]    HappyPath
+    [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
     And the user should see the text in the page      Other documents
     When the user clicks the button/link              jQuery=button:contains("Reject documents")
