@@ -517,6 +517,19 @@ include::{snippets}/project/get-finance-check-approval-status/response-fields.ad
 ===== Curl Example
 include::{snippets}/project/get-finance-check-approval-status/curl-request.adoc[]
 
+=== Save Finance Check
+==== Success
+===== Request
+include::{snippets}/project/save-finance-check/http-request.adoc[]
+include::{snippets}/project/save-finance-check/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-finance-check/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-finance-check/curl-request.adoc[]
+
+
 === Get Finance Check Summary
 ==== Success
 ===== Request
