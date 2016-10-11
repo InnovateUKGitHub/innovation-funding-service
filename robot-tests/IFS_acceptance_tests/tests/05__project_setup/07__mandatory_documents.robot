@@ -224,7 +224,8 @@ Mandatory document submission
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
-    And the user should see the text in the page    These documents have been approved by Innovate UK.
+    # TODO the following step is Pending due to INFUND-5424
+    # And the user should see the text in the page    These documents have been approved by Innovate UK.
     And the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
