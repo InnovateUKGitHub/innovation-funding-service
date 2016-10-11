@@ -23,8 +23,8 @@ import static org.hamcrest.Matchers.*;
 @RunWith(MockitoJUnitRunner.class)
 public class SpendProfileTableCalculatorTest extends BaseUnitTest {
 
-    private static final String ROW_NAME_1 = "ROW_NAME_1";
-    private static final String ROW_NAME_2 = "ROW_NAME_2";
+    private static final Long ROW_NAME_1 = 1L;
+    private static final Long ROW_NAME_2 = 2L;
 
     private static final BigDecimal CELL_1_1 = new BigDecimal("10.19");
     private static final BigDecimal CELL_1_2 = new BigDecimal("15.49");
@@ -41,13 +41,13 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
             .add(CELL_2_1)
             .add(CELL_2_2);
 
-    private static final Map<String, List<BigDecimal>> TABLE_DATA = ImmutableMap.<String, List<BigDecimal>>builder()
+    private static final Map<Long, List<BigDecimal>> TABLE_DATA = ImmutableMap.<Long, List<BigDecimal>>builder()
             .put(ROW_NAME_1, Lists.newArrayList(CELL_1_1, CELL_1_2))
             .put(ROW_NAME_2, Lists.newArrayList(CELL_2_1, CELL_2_2))
             .build();
 
     //Use row totals as eligible costs for this test.
-    private static final Map<String, BigDecimal> ELIGIBLE_DATA = ImmutableMap.<String, BigDecimal>builder()
+    private static final Map<Long, BigDecimal> ELIGIBLE_DATA = ImmutableMap.<Long, BigDecimal>builder()
             .put(ROW_NAME_1, ROW_1_EXPECTED_TOTAL)
             .put(ROW_NAME_2, ROW_2_EXPECTED_TOTAL)
             .build();
@@ -58,7 +58,7 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
 
     @Test
     public void testCalculateRowTotal() {
-        Map<String, BigDecimal> result = spendProfileTableCalculator.calculateRowTotal(TABLE_DATA);
+        Map<Long, BigDecimal> result = spendProfileTableCalculator.calculateRowTotal(TABLE_DATA);
 
         assertThat(result.get(ROW_NAME_1), equalTo(ROW_1_EXPECTED_TOTAL));
         assertThat(result.get(ROW_NAME_2), equalTo(ROW_2_EXPECTED_TOTAL));

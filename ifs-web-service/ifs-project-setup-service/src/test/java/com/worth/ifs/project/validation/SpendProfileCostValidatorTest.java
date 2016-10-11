@@ -39,9 +39,9 @@ public class SpendProfileCostValidatorTest {
     public void testWhenCostsAreFractional() {
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
+                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
 
 
         validator.validate(table, bindingResult);
@@ -50,9 +50,9 @@ public class SpendProfileCostValidatorTest {
 
         List<ObjectError> errors = bindingResult.getAllErrors();
 
-        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: Labour, Month#: 1");
-        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: Materials, Month#: 2");
-        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: Other costs, Month#: 3");
+        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: 1, Month#: 1");
+        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: 2, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: 3, Month#: 3");
 
     }
 
@@ -60,9 +60,9 @@ public class SpendProfileCostValidatorTest {
     public void testWhenCostsAreLessThanZero() {
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("0"), new BigDecimal("00"), new BigDecimal("-1")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("1"), new BigDecimal("-33"))));
+                1L, asList(new BigDecimal("0"), new BigDecimal("00"), new BigDecimal("-1")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("1"), new BigDecimal("-33"))));
 
 
         validator.validate(table, bindingResult);
@@ -71,18 +71,18 @@ public class SpendProfileCostValidatorTest {
 
         List<ObjectError> errors = bindingResult.getAllErrors();
 
-        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: Labour, Month#: 3");
-        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: Materials, Month#: 2");
-        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: Other costs, Month#: 3");
+        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: 1, Month#: 3");
+        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: 2, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: 3, Month#: 3");
     }
 
     @Test
     public void testWhenCostsAreGreaterThanOrEqualToMillion() {
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
+                1L, asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
 
 
         validator.validate(table, bindingResult);
@@ -91,18 +91,18 @@ public class SpendProfileCostValidatorTest {
 
         List<ObjectError> errors = bindingResult.getAllErrors();
 
-        assertExpectedErrors(errors, "Cost cannot be million or more. Category: Labour, Month#: 1");
-        assertExpectedErrors(errors, "Cost cannot be million or more. Category: Materials, Month#: 2");
-        assertExpectedErrors(errors, "Cost cannot be million or more. Category: Other costs, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot be million or more. Category: 1, Month#: 1");
+        assertExpectedErrors(errors, "Cost cannot be million or more. Category: 2, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot be million or more. Category: 3, Month#: 2");
     }
 
     @Test
     public void testWhenCostsAreFractionalLessThanZeroOrGreaterThanMillion() {
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
+                1L, asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
 
 
         validator.validate(table, bindingResult);
@@ -111,18 +111,18 @@ public class SpendProfileCostValidatorTest {
 
         List<ObjectError> errors = bindingResult.getAllErrors();
 
-        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: Labour, Month#: 1");
-        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: Materials, Month#: 2");
-        assertExpectedErrors(errors, "Cost cannot be million or more. Category: Other costs, Month#: 3");
+        assertExpectedErrors(errors, "Cost cannot contain fractional part. Category: 1, Month#: 1");
+        assertExpectedErrors(errors, "Cost cannot be less than zero. Category: 2, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot be million or more. Category: 3, Month#: 3");
     }
 
     @Test
     public void successWhenAllCostsAreCorrect() {
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("30"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("100"))));
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("30"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("100"))));
 
 
         validator.validate(table, bindingResult);
