@@ -29,7 +29,7 @@ public class ProjectStatusControllerDocumentation extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testGetCompetitionStatus() throws Exception {
+    public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
         CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().build();
 

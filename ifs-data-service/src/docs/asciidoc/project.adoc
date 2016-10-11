@@ -494,28 +494,41 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.
 === Approve Finance Check
 ==== Success
 ===== Request
-include::{snippets}/project/test-approve-finance-check/http-request.adoc[]
-include::{snippets}/project/test-approve-finance-check/path-parameters.adoc[]
+include::{snippets}/project/approve-finance-check/http-request.adoc[]
+include::{snippets}/project/approve-finance-check/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/test-approve-finance-check/http-response.adoc[]
+include::{snippets}/project/approve-finance-check/http-response.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/test-approve-finance-check/curl-request.adoc[]
+include::{snippets}/project/approve-finance-check/curl-request.adoc[]
 
 
 === Get Finance Check Approval Status
 ==== Success
 ===== Request
-include::{snippets}/project/test-get-finance-check-approval-status/http-request.adoc[]
-include::{snippets}/project/test-get-finance-check-approval-status/path-parameters.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/http-request.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/test-get-finance-check-approval-status/http-response.adoc[]
-include::{snippets}/project/test-get-finance-check-approval-status/response-fields.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/http-response.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/response-fields.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/test-get-finance-check-approval-status/curl-request.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/curl-request.adoc[]
+
+=== Get Finance Check Summary
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-summary/http-request.adoc[]
+include::{snippets}/project/get-finance-check-summary/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-summary/http-response.adoc[]
+include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
 
 
 === Get Spend Profile CSV
