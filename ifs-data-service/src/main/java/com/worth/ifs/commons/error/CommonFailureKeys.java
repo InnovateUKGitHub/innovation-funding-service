@@ -155,11 +155,15 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Finance Checks
      */
     FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW(INTERNAL_SERVER_ERROR),
+    FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST(BAD_REQUEST),
+    FINANCE_CHECKS_COST_LESS_THAN_ZERO(BAD_REQUEST),
+    FINANCE_CHECKS_COST_NULL(BAD_REQUEST),
 
     /**
      * Offer letter
      */
     GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT(BAD_REQUEST);
+
 
     private ErrorTemplate errorTemplate;
 

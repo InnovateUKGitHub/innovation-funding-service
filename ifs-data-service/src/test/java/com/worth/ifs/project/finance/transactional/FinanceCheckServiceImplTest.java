@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -24,7 +25,9 @@ import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
@@ -32,15 +35,17 @@ import java.util.Optional;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.project.builder.CostBuilder.newCost;
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
-import static com.worth.ifs.project.builder.FinanceCheckBuilder.newFinanceCheck;
-import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
+import static com.worth.ifs.project.builder.CostResourceBuilder.newCostResource;
+import static com.worth.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
+import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -54,6 +59,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_FINANCE_C
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
 
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
@@ -124,6 +130,49 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         setLoggedInUser(loggedInUserResource);
 
         ServiceResult result = service.save(financeCheckResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveFinanceCheckValidationFail(){
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
+                withProject(projectId).
+                withOrganisation(organisationId).
+                withCostGroup(newCostGroupResource().
+                        withCosts(newCostResource().
+                                withValue(new BigDecimal("1.01"), null, new BigDecimal("-1"), new BigDecimal("1.00")).build(4)).
+                        build()).
+                build();
+
+        ServiceResult result = service.validate(financeCheckResource);
+
+        assertTrue(result.isFailure());
+        assertEquals(3, result.getErrors().size());
+        assertEquals(3, result.getErrors().size());
+        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST)));
+        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST,  HttpStatus.BAD_REQUEST)));
+        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_COST_NULL, HttpStatus.BAD_REQUEST)));
+    }
+
+    @Test
+    public void testSaveFinanceCheckValidationPass(){
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
+                withProject(projectId).
+                withOrganisation(organisationId).
+                withCostGroup(newCostGroupResource().
+                        withCosts(newCostResource().
+                                withValue(new BigDecimal("1.00"), BigDecimal.ZERO, BigDecimal.ONE).build(3)).
+                        build()).
+                build();
+
+        ServiceResult result = service.validate(financeCheckResource);
 
         assertTrue(result.isSuccess());
     }

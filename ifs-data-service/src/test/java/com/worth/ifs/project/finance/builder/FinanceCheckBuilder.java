@@ -1,11 +1,9 @@
-package com.worth.ifs.project.builder;
+package com.worth.ifs.project.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.CostGroup;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
-import com.worth.ifs.project.finance.resource.CostGroupResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.user.domain.Organisation;
 
 import java.util.List;

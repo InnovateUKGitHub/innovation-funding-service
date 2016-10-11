@@ -327,12 +327,30 @@ CompAdmin approves other documents
     When the user clicks the button/link              jQuery=button:contains("Accept documents")
     And the user clicks the button/link               jQuery=.modal-accept-docs .button:contains("Accept Documents")
     Then the user should see the text in the page     The documents provided have been approved.
+    [Teardown]  Logout as user
+
+Project Finance is able to Approve and Reject
+    [Documentation]  INFUND-4621, INFUND-5440
+    [Tags]
+    [Setup]  Log in as user                           project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
+    Then the user should see the text in the page     Other documents
+    And the user should see the element               jQuery=button:contains("Accept documents")
+    And the user should see the element               jQuery=button:contains("Reject documents")
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=.modal-accept-docs button:contains("Cancel")
+    Then the user should not see an error in the page
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
+    Then the user should not see an error in the page
+    [Teardown]  logout as user
 
 #TODO INFUND-5424 Partners should be able to see documents approved
 
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
     [Tags]    HappyPath
+    [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
     And the user should see the text in the page      Other documents
     When the user clicks the button/link              jQuery=button:contains("Reject documents")
@@ -350,6 +368,19 @@ CompAdmin can see Project status updated
     Then the user should see the element   jQuery=tr:nth-child(1):contains("best riffs")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
+
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok
+
+
 
 #TODO INFUND-5424 Partners should be able to see documents rejected
 
