@@ -43,6 +43,10 @@ public class ApplicationFinanceResourceBuilder extends BaseBuilder<ApplicationFi
         return with(finance -> finance.setOrganisation(organisationId));
     }
 
+    public ApplicationFinanceResourceBuilder withFinanceFileEntry(Long financeFileEntry) {
+        return with(finance -> finance.setFinanceFileEntry(financeFileEntry));
+    }
+
     public ApplicationFinanceResourceBuilder withGrantClaimPercentage(Integer percentage) {
         return with(finance -> {
             GrantClaimCategory costCategory = new GrantClaimCategory();

@@ -116,6 +116,17 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator() {
+        allGlobalRoleUsers.forEach(user -> {
+                if (user.equals(projectFinanceUser())) {
+                    assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
+                } else {
+                    assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
+                }
+        });
+    }
+
+    @Test
     public void testUpdateCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
