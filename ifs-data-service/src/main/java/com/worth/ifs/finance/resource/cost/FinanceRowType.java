@@ -3,7 +3,7 @@ package com.worth.ifs.finance.resource.cost;
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
-public enum FinanceRowType implements CostCategoryGenerator {
+public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     LABOUR("labour", true, "Labour"),
     OVERHEADS("overheads", true, "Overheads"),
     MATERIALS("materials", true, "Materials"),
