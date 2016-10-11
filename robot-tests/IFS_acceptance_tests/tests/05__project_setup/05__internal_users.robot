@@ -41,7 +41,7 @@ Other internal users do not have access to the Summary Overview
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details
     [Documentation]    INFUND-4903
-    [Tags]
+    [Tags]    Experian
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=Killer Riffs
