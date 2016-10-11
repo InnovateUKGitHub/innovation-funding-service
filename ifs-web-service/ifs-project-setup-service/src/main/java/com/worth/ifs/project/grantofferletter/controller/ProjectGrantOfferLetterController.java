@@ -53,6 +53,27 @@ public class ProjectGrantOfferLetterController {
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
 
+    @RequestMapping(value="/confirmation", method = GET)
+    public String confirmation(@PathVariable("projectId") Long projectId, Model model) {
+        model.addAttribute("projectId", projectId);
+        return BASE_DIR + "/grant-offer-letter-confirmation";
+    }
+
+    @RequestMapping(params = "confirmSubmit", method = POST)
+    public String submit(@PathVariable("projectId") Long projectId,
+                         @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler,
+                         Model model,
+                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+
+        return validationHandler.performActionOrBindErrorsToField("",
+                () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form),
+                () -> "redirect:/project/" + projectId,
+                () -> projectService.submitGrantOfferLetter(projectId));
+    }
+
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
     public String uploadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
@@ -166,7 +187,7 @@ public class ProjectGrantOfferLetterController {
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(), project.isOfferRejected());
+                project.getOfferSubmittedDate(), project.isOfferRejected(), false);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {

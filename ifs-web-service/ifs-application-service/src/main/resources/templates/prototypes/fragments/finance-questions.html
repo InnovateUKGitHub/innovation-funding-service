@@ -45,10 +45,10 @@
 					<tr>
 						<th class="width-large">
 							
-							<label class="form-label" for="working_days">Working Days per Year</label>
+							<label class="form-label" for="cost-labour-1-workingDays">Working Days per Year</label>
 						</th>
 						<td>
-							<input type="number" class="width-small" id="cost-labour-1-workingDays" name="labour-workingDays-1" value="232" />
+							<input type="number" readonly="readonly" class="width-small" id="cost-labour-1-workingDays" name="labour-workingDays-1" value="232" />
 						</td>
 					</tr>
 				</tbody>
@@ -58,79 +58,89 @@
 					<thead>
 						<tr>
 							<th>Role within project</th>
-							<th class="numeric">Gross Annual Salary</th>
-							<th class="numeric">Rate (&pound;/day)</th>
-							<th class="numeric">Days to be spent by all staff at this grade</th>
+							<th class="alignright">Gross Annual Salary</th>
+							<th class="alignright">Rate (&pound;/day)</th>
+							<th class="alignright">Number of staff</th>
+							<th class="alignright">Days to be spent</th>
+							<th class="alignright">Total costs</th>
 						</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="5">Total labour costs</td>
+						<td class="alignright">
+							<span data-subsection-id="9" class="section-status complete place-in-header">
+								<span data-binding-output="subsection-total-9">£ 126,207</span>
+							</span>
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 						
 						<tr data-cost-row="2">
 							<td>
-								<input type="text" name="labour-role-2" id="cost-labour-2-labourRole" value="Manager" />
+								<input type="text" readonly="readonly" name="labour-role-2" id="cost-labour-2-labourRole" value="Manager" />
 							</td>
 							<td class="numeric">
-								<input type="number" name="labour-grossAnnualSalary-2" id="cost-labour-2-labourGrossSalary" class="width-medium" value="50000" />
+								<input type="number" readonly="readonly" name="labour-grossAnnualSalary-2" id="cost-labour-2-labourGrossSalary" class="width-medium" value="50000" />
 							</td>
 							<td class="numeric">
-								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="215.51724" id="cost-labour-2-labourRate" class="width-medium" name="labour-labourRate-2" value="£ 216" />
+								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="215.51724" id="cost-labour-2-labourRate" class="width-small" name="labour-labourRate-2" value="£ 216" />
 							</td>
 							<td class="numeric">
-								<input type="number" class="width-medium" id="cost-labour-2-labourDays" name="labour-labourDays-2" value="168" />
+								<input type="number" class="width-small" id="cost-labour-2-staff" name="cost-labour-2-staff" value="" />
 							</td>
-						</tr>
-						<tr data-cost-row="2">
+							<td class="numeric">
+								<input type="number" readonly="readonly" class="width-small" id="cost-labour-2-labourDays" name="labour-labourDays-2" value="168" />
+							</td>
 							<td colspan="4" class="numeric">
-								Total costs
-								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-2-labourDays" data-calculation-rawvalue="36206.89632" name="labour-total-2" class="width-medium" id="cost-labour-2-labourTotalCost" value="£ 36,207" />
-								<a class="delete-row control" data-cost-row="2" href="/application/1/form/deletecost/7/2">Remove</a>
-							</td>
-						</tr>
-						
-						
-						<tr data-cost-row="4">
-							<td>
-								<input type="text" name="labour-role-4" id="cost-labour-4-labourRole" value="Engineer" />
-							</td>
-							<td class="numeric">
-								<input type="number" name="labour-grossAnnualSalary-4" class="width-medium" id="cost-labour-4-labourGrossSalary" value="30000" />
-							</td>
-							<td class="numeric">
-								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="129.31034" class="width-medium" id="cost-labour-4-labourRate" name="labour-labourRate-4" value="£ 129" />
-							</td>
-							<td class="numeric">
-								<input type="number" class="width-medium" id="cost-labour-4-labourDays" name="labour-labourDays-4" value="696" />
+								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-2-labourDays" data-calculation-rawvalue="36206.89632" name="labour-total-2" class="width-small" id="cost-labour-2-labourTotalCost" value="£ 36,207" />
+								<!--<a class="delete-row control" data-cost-row="2" href="/application/1/form/deletecost/7/2">Remove</a>-->
 							</td>
 						</tr>
 						<tr data-cost-row="4">
+							<td>
+								<input type="text" readonly="readonly" name="labour-role-4" id="cost-labour-4-labourRole" value="Engineer" />
+							</td>
+							<td class="numeric">
+								<input type="number" readonly="readonly" name="labour-grossAnnualSalary-4" class="width-medium" id="cost-labour-4-labourGrossSalary" value="30000" />
+							</td>
+							<td class="numeric">
+								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="129.31034" class="width-small" id="cost-labour-4-labourRate" name="labour-labourRate-4" value="£ 129" />
+							</td>
+							<td class="numeric">
+								<input type="number" class="width-small" id="cost-labour-4-staff" name="cost-labour-2-staff" value="" />
+							</td>
+							<td class="numeric">
+								<input type="number" readonly="readonly" class="width-small" id="cost-labour-4-labourDays" name="labour-labourDays-4" value="696" />
+							</td>
 							<td colspan="4" class="numeric">
-								Total costs
-								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-4-labourDays" data-calculation-rawvalue="89999.99664" name="labour-total-4" class="width-medium" id="cost-labour-4-labourTotalCost" value="£ 90,000" />
-								<a class="delete-row control" data-cost-row="4" href="/application/1/form/deletecost/7/4">Remove</a>
+								<input type="text" data-calculation-operations="/,*" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays,#cost-labour-4-labourDays" data-calculation-rawvalue="89999.99664" name="labour-total-4" class="width-small" id="cost-labour-4-labourTotalCost" value="£ 90,000" />
+								<!--<a class="delete-row control" data-cost-row="4" href="/application/1/form/deletecost/7/4">Remove</a>-->
 							</td>
 						</tr>
 						
 					</tbody>
 				</table>
-				<p class="alignright">
-					<a class="add-another-row" data-clone-rows="0-1" href="/application/1/form/addcost/7/28?expand=true&amp;panel=collapsible-0">Add another role</a>
-				</p>
+				<!--<p class="alignright">-->
+					<!--<a class="add-another-row" data-clone-rows="0-1" href="/application/1/form/addcost/7/28?expand=true&amp;panel=collapsible-0">Add another role</a>-->
+				<!--</p>-->
 			</div>
-			<div class="form-group form-group--align-right alignright">
-				<label>
-					Total labour costs
-					<input class="form-control form-control-1-4 alignright" data-calculation-fields="[id*=labourTotalCost]" data-calculation-operations="+" readonly="" type="text" id="cost-labour-total-field" data-binding-input="subsection-total-9" data-calculation-rawvalue="126206.89296" value="£ 126,207" />
-					<span style="display: none;" data-subsection-id="9" class="section-status complete place-in-header">
-						<span data-binding-output="subsection-total-9">£ 126,207</span>
-					</span>
-				</label>
-			</div>
+			<!--<div class="form-group form-group&#45;&#45;align-right alignright">-->
+				<!--<label>-->
+					<!--Total labour costs-->
+					<!--<input class="form-control form-control-1-4 alignright" data-calculation-fields="[id*=labourTotalCost]" data-calculation-operations="+" readonly="" type="text" id="cost-labour-total-field" data-binding-input="subsection-total-9" data-calculation-rawvalue="126206.89296" value="£ 126,207" />-->
+					<!--<span style="display: none;" data-subsection-id="9" class="section-status complete place-in-header">-->
+						<!--<span data-binding-output="subsection-total-9">£ 126,207</span>-->
+					<!--</span>-->
+				<!--</label>-->
+			<!--</div>-->
 			
 			<div class="alignright-button">
 		            
-	            <button type="submit" name="mark_as_complete" class="button" formaction="#question-31" value="31">Mark as complete
-	            </button>
-	            
+	            <!--<button type="submit" name="mark_as_complete" class="button" formaction="#question-31" value="31">Mark as complete</button>-->
+				<button type="submit" name="edit" class="button-secondary">Edit</button>
+
 	        </div>
 
 		</div>

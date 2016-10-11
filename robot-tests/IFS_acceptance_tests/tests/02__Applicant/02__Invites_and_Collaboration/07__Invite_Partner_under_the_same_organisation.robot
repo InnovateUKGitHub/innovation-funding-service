@@ -27,8 +27,8 @@ Create a new application
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-    input text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${NAME}
-    input text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${EMAIL}
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${NAME}
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${EMAIL}
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    ${APPLICATION NAME}

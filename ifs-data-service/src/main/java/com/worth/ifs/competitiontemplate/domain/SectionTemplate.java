@@ -46,7 +46,7 @@ public class SectionTemplate {
     @OrderBy("priority ASC")
     private List<SectionTemplate> childSectionTemplates;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTemplateId", referencedColumnName="id")
     private CompetitionTemplate competitionTemplate;
 

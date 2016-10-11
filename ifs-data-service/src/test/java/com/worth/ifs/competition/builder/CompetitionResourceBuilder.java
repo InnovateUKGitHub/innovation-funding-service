@@ -23,14 +23,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return new CompetitionResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public CompetitionResourceBuilder withApplications(List<Long> applications) {
-        return with(competition -> competition.setApplications(applications));
-    }
-
-    public CompetitionResourceBuilder withSections(List<Long> sections) {
-        return with(competition -> competition.setSections(sections));
-    }
-
     public CompetitionResourceBuilder withName(String name) {
         return with(competition -> setField("name", name, competition));
     }

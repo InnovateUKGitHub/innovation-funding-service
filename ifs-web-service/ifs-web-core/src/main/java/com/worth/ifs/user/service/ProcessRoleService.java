@@ -16,5 +16,6 @@ public interface ProcessRoleService {
     Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId);
 
     Future<ProcessRoleResource> getById(Long id);
-    List<ProcessRoleResource> getByIds(List<Long> ids);
+
+    List<ProcessRoleResource> getByApplicationId(Long applicationId);
 }

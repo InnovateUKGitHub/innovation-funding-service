@@ -264,6 +264,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
+    @Override
+    public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
+        return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
+    }
+
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));

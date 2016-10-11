@@ -28,7 +28,7 @@
 	<div th:if="${param.spend != null and param.spend[0] == 'high'}" th:remove="tag">
 
 		<div class="warning-alert extra-margin-bottom">
-			<h2 class="heading-small">Your spend profile has total costs higher than eligible project costs, this cannot be submitted with higher total costs.</h2>
+			<h2 class="heading-small">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
 			<p class="no-margin-bottom">Please review:</p>
 			<ul class="list-bullet">
 				<li>Subcontracting costs</li>
@@ -40,7 +40,7 @@
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject' and param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<div class="success-alert extra-margin-bottom">
-			<p><strong>All Project Spend profiles have been submitted to Innovate UK</strong></p>
+			<p><strong>All project spend profiles have been submitted to Innovate UK.</strong></p>
 		</div>
 	</div>
 
@@ -50,7 +50,7 @@
 		</div>
 	</div>
 
-	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
+	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
 
 	<dl class="standard-definition-list">
 		<dt>Project start date</dt>
@@ -73,7 +73,7 @@
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 		<h2 class="heading-medium">Partner project costs</h2>
-		<p class="form-hint">These are the project costs for your partners on the project</p>
+		<p class="form-hint">These are the project costs for your partners on the project.</p>
 
 		<table id="partner-totals">
 			<thead>
@@ -120,7 +120,7 @@
 	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project - Spend profile</h2>
+		<h2 class="heading-medium">Project spend profile</h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
@@ -160,7 +160,7 @@
 						<th colspan="4" class="aligncentre separate-cell year">2017</th>
 						<th class="aligncentre separate-cell">2018</th>
 						<th scope="col" rowspan="2" class="total" id="grand-total">Total</th>
-						<th scope="col" rowspan="2" class="total eligible" id="eligible-project-cost">Eligible project cost
+						<th scope="col" rowspan="2" class="total eligible" id="eligible-project-cost">Eligible project costs
 						</th>
 					</tr>
 					<tr>
@@ -403,9 +403,6 @@
 
 		<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
-			<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-				<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
-			</div>
 
 
 			<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
@@ -416,9 +413,14 @@
 				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 			</div>
 
+			<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
+				<!--<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>-->
+				<p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
+			</div>
+
 			<p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit, make sure you are satisfied with your spend profile and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
 
-			<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the spend profile mark the section as complete, this will allow you to submit the project spend profile to innovate UK. If you wish you return to allow edits to this page.</p>
+			<!--<p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the spend profile mark the section as complete, this will allow you to submit the project spend profile to innovate UK. If you wish you return to allow edits to this page.</p>-->
 
 
 			<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
@@ -502,11 +504,15 @@
 		</div>
 
 		<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-			<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
+			<!--<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>-->
 
 			<div class="extra-margin">
 				<a href="#" class="button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
 			</div>
+
+			<p></p>
+
+			<p class="extra-margin">Before you submit, make sure you are satisfied with your spend profile and that it matches the eligible project costs. You can submit your spend profile to the lead partner. They will then submit to Innovate UK.</p>
 
 			<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
