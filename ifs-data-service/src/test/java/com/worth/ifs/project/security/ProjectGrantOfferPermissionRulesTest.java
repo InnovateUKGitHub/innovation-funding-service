@@ -102,6 +102,26 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.partnersCanDownloadGrantOfferLetter(project, user));
     }
 
+    @Test
+    public void testProjectManagerCanSubmitOfferLetter() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+
+    }
+
+    @Test
+    public void testNonProjectManagerCannotSubmitOfferLetter() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectManager(user);
+
+        assertFalse(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+    }
 
     @Override
     protected ProjectGrantOfferPermissionRules supplyPermissionRulesUnderTest() {
