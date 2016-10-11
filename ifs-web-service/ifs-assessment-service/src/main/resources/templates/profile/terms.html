@@ -14,9 +14,9 @@
 
             <div ifs:utext="${model.getTerms()}"/>
 
-            <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.</p>
+            <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
-            <form th:action="@{/registration/terms}" method="post" th:object="${form}">
+            <form th:action="@{/profile/terms}" method="post" th:object="${form}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
                     <fieldset>
                         <legend>
