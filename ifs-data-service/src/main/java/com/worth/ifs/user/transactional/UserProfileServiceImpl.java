@@ -74,12 +74,12 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<AffiliationResource>> getUserAffilliations(Long userId) {
+    public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
     }
 
     @Override
-    public ServiceResult<Void> updateUserAffilliations(long userId, List<AffiliationResource> affiliations) {
+    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
             targetAffiliations.clear();

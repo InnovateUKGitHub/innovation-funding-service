@@ -1,5 +1,6 @@
 package com.worth.ifs.project.transactional;
 
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -161,6 +164,17 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
 
+    }
+
+    @Override
+    public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSignedGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            project.setOfferSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
     }
 
     private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {

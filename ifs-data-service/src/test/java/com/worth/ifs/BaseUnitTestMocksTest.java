@@ -94,7 +94,7 @@ import org.mockito.MockitoAnnotations;
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
-    protected AffiliationMapper affilliationMapperMock;
+    protected AffiliationMapper affiliationMapperMock;
 
     @Mock
     protected AlertService alertServiceMock;

@@ -218,8 +218,8 @@ table{
 		//.sub-header,
 		//.hgroup,
 		.centralise{
-			@extend %site-width-container;
-  			@extend %contain-floats;
+			//@extend %site-width-container;
+  			//@extend %contain-floats;
   			box-sizing: border-box;
 		}
 

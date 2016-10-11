@@ -5,6 +5,7 @@ import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -129,7 +130,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
-        return new CompetitionSearchResultItem(c.getId(), c.getName(), ofNullable(c.getInnovationArea()).map(Category::getName).orElse(null), c.getApplications().size(), c.startDateDisplay(), c.getCompetitionStatus(), c.getCompetitionType().getName());
+        return new CompetitionSearchResultItem(c.getId(),
+                c.getName(),
+                ofNullable(c.getInnovationArea()).map(Category::getName).orElse(null),
+                c.getApplications().size(),
+                c.startDateDisplay(),
+                c.getCompetitionStatus(),
+                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null));
     }
 
     @Override

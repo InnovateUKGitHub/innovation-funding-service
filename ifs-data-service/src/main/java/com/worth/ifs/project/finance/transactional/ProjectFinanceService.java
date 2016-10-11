@@ -14,6 +14,14 @@ public interface ProjectFinanceService {
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can generate a Spend Profile for any Project" )
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
+    ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can get the approved status of a Spend Profile for any Project" )
+    ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId);
+
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
     ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
@@ -28,4 +36,7 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
+
+    @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
+    ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 }

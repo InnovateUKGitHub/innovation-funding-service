@@ -39,5 +39,11 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     public boolean projectManagerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
     }
+    @PermissionRule(
+            value = "SUBMIT_GRANT_OFFER_LETTER",
+            description = "Project manager can submit the grant offer letter")
+    public boolean projectManagerSubmitGrantOfferLetter(Long projectId, UserResource user) {
+        return isProjectManager(projectId, user.getId());
+    }
 
 }
