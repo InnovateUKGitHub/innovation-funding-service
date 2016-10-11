@@ -36,6 +36,10 @@ public class CostCategoryBuilder extends BaseBuilder<CostCategory, CostCategoryB
         return withArray((name, costCategory) -> setField("name", name, costCategory), names);
     }
 
+    public CostCategoryBuilder withLabel(String... labels) {
+        return withArray((label, costCategory) -> setField("label", label, costCategory), labels);
+    }
+
 
 
 }

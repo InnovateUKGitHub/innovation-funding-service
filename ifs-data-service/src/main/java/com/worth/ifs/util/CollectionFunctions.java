@@ -708,6 +708,12 @@ public final class CollectionFunctions {
         return transformedContaining.containsAll(transformedContained);
     }
 
+    public static <T extends Comparable<T>> List<T> sorted(Collection<T> toSort){
+        List<T> sorted = new ArrayList<T>(toSort);
+        Collections.sort(sorted);
+        return sorted;
+    }
+
     public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
         SortedMap<T, List<R>> orderedMap = new TreeMap<>();
         if (orderedList != null) {
