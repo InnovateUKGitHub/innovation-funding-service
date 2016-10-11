@@ -1,4 +1,4 @@
-// Set up the handlers for adding and removing Cost Category costs rows
+// Set up the handlers for adding and removing additional rows for declaration of interest fields
 IFS.assessment.repeatableDeclarationRows = (function() {
     'use strict';
 
