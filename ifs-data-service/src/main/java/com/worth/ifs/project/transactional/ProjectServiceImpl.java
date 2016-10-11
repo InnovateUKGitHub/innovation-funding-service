@@ -468,7 +468,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
                     List<Long> partnerIds = simpleMap(partners, p -> p.getUser().getId());
-                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId() == userId);
+                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(userId));
                     if (partnerIds.contains(userId)) {
                         return serviceSuccess(projectUser.get()); // Already a partner
                     } else {
