@@ -6,6 +6,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-4145: As an Assessor and I am accepting an invitation to assess within a competition and I don't have an account, I need to select that I create an account in order to be available to assess applications.
 ...
 ...               INFUND-1478 As an Assessor creating an account I need to supply my contact details so that Innovate UK can contact me to assess applications.
+...
+...               INFUND-4919 As an assessor and I have completed setting up my account I can see my dashboard so that I can see the competitions I have accepted to assess.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -45,7 +47,7 @@ Register as an assessor
 
 Create assessor account: Contact details server-side validations
     [Documentation]    INFUND-4916
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     And The user should be redirected to the correct page    ${Create_account_contact_details_assessor3}
     When Then the user clicks the button/link    jQuery=button:contains("Continue")
@@ -66,7 +68,7 @@ Create assessor account: Contact details server-side validations
 
 Create assessor account: Contact details client-side validations
     [Documentation]    INFUND-4916
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    T
     And the user moves focus away from the element    id=firstName
     Then The user should not see the text in the page    Please enter a first name
@@ -144,7 +146,7 @@ Create assessor account: Contact details client-side validations
 
 Create assessor account: Contact details (save and edit)
     [Documentation]
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     When The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
@@ -159,6 +161,16 @@ Create assessor account: Contact details (save and edit)
    # And the user reloads the page
    # Then the assessor should see the changed data
     Then the user should be redirected to the correct page    ${LOGIN_URL}
+
+Create assessor account: Accepted competitions should be displayed in dashboard
+    [Documentation]    INFUND-4957
+    [Tags]    Pendin
+    # TODO remove the pending once the devs have merged their changes into development
+    When guest user log-in    worth.email.test+assessor3@gmail.com    Password1Password1
+    Then the user should see the element    link=Juggling Craziness
+    And the user clicks the button/link    link=Juggling Craziness
+    And The user should see the text in the page    Juggling Craziness
+    [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631, INFUND-4636
