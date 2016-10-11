@@ -67,8 +67,8 @@ Links to other sections in Project setup dependant on project details (applicabl
     And the user should see the text in the page    Successful application
     Then the user should not see the element    link = Monitoring Officer 
     And the user should not see the element    link = Bank details
-     And the user should not see the element    link = Finance checks
-     And the user should not see the element    link = Spend profile 
+    And The user should not see the element    link = Finance checks
+    And The user should not see the element   link= Spend profile
     And the user should not see the element    link = Bank details 
     And the user should not see the element    link = Grant offer letter
     [Teardown]    logout as user
