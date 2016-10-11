@@ -64,11 +64,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .withBusinessType(businessType)
                 .build();
 
-        UserResource user = newUserResource()
-                .withProfile(profile)
-                .build();
-
-        when(userService.updateProfile(1L, profile)).thenReturn(serviceSuccess(user));
+        when(userService.updateProfile(1L, profile)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/profile/skills")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -95,7 +91,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
                 .andExpect(view().name("profile/innovation-areas"))
                 .andReturn();
-
 
         AssessorRegistrationSkillsForm form = (AssessorRegistrationSkillsForm) result.getModelAndView().getModel().get("form");
         assertEquals(skillAreas, form.getSkillAreas());

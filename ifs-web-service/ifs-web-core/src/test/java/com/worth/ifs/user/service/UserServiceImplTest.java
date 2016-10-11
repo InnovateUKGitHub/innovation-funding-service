@@ -99,12 +99,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void updateProfile() throws Exception {
         Long userId = 1L;
         ProfileResource profile = newProfileResource().build();
-        UserResource expected = newUserResource().withId(userId).withProfile(profile).build();
 
-        when(userRestService.updateProfile(userId, profile)).thenReturn(restSuccess(expected));
+        when(userRestService.updateProfile(userId, profile)).thenReturn(restSuccess());
 
-        UserResource result = service.updateProfile(userId, profile).getSuccessObject();
-        assertEquals(profile, result.getProfile());
+        service.updateProfile(userId, profile).getSuccessObject();
+        verify(userRestService, only()).updateProfile(userId, profile);
     }
 
     @Test
