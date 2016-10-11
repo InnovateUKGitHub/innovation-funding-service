@@ -133,6 +133,17 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
+    @Test
+    public void testSubmitGrantOfferLetter() {
+        final Long projectId = 1L;
+
+        assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).projectManagerSubmitGrantOfferLetter(projectId, getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+
     @Override
     protected Class<? extends ProjectGrantOfferService> getClassUnderTest() {
         return TestProjectGrantOfferService.class;
@@ -187,6 +198,11 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
             return null;
         }
     }

@@ -27,6 +27,7 @@ IFS.core.loadOrder = {
       IFS.core.autoSave.init();
       IFS.core.formValidation.init();
       IFS.core.wordCount.init();
+      IFS.core.disableSubmitUntilChecked.init();
     },
     finalize : function(){
       IFS.core.modal.init();

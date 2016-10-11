@@ -14,7 +14,6 @@ public class SpendProfileDocs {
             fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table"),
             fieldWithPath("costCategoryResourceMap").description("Cost category Id to Cost category resource mapping"),
             fieldWithPath("costCategoryGroupMap").description("Cost category grouped based on labels")
-
     };
 
     public static final FieldDescriptor[] spendProfileCSVFields = {
@@ -32,5 +31,6 @@ public class SpendProfileDocs {
             fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
             fieldWithPath("generatedBy").description("The user who generated this Spend Profile"),
             fieldWithPath("generatedDate").description("The date and time at which this Spend Profile was generated"),
+            fieldWithPath("approval").description("If the spend profile is approved or rejected")
     };
 }

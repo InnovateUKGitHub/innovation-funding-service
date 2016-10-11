@@ -13,6 +13,7 @@ import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
+import com.worth.ifs.project.util.SpendProfileTableCalculator;
 import com.worth.ifs.project.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
@@ -66,6 +67,9 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private SpendProfileTableCalculator spendProfileTableCalculator;
 
     @Autowired
     @Qualifier("spendProfileCostValidator")
@@ -196,21 +200,21 @@ public class ProjectSpendProfileController {
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
+        SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
-        SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
-        Map<Long, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
-        List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
-
-        BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
-        BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
+        List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
+
+        BigDecimal totalOfAllActualTotals = spendProfileTableCalculator.calculateTotalOfAllActualTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
+        BigDecimal totalOfAllEligibleTotals = spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
+
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
-                totalOfAllActualTotals, totalOfAllEligibleTotals, spendProfileTableResource.getCostCategoryGroupMap(),
+                totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
                 spendProfileTableResource.getCostCategoryResourceMap(), isResearch);
     }
 
@@ -278,6 +282,7 @@ public class ProjectSpendProfileController {
                 ).collect(toList());
     }
 
+
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -288,7 +293,8 @@ public class ProjectSpendProfileController {
         return new ProjectSpendProfileProjectManagerViewModel(projectId,
                 projectResource.getName(),
                 partnersSpendProfileProgress,
-                partnerOrganisations);
+                partnerOrganisations,
+                projectResource.getSpendProfileSubmittedDate() != null);
     }
 
     private boolean userHasProjectManagerRole(UserResource user, Long projectId) {

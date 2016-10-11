@@ -47,4 +47,6 @@ public interface ProjectGrantOfferService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")
     ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
+    @PreAuthorize("hasPermission(#projectId, 'SUBMIT_GRANT_OFFER_LETTER')")
+    ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 }

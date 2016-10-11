@@ -4,6 +4,7 @@ import com.worth.ifs.project.finance.domain.SpendProfile;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Optional;
+import java.util.List;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -12,4 +13,5 @@ import java.util.Optional;
  */
 public interface SpendProfileRepository extends PagingAndSortingRepository<SpendProfile, Long> {
     Optional<SpendProfile> findOneByProjectIdAndOrganisationId(Long projectId, Long organisationId);
+    List<SpendProfile> findByProjectId(Long projectId);
 }

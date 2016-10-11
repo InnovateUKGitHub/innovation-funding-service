@@ -159,6 +159,15 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void testCompleteSpendProfilesReview() throws Exception {
+        Long projectId = 1L;
+        when(projectFinanceServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
+                .andExpect(status().isOk());
+    }
+
     @Override
     protected ProjectFinanceController supplyControllerUnderTest() {
         return new ProjectFinanceController();

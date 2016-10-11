@@ -35,6 +35,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -123,6 +124,25 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
         }
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        updateApprovalOfSpendProfile(projectId, approvalType);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+
+        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+           return serviceSuccess(ApprovalType.REJECTED);
+        } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
+           return serviceSuccess(ApprovalType.APPROVED);
+        }
+
+        return serviceSuccess(ApprovalType.UNSET);
     }
 
     @Override
@@ -227,6 +247,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             resource.setId(profile.getId());
             resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
             resource.setGeneratedDate(profile.getGeneratedDate());
+            resource.setMarkedAsComplete(profile.isMarkedAsComplete());
             return resource;
         });
     }
@@ -251,6 +272,21 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId) {
         return find(costCategoryTypeRepository.findByCostCategoryGroupId(costCategoryGroupId), notFoundError(CostCategoryType.class, costCategoryGroupId)).
                 andOnSuccessReturn(costCategoryTypeMapper::mapToResource);
+    }
+
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSpendProfileSubmittedDate() != null) {
+                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+            }
+
+            if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
+                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+            }
+
+            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -325,6 +361,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         SpendProfile spendProfile = spendProfileOptional.get();
 
+        if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+        }
+
         spendProfile.setMarkedAsComplete(markAsComplete);
 
         updateSpendProfileCosts(spendProfile, table);
@@ -360,6 +400,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             costToUpdate.setValue(monthlyCosts.get(index));
             index++;
         }
+    }
+
+    private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+
+        spendProfileRepository.save(spendProfiles);
     }
 
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
@@ -431,8 +478,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
         spendProfileRepository.save(spendProfile);
         return serviceSuccess();
     }
@@ -471,6 +517,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
+    }
 
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,
                                                                 ProjectOrganisationCompositeId projectOrganisationCompositeId) throws IOException {
