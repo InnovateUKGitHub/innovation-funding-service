@@ -72,10 +72,7 @@ public class ProjectUserResourceBuilder extends BaseBuilder<ProjectUserResource,
     public ProjectUserResourceBuilder withPhoneNumber(String... phoneNumber) {
         return withArray((number, projectUser) -> projectUser.setPhoneNumber(number), phoneNumber);
     }
-
         public ProjectUserResourceBuilder withInvite(Long... projectInvites) {
         return withArray((invite, projectUser) -> projectUser.setInvite(invite), projectInvites);
     }
-
-
 }

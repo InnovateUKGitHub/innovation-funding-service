@@ -63,13 +63,15 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     }
 
     public ProjectUser accept() {
-        if (getInvite().getStatus() != OPENED)
+        if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a ProjectUser that hasn't been opened");
-
-        if (getStatus() == REJECTED)
+        }
+        if (getStatus() == REJECTED) {
             throw new IllegalStateException("Cannot accept a ProjectUser that has been rejected");
-        if (getStatus() == ACCEPTED)
+        }
+        if (getStatus() == ACCEPTED) {
             throw new IllegalStateException("ProjectUser has already been accepted");
+        }
 
         setStatus(ACCEPTED);
 

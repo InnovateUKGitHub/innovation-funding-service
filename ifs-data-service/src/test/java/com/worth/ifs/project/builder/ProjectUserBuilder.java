@@ -69,7 +69,6 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
 
         Project project = projectUser.getProcess();
 
-
         if (project != null) {
 
             if (project.getProjectUsers() == null) {

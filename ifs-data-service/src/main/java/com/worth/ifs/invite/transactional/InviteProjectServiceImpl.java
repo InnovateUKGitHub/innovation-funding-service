@@ -8,6 +8,8 @@ import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -57,6 +59,9 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
     LocalValidatorFactoryBean validator;
 
 
@@ -105,7 +110,10 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 invite = inviteProjectRepository.save(invite.open());
-                return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId());
+                ProjectUser pu = projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId()).getSuccessObject();
+                pu.setInvite(invite);
+                projectUserRepository.save(pu.accept());
+                return serviceSuccess();
             }
             LOG.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
             Error e = new Error("Invited email address not the same as the users email address", HttpStatus.NOT_ACCEPTABLE);

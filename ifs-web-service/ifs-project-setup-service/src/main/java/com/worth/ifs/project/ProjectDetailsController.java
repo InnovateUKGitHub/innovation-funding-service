@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -49,7 +51,6 @@ import static com.worth.ifs.project.viewmodel.FinanceContactStatus.PENDING;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
@@ -450,14 +451,20 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        List<FinanceContactModel> thisOrganisationUsers = projectService.getProjectUsersForProject(projectId).stream()
-                .map(user -> new FinanceContactModel(EXISTING, user.getUserName(), user.getUser()))
-                .collect(toList());
-        List<FinanceContactModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                .filter(invite -> form.getOrganisation().equals(invite.getOrganisation())
-                        && !invite.getStatus().equals(InviteStatus.OPENED))
-                .map(invite -> new FinanceContactModel(PENDING, invite.getName() + " (Pending)", projectId))
-                .collect(toList());
+
+        List<ProjectUserResource> projectUsersForProject = projectService.getProjectUsersForProject(projectId);
+        List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
+
+        Function<ProjectUserResource, FinanceContactModel> financeContactModelMappingFn = user -> new FinanceContactModel(EXISTING, user.getUserName(), user.getUser());
+        Function<InviteProjectResource, FinanceContactModel> inviteeMappingFn = invite -> new FinanceContactModel(PENDING, invite.getName() + " (Pending)", projectId);
+
+        Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation())
+                && !invite.getStatus().equals(InviteStatus.OPENED);
+
+        List<FinanceContactModel> thisOrganisationUsers = simpleMap(projectUsersForProject, financeContactModelMappingFn);
+        List<InviteProjectResource> inviteProjectResources = simpleFilter(inviteProjectResourceList, inviteProjectResourceFilterFn);
+        List<FinanceContactModel> invitedUsers = simpleMap(inviteProjectResources, inviteeMappingFn);
+
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 

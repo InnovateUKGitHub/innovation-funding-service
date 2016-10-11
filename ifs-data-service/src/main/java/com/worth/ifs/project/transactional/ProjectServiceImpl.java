@@ -26,7 +26,6 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.transactional.InviteServiceImpl;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -461,29 +460,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+    public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)) {
-                        return serviceSuccess(); // Already a partner
+                    List<Long> partnerIds = simpleMap(partners, p -> p.getUser().getId());
+                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId() == userId);
+                    if (partnerIds.contains(userId)) {
+                        return serviceSuccess(projectUser.get()); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
-                        List<ProjectInvite> projectInvites = inviteProjectRepository.findByProjectId(projectId);
-                        Optional<ProjectInvite> projectInvite = projectInvites.stream().filter(p -> p.getUser().getId() == userId).findAny();
-                        pu.setInvite(projectInvite.isPresent() ? projectInvite.get() : null);
-
-                        if (pu.getInvite() != null) {
-                            projectUserRepository.save(pu.accept());
-                        } else {
-                            projectUserRepository.save(pu);
-                        }
-                        user.addUserOrganisation(organisation);
-                        userRepository.save(user);
-                        return serviceSuccess();
+                        return serviceSuccess(pu);
                     }
                 });
     }
@@ -749,7 +739,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 failure -> handleInviteError(projectInvite, failure),
                 success -> handleInviteSuccess(projectInvite)
         );
-        return inviteContactEmailSendResult;//processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
+        return inviteContactEmailSendResult;
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
@@ -757,9 +747,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return true;
     }
 
-    private boolean handleInviteError(ProjectInvite i, ServiceFailure failure) {
-           LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        return true;
+    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
+        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+        List<Error> errors = failure.getErrors();
+        return serviceFailure(errors);
     }
 
     private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
