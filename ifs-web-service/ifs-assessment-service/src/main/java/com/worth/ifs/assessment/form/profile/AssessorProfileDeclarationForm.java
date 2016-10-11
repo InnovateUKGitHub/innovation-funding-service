@@ -1,8 +1,12 @@
 package com.worth.ifs.assessment.form.profile;
 
+import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.validator.constraints.FieldRequiredIf;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
@@ -13,7 +17,11 @@ import java.util.List;
 /**
  * Form field model for the Assessor Profile Declaration of Interest page
  */
-public class AssessorProfileDeclarationForm {
+@FieldRequiredIf(required = "appointments", argument = "hasAppointments", predicate = true, message = "{validation.assessorprofiledeclarationform.appointments.required}")
+@FieldRequiredIf(required = "financialInterests", argument = "hasFinancialInterests", predicate = true, message = "{validation.assessorprofiledeclarationform.financialInterests.required}")
+@FieldRequiredIf(required = "familyAffiliations", argument = "hasFamilyAffiliations", predicate = true, message = "{validation.assessorprofiledeclarationform.familyAffiliations.required}")
+@FieldRequiredIf(required = "familyFinancialInterests", argument = "hasFamilyFinancialInterests", predicate = true, message = "{validation.assessorprofiledeclarationform.familyFinancialInterests.required}")
+public class AssessorProfileDeclarationForm implements BindingResultTarget {
 
     @NotEmpty(message = "{validation.assessorprofiledeclarationform.principalEmployer.required}")
     private String principalEmployer;
@@ -42,23 +50,8 @@ public class AssessorProfileDeclarationForm {
     @AssertTrue(message = "{validation.assessorprofiledeclarationform.accurateAccount.required}")
     private Boolean accurateAccount;
 
-    public AssessorProfileDeclarationForm() {
-    }
-
-    public AssessorProfileDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, List<AssessorProfileAppointmentForm> appointments, Boolean hasFinancialInterests, String financialInterests, Boolean hasFamilyAffiliations, List<AssessorProfileFamilyAffiliationForm> familyAffiliations, Boolean hasFamilyFinancialInterests, String familyFinancialInterests, Boolean accurateAccount) {
-        this.principalEmployer = principalEmployer;
-        this.role = role;
-        this.professionalAffiliations = professionalAffiliations;
-        this.hasAppointments = hasAppointments;
-        this.appointments = appointments;
-        this.hasFinancialInterests = hasFinancialInterests;
-        this.financialInterests = financialInterests;
-        this.hasFamilyAffiliations = hasFamilyAffiliations;
-        this.familyAffiliations = familyAffiliations;
-        this.hasFamilyFinancialInterests = hasFamilyFinancialInterests;
-        this.familyFinancialInterests = familyFinancialInterests;
-        this.accurateAccount = accurateAccount;
-    }
+    private BindingResult bindingResult;
+    private List<ObjectError> objectErrors;
 
     public String getPrincipalEmployer() {
         return principalEmployer;
@@ -157,6 +150,26 @@ public class AssessorProfileDeclarationForm {
     }
 
     @Override
+    public BindingResult getBindingResult() {
+        return bindingResult;
+    }
+
+    @Override
+    public void setBindingResult(BindingResult bindingResult) {
+        this.bindingResult = bindingResult;
+    }
+
+    @Override
+    public List<ObjectError> getObjectErrors() {
+        return objectErrors;
+    }
+
+    @Override
+    public void setObjectErrors(List<ObjectError> objectErrors) {
+        this.objectErrors = objectErrors;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -177,6 +190,8 @@ public class AssessorProfileDeclarationForm {
                 .append(hasFamilyFinancialInterests, that.hasFamilyFinancialInterests)
                 .append(familyFinancialInterests, that.familyFinancialInterests)
                 .append(accurateAccount, that.accurateAccount)
+                .append(bindingResult, that.bindingResult)
+                .append(objectErrors, that.objectErrors)
                 .isEquals();
     }
 
@@ -195,6 +210,8 @@ public class AssessorProfileDeclarationForm {
                 .append(hasFamilyFinancialInterests)
                 .append(familyFinancialInterests)
                 .append(accurateAccount)
+                .append(bindingResult)
+                .append(objectErrors)
                 .toHashCode();
     }
 }
