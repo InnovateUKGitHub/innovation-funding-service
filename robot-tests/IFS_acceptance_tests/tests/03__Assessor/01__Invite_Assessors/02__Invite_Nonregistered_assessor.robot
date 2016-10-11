@@ -137,19 +137,27 @@ Create assessor account: Contact details client-side validations
     And The user should not see the text in the page    Password must at least be 10 characters
     And The user should not see the text in the page    Password must contain at least one number
     And The user should not see the text in the page    Passwords must match
-   # And the user should see an error    Please enter your address details
+    And The user should see the text in the page    Please enter your address details
+   # TODO due to INFUND-5557
     # When the user clicks the button/link    id=postcode-lookup
-    # And the user should see the element    css=.form-label .error-message   # empty postcode check
+   # And The user should see the text in the page    Please enter postcode  # empty postcode check
 
-Create assessor account: Contact details
+Create assessor account: Contact details (save and edit)
     [Documentation]
     [Tags]    HappyPath    Pending
     When The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
+    And the assessor should see the address details autofilled
     And the email displayed should be correct
     And the user clicks the button/link    jQuery=.button:contains("Continue")
+    # TODO due to INFUND-5556
+   # Then the user reloads the page
+   # And the assessor should see the data entered
+   # Then the assessor should be able to edit the data entered
+   # And the user reloads the page
+   # Then the assessor should see the changed data
     Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Non-registered assessor: Reject invitation
@@ -191,4 +199,42 @@ the user moves focus away from the element
     [Arguments]    ${element}
     mouse out    ${element}
     focus    jQuery=.button:contains("Continue")
+
+the assessor should see the data entered
+    the user should see the text in the page    Thomas
+    the user should see the text in the page    Fister
+    Radio Button Should Be Set To    gender
+    Radio Button Should Be Set To    ethnicity
+    Radio Button Should Be Set To    disability
+    the user should see the text in the page    08549741414
+
+the assessor should be able to edit the data entered
+    Select From List By Index    id=title    1
+    The user enters text to a text field    id=firstName    Annabelle
+    The user enters text to a text field    id=lastName    Wallis
+    the user selects the radio button    gender    gender1
+    the user selects the radio button    ethnicity    ethnicity3
+    the user selects the radio button    disability    disability3
+    The user enters text to a text field    id=phoneNumber    09761963636
+    The user enters text to a text field    id=password    Password1Password1
+    The user enters text to a text field    id=retypedPassword    Password1Password1
+
+the assessor should see the changed data
+    Element Text Should Be    id=title    Miss
+    the user should see the text in the page    Annabelle
+    the user should see the text in the page    Wallis
+    Radio Button Should Be Set To    gender
+    Radio Button Should Be Set To    ethnicity
+    Radio Button Should Be Set To    disability
+    the user should see the text in the page    08549741414
+
+the assessor should see the address details autofilled
+    the user should see the text in the page    Montrose House 1
+  #  the user should see the text in the page    Clayhill Park
+  #  the user should see the text in the page    Cheshire West and Chester
+    the user should see the text in the page    Neston
+  #  the user should see the text in the page    Cheshire
+    the user should see the text in the page    CH64 3RU
+
+
 
