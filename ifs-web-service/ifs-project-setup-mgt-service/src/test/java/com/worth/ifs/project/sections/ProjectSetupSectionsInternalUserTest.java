@@ -112,6 +112,37 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
     }
 
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isFinanceChecksSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
+
+        verifyInteractions(
+                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isOtherDocumentsSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionButOtherSectionsAreIncomplete() {
+        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isFinanceChecksSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
+    }
+
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
         asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));

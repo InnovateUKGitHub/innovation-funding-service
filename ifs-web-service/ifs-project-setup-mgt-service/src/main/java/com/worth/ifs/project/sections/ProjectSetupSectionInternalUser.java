@@ -68,10 +68,24 @@ public class ProjectSetupSectionInternalUser {
 
         return ACCESSIBLE;
     }
+
+    public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
+        if(!projectSetupProgressChecker.isProjectDetailsSubmitted()
+                || !projectSetupProgressChecker.isMonitoringOfficerSubmitted()
+                || !projectSetupProgressChecker.isBankDetailsApproved()
+                || !projectSetupProgressChecker.isFinanceChecksSubmitted()
+                || !projectSetupProgressChecker.isSpendProfileSubmitted()
+                || !projectSetupProgressChecker.isOtherDocumentsSubmitted()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
     }
 
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;
     }
+
+
 }

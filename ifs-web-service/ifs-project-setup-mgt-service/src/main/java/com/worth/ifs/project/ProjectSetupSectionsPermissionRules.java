@@ -61,6 +61,13 @@ public class ProjectSetupSectionsPermissionRules {
     public boolean internalCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessOtherDocumentsSection);
     }
+
+    @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SECTION", description = "A internal can access the Other Documents " +
+            "section when the lead partner submits the documents")
+    public boolean internalCanAccessGrantOfferLetterSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessGrantOfferLetterSection);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
