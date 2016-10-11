@@ -29,6 +29,7 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -815,6 +816,41 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(result.isFailure());
 
         assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsWithoutDecisionError() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
+
+        assertTrue(result.isFailure());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.nullValue());
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsAlreadyApprovedError() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId)
+                .withOtherDocumentsApproved(true).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
+
+        assertTrue(result.isFailure());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(true));
 
     }
 
