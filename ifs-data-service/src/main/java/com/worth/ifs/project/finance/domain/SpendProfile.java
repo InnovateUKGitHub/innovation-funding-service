@@ -1,12 +1,15 @@
 package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Entity representing the Spend Profile of a Partner Organisation on a Project
@@ -39,17 +42,22 @@ public class SpendProfile {
 
     private boolean markedAsComplete;
 
+    @NotNull
+    @Enumerated(STRING)
+    private ApprovalType approval;
+
     public SpendProfile() {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, boolean markedAsComplete) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, boolean markedAsComplete, ApprovalType approval) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
         this.eligibleCosts = new CostGroup(ELIGIBLE_COSTS_DESCRIPTION, eligibleCosts);
         this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
         this.markedAsComplete = markedAsComplete;
+        this.approval = approval;
     }
 
     public Long getId() {
@@ -82,5 +90,13 @@ public class SpendProfile {
 
     public void setMarkedAsComplete(boolean markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
+    }
+
+    public ApprovalType getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ApprovalType approval) {
+        this.approval = approval;
     }
 }

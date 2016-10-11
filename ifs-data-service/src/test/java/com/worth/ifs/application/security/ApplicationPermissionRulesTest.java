@@ -1,11 +1,9 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -25,9 +23,7 @@ import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -44,7 +40,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         return new ApplicationPermissionRules();
     }
 
-    private ApplicationStatusResource applicationStatusOpen;
     private ApplicationResource applicationResource1;
     private ApplicationResource applicationResource2;
     private Application application1;
@@ -75,9 +70,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
         assessorProcessRole = newProcessRole().withRole(assessorRole).build();
-        applicationStatusOpen = ApplicationStatusResourceBuilder.newApplicationStatusResource().withName(ApplicationStatusConstants.OPEN).build();
-        applicationResource1 = newApplicationResource().withProcessRoles(asList(processRole1.getId())).withApplicationStatus(ApplicationStatusConstants.OPEN).build();
-        applicationResource2 = newApplicationResource().withProcessRoles(asList(processRole2.getId())).build();
+        applicationResource1 = newApplicationResource().withApplicationStatus(ApplicationStatusConstants.OPEN).build();
+        applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1.setApplication(application1);

@@ -23,6 +23,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
 Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
@@ -227,7 +228,7 @@ Partners nominate finance contacts
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -327,16 +328,13 @@ Project details read only after submission
     And The user should not see the element    link=Start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
-    And The user should not see the element    link=Ludlow
-    And The user should not see the element    link=EGGS
-    And The user should not see the element    link=Cheeseco
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Setup]    the user logs out if they are logged in
     When guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=Ludlow
+    Then the user should see the text in the page    Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     Then the user navigates to the page    ${project_in_setup_page}
@@ -345,7 +343,7 @@ All partners can view submitted project details
     Then the user logs out if they are logged in
     When guest user log-in    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=Vitruvius Stonework Limited
+    Then the user should see the text in the page    Vitruvius Stonework Limited
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
@@ -373,6 +371,20 @@ Non-lead partner cannot change any project details
     And the user should be redirected to the correct page    ${project_in_setup_page}
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
+    [Teardown]    Logout as user
+
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).waiting
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+    [Teardown]    logout as user
 
 *** Keywords ***
 the user should see a validation error

@@ -8,6 +8,7 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.OutcomeType;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -17,11 +18,11 @@ import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 @Entity
 public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Application target;
 

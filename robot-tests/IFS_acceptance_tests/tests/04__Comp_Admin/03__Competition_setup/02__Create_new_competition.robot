@@ -25,12 +25,19 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
 ...
-...
 ...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \ INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...
+...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
+...
+...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
+...
+...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -102,15 +109,17 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
+    ...
+    ...    INFUND-4979
     [Tags]    Pending
-    #This ticket marked as pending because atm there is only one competition type. We should recheck this in sprint15
+    #TODO This ticket marked as pending because atm there is no SBRI competition type. We should recheck this in sprint17
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Sector    id=competitionTypeId
     Then the user should see the element    css=.yes
 
 Initial details client-side validations
@@ -147,11 +156,12 @@ Initial details: Autosave
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
 
-Initial details should not allow to mark as complete when date is in past
+Initial details should not allow dates in the past
     [Documentation]    INFUND-4682
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2015
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should not see the element    jQuery=.button:contains("Edit")
     [Teardown]    the user enters text to a text field    id=openingDateYear    2017
@@ -163,6 +173,7 @@ Initial details mark as done
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Competition Executive Two
     And the user should see the text in the page    1/12/2017
@@ -174,13 +185,17 @@ Initial details mark as done
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Initial details can be edited again
+Initial details can be edited again except from Comp Type and Date
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
+    ...
+    ...    INFUND-4892
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
+    And The element should be disabled    id=competitionTypeId
+    And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
     And the user should see the text in the page    Competition Technologist One
@@ -245,27 +260,32 @@ Funding information client-side validations
 
 Funding information Autosave
     [Documentation]    INFUND-4581
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Funding Information
     Then the user should see the correct details in the funding information form
 
 Funding informations calculations
     [Documentation]    INFUND-2985
+    ...
+    ...    INFUND-4894
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    jQuery=Button:contains("Remove")
+    And the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
+    When the user clicks the button/link    jQuery=Button:contains("Remove")
+    Then the total should be correct    £ 20,000
 
 Funding Information can be saved
     [Documentation]    INFUND-3182
     [Tags]    HappyPath
+    Given the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    FunderName
-    And the user should see the text in the page    FunderName2
-    And the user should see the text in the page    £21,000
+    And the user should see the text in the page    £20,000
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
@@ -275,9 +295,9 @@ Funding Information can be saved
 Funding Information can be edited
     [Documentation]    INFUND-3002
     [Tags]
-    #TODO neAnd The user should see the elemented to enable this And The user should see the elementtest when the INFUND-5111 is fixed
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    testFunder
 
@@ -313,6 +333,7 @@ Eligibility server-side validations
     [Tags]    HappyPath
     [Setup]
     Given the user selects the radio button    multipleStream    yes
+    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
@@ -331,17 +352,17 @@ Eligibility client-side validations
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field    id=streamName    Test stream name
-    And the user moves focus to a different part of the page and waits for autosave
+    And the user moves focus and waits for autosave
     And the user should not see the text in the page    A stream name is required
     And the user selects the radio button    resubmission    no
     And the user should not see the text in the page    Please select a resubmission option
@@ -402,8 +423,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
-    [Tags]    Pending
-    #TODO INFUND-3873
+    [Tags]
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
@@ -414,6 +434,13 @@ Milestones: Client side validations
     [Tags]    HappyPath
     When the user fills the milestones with valid data
     Then The user should not see the text in the page    please enter a future date that is after the previous milestone
+    Then The user should not see the text in the page    please enter a valid date
+
+Milestones: Autosave
+    [Tags]
+    When the user clicks the button/link    link=Competition set up
+    And the user clicks the button/link    link=Milestones
+    Then the user should see the correct inputs in the Milestones form
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
@@ -466,10 +493,20 @@ Application questions: Client side validations
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
+Application questions: Autosave
+    [Documentation]    INFUND-4586
+    [Tags]    Pending
+    # Pending due to INFUND-5538
+    Given the user moves focus and waits for autosave
+    When the user clicks the button/link    link=Competition set up
+    And The user clicks the button/link    link=Application Questions
+    Then the user should see the correct inputs in the Applications questions form
+
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
     [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
+    Given the user moves focus and waits for autosave
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
     And the user should see the text in the page    Subtitle test
@@ -512,17 +549,18 @@ User should be able to Save the competition as open
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
-the user moves focus to a different part of the page and waits for autosave
+the user moves focus and waits for autosave
     focus    link=Sign out
+    sleep    500ms
     Wait For Autosave
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
+    Wait for autosave
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
     sleep    500ms
-    Wait for autosave
 
 the total should be correct
     [Arguments]    ${Total}
@@ -538,6 +576,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+    the user moves focus and waits for autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -561,45 +600,45 @@ The competition should show in the correct section
     Element should contain    ${SECTION}    ${COMP_NAME}
 
 the user fills the milestones with invalid data
-    input text    name=milestoneEntries[OPEN_DATE].day    15
-    input text    name=milestoneEntries[OPEN_DATE].month    1
-    input text    name=milestoneEntries[OPEN_DATE].year    2019
-    input text    name=milestoneEntries[BRIEFING_EVENT].day    14
-    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
-    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
-    input text    name=milestoneEntries[SUBMISSION_DATE].day    13
-    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
-    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    12
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    10
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    9
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    input text    name=milestoneEntries[LINE_DRAW].day    8
-    input text    name=milestoneEntries[LINE_DRAW].month    1
-    input text    name=milestoneEntries[LINE_DRAW].year    2019
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    7
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
-    input text    name=milestoneEntries[PANEL_DATE].day    6
-    input text    name=milestoneEntries[PANEL_DATE].month    1
-    input text    name=milestoneEntries[PANEL_DATE].year    2019
-    input text    name=milestoneEntries[FUNDERS_PANEL].day    5
-    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
-    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
-    input text    name=milestoneEntries[NOTIFICATIONS].day    4
-    input text    name=milestoneEntries[NOTIFICATIONS].month    1
-    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    333
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    15
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].day    14
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].month    1
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    13
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    12
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    10
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    9
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    8
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    7
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    6
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    5
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    4
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    3
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
@@ -613,48 +652,48 @@ Validation summary should be visible
     And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
     And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
     And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a valid date
+    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
 
 the user fills the milestones with valid data
-    input text    name=milestoneEntries[OPEN_DATE].day    10
-    input text    name=milestoneEntries[OPEN_DATE].month    1
-    input text    name=milestoneEntries[OPEN_DATE].year    2019
-    input text    name=milestoneEntries[BRIEFING_EVENT].day    11
-    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
-    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
-    input text    name=milestoneEntries[SUBMISSION_DATE].day    12
-    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
-    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
-    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    input text    name=milestoneEntries[LINE_DRAW].day    17
-    input text    name=milestoneEntries[LINE_DRAW].month    1
-    input text    name=milestoneEntries[LINE_DRAW].year    2019
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    18
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
-    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
-    input text    name=milestoneEntries[PANEL_DATE].day    19
-    input text    name=milestoneEntries[PANEL_DATE].month    1
-    input text    name=milestoneEntries[PANEL_DATE].year    2019
-    input text    name=milestoneEntries[FUNDERS_PANEL].day    20
-    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
-    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
-    input text    name=milestoneEntries[NOTIFICATIONS].day    21
-    input text    name=milestoneEntries[NOTIFICATIONS].month    1
-    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].day    11
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].month    1
+    The user enters text to a text field    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    17
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    18
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    19
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    21
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    22
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 
@@ -734,3 +773,30 @@ the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
     sleep    1s
     Wait For Autosave
+
+the user should see the correct inputs in the Milestones form
+    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(1)    Thu
+    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(1)    Fri
+    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(1)    Sat
+    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(1)    Sun
+    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(1)    Mon
+    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(1)    Tue
+    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(1)    Wed
+    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(1)    Thu
+    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(1)    Fri
+    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(1)    Sat
+    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(1)    Sun
+    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(1)    Mon
+    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(1)    Tue
+
+the user should see the correct inputs in the Applications questions form
+    ${input_value} =    Get Value    id=question.title
+    Should Be Equal    ${input_value}    Test title
+    ${input_value} =    Get Value    id=question.subTitle
+    Should Be Equal    ${input_value}    Subtitle test
+    ${input_value} =    Get Value    id=question.guidanceTitle
+    Should Be Equal    ${input_value}    Test guidance title
+    ${input_value} =    Get Value    css=.editor
+    Should Be Equal    ${input_value}    Guidance text test
+    ${input_value} =    Get Value    id=question.maxWords
+    Should Be Equal    ${input_value}    150

@@ -55,15 +55,6 @@ Unsuccessful applicant cannot remove the uploaded feedback
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
 
-Unsuccessful applicant can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
-
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
@@ -80,12 +71,3 @@ Partner cannot remove the uploaded feedback
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
-
-Partner can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}

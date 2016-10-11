@@ -20,6 +20,8 @@ public class SpendProfileResource {
 
     private boolean markedAsComplete;
 
+    private ApprovalType approval;
+
     public Long getId() {
         return id;
     }
@@ -74,6 +76,14 @@ public class SpendProfileResource {
 
     public void setMarkedAsComplete(boolean markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
+    }
+
+    public ApprovalType getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ApprovalType approval) {
+        this.approval = approval;
     }
 
     @Override

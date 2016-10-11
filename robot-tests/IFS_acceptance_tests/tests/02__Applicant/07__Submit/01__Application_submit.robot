@@ -18,13 +18,14 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant    Pending
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 
@@ -32,6 +33,7 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Email    HappyPath
+    #TODO pending INFUND-5552
     When the user clicks the button/link    jQuery=.button:contains("Review & submit")
     Then the submit button should be disabled
     [Teardown]    the applicant marks the first section as complete
@@ -39,6 +41,7 @@ Submit button disabled when the application is incomplete
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Email    HappyPath
+    #TODO pending INFUND-5552
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     Given the user clicks the button/link    link=Your finances
@@ -58,6 +61,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
+    #TODO pending INFUND-5552
     Given guest user log-in    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
@@ -73,11 +77,13 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath    SmokeTest
+    #TODO pending INFUND-5552
     Then the user should get a confirmation email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    Congratulations, you have successfully submitted an application for funding to Innovate    Successful submission of application
 
 Submitted application is read only
     [Documentation]    INFUND-1938
     [Tags]    Email    SmokeTest
+    #TODO pending INFUND-5552
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=View application
@@ -87,6 +93,7 @@ Submitted application is read only
 Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]    Email
+    #TODO pending INFUND-5552
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=${application_name}
@@ -131,8 +138,8 @@ The user marks the finances as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Your finances
-    the user selects the checkbox          id=agree-terms-page
-    the user selects the checkbox          id=agree-state-aid-page
+    the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
@@ -141,11 +148,11 @@ the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview
     the user clicks the button/link    link=Application details
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    18
+    The user enters text to a text field    id=application_details-startdate_day    18
     Clear Element Text    id=application_details-startdate_year
-    Input Text    id=application_details-startdate_year    2018
+    The user enters text to a text field    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    11
+    The user enters text to a text field    id=application_details-startdate_month    11
     the user clicks the button/link    jQuery=label:contains(No) input
     the user clicks the button/link    name=mark_as_complete
 

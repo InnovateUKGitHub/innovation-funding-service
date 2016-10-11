@@ -5,12 +5,14 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.CompetitionInviteController;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.CompetitionInviteDocs.*;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Optional.ofNullable;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -78,8 +80,11 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
     @Test
     public void acceptInvite() throws Exception {
         String hash = "invitehash";
+        UserResource user = newUserResource().build();
 
-        when(competitionInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
+        login(user);
+
+        when(competitionInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/acceptInvite/{hash}", hash))
                 .andExpect(status().isOk())

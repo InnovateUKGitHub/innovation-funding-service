@@ -18,24 +18,24 @@ public class QuestionStatus {
 
     private Boolean markedAsComplete;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="markedAsCompleteById", referencedColumnName="id")
     private ProcessRole markedAsCompleteBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assigneeId", referencedColumnName="id")
     private ProcessRole assignee;
     private LocalDateTime assignedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assignedById", referencedColumnName="id")
     private ProcessRole assignedBy;
     private Boolean notified;

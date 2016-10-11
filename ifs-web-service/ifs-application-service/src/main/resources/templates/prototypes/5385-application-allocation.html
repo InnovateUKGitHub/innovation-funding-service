@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle">Technology inspired, (12345A)</p>
+	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
+
+	<div class="grid-row extra-margin">
+		<div class="column-three-quarters">
+			<p>
+				<span id="assessors" class="heading-large">60</span> Assessors
+
+				<span id="applications" class="heading-large extra-margin-left">28</span> Applications
+			</p>
+
+			<h2 class="heading-small">Assign invited assessors to assess applications</h2>
+
+			<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
+
+		</div>
+		<div class="column-quarter">
+			<div class="alignright">
+			<a href="/prototypes/5388-notify-assessors?status=incomplete" class="button large">Notify Assessors</a>
+			</div>
+		</div>
+	</div>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=true,sortByType=1" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list-table" th:remove="tag" />
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>
