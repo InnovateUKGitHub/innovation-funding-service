@@ -9,10 +9,12 @@ import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewM
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.cglib.core.Local;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,6 +183,55 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertNull(form.getCollaborationAgreement());
         assertNull(form.getExploitationPlan());
     }
+
+
+    @Test
+    public void testViewOtherDocumentsPageWithSubmittedDocuments() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource().withId(projectId)
+                .withDocumentsSubmittedDate(LocalDateTime.now()).build();
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertNull(model.getCollaborationAgreementFileDetails());
+        assertNull(model.getExploitationPlanFileDetails());
+        assertEquals(emptyList(), model.getRejectionReasons());
+        assertEquals(simpleMap(partnerOrganisations, OrganisationResource::getName),
+                model.getPartnerOrganisationNames());
+
+        // test flags that help to drive the page
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertTrue(model.isLeadPartner());
+        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowApprovedMessage());
+        assertTrue(model.isShowDocumentsBeingReviewedMessage());
+        assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isShowSubmitDocumentsButton());
+
+        // test the form for the file uploads
+        assertNull(form.getCollaborationAgreement());
+        assertNull(form.getExploitationPlan());
+    }
+
 
     @Test
     public void testDownloadCollaborationAgreement() throws Exception {

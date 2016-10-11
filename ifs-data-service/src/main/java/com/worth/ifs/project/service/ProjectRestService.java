@@ -83,6 +83,8 @@ public interface ProjectRestService {
 
     RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId);
 
+    RestResult<Void> submitGrantOfferLetter(Long projectId);
+
     RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);

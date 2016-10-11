@@ -396,7 +396,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
 
         ProjectManagerForm form = new ProjectManagerForm();
-        form.setProjectManager(existingProjectManager.map(ProjectUserResource::getId).orElse(null));
+        form.setProjectManager(existingProjectManager.map(ProjectUserResource::getUser).orElse(null));
         return form;
     }
 

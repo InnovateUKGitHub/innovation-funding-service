@@ -371,6 +371,20 @@ Non-lead partner cannot change any project details
     And the user should be redirected to the correct page    ${project_in_setup_page}
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
+    [Teardown]    Logout as user
+
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).waiting
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+    [Teardown]    logout as user
 
 *** Keywords ***
 the user should see a validation error

@@ -387,42 +387,43 @@
 
         <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
             <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
-            <div class="panel-indent">
-                <form th:action="${#httpServletRequest.requestURI}">
-                    <fieldset>
-                        <legend>Enter the new assessor's details below to add them to your invite list</legend>
-                    </fieldset>
-                    
-                    <div class="grid-row extra-">
-                        <div class="column-third">
-                            <div class="form-group">
-                                <label class="form-label-bold" for="name">Name</label>
-                                <input class="form-control width-full" id="name" name="name" type="text" required="required" />
-                            </div>
-                        </div>
+            <form th:action="${#httpServletRequest.requestURI}">
+                <fieldset>
+                    <legend>Enter the new assessor's details below to add them to your invite list</legend>
+                </fieldset>
 
-                        <div class="column-third">
-                             <div class="form-group">
-                                <label class="form-label-bold" for="email">Email</label>
-                                <input class="form-control width-full" id="email" name="email" type="text" required="required" />
-                            </div>         
-                        </div>
+                <div class="table-overflow">
 
-                        <div class="column-third">
-                            <div class="extra-margin-top">
-                                <a href="#">Add another row</a>
-                            </div>
-                        </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th id="invite-label-assessor-name" scope="col">Name</th>
+                                <th id="invite-label-assessor-email" scope="col" colspan="2">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="text" id="assessor-name" name="assessor-name" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
+                                </td>
+                                <td>
+                                    <input type="text" id="assessor-email" name="assessor-email" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
+                                </td>
+                                <td>
+                                    <a href="#">Add another row</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                    </div>
+                </div>
 
-                    <div class="alignright extra-margin-top">
-                        <input type="hidden" name="status" value="invite-new" />
-                        <input type="hidden" name="tab" value="invite" />
-                        <button class="button">Add assessor(s) to list</button>
-                    </div>
-                </form>
-            </div>
+                <div class="alignright extra-margin-top">
+                    <input type="hidden" name="status" value="invite-new" />
+                    <input type="hidden" name="tab" value="invite" />
+                    <button class="button">Add assessor(s) to list</button>
+                </div>
+            </form>
         </details>  
 
         <div class="tabular-list" id="assessors-invite">
