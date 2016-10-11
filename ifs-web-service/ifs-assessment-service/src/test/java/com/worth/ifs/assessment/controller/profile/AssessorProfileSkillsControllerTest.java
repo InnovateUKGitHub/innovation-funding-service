@@ -76,7 +76,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .param("assessorType", businessType.name()))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile/declaration"));
+                .andExpect(redirectedUrl("/assessor/dashboard"));
 
         verify(userService).updateProfile(1L, profile);
     }

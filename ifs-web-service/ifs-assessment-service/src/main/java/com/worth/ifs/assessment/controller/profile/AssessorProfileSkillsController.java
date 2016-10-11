@@ -59,7 +59,7 @@ public class AssessorProfileSkillsController {
             profile.setSkillsAreas(form.getSkillAreas());
             ServiceResult<UserResource> result = userService.updateProfile(loggedInUser.getId(), profile);
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
     }
 
