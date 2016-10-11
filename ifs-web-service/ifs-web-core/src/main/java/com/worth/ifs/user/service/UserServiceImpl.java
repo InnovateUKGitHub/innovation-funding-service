@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> updateProfile(Long id, ProfileResource profile) {
+    public ServiceResult<Void> updateProfile(Long id, ProfileResource profile) {
         return userRestService.updateProfile(id, profile).toServiceResult();
     }
 
