@@ -3,16 +3,20 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
+import com.worth.ifs.user.mapper.ContractMapper;
 import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
@@ -35,7 +39,17 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private UserMapper userMapper;
 
     @Autowired
+    private ContractMapper contractMapper;
+
+    @Autowired
+    private ContractService contractService;
+
+    @Autowired
+    private ContractRepository contractRepository;
+
+    @Autowired
     private AffiliationMapper affiliationMapper;
+
 
     public enum ServiceFailures {
         UNABLE_TO_UPDATE_USER
@@ -47,10 +61,14 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccess(user -> updateUserProfile(user, profileResource));
     }
 
-    private ServiceResult<Void> updateUserProfile(User user, ProfileResource profileResource) {
+    private void setUserProfileIfNoneExists(User user) {
         if (user.getProfile() == null) {
             user.setProfile(new Profile(user));
         }
+    }
+
+    private ServiceResult<Void> updateUserProfile(User user, ProfileResource profileResource) {
+        setUserProfileIfNoneExists(user);
 
         final Profile profile = user.getProfile();
 
@@ -93,6 +111,17 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    @Override
+    public ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    setUserProfileIfNoneExists(user);
+                    return validateContractAndAddToProfile(user, profileResource);
+                });
+
+
+    }
+
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());
@@ -101,5 +130,27 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         existingUserResource.setProfile(updatedUserResource.getProfile());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
+    }
+
+
+    private ServiceResult<Void> validateContractAndAddToProfile(User user, ProfileResource profileResource) {
+        if (profileResource.getContract() != null) {
+
+            Contract currentContract = contractRepository.findByCurrentTrue();
+            if (!profileResource.getContract().getId().equals(currentContract.getId())) {
+                return serviceFailure(badRequestError("Cannot sign contract other than current contract"));
+            }
+            if (user.getProfile().getContract()!=null && profileResource.getContract().getId().equals(user.getProfile().getContract().getId())) {
+                return serviceFailure(badRequestError("Cannot sign contract because contract is already signed"));
+            } else {
+                user.getProfile().setContractSignedDate(LocalDateTime.now());
+                user.getProfile().setContract(currentContract);
+                userRepository.save(user);
+                return serviceSuccess();
+            }
+        } else {
+            return serviceFailure(badRequestError("Cannot sign without contract identifier present"));
+        }
+
     }
 }

@@ -175,4 +175,10 @@ public class UserController {
                                                    @RequestBody List<AffiliationResource> affiliations) {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
+
+    @RequestMapping(value = "/id/{userId}/updateUserContract", method = PUT)
+    public RestResult<Void> updateUserContract(@PathVariable("userId") Long userId,
+                                                   @RequestBody ProfileResource profileResource) {
+        return userProfileService.updateUserContract(userId, profileResource).toPutResponse();
+    }
 }

@@ -153,4 +153,15 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> response = service.updateUserAffiliations(userId, expected);
         assertTrue(response.isSuccess());
     }
+
+    @Test
+    public void updateUserContract() {
+        Long userId = 1L;
+        ProfileResource profileResource = newProfileResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserContract", usersUrl, userId), profileResource, OK);
+
+        RestResult<Void> response = service.updateUserContract(userId, profileResource);
+        assertTrue(response.isSuccess());
+    }
 }

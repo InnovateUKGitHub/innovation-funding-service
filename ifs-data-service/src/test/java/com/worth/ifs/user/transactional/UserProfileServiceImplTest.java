@@ -3,6 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
@@ -15,9 +16,13 @@ import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ContractBuilder.newContract;
+import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
+import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -130,6 +135,188 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
         inOrder.verify(affiliationMapperMock, times(2)).mapToResource(isA(Affiliation.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void updateUserContract() throws Exception {
+        Long userId = 1L;
+        Long contractId = 2L;
+
+        User user = newUser()
+                .withId(userId)
+                .withProfile(newProfile()
+                        .build())
+                .build();
+        ProfileResource profileResource = newProfileResource()
+                .withContract(newContractResource()
+                        .withId(contractId)
+                        .build())
+                .build();
+
+        Contract contract = newContract()
+                .withId(contractId)
+                .build();
+
+        when(userRepositoryMock.findOne(1L)).thenReturn(user);
+        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(contract);
+
+        ServiceResult<Void> result = service.updateUserContract(user.getId(), profileResource);
+
+        assertTrue(result.isSuccess());
+        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, userRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(userRepositoryMock).save(isA(User.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void updateUserContract_noContractResourceAttached() throws Exception {
+        Long userId = 1L;
+        Long contractId = 2L;
+
+        User user = newUser()
+                .withId(userId)
+                .withProfile(newProfile()
+                        .build())
+                .build();
+        ProfileResource profileResource = newProfileResource().build();
+
+        Contract contract = newContract()
+                .withId(contractId)
+                .build();
+
+        when(userRepositoryMock.findOne(1L)).thenReturn(user);
+        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(contract);
+
+        ServiceResult<Void> result = service.updateUserContract(user.getId(), profileResource);
+
+        verify(userRepositoryMock).findOne(userId);
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), "Cannot sign without contract identifier present");
+    }
+
+    @Test
+    public void updateUserContract_contractAlreadySigned() throws Exception {
+        Long userId = 1L;
+        Long contractId = 2L;
+
+        User user = newUser()
+                .withId(userId)
+                .withProfile(newProfile()
+                        .withContract(
+                                newContract()
+                                        .withId(contractId)
+                                        .build()
+                        )
+                        .build())
+                .build();
+        ProfileResource profileResource = newProfileResource()
+                .withContract(newContractResource()
+                        .withId(contractId)
+                        .build())
+                .build();
+
+        Contract contract = newContract()
+                .withId(contractId)
+                .build();
+
+        when(userRepositoryMock.findOne(1L)).thenReturn(user);
+        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(contract);
+
+        ServiceResult<Void> result = service.updateUserContract(user.getId(), profileResource);
+
+        verify(userRepositoryMock).findOne(userId);
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), "Cannot sign contract because contract is already signed");
+
+    }
+
+    @Test
+    public void updateUserContract_contractNotCurrent() throws Exception {
+        Long userId = 1L;
+        Long profileResourceContractId = 2L;
+
+        Long currentContractId = 3L;
+
+        User user = newUser()
+                .withId(userId)
+                .withProfile(newProfile().build())
+                .build();
+        ProfileResource profileResource = newProfileResource()
+                .withContract(newContractResource()
+                        .withId(profileResourceContractId)
+                        .build())
+                .build();
+
+        Contract contract = newContract()
+                .withId(currentContractId)
+                .build();
+
+        when(userRepositoryMock.findOne(1L)).thenReturn(user);
+        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(contract);
+
+        ServiceResult<Void> result = service.updateUserContract(user.getId(), profileResource);
+
+        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), "Cannot sign contract other than current contract");
+    }
+
+    @Test
+    public void updateUserContract_userDoesNotExist() throws Exception {
+        Long userId = 1L;
+        Long profileResourceContractId = 2L;
+
+        Long currentContractId = 3L;
+
+        ProfileResource profileResource = newProfileResource().build();
+
+        when(userRepositoryMock.findOne(userId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.updateUserContract(userId, profileResource);
+
+        InOrder inOrder = inOrder(userRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), GENERAL_NOT_FOUND.getErrorKey());
+    }
+
+    @Test
+    public void updateUserContract_userDoesNotHaveProfileYet() throws Exception {
+        Long userId = 1L;
+        Long contractId = 2L;
+
+        User user = newUser()
+                .withId(userId)
+                .build();
+        ProfileResource profileResource = newProfileResource()
+                .withContract(newContractResource()
+                        .withId(contractId)
+                        .build())
+                .build();
+
+        Contract contract = newContract()
+                .withId(contractId)
+                .build();
+
+        when(userRepositoryMock.findOne(1L)).thenReturn(user);
+        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(contract);
+
+        ServiceResult<Void> result = service.updateUserContract(user.getId(), profileResource);
+
+        assertTrue(result.isSuccess());
+        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, userRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(userRepositoryMock).save(isA(User.class));
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -40,5 +40,6 @@ public interface UserRestService {
     RestResult<UserResource> updateProfile(Long id, ProfileResource profile);
     RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);
     RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
+    RestResult<Void> updateUserContract(Long userId, ProfileResource profileResource);
 
 }

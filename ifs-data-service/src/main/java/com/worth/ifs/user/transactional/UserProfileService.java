@@ -26,4 +26,7 @@ public interface UserProfileService {
 
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_AFFILIATIONS')")
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
+
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_CONTRACT')")
+    ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource);
 }

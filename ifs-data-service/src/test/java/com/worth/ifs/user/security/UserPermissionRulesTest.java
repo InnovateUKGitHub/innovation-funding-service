@@ -321,6 +321,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testUsersCantUpdateOtherUsersContracts() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.usersCanUpdateTheirSignedContract(user, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirContract() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanUpdateTheirSignedContract(user, user));
+    }
+
+    @Test
     public void testUsersCanUpdateTheirAffiliationsButAttemptingToUpdateAnotherUsersProfile() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();

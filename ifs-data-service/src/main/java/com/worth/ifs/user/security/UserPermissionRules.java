@@ -115,6 +115,11 @@ public class UserPermissionRules {
         return user.getId().equals(userToUpdate.getId());
     }
 
+    @PermissionRule(value = "UPDATE_CONTRACT", description = "A User can update their signed contract")
+    public boolean usersCanUpdateTheirSignedContract(UserResource userToUpdate, UserResource user) {
+        return user.getId().equals(userToUpdate.getId());
+    }
+
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, ProcessRole::getApplication);

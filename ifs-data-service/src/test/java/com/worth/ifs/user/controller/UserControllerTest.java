@@ -312,4 +312,19 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
     }
+
+    @Test
+    public void updateUserContract() throws Exception {
+        Long userId = 1L;
+        ProfileResource profileResource = newProfileResource().build();
+
+        when(userProfileServiceMock.updateUserContract(userId, profileResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateUserContract", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileResource)))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, only()).updateUserContract(userId, profileResource);
+    }
 }

@@ -3,6 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ContractResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.security.UserLookupStrategies;
@@ -68,6 +69,20 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         });
     }
 
+    @Test
+    public void updateUserContract() {
+        Long userId = 1L;
+        ProfileResource profileResource = newProfileResource().build();
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.updateUserContract(userId, profileResource), () -> {
+            verify(rules).usersCanUpdateTheirSignedContract(user, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
     @Override
     protected Class<? extends UserProfileService> getClassUnderTest() {
         return TestUserProfileService.class;
@@ -92,6 +107,11 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
 
         @Override
         public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource) {
             return null;
         }
     }
