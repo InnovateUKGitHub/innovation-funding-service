@@ -123,11 +123,11 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
 
         verifyInteractions(
-                mock -> mock.isOtherDocumentsSubmitted(),
-                mock -> mock.isOtherDocumentsSubmitted(),
-                mock -> mock.isOtherDocumentsSubmitted(),
-                mock -> mock.isOtherDocumentsSubmitted(),
-                mock -> mock.isOtherDocumentsSubmitted(),
+                mock -> mock.isProjectDetailsSubmitted(),
+                mock -> mock.isMonitoringOfficerSubmitted(),
+                mock -> mock.isBankDetailsApproved(),
+                mock -> mock.isFinanceChecksSubmitted(),
+                mock -> mock.isSpendProfileSubmitted(),
                 mock -> mock.isOtherDocumentsSubmitted()
         );
     }
