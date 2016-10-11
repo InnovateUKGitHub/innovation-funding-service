@@ -467,9 +467,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    List<Long> partnerIds = simpleMap(partners, p -> p.getUser().getId());
                     Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(userId));
-                    if (partnerIds.contains(userId)) {
+                    if (projectUser.isPresent()) {
                         return serviceSuccess(projectUser.get()); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);

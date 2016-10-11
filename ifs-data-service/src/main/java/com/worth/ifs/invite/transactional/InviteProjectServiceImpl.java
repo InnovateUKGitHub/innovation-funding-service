@@ -109,7 +109,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 ProjectInvite projectInvite = inviteProjectRepository.save(invite.open());
-                projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
+                return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
                     pu.setInvite(projectInvite);
                     projectUserRepository.save(pu.accept());
                     return serviceSuccess();
