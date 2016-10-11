@@ -346,7 +346,7 @@ Project Finance is able to Approve and Reject
     Then the user should not see an error in the page
     [Teardown]  logout as user
 
-#TODO INFUND-5424 Partners should be able to see documents approved
+#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
 
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
@@ -383,7 +383,7 @@ Status updates correctly for internal user's table
 
 
 
-#TODO INFUND-5424 Partners should be able to see documents rejected
+#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents rejected
 
 *** Keywords ***
 the user uploads to the collaboration agreement question
