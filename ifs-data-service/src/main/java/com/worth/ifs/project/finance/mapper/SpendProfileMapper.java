@@ -8,6 +8,8 @@ import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
         config = GlobalMapperConfig.class,

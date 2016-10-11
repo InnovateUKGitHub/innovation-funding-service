@@ -4,6 +4,7 @@ Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
@@ -46,7 +47,6 @@ create new account for submitting
     And the user fills the create account form    Temur    Ketsbaia
     When the user opens the mailbox and verifies the email from    ${test_mailbox_one}+submittest@gmail.com
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-
 
 the user marks every section but one as complete
     Guest user log-in    ${submit_test_email}    Passw0rd123
@@ -190,15 +190,15 @@ the user marks finances as complete
     the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
-    the user selects the checkbox           id=agree-terms-page
-    the user selects the checkbox           id=agree-state-aid-page
+    the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
 the user marks the finances as complete
-    the user selects the checkbox          id=agree-terms-page
-    the user selects the checkbox          id=agree-state-aid-page
+    the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s

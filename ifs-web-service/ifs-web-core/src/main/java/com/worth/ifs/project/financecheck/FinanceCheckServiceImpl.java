@@ -2,6 +2,7 @@ package com.worth.ifs.project.financecheck;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.finance.service.FinanceCheckRestService;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -22,6 +23,11 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     @Override
     public ServiceResult<Void> update(FinanceCheckResource toUpdate){
         return financeCheckRestService.update(toUpdate).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+        return financeCheckRestService.getFinanceCheckSummary(projectId).toServiceResult();
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.worth.ifs.project.financecheck.controller;
 
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -14,9 +12,9 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
-import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.financecheck.form.CostFormField;
@@ -24,7 +22,10 @@ import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.resource.PartnerOrganisationResource;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
@@ -41,21 +42,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
-import static com.worth.ifs.util.CollectionFunctions.*;
-import static java.math.RoundingMode.HALF_EVEN;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -76,9 +71,6 @@ public class FinanceCheckController {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private ApplicationSummaryService applicationSummaryService;
 
     @Autowired
     private FinanceService financeService;
@@ -115,8 +107,11 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(method = GET)
-    public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model) {
-        return doViewFinanceCheckSummary(projectId, model, new FinanceCheckSummaryForm());
+    public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
+                                          @ModelAttribute FinanceCheckSummaryForm form,
+                                          @SuppressWarnings("unused") BindingResult bindingResult,
+                                          ValidationHandler validationHandler) {
+        return doViewFinanceCheckSummary(projectId, model);
     }
 
     @RequestMapping(value = "/generate", method = POST)
@@ -125,7 +120,7 @@ public class FinanceCheckController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model, form);
+        Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model);
         ServiceResult<Void> generateResult = projectFinanceService.generateSpendProfile(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
@@ -248,79 +243,11 @@ public class FinanceCheckController {
         return financeCheckService.update(currentFinanceCheckResource);
     }
 
-    private String doViewFinanceCheckSummary(Long projectId, Model model, FinanceCheckSummaryForm form) {
-
-        ProjectFinanceCheckSummaryViewModel viewModel = populateFinanceCheckSummaryViewModel(projectId);
-
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-
+    private String doViewFinanceCheckSummary(Long projectId, Model model) {
+        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccessObjectOrThrowException();
+        ProjectFinanceCheckSummaryViewModel projectFinanceCheckSummaryViewModel = new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource);
+        model.addAttribute("model", projectFinanceCheckSummaryViewModel);
         return "project/financecheck/summary";
-    }
-
-    // TODO DW - a lot of this information will not be available in reality until the Finance Checks story is available,
-    // so supporting the page with dummy data until then in order to unblock development on other Spend Profile stories
-    private ProjectFinanceCheckSummaryViewModel populateFinanceCheckSummaryViewModel(Long projectId) {
-
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-        ProjectTeamStatusResource projectTeamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
-
-        boolean financeChecksAllApproved = !simpleFindFirst(projectTeamStatus.getPartnerStatuses(), s ->
-                !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
-
-        Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
-
-        List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
-
-        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) -> {
-
-            boolean financeChecksApproved = ProjectActivityStates.COMPLETE.equals(projectTeamStatus.getPartnerStatusForOrganisation(org.getId()).get().getFinanceChecksStatus());
-
-            return new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
-                    org.getId(), org.getName(),
-                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
-                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
-                    financeChecksApproved ? ProjectFinanceCheckSummaryViewModel.Eligibility.APPROVED : ProjectFinanceCheckSummaryViewModel.Eligibility.REVIEW,
-                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
-                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i));
-        });
-
-        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
-        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
-        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalOtherFunding);
-
-        return new ProjectFinanceCheckSummaryViewModel(
-                projectId, competitionSummary, organisationRows,
-                project.getTargetStartDate(),
-                project.getDurationInMonths().intValue(),
-                projectTotal,
-                totalFundingSought,
-                totalOtherFunding,
-                calculateGrantPercentage(projectTotal, totalFundingSought),
-                anySpendProfile.isPresent(), financeChecksAllApproved,
-                anySpendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null),
-                anySpendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null));
-    }
-
-    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
-        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
-    }
-
-    private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
-
-        if (projectTotal.equals(BigDecimal.ZERO)) {
-            return BigDecimal.ZERO;
-        }
-
-        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
-    }
-
-    private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
-        T[] enumConstants = enums.getEnumConstants();
-        return enumConstants[index % enumConstants.length];
     }
 
     private String redirectToViewFinanceCheckSummary(Long projectId) {

@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
@@ -49,17 +50,19 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime offerSubmittedDate;
 
+    private LocalDateTime spendProfileSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
     private FileEntry collaborationAgreement;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
@@ -80,11 +83,13 @@ public class Project implements ProcessActivity {
 
     private Boolean otherDocumentsApproved;
 
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpendProfile> spendProfiles;
+
 
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-
                    Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
 
         this.id = id;
@@ -274,5 +279,21 @@ public class Project implements ProcessActivity {
 
     public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
+    public LocalDateTime getSpendProfileSubmittedDate() {
+        return spendProfileSubmittedDate;
+    }
+
+    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+        this.spendProfileSubmittedDate = spendProfileSubmittedDate;
+    }
+
+    public List<SpendProfile> getSpendProfiles() {
+        return spendProfiles;
+    }
+
+    public void setSpendProfiles(List<SpendProfile> spendProfiles) {
+        this.spendProfiles = spendProfiles;
     }
 }

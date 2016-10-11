@@ -2,7 +2,7 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -20,6 +20,16 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Void> generateSpendProfile(Long projectId) {
         String url = projectFinanceRestURL + "/" + projectId + "/spend-profile/generate";
         return postWithRestResult(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/spend-profile/approval/" + approvalType, Void.class);
+    }
+
+    @Override
+    public RestResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/spend-profile/approval", ApprovalType.class);
     }
 
     @Override
@@ -48,5 +58,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     @Override
     public RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
         return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> completeSpendProfilesReview(Long projectId) {
+        return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
     }
 }

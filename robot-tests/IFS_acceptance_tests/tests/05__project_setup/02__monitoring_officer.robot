@@ -18,6 +18,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
 Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
@@ -83,7 +84,7 @@ MO client-side validation
     And the user moves focus away from an element for MO    id=phoneNumber
     And the user should not see the text in the page    Please enter a phone number
     And the user should not see the text in the page    Please enter a valid phone number
-    # Pending due to INFUND-4101
+    # Todo Pending due to INFUND-4101
     #    And the user enters text to a text field    id=phoneNumber    0123
     #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
@@ -184,6 +185,18 @@ MO details accessible/seen by all partners
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+
+
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id=emailAddress    ${EMPTY}
@@ -204,7 +217,7 @@ standard verification for Phone number follows
     the user should see an error    Please enter a phone number
     the user enters text to a text field    id=phoneNumber    invalidphone
     the user should see an error    Please enter a valid phone number
-    # Pending due to INFUND-2101
+    # Todo Pending due to INFUND-4101
     #    And the user enters text to a text field    id=phoneNumber    0123
     #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
@@ -218,10 +231,10 @@ the user moves focus away from an element for MO
     focus    jQuery=.button:contains("Assign Monitoring Officer")
 
 the user edits the MO details
-    Input Text    id=firstName    Grace
-    Input Text    id=lastName    Harper
+    The user enters text to a text field    id=firstName    Grace
+    The user enters text to a text field    id=lastName    Harper
     #    Input Text    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    Input Text    id=phoneNumber    08549731414
+    The user enters text to a text field    id=phoneNumber    08549731414
     the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
 

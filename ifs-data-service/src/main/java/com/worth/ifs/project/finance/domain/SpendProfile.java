@@ -1,14 +1,17 @@
 package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Entity representing the Spend Profile of a Partner Organisation on a Project
@@ -48,11 +51,15 @@ public class SpendProfile {
 
     private boolean markedAsComplete;
 
+    @NotNull
+    @Enumerated(STRING)
+    private ApprovalType approval;
+
     public SpendProfile() {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, User generatedBy, Calendar generatedDate, boolean markedAsComplete) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, User generatedBy, Calendar generatedDate, boolean markedAsComplete, ApprovalType approval) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
@@ -61,6 +68,7 @@ public class SpendProfile {
         this.generatedBy = generatedBy;
         this.generatedDate = generatedDate;
         this.markedAsComplete = markedAsComplete;
+        this.approval = approval;
     }
 
     public Long getId() {
@@ -101,5 +109,13 @@ public class SpendProfile {
 
     public Calendar getGeneratedDate() {
         return generatedDate;
+    }
+
+    public ApprovalType getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ApprovalType approval) {
+        this.approval = approval;
     }
 }

@@ -1,16 +1,15 @@
 package com.worth.ifs.form.domain;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
@@ -29,18 +28,18 @@ public class FormInput{
     @Column(length = 5000)
     private Integer wordCount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formInputTypeId", referencedColumnName = "id")
     private FormInputType formInputType;
 
     @OneToMany(mappedBy = "formInput")
     private List<FormInputResponse> responses;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competitionId", referencedColumnName = "id")
     private Competition competition;
 

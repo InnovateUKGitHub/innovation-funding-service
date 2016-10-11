@@ -29,6 +29,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
 #    Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -138,6 +139,7 @@ Non-lead partner can view spend profile page
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Ludlow - Spend profile
 
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -146,6 +148,18 @@ Non-lead partner can see correct project start date and duration
     And the user should see the text in the page    January 2017
     And the user should see the text in the page    36 Months
     [Teardown]    Logout as user
+
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
 
 
 *** Keywords ***

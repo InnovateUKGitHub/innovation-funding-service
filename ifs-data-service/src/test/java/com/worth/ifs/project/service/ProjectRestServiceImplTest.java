@@ -502,4 +502,15 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertFalse(retrievedFileEntry.isPresent());
     }
 
+    @Test
+    public void testSubmitGrantOfferLetter() {
+        long projectId = 123L;
+        String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/submit";
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
 }

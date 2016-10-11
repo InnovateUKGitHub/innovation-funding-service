@@ -23,6 +23,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
@@ -195,12 +196,12 @@ Registered partner should not create new org but should follow the create accoun
 
 *** Keywords ***
 the applicant enters valid inputs
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    Fannie May
-    Input Text    name=organisations[1].invites[0].personName    Adrian Booth
-    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
+    The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
+    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
     focus    jquery=button:contains("Save Changes")
-    Click Element    jquery=button:contains("Save Changes")
+    The user clicks the button/link    jquery=button:contains("Save Changes")
 
 The lead applicant should have the correct status
     the user should see the element    css=#content h2.heading-medium
@@ -212,8 +213,8 @@ The lead applicant should have the correct status
 
 the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add another person')
     sleep    300ms
 
