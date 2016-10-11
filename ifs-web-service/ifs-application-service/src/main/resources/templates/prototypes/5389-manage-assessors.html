@@ -20,7 +20,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
+	<h1 class="heading-xlarge no-margin">Manage Assessors</h1>
 
 	<div class="grid-row extra-margin">
 		<div class="column-half">
@@ -37,18 +37,18 @@
 		</div>
 		<div class="column-quarter">
 			<div class="alignright">
-				<a href="/prototypes/5472-notify-assessors?status=incomplete" class="button large">Update Assessors</a>
+				<a href="/prototypes/5391-update-assessors?status=incomplete" class="button large">Update Assessors</a>
 			</div>
 		</div>
 	</div>
 
-	<h2 class="heading-medium">Applications</h2>
+	<h2 class="heading-medium">Assessors</h2>
 
 	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=3" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=5" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list2-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list5-table" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

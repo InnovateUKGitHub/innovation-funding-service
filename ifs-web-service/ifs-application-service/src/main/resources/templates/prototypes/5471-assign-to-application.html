@@ -56,7 +56,7 @@
 
 	<h2 class="heading-medium">Available Assessors</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=4" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list2-table" th:remove="tag" />
 
