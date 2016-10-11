@@ -4,6 +4,10 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-4631: As an assessor I want to be able to reject the invitation for a competition, so that the competition team is aware that I am available for assessment
 ...
 ...               INFUND-4145: As an Assessor and I am accepting an invitation to assess within a competition and I don't have an account, I need to select that I create an account in order to be available to assess applications.
+...
+...               INFUND-1478 As an Assessor creating an account I need to supply my contact details so that Innovate UK can contact me to assess applications.
+...
+...               INFUND-4919 As an assessor and I have completed setting up my account I can see my dashboard so that I can see the competitions I have accepted to assess.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -13,10 +17,12 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
+${Create_account_contact_details_assessor3}    ${server}/assessment/registration/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932/register
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -31,12 +37,85 @@ Non-registered assessor: Accept invitation
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
 
-Register as an assessor
+User can navigate back to the Become an Assessor page
     [Documentation]    INFUND-4145
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
+    And the email displayed should be correct
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
+
+Create assessor account: server-side validations
+    [Documentation]    INFUND-1478
+    [Tags]    HappyPath
+    Given the user clicks the button/link    jQuery=.button:contains("Create account")
+    When the user clicks the button/link    jQuery=button:contains("Continue")
+    Then the user should see an error    Please enter a first name
+    And the user should see an error    Please enter a last name
+    And the user should see an error    Please select a gender
+    And the user should see an error    Please select an ethnicity
+    And the user should see an error    Please select a disability
+    And the user should see an error    Please enter a phone number
+    And the user should see an error    Please enter your password
+    And the user should see an error    Please re-type your password
+    And the user should see an error    Please enter a valid phone number
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    And the user should see an error    Your last name should have at least 2 characters
+    And the user should see an error    Your first name should have at least 2 characters
+    And the user should see an error    Password must at least be 10 characters
+    And the user should see an error    Please enter your address details
+
+Create assessor account: client-side validations
+    [Documentation]    INFUND-1478
+    [Tags]    HappyPath
+    When The user enters text to a text field    id=firstName    Thomas
+    Then the user should not see the validation error in the create assessor form    Please enter a first name
+    When The user enters text to a text field    id=lastName    Fister
+    Then the user should not see the validation error in the create assessor form    Please enter a last name
+    When the user selects the radio button    gender    gender2
+    Then the user should not see the validation error in the create assessor form    Please select a gender
+    When the user selects the radio button    ethnicity    ethnicity2
+    Then the user should not see the validation error in the create assessor form    Please select an ethnicity
+    When the user selects the radio button    disability    disability2
+    Then the user should not see the validation error in the create assessor form    Please select a disability
+    When the user enters text to a text field    id=phoneNumber    123123123123
+    Then the user should not see the validation error in the create assessor form    Please enter a phone number
+    And the user should not see the validation error in the create assessor form    Please enter a valid phone number
+    And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters
+    When The user enters text to a text field    id=password    Passw0rd123
+    And The user enters text to a text field    id=retypedPassword    Passw0rd123
+    Then the user should not see the validation error in the create assessor form    Please enter your password
+    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
+    # TODO due to INFUND-5557
+    # When the user clicks the button/link    id=postcode-lookup
+    # And The user should see the text in the page    Please enter postcode    # empty postcode check
+
+Create assessor account: Postcode lookup and save
+    [Documentation]    INFUND-1478
+    [Tags]    HappyPath
+    When The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    id=addressForm.selectedPostcodeIndex
+    And the user clicks the button/link    css=#select-address-block button
+    And the assessor should see the address details autofilled
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    # TODO due to INFUND-5556
+    # Then the user reloads the page
+    # And the assessor should see the data entered
+    # Then the assessor should be able to edit the data entered
+    # And the user reloads the page
+    # Then the assessor should see the changed data
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
+
+Create assessor account: Accepted competitions should be displayed in dashboard
+    [Documentation]    INFUND-4957
+    [Tags]    Pending
+    # TODO remove the pending once the devs have merged their changes into development
+    When guest user log-in    worth.email.test+assessor3@gmail.com    Password1Password1
+    Then the user should see the element    link=Juggling Craziness
+    And the user clicks the button/link    link=Juggling Craziness
+    And The user should see the text in the page    Juggling Craziness
+    [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631, INFUND-4636
@@ -57,3 +136,67 @@ the assessor fills in all fields
     Select From List By Index    id=rejectReason    3
     The user should not see the text in the page    This field cannot be left blank
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
+
+the assessor fills in contact details
+    Select From List By Index    id=title    0
+    The user enters text to a text field    id=firstName    Thomas
+    The user enters text to a text field    id=lastName    Fister
+    the user selects the radio button    gender    gender2
+    the user selects the radio button    ethnicity    ethnicity2
+    the user selects the radio button    disability    disability2
+    The user enters text to a text field    id=phoneNumber    08549741414
+    The user enters text to a text field    id=password    Password1Password1
+    The user enters text to a text field    id=retypedPassword    Password1Password1
+
+the email displayed should be correct
+    ${Email}=    Get Text    css=div:nth-child(10) p strong
+    Should Be Equal    ${Email}    worth.email.test+assessor3@gmail.com
+
+the user moves focus away from the element
+    [Arguments]    ${element}
+    mouse out    ${element}
+    focus    jQuery=.button:contains("Continue")
+
+the assessor should see the data entered
+    the user should see the text in the page    Thomas
+    the user should see the text in the page    Fister
+    Radio Button Should Be Set To    gender
+    Radio Button Should Be Set To    ethnicity
+    Radio Button Should Be Set To    disability
+    the user should see the text in the page    08549741414
+
+the assessor should be able to edit the data entered
+    Select From List By Index    id=title    1
+    The user enters text to a text field    id=firstName    Annabelle
+    The user enters text to a text field    id=lastName    Wallis
+    the user selects the radio button    gender    gender1
+    the user selects the radio button    ethnicity    ethnicity3
+    the user selects the radio button    disability    disability3
+    The user enters text to a text field    id=phoneNumber    09761963636
+    The user enters text to a text field    id=password    Password1Password1
+    The user enters text to a text field    id=retypedPassword    Password1Password1
+
+the assessor should see the changed data
+    Element Text Should Be    id=title    Miss
+    the user should see the text in the page    Annabelle
+    the user should see the text in the page    Wallis
+    Radio Button Should Be Set To    gender
+    Radio Button Should Be Set To    ethnicity
+    Radio Button Should Be Set To    disability
+    the user should see the text in the page    08549741414
+
+the assessor should see the address details autofilled
+    the user should see the text in the page    Montrose House 1
+    #    the user should see the text in the page    Clayhill Park
+    #    the user should see the text in the page    Cheshire West and Chester
+    the user should see the text in the page    Neston
+    #    the user should see the text in the page    Cheshire
+    the user should see the text in the page    CH64 3RU
+
+the user should not see the validation error in the create assessor form
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=button:contains("Continue")
+    Wait for autosave
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}

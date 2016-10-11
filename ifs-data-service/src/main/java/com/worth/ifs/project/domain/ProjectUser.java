@@ -10,6 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
+import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
+
 /**
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
@@ -58,8 +62,27 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         this.organisation = organisation;
     }
 
+    public ProjectUser accept() {
+        if (getInvite().getStatus() != OPENED) {
+            throw new IllegalStateException("Cannot accept a ProjectUser that hasn't been opened");
+        }
+        if (getStatus() == REJECTED) {
+            throw new IllegalStateException("Cannot accept a ProjectUser that has been rejected");
+        }
+        if (getStatus() == ACCEPTED) {
+            throw new IllegalStateException("ProjectUser has already been accepted");
+        }
+
+        setStatus(ACCEPTED);
+
+        return this;
+    }
+
+
     @Override
-    public ProjectInvite getInvite() { return invite; }
+    public ProjectInvite getInvite() {
+        return invite;
+    }
 
     @Override
     public ProjectParticipantRole getRole() {
@@ -101,6 +124,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
 
     public boolean isFinanceContact() {
         return getRole().isFinanceContact();
+    }
+
+    public void setInvite(ProjectInvite invite) {
+        this.invite = invite;
     }
 
     @Override
