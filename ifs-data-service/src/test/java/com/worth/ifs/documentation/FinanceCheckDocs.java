@@ -30,4 +30,11 @@ public class FinanceCheckDocs {
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
             fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
     };
+
+    public static final FieldDescriptor[] financeCheckResourceFields = {
+            fieldWithPath("id").description("Finance check entity unique id"),
+            fieldWithPath("project").description("Project id to which the finance check belongs"),
+            fieldWithPath("organisation").description("Organisation of partner organisation"),
+            fieldWithPath("costGroup").description("Cost group that holds updated cost values for finance check.  These are then used to generate spend profile for each partner")
+    };
 }

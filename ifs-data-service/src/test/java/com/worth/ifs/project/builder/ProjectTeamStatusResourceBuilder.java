@@ -34,7 +34,8 @@ public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamSta
     }
 
 
-    public ProjectTeamStatusResourceBuilder withPartnerStatuses(List<ProjectPartnerStatusResource>... partnerStatuses){
+    @SafeVarargs
+    public final ProjectTeamStatusResourceBuilder withPartnerStatuses(List<ProjectPartnerStatusResource>... partnerStatuses){
         return withArray((statuses, projectTeamStatusResource) -> addListToList("partnerStatuses", statuses, projectTeamStatusResource), partnerStatuses);
     }
 

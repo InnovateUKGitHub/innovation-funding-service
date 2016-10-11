@@ -3,7 +3,6 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.finance.resource.CostResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -33,7 +32,8 @@ public class CostGroupResourceBuilder extends BaseBuilder<CostGroupResource, Cos
     }
 
 
-    public CostGroupResourceBuilder withCosts(List<CostResource>... costs) {
+    @SafeVarargs
+    public final CostGroupResourceBuilder withCosts(List<CostResource>... costs) {
         return withArray((cost, costGroupResource) -> setField("costs", cost, costGroupResource), costs);
     }
 
