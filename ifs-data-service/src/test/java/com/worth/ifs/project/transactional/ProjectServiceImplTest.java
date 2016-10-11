@@ -1037,7 +1037,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(organisationRepositoryMock.findOne(organisationNotOnProject.getId())).thenReturn(organisationNotOnProject);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
@@ -1056,7 +1056,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
         // Expectations
         verifyZeroInteractions(projectUserRepositoryMock);
         assertTrue(shouldFail.isSuccess());
@@ -1079,9 +1079,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(inviteProjectRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), newUser.getId(), o.getId());
-        // Expectations
-        verify(projectUserRepositoryMock).save(isA(ProjectUser.class));
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), newUser.getId(), o.getId());
+
         assertTrue(shouldFail.isSuccess());
     }
 
