@@ -41,15 +41,15 @@ User can navigate back to the Become an Assessor page
     [Documentation]    INFUND-4145
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
+    And the email displayed should be correct
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
 
 Create assessor account: server-side validations
-    [Documentation]    INFUND-4916
+    [Documentation]    INFUND-1478
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
-    And The user should be redirected to the correct page    ${Create_account_contact_details_assessor3}
-    Then the user clicks the button/link    jQuery=button:contains("Continue")
+    When the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
     And the user should see an error    Please select a gender
@@ -66,7 +66,7 @@ Create assessor account: server-side validations
     And the user should see an error    Please enter your address details
 
 Create assessor account: client-side validations
-    [Documentation]    INFUND-4916
+    [Documentation]    INFUND-1478
     [Tags]    HappyPath
     When The user enters text to a text field    id=firstName    Thomas
     Then the user should not see the validation error in the create assessor form    Please enter a first name
@@ -91,13 +91,13 @@ Create assessor account: client-side validations
     # And The user should see the text in the page    Please enter postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
+    [Documentation]    INFUND-1478
     [Tags]    HappyPath
     When The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
     And the assessor should see the address details autofilled
-    And the email displayed should be correct
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     # TODO due to INFUND-5556
     # Then the user reloads the page
@@ -109,7 +109,7 @@ Create assessor account: Postcode lookup and save
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4957
-    [Tags]    Pendin
+    [Tags]    Pending
     # TODO remove the pending once the devs have merged their changes into development
     When guest user log-in    worth.email.test+assessor3@gmail.com    Password1Password1
     Then the user should see the element    link=Juggling Craziness
