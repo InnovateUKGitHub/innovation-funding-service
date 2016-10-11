@@ -42,11 +42,11 @@ public class ApplicationFinanceResourceBuilder extends BaseBuilder<ApplicationFi
     }
 
     public ApplicationFinanceResourceBuilder withApplication(Long... applicationIds) {
-        return withArray((applicationId, applicationFinanceResource) -> setField("applicationId", applicationId, applicationFinanceResource), applicationIds);
+        return withArray((applicationId, applicationFinanceResource) -> setField("application", applicationId, applicationFinanceResource), applicationIds);
     }
 
     public ApplicationFinanceResourceBuilder withOrganisation(Long... organisationIds) {
-        return withArray((organisationId, applicationFinanceResource) -> setField("organisationId", organisationId, applicationFinanceResource), organisationIds);
+        return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
     }
 
     public ApplicationFinanceResourceBuilder withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
