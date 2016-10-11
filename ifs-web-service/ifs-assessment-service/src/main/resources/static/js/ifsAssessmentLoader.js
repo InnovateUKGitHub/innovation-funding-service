@@ -25,7 +25,7 @@ IFS.assessment.loadOrder = {
   },
   'declaration-form' : {
     init : function(){
-      IFS.assessment.repeatableRows.init();
+      IFS.assessment.repeatableDeclarationRows.init();
     }
   }
 };
