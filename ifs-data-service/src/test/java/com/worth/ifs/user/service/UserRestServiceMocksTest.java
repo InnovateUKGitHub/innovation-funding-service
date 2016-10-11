@@ -119,17 +119,15 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
     }
 
-    @Ignore
     @Test
     public void updateUserProfile() {
         Long userId = 1L;
         ProfileResource profile = newProfileResource().build();
 
-        setupPutWithRestResultAnonymousExpectations(format("%s/id/%s/updateProfile", usersUrl, userId), profile, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfile", usersUrl, userId), profile, OK);
 
-        RestResult<UserResource> response = service.updateProfile(userId, profile);
+        RestResult<Void> response = service.updateProfile(userId, profile);
         assertTrue(response.isSuccess());
-
     }
 
     @Test
