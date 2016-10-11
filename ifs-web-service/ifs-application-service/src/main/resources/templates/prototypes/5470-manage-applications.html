@@ -46,7 +46,7 @@
 
 	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=3" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list2-table" th:remove="tag" />
 
