@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
@@ -224,6 +225,20 @@ public final class CollectionFunctions {
             return emptyList();
         }
         return list.stream().map(mappingFn).collect(toList());
+    }
+
+    public static <T, R> R[] simpleMapArray(T[] array, Function<T, R> mappingFn, Class<R> clazz) {
+        if (array == null || array.length == 0){
+            return (R[]) Array.newInstance(clazz, 0);
+        } else {
+            R[] result = (R[]) Array.newInstance(clazz, array.length);
+            for (int index = 0; index < array.length; index++){
+                result[index] = mappingFn.apply(array[index]);
+            }
+            return result;
+        }
+
+
     }
 
     /**
