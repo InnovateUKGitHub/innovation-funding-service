@@ -411,6 +411,20 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testGetProjectStatus(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.getProjectStatus(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).compAdminsCanViewStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
