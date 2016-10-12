@@ -66,7 +66,6 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
                                 withName(LABOUR.getName(), MATERIALS.getName()).
-                                withLabel(LABOUR.getLabel(), MATERIALS.getLabel()).
                                 build(2)).
                         build()).
                 build();
@@ -76,6 +75,34 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
+        // Method under test
+        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(expectedCct, result.getSuccessObject()); // We matched
+    }
+
+
+    @Test
+    public void testAlreadyCreated() {
+        // Setup
+        ApplicationResource ar = newApplicationResource().build();
+        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Industrial
+        ApplicationFinanceResource afr = newApplicationFinanceResource().build();
+        CostCategoryType expectedCct = newCostCategoryType().
+                withName("A name that will not match - we care only about the contained CostCategories").
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().
+                                withName(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getName, String.class)).
+                                withLabel(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getLabel, String.class)).
+                                build(AcademicCostCategoryGenerator.values().length)).
+                        build()).
+                build();
+        // Mocks
+        when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
+        when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(costCategoryTypeRepositoryMock.findAll()).thenReturn(asList(expectedCct)); // This is the one already created and should be returned
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());

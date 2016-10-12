@@ -712,6 +712,18 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
+    public static final <T, R> boolean containsAll(Collection<T> containing, Collection<R> contained, BiFunction<T,R,Boolean> equalsFunction){
+        if (containing == null && contained != null) {
+            return false;
+        } else if (contained == null) {
+            return true;
+        }
+        boolean notContained = contained.stream().filter(containedItem ->
+                    !containing.stream().filter(containingItem -> equalsFunction.apply(containingItem, containedItem)).findAny().isPresent()
+        ).findAny().isPresent();
+        return !notContained;
+    }
+
     public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
         if (containing == null && contained != null) {
             return false;
