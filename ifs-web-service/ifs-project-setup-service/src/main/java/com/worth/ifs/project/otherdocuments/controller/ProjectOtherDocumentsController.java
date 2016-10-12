@@ -205,7 +205,7 @@ public class ProjectOtherDocumentsController {
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
-                otherDocumentsApproved, isSubmitAllowed, project.getDocumentsSubmittedDate());
+                approvalDecisionMade, isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

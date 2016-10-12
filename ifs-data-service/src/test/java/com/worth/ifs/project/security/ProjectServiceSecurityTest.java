@@ -113,7 +113,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
 
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonCompAdminRoles.forEach(role -> {
