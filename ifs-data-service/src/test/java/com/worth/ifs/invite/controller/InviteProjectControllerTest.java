@@ -172,7 +172,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
         when(inviteProjectServiceMock.acceptProjectInvite(hash,userId)).
                 thenReturn(serviceFailure(new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE)));
 
-        mockMvc.perform(post("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isNotAcceptable());
 
@@ -188,7 +188,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         when(inviteProjectServiceMock.acceptProjectInvite(hash,userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 

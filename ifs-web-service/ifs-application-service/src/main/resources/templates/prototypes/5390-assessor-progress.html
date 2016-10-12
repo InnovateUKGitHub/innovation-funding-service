@@ -19,41 +19,45 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Assign to application</h1>
+	<h1 class="heading-xlarge no-margin">Assessor progress</h1>
 
-	<h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+	<h2 class="heading-large no-margin">John Smith</h2>
 
-	<div class="grid-row extra-margin">
+	<h3 class="heading-medium">Innovation area and skills</h3>
+
+	<div class="grid-row">
 		<div class="column-quarter">
-			<h3 class="heading-small">Partners</h3>
+			<h4 class="heading-small no-margin">Innovation area</h4>
 			<ul>
-				<li>Aptrans Ltd (Lead)</li>
-				<li>Biotech Corp</li>
-				<li>Unversity of Cardiff</li>
+				<li>Advanced materials</li>
+				<li>Biosciences</li>
+				<li>Materials</li>
 			</ul>
 		</div>
 		<div class="column-quarter">
-			<h3 class="heading-small">Innovation area</h3>
-			<p>Advanced materials</p>
+			<h4 class="heading-small no-margin">Type</h4>
+			<p>Business</p>
+			<h4 class="heading-small">Principle employer</h4>
+			<p>ASDF Solutions</p>
 		</div>
 	</div>
-	<div class="extra-margin">
-		<a href="#">Review application</a>
-	</div>
+	<p>
+		<span class="heading-large">5</span> Total applications
+	</p>
 
 	<h2 class="heading-medium">Assigned(2)</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list3-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list3-table" th:remove="tag" />
 
 	<h2 class="heading-medium">Rejected(1)</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list4-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list4-table" th:remove="tag" />
 
-	<h2 class="heading-medium">Available Assessors</h2>
+	<h2 class="heading-medium">Applications</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=4" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=true,sortByType=6" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list2-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list5-table" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

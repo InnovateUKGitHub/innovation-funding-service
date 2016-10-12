@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -133,7 +134,7 @@ public interface ProjectService {
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ADD_PARTNER",
             description = "The System Registration user can add a partner to a project")
-    ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
+    ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);

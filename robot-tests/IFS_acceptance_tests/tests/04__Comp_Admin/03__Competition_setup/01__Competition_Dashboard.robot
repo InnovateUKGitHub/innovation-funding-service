@@ -103,7 +103,7 @@ Competition Opens automatically on date
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     And The competition is ready to open
-    When Change the open date of the Sarcasm Stipendousnss in the database to one day before
+    When Change the open date of the Sarcasm Stupendousness in the database to one day before
     And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
     And The competition should be open
