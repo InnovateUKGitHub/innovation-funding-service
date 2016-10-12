@@ -257,8 +257,8 @@
 
                         <!--/* readonly */-->
                         <th:block th:if="${readonly}">
-                            <div th:each="section : ${model.table.getCostCategoryGroupMap()}">
-                                <div th:each="rowList,iteration : ${section.value}">
+                            <th:block th:each="section : ${model.table.getCostCategoryGroupMap()}">
+                                <th:block th:each="rowList,iteration : ${section.value}">
                                     <tr th:each="row : ${rowList}" class="spend-ok" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
                                         <th th:if="${iteration.index == 0}" th:text="${section.key}" class="fix-left1">Directly Incured</th>
                                         <th th:unless="${iteration.index == 0}" class="fix-left1"></th>
@@ -267,12 +267,11 @@
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}" class="error-message">Your total costs are higher than your eligible costs</span>
                                         </th>
                                         <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
-                                        <!--<td class="separate-cell year">12,500</td>-->
                                         <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}" th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}" />
                                         <td class="total eligible fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}" />
                                     </tr>
-                                </div>
-                            </div>
+                                </th:block>
+                            </th:block>
                         </th:block>
                      </tbody>
                     </table>
