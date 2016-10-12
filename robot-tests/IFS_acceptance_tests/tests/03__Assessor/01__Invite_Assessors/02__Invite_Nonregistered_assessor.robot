@@ -31,7 +31,7 @@ Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
     ...    INFUND-4145
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     And the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
@@ -41,6 +41,7 @@ Non-registered assessor: Accept invitation
 
 User can navigate back to the Become an Assessor page
     [Documentation]    INFUND-4145
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
     And the email displayed should be correct
@@ -90,7 +91,7 @@ Create assessor account: client-side validations
     And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
     # TODO due to INFUND-5557
     # When the user clicks the button/link    id=postcode-lookup
-    # And The user should see the text in the page    Please enter postcode    # empty postcode check
+    # And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
@@ -99,7 +100,7 @@ Create assessor account: Postcode lookup and save
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
-    And the assessor should see the address details autofilled
+    And the address fields should be filled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     # TODO due to INFUND-5556
     # Then the user reloads the page
@@ -143,7 +144,7 @@ Assessor attempts to accept/reject an invitation which is already accepted
     [Documentation]    INFUND-5165
     [Tags]    Pending
     [Setup]    The guest user opens the browser
-    # TODO due to INFUND-5566
+    # TODO pending due to INFUND-5566
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 
@@ -195,14 +196,6 @@ the assessor should see the changed data
     Radio Button Should Be Set To    ethnicity
     Radio Button Should Be Set To    disability
     the user should see the text in the page    08549741414
-
-the assessor should see the address details autofilled
-    the user should see the text in the page    Montrose House 1
-    #    the user should see the text in the page    Clayhill Park
-    #    the user should see the text in the page    Cheshire West and Chester
-    the user should see the text in the page    Neston
-    #    the user should see the text in the page    Cheshire
-    the user should see the text in the page    CH64 3RU
 
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
