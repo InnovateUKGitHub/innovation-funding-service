@@ -752,7 +752,8 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
 
         MvcResult result = mockMvc.perform(post("/profile/declaration")
-                .contentType(APPLICATION_FORM_URLENCODED))
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("accurateAccount", "false"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeExists("form"))
@@ -763,8 +764,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeHasFieldErrors("form", "hasFinancialInterests"))
                 .andExpect(model().attributeHasFieldErrors("form", "hasFamilyAffiliations"))
                 .andExpect(model().attributeHasFieldErrors("form", "hasFamilyFinancialInterests"))
-                // TODO
-                //.andExpect(model().attributeHasFieldErrors("form", "accurateAccount"))
+                .andExpect(model().attributeHasFieldErrors("form", "accurateAccount"))
                 .andExpect(view().name("profile/declaration-of-interest"))
                 .andReturn();
 
@@ -774,7 +774,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(6, bindingResult.getFieldErrorCount());
+        assertEquals(7, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("principalEmployer"));
         assertEquals("Please enter a principal employer", bindingResult.getFieldError("principalEmployer").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("role"));
@@ -787,6 +787,8 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals("Please tell us if any of your close family members have any appointments, directorships or consultancies", bindingResult.getFieldError("hasFamilyAffiliations").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFamilyFinancialInterests"));
         assertEquals("Please tell us if any of your close family members have any other financial interests", bindingResult.getFieldError("hasFamilyFinancialInterests").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("accurateAccount"));
+        assertEquals("In order to register an account you have to agree that this is an accurate account", bindingResult.getFieldError("accurateAccount").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }

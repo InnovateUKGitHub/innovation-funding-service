@@ -47,6 +47,7 @@ public class AssessorProfileDeclarationForm implements BindingResultTarget {
     private Boolean hasFamilyFinancialInterests;
     private String familyFinancialInterests;
 
+    @NotNull(message = "{validation.assessorprofiledeclarationform.accurateAccount.required}")
     @AssertTrue(message = "{validation.assessorprofiledeclarationform.accurateAccount.required}")
     private Boolean accurateAccount;
 
