@@ -229,7 +229,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         verify(userRepositoryMock).findOne(userId);
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().get(0).getErrorKey(), "Cannot sign contract because contract is already signed");
+        assertEquals(result.getErrors().get(0).getErrorKey(), "validation.assessorprofiletermsform.terms.alreadysigned");
 
     }
 
@@ -265,7 +265,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().get(0).getErrorKey(), "Cannot sign contract other than current contract");
+        assertEquals(result.getErrors().get(0).getErrorKey(), "validation.assessorprofiletermsform.terms.oldterms");
     }
 
     @Test

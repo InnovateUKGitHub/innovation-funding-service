@@ -138,10 +138,10 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
             Contract currentContract = contractRepository.findByCurrentTrue();
             if (!profileResource.getContract().getId().equals(currentContract.getId())) {
-                return serviceFailure(badRequestError("Cannot sign contract other than current contract"));
+                return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.oldterms"));
             }
             if (user.getProfile().getContract()!=null && profileResource.getContract().getId().equals(user.getProfile().getContract().getId())) {
-                return serviceFailure(badRequestError("Cannot sign contract because contract is already signed"));
+                return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
             } else {
                 user.getProfile().setContractSignedDate(LocalDateTime.now());
                 user.getProfile().setContract(currentContract);

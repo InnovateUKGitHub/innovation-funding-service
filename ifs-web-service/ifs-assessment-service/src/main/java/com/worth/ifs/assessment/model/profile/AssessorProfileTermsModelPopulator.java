@@ -22,7 +22,7 @@ public class AssessorProfileTermsModelPopulator {
     }
 
     private void addContractHTML(AssessorProfileTermsViewModel model) {
-        RestResult<ContractResource> contractResourceRestResult = contractRestService.getCurrentContract();
-        model.setTerms(contractResourceRestResult.getSuccessObject().getText());
+        ContractResource currentContract = contractRestService.getCurrentContract().getSuccessObjectOrThrowException();
+        model.setTerms(currentContract.getText());
     }
 }

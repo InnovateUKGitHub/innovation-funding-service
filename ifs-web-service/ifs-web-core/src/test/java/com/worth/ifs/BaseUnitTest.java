@@ -38,10 +38,7 @@ import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
-import com.worth.ifs.user.service.OrganisationRestService;
-import com.worth.ifs.user.service.OrganisationTypeRestService;
-import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.user.service.*;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -182,6 +179,8 @@ public class BaseUnitTest {
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
     public ProjectStatusService projectStatusServiceMock;
+    @Mock
+    public ContractRestService contractRestService;
 
     @Spy
     @InjectMocks

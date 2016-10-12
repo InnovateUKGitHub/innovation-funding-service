@@ -12,11 +12,20 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
-            <div ifs:utext="${model.getTerms()}"/>
-
-            <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
-
             <form th:action="@{/profile/terms}" method="post" th:object="${form}">
+                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                    <h1 class="heading-medium error-summary-heading">
+                        You were unable to sign the contract
+                    </h1>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+                <div ifs:utext="${model.getTerms()}"/>
+
+                <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
+
                 <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
                     <fieldset>
                         <legend>

@@ -9,6 +9,7 @@ import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -124,6 +125,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
         return userRestService.updateUserAffiliations(userId, affiliations).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource) {
+        return userRestService.updateUserContract(userId, profileResource).toServiceResult();
     }
 
     @Override
