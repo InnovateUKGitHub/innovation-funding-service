@@ -3,7 +3,6 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -31,16 +30,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
@@ -126,7 +122,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
-        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getId());
+        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeRowService.financeTotals(application.getId()).getSuccessObject();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
