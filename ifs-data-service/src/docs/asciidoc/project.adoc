@@ -137,22 +137,22 @@ include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-pro
 ====== Curl Example
 include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
 
-=== Update Bank Details
+=== Submit Banks Details
 ==== Success
 ===== Request
-include::{snippets}/project/update-banks-detail/http-request.adoc[]
-include::{snippets}/project/update-banks-detail/path-parameters.adoc[]
-include::{snippets}/project/update-banks-detail/request-fields.adoc[]
+include::{snippets}/project/submit-bank-details/http-request.adoc[]
+include::{snippets}/project/submit-bank-details/path-parameters.adoc[]
+include::{snippets}/project/submit-bank-details/request-fields.adoc[]
 
 ===== Response
-include::{snippets}/project/update-banks-detail/http-response.adoc[]
+include::{snippets}/project/submit-bank-details/http-response.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/update-banks-detail/curl-request.adoc[]
+include::{snippets}/project/submit-bank-details/curl-request.adoc[]
 
 ==== Failure cases
 ===== Update Bank Details with invalid input
-include::{snippets}/project/update-banks-detail-with-invalid-details-returns-errors/http-response.adoc[]
+include::{snippets}/project/submit-invalid-bank-details/http-response.adoc[]
 
 
 === Upload Collaboration Agreement Document during Project Setup
@@ -494,28 +494,54 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.
 === Approve Finance Check
 ==== Success
 ===== Request
-include::{snippets}/project/test-approve-finance-check/http-request.adoc[]
-include::{snippets}/project/test-approve-finance-check/path-parameters.adoc[]
+include::{snippets}/project/approve-finance-check/http-request.adoc[]
+include::{snippets}/project/approve-finance-check/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/test-approve-finance-check/http-response.adoc[]
+include::{snippets}/project/approve-finance-check/http-response.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/test-approve-finance-check/curl-request.adoc[]
+include::{snippets}/project/approve-finance-check/curl-request.adoc[]
 
 
 === Get Finance Check Approval Status
 ==== Success
 ===== Request
-include::{snippets}/project/test-get-finance-check-approval-status/http-request.adoc[]
-include::{snippets}/project/test-get-finance-check-approval-status/path-parameters.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/http-request.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/test-get-finance-check-approval-status/http-response.adoc[]
-include::{snippets}/project/test-get-finance-check-approval-status/response-fields.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/http-response.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/response-fields.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/test-get-finance-check-approval-status/curl-request.adoc[]
+include::{snippets}/project/get-finance-check-approval-status/curl-request.adoc[]
+
+=== Save Finance Check
+==== Success
+===== Request
+include::{snippets}/project/save-finance-check/http-request.adoc[]
+include::{snippets}/project/save-finance-check/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-finance-check/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-finance-check/curl-request.adoc[]
+
+
+=== Get Finance Check Summary
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-summary/http-request.adoc[]
+include::{snippets}/project/get-finance-check-summary/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-summary/http-response.adoc[]
+include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
 
 
 === Get Spend Profile CSV

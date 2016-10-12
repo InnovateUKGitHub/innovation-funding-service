@@ -25,6 +25,10 @@
         <h2 class="heading-small no-margin">These documents have been approved by Innovate UK.</h2>
     </div>
 
+    <div th:if="${model.isShowGenericRejectionMessage()}" class="warning-alert">
+        <h2 class="heading-small no-margin">We are unable to approve these documents. Please contact Customer Support.</h2>
+    </div>
+
     <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
         <h2 class="heading-small">These documents have been returned to the project team, the following reason was
             given;</h2>
@@ -33,7 +37,7 @@
         </ul>
     </div>
 
-    <th:block th:if="${model.leadPartner}">
+    <th:block th:if="${model.isShowLeadPartnerGuidanceInformation()}">
         <p>As the lead partner in this project you must supply additional documents to support your grant
             application.</p>
         <p>These documents are:</p>
@@ -43,6 +47,11 @@
         </ul>
         <p>You should review these documents with the other partners in the project.</p>
         <p>Further details on what is required from these documents is available below.</p>
+    </th:block>
+
+    <th:block th:if="${model.isShowDocumentsBeingReviewedMessage()}">
+        <p>The documents submitted below are now being reviewed. We will contact the Project Manager
+            if we need any further information.</p>
     </th:block>
 
     <div class="upload-section">
@@ -172,16 +181,16 @@
         </th:block>
     </div>
 
-    <p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate
-        UK for review. If these documents require further clarification Innovate UK will contact you.</p>
-    <a th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}"
-       th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
+    <th:block th:if="${model.isShowSubmitDocumentsButton()}">
+        <p>Once you have uploaded these documents, they must be submitted to Innovate UK for review.
+            We will contact you if we need clarification.</p>
+        <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
        data-js-modal="modal-partner-documents">Submit partner documents</a>
-    <div class="extra-margin"
-         th:if="${!model.submitAllowed and model.submitDate == null}">
+    </th:block>
+     <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
         <p>You are not able to submit until all files are uploaded. And you must be the project manager</p>
-        <button disabled="disabled" class="button">Submit partner documents</button>
-    </div>
+        <button disabled="disabled" class="button extra-margin">Submit partner documents</button>
+     </th:block>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
 

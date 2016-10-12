@@ -89,7 +89,7 @@ public interface QuestionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<QuestionResource> save(QuestionResource questionResource);
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'READ')")

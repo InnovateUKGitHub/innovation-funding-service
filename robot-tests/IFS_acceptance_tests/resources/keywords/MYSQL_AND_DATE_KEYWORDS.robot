@@ -61,7 +61,7 @@ get yesterday
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
 
-Change the open date of the Sarcasm Stipendousnss in the database to one day before
+Change the open date of the Sarcasm Stupendousness in the database to one day before
     ${yesterday} =    get yesterday
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
     And the user reloads the page

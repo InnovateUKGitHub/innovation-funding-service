@@ -16,7 +16,9 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.transactional.OrganisationTypeService;
+import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -47,25 +49,27 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
 
+    static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
+
     @Override
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
         return find(project(projectId), organisation(organisationId)).
                 andOnSuccess((project, organisation) ->
                         find(applicationFinanceResource(project.getApplication(), organisation.getId())).
                                 andOnSuccess((finances) -> {
-                                    Set<? extends CostCategoryGenerator> costCategoryGenerators;
+                                    List<? extends CostCategoryGenerator> costCategoryGenerators;
                                     if (!isResearch(organisation.getOrganisationType())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
-                                        costCategoryGenerators = financeOrganisationDetails.keySet();
+                                        costCategoryGenerators = sort(financeOrganisationDetails.keySet());
                                     }
                                     else {
-                                        costCategoryGenerators = allOf(AcademicCostCategoryGenerator.class);
+                                        costCategoryGenerators = sort(allOf(AcademicCostCategoryGenerator.class));
                                     }
                                     return serviceSuccess(getOrCreateSupportingCostCategoryType(costCategoryGenerators));
                                 }));
     }
 
-    private CostCategoryType getOrCreateSupportingCostCategoryType(Set<? extends CostCategoryGenerator> summaryPerCategory) {
+    private CostCategoryType getOrCreateSupportingCostCategoryType(List<? extends CostCategoryGenerator> summaryPerCategory) {
         // Get the generators for the CostCategories we may need to generate
         List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory, CostCategoryGenerator::isSpendCostCategory);
         // Get all of the CostCategoryTypes so we can find out if there is already a logical grouping of CostCategories that fulfils our needs
@@ -73,7 +77,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
             List<CostCategory> costCategories = costCategoryType.getCostCategories();
             return costCategories.size() == costCategoryGenerators.size() &&
-                    containsAll(costCategories, CostCategory::getName, costCategoryGenerators, CostCategoryGenerator::getName);
+                    containsAll(costCategories, costCategoryGenerators, this::areEqual);
         });
 
         return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {
@@ -81,10 +85,10 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
             // We need CostCategories
             List<CostCategory> costCategories = simpleMap(costCategoryGenerators, this::newCostCategory);
             // We need a CostCategoryGroup - a logical grouping of the CostCategories with a description
-            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryGroupDescription = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
             CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
             // We need a CostCategoryType - a description of the CostCategoryGroup. E.g. currently we would expect one for Industrial and one for Academic
-            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryTypeName = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
             CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
             return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
@@ -107,4 +111,18 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     private Supplier<ServiceResult<ApplicationFinanceResource>> applicationFinanceResource(Long applicationId, Long organisationId) {
         return () -> financeRowService.financeDetails(applicationId, organisationId);
     }
+
+
+
+    /**
+     * Convenience method to determine if a {@link CostCategory} is equal to a {@link CostCategoryGenerator} and so needs to be generated
+     *
+     * @param cc
+     * @param ccg
+     * @return
+     */
+    boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
+        return ccg.getLabel() == cc.getLabel() && ccg.getName() == cc.getName();
+    }
+
 }

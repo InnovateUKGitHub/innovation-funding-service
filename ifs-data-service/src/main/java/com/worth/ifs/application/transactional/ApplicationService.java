@@ -84,8 +84,8 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
-    
-    @PreAuthorize("hasAuthority('comp_admin')")
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
