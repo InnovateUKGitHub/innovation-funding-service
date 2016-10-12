@@ -77,6 +77,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return !rejectionReasons.isEmpty();
     }
 
+    public boolean isShowGenericRejectionMessage() {
+        return !isShowRejectionMessages() && approvalDecisionMade && !approved;
+    }
+
     public List<String> getRejectionReasons() {
         return rejectionReasons;
     }
@@ -104,4 +108,5 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     public LocalDateTime getSubmitDate() {
         return submitDate;
     }
+
 }

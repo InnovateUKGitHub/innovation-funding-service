@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
+import java.util.Locale;
 /**
  *
  */
@@ -30,6 +30,7 @@ public class FreemarkerConfiguration {
         // a good choice in most applications:
         cfg.setDefaultEncoding("UTF-8");
 
+        cfg.setLocale(java.util.Locale.UK);
         // Sets how errors will appear.
         // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
