@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.controller.profile;
 
-import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
+import com.worth.ifs.assessment.form.profile.AssessorProfileSkillsForm;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.user.resource.ProfileResource;
@@ -35,7 +35,7 @@ public class AssessorProfileSkillsController {
     @RequestMapping(method = RequestMethod.GET)
     public String getSkills(Model model,
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                            @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
+                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                             BindingResult bindingResult) {
         return doViewYourSkills(loggedInUser, model, form, bindingResult);
     }
@@ -43,7 +43,7 @@ public class AssessorProfileSkillsController {
     @RequestMapping(method = RequestMethod.POST)
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
+                               @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
 
@@ -59,14 +59,14 @@ public class AssessorProfileSkillsController {
         });
     }
 
-    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorRegistrationSkillsForm form, BindingResult bindingResult) {
+    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorProfileSkillsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
         return "profile/innovation-areas";
     }
 
-    private void populateFormWithExistingValues(UserResource loggedInUser, AssessorRegistrationSkillsForm form) {
+    private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
         if (loggedInUser.getProfile() != null) {
             form.setAssessorType(loggedInUser.getProfile().getBusinessType());
             form.setSkillAreas(loggedInUser.getProfile().getSkillsAreas());
