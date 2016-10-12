@@ -6,11 +6,11 @@ Thank you for submitting your application ${applicationName} for funding to the 
 
 We are pleased to inform you that your application has been successful.
 
-Before this project can begin we will need additional details, documents and for you to undergo financial checks. This process will be managed through your Innovate UK dashboard, which will provide full details. This will be available to you from <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["EEEE dd MMMM"]}.
+Before this project can begin we will need additional details, documents and for you to undergo financial checks. This process will be managed through your Innovate UK dashboard, which will provide full details. This will be available to you from <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["EEEE dd MMMM yyyy"]}.
 
 This offer is conditional and subject to the satisfactory completion of a finance review by Innovate UK. You must not start your project until we have confirmed that all pre-start work has been completed.
 
-Feedback on your application will be available on <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["dd MMMM"]} and will be accessible from your Innovate UK dashboard. we will send you a further email notification when your feedback is ready for you to view.
+Feedback on your application will be available on <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["dd MMMM yyyy"]} and will be accessible from your Innovate UK dashboard. we will send you a further email notification when your feedback is ready for you to view.
 
 Once again, congratulations on the successful outcome of your application.
 
