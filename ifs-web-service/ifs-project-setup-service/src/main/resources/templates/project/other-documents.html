@@ -154,7 +154,7 @@
                     <span class="error-message" th:each="err : ${#fields.errors('exploitationPlan')}" th:text="${err}"/>
                 </th:block>
 
-                <input th:errorclass="field-error" th:field="*{exploitationPlan}" type="file" id="exploitationPlan"
+                <input th:field="*{exploitationPlan}" type="file" id="exploitationPlan"
                        class="inputfile"/>
                 <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
                 <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit"
