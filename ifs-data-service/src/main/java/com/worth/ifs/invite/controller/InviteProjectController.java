@@ -1,11 +1,8 @@
 package com.worth.ifs.invite.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteProjectService;
-import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +50,7 @@ public class InviteProjectController {
         return inviteProjectService.getInvitesByProject(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = ACCEPT_INVITE  + "{hash}/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = ACCEPT_INVITE  + "{hash}/{userId}", method = RequestMethod.PUT)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteProjectService.acceptProjectInvite(hash, userId).toPostResponse();
     }
