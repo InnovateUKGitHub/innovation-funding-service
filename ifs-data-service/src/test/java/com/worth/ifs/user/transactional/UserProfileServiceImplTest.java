@@ -62,7 +62,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void testUpdateProfileButUserNotFound() {
-
         UserResource userToUpdate = newUserResource().
                 withFirstName("First").
                 withLastName("Last").
@@ -72,10 +71,12 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 withTitle("Mr").
                 build();
 
-        when(userServiceMock.findByEmail(userToUpdate.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, userToUpdate.getEmail())));
-
         ServiceResult<Void> result = service.updateProfile(userToUpdate.getId(), null);
         assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(User.class, userToUpdate.getId())));
+
+        verify(userRepositoryMock).findOne(userToUpdate.getId());
+        verify(userRepositoryMock, never()).save(isA(User.class));
     }
 
     @Test

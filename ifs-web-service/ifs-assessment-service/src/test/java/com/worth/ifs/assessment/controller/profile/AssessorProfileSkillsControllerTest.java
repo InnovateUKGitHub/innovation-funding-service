@@ -2,14 +2,10 @@ package com.worth.ifs.assessment.controller.profile;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
-import com.worth.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import com.worth.ifs.user.resource.BusinessType;
 import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -32,10 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsController> {
 
-    @Spy
-    @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorRegistrationSkillsModelPopulator;
-
     @Override
     protected AssessorProfileSkillsController supplyControllerUnderTest() {
         return new AssessorProfileSkillsController();
@@ -45,7 +36,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void getSkills() throws Exception {
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("profile/innovation-areas"));
     }
 
@@ -86,7 +76,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .param("skillAreas", skillAreas))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
-                .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
                 .andExpect(view().name("profile/innovation-areas"))

@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.controller.profile;
 
 import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
-import com.worth.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.user.resource.ProfileResource;
@@ -27,9 +26,6 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldE
 @Controller
 @RequestMapping("/profile/skills")
 public class AssessorProfileSkillsController {
-
-    @Autowired
-    private AssessorProfileSkillsModelPopulator assessorSkillsModelPopulator;
 
     @Autowired
     private UserService userService;
@@ -67,7 +63,6 @@ public class AssessorProfileSkillsController {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        model.addAttribute("model", assessorSkillsModelPopulator.populateModel());
         return "profile/innovation-areas";
     }
 

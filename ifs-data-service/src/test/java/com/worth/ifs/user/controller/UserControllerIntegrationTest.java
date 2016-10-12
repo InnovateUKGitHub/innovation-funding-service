@@ -152,31 +152,31 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
     }
 
-//    @Test
-//    public void testUpdateUserDetailsInvalid() {
-//        UserResource user = new UserResource();
-//        user.setEmail("NotExistin@gUser.nl");
-//        user.setFirstName("Some");
-//        user.setLastName("How");
-//
-//        RestResult<Void> restResult = controller.updateDetails(user);
-//        assertTrue(restResult.isFailure());
-//    }
-//
-//    @Test
-//    public void testUpdateUserDetails() {
-//        loginCompAdmin();
-//        UserResource userOne = controller.getUserById(1L).getSuccessObject();
-//        setLoggedInUser(userOne);
-//
-//        userOne.setFirstName("Some");
-//        userOne.setLastName("How");
-//
-//        setLoggedInUser(userOne);
-//
-//        RestResult<Void> restResult = controller.updateDetails(userOne);
-//        assertTrue(restResult.isSuccess());
-//    }
+    @Test
+    public void testUpdateUserDetailsInvalid() {
+        UserResource user = new UserResource();
+        user.setEmail("NotExistin@gUser.nl");
+        user.setFirstName("Some");
+        user.setLastName("How");
+
+        RestResult<Void> restResult = controller.updateDetails(user);
+        assertTrue(restResult.isFailure());
+    }
+
+    @Test
+    public void testUpdateUserDetails() {
+        loginCompAdmin();
+        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        setLoggedInUser(userOne);
+
+        userOne.setFirstName("Some");
+        userOne.setLastName("How");
+
+        setLoggedInUser(userOne);
+
+        RestResult<Void> restResult = controller.updateDetails(userOne);
+        assertTrue(restResult.isSuccess());
+    }
 
     @Test
     public void testUpdateUserProfile() {
@@ -225,7 +225,6 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
-    @Ignore
     public void testResendEmailVerificationNotification() {
         loginSystemRegistrationUser();
         final RestResult<Void> restResult = controller.resendEmailVerificationNotification("ewan+1@hiveit.co.uk");

@@ -45,7 +45,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -74,6 +73,41 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile information is being generated")
+                        )
+                ));
+    }
+
+    @Test
+    public void approveOrRejectSpendProfile() throws Exception {
+
+        when(projectFinanceServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the " +
+                                        "Spend Profile information is being approved or rejected"),
+                                parameterWithName("approvalType").description("New approval or rejection of the " +
+                                        "Spend profile in this project")
+                        )
+                ));
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectId() throws Exception {
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(isA(Long.class)))
+                .thenReturn(serviceSuccess(ApprovalType.APPROVED));
+
+        mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(ApprovalType.APPROVED)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the " +
+                                        "Spend Profile status is requested")
                         )
                 ));
     }
