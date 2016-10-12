@@ -310,25 +310,21 @@ CompAdmin can see uploaded files
     Then the user should see the file without error
     When the user clicks the button/link             jQuery=.uploaded-file:nth-of-type(2)
     Then the user should see the file without error
+    [Teardown]  logout as user
 
-CompAdmin approves other documents
-    [Documentation]    INFUND-4621
+CompAdmin rejects other documents
+    [Documentation]    INFUND-4620
     [Tags]    HappyPath
+    [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
     And the user should see the text in the page      Other documents
-    And the user should see the text in the page      Vitruvius Stonework Limited
-    And the user should see the text in the page      Ludlow
-    And the user should see the text in the page      EGGS
-    And the user should see the text in the page      worth.email.test+projectlead@gmail.com
-    Then the user should see the element              jQuery=button:contains("Accept documents")
-    And the user should see the element               jQuery=button:contains("Reject documents")
-    When the user clicks the button/link              jQuery=button:contains("Accept documents")
-    And the user clicks the button/link               jQuery=.modal-accept-docs button:contains("Cancel")
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link              jQuery=button:contains("Accept documents")
-    And the user clicks the button/link               jQuery=.modal-accept-docs .button:contains("Accept Documents")
-    Then the user should see the text in the page     The documents provided have been approved.
-    [Teardown]  Logout as user
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=.modal-reject-docs .button:contains("Reject Documents")
+    Then the user should see the text in the page     These documents after review have been rejected and returned to the project team.
+    [Teardown]  logout as user
 
 Project Finance is able to Approve and Reject
     [Documentation]  INFUND-4621, INFUND-5440
@@ -348,22 +344,30 @@ Project Finance is able to Approve and Reject
 
 #TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
 
-CompAdmin rejects other documents
-    [Documentation]    INFUND-4620
+CompAdmin approves other documents
+    [Documentation]    INFUND-4621
     [Tags]    HappyPath
     [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
     And the user should see the text in the page      Other documents
-    When the user clicks the button/link              jQuery=button:contains("Reject documents")
-    And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
+    And the user should see the text in the page      Vitruvius Stonework Limited
+    And the user should see the text in the page      Ludlow
+    And the user should see the text in the page      EGGS
+    And the user should see the text in the page      worth.email.test+projectlead@gmail.com
+    Then the user should see the element              jQuery=button:contains("Accept documents")
+    And the user should see the element               jQuery=button:contains("Reject documents")
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=.modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link              jQuery=button:contains("Reject documents")
-    And the user clicks the button/link               jQuery=.modal-reject-docs .button:contains("Reject Documents")
-    Then the user should see the text in the page     These documents after review have been rejected and returned to the project team.
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    Then the user should see the text in the page     The documents provided have been approved.
+    [Teardown]  Logout as user
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
     [Tags]    HappyPath
+    [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page   ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=Killer Riffs
     Then the user should see the element   jQuery=tr:nth-child(1):contains("best riffs")

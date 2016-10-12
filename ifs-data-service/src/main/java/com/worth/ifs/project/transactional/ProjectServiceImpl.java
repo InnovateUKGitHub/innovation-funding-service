@@ -75,8 +75,13 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
+import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
@@ -450,9 +455,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-
+        if (approved == null) {
+            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
+        }
         return getProject(projectId)
-                .andOnSuccessReturnVoid(project -> project.setOtherDocumentsApproved(approved));
+                .andOnSuccess(project -> {
+                    if (project.getOtherDocumentsApproved() != null
+                            && project.getOtherDocumentsApproved()) {
+                        return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
+                    }
+                    project.setOtherDocumentsApproved(approved);
+                    return serviceSuccess();
+                });
     }
 
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
