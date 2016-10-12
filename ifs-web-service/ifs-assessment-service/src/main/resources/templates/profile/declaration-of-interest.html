@@ -85,6 +85,9 @@
                     </fieldset>
 
                     <div class="panel-indent js-hidden" id="toggle-appointments">
+                        <span th:if="${#fields.hasErrors('appointments')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}" />
+                        </span>
                         <table id="position-table">
                             <thead>
                                 <tr>
@@ -113,31 +116,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <!--div class="grid-row" th:each="appointment,appointmentStat: *{appointments}">
-                            <div class="column-half">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
-                                    <label class="form-label-bold">Organisation
-                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}" th:text="${err}" />
-                                        </span>
-                                    </label>
-                                    <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].organisation}" />
-                                </div>
-                            </div>
-                            <div class="column-half">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
-                                    <label class="form-label-bold">Position
-                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}" th:text="${err}" />
-                                        </span>
-                                    </label>
-                                    <input class="form-control width-full" type="text" th:field="*{appointments[__${appointmentStat.index}__].position}" />
-                                </div>
-                            </div>
-
-                            <p class="alignright"><button class="buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button></p>
-                        </div-->
 
                         <p class="alignright extra-margin">
                             <button class="buttonlink" data-repeatable-rowcontainer="#position-table tbody" name="addAppointment" type="submit">Add another position</button>
@@ -190,7 +168,7 @@
                         </legend>
 
                         <div class="form-group form-group-compound">
-                            <label class="block-label" data-target="toggle-family-appointments">
+                            <label class="block-label" data-target="toggle-familyAffiliations">
                                 <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" />
                                 Yes
                             </label>
@@ -201,7 +179,10 @@
                         </div>
                     </fieldset>
 
-                    <div class="panel-indent js-hidden" id="toggle-family-appointments">
+                    <div class="panel-indent js-hidden" id="toggle-familyAffiliations">
+                        <span th:if="${#fields.hasErrors('familyAffiliations')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}" />
+                        </span>
                         <table id="family-table">
                             <thead>
                                 <tr>
@@ -238,39 +219,6 @@
                             </tbody>
                         </table>
 
-                        <!--div class="grid-row extra-margin" th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
-                            <div class="column-third">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
-                                    <label class="form-label-bold">Relation
-                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
-                                        </span>
-                                    </label>
-                                    <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}" />
-                                </div>
-                            </div>
-                                <div class="column-third">
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
-                                        <label class="form-label-bold">Organisation
-                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
-                                            </span>
-                                        </label>
-                                        <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}" />
-                                    </div>
-                                </div>
-                            <div class="column-third">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
-                                    <label class="form-label-bold">Position
-                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
-                                        </span>
-                                    </label>
-                                    <input class="form-control width-full" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}" />
-                                </div>
-                            </div>
-                        </div -->
-
                         <p class="alignright extra-margin"><button class="buttonlink" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
                     </div>
                 </div>
@@ -295,16 +243,16 @@
                                 No
                             </label>
                         </div>
-
-                        <div class="panel-indent js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')}? error">
-                            <label class="form-label-bold">Please describe these interests
-                                <span th:if="${#fields.hasErrors('familyFinancialInterests')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}" />
-                                </span>
-                            </label>
-                            <textarea class="form-control width-full" cols="30" rows="3" th:field="*{familyFinancialInterests}" th:errorclass="field-error"></textarea>
-                        </div>
                     </fieldset>
+
+                    <div class="panel-indent js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')}? error">
+                        <label class="form-label-bold">Please describe these interests
+                            <span th:if="${#fields.hasErrors('familyFinancialInterests')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <textarea class="form-control width-full" cols="30" rows="3" th:field="*{familyFinancialInterests}" th:errorclass="field-error"></textarea>
+                    </div>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')}? error">
