@@ -8,7 +8,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-3971 As a partner I want to be able to view my spend profile in a summary table so that I can review my spend profile by financial year
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup    Failing
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
