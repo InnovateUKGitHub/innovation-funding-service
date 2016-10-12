@@ -2,10 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,8 +15,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -96,14 +93,32 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void updateProfile() throws Exception {
+    public void getProfileSkills() throws Exception {
         Long userId = 1L;
-        ProfileResource profile = newProfileResource().build();
+        ProfileSkillsResource expected = newProfileSkillsResource().build();
 
-        when(userRestService.updateProfile(userId, profile)).thenReturn(restSuccess());
+        when(userRestService.getProfileSkills(userId)).thenReturn(restSuccess(expected));
 
-        service.updateProfile(userId, profile).getSuccessObject();
-        verify(userRestService, only()).updateProfile(userId, profile);
+        ProfileSkillsResource response = service.getProfileSkills(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getProfileSkills(userId);
+    }
+
+    @Test
+    public void updateProfileSkills() throws Exception {
+        Long userId = 1L;
+        BusinessType businessType = BUSINESS;
+        String skillsAreas = "Skills";
+
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build();
+
+        when(userRestService.updateProfileSkills(userId, profileSkills)).thenReturn(restSuccess());
+
+        service.updateProfileSkills(userId, businessType, skillsAreas).getSuccessObjectOrThrowException();
+        verify(userRestService, only()).updateProfileSkills(userId, profileSkills);
     }
 
     @Test
@@ -119,13 +134,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void updateUserAffilliations() throws Exception {
+    public void updateUserAffiliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> affiliations = newAffiliationResource().build(2);
 
         when(userRestService.updateUserAffiliations(userId, affiliations)).thenReturn(restSuccess());
 
-        service.updateUserAffiliations(userId, affiliations).getSuccessObject();
+        service.updateUserAffiliations(userId, affiliations).getSuccessObjectOrThrowException();
         verify(userRestService, only()).updateUserAffiliations(userId, affiliations);
     }
 }

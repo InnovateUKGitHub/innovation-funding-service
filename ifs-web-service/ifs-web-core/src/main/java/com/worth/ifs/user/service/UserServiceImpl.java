@@ -112,8 +112,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<Void> updateProfile(Long id, ProfileResource profile) {
-        return userRestService.updateProfile(id, profile).toServiceResult();
+    public ProfileSkillsResource getProfileSkills(Long userId) {
+        return userRestService.getProfileSkills(userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas) {
+        ProfileSkillsResource profileSkills = new ProfileSkillsResource();
+        profileSkills.setBusinessType(businessType);
+        profileSkills.setSkillsAreas(skillsAreas);
+        return userRestService.updateProfileSkills(userId, profileSkills).toServiceResult();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class UserResource {
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
-    private ProfileResource profile;
+    private Long profile;
 
     public UserResource() {
         // no-arg constructor
@@ -192,11 +192,11 @@ public class UserResource {
         this.ethnicity = ethnicity;
     }
 
-    public ProfileResource getProfile() {
+    public Long getProfile() {
         return profile;
     }
 
-    public void setProfile(ProfileResource profile) {
+    public void setProfile(Long profile) {
         this.profile = profile;
     }
 

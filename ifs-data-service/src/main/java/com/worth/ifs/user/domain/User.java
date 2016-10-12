@@ -284,7 +284,9 @@ public class User implements Serializable {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-        profile.setUser(this);
+        if (profile != null) {
+            profile.setUser(this);
+        }
     }
 
     public List<Affiliation> getAffiliations() {
