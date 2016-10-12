@@ -2,19 +2,18 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
@@ -119,16 +118,36 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
     }
 
-    @Ignore
     @Test
     public void updateUserProfile() {
         Long userId = 1L;
         ProfileResource profile = newProfileResource().build();
 
-        setupPutWithRestResultAnonymousExpectations(format("%s/id/%s/updateProfile", usersUrl, userId), profile, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfile", usersUrl, userId), profile, OK);
 
-        RestResult<UserResource> response = service.updateProfile(userId, profile);
+        RestResult<Void> response = service.updateProfile(userId, profile);
         assertTrue(response.isSuccess());
+    }
 
+    @Test
+    public void getUserAffiliations() {
+        Long userId = 1L;
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), affiliationResourceListType(), expected, OK);
+
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObject();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void updateUserAffiliations() {
+        Long userId = 1L;
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserAffiliations", usersUrl, userId), expected, OK);
+
+        RestResult<Void> response = service.updateUserAffiliations(userId, expected);
+        assertTrue(response.isSuccess());
     }
 }

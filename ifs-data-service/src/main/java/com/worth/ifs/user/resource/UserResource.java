@@ -34,7 +34,7 @@ public class UserResource {
     private ProfileResource profile;
 
     public UserResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public Long getId() {
@@ -64,7 +64,7 @@ public class UserResource {
     @JsonIgnore
     public String getName() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(StringUtils.hasText(firstName)){
+        if (StringUtils.hasText(firstName)) {
             stringBuilder.append(firstName)
                     .append(" ");
         }
@@ -202,9 +202,13 @@ public class UserResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         UserResource that = (UserResource) o;
 

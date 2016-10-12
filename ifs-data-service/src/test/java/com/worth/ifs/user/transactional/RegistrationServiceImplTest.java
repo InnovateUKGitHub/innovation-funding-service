@@ -24,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -74,73 +75,73 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         return service;
     }
 
-//    @Test
-//    public void createUser() throws Exception {
-//        RoleResource roleResource = newRoleResource().build();
-//        Role role = newRole().build();
-//        Ethnicity ethnicity = newEthnicity().with(id(1L)).build();
-//
-//        UserResource userToCreateResource = newUserRResource()
-//                .withId((Long) null)
-//                .withTitle("Mr")
-//                .withFirstName("First")
-//                .withLastName("Last")
-//                .withGender(NOT_STATED)
-//                .withEthnicity(ethnicity.getId())
-//                .withDisability(NO)
-//                .withPhoneNumber("01234 567890")
-//                .withEmail("email@example.com")
-//                .withPassword("Passw0rd123")
-//                .withRolesGlobal(asList(roleResource))
-//                .build();
-//
-//        User userToCreate = newUser()
-//                .withId((Long) null)
-//                .withTitle("Mr")
-//                .withFirstName("First")
-//                .withLastName("Last")
-//                .withGender(NOT_STATED)
-//                .withEthnicity(ethnicity)
-//                .withDisability(NO)
-//                .withPhoneNumber("01234 567890")
-//                .withEmailAddress("email@example.com")
-//                .withRolesGlobal(role)
-//                .build();
-//
-//        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource)).thenReturn(serviceSuccess());
-//        when(userMapperMock.mapToDomain(userToCreateResource)).thenReturn(userToCreate);
-//        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
-//
-//        User userToSave = createLambdaMatcher(user -> {
-//            assertNull(user.getId());
-//            assertEquals("Mr", user.getTitle());
-//            assertEquals("First Last", user.getName());
-//            assertEquals("First", user.getFirstName());
-//            assertEquals("Last", user.getLastName());
-//            assertEquals(NOT_STATED, user.getGender());
-//            assertEquals(ethnicity, user.getEthnicity());
-//            assertEquals(NO, user.getDisability());
-//            assertEquals("01234 567890", user.getPhoneNumber());
-//            assertEquals("email@example.com", user.getEmail());
-//
-//            assertEquals("new-uid", user.getUid());
-//            assertEquals(1, user.getRoles().size());
-//            assertEquals(role, user.getRoles().get(0));
-//            assertTrue(user.getOrganisations().isEmpty());
-//
-//            return true;
-//        });
-//
-//        User savedUser = newUser().build();
-//        UserResource savedUserResource = newUserResource().build();
-//
-//        when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
-//        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
-//
-//        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
-//        assertTrue(result.isSuccess());
-//        assertEquals(savedUserResource, result.getSuccessObject());
-//    }
+    @Test
+    public void createUser() throws Exception {
+        RoleResource roleResource = newRoleResource().build();
+        List<Role> roles = newRole().build(1);
+        Ethnicity ethnicity = newEthnicity().with(id(1L)).build();
+
+        UserResource userToCreateResource = newUserResource()
+                .withId((Long) null)
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withGender(NOT_STATED)
+                .withEthnicity(ethnicity.getId())
+                .withDisability(NO)
+                .withPhoneNumber("01234 567890")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRolesGlobal(asList(roleResource))
+                .build();
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withGender(NOT_STATED)
+                .withEthnicity(ethnicity)
+                .withDisability(NO)
+                .withPhoneNumber("01234 567890")
+                .withEmailAddress("email@example.com")
+                .withRoles(roles)
+                .build();
+
+        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource)).thenReturn(serviceSuccess());
+        when(userMapperMock.mapToDomain(userToCreateResource)).thenReturn(userToCreate);
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+
+        User userToSave = createLambdaMatcher(user -> {
+            assertNull(user.getId());
+            assertEquals("Mr", user.getTitle());
+            assertEquals("First Last", user.getName());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+            assertEquals(NOT_STATED, user.getGender());
+            assertEquals(ethnicity, user.getEthnicity());
+            assertEquals(NO, user.getDisability());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals("email@example.com", user.getEmail());
+
+            assertEquals("new-uid", user.getUid());
+            assertEquals(1, user.getRoles().size());
+            assertEquals(roles, user.getRoles());
+            assertTrue(user.getOrganisations().isEmpty());
+
+            return true;
+        });
+
+        User savedUser = newUser().build();
+        UserResource savedUserResource = newUserResource().build();
+
+        when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
+        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
+
+        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
+        assertTrue(result.isSuccess());
+        assertEquals(savedUserResource, result.getSuccessObject());
+    }
 
     @Test
     public void testCreateOrganisationUser() {

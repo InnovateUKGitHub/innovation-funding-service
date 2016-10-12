@@ -1,21 +1,27 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.stream.Collectors.toList;
+
 /**
  * A Service for operations regarding Users' profiles.  This implementation delegates some of this work to an Identity Provider Service
  */
@@ -23,10 +29,13 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 public class UserProfileServiceImpl extends BaseTransactionalService implements UserProfileService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Autowired
+    private AffiliationMapper affiliationMapper;
 
     public enum ServiceFailures {
         UNABLE_TO_UPDATE_USER
@@ -55,7 +64,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Void> updateDetails(UserResource userResource) {
-        if(userResource!=null) {
+        if (userResource != null) {
             return userService.findByEmail(userResource.getEmail())
                     .andOnSuccess(existingUser ->
                             updateUser(existingUser, userResource));
@@ -64,7 +73,27 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         }
     }
 
-    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource){
+    @Override
+    public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
+            List<Affiliation> targetAffiliations = user.getAffiliations();
+            targetAffiliations.clear();
+            affiliationMapper.mapToDomain(affiliations)
+                    .forEach(affiliation -> {
+                        affiliation.setUser(user);
+                        targetAffiliations.add(affiliation);
+                    });
+            userRepository.save(user);
+            return serviceSuccess();
+        });
+    }
+
+    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());

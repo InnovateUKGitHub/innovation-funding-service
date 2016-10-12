@@ -93,7 +93,7 @@
 
       <!--/* ========================= Spend Profile ========================= */-->
 
-      <li>
+      <li th:classappend="${model.spendProfileSubmitted ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
 
@@ -126,7 +126,7 @@
       </li>
       <!--/* ========================= GOL ========================= */-->
 
-      <li>
+      <li th:classappend="${model.grantOfferLetterSubmitted ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium"><a th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a></h2>

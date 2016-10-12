@@ -196,30 +196,30 @@ table{
 	#global-header{
 		.header-wrapper{
 			max-width: 95%;
-			min-width: 960px;
+			//min-width: 960px;
 		}
 	}
 
 	.grid-container{
 		max-width: 95%;
-		min-width: 960px;
+		//min-width: 960px;
 	}
 
 	#content{
 
 		max-width: 95%;
-		min-width: 960px;
+		//min-width: 960px;
 
 		@include media-down(tablet){
-			min-width: 90%;
+			//min-width: 90%;
 		}
 
 		//.phase-banner,
 		//.sub-header,
 		//.hgroup,
 		.centralise{
-			@extend %site-width-container;
-  			@extend %contain-floats;
+			//@extend %site-width-container;
+  			//@extend %contain-floats;
   			box-sizing: border-box;
 		}
 

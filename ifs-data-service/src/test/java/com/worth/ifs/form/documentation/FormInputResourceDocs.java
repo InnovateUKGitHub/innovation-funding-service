@@ -13,7 +13,6 @@ public class FormInputResourceDocs {
         fieldWithPath("wordCount").description("amount of words in the response"),
         fieldWithPath("formInputType").description("forminputType"),
         fieldWithPath("formInputTypeTitle").description("formInputTypeTitle"),
-        fieldWithPath("responses").description("list of response ids"),
         fieldWithPath("question").description("id of the question this input belongs to"),
         fieldWithPath("competition").description("id of the competition the form input belongs to"),
         fieldWithPath("inputValidators").description("list of inputValidator ids"),

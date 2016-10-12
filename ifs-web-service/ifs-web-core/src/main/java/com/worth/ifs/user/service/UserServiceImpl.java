@@ -5,10 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
 
@@ -59,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         for(final ProcessRoleResource processRole : userApplicationRoles){
             if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -67,35 +64,36 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
-    
+
 	@Override
 	public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
-		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByIds(application.getProcessRoles());
+		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
 		return userApplicationRoles.stream()
 				.filter(prr -> organisation.equals(prr.getOrganisation()))
 				.collect(Collectors.toList());
 	}
-    
+
 	@Override
 	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
 		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
 		if(leadProcessRole == null) {
 			return new ArrayList<>();
 		}
-		return processRoleService.getByIds(application.getProcessRoles()).stream()
+		return processRoleService.getByApplicationId(application.getId()).stream()
 				.filter(pr -> leadProcessRole.getOrganisation().equals(pr.getOrganisation()))
 				.collect(Collectors.toList());
 	}
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
-        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<UserResource>(a)).getSuccessObjectOrThrowException();
+        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<>(a)).getSuccessObjectOrThrowException();
     }
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
+
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
         return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId);
@@ -114,8 +112,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> updateProfile(Long id, ProfileResource profile) {
+    public ServiceResult<Void> updateProfile(Long id, ProfileResource profile) {
         return userRestService.updateProfile(id, profile).toServiceResult();
+    }
+
+    @Override
+    public List<AffiliationResource> getUserAffiliations(Long userId) {
+        return userRestService.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
+        return userRestService.updateUserAffiliations(userId, affiliations).toServiceResult();
     }
 
     @Override

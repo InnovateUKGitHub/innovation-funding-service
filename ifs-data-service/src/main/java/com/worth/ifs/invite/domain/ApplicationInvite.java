@@ -4,10 +4,7 @@ package com.worth.ifs.invite.domain;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatus;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * An {@link Invite} for a person at an organisation to participate in an {@link Application}.
@@ -16,11 +13,11 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("APPLICATION")
 public class ApplicationInvite extends Invite<Application, ApplicationInvite> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application application;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private InviteOrganisation inviteOrganisation;
 

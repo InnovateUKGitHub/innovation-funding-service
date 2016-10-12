@@ -443,7 +443,7 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected Optional<SectionResource> getSectionByIds(Long competitionId, List<Long> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected Optional<SectionResource> getSectionByIds(Long competitionId, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         return getSection(allSections, sectionId, selectFirstSectionIfNoneCurrentlySelected);
     }

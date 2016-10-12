@@ -150,6 +150,19 @@ Non-lead partner can see correct project start date and duration
     [Teardown]    Logout as user
 
 
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Tags]    Experian
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+
+
 *** Keywords ***
 the project finance user generates the spend profile table
     log in as user    project.finance1@innovateuk.test    Passw0rd

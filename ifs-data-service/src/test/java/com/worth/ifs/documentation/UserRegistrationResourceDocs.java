@@ -14,6 +14,10 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+
+/**
+ * Helper for Spring REST Docs, specifically for user registration.
+ */
 import static com.worth.ifs.BuilderAmendFunctions.id;
 public class UserRegistrationResourceDocs {
 

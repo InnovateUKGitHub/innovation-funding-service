@@ -1,27 +1,20 @@
 package com.worth.ifs.application.resource;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.competition.resource.CompetitionResource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
+import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -45,13 +38,10 @@ public class ApplicationResource {
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
-    private List<Long> processRoles = new ArrayList<>();
-    private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
     private String applicationStatusName;
     private Long competition;
     private String competitionName;
-    private List<Long> invites;
     private Long assessorFeedbackFileEntry;
     private CompetitionResource.Status competitionStatus;
     private BigDecimal completion;
@@ -106,22 +96,6 @@ public class ApplicationResource {
         this.durationInMonths = durationInMonths;
     }
 
-    public List<Long> getProcessRoles() {
-        return processRoles;
-    }
-
-    public void setProcessRoles(List<Long> processRoles) {
-        this.processRoles = processRoles;
-    }
-
-    public List<Long> getApplicationFinances() {
-        return applicationFinances;
-    }
-
-    public void setApplicationFinances(List<Long> applicationFinances) {
-        this.applicationFinances = applicationFinances;
-    }
-
     public Long getApplicationStatus() {
         return applicationStatus;
     }
@@ -163,15 +137,6 @@ public class ApplicationResource {
     public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
 
     @JsonIgnore
-    public List<Long> getInvites() {
-        return invites;
-    }
-
-    public void setInvites(List<Long> invites) {
-        this.invites = invites;
-    }
-
-    @JsonIgnore
     public boolean isOpen(){
         return ApplicationStatusConstants.OPEN.getId().equals(applicationStatus) || ApplicationStatusConstants.CREATED.getId().equals(applicationStatus);
     }
@@ -201,11 +166,8 @@ public class ApplicationResource {
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
-                .append(processRoles, that.processRoles)
-                .append(applicationFinances, that.applicationFinances)
                 .append(applicationStatus, that.applicationStatus)
                 .append(competition, that.competition)
-                .append(invites, that.invites)
                 .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
     }
@@ -217,11 +179,8 @@ public class ApplicationResource {
                 .append(name)
                 .append(startDate)
                 .append(durationInMonths)
-                .append(processRoles)
-                .append(applicationFinances)
                 .append(applicationStatus)
                 .append(competition)
-                .append(invites)
                 .append(assessorFeedbackFileEntry)
                 .toHashCode();
     }

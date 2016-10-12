@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -25,6 +26,7 @@ import java.util.Set;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -161,5 +163,16 @@ public class UserController {
     public RestResult<Void> updateProfile(@PathVariable("id") Long id,
                                           @RequestBody ProfileResource profile) {
         return userProfileService.updateProfile(id, profile).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)
+    public RestResult<List<AffiliationResource>> getUserAffiliations(@PathVariable("userId") Long userId) {
+        return userProfileService.getUserAffiliations(userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/updateUserAffiliations", method = PUT)
+    public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
+                                                   @RequestBody List<AffiliationResource> affiliations) {
+        return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
 }

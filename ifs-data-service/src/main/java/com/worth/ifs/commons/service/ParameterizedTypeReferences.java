@@ -7,9 +7,10 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.finance.domain.FinanceRow;
@@ -57,6 +58,10 @@ public final class ParameterizedTypeReferences {
      * IFS types
      */
 
+    public static ParameterizedTypeReference<List<AffiliationResource>> affiliationResourceListType() {
+        return new ParameterizedTypeReference<List<AffiliationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
@@ -79,6 +84,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionSearchResultItem>> competitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
     }
 
     public static ParameterizedTypeReference<List<CategoryResource>> categoryResourceListType() {
