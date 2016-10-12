@@ -8,9 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 public interface CategoryService {
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<List<CategoryResource>> getByType(CategoryType type);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<List<CategoryResource>> getByParent(Long parentId);
 }

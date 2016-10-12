@@ -15,7 +15,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
+import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
@@ -29,6 +29,7 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +60,8 @@ import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
@@ -462,7 +465,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+        InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -498,7 +501,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+        InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -516,6 +519,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(notificationServiceMock.sendNotification(any(), any())).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
+
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
         assertTrue(result.isFailure());
@@ -527,7 +532,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+        InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -543,6 +548,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
         when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
+
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -554,7 +563,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+        InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -570,6 +579,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
         when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
@@ -819,6 +830,41 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testAcceptOrRejectOtherDocumentsWithoutDecisionError() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
+
+        assertTrue(result.isFailure());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.nullValue());
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsAlreadyApprovedError() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId)
+                .withOtherDocumentsApproved(true).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
+
+        assertTrue(result.isFailure());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(true));
+
+    }
+
+    @Test
     public void testAcceptOrRejectOtherDocumentsSuccess() {
 
         Long projectId = 1L;
@@ -998,7 +1044,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testInviteProjectFinanceUser(){
         Organisation o = newOrganisation().build();
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = newInviteProjectResource().build();
         ProcessRole[] roles = newProcessRole().withOrganisation(o).withRole(LEADAPPLICANT).build(1).toArray(new ProcessRole[0]);
         Application a = newApplication().withProcessRoles(roles).build();
 
@@ -1006,6 +1052,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().build());
 
         ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
 
@@ -1026,7 +1073,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(organisationRepositoryMock.findOne(organisationNotOnProject.getId())).thenReturn(organisationNotOnProject);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
@@ -1045,7 +1092,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
         // Expectations
         verifyZeroInteractions(projectUserRepositoryMock);
         assertTrue(shouldFail.isSuccess());
@@ -1055,17 +1102,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testAddPartner(){
         Organisation o = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).withInvite(newInvite().build())
+                .build(1);
         Project p = newProject().withProjectUsers(pu).build();
         User newUser = newUser().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
+        List<ProjectInvite> projectInvites = newInvite().withUser(user).build(1);
+        projectInvites.get(0).open();
+        when(inviteProjectRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+
         // Method under test
-        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), newUser.getId(), o.getId());
-        // Expectations
-        verify(projectUserRepositoryMock).save(isA(ProjectUser.class));
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), newUser.getId(), o.getId());
+
         assertTrue(shouldFail.isSuccess());
     }
 

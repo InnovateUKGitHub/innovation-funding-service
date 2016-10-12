@@ -3,6 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
 </head>
 
 <body class="full-width">
@@ -14,46 +15,40 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage Applications'}, ${'/prototypes/5470-manage-applications'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/860-comp-applications-dashboard'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Assign to application</h1>
-
-	<h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+	<h1 class="heading-xlarge no-margin">Manage Assessors</h1>
 
 	<div class="grid-row extra-margin">
-		<div class="column-quarter">
-			<h3 class="heading-small">Partners</h3>
-			<ul>
-				<li>Aptrans Ltd (Lead)</li>
-				<li>Biotech Corp</li>
-				<li>Unversity of Cardiff</li>
-			</ul>
+		<div class="column-half">
+			<p>
+				<span class="heading-small">Assessor accepts: 18 October 2016</span>
+			</p>
+			<p>
+				<span class="heading-small">Assessor deadline: 23 October 2016</span>
+			</p>
+
 		</div>
 		<div class="column-quarter">
-			<h3 class="heading-small">Innovation area</h3>
-			<p>Advanced materials</p>
+			<p><span class="heading-large">5</span><br /> changes since last update</p>
+		</div>
+		<div class="column-quarter">
+			<div class="alignright">
+				<a href="/prototypes/5391-update-assessors?status=incomplete" class="button large">Update Assessors</a>
+			</div>
 		</div>
 	</div>
-	<div class="extra-margin">
-		<a href="#">Review application</a>
-	</div>
 
-	<h2 class="heading-medium">Assigned(2)</h2>
+	<h2 class="heading-medium">Assessors</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list3-table" th:remove="tag" />
+	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
-	<h2 class="heading-medium">Rejected(1)</h2>
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=5" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list4-table" th:remove="tag" />
-
-	<h2 class="heading-medium">Available Assessors</h2>
-
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=4" th:remove="tag" />
-
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list2-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list5-table" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

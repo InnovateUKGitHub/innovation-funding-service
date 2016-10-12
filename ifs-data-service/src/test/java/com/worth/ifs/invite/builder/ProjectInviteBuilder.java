@@ -5,6 +5,7 @@ import com.worth.ifs.Builder;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -55,6 +56,11 @@ public class ProjectInviteBuilder extends BaseBuilder<ProjectInvite, ProjectInvi
     public ProjectInviteBuilder withHash(String... hashes) {
         return withArray((hash, invite) -> invite.setHash(hash), hashes);
     }
+
+    public ProjectInviteBuilder withUser(User... users) {
+        return withArray((user, invite) -> invite.setUser(user), users);
+    }
+
 
 
 
