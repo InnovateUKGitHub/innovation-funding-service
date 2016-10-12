@@ -4,6 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.BankDetailsService;
+import com.worth.ifs.bankdetails.form.ApproveBankDetailsForm;
 import com.worth.ifs.bankdetails.form.ChangeBankDetailsForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.naming.Binding;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -76,19 +78,28 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model);
+        return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
     }
 
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = POST)
     public String approveBankDetails(
             Model model,
+            @ModelAttribute(FORM_ATTR_NAME) ApproveBankDetailsForm form,
+            BindingResult bindingResult,
+            ValidationHandler validationHandler,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model);
+        bankDetailsResource.setManualApproval(true);
+
+        return validationHandler.performActionOrBindErrorsToField("",
+                () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
+                () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
+                () -> bankDetailsService.updateBankDetails(projectId, bankDetailsResource));
     }
 
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = GET)
@@ -128,7 +139,7 @@ public class BankDetailsManagementController {
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
                         updatedOrganisationResource = organisationService.updateNameAndRegistration(updatedOrganisationResource);
-                        return doViewReviewBankDetails(updatedOrganisationResource, project, updatedBankDetailsResource, model);
+                        return doViewReviewBankDetails(updatedOrganisationResource, project, updatedBankDetailsResource, model, new ApproveBankDetailsForm());
                     });
         });
     }
@@ -171,9 +182,10 @@ public class BankDetailsManagementController {
         return bankDetailsResource;
     }
 
-    private String doViewReviewBankDetails(OrganisationResource organisationResource, ProjectResource projectResource, BankDetailsResource bankDetailsResource, Model model) {
+    private String doViewReviewBankDetails(OrganisationResource organisationResource, ProjectResource projectResource, BankDetailsResource bankDetailsResource, Model model, ApproveBankDetailsForm form) {
         BankDetailsReviewViewModel viewModel = populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
         model.addAttribute("model", viewModel);
+        model.addAttribute(FORM_ATTR_NAME, form);
         return "project/review-bank-details";
     }
 
