@@ -30,6 +30,6 @@ public class ProjectSpendProfileSummaryControllerSecurityTest extends BaseProjec
 
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessSpendProfileSection(eq(123L), isA(UserResource.class));
+        return permissionRules -> permissionRules.internalCanAccessFinanceChecksSection(eq(123L), isA(UserResource.class));
     }
 }

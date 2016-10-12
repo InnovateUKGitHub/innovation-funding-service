@@ -71,14 +71,14 @@ public class ProjectSetupSectionsPermissionRules {
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
-        if (!isCompAdminOrFinanceTeam(user)) {
+        if (!isInternal(user)) {
             return false;
         }
 
         try {
             projectStatusResource = projectService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
-            LOG.error("Internal user  is not allowed to access this project " + projectId);
+            LOG.error("Internal user is not allowed to access this project " + projectId);
             return false;
         }
 
@@ -88,7 +88,8 @@ public class ProjectSetupSectionsPermissionRules {
     }
 
 
-    private boolean isCompAdminOrFinanceTeam(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+    private boolean isInternal(UserResource user) {
+        return user.hasRole(UserRoleType.COMP_ADMIN)
+                || user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 }

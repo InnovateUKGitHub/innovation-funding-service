@@ -56,13 +56,13 @@ public class ProjectSpendProfileSummaryController {
     @Autowired
     private FinanceService financeService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value = "/generate", method = POST)
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute ProjectSpendProfileForm form,
