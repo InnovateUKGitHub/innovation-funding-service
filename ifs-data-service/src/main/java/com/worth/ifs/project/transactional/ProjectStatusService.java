@@ -7,9 +7,9 @@ import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ProjectStatusService {
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId);
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ProjectStatusResource getProjectStatusResourceByProject(Project project);
 }
