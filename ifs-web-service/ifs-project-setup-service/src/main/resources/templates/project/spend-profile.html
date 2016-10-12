@@ -78,7 +78,7 @@
                 </colgroup>
                 <thead>
                   <tr>
-                      <th scope="row" class="fix-left" id="month">Month</th>
+                      <th scope="row" id="month">Month</th>
                       <th:block th:each="month,stats : ${model.table.getMonths()}">
                         <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
                       </th:block>
@@ -90,7 +90,7 @@
                   <!--/* readonly */-->
                   <th:block th:if="${readonly}">
                     <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
-                        <th scope="row" class="fix-left">
+                        <th scope="row">
                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}" />
                           <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}" class="error-message">Your total costs are higher than your eligible costs</span>
                         </th>
@@ -102,7 +102,7 @@
                   <!--/* edit */-->
                   <th:block th:unless="${readonly}">
                       <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
-                          <th scope="row" class="fix-left" th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
+                          <th scope="row" th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
                               <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}" />
                               <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}" class="error-message">Your total costs are higher than your eligible costs</span>
                           </th>
@@ -133,7 +133,7 @@
                 </tbody>
                 <tfoot>
                   <tr class="form-group-row">
-                      <th scope="row" class="fix-left">Total</th>
+                      <th scope="row">Total</th>
                       <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
                         <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
                             th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
@@ -210,9 +210,9 @@
     <th:block th:unless="${!model.research}" th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
 
-        <div class="flex-table">
-                <div class="flex-left"></div>
-                <div class="flex-middle">
+        <div class="spend-profile-table academic">
+                <div class="flex-table-before"></div>
+                <div class="flex-table-wrap">
                     <table id="table-forecast">
                         <colgroup >
                             <col />
@@ -222,47 +222,26 @@
                             <col class="total" />
                         </colgroup>
                         <thead>
-                        <tr>
-                            <th scope="row" class="fix-left" id="month" colspan="2">Month</th>
-                            <th:block th:each="month,stats : ${model.table.getMonths()}">
-                                <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
-                            </th:block>
-                            <th scope="col" class="total fix-right2" id="grand-total">Total</th>
-                            <th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
-                        </tr>
+                          <tr>
+                              <th scope="row" id="month" colspan="2">J-eS category</th>
+                              <th:block th:each="month,stats : ${model.table.getMonths()}">
+                                  <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
+                              </th:block>
+                              <th scope="col" class="total fix-right" id="grand-total">Total</th>
+                              <th scope="col" class="total eligible fix-right" id="eligible-project-cost">Eligible project cost</th>
+                          </tr>
                         </thead>
 
-                        <tfoot>
-                            <tr class="form-group-row totals">
-                                <th scope="row" id="total" class="fix-left" colspan="2">Total</th>
-                                <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
-                                    <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
-                                        th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
-                                        data-calculation-operations="+" />
-                                </th:block>
-                                <td>
-                                    <input th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
-                                           readonly="readonly"
-                                           data-calculation-operations="+"
-                                           id="spend-profile-total-total"
-                                           data-calculation-fields="input[id*=row-total-]" />
-                                </td>
-                                <td class="fix-right">
-                                    <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}"
-                                           th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}"/>
-                                </td>
-                            </tr>
-                        </tfoot>
                         <tbody>
 
                         <!--/* readonly */-->
                         <th:block th:if="${readonly}">
                             <th:block th:each="section : ${model.table.getCostCategoryGroupMap()}">
                                 <th:block th:each="rowList,iteration : ${section.value}">
-                                    <tr th:each="row : ${rowList}" class="spend-ok" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
-                                        <th th:if="${iteration.index == 0}" th:text="${section.key}" class="fix-left1">Directly Incured</th>
-                                        <th th:unless="${iteration.index == 0}" class="fix-left1"></th>
-                                        <th scope="row" th:id="${row.key}" class="fix-left2">
+                                    <tr th:each="row : ${rowList}" class="form-group-row" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
+                                        <th scope="row" th:if="${iteration.index == 0}" th:text="${section.key}">Directly Incured</th>
+                                        <th scope="row" th:unless="${iteration.index == 0}"></th>
+                                        <th scope="row" th:id="${'row-'+row.key}">
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}" />
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}" class="error-message">Your total costs are higher than your eligible costs</span>
                                         </th>
@@ -274,9 +253,30 @@
                             </th:block>
                         </th:block>
                      </tbody>
+                     <tfoot>
+                         <tr class="form-group-row">
+                             <th scope="row" id="total" colspan="2">Total</th>
+                             <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
+                                 <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
+                                     th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
+                                     data-calculation-operations="+" />
+                             </th:block>
+                             <td class="fix-right">
+                                 <input th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
+                                        readonly="readonly"
+                                        data-calculation-operations="+"
+                                        id="spend-profile-total-total"
+                                        data-calculation-fields="input[id*=row-total-]" />
+                             </td>
+                             <td class="fix-right">
+                                 <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}"
+                                        th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}"/>
+                             </td>
+                         </tr>
+                     </tfoot>
                     </table>
                 </div>
-                <div class="flex-right"></div>
+                <div class="flex-table-after"></div>
             </div>
 
 
