@@ -11,5 +11,8 @@ import javax.validation.constraints.Pattern;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 
+/**
+ * Empty form class to provide errors to template if approving bank details fails.
+ */
 public class ApproveBankDetailsForm {
 }

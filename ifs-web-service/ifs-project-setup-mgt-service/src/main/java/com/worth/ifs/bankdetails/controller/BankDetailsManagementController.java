@@ -96,8 +96,13 @@ public class BankDetailsManagementController {
         final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
         bankDetailsResource.setManualApproval(true);
 
+        Supplier<String> faliureView = () -> {
+            bankDetailsResource.setManualApproval(false);
+            return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form);
+        };
+
         return validationHandler.performActionOrBindErrorsToField("",
-                () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
+                faliureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> bankDetailsService.updateBankDetails(projectId, bankDetailsResource));
     }
