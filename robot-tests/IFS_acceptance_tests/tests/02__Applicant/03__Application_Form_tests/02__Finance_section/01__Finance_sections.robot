@@ -86,12 +86,13 @@ the user adds three material rows
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input
+    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
     the user moves focus to the element    jQuery=#material-costs-table button:contains("Remove")
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=button:contains("Materials")
 
 the Funding levels value should be empty
