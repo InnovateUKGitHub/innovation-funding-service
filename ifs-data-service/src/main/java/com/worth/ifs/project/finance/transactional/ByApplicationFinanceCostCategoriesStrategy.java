@@ -77,7 +77,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
             List<CostCategory> costCategories = costCategoryType.getCostCategories();
             return costCategories.size() == costCategoryGenerators.size() &&
-                    containsAll(costCategories, costCategoryGenerators, CostCategoryGenerator::areEqual);
+                    containsAll(costCategories, costCategoryGenerators, this::areEqual);
         });
 
         return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {
@@ -111,4 +111,18 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     private Supplier<ServiceResult<ApplicationFinanceResource>> applicationFinanceResource(Long applicationId, Long organisationId) {
         return () -> financeRowService.financeDetails(applicationId, organisationId);
     }
+
+
+
+    /**
+     * Convenience method to determine if a {@link CostCategory} is equal to a {@link CostCategoryGenerator} and so needs to be generated
+     *
+     * @param cc
+     * @param ccg
+     * @return
+     */
+    boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
+        return ccg.getLabel() == cc.getLabel() && ccg.getName() == cc.getName();
+    }
+
 }
