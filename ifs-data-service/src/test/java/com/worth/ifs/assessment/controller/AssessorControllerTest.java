@@ -72,7 +72,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         verify(assessorServiceMock, only()).registerAssessorByHash(hash, userRegistrationResource);
     }
 
-    // todo address validation tests
+    // TODO address validation tests
 
     @Test
     public void registerAssessorByHash_emptyFields() throws Exception {
@@ -430,5 +430,4 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
         verify(assessorServiceMock, only()).registerAssessorByHash(hash, userRegistrationResource);
     }
-
 }

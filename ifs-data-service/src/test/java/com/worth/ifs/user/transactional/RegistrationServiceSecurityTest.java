@@ -1,7 +1,6 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -96,11 +95,6 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     public static class TestRegistrationService implements RegistrationService {
-
-//        @Override
-//        public ServiceResult<UserResource> createUser(@P("user") UserResource userResource) {
-//            return null;
-//        }
 
         @Override
         public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource) {

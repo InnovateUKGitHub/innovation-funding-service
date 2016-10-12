@@ -2,9 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.mapper.AddressMapper;
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;

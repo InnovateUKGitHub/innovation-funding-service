@@ -3,8 +3,6 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.registration.builder.UserRegistrationResourceBuilder;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;

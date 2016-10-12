@@ -30,17 +30,6 @@ public class AssessorServiceImpl implements AssessorService {
 
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
-//        UserResource userResource = new UserResource();
-//        userResource.setTitle(userRegistrationResource.getTitle());
-//        userResource.setFirstName(userRegistrationResource.getFirstName());
-//        userResource.setLastName(userRegistrationResource.getLastName());
-//        userResource.setPhoneNumber(userRegistrationResource.getPhoneNumber());
-//        userResource.setGender(userRegistrationResource.getGender());
-//        userResource.setDisability(userRegistrationResource.getDisability());
-//        userResource.setEthnicity(userRegistrationResource.getEthnicity().getId());
-//        userResource.setPassword(userRegistrationResource.getPassword());
-
-        // need to add the address
 
         // TODO: Handle failures gracefully and hand them back to the webservice
         // TODO: Retrieve and add assessor role through RoleService before account creation
@@ -61,10 +50,6 @@ public class AssessorServiceImpl implements AssessorService {
     private ServiceResult<RoleResource> getAssessorRoleResource() {
         return roleService.findByUserRoleType(ASSESSOR);
     }
-
-//    private ServiceResult<Void> createUser(UserResource userResource, AddressResource addressResource) {
-//        return userRegistrationService.createUser(userResource, addressResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
-//    }
 
     private ServiceResult createUser(UserRegistrationResource userRegistrationResource) {
         return userRegistrationService.createUser(userRegistrationResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
