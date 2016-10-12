@@ -64,6 +64,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private static final String CSV_TOTAL = "TOTAL";
     private static final String CSV_ELIGIBLE_COST_TOTAL = "Eligible Costs Total";
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
+    private static final String CSV_FILE_NAME_DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+    private static final List<String> RESEARCH_CAT_GROUP_ORDER = new LinkedList<>();
 
     @Autowired
     private ProjectService projectService;
@@ -84,9 +86,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private CostCategoryTypeMapper costCategoryTypeMapper;
 
     @Autowired
-    private CostCategoryMapper costCategoryMapper;
-
-    @Autowired
     private CostCategoryRepository costCategoryRepository;
 
     @Autowired
@@ -98,6 +97,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    static {
+        RESEARCH_CAT_GROUP_ORDER.add("Directly incurred");
+        RESEARCH_CAT_GROUP_ORDER.add("Directly allocated");
+        RESEARCH_CAT_GROUP_ORDER.add("Indirect Costs");
+        RESEARCH_CAT_GROUP_ORDER.add("Exceptions");
+    }
+
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -185,8 +192,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             checkTotalForMonthsAndAddToTable(table);
 
-           boolean isRearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
-            if (isRearch) {
+           boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
+            if (isResearch) {
                 table.setCostCategoryGroupMap(groupCategories(table));
             }
 
@@ -211,21 +218,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
             CostCategory costCategory = costCategoryRepository.findOne(category);
-            if (costCategory.getLabel() != null) {
-                if (catGroupMap.get(costCategory.getLabel()) != null) {
-                    Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
-                    tempRow.put(category, values);
-                    catGroupMap.get(costCategory.getLabel()).add(tempRow);
-                } else {
-                    List<Map<Long, List<BigDecimal>>> newList = new ArrayList<>();
-                    Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
-                    tempRow.put(category, values);
-                    newList.add(tempRow);
-                    catGroupMap.put(costCategory.getLabel(), newList);
-                }
+            if (costCategory.getLabel() == null) {
+                costCategory.setLabel("DEFAULT");
+            }
+            if (catGroupMap.get(costCategory.getLabel()) != null) {
+                Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                tempRow.put(category, values);
+                catGroupMap.get(costCategory.getLabel()).add(tempRow);
+            } else {
+                List<Map<Long, List<BigDecimal>>> newList = new ArrayList<>();
+                Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                tempRow.put(category, values);
+                newList.add(tempRow);
+                catGroupMap.put(costCategory.getLabel(), newList);
             }
         });
-        return catGroupMap;
+        return orderResearchCategoryMap(catGroupMap);
+    }
+
+    private Map<String, List<Map<Long, List<BigDecimal>>>> orderResearchCategoryMap(Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap) {
+        Map<String, List<Map<Long, List<BigDecimal>>>> orderedCatGroupMap = new LinkedHashMap<>();
+        RESEARCH_CAT_GROUP_ORDER.forEach(groupName -> {
+            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName));
+        });
+        return orderedCatGroupMap;
     }
 
     @Override
@@ -571,7 +587,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private String generateSpendProfileFileName(String organisationName) {
         Date date = new Date() ;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(CSV_FILE_NAME_DATE_FORMAT);
         return String.format(CSV_FILE_NAME_FORMAT, organisationName, dateFormat.format(date));
     }
 
