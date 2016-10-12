@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -57,7 +58,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void testFundingDecisionDeniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {
@@ -107,7 +108,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void testSaveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {
