@@ -94,7 +94,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId()); // TODO wny not set academic here too?
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }
