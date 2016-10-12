@@ -48,7 +48,17 @@ public class FormInputResponseFileUploadRules {
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
     public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return SecurityRuleUtil.isCompAdmin(user) || userIsApplicantOnThisApplication(fileEntry, user);
+        return userIsApplicantOnThisApplication(fileEntry, user);
+    }
+
+    @PermissionRule(value = "READ", description = "A comp admin can download a file for an answer")
+    public boolean compAdminCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        return SecurityRuleUtil.isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "A comp admin can download a file for an answer")
+    public boolean projectFinanceUserCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        return SecurityRuleUtil.isProjectFinanceUser(user);
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
