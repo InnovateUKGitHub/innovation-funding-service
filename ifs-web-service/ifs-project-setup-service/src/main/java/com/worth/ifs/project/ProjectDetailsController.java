@@ -46,6 +46,7 @@ import com.worth.ifs.project.viewmodel.ProjectUserInviteModel;
 import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
 import com.worth.ifs.project.viewmodel.SelectProjectManagerViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 
@@ -526,7 +527,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
-        List<ProjectUserResource> projectUsersForProject = projectService.getProjectUsersForProject(projectId);
+        List<ProcessRoleResource> organisationProcessRoles = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
         List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
 
         Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn = user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
