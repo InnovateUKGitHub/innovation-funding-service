@@ -1,8 +1,8 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
   <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;">Thank you for submitting your application &quot;${applicationName}&quot; for funding to Innovate UK for the ${competitionName} competition.</p>
-  <p style="margin: 0 0 1em 0;">The assessment process is now complete. Unfortunately Innovate UK is unable to fund your application. Feedback will be available by <#assign feedbackDateIso = feedbackDate?datetime.iso> ${feedbackDateIso?string["EEEE dd MMMM"]} and will be accessible from your Innovate UK <a href="${dashboardUrl}">Innovation Funding Service dashboard</a>. We will send you a further email notification when your feedback is ready for you to view.</p>
+  <p style="margin: 0 0 1em 0;">Thank you for submitting your application '${applicationName}' for funding to Innovate UK for the ${competitionName} competition.</p>
+  <p style="margin: 0 0 1em 0;">The assessment process is now complete. Unfortunately Innovate UK is unable to fund your application. Feedback will be available by <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["EEEE dd MMMM"]} and will be accessible from your Innovate UK <a href="${dashboardUrl}">Innovation Funding Service dashboard</a>. We will send you a further email notification when your feedback is ready for you to view.</p>
   <p style="margin: 0 0 1em 0;">We would like to take this opportunity to remind you of the government's commitment to promote innovation and to encourage you to remain aware of opportunities offered by future competitions. Details of all future competitions are posted on the Innovate UK website <a href="http://www.innovateuk.gov.uk">www.innovateuk.gov.uk</a>.</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
   <p style="margin: 0 0 1em 0;">

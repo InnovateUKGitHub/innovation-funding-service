@@ -1,6 +1,6 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear User 2,
+Dear ${notificationTarget.name},
 
 Application number: ${applicationNumber}
 Application name: ${applicationName}
