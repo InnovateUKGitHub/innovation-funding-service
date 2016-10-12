@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Manage Applications'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assign assessors'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -20,31 +20,13 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
+	<h1 class="heading-xlarge no-margin">Assign assessors</h1>
 
-	<div class="grid-row extra-margin">
-		<div class="column-three-quarters">
-			<p>
-				<span id="assessors" class="heading-large">60</span> Assessors
+	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
-				<span id="applications" class="heading-large extra-margin-left">28</span> Applications
-			</p>
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=2" th:remove="tag" />
 
-			<h2 class="heading-small">Assign invited assessors to assess applications</h2>
-
-			<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
-
-		</div>
-		<div class="column-quarter">
-			<div class="alignright">
-			<a href="/prototypes/5388-notify-assessors?status=incomplete" class="button large">Notify Assessors</a>
-			</div>
-		</div>
-	</div>
-
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=true,sortByType=1" th:remove="tag" />
-
-	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list-table" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list6-table" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

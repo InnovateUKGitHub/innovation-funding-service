@@ -26,6 +26,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -452,16 +453,16 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
-        List<ProjectUserResource> projectUsersForProject = projectService.getProjectUsersForProject(projectId);
+        List<ProcessRoleResource> organisationProcessRoles = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
         List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
 
-        Function<ProjectUserResource, FinanceContactModel> financeContactModelMappingFn = user -> new FinanceContactModel(EXISTING, user.getUserName(), user.getUser());
+        Function<ProcessRoleResource, FinanceContactModel> financeContactModelMappingFn = user -> new FinanceContactModel(EXISTING, user.getUserName(), user.getUser());
         Function<InviteProjectResource, FinanceContactModel> inviteeMappingFn = invite -> new FinanceContactModel(PENDING, invite.getName() + " (Pending)", projectId);
 
         Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation())
                 && !invite.getStatus().equals(InviteStatus.OPENED);
 
-        List<FinanceContactModel> thisOrganisationUsers = simpleMap(projectUsersForProject, financeContactModelMappingFn);
+        List<FinanceContactModel> thisOrganisationUsers = simpleMap(organisationProcessRoles, financeContactModelMappingFn);
         List<InviteProjectResource> inviteProjectResources = simpleFilter(inviteProjectResourceList, inviteProjectResourceFilterFn);
         List<FinanceContactModel> invitedUsers = simpleMap(inviteProjectResources, inviteeMappingFn);
 
