@@ -70,8 +70,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowSubmitDocumentsButton() {
-        return leadPartner && !otherDocumentsSubmitted;
+        return leadPartner && !otherDocumentsSubmitted && submitAllowed;
     }
+
+    public boolean isShowDisabledSubmitDocumentsButton() { return !otherDocumentsSubmitted && !submitAllowed; }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();

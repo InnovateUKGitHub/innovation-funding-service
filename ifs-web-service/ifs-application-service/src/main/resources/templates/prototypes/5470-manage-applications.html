@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Manage Applications'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -22,29 +22,29 @@
 	<p class="subtitle">Technology inspired, (12345A)</p>
 	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
 
-	<div class="grid-row extra-margin">
-		<div class="column-half">
-			<p>
-				<span class="heading-small">Assessor accepts: 18 October 2016</span>
-			</p>
-			<p>
-				<span class="heading-small">Assessor deadline: 23 October 2016</span>
-			</p>
+	<!--<div class="grid-row extra-margin">-->
+		<!--<div class="column-half">-->
+			<!--<p>-->
+				<!--<span class="heading-small">Assessor accepts: 18 October 2016</span>-->
+			<!--</p>-->
+			<!--<p>-->
+				<!--<span class="heading-small">Assessor deadline: 23 October 2016</span>-->
+			<!--</p>-->
 
-		</div>
-		<div class="column-quarter">
-			<p><span class="heading-large">5</span><br /> changes since last update</p>
-		</div>
-		<div class="column-quarter">
-			<div class="alignright">
-				<a href="/prototypes/5472-notify-assessors?status=incomplete" class="button large">Update Assessors</a>
-			</div>
-		</div>
-	</div>
+		<!--</div>-->
+		<!--<div class="column-quarter">-->
+			<!--<p><span class="heading-large">5</span><br /> changes since last update</p>-->
+		<!--</div>-->
+		<!--<div class="column-quarter">-->
+			<!--<div class="alignright">-->
+				<!--<a href="/prototypes/5472-notify-assessors?status=incomplete" class="button large">Update Assessors</a>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
 
-	<h2 class="heading-medium">Applications</h2>
+	<!--<h2 class="heading-medium">Applications</h2>-->
 
-	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
+	<p class="extra-margin">Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=3" th:remove="tag" />
 
