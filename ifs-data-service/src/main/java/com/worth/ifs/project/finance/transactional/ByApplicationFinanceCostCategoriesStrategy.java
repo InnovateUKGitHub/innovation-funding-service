@@ -77,7 +77,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
             List<CostCategory> costCategories = costCategoryType.getCostCategories();
             return costCategories.size() == costCategoryGenerators.size() &&
-                    containsAll(costCategories, CostCategory::getName, costCategoryGenerators, CostCategoryGenerator::getName);
+                    containsAll(costCategories, costCategoryGenerators, CostCategoryGenerator::areEqual);
         });
 
         return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {

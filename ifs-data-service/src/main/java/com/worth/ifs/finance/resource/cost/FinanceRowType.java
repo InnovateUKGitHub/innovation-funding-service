@@ -49,10 +49,12 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return spendCostCategory;
     }
 
+    @Override
     public String getLabel() {
         return null;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.project.builder.CostCategoryBuilder;
 import com.worth.ifs.project.builder.CostCategoryGroupBuilder;
@@ -37,7 +38,10 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.finance.transactional.ByApplicationFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
+import static java.util.EnumSet.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -62,8 +66,6 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
                                 withName(LABOUR.getName(), MATERIALS.getName()).
-                                withLabel(LABOUR.getLabel()).
-                                withLabel(MATERIALS.getLabel()).
                                 build(2)).
                         build()).
                 build();
@@ -77,15 +79,70 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
         assertEquals(expectedCct, result.getSuccessObject()); // We matched
+    }
 
+
+    @Test
+    public void testAlreadyCreated() {
+        // Setup
+        ApplicationResource ar = newApplicationResource().build();
+        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Industrial
+        ApplicationFinanceResource afr = newApplicationFinanceResource().build();
+        CostCategoryType expectedCct = newCostCategoryType().
+                withName("A name that will not match - we care only about the contained CostCategories").
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().
+                                withName(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getName, String.class)).
+                                withLabel(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getLabel, String.class)).
+                                build(AcademicCostCategoryGenerator.values().length)).
+                        build()).
+                build();
+        // Mocks
+        when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
+        when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(costCategoryTypeRepositoryMock.findAll()).thenReturn(asList(expectedCct)); // This is the one already created and should be returned
+        // Method under test
+        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(expectedCct, result.getSuccessObject()); // We matched
+    }
+
+    @Test
+    public void testAcademicCreate() {
+        // Setup
+        ApplicationResource ar = newApplicationResource().build();
+        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Industrial
+        ApplicationFinanceResource afr = newApplicationFinanceResource().build();
+        CostCategoryType expectedCct = newCostCategoryType().
+                withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().
+                                withName(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getName, String.class)).
+                                withLabel(simpleMapArray(AcademicCostCategoryGenerator.values(), AcademicCostCategoryGenerator::getLabel, String.class)).
+                                build(AcademicCostCategoryGenerator.values().length)).
+                        build()).
+                build();
+        // Mocks
+        when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
+        when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
+        when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
+        // Method under test
+        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(expectedCct, result.getSuccessObject()); // We matched
     }
 
     private CostCategoryType matcherForCostCategoryType(CostCategoryType expected) {
         return createLambdaMatcher(actual -> {
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getCostCategories().size(), expected.getCostCategories().size());
-            assertTrue(CollectionFunctions.containsAll(expected.getCostCategories(), CostCategory::getName, actual.getCostCategories(), CostCategory::getName));
-            assertTrue(CollectionFunctions.containsAll(expected.getCostCategories(), CostCategory::getLabel, actual.getCostCategories(), CostCategory::getLabel));
+            assertTrue(containsAll(expected.getCostCategories(), CostCategory::getName, actual.getCostCategories(), CostCategory::getName));
+            assertTrue(containsAll(expected.getCostCategories(), CostCategory::getLabel, actual.getCostCategories(), CostCategory::getLabel));
         });
     }
 
