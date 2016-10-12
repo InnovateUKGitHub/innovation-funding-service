@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
@@ -67,6 +68,11 @@ public class FormInputResponsePermissionRules {
     @PermissionRule(value = "READ", description = "A comp admin can see form input responses for applications")
     public boolean compAdminCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "A project finance user can see form input responses for applications")
+    public boolean projectFinanceUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "SAVE",

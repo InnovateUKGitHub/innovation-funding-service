@@ -87,7 +87,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Industrial
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
         ApplicationFinanceResource afr = newApplicationFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName("A name that will not match - we care only about the contained CostCategories").
@@ -114,7 +114,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Industrial
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
         ApplicationFinanceResource afr = newApplicationFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).
