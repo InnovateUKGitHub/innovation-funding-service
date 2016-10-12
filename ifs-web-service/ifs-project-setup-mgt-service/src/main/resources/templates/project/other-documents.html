@@ -57,7 +57,7 @@
              class="uploaded-file"
              th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
-            <th:block th:unless="${model.approved != null and model.approved}">
+            <th:block th:unless="${model.isShowApproveRejectButtons()}">
                 <h2 class="heading-medium">Review documents</h2>
                 <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
                 <button data-js-modal="modal-accept-docs" class="button large">Accept documents</button>
