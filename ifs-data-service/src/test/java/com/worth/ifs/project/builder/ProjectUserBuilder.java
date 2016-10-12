@@ -2,6 +2,7 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -53,6 +54,10 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
 
     public ProjectUserBuilder       withOrganisation(Organisation... organisations) {
         return withArray((organisation, projectUser) -> setField("organisation", organisation, projectUser), organisations);
+    }
+
+    public ProjectUserBuilder  withInvite(ProjectInvite... projectInvites) {
+        return withArray((projectInvite, projectUser) -> setField("invite", projectInvite, projectUser), projectInvites);
     }
 
     public ProjectUserBuilder withUser(User... users) {

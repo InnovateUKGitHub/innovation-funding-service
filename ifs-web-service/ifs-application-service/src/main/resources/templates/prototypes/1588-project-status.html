@@ -26,7 +26,7 @@
 			The project is live, you can review progress at <a href="#">_connect</a>
 		</div>
 
-		<p>The following steps have been completed allowing the project to begin. All steps have been completed by all partners.</p>
+		<p>The following steps have been completed by all partners. The project can now start.</p>
 	</th:block>
 
 	<div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
@@ -42,7 +42,7 @@
 		<li class="complete">
 			<span>
 				<h2 class="heading-medium">Successful application</h2>
-				<p>The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
+				<p>The application <strong>Machine learning in robots</strong> has been successful in the <strong>Technology inspired</strong> competition.</p>
 				<a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback" class="buttonlink">View application and feedback</a> 
 				<a href="#" class="buttonlink">View terms and conditions of grant offer</a>
 			</span>
@@ -57,7 +57,7 @@
 
 				</h2>
 					
-				<p>Confirm the contact details, proposed start date and location of the project.</p>
+				<p>The contact details, start date and location of the project.</p>
 			</span>
 		</li>
 
@@ -84,7 +84,7 @@
 		<li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
-				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+				<p>The bank details submitted for your organisation.</p>
 			</span>
 		</li>
 
@@ -105,7 +105,7 @@
 		<li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checks</a></h2>
-				<p>We will review all project costs and contact you if we have any queries.</p>
+				<p>A record of your initial project costs and queries raised.</p>
 			</span>
 		</li>
 
@@ -119,7 +119,7 @@
 		<li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
-				<p>Once we have approved your financial information, we will produce a spend profile.</p>
+				<p>The spend profile created for your project.</p>
 			</span>
 		</li>
 
@@ -155,21 +155,20 @@
 				<div th:unless="${param.user != null}" th:remove="tag">
 
 					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
-					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+					<p>Supporting documents uploaded by the Project Manager.</p>
 
 				</div>
 				
 				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 					
 					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead&#38;status=submitted">Other documents</a></h2>
-					<p>The lead partner of the consortium will need to upload documents including:</p>
+					<p>Supporting documents uploaded by the Project Manager.</p>
 
 				</div>
 
 				<ul class="list-bullet">
-					<li>a collaboration agreement</li>
+					<li>collaboration agreement</li>
 					<li>exploitation plan</li>
-					<li>project plan</li>
 				</ul>
 			</span>
 		</li>
@@ -194,7 +193,7 @@
 				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 					<h2 class="heading-medium"><a href="/prototypes/1594-gol-partner-view?user=nonLead">Grant offer letter</a></h2>
 				</div>
-				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+				<p>A copy of the grant offer letter that was signed by the Project Manager, completing project setup.</p>
 			</span>
 		</li>
 	</ul>

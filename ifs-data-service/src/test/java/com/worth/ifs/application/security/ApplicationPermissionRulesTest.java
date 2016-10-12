@@ -189,16 +189,23 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+    public void projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+        assertTrue(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, user2));
+    }
 
-        //
+    @Test
+    public void projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+        assertTrue(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, user2));
+    }
+
+    @Test
+    public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
             allGlobalRoleUsers.forEach(user -> {
 
                 ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
@@ -220,17 +227,40 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         });
     }
 
-    @Test
-    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
 
-        //
+    @Test
+    public void projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
+            allGlobalRoleUsers.forEach(user -> {
+
+                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
+
+                // if the user is not a Comp Admin, immediately fail
+                if (!user.equals(projectFinanceUser())) {
+                    assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
+
+                } else {
+
+                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                        assertTrue(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    } else {
+                        assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    }
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+        // For each possible Competition Status...
+        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+
+            // For each possible role
             allGlobalRoleUsers.forEach(user -> {
 
                 ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
@@ -257,15 +287,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void testCompAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
-
-        //
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
             allGlobalRoleUsers.forEach(user -> {
 
                 Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
@@ -303,9 +328,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ProcessRole collaboratorProcessRole = newProcessRole().withRole(COLLABORATOR).build();
         ProcessRole assessorProcessRole = newProcessRole().withRole(ASSESSOR).build();
 
-        //
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
             application.setCompetitionStatus(competitionStatus);
