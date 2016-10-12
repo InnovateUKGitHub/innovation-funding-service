@@ -80,6 +80,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
+    public ProjectBuilder withOtherDocumentsApproved(Boolean approved){
+        return with (project -> project.setOtherDocumentsApproved(approved));
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 
