@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -55,7 +56,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_applicationSummariesByCompetitionId_deniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {
@@ -104,7 +105,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_submittedApplicationSummariesByClosedCompetitionId_deniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {
@@ -152,7 +153,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_notSubmittedApplicationSummariesByClosedCompetitionId_deniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {
@@ -202,7 +203,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_feedbackRequiredundedApplicationSummariesByCompetitionId_deniedIfNotCorrectGlobalRoles() {
 
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
 				.collect(toList());
 
 		nonCompAdminRoles.forEach(role -> {

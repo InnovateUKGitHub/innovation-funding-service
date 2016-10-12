@@ -80,4 +80,6 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
         return approved;
     }
 
+    public boolean isShowApproveRejectButtons() { return approved != null && approved; }
+
 }
