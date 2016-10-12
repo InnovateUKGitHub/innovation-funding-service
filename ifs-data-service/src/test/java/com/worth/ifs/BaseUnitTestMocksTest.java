@@ -50,10 +50,7 @@ import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
-import com.worth.ifs.invite.mapper.CompetitionParticipantMapper;
-import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
-import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
-import com.worth.ifs.invite.mapper.RejectionReasonMapper;
+import com.worth.ifs.invite.mapper.*;
 import com.worth.ifs.invite.repository.*;
 import com.worth.ifs.invite.transactional.EthnicityService;
 import com.worth.ifs.invite.transactional.InviteProjectService;
@@ -203,6 +200,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected NotificationService notificationServiceMock;
+
+    @Mock
+    protected InviteProjectMapper inviteProjectMapperMock;
 
     @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
