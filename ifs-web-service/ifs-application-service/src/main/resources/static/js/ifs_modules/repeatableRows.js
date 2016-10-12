@@ -88,8 +88,11 @@ IFS.application.repeatableRows = (function() {
             var fieldsForUnsavedCost = jQuery('[data-repeatable-row] [name*="' + unsavedCostId + '"]');
 
             fieldsForUnsavedCost.each(function(){
-              var thisFieldNameSplit = jQuery(this).attr('name').split('-');
-              jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + newFieldId);
+              var oldName = jQuery(this).prop('name');
+              var thisFieldNameSplit = oldName.split('-');
+              var newName = thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + newFieldId;
+              jQuery(this).prop('name', newName);
+              jQuery('[data-errorfield="'+oldName+'"]').attr('data-errorfield',newName);
             });
             //add the button
             var row = jQuery('[data-repeatable-row="'+unsavedCostId+'"]');

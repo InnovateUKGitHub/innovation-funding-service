@@ -342,7 +342,7 @@ Project Finance is able to Approve and Reject
     Then the user should not see an error in the page
     [Teardown]  logout as user
 
-#TODO INFUND-5424 Partners should be able to see documents approved
+#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
 
 CompAdmin approves other documents
     [Documentation]    INFUND-4621
@@ -377,6 +377,7 @@ CompAdmin can see Project status updated
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
+    [Tags]    Experian
     [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
@@ -387,7 +388,7 @@ Status updates correctly for internal user's table
 
 
 
-#TODO INFUND-5424 Partners should be able to see documents rejected
+#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents rejected
 
 *** Keywords ***
 the user uploads to the collaboration agreement question
