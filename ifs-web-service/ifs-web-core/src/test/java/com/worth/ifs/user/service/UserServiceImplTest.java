@@ -2,8 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,8 +14,12 @@ import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Matchers.eq;
@@ -73,7 +76,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void test_findUserByType() throws Exception {
+    public void findUserByType() throws Exception {
         UserResource userOne = new UserResource();
         userOne.setId(1L);
 
@@ -87,5 +90,57 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(2, found.size());
         assertEquals(Long.valueOf(1), found.get(0).getId());
         assertEquals(Long.valueOf(2), found.get(1).getId());
+    }
+
+    @Test
+    public void getProfileSkills() throws Exception {
+        Long userId = 1L;
+        ProfileSkillsResource expected = newProfileSkillsResource().build();
+
+        when(userRestService.getProfileSkills(userId)).thenReturn(restSuccess(expected));
+
+        ProfileSkillsResource response = service.getProfileSkills(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getProfileSkills(userId);
+    }
+
+    @Test
+    public void updateProfileSkills() throws Exception {
+        Long userId = 1L;
+        BusinessType businessType = BUSINESS;
+        String skillsAreas = "Skills";
+
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build();
+
+        when(userRestService.updateProfileSkills(userId, profileSkills)).thenReturn(restSuccess());
+
+        service.updateProfileSkills(userId, businessType, skillsAreas).getSuccessObjectOrThrowException();
+        verify(userRestService, only()).updateProfileSkills(userId, profileSkills);
+    }
+
+    @Test
+    public void getUserAffilliations() throws Exception {
+        Long userId = 1L;
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
+
+        when(userRestService.getUserAffiliations(userId)).thenReturn(restSuccess(expected));
+
+        List<AffiliationResource> response = service.getUserAffiliations(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getUserAffiliations(userId);
+    }
+
+    @Test
+    public void updateUserAffiliations() throws Exception {
+        Long userId = 1L;
+        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
+
+        when(userRestService.updateUserAffiliations(userId, affiliations)).thenReturn(restSuccess());
+
+        service.updateUserAffiliations(userId, affiliations).getSuccessObjectOrThrowException();
+        verify(userRestService, only()).updateUserAffiliations(userId, affiliations);
     }
 }

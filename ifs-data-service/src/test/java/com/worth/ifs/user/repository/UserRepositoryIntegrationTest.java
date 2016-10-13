@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserStatus.ACTIVE;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.stream.Collectors.toList;
@@ -45,9 +46,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Test
     @Rollback
     public void test_findByEmailAndStatus() {
-        final User user = UserBuilder.newUser()
+        final User user = newUser()
                 .withUid("my-uid")
-                .withUserStatus(INACTIVE)
+                .withStatus(INACTIVE)
                 .build();
 
         final User expected = repository.save(user);

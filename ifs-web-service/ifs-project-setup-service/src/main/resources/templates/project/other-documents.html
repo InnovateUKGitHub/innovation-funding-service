@@ -154,7 +154,7 @@
                     <span class="error-message" th:each="err : ${#fields.errors('exploitationPlan')}" th:text="${err}"/>
                 </th:block>
 
-                <input th:errorclass="field-error" th:field="*{exploitationPlan}" type="file" id="exploitationPlan"
+                <input th:field="*{exploitationPlan}" type="file" id="exploitationPlan"
                        class="inputfile"/>
                 <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
                 <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit"
@@ -187,11 +187,10 @@
         <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
        data-js-modal="modal-partner-documents">Submit partner documents</a>
     </th:block>
-    <div class="extra-margin"
-         th:if="${!model.submitAllowed and model.submitDate == null}">
+     <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
         <p>You are not able to submit until all files are uploaded. And you must be the project manager</p>
-        <button disabled="disabled" class="button">Submit partner documents</button>
-    </div>
+        <button disabled="disabled" class="button extra-margin">Submit partner documents</button>
+     </th:block>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
 
