@@ -15,6 +15,9 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-4583 As a partner I want to be able to continue with Project Setup once I have supplied my Project Details so that I don't have to wait until all partner details are submitted before providing further information
 ...
 ...               INFUND-4428 As a Partner, I should have access to the various Project Setup sections when they become available, so that I can access them when it is valid to
+...
+...               INFUND-5610 As a user I want to check the selected Project Manager value persists
+
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -66,9 +69,8 @@ Links to other sections in Project setup dependant on project details (applicabl
     And the user should see the text in the page    Successful application
     Then the user should not see the element    link = Monitoring Officer
     And the user should not see the element    link = Bank details
-    And The user should not see the element    link = Finance checks
-    And The user should not see the element    link= Spend profile
-    And the user should not see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
     And the user should not see the element    link = Grant offer letter
     [Teardown]    logout as user
 
@@ -172,6 +174,7 @@ Lead partner can change the project manager
     [Documentation]    INFUND-2616
     ...
     ...    INFUND-2996
+    ...    INFUND-5610
     [Tags]    HappyPath
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     And the user clicks the button/link    link=Project manager
@@ -182,6 +185,7 @@ Lead partner can change the project manager
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project manager
+    And the user can see selected radio button
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
@@ -418,6 +422,9 @@ the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}
     the user should see the element    ${table_id}
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
+
+the user can see selected radio button 
+    the user should see the element    xpath =//*[@id="projectManager2" and @checked ="checked"]
 
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months
