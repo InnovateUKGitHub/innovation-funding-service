@@ -20,7 +20,7 @@ public class BankDetailsManagementControllerSecurityTest extends BaseProjectSetu
 
     @Test
     public void testApproveBankDetails() {
-        assertSecured(() -> classUnderTest.approveBankDetails(null, 123L, 234L, null));
+        assertSecured(() -> classUnderTest.approveBankDetails(null, null, null, null, 123L, 234L, null));
     }
 
     @Test
