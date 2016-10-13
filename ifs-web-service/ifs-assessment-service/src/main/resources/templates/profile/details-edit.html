@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your profile',linkClass='link-back',linkUrl=@{/profile/details}" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your details',linkClass='link-back',linkUrl=@{/profile/details}" th:remove="tag"/>
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your details</h1>
