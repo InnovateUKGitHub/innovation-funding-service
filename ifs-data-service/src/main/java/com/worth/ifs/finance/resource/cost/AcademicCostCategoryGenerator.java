@@ -64,9 +64,4 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
         }
         return null;
     }
-
-
-
-
-
 }
