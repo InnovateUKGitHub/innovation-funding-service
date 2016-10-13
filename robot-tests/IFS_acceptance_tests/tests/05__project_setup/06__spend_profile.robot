@@ -215,7 +215,7 @@ Project Finance is able to Reject Spend Profile
     #    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
     #    And the user clicks the button/link            jQuery=.modal-reject-profile button:contains('Reject spend profile')
     #    Then the user should see the element           jQuery=h3:contains("The spend profile has been rejected")
-    # The above lines are passing, but they are disabled so that the Sp Prof can be Approved.
+    # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638
@@ -230,6 +230,8 @@ Project Finance is able to Approve Spend Profile
     When the user clicks the button/link             jQuery=button:contains("Approved")
     And the user clicks the button/link              jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element         jQuery=h3:contains("The spend profile has been approved")
+    When the user navigates to the page              ${server}/project-setup-management/competition/6/status
+#    Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok TODO INFUND-5560
     [Teardown]  Logout as user
 
 
