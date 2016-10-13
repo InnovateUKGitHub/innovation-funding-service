@@ -22,7 +22,7 @@ Partners should not be able to submit the Grant Offer
 
 PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851
-    [Setup]    log in as user    &{lead_applicant_credentials}
+    [Setup]    log in as user    worth.email.test+projectlead@gmail.com    Passw0rd
     Given the user clicks the button/link    link=00000001: best riffs
     And the user clicks the button/link    link=Grant offer letter
     When the lead uploads a grant offer letter    ${too_large_pdf}
