@@ -63,10 +63,13 @@
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
                         th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" />
 
-              <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" />
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})"/>
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                        th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+                        th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
                         th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" />
 

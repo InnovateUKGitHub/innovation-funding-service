@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
+import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import org.springframework.beans.factory.annotation.Autowired;

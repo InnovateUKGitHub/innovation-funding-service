@@ -8,6 +8,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-1478 As an Assessor creating an account I need to supply my contact details so that Innovate UK can contact me to assess applications.
 ...
 ...               INFUND-4919 As an assessor and I have completed setting up my account I can see my dashboard so that I can see the competitions I have accepted to assess.
+...
+...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -29,7 +31,7 @@ Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
     ...    INFUND-4145
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     And the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
@@ -39,6 +41,7 @@ Non-registered assessor: Accept invitation
 
 User can navigate back to the Become an Assessor page
     [Documentation]    INFUND-4145
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
     And the email displayed should be correct
@@ -63,7 +66,6 @@ Create assessor account: server-side validations
     And the user should see an error    Your last name should have at least 2 characters
     And the user should see an error    Your first name should have at least 2 characters
     And the user should see an error    Password must at least be 10 characters
-    And the user should see an error    Please enter your address details
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
@@ -88,7 +90,7 @@ Create assessor account: client-side validations
     And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
     # TODO due to INFUND-5557
     # When the user clicks the button/link    id=postcode-lookup
-    # And The user should see the text in the page    Please enter postcode    # empty postcode check
+    # And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
@@ -97,7 +99,7 @@ Create assessor account: Postcode lookup and save
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
-    And the assessor should see the address details autofilled
+    And the address fields should be filled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     # TODO due to INFUND-5556
     # Then the user reloads the page
@@ -108,9 +110,9 @@ Create assessor account: Postcode lookup and save
     Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
-    [Documentation]    INFUND-4957
+    [Documentation]    INFUND-4919
     [Tags]    Pending
-    # TODO remove the pending once the devs have merged their changes into development
+    # TODO remove the pending once the devs have merged their changes into development (11/10/16)
     When guest user log-in    worth.email.test+assessor3@gmail.com    Password1Password1
     Then the user should see the element    link=Juggling Craziness
     And the user clicks the button/link    link=Juggling Craziness
@@ -118,7 +120,11 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
-    [Documentation]    INFUND-4631, INFUND-4636
+    [Documentation]    INFUND-4631
+    ...
+    ...             INFUND-4636
+    ...
+    ...             INFUND-5165
     [Tags]
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
@@ -128,8 +134,18 @@ Non-registered assessor: Reject invitation
     And the assessor fills in all fields
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
-    # TODO remove the comment after 5165 is ready to test
-    # And the user shouldn't be able to reject the rejected competition
+    And the assessor shouldn't be able to reject the rejected competition
+    # TODO due to INFUND-5566
+   # And the assessor shouldn't be able to accept the rejected competition
+   [Teardown]    The user closes the browser
+
+Assessor attempts to accept/reject an invitation which is already accepted
+    [Documentation]    INFUND-5165
+    [Tags]    Pending
+    [Setup]    The guest user opens the browser
+    # TODO pending due to INFUND-5566
+    Then the assessor shouldn't be able to accept the accepted competition
+    And the assessor shouldn't be able to reject the accepted competition
 
 *** Keywords ***
 the assessor fills in all fields
@@ -151,11 +167,6 @@ the assessor fills in contact details
 the email displayed should be correct
     ${Email}=    Get Text    css=div:nth-child(10) p strong
     Should Be Equal    ${Email}    worth.email.test+assessor3@gmail.com
-
-the user moves focus away from the element
-    [Arguments]    ${element}
-    mouse out    ${element}
-    focus    jQuery=.button:contains("Continue")
 
 the assessor should see the data entered
     the user should see the text in the page    Thomas
@@ -185,14 +196,6 @@ the assessor should see the changed data
     Radio Button Should Be Set To    disability
     the user should see the text in the page    08549741414
 
-the assessor should see the address details autofilled
-    the user should see the text in the page    Montrose House 1
-    #    the user should see the text in the page    Clayhill Park
-    #    the user should see the text in the page    Cheshire West and Chester
-    the user should see the text in the page    Neston
-    #    the user should see the text in the page    Cheshire
-    the user should see the text in the page    CH64 3RU
-
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
@@ -200,3 +203,36 @@ the user should not see the validation error in the create assessor form
     Wait for autosave
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
+
+the assessor shouldn't be able to reject the rejected competition
+    the user navigates to the page    ${Invitation_nonregistered_assessor2}
+    the user clicks the button/link    css=form a
+    the assessor fills all fields with valid inputs
+    the user clicks the button/link    jQuery=button:contains("Reject")
+    The user should see the text in the page    We were unable to reject the competition:
+    The user should see the text in the page    You have already rejected the invitation for this competition.
+
+the assessor fills all fields with valid inputs
+    Select From List By Index    id=rejectReason    2
+    The user should not see the text in the page    This field cannot be left blank
+    The user enters text to a text field    id=rejectComment    Unable to assess this application.
+
+the assessor shouldn't be able to accept the accepted competition
+    When the user navigates to the page    ${Invitation_nonregistered_assessor3}
+    And the user clicks the button/link    jQuery=button:contains("Accept")
+    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    This invite has already been accepted.
+
+the assessor shouldn't be able to reject the accepted competition
+    When the user navigates to the page    ${Invitation_nonregistered_assessor3}
+    And the user clicks the button/link    css=form a
+    the assessor fills all fields with valid inputs
+    the user clicks the button/link    jQuery=button:contains("Reject")
+    The user should see the text in the page    We were unable to reject the competition:
+    The user should see the text in the page    You have already accepted the invitation to assess this competition.
+
+the assessor shouldn't be able to accept the rejected competition
+    When the user navigates to the page    ${Invitation_nonregistered_assessor2}
+    And the user clicks the button/link    jQuery=button:contains("Accept")
+    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    You have already rejected the invitation

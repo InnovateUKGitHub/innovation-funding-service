@@ -27,7 +27,7 @@ Calculation of the applications for assessment should be correct
 When the deadline has passed the assessment should not be visible
     [Documentation]    INFUND-1188
     [Tags]    MySQL    Pending
-    #TODO Pending INFUND-5380
+    #TODO We need to adjust this when the \ INFUND-1186 is ready
     When The assessment deadline for the Juggling Craziness changes to the past
     Then The user should not see the element    link=Juggling is fun
     [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2016-12-31 00:00:00' WHERE `id`='21';
