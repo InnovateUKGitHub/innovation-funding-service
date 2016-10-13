@@ -27,9 +27,9 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=00000001: best riffs
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-#    Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
     And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
+
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -37,6 +37,7 @@ Lead partner can see correct project start date and duration
     Then the user should see the text in the page    1
     And the user should see the text in the page    January 2017
     And the user should see the text in the page    36 Months
+
 
 Calculations in the spend profile table
     [Documentation]    INFUND-3764
@@ -56,6 +57,7 @@ Calculations in the spend profile table
     And the sum of tds equals the total    div.spend-profile-table   6    38    7956      # Travel & subsistence
     And the sum of tds equals the total    div.spend-profile-table   7    38    32444     # Other Costs
 
+
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971
     [Tags]
@@ -66,6 +68,7 @@ Lead Partner can see Spend profile summary
     And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(2) td:nth-child(2)    £ 118,740
     And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 118,740
     And the user sees the text in the element       jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 89,055
+
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
@@ -94,6 +97,7 @@ Lead partner can edit his spend profile with invalid values
     # Then the user should not see the element       jQuery=.tr:nth-child(1).error    TODO INFUND-5156
     Then the user clicks the button/link             jQuery=.button:contains("Save and return to spend profile overview")
 
+
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]
@@ -120,16 +124,17 @@ Lead Partners Spend profile summary gets updated when edited
     And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 117,841
     And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 88,834
 
-Lead partner submits Spend Profile
+Lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3765
     [Tags]
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   Your Spend Profile is currently marked as complete
-    And the user should not see the element         css=table a[type="number"]
+    And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
     [Teardown]    Logout as user
 
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
+
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -141,13 +146,102 @@ Non-lead partner can view spend profile page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
     And the user should see the text in the page    Ludlow - Spend profile
 
+
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page    January 2017
     And the user should see the text in the page    36 Months
-    [Teardown]    Logout as user
+
+
+Non-lead partner marks Spend Profile as complete
+    [Documentation]    INFUND-3767
+    [Tags]
+    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    Then the user should see the text in the page   Your Spend Profile is currently marked as complete
+    And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
+    [Teardown]    logout as user
+
+
+Project Manager doesn't have the option to submit spend profiles until all partners have marked as complete
+    [Documentation]    INFUND-3767
+    [Tags]
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=Spend profile
+    Then the user should not see the element    jQuery=.button:contains("Review and submit total project profile spend")
+    [Teardown]    logout as user
+
+
+Academic partner can view spend profile page
+    [Documentation]    INFUND-3970
+    [Tags]
+    [Setup]    Log in as user    pete.tom@egg.com    Passw0rd
+    Given the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=Spend profile
+    Then the user should not see an error in the page
+    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    EGGS - Spend profile
+
+
+Academic partner can see correct project start date and duration
+    [Documentation]    INFUND-3970
+    [Tags]
+    Then the user should see the text in the page    1
+    And the user should see the text in the page    January 2017
+    And the user should see the text in the page    36 Months
+
+
+Academic partner marks Spend Profile as complete
+    [Documentation]    INFUND-3767
+    [Tags]
+    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    Then the user should see the text in the page   Your Spend Profile is currently marked as complete
+    And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
+    [Teardown]    logout as user
+
+
+Lead partner can view partners' spend profiles
+    [Documentation]    INFUND-3767
+    [Tags]
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=Spend profile
+    Then the user should not see an error in the page
+    Then the user clicks the button/link    link=Vitruvius Stonework Limited
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link    link=Ludlow
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user clicks the button/link    link=EGGS
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+
+Lead partner can view combined spend profile
+    [Documentation]    INFUND-3767
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Review and submit total project profile")
+    Then the user should see the text in the page    This is the proposed spend profile for your project.
+    And the user should see the text in the page    The spend profile that you submit will be used as the base for your project spend over the following financial years.
+
+
+Project Manager can choose cancel on the dialogue
+    [Documentation]    INFUND-3767
+    When the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
+    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    Then the user should see the element    jQuery=.button:contains("Submit project spend profile")
+
+
+Project Manager can submit the project's spend profiles
+    [Documentation]    INFUND-3767
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
+    And the user should see the element    jQuery=.button:contains("Cancel")
+    When the user clicks the button/link    css=div.modal-confirm-spend-profile-totals .button.large
+    Then the user should see the text in the page    Project setup status
+    And the user should see the element    jQuery=ul li.complete:nth-child(4)
 
 
 Status updates correctly for internal user's table
