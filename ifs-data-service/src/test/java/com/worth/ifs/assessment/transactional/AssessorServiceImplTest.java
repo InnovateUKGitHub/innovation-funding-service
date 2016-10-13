@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
-import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -27,9 +26,7 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NO;
 import static com.worth.ifs.user.resource.Gender.NOT_STATED;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -139,11 +136,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(registrationServiceMock.createUser(userRegistrationResource)).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
-
-        verify(registrationServiceMock).createUser(isA(UserRegistrationResource.class));
-        verifyNoMoreInteractions(registrationServiceMock);
-        verify(competitionInviteServiceMock).getInvite(hash);
-        verifyNoMoreInteractions(competitionInviteServiceMock);
 
         InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock);
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
