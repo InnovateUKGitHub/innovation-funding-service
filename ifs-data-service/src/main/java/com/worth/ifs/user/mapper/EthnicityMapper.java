@@ -6,6 +6,9 @@ import com.worth.ifs.user.domain.Ethnicity;
 import com.worth.ifs.user.resource.EthnicityResource;
 import org.mapstruct.Mapper;
 
+/**
+ * Maps between domain and resource DTO for {@link Ethnicity}.
+ */
 @Mapper(
     config =  GlobalMapperConfig.class,
     uses = {
