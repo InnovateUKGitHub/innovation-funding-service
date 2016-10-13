@@ -19,6 +19,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,6 +64,7 @@ public class ProjectMonitoringOfficerController {
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @RequestMapping(method = GET)
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -74,6 +76,7 @@ public class ProjectMonitoringOfficerController {
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @RequestMapping(value = "/edit", method = GET)
     public String editMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -85,6 +88,7 @@ public class ProjectMonitoringOfficerController {
         return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @RequestMapping(value = "/confirm", method = POST)
     public String confirmMonitoringOfficerDetails(Model model,
                                                   @PathVariable("projectId") final Long projectId,
@@ -102,6 +106,7 @@ public class ProjectMonitoringOfficerController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @RequestMapping(value = "/assign", method = POST)
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,
