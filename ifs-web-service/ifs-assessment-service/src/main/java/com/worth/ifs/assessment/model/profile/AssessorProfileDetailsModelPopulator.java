@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.model.profile;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.assessment.viewmodel.AssessorRegistrationSkillsViewModel;
 import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileDetailsViewModel;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.EthnicityResource;

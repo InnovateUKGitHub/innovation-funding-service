@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.controller.profile;
 
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
 import com.worth.ifs.assessment.form.profile.AssessorProfileEditDetailsForm;
 import com.worth.ifs.assessment.model.profile.AssessorProfileDetailsModelPopulator;
 import com.worth.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.service.EthnicityRestService;
@@ -54,39 +54,36 @@ public class AssessorProfileDetailsController {
     @RequestMapping(value = "/details-edit", method = RequestMethod.GET)
     public String getDetailsEdit(Model model,
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form) {
-        return doViewEditYourDetails(loggedInUser, model, form);
+                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
+                            BindingResult bindingResult) {
+        return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
     @RequestMapping(value = "/details-edit", method = RequestMethod.POST)
-    public String submitDetails( Model model,
+    public String submitDetails(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
 
-/*        Supplier<String> failureView = () -> doViewYourDetails(loggedInUser, model, form, bindingResult);
+        Supplier<String> failureView = () -> doViewEditYourDetails(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = userService.updateDetails();
+            RestResult<UserResource> result = userService.updateDetails(loggedInUser.getId(), loggedInUser.getEmail(), form.getFirstName(), form.getLastName(), form.getTitle(),form.getPhoneNumber());
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
-        });*/
-
-        return doViewEditYourDetails(loggedInUser, model, form);
+        });
     }
 
     private String doViewYourDetails(UserResource loggedInUser, Model model) {
-        //populateFormWithExistingValues(loggedInUser, form);
         model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser));
         return "profile/details";
     }
 
-    private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form) {
-//        if (!bindingResult.hasErrors()) {
-//            populateFormWithExistingValues(loggedInUser, form);
-//        }
-        populateFormWithExistingValues(loggedInUser, form);
+    private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            populateFormWithExistingValues(loggedInUser, form);
+        }
         model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser.getEmail()));
         return "profile/details-edit";
     }
