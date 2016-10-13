@@ -13,7 +13,6 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -412,20 +411,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
-    @Test
-    public void testGetProjectStatus(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getProjectStatus(123L), () -> {
-            verify(projectPermissionRules).partnersCanViewStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).compAdminsCanViewStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanViewStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -438,11 +423,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
             return serviceSuccess(newProjectResource().withId(1L).build());
-        }
-
-        @Override
-        public ServiceResult<ProjectStatusResource> getProjectStatus(Long projectId) {
-            return null;
         }
 
         @Override

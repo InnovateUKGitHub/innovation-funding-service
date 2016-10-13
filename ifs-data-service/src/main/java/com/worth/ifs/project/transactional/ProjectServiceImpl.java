@@ -164,10 +164,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
 
-    @Autowired
-    private ProjectStatusService projectStatusService;
-
-
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -696,12 +692,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
 
         return serviceSuccess(projectTeamStatusResource);
-    }
-
-    @Override
-    public ServiceResult<ProjectStatusResource> getProjectStatus(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
-        return serviceSuccess(projectStatusService.getProjectStatusResourceByProject(project));
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {

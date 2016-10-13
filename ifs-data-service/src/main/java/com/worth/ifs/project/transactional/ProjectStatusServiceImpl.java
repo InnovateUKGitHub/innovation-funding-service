@@ -1,6 +1,7 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -15,12 +16,14 @@ import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -51,7 +54,15 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     @Override
-    public ProjectStatusResource getProjectStatusResourceByProject(Project project) {
+    public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+        if(null != project) {
+            return ServiceResult.serviceSuccess(getProjectStatusResourceByProject(project));
+        }
+        return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
+    }
+
+    private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
         return new ProjectStatusResource(
                 project.getName(),

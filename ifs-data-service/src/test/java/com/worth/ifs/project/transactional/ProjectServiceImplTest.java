@@ -26,7 +26,6 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.resource.*;
-import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -71,7 +70,6 @@ import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -158,17 +156,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-    }
-
-    @Test
-    public void testGetProjectStatus() {
-        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
-
-        when(projectStatusServiceMock.getProjectStatusResourceByProject(project)).thenReturn(projectStatusResource);
-
-        ServiceResult<ProjectStatusResource> result = service.getProjectStatus(projectId);
-        assertTrue(result.isSuccess());
-        assertEquals(projectStatusResource, result.getSuccessObject());
     }
 
     @Test

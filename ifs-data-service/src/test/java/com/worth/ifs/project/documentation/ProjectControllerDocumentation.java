@@ -115,7 +115,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(projectServiceMock.getProjectStatus(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
                 .andDo(this.document.snippets(

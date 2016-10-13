@@ -1,6 +1,5 @@
   package com.worth.ifs.project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
@@ -106,11 +105,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         mockMvc.perform(get("/project/{id}", project1Id))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testProjectResource1)));
+                .andExpect(content().json(toJson(testProjectResource1)));
 
         mockMvc.perform(get("/project/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testProjectResource2)));
+                .andExpect(content().json(toJson(testProjectResource2)));
     }
 
     @Test
@@ -119,11 +118,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(projectServiceMock.getProjectStatus(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(projectStatusResource)));
+                .andExpect(content().json(toJson(projectStatusResource)));
     }
 
     @Test
@@ -192,7 +191,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .param("leadOrganisationId", "123")
                 .param("addressType", OrganisationAddressType.REGISTERED.name())
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(addressResource)))
+                .content(toJson(addressResource)))
             .andExpect(status().isOk())
             .andExpect(content().string(""));
 

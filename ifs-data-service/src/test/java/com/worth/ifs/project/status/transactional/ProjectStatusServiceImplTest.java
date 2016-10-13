@@ -203,15 +203,22 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(spendprofile);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
 
-        ProjectStatusResource result = service.getProjectStatusResourceByProject(project);
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        assertEquals(project.getName(), result.getProjectTitle());
-        assertEquals(project.getId(), result.getProjectNumber());
-        assertEquals(Integer.valueOf(1), result.getNumberOfPartners());
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), result.getSuccessObject().getProjectTitle());
+        assertEquals(project.getId(), result.getSuccessObject().getProjectNumber());
+        assertEquals(Integer.valueOf(1), result.getSuccessObject().getNumberOfPartners());
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
     }
 }

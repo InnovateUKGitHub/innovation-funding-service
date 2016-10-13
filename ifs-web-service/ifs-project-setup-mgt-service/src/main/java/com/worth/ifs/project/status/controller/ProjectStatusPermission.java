@@ -1,7 +1,7 @@
 package com.worth.ifs.project.status.controller;
 
 /**
- * TODO
+ * Class for checking the access permissions
  */
 public class ProjectStatusPermission {
     private Boolean canAccessCompaniesHouse;
