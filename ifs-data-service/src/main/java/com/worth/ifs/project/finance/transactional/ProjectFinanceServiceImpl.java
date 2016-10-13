@@ -5,7 +5,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
@@ -15,7 +14,6 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,7 +93,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
         List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
 
-        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+        if(spendProfiles.isEmpty()) {
+            return serviceSuccess(ApprovalType.EMPTY);
+        } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
            return serviceSuccess(ApprovalType.REJECTED);
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
            return serviceSuccess(ApprovalType.APPROVED);

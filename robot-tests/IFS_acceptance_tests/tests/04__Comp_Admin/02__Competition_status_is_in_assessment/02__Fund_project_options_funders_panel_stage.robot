@@ -82,12 +82,12 @@ Once applicants are notified, the whole state of the competition changes to Asse
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test+fundsuccess@gmail.com    testtest1    ${email_success_message}    Your application was successful
+    Then the user should get a confirmation email    worth.email.test+fundsuccess@gmail.com    testtest1    ${email_success_message}    Your application into competition La Fromage
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test.two+fundfailure@gmail.com    testtest1    ${email_failure_message}    Your application was unsuccessful
+    Then the user should get a confirmation email    worth.email.test.two+fundfailure@gmail.com    testtest1    ${email_failure_message}    Your application into competition La Fromage
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
