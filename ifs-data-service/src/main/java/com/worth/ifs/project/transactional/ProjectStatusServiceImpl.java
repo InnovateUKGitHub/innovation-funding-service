@@ -8,6 +8,8 @@ import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.users.ProjectUsersHelper;
@@ -31,6 +33,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -99,6 +104,13 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getSpendProfileStatus(Project project){
         List<Organisation> organisations = project.getOrganisations();
+
+        ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+        if(ApprovalType.APPROVED.equals(approvalType)) {
+            return COMPLETE;
+        } else if(ApprovalType.REJECTED.equals(approvalType)) {
+            return PENDING;
+        }
 
         for(Organisation organisation : organisations) {
             Optional<SpendProfile> spendProfile = Optional.ofNullable(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
