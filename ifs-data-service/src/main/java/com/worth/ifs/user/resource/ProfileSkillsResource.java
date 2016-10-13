@@ -45,6 +45,7 @@ public class ProfileSkillsResource {
         ProfileSkillsResource that = (ProfileSkillsResource) o;
 
         return new EqualsBuilder()
+                .append(user, that.user)
                 .append(skillsAreas, that.skillsAreas)
                 .append(businessType, that.businessType)
                 .isEquals();
@@ -53,6 +54,7 @@ public class ProfileSkillsResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(user)
                 .append(skillsAreas)
                 .append(businessType)
                 .toHashCode();
