@@ -24,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -77,7 +78,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void createUser() throws Exception {
         RoleResource roleResource = newRoleResource().build();
-        Role role = newRole().build();
+        List<Role> roles = newRole().build(1);
         Ethnicity ethnicity = newEthnicity().with(id(1L)).build();
 
         UserResource userToCreateResource = newUserResource()
@@ -104,7 +105,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
-                .withRolesGlobal(role)
+                .withRoles(roles)
                 .build();
 
         when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource)).thenReturn(serviceSuccess());
@@ -125,7 +126,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(role, user.getRoles().get(0));
+            assertEquals(roles, user.getRoles());
             assertTrue(user.getOrganisations().isEmpty());
 
             return true;
