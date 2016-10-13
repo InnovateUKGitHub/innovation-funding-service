@@ -9,7 +9,6 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
-import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**
@@ -21,7 +20,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Application.class.equals(clazz);
+        return Application.class.equals(clazz.getSuperclass());
     }
 
     @Override
