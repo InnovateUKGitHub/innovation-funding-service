@@ -71,34 +71,25 @@ MO client-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    Abbey
-    Then the user moves focus away from an element for MO    id=firstName
-    And the user should not see the text in the page    Please enter a first name
-    Then the user enters text to a text field    id=lastName    Abigail
-    And the user moves focus away from an element for MO    id=lastName
-    And the user should not see the text in the page    Please enter a last name
-    Then the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user moves focus away from an element for MO    id=emailAddress
-    And the user should not see the text in the page    Please enter a valid email address
-    And the user should not see the text in the page    Please enter an email address
-    Then the user enters text to a text field    id=phoneNumber    07438620303
-    And the user moves focus away from an element for MO    id=phoneNumber
-    And the user should not see the text in the page    Please enter a phone number
-    And the user should not see the text in the page    Please enter a valid phone number
-    # Todo Pending due to INFUND-4101
-    #    And the user enters text to a text field    id=phoneNumber    0123
-    #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-    #    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    Then the user should not see the validation error    Please enter a first name
+    When the user enters text to a text field    id=lastName    Abigail
+    Then the user should not see the validation error    Please enter a last name
+    When standard verification for email address follows
+    When the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should not see the validation error    Please enter a valid email address
+    And the user should not see the validation error    Please enter an email address
+    When the user enters text to a text field    id=phoneNumber    0123
+    And the user should not see the validation error    Please enter a phone number
+    And the user should not see the validation error    Please enter a valid phone number
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    When the user enters text to a text field    id=phoneNumber    07438620303
+    Then the user should not see the validation error    Input for your phone number has a minimum length of 8 characters
 
 MO details can be added
     [Documentation]    INFUND-2630
     ...
     ...    INFUND-2632
     [Tags]    HappyPath
-    When standard verification for email address follows
-    And the user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
-    Then standard verification for Phone number follows
-    And the user moves focus away from an element for MO    id=phoneNumber
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
     Then the user should not see the text in the page    A Monitoring Officer has been assigned.
@@ -195,12 +186,8 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
 
-
-
 *** Keywords ***
 standard verification for email address follows
-    the user enters text to a text field    id=emailAddress    ${EMPTY}
-    the user should see an error    Please enter an email address
     the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
     the user should see an error    Please enter a valid email address
     the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
@@ -212,28 +199,18 @@ standard verification for email address follows
     the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
     the user should see an error    Please enter a valid email address
 
-standard verification for Phone number follows
-    the user enters text to a text field    id=phoneNumber    ${EMPTY}
-    the user should see an error    Please enter a phone number
-    the user enters text to a text field    id=phoneNumber    invalidphone
-    the user should see an error    Please enter a valid phone number
-    # Todo Pending due to INFUND-4101
-    #    And the user enters text to a text field    id=phoneNumber    0123
-    #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
-    #    And the user should see an error    Input for your phone number has a minimum length of 8 characters
-    Then the user enters text to a text field    id=phoneNumber    07438620303
-    #    And the user moves focus away from an element for MO    id=phoneNumber
-
-the user moves focus away from an element for MO
-    [Arguments]    ${element}
-    mouse out    ${element}
-    focus    jQuery=.button:contains("Assign Monitoring Officer")
+the user should not see the validation error
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Assign Monitoring Officer")
+    Wait for autosave
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the user edits the MO details
     The user enters text to a text field    id=firstName    Grace
     The user enters text to a text field    id=lastName    Harper
-    #    Input Text    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
     The user enters text to a text field    id=phoneNumber    08549731414
     the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
@@ -243,5 +220,3 @@ the user can see the changed MO details
     the user should see the text in the page    A Monitoring Officer has been assigned.
     Textfield Should Contain    id=firstName    Grace
     Textfield Should Contain    id=lastName    Harper
-    # Textfield Should Contain    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    #    Element Should Contain    id=phoneNumber    08549731414
