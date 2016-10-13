@@ -1,18 +1,17 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear User 2,
+Dear ${notificationTarget.name},
 
-Application number: ${applicationNumber}
-Application name: ${applicationName}
+The feedback for your application ${applicationName} is now available for you to view.
 
-Following the success of your application ${applicationName} to achieve funding in the competition ${competitionName}, we are happy to inform you that feedback is now available.
+Please sign into into your Innovation Funding Service dashboard (${dashboardUrl}).
 
 The feedback provided by the independent assessors has been reviewed by Innovate UK.
-
-You can now view this feedback by signing into your Innovation Funding Service dashboard at ${dashboardUrl}.
 
 Yours sincerely,
 
 Competitions Team
 Innovate UK
+Tel: 0300 321 4357
+Email: competitions@innovateuk.gov.uk
 </@layout.defaultPlainText>
