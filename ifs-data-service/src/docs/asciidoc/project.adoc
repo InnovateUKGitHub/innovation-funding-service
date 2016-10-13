@@ -507,8 +507,6 @@ include::{snippets}/project/get-spend-profile-csv/curl-request.adoc[]
 ==== Failures
 ===== Spend Profile data does not yet exist
 include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in-db/http-response.adoc[]
-include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in-db/response-fields.adoc[]
 
 ===== Exception thrown when generating the Spend Profile CSV
 include::{snippets}/project/get-spend-profile-csv-when-io-exception/http-response.adoc[]
-include::{snippets}/project/get-spend-profile-csv-when-io-exception/response-fields.adoc[]
