@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup    Pending
+Force Tags        Project Setup    Upload
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -11,7 +11,7 @@ Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
-Partners should not be able to access the Submit button
+Partners should not be able to submit the Grant Offer
     [Documentation]    INFUND-4851
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=00000001: best riffs
@@ -20,20 +20,52 @@ Partners should not be able to access the Submit button
     And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
     [Teardown]    logout as user
 
-Project manager should be able to access the Submit button
+PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851
     [Setup]    log in as user    &{lead_applicant_credentials}
     Given the user clicks the button/link    link=00000001: best riffs
     And the user clicks the button/link    link=Grant offer letter
+    When the lead uploads a grant offer letter    ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    And the user goes back to the previous page
+
+PM should be able upload a file and then access the Submit button
+    [Documentation]    INFUND-4851
+    [Tags]
+    [Setup]
+    #TO DO remove the comment from the last check when the infund-5567 is ready
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
-    And the Grant offer submit button should be enabled
+    #And the Grant offer submit button should be enabled
 
-When the Grant Offer Letter is submitted the Dashboard should be updated
+PM can view the upload Grant Offer file
+    [Documentation]    INFUND-4851
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+
+PM Submits the Grant Offer letter
     [Documentation]    INFUND-4851
     When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
     and the user clicks the button/link    jQuery=button:contains("Confirm Submission")
-    Then the user should see the element
+    Then the user should see the element    css=li.complete:nth-child(8)
+    [Teardown]
+
+PM's dashboard should be updated
+    [Documentation]    INFUND-4851
+    [Tags]    Pending
+    #TODO Pending INFUND-5584
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
+    [Teardown]    logout as user
+
+Internal Dashboard should be updated
+    [Documentation]    INFUND-4851
+    [Tags]    Pending
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    #TODO Pending INFUND-5584
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 *** Keywords ***
 the lead uploads a grant offer letter

@@ -19,22 +19,21 @@
 
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="filterSearch">Keywords</label>
-                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-                        </div>
-
-                    </div>
-
-                    <div class="column-half">
                         <div th:if="${filterType}" class="form-group">
                             <label class="form-label" for="filterType">Type</label>
                             <select class="form-control" id="filterType" name="filterType">
-                                    <option selected="selected">---</option>
-                                    <option value="Industry">Industry</option>
-                                    <option value="Academic">Academic</option>
-                                    <option value="International">International</option>
+                                <option selected="selected">---</option>
+                                <option value="Industry">Industry</option>
+                                <option value="Academic">Academic</option>
+                                <option value="International">International</option>
                             </select>
+                        </div>
+
+                    </div>
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label" for="filterSearch">Keywords</label>
+                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                         </div>
                         <div class="column-half extra-margin">
                             <a href="#">Clear all filters</a>
@@ -116,7 +115,6 @@
     </div>
 </div>
 
-
 <!-- =========================== Application list table =========================== -->
 <div th:fragment="prototype-application-list-table">
     <div class="table-overflow">
@@ -127,7 +125,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Innovation Area</th>
                     <th scope="col">Lead Organisation</th>
-                    <th scope="col">Assigned Assessors</th>
+                    <th class="aligncentre" scope="col">Assigned Assessors</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -137,7 +135,7 @@
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Wessex University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -147,7 +145,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Plymouth University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -157,7 +155,7 @@
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Horizon Ltd</td>
-                    <td>0</td>
+                    <td class="aligncentre">0</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -167,7 +165,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Zodiac Industries Ltd</td>
-                    <td>5</td>
+                    <td class="aligncentre">5</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -177,7 +175,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Durham University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -420,42 +418,42 @@
             <thead>
                 <tr>
                     <th scope="col">Application</th>
-                    <th scope="col">Assessors</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>0</td>
+                    <td class="aligncentre">0</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                    <td>2</td>
+                    <td class="aligncentre">2</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>3</td>
+                    <td class="aligncentre">3</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>4</td>
+                    <td class="aligncentre">4</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -473,11 +471,10 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Employer</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation Area</th>
-                    <th scope="col">Total applications</th>
-                    <th scope="col">Applications this competition</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Applications this competition</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -487,7 +484,6 @@
                 </tr>
                 <tr id="assessor-assigned">
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
@@ -500,7 +496,6 @@
             <tbody th:if="${type == 'available'}">
                 <tr id="assessor-available">
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">5</td>
@@ -511,7 +506,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">9</td>
@@ -522,7 +516,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
                     <td class="aligncentre">20</td>
@@ -533,7 +526,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
                     <td class="aligncentre">15</td>
@@ -544,7 +536,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">9</td>
@@ -555,7 +546,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">10</td>
@@ -576,7 +566,6 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Employer</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation Area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
@@ -590,7 +579,6 @@
             <tbody>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">4</td>
@@ -604,7 +592,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">6</td>
@@ -618,7 +605,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
                     <td class="aligncentre">5</td>
@@ -632,7 +618,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
                     <td class="aligncentre">9</td>
@@ -646,7 +631,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">4</td>
@@ -660,7 +644,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">9</td>
@@ -754,7 +737,6 @@
     </div>
 </div>
 
-
 <!-- =========================== Assessors list 5 table =========================== -->
 <div th:fragment="prototype-assessors-list5-table">
     <div class="table-overflow">
@@ -842,4 +824,75 @@
         </table>
     </div>
 </div>
+
+<!-- =========================== Assessors list 6 table =========================== -->
+<div th:fragment="prototype-assessors-list6-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">Assessor</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation Area</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td>Academic</td>
+                    <td>Healthcare, Regenerative medicine</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">4</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <td>Business</td>
+                    <td>Analytical science</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <td>Academic</td>
+                    <td>Architectures and operating system</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp;amp; photonics, Materials</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <td>Business</td>
+                    <td>Biophysics and soft matter physics</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </html>
