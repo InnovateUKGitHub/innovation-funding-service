@@ -25,6 +25,7 @@ Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
@@ -104,8 +105,9 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]    Email
+    [Tags]    Email    Pending
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    #TODO Pending INFUND-5218
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are within the required range

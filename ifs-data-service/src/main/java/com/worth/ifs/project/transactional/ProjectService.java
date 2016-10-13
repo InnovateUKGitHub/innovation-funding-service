@@ -3,16 +3,16 @@ package com.worth.ifs.project.transactional;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-
-import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -41,12 +41,12 @@ public interface ProjectService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findAll();
 
-    @PreAuthorize("hasAuthority('comp_admin')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin is able to create a project (by making decision)" )
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a project (by making decision)" )
     ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin is able to create a projects (by making decisions)" )
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
@@ -64,10 +64,10 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
-    @PreAuthorize("hasPermission(#inviteResource, 'INVITE_FINANCE_CONTACT')")
+    @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
-    @PreAuthorize("hasPermission(#inviteResource, 'INVITE_PROJECT_MANAGER')")
+    @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
@@ -133,7 +133,7 @@ public interface ProjectService {
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ADD_PARTNER",
             description = "The System Registration user can add a partner to a project")
-    ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
+    ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);

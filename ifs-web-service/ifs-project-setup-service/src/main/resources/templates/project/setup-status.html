@@ -93,7 +93,7 @@
 
       <!--/* ========================= Spend Profile ========================= */-->
 
-      <li>
+      <li th:classappend="${model.spendProfileSubmitted ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
 
@@ -126,10 +126,10 @@
       </li>
       <!--/* ========================= GOL ========================= */-->
 
-      <li>
+      <li th:classappend="${model.grantOfferLetterSubmitted ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium">Grant offer letter</h2>
+          <h2 class="heading-medium"><a th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a></h2>
           <p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
         </div>
       </li>

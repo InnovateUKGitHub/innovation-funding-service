@@ -18,6 +18,7 @@ import java.util.List;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static javax.persistence.EnumType.STRING;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -36,7 +37,7 @@ public class User implements Serializable {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private UserStatus status;
 
     @Column(unique = true)
@@ -60,15 +61,21 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Gender gender;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Disability disability;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private Profile profile;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<Affiliation> affiliations = new ArrayList<>();
 
     public User() {
         // no-arg constructor
@@ -174,8 +181,7 @@ public class User implements Serializable {
         }
 
         stringBuilder
-                .append(lastName)
-                .toString();
+                .append(lastName);
 
         return stringBuilder.toString();
     }
@@ -271,5 +277,23 @@ public class User implements Serializable {
 
     public void setEthnicity(Ethnicity ethnicity) {
         this.ethnicity = ethnicity;
+    }
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+        if (profile != null) {
+            profile.setUser(this);
+        }
+    }
+
+    public List<Affiliation> getAffiliations() {
+        return affiliations;
+    }
+
+    public void setAffiliations(List<Affiliation> affiliations) {
+        this.affiliations = affiliations;
     }
 }

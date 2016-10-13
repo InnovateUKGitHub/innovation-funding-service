@@ -9,7 +9,10 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-2417 As a collaborator I want to be able to review the grant Terms and Conditions so that the lead applicant can agree to them on my behalf
 ...
 ...               INFUND-3016 As a collaborator I want to mark my finances as complete so the lead can progress with submitting the application.
+...
 ...               INFUND-3288: Assigning questions more than once leads to an internal server error
+...
+...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
@@ -18,6 +21,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Lead applicant can assign a question
@@ -26,6 +30,7 @@ Lead applicant can assign a question
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
@@ -75,7 +80,7 @@ Collaborator should see the review button instead of the review and submit
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link=Assign test
     Then the user should not see the element    jQuery=.button:contains("Review & submit")
     And the user clicks the button/link    jQuery=.button:contains("Review")
     And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
@@ -125,7 +130,6 @@ Collaborator cannot edit after marking ready for review
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    #When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the element    css=#form-input-12 .readonly
     [Teardown]
 
@@ -183,12 +187,11 @@ Lead marks finances as complete and collaborator should be able to edit them
     [Tags]    Email
     [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
-    #Given the user navigates to the page    ${DASHBOARD_URL}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     And the user enters the funding level
-    And the user selects the checkbox       id=agree-terms-page
-    And the user selects the checkbox       id=agree-state-aid-page
+    And the user selects the checkbox    id=agree-terms-page
+    And the user selects the checkbox    id=agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again
@@ -215,11 +218,26 @@ The question is disabled on the summary page for other collaborators
     And the user should not see the element    jQuery=button:contains("Ready for review")
     [Teardown]    the user closes the browser
 
+Lead applicant should be able to remove the registered partner
+    [Documentation]    INFUND-4806
+    [Tags]    Pending
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    #TODO INFUND-5461
+    Given the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
+    And the user clicks the button/link    jQuery=button:contains("Remove")
+    Then the user should not see the element    link=Dennis Bergkamp
+    Capture Page Screenshot
+    #The following steps check if the collaborator should not see the application in the dashboard page
+    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
+    And the user should not see the element    link= Assign test
+
 *** Keywords ***
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
-    Input Text    css=#form-input-12 .editor    collaborator's text
+    The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
     sleep    1s
     sleep    1s

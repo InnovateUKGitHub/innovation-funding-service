@@ -6,10 +6,12 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,23 +50,47 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime documentsSubmittedDate;
 
+    private LocalDateTime offerSubmittedDate;
+
+    private LocalDateTime spendProfileSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
     private FileEntry collaborationAgreement;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    @OneToOne
+    @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
+    private FileEntry signedGrantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry grantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry additionalContractFile;
+
+    @NotNull
+    private boolean offerRejected;
+
     private Boolean otherDocumentsApproved;
+
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpendProfile> spendProfiles;
+
 
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
                    Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
+
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -177,6 +203,14 @@ public class Project implements ProcessActivity {
         this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
+    }
+
     public FileEntry getCollaborationAgreement() {
         return collaborationAgreement;
     }
@@ -193,11 +227,59 @@ public class Project implements ProcessActivity {
         this.exploitationPlan = exploitationPlan;
     }
 
+    public FileEntry getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(FileEntry signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
+    }
+
+    public FileEntry getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(FileEntry additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
     public Boolean getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
     public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
+    public LocalDateTime getSpendProfileSubmittedDate() {
+        return spendProfileSubmittedDate;
+    }
+
+    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+        this.spendProfileSubmittedDate = spendProfileSubmittedDate;
+    }
+
+    public List<SpendProfile> getSpendProfiles() {
+        return spendProfiles;
+    }
+
+    public void setSpendProfiles(List<SpendProfile> spendProfiles) {
+        this.spendProfiles = spendProfiles;
     }
 }

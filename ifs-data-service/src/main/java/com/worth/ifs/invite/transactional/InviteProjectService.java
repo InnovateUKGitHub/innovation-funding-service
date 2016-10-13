@@ -16,7 +16,7 @@ public interface InviteProjectService {
 
 
     @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")
-    ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);
+    ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);
 
     @PostFilter("hasPermission(filterObject, 'READ_PROJECT_INVITE')")
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);

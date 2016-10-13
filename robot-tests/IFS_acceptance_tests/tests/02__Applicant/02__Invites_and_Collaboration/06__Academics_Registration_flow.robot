@@ -2,12 +2,13 @@
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Failing
+Force Tags        Applicant    failing
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Academic organisations search
@@ -59,7 +60,7 @@ Accept invitation as academic
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
     And If the user goes to the previous page he should redirect to the login page
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Passw0rd123
     When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}

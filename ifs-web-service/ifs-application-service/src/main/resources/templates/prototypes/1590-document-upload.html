@@ -35,14 +35,14 @@
 	</th:block>
 	
 	<th:block th:if="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'submitted' and param.user != null and param.user[0] == 'nonLead'}">
-		<p>The documents submitted below are now being reviewed. We will contact the project manager if we need any further information.</p>
+		<p>The documents submitted below are now being reviewed. We will contact the Project Manager if we need any further information.</p>
 	</th:block>
 
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
 		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
 			<div class="warning-alert extra-margin-bottom">
-				<h3 class="heading-small no-margin-top">These documents have been returned as they have not been approved. A member of Innovate UK should be in contact to discuss their requirements</h3>
+				<h3 class="heading-small no-margin-top">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h3>
 			</div>
 		</div>
 
@@ -191,6 +191,14 @@
 
 		</fieldset>
 
+		<div th:if="${param.user != null and param.user[0] == 'nonLead'}">
+
+			<p>The Project Manager must upload both documents for submission. We will contact the Project Manager if we have any queries.</p>
+
+			<a href="#" class="button button-large disabled">Submit partner documents</a>
+
+		</div>
+
 		<div th:if="${param.user == null and param.status == null or param.user == null and param.status != null and param.status[0] == 'reject'}">
 
 			<p>Once you have uploaded these documents, they must be submitted to Innovate UK for review. We will contact you if we need clarification.</p>
@@ -203,7 +211,7 @@
 
 					<h2 class="heading-medium no-margin">Submit documents</h2>
 
-					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the project manager.</p>
+					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the Project Manager.</p>
 
 					<hr />
 

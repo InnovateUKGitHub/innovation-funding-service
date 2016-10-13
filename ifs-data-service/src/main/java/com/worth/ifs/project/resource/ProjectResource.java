@@ -19,10 +19,16 @@ public class ProjectResource {
     private AddressResource address;
     private String name;
     private LocalDateTime documentsSubmittedDate;
+    private LocalDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
+    private Long signedGrantOfferLetter;
+    private Long grantOfferLetter;
+    private Long additionalContractFile;
+    private boolean offerRejected;
     private Boolean otherDocumentsApproved;
+    private LocalDateTime spendProfileSubmittedDate;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -30,6 +36,11 @@ public class ProjectResource {
     @JsonIgnore
     public boolean isPartnerDocumentsSubmitted(){
         return documentsSubmittedDate != null;
+    }
+
+    @JsonIgnore
+    public boolean isOfferSubmitted(){
+        return offerSubmittedDate != null;
     }
 
     public Long getId() {
@@ -101,6 +112,14 @@ public class ProjectResource {
         this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
+    }
+
     public Long getCollaborationAgreement() {
         return collaborationAgreement;
     }
@@ -117,11 +136,51 @@ public class ProjectResource {
         this.exploitationPlan = exploitationPlan;
     }
 
+    public Long getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(Long signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
+    }
+
+    public Long getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(Long additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
+    }
+
+    public Long getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(Long grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
     public Boolean getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
     public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
+    public LocalDateTime getSpendProfileSubmittedDate() {
+        return spendProfileSubmittedDate;
+    }
+
+    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+        this.spendProfileSubmittedDate = spendProfileSubmittedDate;
     }
 }

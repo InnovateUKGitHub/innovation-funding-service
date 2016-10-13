@@ -31,7 +31,7 @@
 			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
 		</div>
 
-		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project set up and will soon be able to complete the process.</p>
+		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
@@ -44,15 +44,15 @@
 	</th:block>
 
 	<th:block th:if="${param.status == null}">
-		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project set up.</p>
+		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-		<p>The Grant offer letter is now available to the project team for review, Innovate UK are awaiting receipt of a signed grant offer letter</p>
+		<p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLDecision'}">
-		<p>Please review the Grant offer letter to confirm that this has been signed by the lead partner and the project is ready to begin.</p>
+		<p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
 	</th:block>
 
 	<div class="upload-section unstyled-view">
@@ -60,7 +60,7 @@
 
 		<th:block th:if="${param.status == null}">
 		
-			<p>The grant offer letter has been created from the information supplied by the applicants.</p>
+			<!--<p>The grant offer letter has been created from the information supplied by the applicants.</p>-->
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
 				<a href="#">Grant offer letter 2016-04-28a.PDF</a> 
@@ -103,7 +103,7 @@
     <th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
 		<div class="upload-section unstyled-view">
 			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
-			<p><strong>Awaiting upload by project manager</strong></p>
+			<p><strong>Awaiting upload by the Project Manager</strong></p>
 		</div>
 	</th:block>
 
@@ -145,7 +145,7 @@
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
 			
 		<h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
-		<p>If the grant offer letter has been received by post, please indicate that it has been received for review.</p>
+		<p>If the grant offer letter has been received by post, please tick the box below.</p>
 
 		<div class="form-group">
 	    	<label class="block-label" for="gol-by-post">

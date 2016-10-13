@@ -2,29 +2,21 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-
-import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
@@ -94,6 +86,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testProjectFinanceUserCanAcceptOrRejectOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testProjectFinanceUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();
@@ -116,34 +122,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         setupUserAsLeadPartner(project, user);
 
         assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
-    }
-
-    private void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
-        setupLeadPartnerExpectations(project, user, true);
-    }
-
-    private void setupUserNotAsLeadPartner(ProjectResource project, UserResource user) {
-        setupLeadPartnerExpectations(project, user, false);
-    }
-
-    private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
-
-        Application originalApplication = newApplication().build();
-        Project projectEntity = newProject().withApplication(originalApplication).build();
-        Role leadApplicantRole = newRole().build();
-        Role partnerRole = newRole().build();
-        Organisation leadOrganisation = newOrganisation().build();
-        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
-
-        // find the lead organisation
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
-
-        // see if the user is a partner on the lead organisation
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
-                project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
 
     @Test
@@ -464,7 +442,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewTeamStatus(project, user));
     }
-
     @Test
     public void testCompAdminsCanViewTeamStatus(){
         ProjectResource project = newProjectResource().build();
@@ -475,48 +452,5 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     public void testProjectFinanceUserCanViewTeamStatus(){
         ProjectResource project = newProjectResource().build();
         assertTrue(rules.projectFinanceUserCanViewTeamStatus(project, projectFinanceUser()));
-    }
-
-    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
-        List<ProjectUser> projectManagerUser = newProjectUser().build(1);
-
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
-                .thenReturn(projectManagerUser);
-    }
-
-    private void setupUserAsPartner(ProjectResource project, UserResource user) {
-        setupPartnerExpectations(project, user, true);
-    }
-
-    private void setupUserNotAsPartner(ProjectResource project, UserResource user) {
-        setupPartnerExpectations(project, user, false);
-    }
-
-    private void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
-        List<RoleResource> compAdminRoleResource = newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1);
-        user.setRoles(compAdminRoleResource);
-    }
-
-    private void setUpUserNotAsCompAdmin(ProjectResource project, UserResource user) {
-        List<RoleResource> compAdminRoleResource = emptyList();
-        user.setRoles(compAdminRoleResource);
-    }
-
-    private void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
-        user.setRoles(projectFinanceUser);
-    }
-
-    private void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = emptyList();
-        user.setRoles(projectFinanaceUser);
-    }
-
-    private void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
-        Role partnerRole = newRole().build();
-        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 }

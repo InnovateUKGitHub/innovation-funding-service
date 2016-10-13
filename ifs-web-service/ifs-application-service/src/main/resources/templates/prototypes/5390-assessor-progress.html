@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor progress'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage Applications'}, ${'/prototypes/5470-manage-applications'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle">Technology inspired, (12345A)</p>
+	<h1 class="heading-xlarge no-margin">Assessor progress</h1>
+
+	<h2 class="heading-large no-margin">John Smith</h2>
+
+	<h3 class="heading-medium">Innovation area and skills</h3>
+
+	<div class="grid-row">
+		<div class="column-quarter">
+			<h4 class="heading-small no-margin">Innovation area</h4>
+			<ul>
+				<li>Advanced materials</li>
+				<li>Biosciences</li>
+				<li>Materials</li>
+			</ul>
+		</div>
+		<div class="column-quarter">
+			<h4 class="heading-small no-margin">Type</h4>
+			<p>Business</p>
+			<h4 class="heading-small">Principle employer</h4>
+			<p>ASDF Solutions</p>
+		</div>
+	</div>
+	<p>
+		<span class="heading-large">5</span> Total applications
+	</p>
+
+	<h2 class="heading-medium">Assigned(2)</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list3-table" th:remove="tag" />
+
+	<h2 class="heading-medium">Rejected(1)</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list4-table" th:remove="tag" />
+
+	<h2 class="heading-medium">Applications</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=true,sortByType=6" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list5-table" th:remove="tag" />
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

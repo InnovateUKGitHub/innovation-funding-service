@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
@@ -11,6 +12,7 @@ import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.rest.ErrorControllerAdvice;
 import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,6 +23,7 @@ import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -291,7 +294,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of testing a Controller method for simple getting of a file's details (a FileEntryResource)
      */
-    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
         FileEntryResource fileToReturn = newFileEntryResource().
                 with(id(456L)).
@@ -300,7 +303,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 withMediaType("text/plain").
                 build();
 
-        when(getFileFn.apply(serviceToCall, fileToReturn)).thenReturn(serviceSuccess(fileToReturn));
+        when(getFileFn.apply(serviceToCall)).thenReturn(serviceSuccess(fileToReturn));
 
         MockHttpServletRequestBuilder mainRequest = get(url, urlParams).
                 header("IFS_AUTH_TOKEN", "123abc");
@@ -310,7 +313,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(fileToReturn)));
 
-        getFileFn.apply(verify(serviceToCall), fileToReturn);
+        getFileFn.apply(verify(serviceToCall));
 
         return resultActions;
     }
@@ -339,14 +342,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of testing a Controller method for simple getting of a file's contents (binary data)
      */
-    protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileAndContents>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<FileAndContents>> getFileFn) throws Exception {
 
         FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
 
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
         FileAndContents getResult = new BasicFileAndContents(expectedFileEntryResource, inputStreamSupplier);
-        when(getFileFn.apply(serviceToCall, expectedFileEntryResource)).thenReturn(serviceSuccess(getResult));
+        when(getFileFn.apply(serviceToCall)).thenReturn(serviceSuccess(getResult));
 
         MockHttpServletRequestBuilder mainRequest = get(url, urlParams).
                 header("IFS_AUTH_TOKEN", "123abc");
@@ -532,5 +535,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations() {
         return fileUploadInputStreamExpectations(dummyFileContent);
+    }
+
+    protected static void login(UserResource userResource) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));
     }
 }

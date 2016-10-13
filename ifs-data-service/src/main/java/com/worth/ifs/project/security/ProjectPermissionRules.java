@@ -1,11 +1,11 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
@@ -43,20 +43,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "The lead partner can update the basic project details like start date")
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "INVITE_FINANCE_CONTACT",
-            description = "A partner can invite a member of their organisation to become a finance contact")
-    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteProjectResource invite, UserResource user) {
-        return isSpecificProjectPartnerByApplicationId(invite.getApplicationId(), invite.getInviteOrganisation(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "INVITE_PROJECT_MANAGER",
-            description = "A partner can invite a member of their organisation to become a project manager")
-    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(InviteProjectResource invite, UserResource user) {
-        return isSpecificProjectPartnerByApplicationId(invite.getApplicationId(), invite.getInviteOrganisation(), user.getId());
     }
 
     @PermissionRule(
@@ -157,6 +143,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "Competition Admin can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
     public boolean competitionAdminCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
+            description = "Project finance user can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean projectFinanceUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

@@ -7,9 +7,10 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.finance.domain.FinanceRow;
@@ -20,6 +21,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -56,6 +58,10 @@ public final class ParameterizedTypeReferences {
      * IFS types
      */
 
+    public static ParameterizedTypeReference<List<AffiliationResource>> affiliationResourceListType() {
+        return new ParameterizedTypeReference<List<AffiliationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
@@ -78,6 +84,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionSearchResultItem>> competitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
     }
 
     public static ParameterizedTypeReference<List<CategoryResource>> categoryResourceListType() {
@@ -110,6 +120,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteOrganisationResource>> inviteOrganisationResourceListType() {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
+        return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FinanceRow>> costListType() {

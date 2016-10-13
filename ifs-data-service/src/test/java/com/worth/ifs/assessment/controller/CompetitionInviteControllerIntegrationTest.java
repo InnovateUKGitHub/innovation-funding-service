@@ -55,7 +55,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Before
     public void setup() {
-        setLoggedInUser(getSystemRegistrationUser());
+        loginSystemRegistrationUser();
 
         competition = competitionRepository.findOne(1L);
     }
@@ -204,7 +204,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUser(newUser().withId(1L))
                 .build());
         assertTrue(controller.openInvite("hash").isSuccess());
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isFailure());
@@ -230,7 +230,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build());
 
         assertTrue(controller.openInvite("hash").isSuccess());
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
@@ -255,7 +255,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build());
         assertTrue(controller.openInvite("hash").isSuccess());
 
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
 
@@ -279,12 +279,11 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withId(getPaulPlum().getId()))
                 .build());
 
         assertTrue(controller.openInvite("hash").isSuccess());
 
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
@@ -292,7 +291,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_hashNotExists() throws Exception {
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
         RestResult<Void> serviceResult = controller.acceptInvite("hash not exists");
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
@@ -315,7 +314,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .build())
                 .build());
 
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
 
@@ -347,7 +346,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
         assertTrue(serviceResult.isSuccess());
 
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
         RestResult<Void> acceptResult = controller.acceptInvite("hash");
 
         assertTrue(acceptResult.isFailure());
@@ -420,7 +419,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build());
         controller.openInvite("hash");
 
-        setLoggedInUser(getPaulPlum());
+        loginPaulPlum();
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
@@ -428,7 +427,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         CompetitionRejectionResource competitionRejectionResource =
                 new CompetitionRejectionResource(newRejectionReasonResource().withId(1L).build(), "too busy");
 
-        setLoggedInUser(getSystemRegistrationUser());
+        loginSystemRegistrationUser();
         RestResult<Void> rejectResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(rejectResult.isFailure());

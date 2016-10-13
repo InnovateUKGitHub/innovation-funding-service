@@ -18,13 +18,14 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean otherDocumentsSubmitted;
     private List<String> partnerOrganisationNames;
     private List<String> rejectionReasons;
+    private boolean approvalDecisionMade;
     private boolean approved;
     private boolean leadPartner;
     private boolean submitAllowed;
     private LocalDateTime submitDate;
 
     public ProjectOtherDocumentsViewModel(Long projectId, String projectName, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean submitAllowed, LocalDateTime submitDate) {
+                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean approvalDecisionMade, boolean submitAllowed, LocalDateTime submitDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
@@ -33,6 +34,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.rejectionReasons = rejectionReasons;
         this.approved = otherDocumentsApproved;
+        this.approvalDecisionMade = approvalDecisionMade;
         this.leadPartner = leadPartner;
         this.submitAllowed = submitAllowed;
         this.submitDate = submitDate;
@@ -64,15 +66,21 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isEditable() {
-        return leadPartner && !otherDocumentsSubmitted && !approved;
+        return leadPartner && !otherDocumentsSubmitted && !approvalDecisionMade;
     }
 
     public boolean isShowSubmitDocumentsButton() {
-        return leadPartner && !otherDocumentsSubmitted;
+        return leadPartner && !otherDocumentsSubmitted && submitAllowed;
     }
+
+    public boolean isShowDisabledSubmitDocumentsButton() { return !otherDocumentsSubmitted && !submitAllowed; }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();
+    }
+
+    public boolean isShowGenericRejectionMessage() {
+        return !isShowRejectionMessages() && approvalDecisionMade && !approved;
     }
 
     public List<String> getRejectionReasons() {
@@ -80,7 +88,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowApprovedMessage() {
-        return approved;
+        return approvalDecisionMade && approved;
     }
 
     public boolean isLeadPartner(){
@@ -92,7 +100,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowDocumentsBeingReviewedMessage() {
-        return otherDocumentsSubmitted && !approved;
+        return otherDocumentsSubmitted && !approvalDecisionMade;
     }
 
     public boolean isSubmitAllowed() {
@@ -102,4 +110,5 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     public LocalDateTime getSubmitDate() {
         return submitDate;
     }
+
 }

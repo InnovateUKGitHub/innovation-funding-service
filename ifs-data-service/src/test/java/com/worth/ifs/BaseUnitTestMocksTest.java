@@ -50,10 +50,7 @@ import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
-import com.worth.ifs.invite.mapper.CompetitionParticipantMapper;
-import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
-import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
-import com.worth.ifs.invite.mapper.RejectionReasonMapper;
+import com.worth.ifs.invite.mapper.*;
 import com.worth.ifs.invite.repository.*;
 import com.worth.ifs.invite.transactional.EthnicityService;
 import com.worth.ifs.invite.transactional.InviteProjectService;
@@ -70,6 +67,7 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.users.ProjectUsersHelper;
@@ -77,14 +75,12 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
-import com.worth.ifs.user.transactional.PasswordPolicyValidator;
-import com.worth.ifs.user.transactional.RegistrationService;
-import com.worth.ifs.user.transactional.RoleService;
-import com.worth.ifs.user.transactional.UserService;
+import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -96,6 +92,9 @@ import org.mockito.MockitoAnnotations;
  * annotation.
  */
 public abstract class BaseUnitTestMocksTest extends BaseTest {
+
+    @Mock
+    protected AffiliationMapper affiliationMapperMock;
 
     @Mock
     protected AlertService alertServiceMock;
@@ -203,6 +202,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected NotificationService notificationServiceMock;
 
     @Mock
+    protected InviteProjectMapper inviteProjectMapperMock;
+
+    @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
 
     @Mock
@@ -249,6 +251,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserService userServiceMock;
+
+    @Mock
+    protected UserProfileService userProfileServiceMock;
 
     @Mock
     protected FinanceRowRepository financeRowRepositoryMock;
@@ -309,6 +314,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected ProjectGrantOfferService projectGrantOfferServiceMock;
 
     @Mock
     protected ProjectStatusService projectStatusServiceMock;

@@ -14,6 +14,9 @@
 	text-align: left;
 }
 
+.alignright{
+	text-align: right;
+}
 /*--- Text colour ---*/
 
 .standard-text-colour{
@@ -47,6 +50,27 @@
 		margin-top: 30px;
 	}
 }
+
+/*-- Setting percentage widths --*/
+
+$columns: 20;
+
+@for $i from 1 through $columns{
+	.width-#{$i * 5}-percent{
+		width: ($i * 5) * 1%;
+		box-sizing: border-box;
+		padding-right: 1em;
+	}
+	
+	@include media-down(mobile) {
+		.width-#{$i * 5}-percent{
+			width: 100%;
+		}
+	}
+
+}
+
+
 
 /*--- Dark headers ---*/
 
@@ -168,22 +192,34 @@ table{
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
-	#content{
+
+	#global-header{
+		.header-wrapper{
+			max-width: 95%;
+			//min-width: 960px;
+		}
+	}
+
+	.grid-container{
 		max-width: 95%;
-		min-width: 960px;
+		//min-width: 960px;
+	}
+
+	#content{
+
+		max-width: 95%;
+		//min-width: 960px;
 
 		@include media-down(tablet){
-			min-width: 90%;
+			//min-width: 90%;
 		}
 
-		.phase-banner,
-		.sub-header,
-		.hgroup,
-		.centralise,
-		.user-feedback,
-		.inline-nav{
-			@extend %site-width-container;
-  			@extend %contain-floats;
+		//.phase-banner,
+		//.sub-header,
+		//.hgroup,
+		.centralise{
+			//@extend %site-width-container;
+  			//@extend %contain-floats;
   			box-sizing: border-box;
 		}
 
@@ -200,6 +236,7 @@ table{
 }
 
 /*--- Contrain areas within full width layout ---*/
+
 .full-width{
 	.constrain-width{
 		max-width: 1400px;

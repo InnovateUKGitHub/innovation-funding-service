@@ -2,11 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.form.AssessorRegistrationDeclarationForm;
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
-import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
-import com.worth.ifs.assessment.form.AssessorRegistrationTermsForm;
-import com.worth.ifs.assessment.model.*;
+import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationBecomeAnAssessorModelPopulator;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -14,11 +12,15 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.EthnicityResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static java.lang.String.format;
 
 /**
  * Controller to manage Assessor Registration.
@@ -38,6 +41,7 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldE
 @Controller
 @RequestMapping("/registration")
 public class AssessorRegistrationController {
+    private static final Log LOG = LogFactory.getLog(AssessorRegistrationController.class);
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -54,16 +58,14 @@ public class AssessorRegistrationController {
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
-    private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
+    private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
+
+    private Validator validator;
 
     @Autowired
-    private AssessorRegistrationSkillsModelPopulator assessorSkillsModelPopulator;
-
-    @Autowired
-    private AssessorRegistrationDeclarationModelPopulator assessorRegistrationDeclarationModelPopulator;
-
-    @Autowired
-    private AssessorRegistrationTermsModelPopulator assessorRegistrationTermsModelPopulator;
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -87,49 +89,72 @@ public class AssessorRegistrationController {
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
+        addSelectedAddress(registrationForm);
+        validateAddressForm(registrationForm, bindingResult);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/registration/skills");
+                    failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
         });
     }
 
-    @RequestMapping(value = "skills", method = RequestMethod.GET)
-    public String getSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
-        model.addAttribute("model", assessorSkillsModelPopulator.populateModel());
-        return "registration/innovation-areas";
+    @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)
+    public String manualAddress(Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                @PathVariable("inviteHash") String inviteHash) {
+        registrationForm.setAddressForm(new AddressForm());
+        registrationForm.getAddressForm().setManualAddress(true);
+
+        return doViewYourDetails(model, inviteHash);
     }
 
-    @RequestMapping(value = "skills", method = RequestMethod.POST)
-    public String submitSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
-        return "redirect:/registration/declaration";
+    @RequestMapping(value = "/{inviteHash}/register", params = "search-address", method = RequestMethod.POST)
+    public String searchAddress(Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                @PathVariable("inviteHash") String inviteHash,
+                                BindingResult bindingResult, ValidationHandler validationHandler) {
+
+        Supplier<String> view = () -> doViewYourDetails(model, inviteHash);
+
+        addAddressOptions(registrationForm);
+        registrationForm.getAddressForm().setTriedToSearch(true);
+
+        if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
+            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcode.required");
+        }
+
+        return validationHandler.failNowOrSucceedWith(view, view);
     }
 
-    @RequestMapping(value = "declaration", method = RequestMethod.GET)
-    public String getDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationDeclarationForm form) {
-        model.addAttribute("model", assessorRegistrationDeclarationModelPopulator.populateModel());
-        return "registration/declaration-of-interest";
+    @RequestMapping(value = "/{inviteHash}/register", params = "select-address", method = RequestMethod.POST)
+    public String selectAddress(Model model,
+                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                @PathVariable("inviteHash") String inviteHash) {
+        addAddressOptions(registrationForm);
+        addSelectedAddress(registrationForm);
+
+        return doViewYourDetails(model, inviteHash);
     }
 
-    @RequestMapping(value = "declaration", method = RequestMethod.POST)
-    public String submitDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationDeclarationForm form) {
-        return "redirect:/registration/terms";
+    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
+        if (postcodeIsSelected(assessorRegistrationForm)) {
+            validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
+        } else {
+            FieldError fieldError = new FieldError("address", "address", "Please enter your address details");
+            bindingResult.addError(fieldError);
+        }
+        assessorRegistrationForm.getAddressForm().setTriedToSave(true);
     }
 
-    @RequestMapping(value = "terms", method = RequestMethod.GET)
-    public String getTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationTermsForm form) {
-        model.addAttribute("model", assessorRegistrationTermsModelPopulator.populateModel());
-        return "registration/terms";
+    private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
+        if (assessorRegistrationForm.getAddressForm() == null) {
+            return false;
+        }
+        return assessorRegistrationForm.getAddressForm().getSelectedPostcode() != null;
     }
-
-    @RequestMapping(value = "terms", method = RequestMethod.POST)
-    public String submitTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationTermsForm form) {
-        return "redirect:/assessor/dashboard";
-    }
-
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
@@ -138,6 +163,22 @@ public class AssessorRegistrationController {
             addressForm.setPostcodeInput(registrationForm.getAddressForm().getPostcodeInput());
             registrationForm.setAddressForm(addressForm);
         }
+    }
+
+    private void addSelectedAddress(AssessorRegistrationForm registrationForm) {
+        AddressForm addressForm = registrationForm.getAddressForm();
+        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex())) {
+            try {
+                AddressResource selectedAddress = new AddressResource();
+                selectedAddress = addressForm.getPostcodeOptions().get(
+                        Integer.parseInt(
+                                addressForm.getSelectedPostcodeIndex()));
+                addressForm.setSelectedPostcode(selectedAddress);
+            } catch (IndexOutOfBoundsException e) {
+                LOG.info(e);
+            }
+        }
+
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {

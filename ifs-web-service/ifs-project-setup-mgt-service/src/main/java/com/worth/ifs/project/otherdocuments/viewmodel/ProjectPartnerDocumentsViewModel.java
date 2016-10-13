@@ -12,6 +12,8 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
 
     private Long projectId;
     private String projectName;
+    private Long competitionId;
+
     private FileDetailsViewModel collaborationAgreementFileDetails;
     private FileDetailsViewModel exploitationPlanFileDetails;
     private List<String> partnerOrganisationNames;
@@ -23,12 +25,13 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
 
     private Boolean approved;
 
-    public ProjectPartnerDocumentsViewModel(Long projectId, String projectName, String leadPartnerOrganisationName, String projectManagerName,
+    public ProjectPartnerDocumentsViewModel(Long projectId, String projectName, Long competitionId, String leadPartnerOrganisationName, String projectManagerName,
                                             String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
                                             FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, Boolean approved
                                           ) {
         this.projectId = projectId;
         this.projectName = projectName;
+        this.competitionId = competitionId;
         this.leadPartnerOrganisationName = leadPartnerOrganisationName;
         this.projectManagerName = projectManagerName;
         this.projectManagerTelephone = projectManagerTelephone;
@@ -47,6 +50,10 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
     @Override
     public String getProjectName() {
         return projectName;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
     public FileDetailsViewModel getCollaborationAgreementFileDetails() {
@@ -72,5 +79,7 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
     public Boolean isApproved() {
         return approved;
     }
+
+    public boolean isShowApproveRejectButtons() { return approved != null && approved; }
 
 }

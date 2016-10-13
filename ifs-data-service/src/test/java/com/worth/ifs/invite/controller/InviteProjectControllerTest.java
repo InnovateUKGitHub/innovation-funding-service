@@ -57,33 +57,31 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
     public void saveProjectInviteWhenErrorWhilstSaving() throws Exception {
 
 
-        when(inviteProjectServiceMock.saveFinanceContactInvite(inviteProjectResource)).
+        when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).
                 thenReturn(serviceFailure(badRequestError("The Invite is not valid")));
 
 
-        mockMvc.perform(put("/projectinvite/save-finance-contact-invite")
+        mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteProjectResource)))
                 .andExpect(status().isBadRequest());
 
-        verify(inviteProjectServiceMock).saveFinanceContactInvite(inviteProjectResource);
+        verify(inviteProjectServiceMock).saveProjectInvite(inviteProjectResource);
         
     }
 
     @Test
     public void saveProjectInviteSuccess() throws Exception {
 
+        when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
 
-        when(inviteProjectServiceMock.saveFinanceContactInvite(inviteProjectResource)).thenReturn(serviceSuccess());
 
-
-        mockMvc.perform(put("/projectinvite/save-finance-contact-invite")
+        mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteProjectResource)))
                 .andExpect(status().isOk());
 
-        verify(inviteProjectServiceMock).saveFinanceContactInvite(inviteProjectResource);
-
+        verify(inviteProjectServiceMock).saveProjectInvite(inviteProjectResource);
 
     }
 
@@ -174,7 +172,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
         when(inviteProjectServiceMock.acceptProjectInvite(hash,userId)).
                 thenReturn(serviceFailure(new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE)));
 
-        mockMvc.perform(post("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isNotAcceptable());
 
@@ -190,7 +188,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         when(inviteProjectServiceMock.acceptProjectInvite(hash,userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 

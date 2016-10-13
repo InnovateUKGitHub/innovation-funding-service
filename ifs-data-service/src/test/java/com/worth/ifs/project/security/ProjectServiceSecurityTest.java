@@ -7,8 +7,8 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -113,7 +113,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
 
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonCompAdminRoles.forEach(role -> {
@@ -166,46 +166,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
-    }
-
-    @Test
-    public void testInviteProjectManager() {
-
-        Long projectId = 1L;
-
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
-                .withName("Abc Xyz")
-                .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
-                .withInviteOrganisationName("Invite Organisation 1")
-                .withHash("sample/url")
-                .build();
-
-        assertAccessDenied(() -> classUnderTest.inviteProjectManager(projectId, inviteResource),
-                () -> {
-                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
-                });
-    }
-
-    @Test
-    public void testInviteFinanceContact() {
-
-        Long projectId = 1L;
-
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
-                .withName("Abc Xyz")
-                .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
-                .withInviteOrganisationName("Invite Organisation 1")
-                .withHash("sample/url")
-                .build();
-
-        assertAccessDenied(() -> classUnderTest.inviteFinanceContact(projectId, inviteResource),
-                () -> {
-                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsFinanceContacts(inviteResource, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
-                });
     }
 
     @Test
@@ -397,6 +357,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
             verify(projectPermissionRules).competitionAdminCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -620,7 +581,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+        public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
             return null;
         }
 

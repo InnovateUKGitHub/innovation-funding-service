@@ -13,7 +13,7 @@ public class ProcessOutcome {
     private String outcome;
     private String description;
     private String comment;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="processId", referencedColumnName="id")
     private Process process;
 

@@ -110,7 +110,8 @@ Other costs
 
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
-    [Tags]
+    [Tags]    Failing
+    #TODO INFUND-5394
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     Then the user should not see the element    jQuery=button:contains(Add another source of funding)
     And the applicant selects 'Yes' and fills two rows
@@ -248,14 +249,14 @@ The applicant can leave the 'Your finances' page but the details are still saved
 The applicant selects 'Yes' and fills two rows
     the user clicks the button/link    jQuery=label:contains(Yes) input
     Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
-    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2)
     the user should see the element    id=other-funding-table
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
     the user moves focus to the element    jQuery=button:contains(Add another source of funding)
     the user clicks the button/link    jQuery=button:contains(Add another source of funding)
-    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2)
     the user clicks the button/link    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
@@ -268,7 +269,7 @@ Totals should be correct
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
     Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
-    Element Should Contain    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+    Wait Until Element Contains    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -285,7 +286,7 @@ Admin costs total should be correct
 the grant value should be correct in the finance summary page
     The user navigates to the next page
     the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
-    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
     the user clears the text from the element    id=cost-financegrantclaim

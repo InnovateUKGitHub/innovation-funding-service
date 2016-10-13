@@ -105,7 +105,7 @@ Bank details submission
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath    Pending
-    # Pending due to INFUND-5287
+    # Todo Pending due to INFUND-5287
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs
@@ -127,12 +127,23 @@ Bank details for non-lead partner
     And the user should see the element    css=.success-alert
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    # TODO uncomment below when INFUND-4735 is done
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user navigates to the page     ${project_in_setup_page}/team-status
-#    And the user should see the text in the page    Project team status
-#    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
     [Teardown]    logout as user
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Tags]    Experian
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
 
 Bank details don't show for partner with no finance details
     [Documentation]    INFUND-3010
@@ -141,8 +152,6 @@ Bank details don't show for partner with no finance details
     When the user clicks the button/link    link=00000001: best riffs
     Then the user should not see the element    link=Bank details
     And the user should see the text in the page    Bank details (not required)
-
-
 
 
 *** Keywords ***

@@ -14,8 +14,9 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -74,29 +75,33 @@
 
 			<div class="visuallyhidden" id="add-appointments">
 
-				<div class="grid-row extra-margin">
-					<div class="column-half">
-						<div class="form-group">
-							<label for="doi-organisation" class="form-label-bold">Organisation</label>
-							<input name="doi-organisation" id="doi-organisation" class="form-control width-full" th:value="(${param.edit != null} ? 'Example organisation' : '')"/>
-						</div>
-					</div>
+				<div class="table-overflow">
+					
+					<table>
+						<thead>
+							<tr>
+								<th scope="col" id="doi-label-appointments-organisation">Organisation</th>
+								<th scope="col" id="doi-label-appointments-position" colspan="2">Position</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" aria-labelledby="doi-label-appointments-organisation" class="form-control width-full" />
+								</td>
+								<td>
+									<input type="text" id="doi-appointments-position" name="doi-appointments-position" aria-labelledby="doi-label-appointments-position" class="form-control width-full" />
+								</td>
+								<td>
+									<a href="#">Add another position</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 
-					<div class="column-half">
-						<div class="form-group">
-							<label for="doi-organisation-position" class="form-label-bold">Position</label>
-							<input name="doi-organisation-position" id="doi-organisation-position" class="form-control width-full" th:value="(${param.edit != null} ? 'Example position' : '')"/>
-						</div>
-					</div>
 				</div>
 
-				<p class="alignright">
-					<a href="#">Add another position</a>
-				</p>
-
 			</div>
-
-
 
 			<div class="form-group">
 				<h2 class="heading-small">Do you have any other financial interests?</h2>
@@ -143,31 +148,34 @@
 				</fieldset>
 			</div>
 
-			<div id="add-family" class="visuallyhidden">
-				<div class="grid-row extra-margin">
-					<div class="column-third">
-						<div class="form-group">
-							<label for="doi-family-relation" class="form-label-bold">Relation</label>
-							<input name="doi-family-relation" id="doi-family-relation" class="form-control width-full" value="" />
-						</div>
-					</div>
-					<div class="column-third">
-						<div class="form-group">
-							<label for="doi-family-organisation" class="form-label-bold">Organisation</label>
-							<input name="doi-family-organisation" id="doi-family-organisation" class="form-control width-full" value="" />
-						</div>
-					</div>
-					<div class="column-third">
-						<div class="form-group">
-							<label for="doi-family-position" class="form-label-bold">Position</label>
-							<input name="doi-family-position" id="doi-family-position" class="form-control width-full" value="" />
-						</div>
-					</div>
-				</div>
+			<div id="add-family" class="extra-margin-bottom visuallyhidden">
 
-				<p class="alignright">
-					<a href="#">Add another family member</a>
-				</p>
+				<table>
+					<thead>
+						<tr>
+							<th scope="col" id="family-label-relation">Relation</th>
+							<th scope="col" id="family-label-organisation">Organisation</th>
+							<th scope="col" id="family-label-position" colspan="2">Position</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="text" id="family-relation" name="family-relation" class="form-control width-full" aria-labelledby="family-label-relation" value="" />
+							</td>
+							<td>
+								<input type="text" id="family-organisation" name="family-organisation" class="form-control width-full" aria-labelledby="family-label-organisation" value="" />
+							</td>
+							<td>
+								<input type="text" id="family-position" name="family-position" class="form-control width-full" aria-labelledby="family-label-position" value="" />
+							</td>
+							<td>
+								<a href="#">Add another family member</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
 			</div>
 
 		</fieldset>
@@ -201,13 +209,19 @@
 		<div class="form-block">
 			<label class="block-label" for="confirm-doi">
 				<input id="confirm-doi" type="checkbox" value="" />
-				I confirm that for the financial year ended 31 March 2017 the above represents an accurate account of my interests outside Innovate UK
+				I confirm that for the financial year ending 31 March 2017 the above represents an accurate account of my interests outside Innovate UK
 			</label>
 		</div>
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
-			<button class="button button-large extra-margin" formaction="/prototypes/1176-assessor-contracts">Continue</button>
+			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+				<input type="hidden" name="version" value="v2" />
+				<input type="hidden" name="accepted" value="yes" />
+				<input type="hidden" name="user" value="assessor" />
+			</th:block>
+
+			<button class="button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}">Save and continue</button>
 
 		</div>
 

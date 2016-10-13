@@ -24,32 +24,33 @@ public class InviteProjectController {
 
     private static final Log LOG = LogFactory.getLog(InviteProjectController.class);
     public static final String PROJECT_INVITE_BASE_URL = "/projectinvite";
+    public static final String PROJECT_INVITE_SAVE = "/saveInvite";
     public static final String CHECK_EXISTING_USER_URL = "/checkExistingUser/";
     public static final String GET_USER_BY_HASH_MAPPING = "/getUser/";
     public static final String GET_INVITE_BY_HASH = "/getProjectInviteByHash/";
     public static final String ACCEPT_INVITE = "/acceptInvite/";
+    public static final String GET_PROJECT_INVITE_LIST = "/getInvitesByProjectId/";
 
     @Autowired
     private InviteProjectService inviteProjectService;
 
-
-    @RequestMapping(value = "/save-finance-contact-invite", method = RequestMethod.PUT)
+    @RequestMapping(value = PROJECT_INVITE_SAVE, method = RequestMethod.POST)
     public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
-        return inviteProjectService.saveFinanceContactInvite(inviteProjectResource).
-                toPutResponse();
+
+        return inviteProjectService.saveProjectInvite(inviteProjectResource).toPostResponse();
     }
 
-    @RequestMapping(value = GET_INVITE_BY_HASH+ "{hash}", method = RequestMethod.GET)
+    @RequestMapping(value = GET_INVITE_BY_HASH + "{hash}", method = RequestMethod.GET)
     public RestResult<InviteProjectResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
         return inviteProjectService.getInviteByHash(hash).toGetResponse();
     }
 
-    @RequestMapping(value = "/getInvitesByProjectId/{projectId}", method = RequestMethod.GET)
+    @RequestMapping(value = GET_PROJECT_INVITE_LIST + "{projectId}", method = RequestMethod.GET)
     public RestResult<List<InviteProjectResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
         return inviteProjectService.getInvitesByProject(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = ACCEPT_INVITE  + "{hash}/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = ACCEPT_INVITE  + "{hash}/{userId}", method = RequestMethod.PUT)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteProjectService.acceptProjectInvite(hash, userId).toPostResponse();
     }

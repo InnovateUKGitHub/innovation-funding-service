@@ -1,18 +1,25 @@
 package com.worth.ifs.project.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
@@ -160,4 +167,63 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
                 map(userId -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
                 .orElseGet(() -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
     }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/signed-grant-offer?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Void> submitGrantOfferLetter(Long projectId) {
+        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/submit", Void.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/additional-contract?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    public RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/invite-finance-contact", inviteResource, Void.class);
+
+    }
+
 }

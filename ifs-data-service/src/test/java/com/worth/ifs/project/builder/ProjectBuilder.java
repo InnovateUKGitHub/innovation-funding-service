@@ -3,6 +3,7 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
@@ -47,6 +48,22 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((add, project) -> project.setAddress(add), address);
     }
 
+    public ProjectBuilder withCollaborationAgreement(FileEntry collaborationAgreement) {
+        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
+    }
+
+    public ProjectBuilder withExploitationPlan(FileEntry exploitationPlan) {
+        return with (project -> project.setExploitationPlan(exploitationPlan));
+    }
+
+    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+        return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {
+        return with (project -> project.setAdditionalContractFile(additionalContractFile));
+    }
+
     public ProjectBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
     }
@@ -61,6 +78,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
+    }
+
+    public ProjectBuilder withOtherDocumentsApproved(Boolean approved){
+        return with (project -> project.setOtherDocumentsApproved(approved));
     }
 
     @Override

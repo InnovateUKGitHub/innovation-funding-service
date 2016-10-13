@@ -22,7 +22,7 @@ public class BankDetails {
 
     private String accountNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId" , referencedColumnName = "id")
     private Project project;
 

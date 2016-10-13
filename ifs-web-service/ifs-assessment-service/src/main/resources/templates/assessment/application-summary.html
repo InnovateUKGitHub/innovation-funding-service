@@ -68,7 +68,7 @@
                                 </span>
                             </legend>
                             <label class="block-label" th:each="option : ${ { true, false } }">
-                                <input th:field="*{fundingConfirmation}" th:value="${option}" name="fundingConfirmation" type="radio" />
+                                <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" required="required" data-required-errormessage="Please indicate your decision" />
                                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                             </label>
                         </fieldset>
@@ -79,7 +79,7 @@
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="question" th:id="form-input-feedback">
                         <div class="form-group" th:classappend="${#fields.hasErrors('feedback')}? error">
-                            <label class="form-label form-label-bold" th:for="form-textarea-feedback" id="form-label-feedback">
+                            <label class="form-label form-label-bold" th:for="feedback">
                                 Your feedback
                                 <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                                 <span th:if="${#fields.hasErrors('feedback')}" th:remove="tag">
@@ -88,7 +88,14 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:errorclass="field-error" th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <textarea
+                                    class="form-control width-full"
+                                    data-max_words="100"
+                                    data-maxwordslength="100"
+                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                    th:errorclass="field-error"
+                                    rows="4"
+                                    th:field="*{feedback}"></textarea>
                                 <div class="textarea-footer" th:with="feedback=*{feedback}">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" th:remove="tag" />
                                 </div>
@@ -98,7 +105,7 @@
 
                     <div class="question" th:id="form-input-comments">
                         <div class="form-group" th:classappend="${#fields.hasErrors('comment')}? error">
-                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">
+                            <label class="form-label form-label-bold" th:for="comment">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                 <span th:if="${#fields.hasErrors('comment')}" th:remove="tag">
                                     <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}" />
@@ -106,7 +113,14 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:errorclass="field-error" th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
+                                <textarea
+                                    class="form-control width-full"
+                                    data-max_words="100"
+                                    data-maxwordslength="100"
+                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                    th:errorclass="field-error"
+                                    rows="4"
+                                    th:field="*{comment}"></textarea>
 
                                 <div class="textarea-footer" th:with="comment=*{comment}">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" th:remove="tag" />

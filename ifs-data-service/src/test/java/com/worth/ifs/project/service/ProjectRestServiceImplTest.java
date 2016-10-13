@@ -448,4 +448,69 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void testGetSignedGrantOfferLetterFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/signed-grant-offer";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        // now run the method under test
+        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/signed-grant-offer";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        // now run the method under test
+        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+    @Test
+    public void testGetGeneratedGrantOfferLetterFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        // now run the method under test
+        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void testGetGeneratedGrantOfferLetterFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        // now run the method under test
+        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetter() {
+        long projectId = 123L;
+        String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/submit";
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
 }

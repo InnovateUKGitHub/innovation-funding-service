@@ -70,6 +70,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessor(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "A project finance user can see application finances for organisations",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean projectFinanceUserCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);
@@ -116,6 +123,15 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "UPLOAD_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can upload Assessor Feedback documentation for an Application whilst " +
+                    "the Application's Competition is in Funders' Panel or Assessor Feedback state",
+            particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
+    public boolean projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user) && application.isInEditableAssessorFeedbackCompetitionState();
+    }
+
+    @PermissionRule(
             value = "REMOVE_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
             particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
@@ -124,10 +140,25 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "REMOVE_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
+            particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
+    public boolean projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
+    }
+
+    @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can see and download Assessor Feedback at any time for any Application")
     public boolean compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can see and download Assessor Feedback at any time for any Application")
+    public boolean projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

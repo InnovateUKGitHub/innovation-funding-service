@@ -39,7 +39,7 @@
       </div>
 
 
-        <th:block th:if ="${model.markedAsComplete and form == null}">
+        <th:block th:if ="${model.markedAsComplete and form == null and !model.submitted}">
             <div class="success-alert extra-margin-bottom">
                 <p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
                     have submitted their spend profiles submit them to Innovate UK</p>
@@ -59,7 +59,7 @@
           <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
         </dl>
 
-        <h2 class="heading-medium">Aptrans Ltd - Spend profile</h2>
+        <h2 class="heading-medium"> <th:block th:text="${model.organisationName}"/> - Spend profile</h2>
         <p>Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
     </div>
 
@@ -192,7 +192,7 @@
       </form>
 
 
-      <div class="grid-container" th:if="${readonly}">
+      <div class="grid-container" th:if="${readonly and !model.submitted}">
         <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
         <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 

@@ -1,7 +1,9 @@
 package com.worth.ifs.security;
 
+import java.util.List;
+
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -14,13 +16,15 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -46,6 +50,9 @@ public abstract class BasePermissionRules {
     protected UserRepository userRepository;
 
     @Autowired
+    protected ProcessOutcomeRepository processOutcomeRepository;
+
+    @Autowired
     protected AssessmentRepository assessmentRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
@@ -69,10 +76,10 @@ public abstract class BasePermissionRules {
         return !partnerProjectUser.isEmpty();
     }
 
-    protected boolean isSpecificProjectPartnerByApplicationId(long applicationId, long organisationId, long userId) {
-        long projectId = projectRepository.findOneByApplicationId(applicationId).getId();
+    protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
-        return partnerProjectUser != null;
+        ProjectUser managerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_MANAGER);
+        return partnerProjectUser != null || managerProjectUser != null;
     }
 
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
@@ -92,7 +99,7 @@ public abstract class BasePermissionRules {
     }
 
     protected boolean isProjectManager(long projectId, long userId) {
-        List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, ProjectParticipantRole.PROJECT_MANAGER);
+        List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_MANAGER);
         return projectManagerUsers != null && !projectManagerUsers.isEmpty();
     }
 }

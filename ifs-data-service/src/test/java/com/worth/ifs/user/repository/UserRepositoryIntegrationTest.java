@@ -3,6 +3,7 @@ package com.worth.ifs.user.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.user.builder.UserBuilder;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
+import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserStatus.ACTIVE;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.stream.Collectors.toList;
@@ -23,6 +27,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected void setRepository(UserRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     public void test_findAll() {
@@ -39,9 +46,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Test
     @Rollback
     public void test_findByEmailAndStatus() {
-        final User user = UserBuilder.newUser()
+        final User user = newUser()
                 .withUid("my-uid")
-                .withUserStatus(INACTIVE)
+                .withStatus(INACTIVE)
                 .build();
 
         final User expected = repository.save(user);
@@ -57,8 +64,17 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Test
     @Rollback
     public void test_createUser() {
+        loginSteveSmith();
+
         // Create a new user
         User newUser = repository.save(new User("New", "User", "new@example.com", "", new ArrayList<>(), "my-uid"));
+        newUser.setProfile(newProfile()
+                .withId((Long)null)
+                .withAddress(newAddress()
+                        .withId((Long)null)
+                        .withAddressLine1("Electric Works")
+                        .build())
+                .build());
         assertNotNull(newUser.getId());
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
@@ -68,6 +84,12 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> expectedUsers = new ArrayList<>(ALL_USERS_EMAIL);
         expectedUsers.add("new@example.com");
         assertTrue(emailAddresses.containsAll(expectedUsers));
+
+        User savedNewUser = repository.findByEmail("new@example.com").get();
+        assertEquals("Electric Works", savedNewUser.getProfile().getAddress().getAddressLine1());
+        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedNewUser.getProfile().getCreatedBy());
+        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedNewUser.getProfile().getModifiedBy());
+        assertNotNull(savedNewUser.getProfile().getModifiedBy());
     }
 
     @Test

@@ -13,6 +13,7 @@ Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Log-out
@@ -72,9 +73,9 @@ Valid login as Project Finance role
     Given the user is not logged-in
     When the guest user enters the log in credentials    project.finance1@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
-    # note that I haven't used error checking on this redirect as this page will currently produce an error
-    # at that point this can be changed to include error checking
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    # note that this has been updated as per the most recent requirements.
+    # project finance users now use the same dashboard as other internal users
     [Teardown]    the user closes the browser
 
 Reset password
@@ -87,7 +88,7 @@ Reset password
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user opens the mailbox and clicks the reset link
+    And the user opens the mailbox and clicks the reset link    worth.email.test+changepsw@gmail.com
     And the user should see the text in the page    Password reset
 
 Reset password validations
@@ -127,43 +128,8 @@ the guest user should get an error message
 the user should be logged-in as an Assessor
     Title Should Be    Assessor Dashboard - Innovation Funding Service
 
-the user opens the mailbox and clicks the reset link
-    run keyword if    ${docker}==1    the user opens the local mailbox and clicks the reset link
-    run keyword if    ${docker}!=1    the user opens the remote mailbox and clicks the reset link
-
-
-the user opens the remote mailbox and clicks the reset link
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-the user opens the local mailbox and clicks the reset link
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
-
-
-
 Clear the login fields
-    Reload Page
+    the user reloads the page
     When the user enters text to a text field    id=id_password    ${EMPTY}
     And the user enters text to a text field    id=id_retypedPassword    ${EMPTY}
     Mouse Out    id=id_retypedPassword

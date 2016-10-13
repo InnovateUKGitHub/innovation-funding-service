@@ -27,7 +27,7 @@
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.applications.size() + ' applicants'}">
+                            cell4=${competition.numberOfApplications + ' applicants'}">
                         </th:block>
                     </li>
                 </ul>
@@ -44,7 +44,7 @@
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.applications.size() + ' applicants'}">
+                            cell4=${competition.numberOfApplications + ' applicants'}">
                         </th:block>
                     </li>
                 </ul>
@@ -61,7 +61,7 @@
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.applications.size() + ' applicants'}">
+                            cell4=${competition.numberOfApplications + ' applicants'}">
                         </th:block>
                     </li>
                 </ul>
@@ -79,7 +79,7 @@
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.applications.size() + ' applicants'}">
+                            cell4=${competition.numberOfApplications + ' applicants'}">
                         </th:block>
                     </li>
                 </ul>
@@ -97,7 +97,7 @@
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.applications.size() + ' applicants'}">
+                            cell4=${competition.numberOfApplications + ' applicants'}">
                         </th:block>
                     </li>
                 </ul>
@@ -114,7 +114,7 @@
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.startDateDisplay()}">
+                            cell4=${competition.startDateDisplay}">
                         </th:block>
                     </li>
                 </ul>
@@ -131,7 +131,7 @@
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
                             cell3=${competition.innovationAreaName},
-                            cell4=${competition.startDateDisplay()}">
+                            cell4=${competition.startDateDisplay}">
                         </th:block>
                     </li>
                 </ul>
