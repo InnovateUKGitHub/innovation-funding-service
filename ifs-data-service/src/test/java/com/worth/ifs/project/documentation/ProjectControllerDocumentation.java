@@ -12,6 +12,7 @@ import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +38,12 @@ import static com.worth.ifs.documentation.BankDetailsDocs.projectBankDetailsStat
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
+import static com.worth.ifs.documentation.ProjectDocs.projectStatusResourceFields;
 import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
+import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -104,6 +107,22 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Id of the project that is being requested")
                         ),
                         responseFields(projectResourceFields)
+                ));
+    }
+
+    @Test
+    public void getStatus() throws Exception {
+        Long projectId = 1L;
+        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
+
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+
+        mockMvc.perform(get("/project/{id}/status", projectId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project that is being requested")
+                        ),
+                        responseFields(projectStatusResourceFields)
                 ));
     }
 
