@@ -13,9 +13,9 @@ import java.util.List;
  */
 public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<AcademicCostCategoryGenerator> {
     DIRECTLY_INCURRED_STAFF("Directly incurred", "Staff", "incurred_staff"),
-    DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE("Directly incurred", "Staff", "incurred_travel_subsistence"),
+    DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE("Directly incurred", "Travel and subsistence", "incurred_travel_subsistence"),
     DIRECTLY_INCURRED_OTHER_COSTS("Directly incurred", "Other costs", "incurred_other_costs"),
-    DIRECTLY_ALLOCATED_INVESTIGATORS("Directly allocated", "Investigators", "allocated_investigators"),
+    DIRECTLY_ALLOCATED_INVESTIGATORS("Directly allocated", "Investigations", "allocated_investigators"),
     DIRECTLY_ALLOCATED_ESTATES_COSTS("Directly allocated", "Estates costs", "allocated_estates_costs"),
     DIRECTLY_ALLOCATED_OTHER_COSTS("Directly allocated", "Other costs", "allocated_other_costs"),
     INDIRECT_COSTS("Indirect Costs", "Indirect costs", "indirect_costs"),
