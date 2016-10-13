@@ -69,18 +69,18 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
 
-== Update Profile
+== Update Profile Skills
 ==== Success case
 ==== Request
-include::{snippets}/user/update-profile/http-request.adoc[]
-include::{snippets}/user/update-profile/path-parameters.adoc[]
-include::{snippets}/user/update-profile/request-fields.adoc[]
+include::{snippets}/user/update-profile-skills/http-request.adoc[]
+include::{snippets}/user/update-profile-skills/path-parameters.adoc[]
+include::{snippets}/user/update-profile-skills/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/update-profile/http-response.adoc[]
+include::{snippets}/user/update-profile-skills/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/user/update-profile/curl-request.adoc[]
+include::{snippets}/user/update-profile-skills/curl-request.adoc[]
 
 == Retrieve user affiliations
 ==== Success case

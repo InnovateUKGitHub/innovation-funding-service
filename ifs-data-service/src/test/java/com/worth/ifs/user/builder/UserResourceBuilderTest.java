@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
@@ -37,7 +36,7 @@ public class UserResourceBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Long expectedEthnicity = 1L;
-        ProfileResource expectedProfile = newProfileResource().build();
+        Long expectedProfile = 1L;
 
         UserResource user = newUserResource()
                 .withId(expectedId)
@@ -95,7 +94,7 @@ public class UserResourceBuilderTest {
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Long[] expectedEthnicities = {1L, 2L};
-        ProfileResource[] expectedProfiles = newProfileResource().buildArray(2, ProfileResource.class);
+        Long[] expectedProfiles = {1L, 2L};
 
         List<UserResource> users = newUserResource()
                 .withId(expectedIds)
@@ -116,7 +115,6 @@ public class UserResourceBuilderTest {
                 .withEthnicity(expectedEthnicities)
                 .withProfile(expectedProfiles)
                 .build(2);
-
 
         UserResource first = users.get(0);
 

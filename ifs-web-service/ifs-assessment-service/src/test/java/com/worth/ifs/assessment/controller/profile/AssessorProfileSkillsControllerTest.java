@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.controller.profile;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.form.profile.AssessorProfileSkillsForm;
 import com.worth.ifs.user.resource.BusinessType;
-import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -13,9 +12,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.util.Collections.nCopies;
@@ -42,13 +40,14 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillsAreas = "skill1 skill2 skill3";
 
-        UserResource user = newUserResource()
-                .withProfile(newProfileResource()
-                        .withBusinessType(businessType)
-                        .withSkillsAreas(skillsAreas)
-                        .build())
-                .build();
+        UserResource user = newUserResource().build();
         setLoggedInUser(user);
+
+        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+                .withUser(user.getId())
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build());
 
         AssessorProfileSkillsForm expectedForm = new AssessorProfileSkillsForm();
         expectedForm.setAssessorType(businessType);
@@ -58,29 +57,25 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/innovation-areas"));
+
+        verify(userService).getProfileSkills(user.getId());
     }
 
     @Test
     public void submitSkills() throws Exception {
         BusinessType businessType = BUSINESS;
-        String skillAreas = String.join(" ", nCopies(100, "skill"));
+        String skillsAreas = String.join(" ", nCopies(100, "skill"));
 
-        ProfileResource profile = newProfileResource()
-                .with(id(null))
-                .withSkillsAreas(skillAreas)
-                .withBusinessType(businessType)
-                .build();
-
-        when(userService.updateProfile(1L, profile)).thenReturn(serviceSuccess());
+        when(userService.updateProfileSkills(1L, businessType, skillsAreas)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/profile/skills")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
-                .param("skillAreas", skillAreas))
+                .param("skillAreas", skillsAreas))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
-        verify(userService).updateProfile(1L, profile);
+        verify(userService).updateProfileSkills(1L, businessType, skillsAreas);
     }
 
     @Test

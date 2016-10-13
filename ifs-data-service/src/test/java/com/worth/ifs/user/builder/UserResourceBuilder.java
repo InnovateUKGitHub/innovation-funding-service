@@ -95,7 +95,7 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((password, user) -> setField("password", password, user), passwords);
     }
 
-    public UserResourceBuilder withProfile(ProfileResource... profiles) {
+    public UserResourceBuilder withProfile(Long... profiles) {
         return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
