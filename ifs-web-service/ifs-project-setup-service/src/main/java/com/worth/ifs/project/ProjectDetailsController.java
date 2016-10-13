@@ -239,12 +239,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-manager", method = POST)
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
-                                       @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        InviteeForm form = new InviteeForm();
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
-
+        
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, projectManagerForm.getProjectManager());
@@ -530,13 +530,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<ProcessRoleResource> organisationProcessRoles = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
         List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
 
-        Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn = user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
+        Function<ProcessRoleResource, ProjectUserInviteModel> financeContactModelMappingFn = user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
         Function<InviteProjectResource, ProjectUserInviteModel> inviteeMappingFn = invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId);
 
         Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation())
                 && !invite.getStatus().equals(InviteStatus.OPENED);
 
-        List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(projectUsersForProject, financeContactModelMappingFn);
+        List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(organisationProcessRoles, financeContactModelMappingFn);
         List<InviteProjectResource> inviteProjectResources = simpleFilter(inviteProjectResourceList, inviteProjectResourceFilterFn);
         List<ProjectUserInviteModel> invitedUsers = simpleMap(inviteProjectResources, inviteeMappingFn);
 
