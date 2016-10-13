@@ -110,6 +110,12 @@
                     <option value="Assigned applications">Assigned applications</option>
                     <option value="Completed applications">Completed applications</option>
                 </select>
+                <select th:if="${sortByType==7}" name="sort-by" id="sort-by" class="form-control">
+                    <option value="Application no.">Application no.</option>
+                    <option value="Title">Title</option>
+                    <option value="Lead organisation">Lead organisation</option>
+                    <option value="Assigned applications">Assigned applications</option>
+                </select>
             </div>
         </div>
     </div>
@@ -406,6 +412,109 @@
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Application list 6 table =========================== -->
+<div th:fragment="prototype-application-list6-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">App No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead Organisation</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#">10001000000</a></td>
+                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td>Wessex University</td>
+                    <td class="aligncentre">4</td>
+                    <td>
+                        <a href="#" class="button-secondary">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000001</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">4</td>
+                    <td>
+                        <a href="#" class="button-secondary">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Application list 7 table =========================== -->
+<div th:fragment="prototype-application-list7-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th scope="col">App No</th>
+                <th scope="col">Title</th>
+                <th scope="col">Lead Organisation</th>
+                <th class="aligncentre" scope="col">Assigned</th>
+                <th scope="col"><span class="visuallyhidden">Assign</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="#">10001000000</a></td>
+                <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                <td>Wessex University</td>
+                <td class="aligncentre">1</td>
+                <td>
+                    <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="#">10001000001</a></td>
+                <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                <td>Plymouth University</td>
+                <td class="aligncentre">1</td>
+                <td>
+                    <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="#">10001000002</a></td>
+                <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                <td>Horizon Ltd</td>
+                <td class="aligncentre">0</td>
+                <td>
+                    <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="#">10001000003</a></td>
+                <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <td>Zodiac Industries Ltd</td>
+                <td class="aligncentre">5</td>
+                <td>
+                    <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="#">10001000004</a></td>
+                <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <td>Durham University</td>
+                <td class="aligncentre">1</td>
+                <td>
+                    <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
