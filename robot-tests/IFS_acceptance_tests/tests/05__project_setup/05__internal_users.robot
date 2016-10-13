@@ -6,7 +6,6 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-4049: As an internal user I want to have an overview of where a project is in the Project Setup process so that I can view and manage outstanding tasks
 ...
 ...               INFUND-5516:  As a internal user, I want to view the Project Setup status link
-
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup

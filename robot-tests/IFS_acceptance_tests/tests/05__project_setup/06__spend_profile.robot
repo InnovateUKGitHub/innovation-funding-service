@@ -6,6 +6,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-3765 As a partner I want to be able to edit my Spend profile so I can prepare an updated profile for my organisation before submission to the Project Manager
 ...
 ...               INFUND-3971 As a partner I want to be able to view my spend profile in a summary table so that I can review my spend profile by financial year
+...
+...               INFUND-2638 As a Competitions team member I want to view a page providing a link to each partners' submitted spend profile so that I can confirm these have been approved by the Technical Lead
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -18,6 +20,7 @@ Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
+@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
 Lead partner can view spend profile page
@@ -27,6 +30,10 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=00000001: best riffs
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
+<<<<<<< HEAD
+=======
+    #Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
+>>>>>>> d96d9d09bde0213c8180579cbbe2666b85bc0537
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
     And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
 
@@ -124,7 +131,8 @@ Lead Partners Spend profile summary gets updated when edited
     And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 117,841
     And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 88,834
 
-Lead partner marks Spend Profile as complete
+
+Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765
     [Tags]
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
@@ -254,7 +262,72 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+    [Teardown]  Logout as user
 
+Project Finance is able to see Spend Profile approval page
+    [Documentation]    INFUND-2638
+    [Tags]
+    [Setup]  Log in as user                         project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page            ${server}/project-setup-management/project/1/spend-profile/approval  #Navigate via url TODO INFUND-5560
+    Then the user should see the element            jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
+    # TODO INFUND-5546
+    #    And the user should not see the element  jQuery=h2:contains("The spend profile has been approved.")
+    #    Same for Rejection
+    When the user should see the text in the page    Lead technologist
+    #Then the user should see the text in the page    Competition Technologist One  #The name of the leadTech Upcoming functionality TODO
+    When the user should see the text in the page    Project spend profile
+    Then the user clicks the button/link             link=Vitruvius Stonework Limited-spend-profile.csv
+    And the user clicks the button/link              link=Ludlow-spend-profile.csv
+    And the user clicks the button/link              link=EGGS-spend-profile.csv
+    When the user should see the text in the page    Approved by Lead technologist
+    Then the element should be disabled              jQuery=#accept-profile
+#    Then the user should not see the element         jQuery=#accept-profile
+    When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
+    Then the user should see the element             jQuery=#accept-profile
+    And the user should see the element              jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    [Teardown]  Logout as user
+
+Comp Admin is able to see Spend Profile approval page
+    [Documentation]    INFUND-2638
+    [Tags]    Pending
+    #TODO Comp Admin can Approve/Reject Spend Profile INFUND-5546
+    [Setup]  Log in as user                 john.doe@innovateuk.test    Passw0rd
+    Given the user navigates to the page    ${server}/project-setup-management/project/1/spend-profile/approval  #Navigate via url TODO INFUND-5560
+    Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
+    When the user selects the checkbox      jQuery=#approvedByLeadTechnologist
+    Then the user should see the element    jQuery=#accept-profile
+    And the user should see the element     jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    [Teardown]  Logout as user
+
+Project Finance is able to Reject Spend Profile
+    [Documentation]    INFUND-2638
+    [Tags]    HappyPath
+    [Setup]  Log in as user                        project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page           ${server}/project-setup-management/project/1/spend-profile/approval
+    And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    Then the user should see the text in the page  Before taking this action please contact the project manager
+    When the user clicks the button/link           jQuery=.modal-reject-profile button:contains("Cancel")
+    Then the user should not see an error in the page
+    #    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    #    And the user clicks the button/link            jQuery=.modal-reject-profile button:contains('Reject spend profile')
+    #    Then the user should see the element           jQuery=h3:contains("The spend profile has been rejected")
+    # The above lines are passing, but they are disabled so that the Sp Prof can be Approved.
+
+Project Finance is able to Approve Spend Profile
+    [Documentation]    INFUND-2638
+    [Tags]    HappyPath
+    Given the user navigates to the page             ${server}/project-setup-management/project/1/spend-profile/approval
+    When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
+    Then the user should see the element             jQuery=button:contains("Approved")
+    When the user clicks the button/link             jQuery=button:contains("Approved")
+    Then the user should see the text in the page    approved and accepted by the Lead technologist
+    When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
+    Then the user should not see an error in the page
+    When the user clicks the button/link             jQuery=button:contains("Approved")
+    And the user clicks the button/link              jQuery=.modal-accept-profile button:contains("Accept documents")
+    Then the user should not see the element         jQuery=h3:contains("The spend profile has been approved")
+    [Teardown]  Logout as user
 
 
 *** Keywords ***
@@ -288,3 +361,9 @@ the field has value
     wait until element is visible    ${field}
     ${var} =  get value     ${field}
     should be equal as strings    ${var}    ${value}
+
+erase the rejection from the database
+    Connect to Database    @{database}
+    execute sql string    UPDATE `${database_name}`.`spend_profile` SET `approval`='null' WHERE `id`='1';
+    execute sql string    UPDATE `${database_name}`.`spend_profile` SET `approval`='null' WHERE `id`='2';
+    execute sql string    UPDATE `${database_name}`.`spend_profile` SET `approval`='null' WHERE `id`='3';
