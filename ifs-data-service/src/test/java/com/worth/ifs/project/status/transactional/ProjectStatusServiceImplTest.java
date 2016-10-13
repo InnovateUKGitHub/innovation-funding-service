@@ -7,13 +7,14 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.transactional.ProjectStatusServiceImpl;
 import com.worth.ifs.user.domain.*;
@@ -30,6 +31,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -39,9 +41,8 @@ import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisation
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -122,7 +123,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(Optional.of(spendProfile));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(Optional.of(spendProfile));
 
-        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
+        MonitoringOfficer monitoringOfficerInDB = newMonitoringOfficer().build();
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(0).getId())).thenReturn(monitoringOfficerInDB);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(1).getId())).thenReturn(monitoringOfficerInDB);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(2).getId())).thenReturn(monitoringOfficerInDB);
@@ -175,6 +176,10 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(projectUsersHelperMock.getPartnerOrganisations(projects.get(1).getId())).thenReturn(organisations);
         when(projectUsersHelperMock.getPartnerOrganisations(projects.get(2).getId())).thenReturn(organisations);
 
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projects.get(0).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId);
 
         assertTrue(result.isSuccess());
@@ -184,5 +189,37 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+    }
+
+    @Test
+    public void getProjectStatusResourceByProject() {
+        Long projectId = 2345L;
+
+        Role role = newRole().build();
+        ProcessRole processRole = newProcessRole().withRole(role).build();
+        Application application = newApplication().withProcessRoles(processRole).build();
+        Project project = newProject().withId(projectId).withApplication(application).build();
+        Organisation organisation = newOrganisation().build();
+        BankDetails bankDetail = newBankDetails().withProject(project).build();
+        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(spendprofile);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), result.getSuccessObject().getProjectTitle());
+        assertEquals(project.getId(), result.getSuccessObject().getProjectNumber());
+        assertEquals(Integer.valueOf(1), result.getSuccessObject().getNumberOfPartners());
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
     }
 }

@@ -4,11 +4,10 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -162,6 +161,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return filterByUserId.
                 map(userId -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
                 .orElseGet(() -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
+    }
+
+    @Override
+    public RestResult<ProjectStatusResource> getProjectStatus(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/status", ProjectStatusResource.class);
     }
 
     @Override

@@ -173,4 +173,25 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "All partners can view the project status")
+    public boolean partnersCanViewStatus(ProjectResource project, UserResource user){
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "Comp admins can see the project status")
+    public boolean compAdminsCanViewStatus(ProjectResource project, UserResource user){
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "Project finance user can see the project status")
+    public boolean projectFinanceUserCanViewStatus(ProjectResource project, UserResource user){
+        return isProjectFinanceUser(user);
+    }
+
 }

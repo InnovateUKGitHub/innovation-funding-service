@@ -36,6 +36,10 @@ public class ProjectSpendProfileApprovalViewModel {
         return leadTechnologist;
     }
 
+    public Boolean getEmpty() {
+        return ApprovalType.EMPTY.equals(approvalType);
+    }
+
     public Boolean getApproved() {
         return ApprovalType.APPROVED.equals(approvalType);
     }

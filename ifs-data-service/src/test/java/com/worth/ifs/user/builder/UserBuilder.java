@@ -4,7 +4,6 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.UserStatus;
 
 import java.util.List;
@@ -13,9 +12,7 @@ import java.util.function.Consumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 /**
  * Builder for User entities.
@@ -39,16 +36,16 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return new UserBuilder(actions);
     }
 
-    public UserBuilder withRolesGlobal(Role... globalRoles) {
-        return with(user -> user.setRoles(asList(globalRoles)));
-    }
-
-    public UserBuilder withOrganisations(final Organisation... organisations) {
-        return with(user -> user.addUserOrganisation(organisations));
+    public UserBuilder withOrganisations(List<Organisation>... organisationsList) {
+        return withArray((organisations, user) -> user.addUserOrganisation(organisations.toArray(new Organisation[organisations.size()])), organisationsList);
     }
 
     public UserBuilder withEmailAddress(final String... emailAddresses) {
         return withArray((email, user) -> user.setEmail(email), emailAddresses);
+    }
+
+    public UserBuilder withRoles(List<Role>... rolesList) {
+        return withArray((roles, user) -> setField("roles", roles, user), rolesList);
     }
 
     public UserBuilder withFirstName(String... firstNames) {
@@ -71,6 +68,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((gender, user) -> setField("gender", gender, user), genders);
     }
 
+    public UserBuilder withImageUrl(String... imageUrls) {
+        return withArray((imageUrl, user) -> setField("imageUrl", imageUrl, user), imageUrls);
+    }
+
     public UserBuilder withPhoneNumber(String... phoneNumbers) {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
     }
@@ -83,16 +84,16 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((id, object) -> setField("id", id, object), ids);
     }
 
-    public UserBuilder withinviteName(String... inviteNames) {
+    public UserBuilder withInviteName(String... inviteNames) {
         return withArray((inviteName, object) -> setField("inviteName", inviteName, object), inviteNames);
     }
 
-    public UserBuilder withUserStatus(UserStatus... userStatuss) {
-        return withArray((userStatus, object) -> setField("status", userStatus, object), userStatuss);
+    public UserBuilder withStatus(UserStatus... statuses) {
+        return withArray((status, user) -> setField("status", status, user), statuses);
     }
 
-    public UserBuilder withProcessRole(ProcessRole... processRoles) {
-        return withArray((processRole, object) -> setField("processRoles", singletonList(processRole), object), processRoles);
+    public UserBuilder withProcessRoles(List<ProcessRole>... processRolesList) {
+        return withArray((processRoles, object) -> setField("processRoles", processRoles, object), processRolesList);
     }
 
     public UserBuilder withUid(String... uids) {
@@ -101,6 +102,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withProfile(Profile... profiles) {
         return withArray((profile, user) -> setField("profile", profile, user), profiles);
+    }
+
+    public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {
+        return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
     }
 
     @Override

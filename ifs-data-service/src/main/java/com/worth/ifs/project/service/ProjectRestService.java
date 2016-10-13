@@ -6,6 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -89,4 +90,6 @@ public interface ProjectRestService {
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
+    RestResult<ProjectStatusResource> getProjectStatus(Long projectId);
 }

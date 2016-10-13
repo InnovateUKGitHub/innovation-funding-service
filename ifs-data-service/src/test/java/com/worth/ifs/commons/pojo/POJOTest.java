@@ -50,8 +50,12 @@ import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
+import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ContractResource;
 import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,6 +75,8 @@ public class POJOTest {
     private List<PojoClass> classes;
     private Validator validator;
     private List<Class<?>> classesToTest = Arrays.asList(
+            Affiliation.class,
+            AffiliationResource.class,
             Alert.class,
             AlertResource.class,
             AssessorFormInputResponse.class,
@@ -128,7 +134,10 @@ public class POJOTest {
             PartnerOrganisationResource.class,
             SpendProfileCSVResource.class,
             FinanceCheckSummaryResource.class,
-            FinanceCheckPartnerStatusResource.class
+            FinanceCheckPartnerStatusResource.class,
+            SpendProfileCSVResource.class,
+            ContractResource.class,
+            ProfileSkillsResource.class
     );
 
     @Before
