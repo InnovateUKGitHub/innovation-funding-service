@@ -134,11 +134,11 @@
 
         <th:block th:if="${model.showApproveButton}">
 
-            <th:block th:if="${model.research}">
-                <h2 class="heading-medium">Download Je-S form:</h2>
+            <div th:if="${model.research}" class="upload-section">
+                <h2 class="heading-medium no-margin">Download Je-S form:</h2>
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                   class="uploaded-file" th:text="${model.jesFileDetails.filename}">The-uploaded-file-example.pdf</a>
-            </th:block>
+                   class="uploaded-file" th:text="${model.jesFileDetails?.filename}">The-uploaded-file-example.pdf</a>
+            </div>
 
             <h3 class="heading-medium">Eligible costs</h3>
             <p>After any required alterations have been made, eligible costs should be approved.</p>
