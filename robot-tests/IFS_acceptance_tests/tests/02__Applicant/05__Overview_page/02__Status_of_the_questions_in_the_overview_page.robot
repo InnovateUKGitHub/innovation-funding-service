@@ -60,6 +60,7 @@ the applicant assigns the Project Summary
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
+    Wait Until Page Does Not Contain    Assigning to Steve Smith...    10s
     The user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
