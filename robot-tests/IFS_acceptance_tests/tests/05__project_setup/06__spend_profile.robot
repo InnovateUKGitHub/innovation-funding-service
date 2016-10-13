@@ -30,10 +30,6 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=00000001: best riffs
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-<<<<<<< HEAD
-=======
-    #Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
->>>>>>> d96d9d09bde0213c8180579cbbe2666b85bc0537
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
     And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
 
