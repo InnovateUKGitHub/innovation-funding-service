@@ -260,7 +260,7 @@ Status updates correctly for internal user's table
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638
-    [Tags]    Pending
+    [Tags]    Pending   #TODO INFUND-5617
     [Setup]  Log in as user                          project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page             ${server}/project-setup-management/project/1/spend-profile/approval
     # Navigate via url TODO this depends on future functionality related to Finance Checks section
@@ -282,7 +282,7 @@ Project Finance is able to see Spend Profile approval page
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638
-    [Tags]    Pending
+    [Tags]    Pending   #TODO INFUND-5617
     [Setup]  Log in as user                          john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page             ${server}/project-setup-management/project/1/spend-profile/approval
     # Navigate via url TODO this depends on future functionality related to Finance Checks section
@@ -303,7 +303,7 @@ Comp Admin is able to see Spend Profile approval page
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath    Pending   #TODO INFUND-5617
     [Setup]  Log in as user                        project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/1/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
@@ -318,7 +318,7 @@ Project Finance is able to Reject Spend Profile
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath    Pending   #TODO INFUND-5617
     Given the user navigates to the page             ${server}/project-setup-management/project/1/spend-profile/approval
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
     Then the user should see the element             jQuery=button:contains("Approved")
