@@ -134,10 +134,9 @@ The user approves the bank details
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    And the user clicks the button/link    jQuery=.button:contains("Update bank account details")
-    #    Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
-    #    And the user should see the text in the page    Bank account details approved
-    #TODO INFUND-5519
+    And the user clicks the button/link    jQuery=.button:contains("Approve account")
+    Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
+    And the user should see the text in the page    The bank details provided have been approved.
     [Teardown]    logout as user
 
 Other internal users cannot access this page
