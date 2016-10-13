@@ -286,7 +286,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String postcodeInput = "";
 
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
-        List<AddressResource> addressResourceList = newAddressResource().withAddressLine1("address resource line 1", "address resource line 2").build(2);
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
