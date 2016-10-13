@@ -244,7 +244,7 @@ Project Manager can submit the project's spend profiles
     When the user clicks the button/link    css=div.modal-confirm-spend-profile-totals .button.large
     Then the user should see the text in the page    Project setup status
     And the user should see the element    jQuery=ul li.complete:nth-child(4)
-    And other partners spend profiles get submitted  #This is now done with Mysql change, Because functionality is not yet done TODO INFUND-5153
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049

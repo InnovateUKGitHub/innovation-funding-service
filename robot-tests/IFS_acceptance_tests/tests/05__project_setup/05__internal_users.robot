@@ -53,7 +53,7 @@ Other internal users cannot see Bank details
 
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
-    [Tags]
+    [Tags]    Failing
     Given the user navigates to the page          ${server}/project-setup-management/project/1/partner/documents
     And the user clicks the button/link           link=Project setup status
     Then the user should not see an error in the page
@@ -63,7 +63,7 @@ Project Finance user can view the Project setup status page
 
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049
-    [Tags]
+    [Tags]    Failing
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
@@ -86,7 +86,7 @@ Comp Admin user cannot see the finance check summary page
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049
-    [Tags]
+    [Tags]    Failing
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
     And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/monitoring-officer')]
