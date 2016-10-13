@@ -47,7 +47,7 @@ Existing assessor: Reject invitation
     ...
     ...    INFUND-5157
     ...
-    ...    INFUND-5382
+    ...    INFUND-5165
     [Tags]
     Given the user navigates to the page    ${Invitation_existing_assessor1}
     and the user should see the text in the page    Invitation to assess 'Juggling Craziness'
@@ -60,9 +60,8 @@ Existing assessor: Reject invitation
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=button:contains("Reject")
     And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
-    And the user shouldn't be able to accept the rejected competition
-    # TODO remove the comment after 5165 is ready to test
-    # And the user shouldn't be able to reject the rejected competition
+    And the assessor shouldn't be able to accept the rejected competition
+    And the assessor shouldn't be able to reject the rejected competition
 
 Existing assessor: Accept invitation
     [Documentation]    INFUND-228
@@ -71,7 +70,7 @@ Existing assessor: Accept invitation
     ...
     ...    INFUND-3716
     ...
-    ...    INFUND-5382
+    ...    INFUND-5165
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Sarcasm Stupendousness'.
@@ -79,14 +78,12 @@ Existing assessor: Accept invitation
     And the user clicks the button/link    jQuery=.button:contains("Accept")
     Then The user should see the text in the page    Assessor Dashboard
     And the user should see the element    link=Sarcasm Stupendousness
-    # TODO remove the comment after 5165 is ready to test
-    #    And the user shouldn't be able to accept the accepted competition
-    #    And the user shouldn't be able to reject the accepted competition
+    And the assessor shouldn't be able to accept the accepted competition
+    And the assessor shouldn't be able to reject the accepted competition
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
-    # TODO remove the comment after 5165 is ready to test
-    #    Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
+    Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
     Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    Assessment period:
@@ -128,7 +125,7 @@ the assessor fills all fields with valid inputs
     The user should not see the text in the page    This field cannot be left blank
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
 
-the user shouldn't be able to accept the rejected competition
+the assessor shouldn't be able to accept the rejected competition
     When the user navigates to the page    ${Invitation_existing_assessor1}
     And the user clicks the button/link    jQuery=button:contains("Accept")
     The user should see the text in the page    You are unable to access this page
@@ -141,7 +138,7 @@ the assessor should see the date for submission of assessment
 the assessor should see the number of days remaining
     the user should see the element    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
 
-the user shouldn't be able to reject the rejected competition
+the assessor shouldn't be able to reject the rejected competition
     the user navigates to the page    ${Invitation_existing_assessor1}
     the user clicks the button/link    css=form a
     the assessor fills all fields with valid inputs
@@ -149,13 +146,13 @@ the user shouldn't be able to reject the rejected competition
     The user should see the text in the page    We were unable to reject the competition:
     The user should see the text in the page    You have already rejected the invitation for this competition.
 
-the user shouldn't be able to accept the accepted competition
+the assessor shouldn't be able to accept the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user clicks the button/link    jQuery=button:contains("Accept")
     The user should see the text in the page    You are unable to access this page
     The user should see the text in the page    This invite has already been accepted.
 
-the user shouldn't be able to reject the accepted competition
+the assessor shouldn't be able to reject the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user clicks the button/link    css=form a
     the assessor fills all fields with valid inputs
