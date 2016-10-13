@@ -10,6 +10,9 @@ import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
+/**
+ * Helper for Spring REST Docs, specifically for user registration.
+ */
 public class UserRegistrationResourceDocs {
 
     public static final FieldDescriptor[] userRegistrationResourceFields = {
