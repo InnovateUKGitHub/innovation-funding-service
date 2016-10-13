@@ -54,8 +54,8 @@
               <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" />
               <th:block th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
               <th:block th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
-              <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" />
-              <th:block th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
               <th:block th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
               <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})"/>
           </tr>
