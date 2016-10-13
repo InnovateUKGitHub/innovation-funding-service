@@ -9,6 +9,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -99,10 +100,11 @@ public interface ProjectService {
 
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
+    ProjectStatusResource getProjectStatus(Long projectId);
+
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
     ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
-
 }

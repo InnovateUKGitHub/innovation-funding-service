@@ -1,6 +1,7 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -15,12 +16,14 @@ import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -43,28 +46,39 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
 
-        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> {
-            ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
-            return new ProjectStatusResource(
-                    project.getName(),
-                    project.getId(),
-                    project.getFormattedId(),
-                    project.getApplication().getId(),
-                    project.getApplication().getFormattedId(),
-                    getProjectPartnerCount(project.getId()),
-                    project.getApplication().getLeadOrganisation().getName(),
-                    getProjectDetailsStatus(project),
-                    getBankDetailsStatus(project),
-                    getFinanceChecksStatus(project),
-                    getSpendProfileStatus(project),
-                    getMonitoringOfficerStatus(project, projectDetailsStatus),
-                    getOtherDocumentsStatus(project),
-                    getGrantOfferLetterStatus(project));
-        });
+        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> getProjectStatusResourceByProject(project));
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
+    }
+
+    @Override
+    public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+        if(null != project) {
+            return ServiceResult.serviceSuccess(getProjectStatusResourceByProject(project));
+        }
+        return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
+    }
+
+    private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
+        return new ProjectStatusResource(
+                project.getName(),
+                project.getId(),
+                project.getFormattedId(),
+                project.getApplication().getId(),
+                project.getApplication().getFormattedId(),
+                getProjectPartnerCount(project.getId()),
+                null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
+                getProjectDetailsStatus(project),
+                getBankDetailsStatus(project),
+                getFinanceChecksStatus(project),
+                getSpendProfileStatus(project),
+                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getOtherDocumentsStatus(project),
+                getGrantOfferLetterStatus(project));
     }
 
     private Integer getProjectPartnerCount(Long projectId){
