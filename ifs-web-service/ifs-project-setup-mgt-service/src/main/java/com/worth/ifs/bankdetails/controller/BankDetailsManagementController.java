@@ -21,6 +21,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,6 +60,7 @@ public class BankDetailsManagementController {
     @Autowired
     private BankDetailsService bankDetailsService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/review-all-bank-details", method = GET)
     public String viewPartnerBankDetails(
             Model model,
@@ -69,6 +71,7 @@ public class BankDetailsManagementController {
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = GET)
     public String viewBankDetails(
             Model model,
@@ -81,6 +84,7 @@ public class BankDetailsManagementController {
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = POST)
     public String approveBankDetails(
             Model model,
@@ -107,6 +111,7 @@ public class BankDetailsManagementController {
                 () -> bankDetailsService.updateBankDetails(projectId, bankDetailsResource));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = GET)
     public String changeBankDetailsView(
             Model model,
@@ -121,6 +126,7 @@ public class BankDetailsManagementController {
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = POST)
     public String changeBankDetails(
             Model model,
