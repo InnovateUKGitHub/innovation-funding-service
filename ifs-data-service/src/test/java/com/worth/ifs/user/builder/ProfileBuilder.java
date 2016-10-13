@@ -2,7 +2,7 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.user.domain.BusinessType;
+import com.worth.ifs.user.resource.BusinessType;
 import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;

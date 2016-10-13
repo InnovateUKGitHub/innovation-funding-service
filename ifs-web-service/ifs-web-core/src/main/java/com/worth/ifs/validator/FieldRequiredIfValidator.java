@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 /**
  * A validator that asserts that a required string is not {@code null} or blank if a separate predicate is met.
@@ -53,8 +54,25 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
     }
 
     private boolean isRequiredFieldBlank(Object object, String requiredFieldName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        String requiredFieldValue = (String) PropertyUtils.getProperty(object, requiredFieldName);
+        Object requiredFieldValue = PropertyUtils.getProperty(object, requiredFieldName);
+
+        if (requiredFieldValue instanceof String) {
+            return isRequiredFieldValueBlank((String) requiredFieldValue);
+        }
+
+        if (requiredFieldValue instanceof Collection) {
+            return isRequiredFieldValueBlank((Collection) requiredFieldValue);
+        }
+
+        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String or Collection. Found " + requiredFieldValue.getClass().getName());
+    }
+
+    private boolean isRequiredFieldValueBlank(String requiredFieldValue) {
         return StringUtils.isBlank(requiredFieldValue);
+    }
+
+    private boolean isRequiredFieldValueBlank(Collection<?> requiredFieldValue) {
+        return requiredFieldValue.isEmpty();
     }
 
     private void addConstraintViolationMessageToField(ConstraintValidatorContext context, String message, String fieldName) {

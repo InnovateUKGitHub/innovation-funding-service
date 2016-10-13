@@ -3,12 +3,12 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
-import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelPopulator;
-import com.worth.ifs.assessment.model.AssessorRegistrationYourDetailsModelPopulator;
+import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationBecomeAnAssessorModelPopulator;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorService;
-import com.worth.ifs.assessment.viewmodel.AssessorRegistrationBecomeAnAssessorViewModel;
-import com.worth.ifs.assessment.viewmodel.AssessorRegistrationYourDetailsViewModel;
+import com.worth.ifs.assessment.viewmodel.registration.AssessorRegistrationBecomeAnAssessorViewModel;
+import com.worth.ifs.assessment.viewmodel.registration.AssessorRegistrationViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
@@ -49,13 +49,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTest<AssessorRegistrationController> {
+
     @Spy
     @InjectMocks
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
+    private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
     @Mock
     private EthnicityRestService ethnicityRestService;
@@ -94,7 +95,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(newEthnicityResource())));
-        AssessorRegistrationYourDetailsViewModel expectedViewModel = new AssessorRegistrationYourDetailsViewModel("hash", "test@test.com");
+        AssessorRegistrationViewModel expectedViewModel = new AssessorRegistrationViewModel("hash", "test@test.com");
 
         mockMvc.perform(get("/registration/{inviteHash}/register", "hash"))
                 .andExpect(status().isOk())
@@ -163,7 +164,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("addressForm.selectedPostcode.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl( format("/invite-accept/competition/%s/accept", inviteHash) ));
+                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }
