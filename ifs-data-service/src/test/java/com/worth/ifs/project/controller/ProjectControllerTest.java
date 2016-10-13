@@ -1,6 +1,5 @@
   package com.worth.ifs.project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
@@ -16,6 +15,7 @@ import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -41,6 +41,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -104,11 +105,24 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         mockMvc.perform(get("/project/{id}", project1Id))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testProjectResource1)));
+                .andExpect(content().json(toJson(testProjectResource1)));
 
         mockMvc.perform(get("/project/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testProjectResource2)));
+                .andExpect(content().json(toJson(testProjectResource2)));
+    }
+
+    @Test
+    public void projectControllerShouldReturnStatusByProjectId() throws Exception {
+        Long projectId = 2L;
+
+        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
+
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+
+        mockMvc.perform(get("/project/{id}/status", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectStatusResource)));
     }
 
     @Test
@@ -177,7 +191,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .param("leadOrganisationId", "123")
                 .param("addressType", OrganisationAddressType.REGISTERED.name())
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(addressResource)))
+                .content(toJson(addressResource)))
             .andExpect(status().isOk())
             .andExpect(content().string(""));
 
