@@ -67,6 +67,10 @@ public class ApplicationFinancePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ_FILE_ENTRY", description = "A project finance user can get file entry resource for finance section of a collaborator")
+    public boolean projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
 
     @PermissionRule(value = "CREATE_FILE_ENTRY", description = "A consortium member can create a file entry for the finance section for their organisation")
     public boolean consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {

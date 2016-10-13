@@ -19,22 +19,21 @@
 
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="filterSearch">Keywords</label>
-                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                        <div th:if="${filterType}" class="form-group">
+                            <label class="form-label" for="filterType">Type</label>
+                            <select class="form-control" id="filterType" name="filterType">
+                                <option selected="selected">---</option>
+                                <option value="Industry">Industry</option>
+                                <option value="Academic">Academic</option>
+                                <option value="International">International</option>
+                            </select>
                         </div>
 
                     </div>
-
                     <div class="column-half">
-                        <div th:unless="${type=='Assessors'}" class="form-group">
-                            <label class="form-label" for="filterType">Type</label>
-                            <select class="form-control" id="filterType" name="filterType">
-                                    <option selected="selected">---</option>
-                                    <option value="Industry">Industry</option>
-                                    <option value="Academic">Academic</option>
-                                    <option value="International">International</option>
-                            </select>
+                        <div class="form-group">
+                            <label class="form-label" for="filterSearch">Keywords</label>
+                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                         </div>
                         <div class="column-half extra-margin">
                             <a href="#">Clear all filters</a>
@@ -59,15 +58,14 @@
         <div class="column-third alignright">
             <div class="form-group">
                 <label for="sort-by">Sort by</label>
-                <select th:if="${type=='Applications'}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==1}" name="sort-by" id="sort-by" class="form-control">
                     <option value="Application no.">Application no.</option>
                     <option value="Title">Title</option>
                     <option value="Innovation area">Innovation area</option>
                     <option value="Lead organisation">Lead organisation</option>
                     <option value="Assigned assessors">Assigned assessors</option>
                 </select>
-
-                <select th:if="${type=='Assessors'}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==2}" name="sort-by" id="sort-by" class="form-control">
                     <option value="Title">Assessor Name</option>
                     <option value="Employer">Employer</option>
                     <option value="Type">Type</option>
@@ -75,13 +73,47 @@
                     <option value="Total applications">Total applications</option>
                     <option value="Applications this competition">Applications this competition</option>
                 </select>
+                <select th:if="${sortByType==3}" name="sort-by" id="sort-by" class="form-control">
+                    <option value="Application no.">Application no.</option>
+                    <option value="Title">Title</option>
+                    <option value="Lead organisation">Lead organisation</option>
+                    <option value="Assigned assessors">Assigned assessors</option>
+                    <option value="Accepted assessors">Accepted assessors</option>
+                    <option value="Started assessors">Started assessors</option>
+                    <option value="Completed assessors">Completed assessors</option>
+                </select>
+                <select th:if="${sortByType==4}" name="sort-by" id="sort-by" class="form-control">
+                    <option value="Title">Assessor Name</option>
+                    <option value="Employer">Employer</option>
+                    <option value="Type">Type</option>
+                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Total applications">Total applications</option>
+                    <option value="Assigned applications">Assigned applications</option>
+                    <option value="Accepted applications">Accepted applications</option>
+                    <option value="Started applications">Started applications</option>
+                    <option value="Completed applications">Completed applications</option>
+                </select>
+                <select th:if="${sortByType==5}" name="sort-by" id="sort-by" class="form-control">
+                    <option value="Title">Assessor Name</option>
+                    <option value="Type">Type</option>
+                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Total applications">Total applications</option>
+                    <option value="Assigned applications">Assigned applications</option>
+                    <option value="Accepted applications">Accepted applications</option>
+                    <option value="Started applications">Started applications</option>
+                    <option value="Completed applications">Completed applications</option>
+                </select>
+                <select th:if="${sortByType==6}" name="sort-by" id="sort-by" class="form-control">
+                    <option value="Application no.">Application no.</option>
+                    <option value="Title">Title</option>
+                    <option value="Lead organisation">Lead organisation</option>
+                    <option value="Assigned applications">Assigned applications</option>
+                    <option value="Completed applications">Completed applications</option>
+                </select>
             </div>
         </div>
-
     </div>
-
 </div>
-
 
 <!-- =========================== Application list table =========================== -->
 <div th:fragment="prototype-application-list-table">
@@ -93,7 +125,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Innovation Area</th>
                     <th scope="col">Lead Organisation</th>
-                    <th scope="col">Assigned Assessors</th>
+                    <th class="aligncentre" scope="col">Assigned Assessors</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -103,7 +135,7 @@
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Wessex University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -113,7 +145,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Plymouth University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -123,7 +155,7 @@
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Horizon Ltd</td>
-                    <td>0</td>
+                    <td class="aligncentre">0</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -133,7 +165,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Zodiac Industries Ltd</td>
-                    <td>5</td>
+                    <td class="aligncentre">5</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -143,7 +175,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Durham University</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -152,21 +184,22 @@
         </table>
     </div>
 </div>
+
 <!-- =========================== Application list 2 table =========================== -->
 <div th:fragment="prototype-application-list2-table">
     <div class="table-overflow">
         <table id="application-list">
             <thead>
-            <tr>
-                <th scope="col">App No</th>
-                <th scope="col">Name</th>
-                <th scope="col">Lead Organisation</th>
-                <th class="aligncentre" scope="col">Assigned</th>
-                <th class="aligncentre" scope="col">Accepted</th>
-                <th class="aligncentre" scope="col">Started</th>
-                <th class="aligncentre" scope="col">Completed</th>
-                <th scope="col"><span class="visuallyhidden">Assign</span></th>
-            </tr>
+                <tr>
+                    <th scope="col">App No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead Organisation</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Accepted</th>
+                    <th class="aligncentre" scope="col">Started</th>
+                    <th class="aligncentre" scope="col">Completed</th>
+                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                </tr>
             </thead>
             <tbody>
             <tr>
@@ -234,6 +267,150 @@
     </div>
 </div>
 
+<!-- =========================== Application list 3 table =========================== -->
+<div th:fragment="prototype-application-list3-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">App No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead Organisation</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Accepted</th>
+                    <th class="aligncentre" scope="col">Started</th>
+                    <th class="aligncentre" scope="col">Completed</th>
+                    <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#">10001000000</a></td>
+                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td>Wessex University</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><a href="#">Review</a></td>
+                    <td>
+                        <a href="#" class="button-secondary">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000001</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"></td>
+                    <td>
+                        <a href="#" class="button-secondary">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- =========================== Application list 4 table =========================== -->
+<div th:fragment="prototype-application-list4-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">App No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead Organisation</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col">Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#">10001000003</a></td>
+                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td>Zodiac Industries Ltd</td>
+                    <td class="aligncentre">4</td>
+                    <td>Too many assignments<br />
+                        You have frequently assign me me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during the summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Application list 5 table =========================== -->
+<div th:fragment="prototype-application-list5-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">App No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead Organisation</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Completed</th>
+                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#">10001000000</a></td>
+                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td>Wessex University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="#" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000001</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="#" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000002</a></td>
+                    <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                    <td>Horizon Ltd</td>
+                    <td class="aligncentre">0</td>
+                    <td class="aligncentre">0</td>
+                    <td>
+                        <a href="#" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000003</a></td>
+                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td>Zodiac Industries Ltd</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">2</td>
+                    <td>
+                        <a href="#" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000004</a></td>
+                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td>Durham University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="#" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <!-- =========================== Application notify table =========================== -->
 <div th:fragment="prototype-application-notify-table">
     <div class="table-overflow">
@@ -241,42 +418,42 @@
             <thead>
                 <tr>
                     <th scope="col">Application</th>
-                    <th scope="col">Assessors</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>0</td>
+                    <td class="aligncentre">0</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                    <td>2</td>
+                    <td class="aligncentre">2</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>3</td>
+                    <td class="aligncentre">3</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>4</td>
+                    <td class="aligncentre">4</td>
                     <td>
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
@@ -294,11 +471,10 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Employer</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation Area</th>
-                    <th scope="col">Total applications</th>
-                    <th scope="col">Applications this competition</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Applications this competition</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -308,7 +484,6 @@
                 </tr>
                 <tr id="assessor-assigned">
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
@@ -321,7 +496,6 @@
             <tbody th:if="${type == 'available'}">
                 <tr id="assessor-available">
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">5</td>
@@ -332,7 +506,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">9</td>
@@ -343,7 +516,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
                     <td class="aligncentre">20</td>
@@ -354,7 +526,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
                     <td class="aligncentre">15</td>
@@ -365,7 +536,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">9</td>
@@ -376,7 +546,6 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">10</td>
@@ -397,11 +566,12 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Employer</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation Area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Accepted</th>
+                    <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Completed</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
@@ -409,10 +579,11 @@
             <tbody>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td>
@@ -421,10 +592,11 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">6</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td>
@@ -433,10 +605,11 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
                     <td class="aligncentre">5</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td>
@@ -445,11 +618,12 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td class="aligncentre">2</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -457,11 +631,12 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">1</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -469,12 +644,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">3</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">2</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -560,4 +736,163 @@
         </table>
     </div>
 </div>
+
+<!-- =========================== Assessors list 5 table =========================== -->
+<div th:fragment="prototype-assessors-list5-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">Assessor</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation Area</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Accepted</th>
+                    <th class="aligncentre" scope="col">Started</th>
+                    <th class="aligncentre" scope="col">Completed</th>
+                    <th scope="col"><span class="visuallyhidden">View progress</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td>Academic</td>
+                    <td>Healthcare, Regenerative medicine</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <td>Business</td>
+                    <td>Analytical science</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <td>Academic</td>
+                    <td>Architectures and operating system</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <td>Business</td>
+                    <td>Biophysics and soft matter physics</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">2</td>
+                    <td class="aligncentre">1</td>
+                    <td>
+                        <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- =========================== Assessors list 6 table =========================== -->
+<div th:fragment="prototype-assessors-list6-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+                <tr>
+                    <th scope="col">Assessor</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation Area</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td>Academic</td>
+                    <td>Healthcare, Regenerative medicine</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">4</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <td>Business</td>
+                    <td>Analytical science</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <td>Academic</td>
+                    <td>Architectures and operating system</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp;amp; photonics, Materials</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <td>Business</td>
+                    <td>Biophysics and soft matter physics</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td>
+                        <a href="/prototypes/5473-assessor-progress" class="button-secondary">Assign</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </html>

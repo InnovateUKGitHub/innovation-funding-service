@@ -1,10 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -38,8 +35,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     @SafeVarargs
-    public final UserResourceBuilder withRolesGlobal(List<RoleResource>... globalRoles) {
-        return withArray((roles, user) -> user.setRoles(roles), globalRoles);
+    public final UserResourceBuilder withRolesGlobal(List<RoleResource>... rolesList) {
+        return withArray((roles, user) -> user.setRoles(roles), rolesList);
     }
 
     public UserResourceBuilder withId(Long... ids) {
@@ -52,6 +49,22 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withLastName(String... lastNames) {
         return withArray((lastName, user) -> setField("lastName", lastName, user), lastNames);
+    }
+
+    public UserResourceBuilder withInviteName(String... inviteNames) {
+        return withArray((inviteName, user) -> setField("inviteName", inviteName, user), inviteNames);
+    }
+
+    public UserResourceBuilder withImageUrl(String... imageUrls) {
+        return withArray((imageUrl, user) -> setField("imageUrl", imageUrl, user), imageUrls);
+    }
+
+    public UserResourceBuilder withStatus(UserStatus... statuses) {
+        return withArray((status, user) -> setField("status", status, user), statuses);
+    }
+
+    public UserResourceBuilder withUid(String... uids) {
+        return withArray((uid, user) -> setField("uid", uid, user), uids);
     }
 
     public UserResourceBuilder withDisability(Disability... disabilities) {
@@ -80,6 +93,10 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withPassword(String... passwords) {
         return withArray((password, user) -> setField("password", password, user), passwords);
+    }
+
+    public UserResourceBuilder withProfile(Long... profiles) {
+        return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
     @SafeVarargs

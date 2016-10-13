@@ -44,8 +44,10 @@
 
 
 	<p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
-	
-	<h2 class="heading-medium">Lead technologist</h2>
+
+	<p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
+
+	<h2 class="heading-medium">Innovation Lead</h2>
 	
 	<p>
 		Paul Davidson
@@ -57,19 +59,19 @@
 	
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<h2 class="heading-medium">Approved by Lead technologist</h2>
-		<p>The spend profile must be sent to the lead technologist for their review and approval.</p>
+		<h2 class="heading-medium">Approved by Innovation Lead</h2>
+		<p>The spend profile must be sent to the Innovation Lead for their review and approval.</p>
 
 		<div class="form-group">
 	    	<label class="block-label" for="profile-reviewed">
 		      <input id="profile-reviewed" value="profile-reviewed" type="checkbox" />
-		     	The spend profile has been approved by the lead technologist
+		     	The spend profile has been approved by the Innovation Lead
 		    </label>
 	    </div>
 
 		<button data-js-modal="modal-accept-profile" id="accept-profile" class="button large" disabled="disabled">Approve</button>
 
-		<button data-js-modal="modal-reject-profile" id="reject-profile" class="button button-warning large">Reject spend profile</button>
+		<button data-js-modal="modal-reject-profile" id="reject-profile" class="button button-warning large">Reject</button>
 
 	</div>
 

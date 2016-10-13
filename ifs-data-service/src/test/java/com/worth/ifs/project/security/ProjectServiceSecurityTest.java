@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -112,7 +113,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
 
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN)
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonCompAdminRoles.forEach(role -> {
@@ -580,7 +581,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+        public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
             return null;
         }
 

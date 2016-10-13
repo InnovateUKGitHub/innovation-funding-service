@@ -17,12 +17,12 @@
             </div>
 
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to create your account
                     </h1>
                     <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                        <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
                     </ul>
                 </div>
 
@@ -150,26 +150,27 @@
                 </div>
 
                 <div class="form-group">
-                    <h3 class="heading-small">Email</h3>
+                    <p class="heading-small">Email</p>
                     <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong th:text="${model.email}"></strong></p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('password')}? error">
-                    <h3 class="heading-small">Password</h3>
                     <label class="form-label" th:for="password">
-                        <span class="visuallyhidden">Password</span>
-                        <span class="form-hint">
-                            Your password is case-sensitive and needs to:<br />
-                            <ul class="list-bullet">
-                                <li>be between 10 and 30 characters long</li>
-                                <li>contain at least 1 capital letter</li>
-                                <li>contain at least 1 number</li>
-                            </ul>
-                        </span>
+                        <span class="form-label-bold">Create password</span>
                         <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control"
+                    <div class="form-hint" id="password-hint">
+                        <p>Your password is case-sensitive and needs to:</p>
+                        <ul class="list-bullet">
+                            <li>be between 10 and 30 characters long</li>
+                            <li>contain at least 1 capital letter</li>
+                            <li>contain at least 1 number</li>
+                        </ul>
+                        <p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+                    </div>
+                    <input aria-describedby="password-hint"
+                           class="form-control"
                            th:errorclass="field-error"
                            type="password"
                            th:field="*{password}"

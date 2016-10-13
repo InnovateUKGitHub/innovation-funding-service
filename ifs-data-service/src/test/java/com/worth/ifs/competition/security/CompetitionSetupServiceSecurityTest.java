@@ -3,13 +3,17 @@ package com.worth.ifs.competition.security;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,26 +48,33 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testAllAccessDenied() {
-        setLoggedInUser(null);
-        Long competitionId = 2L;
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+                .collect(toList());
 
-        assertAccessDenied(() -> classUnderTest.create(), () -> {
-            verifyNoMoreInteractions(rules);
-        });
-        Long sectionId = 3L;
-        assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
-            verifyNoMoreInteractions(rules);
-        });
-        assertAccessDenied(() -> classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
-            verifyNoMoreInteractions(rules);
-        });
-        assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
-            verifyNoMoreInteractions(rules);
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            Long competitionId = 2L;
+
+            assertAccessDenied(() -> classUnderTest.create(), () -> {
+                verifyNoMoreInteractions(rules);
+            });
+            Long sectionId = 3L;
+            assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+                verifyNoMoreInteractions(rules);
+            });
+            assertAccessDenied(() -> classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+                verifyNoMoreInteractions(rules);
+            });
+            assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
+                verifyNoMoreInteractions(rules);
+            });
         });
     }
 
     @Test
-    public void testAllAccessAllowed() {
+    public void testCompAdminAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
 
         classUnderTest.findAllTypes();
@@ -73,11 +84,16 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }
-
     @Test
-    public void findAllCompetitionSectionsStatuses() {
-        setLoggedInUser(null);
+    public void testProjectFinanceAllAccessAllowed() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
 
+        classUnderTest.findAllTypes();
+        Long competitionId = 2L;
+        classUnderTest.create();
+        Long sectionId = 3L;
+        classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }
 
     /**

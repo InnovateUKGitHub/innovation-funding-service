@@ -41,24 +41,22 @@ Other internal users do not have access to the Summary Overview
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details
     [Documentation]    INFUND-4903
-    [Tags]
+    [Tags]    Experian
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=Killer Riffs
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
-    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
+    And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3) a
     Then the user navigates to the page           ${server}/project-setup-management/project/1/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
     And the user should not see the element       jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Vitruvius Stonework Limited")
-    [Teardown]  Logout as user
 
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
-    [Tags]  Pending
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    [Tags]
     Given the user navigates to the page          ${server}/project-setup-management/project/1/partner/documents
-    And the user clicks the button/link           link= Project setup status
+    And the user clicks the button/link           link=Project setup status
     Then the user should not see an error in the page
     And the user should see the text in the page   Projects in setup
     [Teardown]  Logout as user
