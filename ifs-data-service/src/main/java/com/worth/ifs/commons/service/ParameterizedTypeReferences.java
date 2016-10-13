@@ -58,6 +58,10 @@ public final class ParameterizedTypeReferences {
      * IFS types
      */
 
+    public static ParameterizedTypeReference<List<AffiliationResource>> affiliationResourceListType() {
+        return new ParameterizedTypeReference<List<AffiliationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
