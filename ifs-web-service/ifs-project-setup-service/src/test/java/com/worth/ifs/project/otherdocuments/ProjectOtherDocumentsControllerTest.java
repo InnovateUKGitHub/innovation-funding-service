@@ -77,7 +77,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
-        assertTrue(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertTrue(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -124,7 +126,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isSubmitAllowed());
         assertFalse(model.isShowSubmitDocumentsButton());
+        assertTrue(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -177,7 +181,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
-        assertTrue(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertTrue(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -225,7 +231,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertTrue(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isSubmitAllowed());
         assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -438,6 +446,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowRejectionMessages());
         assertTrue(model.isShowSubmitDocumentsButton());
         assertTrue(model.isSubmitAllowed());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());

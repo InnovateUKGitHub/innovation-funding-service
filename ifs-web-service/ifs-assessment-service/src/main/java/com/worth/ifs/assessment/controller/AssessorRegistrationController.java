@@ -114,11 +114,19 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", params = "search-address", method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash) {
+                                @PathVariable("inviteHash") String inviteHash,
+                                BindingResult bindingResult, ValidationHandler validationHandler) {
+
+        Supplier<String> view = () -> doViewYourDetails(model, inviteHash);
+
         addAddressOptions(registrationForm);
         registrationForm.getAddressForm().setTriedToSearch(true);
 
-        return doViewYourDetails(model, inviteHash);
+        if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
+            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcode.required");
+        }
+
+        return validationHandler.failNowOrSucceedWith(view, view);
     }
 
     @RequestMapping(value = "/{inviteHash}/register", params = "select-address", method = RequestMethod.POST)

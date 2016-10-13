@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.controller.profile;
 import com.worth.ifs.assessment.form.profile.AssessorProfileSkillsForm;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +50,7 @@ public class AssessorProfileSkillsController {
         Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ProfileResource profile = new ProfileResource();
-            profile.setBusinessType(form.getAssessorType());
-            profile.setSkillsAreas(form.getSkillAreas());
-            ServiceResult<Void> result = userService.updateProfile(loggedInUser.getId(), profile);
+            ServiceResult<Void> result = userService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
@@ -67,9 +64,8 @@ public class AssessorProfileSkillsController {
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
-        if (loggedInUser.getProfile() != null) {
-            form.setAssessorType(loggedInUser.getProfile().getBusinessType());
-            form.setSkillAreas(loggedInUser.getProfile().getSkillsAreas());
-        }
+        ProfileSkillsResource profileSkills = userService.getProfileSkills(loggedInUser.getId());
+        form.setAssessorType(profileSkills.getBusinessType());
+        form.setSkillAreas(profileSkills.getSkillsAreas());
     }
 }

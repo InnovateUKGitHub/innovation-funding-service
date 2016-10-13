@@ -3,7 +3,7 @@ package com.worth.ifs.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +14,8 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static com.worth.ifs.documentation.AffiliationDocs.affiliationResourceFields;
-import static com.worth.ifs.documentation.ProfileDocs.profileResourceBuilder;
-import static com.worth.ifs.documentation.ProfileDocs.profileResourceFields;
+import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceBuilder;
+import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceFields;
 import static com.worth.ifs.documentation.UserDocs.userResourceFields;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
@@ -126,20 +126,38 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void updateProfile() throws Exception {
+    public void getProfileSkills() throws Exception {
         Long userId = 1L;
-        ProfileResource profile = profileResourceBuilder.build();
+        ProfileSkillsResource profileSkills = profileSkillsResourceBuilder.build();
 
-        when(userProfileServiceMock.updateProfile(userId, profile)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkills));
 
-        mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
-                .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profile)))
+        mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId))
+                .andExpect(status().isOk())
                 .andDo(this.document.document(
                         pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile for")
+                                parameterWithName("id").description("Identifier of the user associated with the profile skills being requested")
                         ),
-                        requestFields(profileResourceFields)
+                        responseFields(profileSkillsResourceFields)
+                ));
+    }
+
+    @Test
+    public void updateProfileSkills() throws Exception {
+        Long userId = 1L;
+        ProfileSkillsResource profileSkills = profileSkillsResourceBuilder.build();
+
+        when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileSkills)))
+                .andExpect(status().isOk())
+                .andDo(this.document.document(
+                        pathParameters(
+                                parameterWithName("id").description("Identifier of the user to update the profile skills for")
+                        ),
+                        requestFields(profileSkillsResourceFields)
                 ));
     }
 

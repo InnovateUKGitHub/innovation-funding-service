@@ -3,7 +3,7 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -119,13 +119,24 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void updateUserProfile() {
+    public void getProfileSkills() {
         Long userId = 1L;
-        ProfileResource profile = newProfileResource().build();
+        ProfileSkillsResource expected = newProfileSkillsResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfile", usersUrl, userId), profile, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", usersUrl, userId), ProfileSkillsResource.class, expected, OK);
 
-        RestResult<Void> response = service.updateProfile(userId, profile);
+        ProfileSkillsResource response = service.getProfileSkills(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void updateProfileSkills() {
+        Long userId = 1L;
+        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
+
+        RestResult<Void> response = service.updateProfileSkills(userId, profileSkills);
         assertTrue(response.isSuccess());
     }
 
@@ -136,7 +147,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), affiliationResourceListType(), expected, OK);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObject();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
     }
 

@@ -3,24 +3,28 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import org.junit.Test;
 import org.mockito.InOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.ContractBuilder.newContract;
+import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -36,47 +40,86 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void testUpdateProfile() {
-
-        ProfileResource profile = newProfileResource().build();
-
-        UserResource userToUpdate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle("Mr").
-                withProfile(profile).
-                build();
-
+    public void testGetUserProfileSkills() {
         User existingUser = newUser().build();
-
+        Profile profile = newProfile()
+                .withUser(existingUser)
+                .withAddress(newAddress().build())
+                .withContract(newContract().build())
+                .withBusinessType(ACADEMIC)
+                .withSkillsAreas("Skills")
+                .build();
+        existingUser.setProfile(profile);
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ServiceResult<Void> result = service.updateProfile(existingUser.getId(), profile);
-        assertTrue(result.isSuccess());
+        ProfileSkillsResource expected = newProfileSkillsResource()
+                .withUser(existingUser.getId())
+                .withBusinessType(ACADEMIC)
+                .withSkillsAreas("Skills")
+                .build();
 
+        ProfileSkillsResource response = service.getProfileSkills(existingUser.getId()).getSuccessObject();
+        assertEquals(expected, response);
+
+        verify(userRepositoryMock).findOne(existingUser.getId());
+        verifyNoMoreInteractions(userRepositoryMock);
     }
 
     @Test
-    public void testUpdateProfileButUserNotFound() {
-        UserResource userToUpdate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@serviceFailureexample.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle("Mr").
-                build();
+    public void testUpdateProfileSkills() {
+        Long userId = 1L;
 
-        ServiceResult<Void> result = service.updateProfile(userToUpdate.getId(), null);
+        User existingUser = newUser().build();
+        Profile profile = newProfile()
+                .withUser(existingUser)
+                .withAddress(newAddress().build())
+                .withContract(newContract().build())
+                .withBusinessType(ACADEMIC)
+                .withSkillsAreas("Skills")
+                .build();
+        existingUser.setProfile(profile);
+
+        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+
+        User expectedUser = createLambdaMatcher(
+                user -> {
+                    assertEquals(userId, user.getId());
+                    assertEquals(existingUser.getProfile().getId(), user.getProfile().getId());
+                    assertEquals(existingUser.getProfile().getUser(), user.getProfile().getUser().getId());
+                    assertEquals(existingUser.getProfile().getAddress(), user.getProfile().getAddress());
+                    assertEquals(existingUser.getProfile().getContract(), user.getProfile().getContract());
+                    assertEquals(BUSINESS, user.getProfile().getBusinessType());
+                    assertEquals("Updated", user.getProfile().getSkillsAreas());
+                }
+        );
+
+        when(userRepositoryMock.save(expectedUser)).thenReturn(newUser().build());
+
+        ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsResource()
+                .withUser(existingUser.getId())
+                .withBusinessType(BUSINESS)
+                .withSkillsAreas("Skills")
+                .build());
+
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(userRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).save(isA(User.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testUpdateProfileSkillsButUserNotFound() {
+        Long userId = 1L;
+
+        ServiceResult<Void> result = service.updateProfileSkills(userId, newProfileSkillsResource().build());
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(User.class, userToUpdate.getId())));
+        assertTrue(result.getFailure().is(notFoundError(User.class, userId)));
 
-        verify(userRepositoryMock).findOne(userToUpdate.getId());
-        verify(userRepositoryMock, never()).save(isA(User.class));
+        verify(userRepositoryMock).findOne(userId);
+        verifyNoMoreInteractions(userRepositoryMock);
     }
 
     @Test
