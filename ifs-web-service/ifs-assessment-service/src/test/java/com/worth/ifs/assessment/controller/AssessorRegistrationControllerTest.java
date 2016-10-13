@@ -39,6 +39,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -278,6 +279,36 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertEquals(addressResourceList.get(0), form.getAddressForm().getPostcodeOptions().get(0));
         assertEquals(addressResourceList.get(1), form.getAddressForm().getPostcodeOptions().get(1));
     }
+
+    @Test
+    public void searchAddress_emptyPostcode() throws Exception {
+        String inviteHash = "hash";
+        String postcodeInput = "";
+
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+
+        MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("search-address", "")
+                .param("addressForm.postcodeInput", postcodeInput))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput"))
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        assertEquals(postcodeInput, form.getAddressForm().getPostcodeInput());
+
+        verifyZeroInteractions(addressRestService);
+    }
+
 
     @Test
     public void selectAddress_showsNoErrorsAndAddsSelectedAddressToForm() throws Exception {

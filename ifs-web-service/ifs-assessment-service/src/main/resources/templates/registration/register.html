@@ -17,12 +17,12 @@
             </div>
 
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to create your account
                     </h1>
                     <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                        <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
                     </ul>
                 </div>
 

@@ -63,7 +63,6 @@ Create assessor account: server-side validations
     And the user should see an error    Your last name should have at least 2 characters
     And the user should see an error    Your first name should have at least 2 characters
     And the user should see an error    Password must at least be 10 characters
-    And the user should see an error    Please enter your address details
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
