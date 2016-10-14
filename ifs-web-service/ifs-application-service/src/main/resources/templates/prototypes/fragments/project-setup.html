@@ -196,7 +196,7 @@
 
         <h2 class="heading-medium no-margin-bottom">Billing address</h2>
 
-        <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+        <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
         <div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" th:unless="${user == 'internal'}"/>
 

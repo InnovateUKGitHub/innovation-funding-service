@@ -5,10 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
@@ -159,10 +156,15 @@ public class UserController {
         return userProfileService.updateDetails(userResource).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{id}/updateProfile", method = PUT)
-    public RestResult<Void> updateProfile(@PathVariable("id") Long id,
-                                          @RequestBody ProfileResource profile) {
-        return userProfileService.updateProfile(id, profile).toPutResponse();
+    @RequestMapping(value = "/id/{id}/getProfileSkills", method = GET)
+    public RestResult<ProfileSkillsResource> getProfileSkills(@PathVariable("id") Long id) {
+        return userProfileService.getProfileSkills(id).toGetResponse();
+    }
+
+    @RequestMapping(value = "/id/{id}/updateProfileSkills", method = PUT)
+    public RestResult<Void> updateProfileSkills(@PathVariable("id") Long id,
+                                          @RequestBody ProfileSkillsResource profileSkills) {
+        return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
     }
 
     @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)

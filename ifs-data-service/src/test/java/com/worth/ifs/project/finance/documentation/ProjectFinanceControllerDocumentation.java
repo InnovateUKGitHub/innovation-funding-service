@@ -27,14 +27,15 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.SpendProfileDocs.*;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileCSVFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -44,7 +45,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -80,7 +80,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void approveOrRejectSpendProfile() throws Exception {
 
-        when(projectFinanceServiceMock.approveOrRejectSpendProfile(any(Long.class), any(ApprovalType.class)))
+        when(projectFinanceServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
@@ -98,7 +98,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void getSpendProfileStatusByProjectId() throws Exception {
 
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(any(Long.class)))
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(isA(Long.class)))
                 .thenReturn(serviceSuccess(ApprovalType.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))

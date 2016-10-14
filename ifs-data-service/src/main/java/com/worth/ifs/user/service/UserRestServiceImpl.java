@@ -17,7 +17,6 @@ import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.lang.String.format;
 
 /**
@@ -190,8 +189,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> updateProfile(Long id, ProfileResource profile) {
-        return putWithRestResult(format("%s/id/%s/updateProfile", userRestURL, id), profile, UserResource.class);
+    public RestResult<ProfileSkillsResource> getProfileSkills(Long userId) {
+        return getWithRestResult(format("%s/id/%s/getProfileSkills", userRestURL, userId), ProfileSkillsResource.class);
+    }
+
+    @Override
+    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills) {
+        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkills, Void.class);
     }
 
     @Override

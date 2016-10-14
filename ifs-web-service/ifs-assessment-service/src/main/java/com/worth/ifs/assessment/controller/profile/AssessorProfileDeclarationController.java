@@ -11,6 +11,7 @@ import com.worth.ifs.user.resource.AffiliationResourceBuilder;
 import com.worth.ifs.user.resource.AffiliationType;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -162,7 +163,7 @@ public class AssessorProfileDeclarationController {
     }
 
     private AffiliationResource getProfessionalAffiliations(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(PROFESSIONAL).setExists(TRUE).setDescription(form.getProfessionalAffiliations()).createAffiliationResource();
+        return new AffiliationResourceBuilder().setAffiliationType(PROFESSIONAL).setExists(StringUtils.isNotBlank(form.getProfessionalAffiliations())).setDescription(form.getProfessionalAffiliations()).createAffiliationResource();
     }
 
     private Boolean hasAppointments(Map<AffiliationType, List<AffiliationResource>> affiliations) {

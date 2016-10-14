@@ -11,7 +11,7 @@ import com.worth.ifs.user.mapper.ContractMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,15 +50,28 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private AffiliationMapper affiliationMapper;
 
-
     public enum ServiceFailures {
         UNABLE_TO_UPDATE_USER
     }
 
     @Override
-    public ServiceResult<Void> updateProfile(Long userId, ProfileResource profileResource) {
+    public ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccess(user -> updateUserProfile(user, profileResource));
+                .andOnSuccess(user -> {
+                    ProfileSkillsResource profileSkills = new ProfileSkillsResource();
+                    profileSkills.setUser(user.getId());
+                    if (user.getProfile() != null) {
+                        profileSkills.setBusinessType(user.getProfile().getBusinessType());
+                        profileSkills.setSkillsAreas(user.getProfile().getSkillsAreas());
+                    }
+                    return serviceSuccess(profileSkills);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
     }
 
     private void setUserProfileIfNoneExists(User user) {
@@ -70,10 +83,10 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<Void> updateUserProfile(User user, ProfileResource profileResource) {
         setUserProfileIfNoneExists(user);
 
-        final Profile profile = user.getProfile();
+        Profile profile = user.getProfile();
 
-        profile.setBusinessType(profileResource.getBusinessType());
-        profile.setSkillsAreas(profileResource.getSkillsAreas());
+        profile.setBusinessType(profileSkills.getBusinessType());
+        profile.setSkillsAreas(profileSkills.getSkillsAreas());
 
         userRepository.save(user);
 
@@ -127,7 +140,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
-        existingUserResource.setProfile(updatedUserResource.getProfile());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

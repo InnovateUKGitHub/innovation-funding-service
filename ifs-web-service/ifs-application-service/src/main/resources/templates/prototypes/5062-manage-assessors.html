@@ -23,9 +23,15 @@
 	<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-intro" th:remove="tag" />
 
 	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=overview'}"><strong>Overview</strong></a></li>
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=find'}"><strong>Find</strong></a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'invite' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=invite'}"><strong>Invite</strong></a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=overview'}"><strong>Overview</strong></a>
+		</li>
 	</ul>
 
 	

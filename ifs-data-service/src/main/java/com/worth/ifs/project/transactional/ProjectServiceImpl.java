@@ -1,20 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
@@ -27,6 +12,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -35,6 +21,7 @@ import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
@@ -59,12 +46,7 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectLeadStatusResource;
-import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -72,29 +54,26 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.aggregate;
 import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -106,11 +85,7 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
@@ -122,6 +97,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 
+    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
+
+    public static final String WEB_CONTEXT = "/project-setup";
     @Autowired
     private ApplicationRepository applicationService;
 
@@ -221,7 +199,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -236,8 +214,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -316,8 +294,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                    failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
-                    success -> setDocumentsSubmittedDate(project, date)));
+                        failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
+                        success -> setDocumentsSubmittedDate(project, date)));
     }
 
     private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
@@ -334,8 +312,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
                 success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
-                            serviceSuccess(true) :
-                            serviceSuccess(false));
+                        serviceSuccess(true) :
+                        serviceSuccess(false));
     }
 
     @Override
@@ -473,9 +451,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-
+        if (approved == null) {
+            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
+        }
         return getProject(projectId)
-                .andOnSuccessReturnVoid(project -> project.setOtherDocumentsApproved(approved));
+                .andOnSuccess(project -> {
+                    if (project.getOtherDocumentsApproved() != null
+                            && project.getOtherDocumentsApproved()) {
+                        return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
+                    }
+                    project.setOtherDocumentsApproved(approved);
+                    return serviceSuccess();
+                });
     }
 
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
@@ -487,21 +474,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+    public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)){
-                        return serviceSuccess(); // Already a partner
+                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(userId));
+                    if (projectUser.isPresent()) {
+                        return serviceSuccess(projectUser.get()); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
-                        projectUserRepository.save(pu);
-                        user.addUserOrganisation(organisation);
-                        userRepository.save(user);
-                        return serviceSuccess();
+                        return serviceSuccess(pu);
                     }
                 });
     }
@@ -643,7 +628,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if(projectUser != null && projectUser.getOrganisation() != null) {
+        if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -698,7 +683,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<Organisation> partnerOrganisationsToInclude =
                 simpleFilter(allPartnerOrganisations, partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
-                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
                 simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
@@ -758,22 +743,39 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return projectPartnerStatusResource;
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
-        Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
+        Notification notification = createInviteContactNotification(projectId, projectResource, kindOfNotification);
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
-        return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
+        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        inviteContactEmailSendResult.handleSuccessOrFailure(
+                failure -> handleInviteError(projectInvite, failure),
+                success -> handleInviteSuccess(projectInvite)
+        );
+        return inviteContactEmailSendResult;
     }
 
-    private Notification createInviteContactNotification(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
-        NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
-        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
+    private boolean handleInviteSuccess(ProjectInvite projectInvite) {
+        inviteProjectRepository.save(projectInvite.send());
+        return true;
+    }
+
+    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
+        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+        List<Error> errors = failure.getErrors();
+        return serviceFailure(errors);
+    }
+
+    private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
+        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, projectResource);
+        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        NotificationTarget notificationTarget = createInviteContactNotificationTarget(projectInvite);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
                 kindOfNotification, globalArguments, emptyMap());
     }
 
-    private NotificationTarget createInviteContactNotificationTarget(InviteProjectResource inviteResource) {
-        return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
+    private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
+        return new ExternalUserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
     }
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
@@ -783,7 +785,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }
 
@@ -882,7 +884,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                    andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
 

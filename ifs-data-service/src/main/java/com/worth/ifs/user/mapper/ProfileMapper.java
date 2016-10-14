@@ -1,41 +1,35 @@
 package com.worth.ifs.user.mapper;
 
-import com.worth.ifs.address.mapper.AddressMapper;
-import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.domain.Profile;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.ProfileResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.repository.ProfileRepository;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
-        config =  GlobalMapperConfig.class,
+        componentModel = "spring",
+        config = GlobalMapperConfig.class,
         uses = {
-                AddressMapper.class,
-                UserMapper.class,
-                ContractMapper.class
         }
 )
-public abstract class ProfileMapper extends BaseMapper<Profile, ProfileResource, Long> {
+public abstract class ProfileMapper {
 
-    @Mappings({
-            @Mapping(target = "user", ignore = true ),
-    })
-    @Override
-    public abstract ProfileResource mapToResource(Profile domain);
+    @Autowired
+    private ProfileRepository repository;
+
+
+    public Profile mapIdToDomain(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return repository.findOne(id);
+    }
 
     public Long mapProfileToId(Profile object) {
         if (object == null) {
             return null;
         }
         return object.getId();
-    }
-
-    public Profile createEntity() {
-        return createDefault(Profile.class);
     }
 }
 

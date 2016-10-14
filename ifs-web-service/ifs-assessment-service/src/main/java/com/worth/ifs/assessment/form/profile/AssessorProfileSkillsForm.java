@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.profile;
 
 import com.worth.ifs.commons.validation.constraints.WordCount;
 import com.worth.ifs.controller.BaseBindingResultTarget;
@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Form field model for the registration of Assessor's Skill Areas
+ * Form field model for the Assessor Profile Skill Areas page
  */
-public class AssessorRegistrationSkillsForm extends BaseBindingResultTarget {
+public class AssessorProfileSkillsForm extends BaseBindingResultTarget {
 
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
@@ -43,7 +43,7 @@ public class AssessorRegistrationSkillsForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorRegistrationSkillsForm that = (AssessorRegistrationSkillsForm) o;
+        AssessorProfileSkillsForm that = (AssessorProfileSkillsForm) o;
 
         return new EqualsBuilder()
                 .append(skillAreas, that.skillAreas)

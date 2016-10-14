@@ -1,0 +1,1 @@
+INSERT INTO contract (id, current, text, annex_1, annex_2, annex_3, created_by, created_on, modified_by, modified_on)VALUES (1, 1, 'text', 'annex1', 'annex2', 'annex3', 9, '2016-10-06 09:15:11', 9, '2016-10-06 10:22:19');

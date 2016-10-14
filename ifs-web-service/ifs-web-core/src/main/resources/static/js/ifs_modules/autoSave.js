@@ -204,10 +204,15 @@ IFS.core.autoSave = (function(){
                     }
                 }, remainingWaitingTime);
 
-            }).fail(function(data) {
+            }).fail(function(jqXHR, data) {
                 if(autoSaveInfo.length){
-                    var errorMessage = IFS.core.autoSave.getErrorMessage(data);
-                    autoSaveInfo.html('<span class="error-message">'+errorMessage+'</span>');
+                    //ignore incomplete requests, likely due to navigating away from the page
+                    if (jqXHR.readyState < 4) {
+                        return true;
+                    } else {
+                        var errorMessage = IFS.core.autoSave.getErrorMessage(data);
+                        autoSaveInfo.html('<span class="error-message">'+errorMessage+'</span>');
+                    }
                 }
             }).always(function(){
                 form.attr('data-save-status','done');

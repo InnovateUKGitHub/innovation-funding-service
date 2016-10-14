@@ -6,7 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
@@ -268,18 +268,33 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void updateUserProfile() throws Exception {
-        ProfileResource profile = newProfileResource().build();
+    public void getProfileSkills() throws Exception {
+        Long userId = 1L;
+        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+
+        when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkills));
+
+        mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(profileSkills)));
+
+        verify(userProfileServiceMock, only()).getProfileSkills(userId);
+    }
+
+    @Test
+    public void updateProfileSkills() throws Exception {
+        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfile(userId, profile)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
+        mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profile)))
+                .content(new ObjectMapper().writeValueAsString(profileSkills)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateProfile(userId, profile);
+        verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkills);
     }
 
     @Test

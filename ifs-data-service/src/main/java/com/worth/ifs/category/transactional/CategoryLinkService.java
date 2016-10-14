@@ -20,7 +20,7 @@ public interface CategoryLinkService {
      * @param className The Class name of the object to link the Category to.
      * @param classPk The Primary Key of the object to link the Category to.
      */
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, String className, Long classPk);
     
     /**
@@ -32,6 +32,6 @@ public interface CategoryLinkService {
      * @param className The Class name of the object to link the Category to.
      * @param classPk The Primary Key of the object to link the Category to.
      */
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, String className, Long classPk);
 }

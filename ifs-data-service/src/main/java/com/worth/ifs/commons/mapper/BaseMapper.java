@@ -33,10 +33,10 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
     public abstract D mapToDomain(R resource);
     public abstract Iterable<D> mapToDomain(Iterable<R> resource);
 
-    public D createDefault(Class<D> clazz) {
+    public static <T> T createDefault(Class<T> clazz) {
         // Copy and paste from BaseBuilderAmendFunctions
         try {
-            Constructor<D> constructor = clazz.getDeclaredConstructor();
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
 

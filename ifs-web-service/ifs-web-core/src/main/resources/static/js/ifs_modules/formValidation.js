@@ -218,7 +218,7 @@ IFS.core.formValidation = (function(){
             //http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
             if(s.html5validationMode){
                 var domField = field[0];
-                if(domField.validity.valid === false && domField.validity.badInput === true){
+                if(domField.validity.badInput === true || domField.validity.stepMismatch === true){
                   if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage); }
                   return false;
                 }
@@ -230,7 +230,9 @@ IFS.core.formValidation = (function(){
             else {
               //old browser mode
               //https://api.jquery.com/jQuery.isNumeric for what this checks
-              if((field.val() > 0) && !jQuery.isNumeric(field.val())){
+              var value = field.val();
+              var wholeNumber = (value.indexOf(',') == -1) && (value.indexOf('.') == -1);
+              if(!jQuery.isNumeric(value) || !wholeNumber){
                 if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage); }
                 return false;
               }

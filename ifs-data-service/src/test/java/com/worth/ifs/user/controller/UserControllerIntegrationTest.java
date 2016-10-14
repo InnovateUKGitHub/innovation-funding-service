@@ -17,13 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
-import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
@@ -152,56 +153,64 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
     }
 
-//    @Test
-//    public void testUpdateUserDetailsInvalid() {
-//        UserResource user = new UserResource();
-//        user.setEmail("NotExistin@gUser.nl");
-//        user.setFirstName("Some");
-//        user.setLastName("How");
-//
-//        RestResult<Void> restResult = controller.updateDetails(user);
-//        assertTrue(restResult.isFailure());
-//    }
-//
-//    @Test
-//    public void testUpdateUserDetails() {
-//        loginCompAdmin();
-//        UserResource userOne = controller.getUserById(1L).getSuccessObject();
-//        setLoggedInUser(userOne);
-//
-//        userOne.setFirstName("Some");
-//        userOne.setLastName("How");
-//
-//        setLoggedInUser(userOne);
-//
-//        RestResult<Void> restResult = controller.updateDetails(userOne);
-//        assertTrue(restResult.isSuccess());
-//    }
+    @Test
+    public void testUpdateUserDetailsInvalid() {
+        UserResource user = new UserResource();
+        user.setEmail("NotExistin@gUser.nl");
+        user.setFirstName("Some");
+        user.setLastName("How");
+
+        RestResult<Void> restResult = controller.updateDetails(user);
+        assertTrue(restResult.isFailure());
+    }
 
     @Test
-    public void testUpdateUserProfile() {
+    public void testUpdateUserDetails() {
         loginCompAdmin();
         UserResource userOne = controller.getUserById(1L).getSuccessObject();
         setLoggedInUser(userOne);
 
-        ContractResource contract = newContractResource()
-                .withText("contract text")
-                .withAnnexOne("annex 1")
-                .withAnnexTwo("annex 2")
-                .withAnnexThree("annex 3")
-                .build();
-
-        ProfileResource profile = newProfileResource()
-                .withBusinessType(BusinessType.BUSINESS)
-                .withAddress(newAddressResource().build())
-                .withContract(contract)
-                .build();
         userOne.setFirstName("Some");
         userOne.setLastName("How");
 
         setLoggedInUser(userOne);
 
-        RestResult<Void> restResult = controller.updateProfile(1L, profile);
+        RestResult<Void> restResult = controller.updateDetails(userOne);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void testGetProfileSkills() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        user.setProfile(newProfile()
+                .with(id(null))
+                .withBusinessType(BUSINESS)
+                .withSkillsAreas("Skills")
+                .build());
+        userRepository.save(user);
+
+        ProfileSkillsResource response = controller.getProfileSkills(userId).getSuccessObjectOrThrowException();
+        assertEquals(userId, response.getUser());
+        assertEquals(BUSINESS, response.getBusinessType());
+        assertEquals("Skills", response.getSkillsAreas());
+    }
+
+    @Test
+    public void testUpdateProfileSkills() {
+        loginCompAdmin();
+        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        setLoggedInUser(userOne);
+
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withBusinessType(BUSINESS)
+                .withSkillsAreas("Skills")
+                .build();
+
+        RestResult<Void> restResult = controller.updateProfileSkills(1L, profileSkills);
         assertTrue(restResult.isSuccess());
     }
 
@@ -225,7 +234,6 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
-    @Ignore
     public void testResendEmailVerificationNotification() {
         loginSystemRegistrationUser();
         final RestResult<Void> restResult = controller.resendEmailVerificationNotification("ewan+1@hiveit.co.uk");
