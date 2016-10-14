@@ -144,7 +144,6 @@ Assessor attempts to accept/reject an invitation which is already accepted
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 
-
 *** Keywords ***
 the assessor fills in all fields
     Select From List By Index    id=rejectReason    3
