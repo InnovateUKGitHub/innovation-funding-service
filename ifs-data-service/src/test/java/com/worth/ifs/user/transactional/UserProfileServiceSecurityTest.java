@@ -2,10 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
@@ -16,6 +13,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -46,6 +44,24 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }*/
 
     @Test
+    public void getProfileContract() {
+        // TODO
+    }
+
+    @Test
+    public void updateProfileContract() {
+        Long userId = 1L;
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.updateProfileContract(userId), () -> {
+            verify(rules).usersCanUpdateTheirSignedContract(user, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
     public void getUserAffiliations() {
         long userId = 1L;
 
@@ -68,20 +84,6 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         });
     }
 
-    @Test
-    public void updateUserContract() {
-        Long userId = 1L;
-        ProfileResource profileResource = newProfileResource().build();
-
-        UserResource user = newUserResource().build();
-        when(userLookupStrategies.findById(userId)).thenReturn(user);
-
-        assertAccessDenied(() -> classUnderTest.updateUserContract(userId, profileResource), () -> {
-            verify(rules).usersCanUpdateTheirSignedContract(user, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
     @Override
     protected Class<? extends UserProfileService> getClassUnderTest() {
         return TestUserProfileService.class;
@@ -100,6 +102,16 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
+        public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateProfileContract(Long userId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> updateDetails(UserResource userResource) {
             return null;
         }
@@ -111,11 +123,6 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
 
         @Override
         public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource) {
             return null;
         }
     }

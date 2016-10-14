@@ -11,11 +11,13 @@ import com.worth.ifs.user.mapper.ContractMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,19 +41,19 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private UserMapper userMapper;
 
     @Autowired
-    private ContractMapper contractMapper;
-
-    @Autowired
-    private ContractService contractService;
-
-    @Autowired
     private ContractRepository contractRepository;
+
+    @Autowired
+    private ContractMapper contractMapper;
 
     @Autowired
     private AffiliationMapper affiliationMapper;
 
+    private Clock clock = Clock.systemDefaultZone();
+
+
     public enum ServiceFailures {
-        UNABLE_TO_UPDATE_USER
+        UNABLE_TO_UPDATE_USER;
     }
 
     @Override
@@ -74,15 +76,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
     }
 
-    private void setUserProfileIfNoneExists(User user) {
-        if (user.getProfile() == null) {
-            user.setProfile(new Profile(user));
-        }
-    }
-
-    private ServiceResult<Void> updateUserProfile(User user, ProfileResource profileResource) {
+    private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
         setUserProfileIfNoneExists(user);
-
         Profile profile = user.getProfile();
 
         profile.setBusinessType(profileSkills.getBusinessType());
@@ -91,6 +86,42 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         userRepository.save(user);
 
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user ->
+                        getCurrentContract().andOnSuccess(currentContract -> {
+                            Profile profile = user.getProfile();
+                            boolean hasAgreement = profile.getContract() != null;
+                            boolean hasCurrentAgreement = hasAgreement && currentContract.getId().equals(profile.getContract().getId());
+                            ProfileContractResource profileContract = new ProfileContractResource();
+                            profileContract.setUser(user.getId());
+                            profileContract.setContract(contractMapper.mapToResource(currentContract));
+                            profileContract.setCurrentAgreement(hasCurrentAgreement);
+                            if (hasCurrentAgreement) {
+                                profileContract.setContractSignedDate(profile.getContractSignedDate());
+                            }
+                            return serviceSuccess(profileContract);
+                        })
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    setUserProfileIfNoneExists(user);
+                    return getCurrentContract().andOnSuccess(currentContract ->
+                            validateContract(currentContract, user).andOnSuccess(() -> {
+                                user.getProfile().setContractSignedDate(LocalDateTime.now(clock));
+                                user.getProfile().setContract(currentContract);
+                                userRepository.save(user);
+                                return serviceSuccess();
+                            })
+                    );
+                });
     }
 
     @Override
@@ -124,17 +155,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    @Override
-    public ServiceResult<Void> updateUserContract(Long userId, ProfileResource profileResource) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccess(user -> {
-                    setUserProfileIfNoneExists(user);
-                    return validateContractAndAddToProfile(user, profileResource);
-                });
-
-
-    }
-
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());
@@ -144,25 +164,21 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
 
-
-    private ServiceResult<Void> validateContractAndAddToProfile(User user, ProfileResource profileResource) {
-        if (profileResource.getContract() != null) {
-
-            Contract currentContract = contractRepository.findByCurrentTrue();
-            if (!profileResource.getContract().getId().equals(currentContract.getId())) {
-                return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.oldterms"));
-            }
-            if (user.getProfile().getContract()!=null && profileResource.getContract().getId().equals(user.getProfile().getContract().getId())) {
-                return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
-            } else {
-                user.getProfile().setContractSignedDate(LocalDateTime.now());
-                user.getProfile().setContract(currentContract);
-                userRepository.save(user);
-                return serviceSuccess();
-            }
-        } else {
-            return serviceFailure(badRequestError("Cannot sign without contract identifier present"));
+    private ServiceResult<Void> validateContract(Contract contract, User user) {
+        if (user.getProfile().getContract() != null && contract.getId().equals(user.getProfile().getContract().getId())) {
+            return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
         }
+        return serviceSuccess();
+    }
 
+
+    private void setUserProfileIfNoneExists(User user) {
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile(user));
+        }
+    }
+
+    private ServiceResult<Contract> getCurrentContract() {
+        return find(contractRepository.findByCurrentTrue(), notFoundError(Contract.class));
     }
 }

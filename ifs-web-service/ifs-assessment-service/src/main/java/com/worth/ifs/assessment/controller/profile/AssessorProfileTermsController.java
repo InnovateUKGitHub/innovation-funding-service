@@ -2,17 +2,13 @@ package com.worth.ifs.assessment.controller.profile;
 
 import com.worth.ifs.assessment.form.profile.AssessorProfileTermsForm;
 import com.worth.ifs.assessment.model.profile.AssessorProfileTermsModelPopulator;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.user.resource.ContractResource;
-import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ContractRestService;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,16 +32,16 @@ public class AssessorProfileTermsController {
     private AssessorProfileTermsModelPopulator assessorProfileTermsModelPopulator;
 
     @Autowired
-    private ContractRestService contractRestService;
-
-    @Autowired
     private UserService userService;
 
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorProfileTermsForm form) {
-        return doViewTerms(model);
+    public String getTerms(Model model,
+                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                           @ModelAttribute(FORM_ATTR_NAME) AssessorProfileTermsForm form) {
+        populateFormWithExistingValues(form, loggedInUser);
+        return doViewTerms(model, loggedInUser);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -54,29 +50,23 @@ public class AssessorProfileTermsController {
                               @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileTermsForm form,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewTerms(model);
 
-        model.addAttribute("model", assessorProfileTermsModelPopulator.populateModel());
+        Supplier<String> failureView = () -> doViewTerms(model, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ProfileResource profile = new ProfileResource();
-
-            RestResult<ContractResource> contractResult = contractRestService.getCurrentContract();
-
-            if(!contractResult.isSuccess()) {
-                return validationHandler.addAnyErrors(contractResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                        failNowOrSucceedWith(failureView, () -> "redirect:/profile/terms");
-            }
-
-            profile.setContract(contractResult.getSuccessObjectOrThrowException());
-            ServiceResult<Void> userResult = userService.updateUserContract(loggedInUser.getId(), profile);
-            return validationHandler.addAnyErrors(userResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/profile/terms");
+            ServiceResult<Void> updateResult = userService.updateProfileContract(loggedInUser.getId());
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
     }
 
-    private String doViewTerms(Model model) {
-        model.addAttribute("model", assessorProfileTermsModelPopulator.populateModel());
+    private String doViewTerms(Model model, UserResource user) {
+        model.addAttribute("model", assessorProfileTermsModelPopulator.populateModel(user.getId()));
         return "profile/terms";
+    }
+
+    private void populateFormWithExistingValues(AssessorProfileTermsForm form, UserResource user) {
+        ProfileContractResource profileContract = userService.getProfileContract(user.getId());
+        form.setAgreesToTerms(profileContract.isCurrentAgreement());
     }
 }

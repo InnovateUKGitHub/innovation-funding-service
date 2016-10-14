@@ -3,14 +3,17 @@ package com.worth.ifs.user.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDateTime;
+
 /**
- * Profile Skills Data Transfer Object
+ * Profile Contract Data Transfer Object
  */
-public class ProfileSkillsResource {
+public class ProfileContractResource {
 
     private Long user;
-    private String skillsAreas;
-    private BusinessType businessType;
+    private ContractResource contract;
+    private boolean currentAgreement;
+    private LocalDateTime contractSignedDate;
 
     public Long getUser() {
         return user;
@@ -20,20 +23,28 @@ public class ProfileSkillsResource {
         this.user = user;
     }
 
-    public String getSkillsAreas() {
-        return skillsAreas;
+    public ContractResource getContract() {
+        return contract;
     }
 
-    public void setSkillsAreas(String skillsAreas) {
-        this.skillsAreas = skillsAreas;
+    public void setContract(ContractResource contract) {
+        this.contract = contract;
     }
 
-    public BusinessType getBusinessType() {
-        return businessType;
+    public boolean isCurrentAgreement() {
+        return currentAgreement;
     }
 
-    public void setBusinessType(BusinessType businessType) {
-        this.businessType = businessType;
+    public void setCurrentAgreement(boolean currentAgreement) {
+        this.currentAgreement = currentAgreement;
+    }
+
+    public LocalDateTime getContractSignedDate() {
+        return contractSignedDate;
+    }
+
+    public void setContractSignedDate(LocalDateTime contractSignedDate) {
+        this.contractSignedDate = contractSignedDate;
     }
 
     @Override
@@ -42,12 +53,13 @@ public class ProfileSkillsResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProfileSkillsResource that = (ProfileSkillsResource) o;
+        ProfileContractResource that = (ProfileContractResource) o;
 
         return new EqualsBuilder()
+                .append(currentAgreement, that.currentAgreement)
                 .append(user, that.user)
-                .append(skillsAreas, that.skillsAreas)
-                .append(businessType, that.businessType)
+                .append(contract, that.contract)
+                .append(contractSignedDate, that.contractSignedDate)
                 .isEquals();
     }
 
@@ -55,8 +67,9 @@ public class ProfileSkillsResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(user)
-                .append(skillsAreas)
-                .append(businessType)
+                .append(contract)
+                .append(currentAgreement)
+                .append(contractSignedDate)
                 .toHashCode();
     }
 }

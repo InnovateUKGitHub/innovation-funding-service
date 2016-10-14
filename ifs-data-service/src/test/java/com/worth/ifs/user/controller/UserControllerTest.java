@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
@@ -274,8 +276,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkills));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId)
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileSkills)));
 
@@ -295,6 +296,32 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk());
 
         verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkills);
+    }
+
+    @Test
+    public void getProfileContract() throws Exception {
+        Long userId = 1L;
+        ProfileContractResource profileContract = newProfileContractResource().build();
+
+        when(userProfileServiceMock.getProfileContract(userId)).thenReturn(serviceSuccess(profileContract));
+
+        mockMvc.perform(get("/user/id/{id}/getProfileContract", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(profileContract)));
+
+        verify(userProfileServiceMock, only()).getProfileContract(userId);
+    }
+
+    @Test
+    public void updateProfileContract() throws Exception {
+        Long userId = 1L;
+
+        when(userProfileServiceMock.updateProfileContract(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateProfileContract", userId))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, only()).updateProfileContract(userId);
     }
 
     @Test
@@ -326,20 +353,5 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk());
 
         verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
-    }
-
-    @Test
-    public void updateUserContract() throws Exception {
-        Long userId = 1L;
-        ProfileResource profileResource = newProfileResource().build();
-
-        when(userProfileServiceMock.updateUserContract(userId, profileResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{id}/updateUserContract", userId)
-                .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profileResource)))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).updateUserContract(userId, profileResource);
     }
 }
