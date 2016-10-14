@@ -1,10 +1,12 @@
 package com.worth.ifs.project.finance.domain;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.worth.ifs.util.CollectionFunctions;
 
+import javax.persistence.*;
+import java.util.*;
+import java.util.function.Function;
+
+import static com.worth.ifs.util.CollectionFunctions.toSortedMap;
 import static javax.persistence.CascadeType.ALL;
 
 /**
@@ -26,6 +28,10 @@ public class CostCategoryGroup {
 
     public CostCategoryGroup() {
         // for ORM use
+    }
+
+    public SortedMap<String, List<CostCategory>> orderedLabelledCostCategories(){
+        return toSortedMap(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
     }
 
     public CostCategoryGroup(String description, Collection<CostCategory> costCategories) {

@@ -62,7 +62,14 @@ small {
 table small {
 	display: block;
 }
-
+tfoot td,
+tfoot th {
+  border-top:3px solid #000;
+  border-bottom:none;
+}
+th[scope="row"]{
+	font-weight:bold;
+}
 /* SG
 
 # IFS/Right aligned buttons

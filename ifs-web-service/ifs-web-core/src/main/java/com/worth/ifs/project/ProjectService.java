@@ -106,5 +106,5 @@ public interface ProjectService {
 
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
-    ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
+    ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
 }

@@ -102,10 +102,10 @@ Bank details submission
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     [Teardown]    logout as user
 
-Bank details for non-lead partner
+Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath    Pending
-    # Todo Pending due to INFUND-5287
+    # Todo Pending due to INFUND-5287   Note: the bank details are used for Jessica!
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs
@@ -145,13 +145,35 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
 
 
-Bank details don't show for partner with no finance details
+Bank details for non-lead partner
     [Documentation]    INFUND-3010
-    [Tags]
+    [Tags]    HappyPath
     Given guest user log-in  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link    link=00000001: best riffs
-    Then the user should not see the element    link=Bank details
-    And the user should see the text in the page    Bank details (not required)
+    When the user clicks the button/link           link=00000001: best riffs
+    Then the user should see the element           link=Bank details
+    When the user clicks the button/link           link=Bank details
+    Then the user should see the text in the page  Bank account
+    When the user enters text to a text field       name=accountNumber    51406795
+    Then the user enters text to a text field       name=sortCode    404745
+    When the user selects the radio button          addressType    ADD_NEW
+    Then the user enters text to a text field       id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link             id=postcode-lookup
+    And the user clicks the button/link             jQuery=button:contains("Use selected address")
+    And the address fields should be filled
+    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link             jquery=button:contains("Cancel")
+    Then the user should not see an error in the page
+    And the user should not see the text in the page    Bank details below are now being reviewed
+    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link             jQuery=button:contains("Submit")
+    And the user should see the element             jQuery=.success-alert p:contains("Bank account details below are now being reviewed")
+    Then the user navigates to the page             ${project_in_setup_page}
+    And the user should see the element             jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
+    [Teardown]    logout as user
 
 
 *** Keywords ***

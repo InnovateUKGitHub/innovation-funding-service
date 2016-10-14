@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
+import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -291,5 +292,4 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
-
 }

@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.resource.ProcessStates;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -37,6 +38,10 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @OrderColumn(name = "process_index")
     @Cascade(CascadeType.ALL)
     protected List<ProcessOutcome> processOutcomes;
+
+    @ManyToOne
+    @JoinColumn(name="internal_participant_id", referencedColumnName = "id")
+    protected User internalParticipant;
 
     public Process() {
     }
@@ -112,6 +117,14 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     public abstract void setTarget(TargetType target);
 
     public abstract TargetType getTarget();
+
+    public User getInternalParticipant() {
+        return internalParticipant;
+    }
+
+    public void setInternalParticipant(User internalParticipant) {
+        this.internalParticipant = internalParticipant;
+    }
 
     public boolean isInState(StatesType state) {
         return state.getBackingState().equals(activityState.getState());
