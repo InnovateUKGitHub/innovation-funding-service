@@ -1,15 +1,16 @@
 package com.worth.ifs.registration.resource;
 
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.user.resource.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * DTO for registering a User.
@@ -61,10 +62,18 @@ public class UserRegistrationResource {
     })
     private String password;
 
+    @NotNull(message = "{validation.standard.address.required}")
+    @Valid
+    private AddressResource address;
+
+    private String email;
+
+    private List<RoleResource> roles;
+
     public UserRegistrationResource() {
     }
 
-    public UserRegistrationResource(String title, String firstName, String lastName, String phoneNumber, Gender gender, Disability disability, EthnicityResource ethnicity, String password) {
+    public UserRegistrationResource(String title, String firstName, String lastName, String phoneNumber, Gender gender, Disability disability, EthnicityResource ethnicity, String password, AddressResource address) {
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,6 +82,7 @@ public class UserRegistrationResource {
         this.disability = disability;
         this.ethnicity = ethnicity;
         this.password = password;
+        this.address = address;
     }
 
     public String getTitle() {
@@ -139,15 +149,27 @@ public class UserRegistrationResource {
         this.password = password;
     }
 
+    public AddressResource getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressResource address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         UserRegistrationResource that = (UserRegistrationResource) o;
 
@@ -160,6 +182,8 @@ public class UserRegistrationResource {
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
                 .append(password, that.password)
+                .append(address, that.address)
+                .append(email, that.email)
                 .isEquals();
     }
 
@@ -174,6 +198,32 @@ public class UserRegistrationResource {
                 .append(disability)
                 .append(ethnicity)
                 .append(password)
+                .append(address)
+                .append(email)
                 .toHashCode();
+    }
+
+    public UserResource toUserResource() {
+        UserResource userResource = new UserResource();
+        userResource.setTitle(this.getTitle());
+        userResource.setFirstName(this.getFirstName());
+        userResource.setLastName(this.getLastName());
+        userResource.setPhoneNumber(this.getPhoneNumber());
+        userResource.setGender(this.getGender());
+        userResource.setDisability(this.getDisability());
+        userResource.setEthnicity(this.getEthnicity().getId());
+        userResource.setPassword(this.getPassword());
+        userResource.setEmail(this.getEmail());
+        userResource.setRoles(this.getRoles());
+
+        return userResource;
+    }
+
+    public List<RoleResource> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleResource> roles) {
+        this.roles = roles;
     }
 }

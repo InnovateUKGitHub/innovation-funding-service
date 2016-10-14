@@ -27,6 +27,7 @@ public class AssessorServiceImpl implements AssessorService {
         userRegistrationResource.setDisability(registrationForm.getDisability());
         userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
         userRegistrationResource.setPassword(registrationForm.getPassword());
+        userRegistrationResource.setAddress(registrationForm.getAddressForm().getSelectedPostcode());
 
         return assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).toServiceResult();
     }
