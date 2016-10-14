@@ -224,4 +224,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-finance-contact", inviteResource, Void.class);
     }
+
+    @Override public RestResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteResource) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/invite-project-manager", inviteResource, Void.class);
+    }
+
 }

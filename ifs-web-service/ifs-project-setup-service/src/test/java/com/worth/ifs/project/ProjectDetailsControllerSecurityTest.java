@@ -1,9 +1,10 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.user.resource.UserResource;
-import org.junit.Test;
-
 import java.util.function.Consumer;
+
+import com.worth.ifs.user.resource.UserResource;
+
+import org.junit.Test;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;

@@ -126,6 +126,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
+        if (project.getSpendProfileSubmittedDate() != null) {
+            return COMPLETE;
+        }
+
         for(Organisation organisation : organisations) {
             Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 

@@ -117,8 +117,8 @@
             <a th:if="${model.otherDocumentsSection.accessible}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
           </h2>
-          <p th:if="${model.leadPartner}">As the lead partner in the consortium, you will need to upload documents including:</p>
-          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload documents including:</p>
+          <p th:if="${model.leadPartner}">As lead partner in the consortium you will need to upload the following documents:</p>
+          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload the following documents:</p>
           <ul class="list-bullet">
             <li>a collaboration agreement</li>
             <li>exploitation plan</li>
