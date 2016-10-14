@@ -2,6 +2,8 @@ package com.worth.ifs.address.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -106,5 +108,37 @@ public class Address {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        return new EqualsBuilder()
+                .append(addressLine1, address.addressLine1)
+                .append(addressLine2, address.addressLine2)
+                .append(addressLine3, address.addressLine3)
+                .append(town, address.town)
+                .append(county, address.county)
+                .append(postcode, address.postcode)
+                .append(organisations, address.organisations)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(addressLine1)
+                .append(addressLine2)
+                .append(addressLine3)
+                .append(town)
+                .append(county)
+                .append(postcode)
+                .append(organisations)
+                .toHashCode();
     }
 }

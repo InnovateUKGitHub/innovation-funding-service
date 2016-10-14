@@ -45,7 +45,6 @@
                     <div th:each="user : ${model.invitedUsers}" th:remove="tag">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
-                            <!-- input type="radio" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" /-->
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
                     </div>
@@ -71,10 +70,12 @@
         <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
             <tr>
                 <td>
-                    <input type="text" class="form-control width-full" aria-labelledby="user-name" value="" name="name" id="name-finance-contact1"/>
+                    <label for="name-finance-contact" class="visuallyhidden">name</label>
+                    <input type="text" class="form-control width-full"  value="" name="name" id="name-finance-contact" required="required"/>
                 </td>
                 <td>
-                    <input type="email" class="form-control width-full" aria-labelledby="user-email" value="" name="email" id="email-finance-contact1"/>
+                    <label for="email-finance-contact" class="visuallyhidden">email</label>
+                    <input type="email" class="form-control width-full" value="" name="email" id="email-finance-contact" required="required"/>
                 </td>
                 <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
                     <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>

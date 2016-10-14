@@ -266,6 +266,22 @@
     </div>
 </div>
 
+<!-- Confirmation on finance checks -->
+<th:block th:fragment="approve-eligibility-modal">
+  <div class="approve-eligibility-modal" role="dialog" aria-hidden="true">
+    <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+    <h2 class="heading-medium no-margin">Approve eligible costs</h2>
+    <p>This partner will now be marked as eligible for this project.</p>
+    <hr />
+    <div class="column-half">
+        <button type="button" class="js-close buttonlink large">Cancel</button>
+    </div>
+    <div class="column-half alignright-button">
+      <button class="button" name="approve">Approve eligible costs</button>
+    </div>
+  </div>
+</th:block>
+
 <!-- Confirmation on removing collaborators -->
 <div th:fragment="modal-submit-remove-collaborator" th:if="${userIsLead}">
     <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true">

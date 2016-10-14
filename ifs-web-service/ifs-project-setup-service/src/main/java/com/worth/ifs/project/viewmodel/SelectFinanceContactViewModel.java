@@ -10,8 +10,8 @@ import com.worth.ifs.project.resource.ProjectResource;
  * view model for the "select finance contact" page
  */
 public class SelectFinanceContactViewModel {
-    private List<FinanceContactModel> organisationUsers;
-    private List<FinanceContactModel> invitedUsers;
+    private List<ProjectUserInviteModel> organisationUsers;
+    private List<ProjectUserInviteModel> invitedUsers;
     private Long organisationId;
     private Long projectId;
     private Long currentUser;
@@ -19,7 +19,7 @@ public class SelectFinanceContactViewModel {
     private CompetitionResource competition;
     private String projectName;
 
-    public SelectFinanceContactViewModel(final List<FinanceContactModel> organisationUsers, final List<FinanceContactModel> invitedUsers, final Long organisationId, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition) {
+    public SelectFinanceContactViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final Long organisationId, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition) {
         this.organisationUsers = organisationUsers;
         this.invitedUsers = invitedUsers;
         this.organisationId = organisationId;
@@ -30,11 +30,11 @@ public class SelectFinanceContactViewModel {
         this.competition = competition;
     }
 
-    public List<FinanceContactModel> getOrganisationUsers() {
+    public List<ProjectUserInviteModel> getOrganisationUsers() {
         return organisationUsers;
     }
 
-    public List<FinanceContactModel> getInvitedUsers() {
+    public List<ProjectUserInviteModel> getInvitedUsers() {
         return invitedUsers;
     }
 

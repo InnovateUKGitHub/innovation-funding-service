@@ -10,7 +10,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-2638 As a Competitions team member I want to view a page providing a link to each partners' submitted spend profile so that I can confirm these have been approved by the Technical Lead
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup    Failing
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -21,6 +21,7 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
+${la_fromage_overview}    ${server}/project-setup/project/4
 
 *** Test Cases ***
 Lead partner can view spend profile page
@@ -336,11 +337,95 @@ Project Finance is able to Approve Spend Profile
 
 *** Keywords ***
 the project finance user generates the spend profile table
-    log in as user    project.finance1@innovateuk.test    Passw0rd
-    the user navigates to the page    ${server}/project-setup-management/project/1/spend-profile/summary    # For now we need to go to the url directly, as the project finance dashboard doesn't exist yet.
-    the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
-    the user clicks the button/link    name=submit-app-details    # this second click is confirming the decision on the modal
+    the project finance user moves La Fromage into project setup if it isn't already
     logout as user
+    the users fill out project details
+    log in as user    project.finance1@innovateuk.test    Passw0rd
+    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/4
+    the user selects the checkbox  id=costs-reviewed
+    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
+    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/6
+    the user selects the checkbox  id=costs-reviewed
+    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
+    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/21
+    the user selects the checkbox  id=costs-reviewed
+    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
+    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check
+    the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
+    the user clicks the button/link    name=submit-app-details
+    logout as user
+
+
+the project finance user moves La Fromage into project setup if it isn't already
+    log in as user    project.finance1@innovateuk.test    Passw0rd
+    the user navigates to the page    ${server}/management/dashboard/projectSetup
+    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    La Fromage
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+
+
+the project finance user moves La Fromage into project setup
+    the user navigates to the page    ${server}/management/competition/3
+    the user selects the option from the drop-down menu    Yes    id=fund16
+    the user selects the option from the drop-down menu    No    id=fund17
+    the user clicks the button/link    jQuery=.button:contains("Notify applicants")
+    the user clicks the button/link    name=publish
+    the user should see the text in the page    Assessor Feedback
+    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/16
+    the user uploads the file    ${valid_pdf}
+    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/17
+    the user uploads the file    ${valid_pdf}
+    the user navigates to the page    ${server}/management/competition/3
+    the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
+    the user clicks the button/link    name=publish
+
+
+the user uploads the file
+    [Arguments]    ${upload_filename}
+    Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
+    Sleep    500ms
+
+
+the users fill out project details
+    When Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    Then the user navigates to the page    ${la_fromage_overview}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=Ludlow
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then Logout as user
+    When Log in as user    pete.tom@egg.com    Passw0rd
+    Then the user navigates to the page    ${la_fromage_overview}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=EGGS
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    logout as user
+    When Log in as user    steve.smith@empire.com    Passw0rd
+    Then the user navigates to the page    ${la_fromage_overview}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=Cheeseco
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    link=Project manager
+    And the user selects the radio button    projectManager    projectManager1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    link=Project address
+    And the user selects the radio button    addressType    REGISTERED
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    the user clicks the button/link    jQuery=button:contains("Submit")
+
+
+
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}

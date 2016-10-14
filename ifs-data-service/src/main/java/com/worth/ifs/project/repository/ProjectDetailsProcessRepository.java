@@ -1,6 +1,7 @@
 package com.worth.ifs.project.repository;
 
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
+import com.worth.ifs.project.finance.domain.FinanceCheckProcess;
 import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
