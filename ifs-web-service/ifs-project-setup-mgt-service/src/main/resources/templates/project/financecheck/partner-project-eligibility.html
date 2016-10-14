@@ -18,7 +18,7 @@
       <div class="column-two-thirds">
         <div class="page-title">
           <p class="subtitle no-margin" th:text="|${model.formattedCompetitionNumber}: ${model.competitionName}|" />
-          <h1 class="heading-xlarge" th:text="${model.organisationName}">Partner Org Name <small th:if="${model.isLeadPartner}">(Lead Partner status)</small></h1>
+          <h1 class="heading-xlarge"><th:block th:text="${model.organisationName}" /> <small th:if="${model.isLeadPartner()}">Lead Partner</small></h1>
         </div>
       </div>
       <div class="column-third alignright extra-margin">
@@ -40,11 +40,14 @@
    </div>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
-        <h3 class="heading-medium">Finance contact</h3>
-        <p>
-            <th:block th:text="${model.financeContactName}">Dave Norman</th:block> <br />
-            <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
-        </p>
+        <th:block th:unless="${model.research}">
+            <h3 class="heading-medium">Finance contact</h3>
+            <p>
+                <th:block th:text="${model.financeContactName}">Dave Norman</th:block> <br />
+                <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
+            </p>
+        </th:block>
+
         <th:block th:unless="${model.research}">
             <h3 class="heading-medium">Project costs</h3>
             <p>Please enter final project costs below</p>
@@ -133,31 +136,47 @@
             </table>
         </th:block>
 
-        <th:block th:if="${model.showApproveButton}">
+        <th:block th:if="${model.research}">
+            <h2 class="heading-medium">Academic finances</h2>
+            <p>These finances were originally submitted at the application stage in Je-S.</p>
+            <div class="upload-section">
+              <h3 class="heading-small no-margin">Download Je-S form:</h3>
+              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                 class="uploaded-file" th:text="${model.jesFileDetails?.filename}">The-uploaded-file-example.pdf</a>
+            </div>
+        </th:block>
 
-            <th:block th:if="${model.research}">
-                <h2 class="heading-medium">Academic finances</h2>
-                <p>These finances were originally submitted at the application stage in Je-S.</p>
-                <div class="upload-section">
-                  <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                  <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                     class="uploaded-file" th:text="${model.jesFileDetails?.filename}">The-uploaded-file-example.pdf</a>
-                </div>
+        <th:block th:if="${model.showApproveButton}">
+            <th:block th:unless="${model.research}">
+              <h3 class="heading-medium">Eligible costs</h3>
+              <p>After any required alterations have been made, eligible costs should be approved.</p>
+              <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+              <div class="form-group">
+                  <label class="block-label" for="costs-reviewed">
+                      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-disable-button-until-checked="#approve-eligibility" />
+                      These finances have been reviewed and are eligible for this project
+                  </label>
+              </div>
+              <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" name="approve" class="button" type="button">Approve eligible costs</button>
+              <hr />
+              <button class="button button-secondary extra-margin">Save and return to finance checks</button>
             </th:block>
 
-            <h3 class="heading-medium">Eligible costs</h3>
-            <p>After any required alterations have been made, eligible costs should be approved.</p>
-            <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
-            <div class="form-group">
-                <label class="block-label" for="costs-reviewed">
-                    <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-disable-button-until-checked="#approve-eligibility" />
-                    These finances have been reviewed and are eligible for this project
-                </label>
-            </div>
-            <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" name="approve" class="button" type="button">Approve eligible costs</button>
+            <th:block th:if="${model.research}">
+              <h3 class="heading-medium">Approve eligibility</h3>
+              <p>After review finance checks should be approved.</p>
+              <div class="form-group">
+                  <label class="block-label" for="costs-reviewed">
+                      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-disable-button-until-checked="#approve-eligibility" />
+                       <th:block th:text="${model.organisationName}" /> finances are eligible for this project
+                  </label>
+              </div>
+              <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" name="approve" class="button" type="button">Approve finances</button>
+              <hr />
+              <button class="button button-secondary extra-margin">Return to finance checks</button>
+            </th:block>
+
             <th:block th:include="fragments/modals :: approve-eligibility-modal" />
-            <hr />
-            <button class="button button-secondary extra-margin">Save and return to finance checks</button>
         </th:block>
     </form>
     <th:block th:unless="${model.showApproveButton}">
