@@ -58,10 +58,6 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
 
-        if (!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)) {
-            return NOT_REQUIRED;
-        }
-
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
             return NOT_ACCESSIBLE;

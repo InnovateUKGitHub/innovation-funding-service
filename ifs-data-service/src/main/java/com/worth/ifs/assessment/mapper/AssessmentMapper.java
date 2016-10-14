@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,7 +20,8 @@ import org.mapstruct.Mappings;
         uses = {
                 ProcessOutcomeMapper.class,
                 ProcessRoleMapper.class,
-                ApplicationMapper.class
+                ApplicationMapper.class,
+                UserMapper.class
         }
 )
 public abstract class AssessmentMapper extends BaseMapper<Assessment, AssessmentResource, Long> {

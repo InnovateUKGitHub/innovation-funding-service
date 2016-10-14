@@ -33,12 +33,17 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
+import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
+import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
-import com.worth.ifs.user.service.*;
+import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.OrganisationTypeRestService;
+import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -178,7 +183,11 @@ public class BaseUnitTest {
     @Mock
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
+    public FinanceCheckService financeCheckServiceMock;
+    @Mock
     public ProjectStatusService projectStatusServiceMock;
+    @Mock
+    public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     public ContractRestService contractRestService;
 

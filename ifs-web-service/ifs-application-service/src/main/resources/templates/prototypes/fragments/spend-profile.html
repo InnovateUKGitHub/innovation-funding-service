@@ -298,7 +298,7 @@
                 <table id="table-forecast">
                     <thead>
                         <tr>
-                            <th class="alignleft fix-left" scope="row" id="jes-cat" colspan="2">J-eS category</th>
+                            <th class="alignleft fix-left" scope="row" id="jes-cat" colspan="2">Je-S category</th>
                             <th scope="col" id="month1" aria-label="June 2016">Jun 2016</th>
                             <th scope="col" id="month2" aria-label="July 2016">Jul 2016</th>
                             <th scope="col" id="month3" aria-label="August 2016">Aug 2016</th>
@@ -453,9 +453,9 @@
 
         <div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
-            <div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-                <p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
-            </div>
+            <!--<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">-->
+                <!--<p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>-->
+            <!--</div>-->
 
             <th:block th:unless="${type == 'academic'}">
                 <div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
@@ -473,7 +473,7 @@
 
             <p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
 
-            <p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
+            <p class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead' or param.status != null and param.status[0] == 'MarkedComplete'}">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
 
 
             <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
@@ -579,7 +579,7 @@
 
                     <h2 class="heading-medium no-margin">Allow partner to edit</h2>
 
-                    <p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informed of by email, if there are any specific changes required please contact them.</p>
+                    <p><strong>Biotech Corp's</strong> spend profile has been returned to them. They have been informed by email. If you have any specific requirements please contact them directly.</p>
 
                     <hr />
 

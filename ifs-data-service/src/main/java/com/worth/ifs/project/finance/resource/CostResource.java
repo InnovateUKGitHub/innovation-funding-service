@@ -1,7 +1,6 @@
 package com.worth.ifs.project.finance.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 
@@ -33,6 +32,7 @@ public class CostResource {
         this.value = value;
     }
 
+    @JsonIgnore
     public CostGroupResource getCostGroup() {
         return costGroup;
     }
@@ -55,31 +55,6 @@ public class CostResource {
 
     public void setCostCategory(CostCategoryResource costCategory) {
         this.costCategory = costCategory;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CostResource that = (CostResource) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(value, that.value)
-                .append(costGroup, that.costGroup)
-                .append(costTimePeriod, that.costTimePeriod)
-                .append(costCategory, that.costCategory)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(value)
-                .toHashCode();
     }
 }
 

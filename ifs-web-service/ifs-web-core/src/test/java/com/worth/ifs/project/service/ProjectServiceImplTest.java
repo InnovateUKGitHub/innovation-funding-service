@@ -1,9 +1,12 @@
 package com.worth.ifs.project.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
@@ -14,16 +17,13 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -475,6 +475,20 @@ public class ProjectServiceImplTest {
         assertTrue(submitted.isSuccess());
 
         verify(projectRestService).inviteFinanceContact(1L, invite);
+    }
+
+    @Test
+    public void testInviteProjectManagerUser()  throws Exception {
+
+        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+
+        when(projectRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
+
+        ServiceResult<Void> submitted = service.inviteProjectManager(1L, invite);
+
+        assertTrue(submitted.isSuccess());
+
+        verify(projectRestService).inviteProjectManager(1L, invite);
     }
 
     @Test

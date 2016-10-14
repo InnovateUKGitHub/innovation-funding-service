@@ -23,6 +23,7 @@ import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.*;
@@ -157,6 +158,11 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProjectUserResource>> projectUserResourceList() {
         return new ParameterizedTypeReference<List<ProjectUserResource>>() {
+        };
+    }
+
+    public static ParameterizedTypeReference<List<PartnerOrganisationResource>> partnerOrganisationResourceList() {
+        return new ParameterizedTypeReference<List<PartnerOrganisationResource>>() {
         };
     }
 

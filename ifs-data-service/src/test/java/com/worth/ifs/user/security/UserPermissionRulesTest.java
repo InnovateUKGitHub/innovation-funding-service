@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -92,6 +93,17 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
             } else {
                 assertFalse(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testSystemRegistrationUserCanCreateUsers_UserRegistrationResource() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserRegistrationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanCreateUsers(newUserRegistrationResource().build(), user));
             }
         });
     }

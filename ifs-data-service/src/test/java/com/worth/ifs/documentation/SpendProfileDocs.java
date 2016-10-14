@@ -28,6 +28,8 @@ public class SpendProfileDocs {
             fieldWithPath("eligibleCosts").description("Eligible costs for each category of the Spend Profile"),
             fieldWithPath("spendProfileFigures").description("Spend Profile Figures for each month, for each category of the Spend Profile"),
             fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
+            fieldWithPath("generatedBy").description("The user who generated this Spend Profile"),
+            fieldWithPath("generatedDate").description("The date and time at which this Spend Profile was generated"),
             fieldWithPath("approval").description("If the spend profile is approved or rejected")
     };
 }
