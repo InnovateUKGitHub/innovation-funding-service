@@ -1,5 +1,9 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
@@ -17,17 +21,16 @@ import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -286,6 +289,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
+    }
+
+    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override

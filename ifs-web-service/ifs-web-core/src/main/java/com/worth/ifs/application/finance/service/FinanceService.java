@@ -16,6 +16,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 public interface FinanceService {
     ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
+    ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
     ValidationMessages addCost(Long applicationFinanceId , Long questionId);
