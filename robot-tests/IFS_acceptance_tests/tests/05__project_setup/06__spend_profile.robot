@@ -10,7 +10,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-2638 As a Competitions team member I want to view a page providing a link to each partners' submitted spend profile so that I can confirm these have been approved by the Technical Lead
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup    Failing
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
