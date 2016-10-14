@@ -28,15 +28,15 @@ public interface AssessorFeedbackService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'REMOVE_ASSESSOR_FEEDBACK')")
     ServiceResult<Void> deleteAssessorFeedbackFileEntry(long applicationId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can find out if any submitted applications for a competition need feedback uploaded", securedType = CompetitionResource.class)
 	ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", description = "Comp Admins can submit assessor feedback for a competition", securedType = CompetitionResource.class)
 	ServiceResult<Void> submitAssessorFeedback(long competitionId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", description = "Comp Admins can send out emails to Lead Applicants notifying them of the Assessor Feedback on their Applications", securedType = CompetitionResource.class)
     ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId);
 }

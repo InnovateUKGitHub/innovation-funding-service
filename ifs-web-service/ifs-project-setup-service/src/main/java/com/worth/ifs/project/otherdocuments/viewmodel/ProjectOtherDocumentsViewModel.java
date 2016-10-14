@@ -70,11 +70,17 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowSubmitDocumentsButton() {
-        return leadPartner && !otherDocumentsSubmitted;
+        return leadPartner && !otherDocumentsSubmitted && submitAllowed;
     }
+
+    public boolean isShowDisabledSubmitDocumentsButton() { return !otherDocumentsSubmitted && !submitAllowed; }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();
+    }
+
+    public boolean isShowGenericRejectionMessage() {
+        return !isShowRejectionMessages() && approvalDecisionMade && !approved;
     }
 
     public List<String> getRejectionReasons() {
@@ -104,4 +110,5 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     public LocalDateTime getSubmitDate() {
         return submitDate;
     }
+
 }

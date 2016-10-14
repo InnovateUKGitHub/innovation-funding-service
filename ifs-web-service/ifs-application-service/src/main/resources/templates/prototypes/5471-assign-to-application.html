@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assign to application'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	<style>
-		#assessor-assigned{
-			display: none;
-		}
-	</style>
 </head>
 
 <body class="full-width">
@@ -56,9 +51,25 @@
 
 	<h2 class="heading-medium">Available Assessors</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=4" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list2-table" th:remove="tag" />
+
+	<ul class="pagination">
+
+		<li class="prev">
+			<a href="#" rel="prev" title="Navigate to previous part">
+				<span class="pagination-label">Previous</span>
+				<!--<span class="pagination-part-title">0 to 20</span>-->
+			</a>
+		</li>
+		<li class="next">
+			<a href="#" rel="next" title="Navigate to next part">
+				<span class="pagination-label">Next</span>
+				<!--<span class="pagination-part-title">21 to 40</span>-->
+			</a>
+		</li>
+	</ul>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

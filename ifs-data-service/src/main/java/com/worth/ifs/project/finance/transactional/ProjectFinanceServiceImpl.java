@@ -130,7 +130,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
         List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
 
-        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+        if(spendProfiles.isEmpty()) {
+            return serviceSuccess(ApprovalType.EMPTY);
+        } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
            return serviceSuccess(ApprovalType.REJECTED);
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
            return serviceSuccess(ApprovalType.APPROVED);
@@ -305,26 +307,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
+        return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()).
+                andOnSuccess (
+                        spendProfile -> {
+                            if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                            }
 
-        Optional<SpendProfile> spendProfileOptional = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+                            spendProfile.setMarkedAsComplete(markAsComplete);
 
-        if(!spendProfileOptional.isPresent()){
-            return serviceFailure(SPEND_PROFILE_DOES_NOT_EXIST);
-        }
+                            updateSpendProfileCosts(spendProfile, table);
 
-        SpendProfile spendProfile = spendProfileOptional.get();
+                            spendProfileRepository.save(spendProfile);
 
-        if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
-        }
-
-        spendProfile.setMarkedAsComplete(markAsComplete);
-
-        updateSpendProfileCosts(spendProfile, table);
-
-        spendProfileRepository.save(spendProfile);
-
-        return serviceSuccess();
+                            return serviceSuccess();
+                        }
+                );
     }
 
     private void updateSpendProfileCosts(SpendProfile spendProfile, SpendProfileTableResource table) {

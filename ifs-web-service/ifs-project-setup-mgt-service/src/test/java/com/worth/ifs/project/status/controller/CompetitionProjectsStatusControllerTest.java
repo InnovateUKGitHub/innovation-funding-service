@@ -2,9 +2,11 @@ package com.worth.ifs.project.status.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.junit.Test;
 
 import static com.worth.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
+import static org.hamcrest.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -16,14 +18,14 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
     public void testViewCompetitionStatusPage() throws Exception {
         Long competitionId = 123L;
 
-        CompetitionProjectsStatusResource expected = newCompetitionProjectsStatusResource().build();
+        CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
-        when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(expected);
+        when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(competitionProjectsStatus);
 
-        mockMvc.perform(get("/competition/123/status")).
-                andExpect(view().name("project/competition-status")).
-                andExpect(model().attribute("model", expected)).
-                andReturn();
+        mockMvc.perform(get("/competition/" + competitionId + "/status"))
+                .andExpect(view().name("project/competition-status"))
+                .andExpect(model().attribute("model", any(CompetitionProjectStatusViewModel.class)))
+                .andReturn();
     }
 
     @Override

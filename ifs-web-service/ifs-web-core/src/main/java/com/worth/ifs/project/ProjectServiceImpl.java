@@ -14,6 +14,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,6 +221,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
         return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ProjectStatusResource getProjectStatus(Long projectId) {
+        return projectRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override

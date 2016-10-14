@@ -16,15 +16,15 @@ public class FinanceCheck {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
+    @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
     private Project project;
 
     @OneToOne
-    @JoinColumn(name = "organisationId", referencedColumnName = "id")
+    @JoinColumn(name = "organisationId", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
 
     @OneToOne(cascade = ALL)
-    @JoinColumn(name = "costGroupId", referencedColumnName = "id")
+    @JoinColumn(name = "costGroupId", referencedColumnName = "id", nullable = false)
     private CostGroup costGroup;
 
     public FinanceCheck(Project project, CostGroup costGroup) {

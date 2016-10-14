@@ -596,6 +596,20 @@ public class CollectionFunctionsTest {
         assertEquals(emptyList(), partitioned.getRight());
     }
 
+
+    @Test
+    public void testContainsAllEqualsFunction(){
+        List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
+        List<String> containedList = asList("two", "pair");
+        List<String> anotherSmallerContainedList = asList("two");
+        List<String> isNotContainedList = asList("not present");
+        assertTrue(containsAll(containingList, containedList, (s,t) -> s.getRight() == t));
+        assertTrue(containsAll(containedList,containingList, (s,t) ->  s == t.getRight()));
+        assertTrue(containsAll(containingList, anotherSmallerContainedList, (s,t) -> s.getRight() == t));
+        assertFalse(containsAll(anotherSmallerContainedList, containingList, (s,t) ->  s == t.getRight()));
+        assertFalse(containsAll(containingList, isNotContainedList, (s,t) -> s.getRight() == t));
+    }
+
     @Test
     public void testContainsAll(){
         List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
@@ -665,4 +679,5 @@ public class CollectionFunctionsTest {
 
     }
 }
+
 

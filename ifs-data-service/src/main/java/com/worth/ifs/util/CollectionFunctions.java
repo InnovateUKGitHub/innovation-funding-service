@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
@@ -224,6 +225,20 @@ public final class CollectionFunctions {
             return emptyList();
         }
         return list.stream().map(mappingFn).collect(toList());
+    }
+
+    public static <T, R> R[] simpleMapArray(T[] array, Function<T, R> mappingFn, Class<R> clazz) {
+        if (array == null || array.length == 0){
+            return (R[]) Array.newInstance(clazz, 0);
+        } else {
+            R[] result = (R[]) Array.newInstance(clazz, array.length);
+            for (int index = 0; index < array.length; index++){
+                result[index] = mappingFn.apply(array[index]);
+            }
+            return result;
+        }
+
+
     }
 
     /**
@@ -697,6 +712,18 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
+    public static final <T, R> boolean containsAll(Collection<T> containing, Collection<R> contained, BiFunction<T,R,Boolean> equalsFunction){
+        if (containing == null && contained != null) {
+            return false;
+        } else if (contained == null) {
+            return true;
+        }
+        boolean notContained = contained.stream().filter(containedItem ->
+                    !containing.stream().filter(containingItem -> equalsFunction.apply(containingItem, containedItem)).findAny().isPresent()
+        ).findAny().isPresent();
+        return !notContained;
+    }
+
     public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
         if (containing == null && contained != null) {
             return false;
@@ -706,6 +733,12 @@ public final class CollectionFunctions {
         List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
         List<S> transformedContained = contained.stream().map(transformer2).collect(toList());
         return transformedContaining.containsAll(transformedContained);
+    }
+
+    public static <T extends Comparable<T>> List<T> sorted(Collection<T> toSort){
+        List<T> sorted = new ArrayList<T>(toSort);
+        Collections.sort(sorted);
+        return sorted;
     }
 
     public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {

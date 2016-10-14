@@ -81,8 +81,13 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
-    public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations){
+
+    public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
+    }
+
+    public ProjectBuilder withOtherDocumentsApproved(Boolean approved){
+        return with (project -> project.setOtherDocumentsApproved(approved));
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -42,7 +43,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (PROJECT_FINANCE.equals(role)) {
+            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
@@ -243,7 +244,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     private List<UserRoleType> getNonProjectFinanceUserRoles() {
-        return asList(UserRoleType.values()).stream().filter(type -> type != PROJECT_FINANCE)
+        return asList(UserRoleType.values()).stream().filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN)
                 .collect(toList());
     }
 }

@@ -27,11 +27,11 @@ public interface FinanceCheckService {
     ServiceResult<Void> approve(Long projectId, Long organisationId);
 
     // TODO: Open this up to partners for updating status on project setup status page
-    @PreAuthorize("hasAuthority('project_finance') || hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view the current status of Finance Checks approvals" )
     ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasAuthority('project_finance') || hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
 }

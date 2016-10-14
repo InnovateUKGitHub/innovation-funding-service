@@ -160,6 +160,13 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void testProjectFinanceUserCanGetFileResourceForPartner(){
+        assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+    }
+
+    @Test
     public void testConsortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(){
         assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));

@@ -2,6 +2,8 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.domain.CostCategory;
+import com.worth.ifs.project.finance.domain.CostCategoryGroup;
+import com.worth.ifs.project.finance.resource.CostCategoryGroupResource;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostResource;
 
@@ -36,6 +38,10 @@ public class CostCategoryResourceBuilder extends BaseBuilder<CostCategoryResourc
 
     public CostCategoryResourceBuilder withName(String... names) {
         return withArray((name, costCategory) -> setField("name", name, costCategory), names);
+    }
+
+    public CostCategoryResourceBuilder withCostCategoryGroup(CostCategoryGroupResource... costCategoryGroupResources) {
+        return withArray((costCategoryGroupResource, costCategory) -> setField("costCategoryGroup", costCategoryGroupResource, costCategory), costCategoryGroupResources);
     }
 
 }
