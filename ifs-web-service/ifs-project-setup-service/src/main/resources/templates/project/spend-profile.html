@@ -207,7 +207,7 @@
     </th:block>
 
     <!-- Academic partner group breakdown -->
-    <th:block th:unless="${!model.research}" th:with="readonly=${form == null ? true : false}">
+    <th:block th:if="${model.research}" th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
 
         <div class="spend-profile-table academic">

@@ -5,6 +5,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
@@ -99,10 +100,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
     static {
-        RESEARCH_CAT_GROUP_ORDER.add("Directly incurred");
-        RESEARCH_CAT_GROUP_ORDER.add("Directly allocated");
-        RESEARCH_CAT_GROUP_ORDER.add("Indirect Costs");
-        RESEARCH_CAT_GROUP_ORDER.add("Exceptions");
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
 
 
