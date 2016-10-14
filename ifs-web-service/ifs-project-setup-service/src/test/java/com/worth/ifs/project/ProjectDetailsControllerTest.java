@@ -1,5 +1,12 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
@@ -13,10 +20,17 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.ProjectUserInviteModel;
+import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
+import com.worth.ifs.project.viewmodel.SelectProjectManagerViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,16 +38,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static com.worth.ifs.address.resource.OrganisationAddressType.*;
+import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -55,13 +65,20 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {

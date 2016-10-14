@@ -43,7 +43,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testUpdateProjectManager() {
-        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null));
     }
 
     @Test

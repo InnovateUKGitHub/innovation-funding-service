@@ -1,21 +1,23 @@
 package com.worth.ifs.project.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -23,10 +25,16 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_REST_RESULT_
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.junit.Assert.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectRestServiceImpl> {
     private static final String projectRestURL = "/project";
@@ -509,6 +517,32 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         setupPostWithRestResultExpectations(expectedUrl, OK);
 
         RestResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteProjectManager() {
+        long projectId = 123L;
+        InviteProjectResource invite = newInviteProjectResource().build();
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/invite-project-manager";
+        setupPostWithRestResultExpectations(expectedUrl, invite, OK);
+
+        RestResult<Void> result = service.inviteProjectManager(projectId, invite);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteFinanceContact() {
+        long projectId = 123L;
+        InviteProjectResource invite = newInviteProjectResource().build();
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/invite-finance-contact";
+        setupPostWithRestResultExpectations(expectedUrl, invite, OK);
+
+        RestResult<Void> result = service.inviteFinanceContact(projectId, invite);
 
         assertTrue(result.isSuccess());
     }
