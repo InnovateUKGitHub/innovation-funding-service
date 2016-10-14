@@ -116,7 +116,6 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
@@ -134,7 +133,6 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)

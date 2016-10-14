@@ -2,6 +2,8 @@ package com.worth.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.authentication.service.RestIdentityProviderService;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
@@ -10,9 +12,11 @@ import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationSource;
 import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -29,13 +33,17 @@ import java.util.Map;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -47,7 +55,6 @@ import static com.worth.ifs.user.resource.Gender.NOT_STATED;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.time.LocalDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -77,22 +84,23 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Test
     public void createUser() throws Exception {
-        RoleResource roleResource = newRoleResource().build();
         List<Role> roles = newRole().build(1);
-        Ethnicity ethnicity = newEthnicity().with(id(1L)).build();
+        EthnicityResource ethnicityResource = newEthnicityResource().with(id(1L)).build();
+        Ethnicity ethnicity = newEthnicity().withId(1L).build();
+        AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
+        Address address = newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
 
-        UserResource userToCreateResource = newUserResource()
-                .withId((Long) null)
+        UserRegistrationResource userToCreateResource = newUserRegistrationResource()
                 .withTitle("Mr")
                 .withFirstName("First")
                 .withLastName("Last")
                 .withGender(NOT_STATED)
-                .withEthnicity(ethnicity.getId())
+                .withEthnicity(ethnicityResource)
                 .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRolesGlobal(asList(roleResource))
+                .withAddress(addressResource)
                 .build();
 
         User userToCreate = newUser()
@@ -106,10 +114,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRoles(roles)
+
                 .build();
 
-        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource)).thenReturn(serviceSuccess());
-        when(userMapperMock.mapToDomain(userToCreateResource)).thenReturn(userToCreate);
+        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
+        when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
+        when(addressMapperMock.mapToDomain(userToCreateResource.getAddress())).thenReturn(
+                newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build());
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
 
         User userToSave = createLambdaMatcher(user -> {
@@ -129,6 +140,19 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(roles, user.getRoles());
             assertTrue(user.getOrganisations().isEmpty());
 
+            assertNotNull(user.getProfile());
+            Profile profile = user.getProfile();
+            assertNull(profile.getId());
+            assertNull(profile.getSkillsAreas());
+            assertNull(profile.getBusinessType());
+            assertNull(profile.getContract());
+            assertNull(profile.getCreatedBy());
+            assertNull(profile.getCreatedOn());
+            assertNull(profile.getModifiedBy());
+            assertNull(profile.getModifiedOn());
+            assertEquals(address, profile.getAddress());
+
+
             return true;
         });
 
@@ -139,6 +163,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
 
         ServiceResult<UserResource> result = service.createUser(userToCreateResource);
+
         assertTrue(result.isSuccess());
         assertEquals(savedUserResource, result.getSuccessObject());
     }

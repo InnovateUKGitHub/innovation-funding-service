@@ -1,6 +1,8 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +15,7 @@ import java.util.Optional;
 public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createUser(@P("user") UserResource userResource);
+    ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createOrganisationUser(Long organisationId, @P("user") UserResource userResource);

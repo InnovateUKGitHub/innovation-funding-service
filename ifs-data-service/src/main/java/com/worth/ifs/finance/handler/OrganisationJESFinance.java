@@ -42,7 +42,9 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<FinanceRow> costs = financeRowRepository.findByApplicationFinanceId(applicationFinanceId);
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
-        return addCostsToCategories(costCategories, costs);
+        costCategories = addCostsToCategories(costCategories, costs);
+        costCategories = calculateTotals(costCategories);
+        return costCategories;
     }
 
     @Override
