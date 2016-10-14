@@ -1,1 +1,1 @@
-Your application into competition ${competitionName}
+Your application into the competition ${competitionName}
