@@ -152,7 +152,7 @@ Initial details: Autosave
     [Documentation]    INFUND-3001
     [Tags]    Pending
     # TODO pending due Ito NFUND-5367
-    When the user clicks the button/link    link=Competition set up
+    When the user clicks the button/link    link=Competition setup
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
 
@@ -208,12 +208,13 @@ Initial details can be edited again except from Comp Type and Date
 Initial details should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition set up
+    Given the user navigates to the page    ${server}/management/competition/setup/8
     Then the user should see the element    jQuery=img.section-status:eq(0)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 User should have access to all the sections
     [Documentation]    INFUND-4725
+    Given the user navigates to the page    ${server}/management/competition/setup/8
     Then The user should see the element    link=Funding Information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
@@ -224,7 +225,8 @@ User should have access to all the sections
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
-    Given The user clicks the button/link    link=All competitions
+    Given the user navigates to the page    ${server}/management/competition/setup/8
+    And The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
@@ -261,8 +263,8 @@ Funding information client-side validations
 Funding information Autosave
     [Documentation]    INFUND-4581
     Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link=Competition set up
-    and the user clicks the button/link    link=Funding Information
+    When the user clicks the button/link    link=Competition setup
+    And the user clicks the button/link    link=Funding Information
     Then the user should see the correct details in the funding information form
 
 Funding informations calculations
@@ -304,7 +306,7 @@ Funding Information can be edited
 Funding information should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition set up
+    When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(1)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
@@ -370,7 +372,7 @@ Eligibility client-side validations
 Eligibility Autosave
     [Documentation]    INFUND-4582
     [Tags]
-    When the user clicks the button/link    link=Competition set up
+    When the user clicks the button/link    link=Competition setup
     and the user clicks the button/link    link=Eligibility
     Then the user should see the correct details in the eligibility form
 
@@ -389,7 +391,7 @@ Eligibility can be marked as done then edit again
     And the user should see the text in the page    Test stream name
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
-    When the user clicks the button/link    link=Competition set up
+    When the user clicks the button/link    link=Competition setup
     When the user clicks the button/link    link=Eligibility
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -397,7 +399,7 @@ Eligibility can be marked as done then edit again
 Eligibility should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition set up
+    When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(2)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
@@ -438,7 +440,7 @@ Milestones: Client side validations
 
 Milestones: Autosave
     [Tags]
-    When the user clicks the button/link    link=Competition set up
+    When the user clicks the button/link    link=Competition setup
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
 
@@ -450,7 +452,7 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
-    When The user clicks the button/link    link=Competition set up
+    When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
@@ -498,7 +500,7 @@ Application questions: Autosave
     [Tags]    Pending
     # Pending due to INFUND-5538
     Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link=Competition set up
+    When the user clicks the button/link    link=Competition setup
     And The user clicks the button/link    link=Application Questions
     Then the user should see the correct inputs in the Applications questions form
 
@@ -518,7 +520,7 @@ Application questions: Mark as done and the Edit again
 
 Application questions: should have a green check
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition set up
+    When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
 
 Ready To Open button should be visible
@@ -533,11 +535,11 @@ Ready to open button shouldn't be visible when the user re-edits the question
     [Setup]
     Given The user clicks the button/link    link=Initial Details
     When the user clicks the button/link    jQuery=.button:contains("Edit")
-    And The user clicks the button/link    link=Competition set up
+    And The user clicks the button/link    link=Competition setup
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial Details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
-    ...    AND    And The user clicks the button/link    link=Competition set up
+    ...    AND    And The user clicks the button/link    link=Competition setup
 
 User should be able to Save the competition as open
     [Documentation]    INFUND-4468
