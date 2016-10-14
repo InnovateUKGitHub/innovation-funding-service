@@ -1,8 +1,10 @@
 package com.worth.ifs.project.finance.transactional;
 
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.security.SecuredBySpring;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -36,6 +38,9 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
+
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId);
 
     @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);

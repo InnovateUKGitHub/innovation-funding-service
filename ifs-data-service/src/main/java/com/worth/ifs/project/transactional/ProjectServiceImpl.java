@@ -8,7 +8,6 @@ import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
@@ -20,7 +19,11 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
@@ -36,10 +39,14 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
+import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -54,18 +61,17 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -101,8 +107,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-    @Autowired
-    private ApplicationRepository applicationService;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -156,7 +160,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceCheckRepository financeCheckRepository;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private FinanceRowRepository financeRowRepository;
 
     @Autowired
     private InviteProjectRepository inviteProjectRepository;
@@ -232,18 +248,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
                 AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
-                existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
+                existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
                 organisationAddressRepository.save(organisationAddress);
             }
             project.setAddress(newAddress);
         }
 
-        if (projectDetailsWorkflowHandler.projectAddressAdded(project, getCurrentlyLoggedInPartner(project))) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-        }
+
+        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(user ->
+               projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
+               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Override
@@ -268,16 +283,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
 
-        return getProject(projectId).andOnSuccess(project -> {
-
-            ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
+        return getProject(projectId).andOnSuccess(project ->
+                getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
                 return serviceSuccess();
             } else {
                 return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
-        });
+        }));
     }
 
     @Override
@@ -649,11 +663,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         project.addProjectUser(financeContact);
 
-        if (projectDetailsWorkflowHandler.projectFinanceContactAdded(project, getCurrentlyLoggedInPartner(project))) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-        }
+        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
+            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
+            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -698,11 +710,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
-        Optional<SpendProfile> spendProfile = Optional.ofNullable(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
+        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(bankDetailsStatus);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
@@ -878,12 +890,21 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
             ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
-                projectUsers.forEach(project::addProjectUser);
+
+                List<Organisation> uniqueOrganisations =
+                        removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
+
+                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
+                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisation().getId())));
+
+                project.setProjectUsers(projectUsers);
+                project.setPartnerOrganisations(partnerOrganisations);
                 return projectRepository.save(project);
             });
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
+                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
@@ -892,11 +913,67 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
+        ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+    }
+
+    private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
+
+        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
+                financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                        serviceSuccess() :
+                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+        return aggregate(results).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
+    }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
+
+        organisations.forEach(organisation -> costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
+                andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
+                andOnSuccessReturn(this::populateFinanceCheck));
+        return serviceSuccess();
+    }
+
+    private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
+        List<Cost> costs = new ArrayList<>();
+        List<CostCategory> costCategories = costCategoryType.getCostCategories();
+        CostGroup costGroup = new CostGroup("finance-check", costs);
+        costCategories.forEach(costCategory -> {
+            Cost cost = new Cost(new BigDecimal(0.0));
+            costs.add(cost);
+            cost.setCostCategory(costCategory);
+        });
+        costGroup.setCosts(costs);
+
+        FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
+        financeCheck.setOrganisation(organisation);
+        financeCheck.setProject(newProject);
+        return financeCheckRepository.save(financeCheck);
+    }
+
+    private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
+        Organisation organisation = financeCheck.getOrganisation();
+        Application application = financeCheck.getProject().getApplication();
+        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            List<FinanceRow> financeRows = financeRowRepository.findByApplicationFinanceId(applicationFinance.getId());
+            financeCheck.getCostGroup().getCosts().forEach(
+                    c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
+            );
+        }
+        return financeCheckRepository.save(financeCheck);
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
@@ -919,13 +996,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
-    private boolean validateDocumentsUploaded(final Project project) {
-        return project.getExploitationPlan() != null
-                && project.getCollaborationAgreement() != null
-                && getExistingProjectManager(project).isPresent()
-                && project.getDocumentsSubmittedDate() == null;
-    }
-
     private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
 
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
@@ -943,24 +1013,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return serviceSuccess();
         });
 
-        return setProjectManagerResult.andOnSuccess(() -> {
-
-            if (projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)) {
-                return serviceSuccess();
-            } else {
-                return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-            }
-        });
-    }
-
-    private ProjectUser getCurrentlyLoggedInPartner(Project project) {
-        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
-    }
-
-    private ProjectUser getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
-        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return simpleFindFirst(project.getProjectUsers(), pu ->
-                pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role)).get();
+        return setProjectManagerResult.andOnSuccessReturn(result ->
+               projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
+               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

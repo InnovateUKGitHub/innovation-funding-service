@@ -6,7 +6,7 @@ The feedback for your application ${applicationName} to the competition ${compet
 
 Please sign into your Innovation Funding Service dashboard.
 
-The feedback provided by the independent assessors has been reviewed by Innovate Uk.
+The feedback provided by the independent assessors has been reviewed by Innovate UK.
 
 Please note that Innovate UK is unable to enter into any further discussion with regards to your feedback.
 

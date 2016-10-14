@@ -1,5 +1,6 @@
 package com.worth.ifs.project.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -10,6 +11,8 @@ public class CostCategoryResource {
     private String name;
 
     private CostCategoryGroupResource costCategoryGroup;
+
+    private String label;
 
     public Long getId() {
         return id;
@@ -27,12 +30,21 @@ public class CostCategoryResource {
         this.name = name;
     }
 
+    @JsonIgnore
     public CostCategoryGroupResource getCostCategoryGroup() {
         return costCategoryGroup;
     }
 
     public void setCostCategoryGroup(CostCategoryGroupResource costCategoryGroup) {
         this.costCategoryGroup = costCategoryGroup;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

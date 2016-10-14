@@ -32,7 +32,6 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
     private TestServiceLevel3 springWrappedTestServiceLevel3;
     private TestServiceCrossThread springWrappedTestServiceCrossThread;
 
-
     @Before
     public void setup() {
         applicationContext.registerBeanDefinition("springWrappedTestServiceLevel1", new RootBeanDefinition(TestServiceLevel1.class));
@@ -43,7 +42,6 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         springWrappedTestServiceLevel3 = (TestServiceLevel3) applicationContext.getBean("springWrappedTestServiceLevel3");
         setLoggedInUser(newUserResource().build());
     }
-
 
     @Test
     public void testNotSecuredMethodsAreAllowedWhenMustBeSecuredByOtherServicesIsFalse() {
@@ -75,9 +73,7 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
     @Test(expected = NotSecuredMethodException.class)
     public void testWhenCallingThereIsAMethodThatIsOkayAndThenOneThatIsNot() {
         springWrappedTestServiceLevel1.notSecuredButNeedsToBeSecuredByAMethodHigherOnTheStack();
-
     }
-
 
     @Test
     public void testThatWeDoNotBleedAcrossThreads() throws Exception {

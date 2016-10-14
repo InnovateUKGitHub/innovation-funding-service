@@ -428,7 +428,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void submitBanksDetail() throws Exception {
+    public void submitBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -456,7 +456,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetailWithInvalidDetailsReturnsErrors() throws Exception {
+    public void submitInvalidBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -556,7 +556,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     public void getBankDetailsProjectSummary() throws  Exception {
         Long projectId = 123L;
         List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withCompetitionName("Galaxy Note 7 disaster case study").withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
         when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
         mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
                 andExpect(status().isOk()).
@@ -568,6 +568,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         responseFields(projectBankDetailsStatusSummaryFields)
                 ));
     }
+
+    @Test
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));

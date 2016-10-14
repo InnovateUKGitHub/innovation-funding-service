@@ -27,9 +27,10 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011, INFUND-2621
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
+    And The user should see the text in the page    The lead partner of the consortium will need to upload documents including:
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     When the user navigates to the page    ${project_in_setup_page}
@@ -138,8 +139,8 @@ Non-lead partner cannot remove or submit right
 
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
-    [Setup]    Logout as user
     [Tags]
+    [Setup]    Logout as user
     Given Guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -213,8 +214,8 @@ Status in the dashboard remains pending after uploads
 
 Mandatory document submission
     [Documentation]    INFUND-3011
-    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     [Tags]    HappyPath
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -230,7 +231,7 @@ Mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link     link=What's the status of each of my partners?
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -246,7 +247,6 @@ PM can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     And the user goes back to the previous page
-
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -293,7 +293,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link     link=What's the status of each of my partners?
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
 
@@ -340,9 +340,8 @@ Project Finance is able to Approve and Reject
     When the user clicks the button/link              jQuery=button:contains("Reject documents")
     And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    [Teardown]  logout as user
-
-#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
+    #TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
+    [Teardown]    logout as user
 
 CompAdmin approves other documents
     [Documentation]    INFUND-4621
@@ -374,21 +373,17 @@ CompAdmin can see Project status updated
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
 
-
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian
     [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok
-
-
-
-#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents rejected
+    #TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents rejected
 
 *** Keywords ***
 the user uploads to the collaboration agreement question

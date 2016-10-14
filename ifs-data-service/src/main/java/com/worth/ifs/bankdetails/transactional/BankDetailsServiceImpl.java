@@ -48,7 +48,6 @@ import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -155,7 +154,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
         Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), org.getId()).getSuccessObject();
 
-        if(isResearch(OrganisationTypeEnum.getFromId(org.getOrganisationType().getId())) || !isSeekingFunding){
+        if(!isSeekingFunding){
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
