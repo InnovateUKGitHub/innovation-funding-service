@@ -2,6 +2,12 @@ package com.worth.ifs.project.financecheck.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.resource.builders.FileEntryResourceBuilder;
+import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
@@ -12,7 +18,9 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -44,12 +52,17 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long projectId = 123L;
         Long organisationId = 456L;
         Long applicationId = 789L;
+        Long financeFileEntry = 1L;
 
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
+        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .withFinanceFileEntry(financeFileEntry)
+                .build();
+        FileEntryResource jesFileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -65,6 +78,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                         build());
         when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
+        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationResource.getId(), organisationId)).thenReturn(applicationFinanceResource);
+        when(financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry())).thenReturn(RestResult.restSuccess(jesFileEntryResource));
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
                 andExpect(view().name("project/financecheck/partner-project-eligibility")).
                 andReturn();
@@ -76,6 +92,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         assertNull(financeCheckViewModel.getFinanceContactName());
         assertTrue(financeCheckViewModel.isFinanceChecksApproved());
         assertFalse(financeCheckViewModel.isResearch());
+        assertEquals(new FileDetailsViewModel(jesFileEntryResource), financeCheckViewModel.getJesFileDetails());
 
         FinanceCheckForm form = (FinanceCheckForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getCosts().size(), 0);
@@ -111,6 +128,86 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
 
         verify(financeCheckServiceMock).update(financeCheck);
         verify(financeCheckServiceMock).approveFinanceCheck(123L, 456L);
+    }
+
+    @Test
+    public void testDownloadJesFileWhenFinanceFileEntryNotPresent() throws Exception {
+
+        Long projectId = 1L;
+        Long applicationId = 1L;
+        Long organisationId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+
+        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationResource.getId(), organisationId)).thenReturn(applicationFinanceResource);
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId + "/jes-file"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        // Assert that there is no content
+        assertEquals("", response.getContentAsString());
+        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertEquals(0, response.getContentLength());
+
+    }
+
+    @Test
+    public void testDownloadJesFileSuccess() throws Exception {
+
+        Long projectId = 1L;
+        Long applicationId = 1L;
+        Long organisationId = 1L;
+        Long financeFileEntry = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+
+        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .withFinanceFileEntry(financeFileEntry)
+                .build();
+
+        FileEntryResource jesFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
+                .withName("jes-file.pdf")
+                .build();
+        byte[] content = "HelloWorld".getBytes();
+        ByteArrayResource jesByteArrayResource = new ByteArrayResource(content);
+
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationResource.getId(), organisationId)).thenReturn(applicationFinanceResource);
+        when(financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry())).thenReturn(RestResult.restSuccess(jesFileEntryResource));
+        when(financeService.getFinanceDocumentByApplicationFinance(applicationFinanceResource.getId())).thenReturn(RestResult.restSuccess(jesByteArrayResource));
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId + "/jes-file"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+        assertEquals("HelloWorld", response.getContentAsString());
+        assertEquals("inline; filename=\"jes-file.pdf\"", response.getHeader("Content-Disposition"));
+        assertEquals(10, response.getContentLength());
+
+    }
+
+    private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
+        T[] enumConstants = enums.getEnumConstants();
+        return enumConstants[index % enumConstants.length];
     }
 
     @Override

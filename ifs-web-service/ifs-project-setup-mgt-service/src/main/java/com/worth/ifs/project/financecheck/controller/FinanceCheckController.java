@@ -1,10 +1,15 @@
 package com.worth.ifs.project.financecheck.controller;
 
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.file.controller.FileDownloadControllerUtils;
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
@@ -26,12 +31,16 @@ import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -63,6 +72,9 @@ public class FinanceCheckController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private FinanceService financeService;
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -135,6 +147,24 @@ public class FinanceCheckController {
         );
     }
 
+    @RequestMapping(value = "/organisation/{organisationId}/jes-file", method = GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
+                                                                           @PathVariable("organisationId") Long organisationId) {
+
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisationId);
+
+        if (applicationFinanceResource.getFinanceFileEntry() != null) {
+            FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+            ByteArrayResource jesByteArrayResource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceResource.getId()).getSuccessObject();
+            return FileDownloadControllerUtils.getFileResponseEntity(jesByteArrayResource, jesFileEntryResource);
+        }
+
+        return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
+
+    }
 
     private String redirectToFinanceCheckForm(Long projectId, Long organisationId){
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
@@ -171,7 +201,15 @@ public class FinanceCheckController {
 
         boolean isLeadPartner = isLeadPartner(projectId, organisationId);
 
-        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+        FileDetailsViewModel jesFileDetailsViewModel = null;
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisationId);
+        if (applicationFinanceResource.getFinanceFileEntry() != null) {
+            FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+            jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+        }
+
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(),
+                isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
 
         if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
             financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
