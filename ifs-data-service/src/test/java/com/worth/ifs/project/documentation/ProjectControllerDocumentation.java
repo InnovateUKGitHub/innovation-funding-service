@@ -19,12 +19,8 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.controller.ProjectController;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectLeadStatusResource;
-import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import org.junit.Before;
@@ -53,11 +49,13 @@ import static com.worth.ifs.documentation.BankDetailsDocs.projectBankDetailsStat
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
+import static com.worth.ifs.documentation.ProjectDocs.projectStatusResourceFields;
 import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
+import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -130,6 +128,22 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Id of the project that is being requested")
                         ),
                         responseFields(projectResourceFields)
+                ));
+    }
+
+    @Test
+    public void getStatus() throws Exception {
+        Long projectId = 1L;
+        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
+
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+
+        mockMvc.perform(get("/project/{id}/status", projectId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project that is being requested")
+                        ),
+                        responseFields(projectStatusResourceFields)
                 ));
     }
 
@@ -435,7 +449,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void submitBanksDetail() throws Exception {
+    public void submitBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -463,7 +477,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetailWithInvalidDetailsReturnsErrors() throws Exception {
+    public void submitInvalidBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -563,7 +577,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     public void getBankDetailsProjectSummary() throws  Exception {
         Long projectId = 123L;
         List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withCompetitionName("Galaxy Note 7 disaster case study").withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
         when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
         mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
                 andExpect(status().isOk()).
@@ -607,7 +621,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 )
             ));
     }
-
+	
+	@Test
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));

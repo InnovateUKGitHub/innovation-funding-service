@@ -25,8 +25,8 @@ import java.util.List;
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 
-    public static final int USER_COUNT  = 16;
-    public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ifs_web_user@innovateuk.org", "compadmin@innovateuk.test", "comp_exec1@innovateuk.test", "comp_exec2@innovateuk.test", "comp_technologist1@innovateuk.test", "comp_technologist2@innovateuk.test");
+    public static final int USER_COUNT  = 17;
+    public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ifs_web_user@innovateuk.org", "compadmin@innovateuk.test", "comp_exec1@innovateuk.test", "comp_exec2@innovateuk.test", "comp_technologist1@innovateuk.test", "comp_technologist2@innovateuk.test", "ifsadmin@innovateuk.test");
 
     /**
      * Set a user on the Spring Security ThreadLocals

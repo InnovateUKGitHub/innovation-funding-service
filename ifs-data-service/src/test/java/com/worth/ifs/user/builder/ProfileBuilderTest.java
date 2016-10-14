@@ -1,7 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.user.domain.BusinessType;
+import com.worth.ifs.user.resource.BusinessType;
 import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import org.junit.Test;
@@ -12,8 +12,8 @@ import java.util.List;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.user.builder.ContractBuilder.newContract;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
-import static com.worth.ifs.user.domain.BusinessType.ACADEMIC;
-import static com.worth.ifs.user.domain.BusinessType.BUSINESS;
+import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
 
 public class ProfileBuilderTest {

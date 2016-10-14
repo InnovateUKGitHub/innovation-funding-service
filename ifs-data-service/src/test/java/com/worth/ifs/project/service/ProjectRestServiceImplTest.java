@@ -14,7 +14,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -27,6 +27,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectU
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -58,6 +59,18 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertEquals(returnedResponse, result);
 
     }
+
+    @Test
+    public void testGetStatusByProjectId() {
+        ProjectStatusResource returnedResponse = newProjectStatusResource().build();
+
+        setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);
+
+        ProjectStatusResource result = service.getProjectStatus(123L).getSuccessObject();
+
+        assertEquals(returnedResponse, result);
+    }
+
     
     @Test
     public void testUpdateFinanceContact() {

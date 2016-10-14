@@ -12,6 +12,10 @@ public class ProjectOrganisationCompositeId implements Serializable {
 
     private final Long organisationId;
 
+    public static ProjectOrganisationCompositeId id(Long projectId, Long organisationId){
+        return new ProjectOrganisationCompositeId(projectId, organisationId);
+    }
+
     public ProjectOrganisationCompositeId(Long projectId, Long organisationId) {
 
         this.projectId = projectId;

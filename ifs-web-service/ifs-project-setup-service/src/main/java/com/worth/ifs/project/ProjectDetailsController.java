@@ -299,13 +299,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
         LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
-        model.addAttribute(FORM_ATTR_NAME, form);
+        return doViewProjectStartDate(model, projectResource, form);
 
-        return "project/details-start-date";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -316,8 +313,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                   Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> viewStartDate(projectId, model, form, loggedInUser);
-
+        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
@@ -434,6 +430,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
+    }
+
+    private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        model.addAttribute(FORM_ATTR_NAME, form);
+        return "project/details-start-date";
     }
 
     private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {

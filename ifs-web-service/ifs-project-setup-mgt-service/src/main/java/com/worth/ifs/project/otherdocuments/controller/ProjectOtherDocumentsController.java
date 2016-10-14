@@ -16,6 +16,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,6 +48,7 @@ public class ProjectOtherDocumentsController {
     @Autowired
     private ApplicationService applicationService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(method = GET)
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
@@ -54,6 +56,7 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(method = POST)
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
                                                BindingResult bindingResult,
@@ -67,6 +70,7 @@ public class ProjectOtherDocumentsController {
                 () -> projectService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/collaboration-agreement", method = GET)
     public
     @ResponseBody
@@ -79,6 +83,7 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/exploitation-plan", method = GET)
     public
     @ResponseBody

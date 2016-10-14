@@ -18,13 +18,16 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -153,5 +156,15 @@ public abstract class BaseTransactionalService  {
 
     protected ServiceResult<Organisation> getOrganisation(Long id) {
         return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+    }
+
+    protected ServiceResult<User> getCurrentlyLoggedInUser() {
+        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (currentUser == null) {
+            return serviceFailure(forbiddenError());
+        }
+
+        return getUser(currentUser.getId());
     }
 }

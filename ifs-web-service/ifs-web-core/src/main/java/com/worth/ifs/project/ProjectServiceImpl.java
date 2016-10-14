@@ -12,11 +12,13 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
+import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 
@@ -225,6 +227,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectStatusResource getProjectStatus(Long projectId) {
+        return projectRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
         return projectRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
     }
@@ -292,5 +299,4 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
-
 }
