@@ -46,9 +46,6 @@
                 <th:block th:text="${model.financeContactName}">Dave Norman</th:block> <br />
                 <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
             </p>
-        </th:block>
-
-        <th:block th:unless="${model.research}">
             <h3 class="heading-medium">Project costs</h3>
             <p>Please enter final project costs below</p>
             <table class="finance-check-form">
