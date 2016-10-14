@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 class AbstractProjectServiceImpl extends BaseTransactionalService {
@@ -102,7 +101,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
             Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
-            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isSeekingFunding) {
+            if (!isSeekingFunding) {
                 return NOT_REQUIRED;
             } else {
                 return ACTION_REQUIRED;
