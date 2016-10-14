@@ -64,6 +64,7 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         when(userService.getProfileContract(user.getId())).thenReturn(profileContract);
 
         AssessorProfileTermsViewModel expectedViewModel = new AssessorProfileTermsViewModel();
+        expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
         expectedViewModel.setAnnexOne(expectedAnnexOne);
@@ -122,6 +123,7 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         when(userService.getProfileContract(user.getId())).thenReturn(profileContract);
 
         AssessorProfileTermsViewModel expectedViewModel = new AssessorProfileTermsViewModel();
+        expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
         expectedViewModel.setAnnexOne(expectedAnnexOne);

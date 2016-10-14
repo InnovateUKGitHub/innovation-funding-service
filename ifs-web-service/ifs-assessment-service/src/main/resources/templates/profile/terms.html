@@ -26,7 +26,7 @@
 
                 <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error" th:unless="${model.currentAgreement}">
                     <fieldset>
                         <legend>
                             <span class="visuallyhidden">Terms of contract</span>
@@ -41,7 +41,10 @@
                     </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Save and continue</button>
+                <p th:text="|You agreed to the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">You agreed to the contract on 1 January 1970.</p>
+
+                <button class="button button-large extra-margin" type="submit" th:unless="${model.currentAgreement}">Save and continue</button>
+                <a role="button" tabindex="0" class="button" th:href="@{/assessor/dashboard}" th:if="${model.currentAgreement}">Continue</a>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

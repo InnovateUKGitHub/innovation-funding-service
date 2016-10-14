@@ -189,7 +189,7 @@ public class BaseUnitTest {
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
-    public ContractRestService contractRestService;
+    public com.worth.ifs.user.service.ContractRestService contractRestService;
 
     @Spy
     @InjectMocks

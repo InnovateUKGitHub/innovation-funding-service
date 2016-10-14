@@ -10,12 +10,20 @@ import java.time.LocalDateTime;
  */
 public class AssessorProfileTermsViewModel {
 
+    private boolean currentAgreement;
     private LocalDateTime contractSignedDate;
     private String text;
     private String annexOne;
     private String annexTwo;
     private String annexThree;
 
+    public boolean isCurrentAgreement() {
+        return currentAgreement;
+    }
+
+    public void setCurrentAgreement(boolean currentAgreement) {
+        this.currentAgreement = currentAgreement;
+    }
 
     public LocalDateTime getContractSignedDate() {
         return contractSignedDate;
@@ -66,6 +74,7 @@ public class AssessorProfileTermsViewModel {
         AssessorProfileTermsViewModel that = (AssessorProfileTermsViewModel) o;
 
         return new EqualsBuilder()
+                .append(currentAgreement, that.currentAgreement)
                 .append(contractSignedDate, that.contractSignedDate)
                 .append(text, that.text)
                 .append(annexOne, that.annexOne)
@@ -77,6 +86,7 @@ public class AssessorProfileTermsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(currentAgreement)
                 .append(contractSignedDate)
                 .append(text)
                 .append(annexOne)

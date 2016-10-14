@@ -22,6 +22,7 @@ public class AssessorProfileTermsModelPopulator {
         ContractResource contract = profileContract.getContract();
 
         AssessorProfileTermsViewModel model = new AssessorProfileTermsViewModel();
+        model.setCurrentAgreement(profileContract.isCurrentAgreement());
         model.setContractSignedDate(profileContract.getContractSignedDate());
         model.setText(contract.getText());
         model.setAnnexOne(contract.getAnnexOne());
