@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Finance Checks'" th:remove="tag" />
+</head>
+<body>
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
+
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <div class="page-title">
+          <p class="subtitle no-margin" th:text="|${model.formattedCompetitionNumber}: ${model.competitionName}|" />
+          <h1 class="heading-xlarge" th:text="${model.organisationName}">Partner Org Name <small th:if="${model.isLeadPartner}">(Lead Partner status)</small></h1>
+        </div>
+      </div>
+      <div class="column-third alignright extra-margin">
+        <h2 class="bold-small blue-block">Eligibility</h2>
+      </div>
+    </div>
+
+    <hr class="no-margin-top"/>
+    <div class="success-alert" th:if="${model.showFinanceChecksApprovedMessage}" th:text="|The partner finance eligibility has been approved by ${model.approverName}, ${#temporals.format(model.approvalDate, 'd MMMM yyyy')}|" />
+
+    <div class="error-summary" aria-hidden="true">
+       <h2 class="heading-medium error-summary-heading">
+          Some of your fields are invalid.
+       </h2>
+       Please review
+       <ul class="error-summary-list">
+           <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+       </ul>
+   </div>
+
+    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+        <h3 class="heading-medium">Finance contact</h3>
+        <p th:text="${model.financeContactName}">Dave Norman <br />
+        <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
+        </p>
+        <th:block th:unless="${model.research}">
+            <h3 class="heading-medium">Project costs</h3>
+            <p>Please enter final project costs below</p>
+            <table class="finance-check-form">
+                <thead>
+                <tr>
+                    <th scope="col" class="heading-small">Section</th>
+                    <th scope="col" class="heading-small alignright" id="project-cost">Project costs</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="form-group-row">
+                    <th scope="row" id="labour">Labour</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost labour" data-required-errormessage="Please enter a labour cost" th:errorclass="field-error" required="required" name="costs[0].value" th:value="*{#numbers.formatInteger(costs[__0__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__0__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="admin-support-costs">Administration support costs</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost admin-support-costs" data-required-errormessage="Please enter an admin support cost" th:errorclass="field-error" required="required" name="costs[1].value" th:value="*{#numbers.formatInteger(costs[__1__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__1__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="materials">Materials</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost materials" data-required-errormessage="Please enter a materials cost" th:errorclass="field-error" required="required" name="costs[2].value" th:value="*{#numbers.formatInteger(costs[__2__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__2__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="capital-usage">Capital usage</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost capital-usage" data-required-errormessage="Please enter a capital usage cost" th:errorclass="field-error" required="required"  name="costs[3].value" th:value="*{#numbers.formatInteger(costs[__3__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__3__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="subcontracting-costs">Subcontracting costs</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost subcontracting-costs" data-required-errormessage="Please enter subcontracting cost" th:errorclass="field-error" required="required"  name="costs[4].value" th:value="*{#numbers.formatInteger(costs[__4__].value,1,'NONE')}" />
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__4__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="travel-subsistence">Travel and subsistence</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost travel-subsistence" data-required-errormessage="Please enter a travel and subsistence cost" th:errorclass="field-error" required="required"  name="costs[5].value" th:value="*{#numbers.formatInteger(costs[__5__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__5__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="form-group-row">
+                    <th scope="row" id="other-costs">Other costs</th>
+                    <td class="alignright">
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost other-costs" data-required-errormessage="Please enter any other cost" th:errorclass="field-error" required="required" name="costs[6].value" th:value="*{#numbers.formatInteger(costs[__6__].value,1,'NONE')}"/>
+                        <th:block th:if="${model.financeChecksApproved}">
+                            &pound;<th:block th:text="*{#numbers.formatInteger(costs[__6__].value,1,'COMMA')}" />
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th scope="row" class="heading-small">
+                        Total project costs
+                    </th>
+                    <td class="heading-small alignright" data-calculation-operations="+" data-calculation-fields=".finance-check-form tbody input[type='number']" >
+                        &pound; <th:block th:text="${#numbers.formatInteger(form.getTotalCost(),1,'COMMA')}"/>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </th:block>
+
+        <th:block th:if="${model.showApproveButton}">
+            <h3 class="heading-medium">Eligible costs</h3>
+            <p>After any required alterations have been made, eligible costs should be approved.</p>
+            <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+            <div class="form-group">
+                <label class="block-label" for="costs-reviewed">
+                    <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-disable-button-until-checked="#approve-eligibility" />
+                    These finances have been reviewed and are eligible for this project
+                </label>
+            </div>
+            <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" name="approve" class="button" type="button">Approve eligible costs</button>
+            <th:block th:include="fragments/modals :: approve-eligibility-modal" />
+            <hr />
+            <button class="button button-secondary extra-margin">Save and return to finance checks</button>
+        </th:block>
+    </form>
+    <th:block th:unless="${model.showApproveButton}">
+      <hr/>
+      <a class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+    </th:block>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

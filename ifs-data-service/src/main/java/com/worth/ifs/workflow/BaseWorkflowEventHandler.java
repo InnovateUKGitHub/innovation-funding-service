@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow;
 
 import com.worth.ifs.invite.domain.ProcessActivity;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.domain.Process;
@@ -13,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
@@ -63,12 +65,47 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             LOG.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
 
             ProcessType processToUpdate = getOrCreateProcess(message);
+            getParticipant(message).ifPresent(processToUpdate::setParticipant);
+            getInternalParticipant(message).ifPresent(processToUpdate::setInternalParticipant);
+
             ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
             processToUpdate.setActivityState(newState);
             processToUpdate.setProcessEvent(message.getPayload().getType());
 
             getProcessRepository().save(processToUpdate);
         }
+    }
+
+    protected Optional<ParticipantType> getParticipant(Message<EventType> message) {
+        return getOptionalParameterFromMessage("participant", message);
+    }
+
+    protected Optional<User> getInternalParticipant(Message<EventType> message) {
+        return getOptionalParameterFromMessage("internalParticipant", message);
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, TargetType target) {
+        return fireEvent(event, getCurrentProcess(target));
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, ProcessType process) {
+        return fireEvent(event, process.getActivityState());
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, StateType currentState) {
+        return stateHandler.handleEventWithState(event.build(), currentState);
+    }
+
+    protected boolean testEvent(MessageBuilder<EventType> event, TargetType target) {
+        return testEvent(event, getCurrentProcess(target).getActivityState());
+    }
+
+    protected boolean testEvent(MessageBuilder<EventType> event, StateType currentState) {
+        return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
+    }
+
+    protected ProcessType getCurrentProcess(TargetType target) {
+        return getProcessByTargetId(target.getId());
     }
 
     private ProcessType getOrCreateProcess(Message<EventType> message) {
@@ -83,6 +120,10 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         });
 
         return processToUpdate;
+    }
+
+    protected <T> Optional<T> getOptionalParameterFromMessage(String parameterName, Message<EventType> message) {
+        return Optional.ofNullable((T) message.getHeaders().get(parameterName));
     }
 
     protected abstract ProcessType createNewProcess(TargetType target, ParticipantType participant);

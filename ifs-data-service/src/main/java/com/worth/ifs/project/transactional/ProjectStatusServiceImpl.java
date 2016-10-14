@@ -127,7 +127,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         }
 
         for(Organisation organisation : organisations) {
-            Optional<SpendProfile> spendProfile = Optional.ofNullable(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+            Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
             ProjectActivityStates financeChecksStatus = ACTION_REQUIRED;
             if (spendProfile.isPresent()) {

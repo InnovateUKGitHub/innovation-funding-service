@@ -15,10 +15,12 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
@@ -230,6 +232,11 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         } catch (AccessDeniedException e) {
             verifications.run();
         }
+    }
+
+    protected void assertPostFilter(List list, Runnable verifications) {
+            assertTrue(list.isEmpty());
+            verifications.run();
     }
 
     public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
