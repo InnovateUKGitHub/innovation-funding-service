@@ -30,11 +30,15 @@
 
   <div th:unless="${bankDetails == null}" class="success-alert">
       <p th:unless="${bankDetails.approved}"><strong>Bank account details below are now being reviewed. We will contact you if we need any further information.</strong></p>
-      <p th:if="${bankDetails.approved}"><strong>Your bank details have been approved</strong></p>
+      <p th:if="${bankDetails.approved}"><strong>Your bank details have been approved.</strong></p>
   </div>
+  <p class="extra-margin" th:if="${bankDetails?.approved}">Your details have been verified and can be used for this project.</p>
 
-	<p th:class="${bankDetails == null ? '' : 'extra-margin'}" >In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>
-	<p>The bank account must belong to the organisation below.</p>
+  <th:block th:if="${bankDetails == null}">
+    <p class="extra-margin">In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>
+    <p>The bank account must belong to the organisation below.</p>
+  </th:block>
+
 
 	<h2 class="heading-medium">Organisation information</h2>
 	<p class="form-hint">This information provided during the application process cannot be changed.</p>
