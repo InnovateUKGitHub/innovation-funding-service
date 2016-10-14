@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -64,5 +65,10 @@ public class CostGroup {
 
     public void removeCost(int index) {
         this.costs.remove(index);
+    }
+
+    @Transient
+    public Optional<Cost> getCostById(Long id){
+        return this.costs.stream().filter(c -> c.getId().equals(id)).findFirst();
     }
 }

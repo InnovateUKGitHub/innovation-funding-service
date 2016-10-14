@@ -2,62 +2,82 @@ package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
+import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
 
-class AbstractProjectServiceImpl extends BaseTransactionalService {
-    @Autowired
-    ProjectRepository projectRepository;
-
-    @Autowired
-    ProjectMapper projectMapper;
+public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
-    ProjectUserRepository projectUserRepository;
+    protected ProjectRepository projectRepository;
 
     @Autowired
-    ProjectUserMapper projectUserMapper;
+    protected ProjectMapper projectMapper;
 
     @Autowired
-    MonitoringOfficerRepository monitoringOfficerRepository;
+    protected ProjectUserRepository projectUserRepository;
 
     @Autowired
-    BankDetailsRepository bankDetailsRepository;
+    protected ProjectUserMapper projectUserMapper;
 
     @Autowired
-    SpendProfileRepository spendProfileRepository;
+    protected MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
-    FinanceRowService financeRowService;
+    protected BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    protected SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    protected FinanceRowService financeRowService;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
+
+    @Autowired
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
     }
 
-    ProjectActivityStates createOtherDocumentStatus(final Project project) {
+    protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
         if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
             if (project.getDocumentsSubmittedDate() != null) {
                 return COMPLETE;
@@ -69,7 +89,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    ProjectActivityStates createGrantOfferLetterStatus() {
+    protected ProjectActivityStates createGrantOfferLetterStatus() {
         //TODO update logic when GrantOfferLetter is implemented
         return NOT_STARTED;
     }
@@ -83,11 +103,11 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return financeContactForOrganisation.map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
     }
 
-    ProjectActivityStates createProjectDetailsStatus(Project project) {
+    protected ProjectActivityStates createProjectDetailsStatus(Project project) {
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
-    ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+    protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
             return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
         } else {
@@ -96,7 +116,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     }
 
-    ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
+    protected ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
@@ -109,16 +129,22 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
-        if(bankDetailsStatus.equals(COMPLETE) || bankDetailsStatus.equals(PENDING) || bankDetailsStatus.equals(NOT_REQUIRED)){
+    protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, ProjectActivityStates bankDetailsStatus) {
+
+        PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+
+        if (financeCheckWorkflowHandler.isApproved(partnerOrg)) {
+            return COMPLETE;
+        }
+
+        if (asList(COMPLETE, PENDING, NOT_REQUIRED).contains(bankDetailsStatus)) {
             return ACTION_REQUIRED;
         } else {
-            //TODO update logic when Finance checks are implemented
             return NOT_STARTED;
         }
     }
 
-    ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+    protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         //TODO - Implement REJECT status when internal spend profile action story is completed
         if (spendProfile.isPresent()) {
             if (spendProfile.get().isMarkedAsComplete()) {
@@ -133,5 +159,26 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
                 return NOT_STARTED;
             }
         }
+    }
+
+    protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {
+        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
+    }
+
+    protected ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).
+                map(user -> serviceSuccess(user)).
+                orElse(serviceFailure(forbiddenError())));
+    }
+
+    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
+                notFoundError(PartnerOrganisation.class, projectId, organisationId));
+    }
+
+    private boolean findUserAndRole(ProjectParticipantRole role, User currentUser, ProjectUser pu) {
+        return pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role);
     }
 }
