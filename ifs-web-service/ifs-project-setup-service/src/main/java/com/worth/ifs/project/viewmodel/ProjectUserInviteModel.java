@@ -1,13 +1,13 @@
 package com.worth.ifs.project.viewmodel;
 
-// model for selecting finance contacts
+// model for selecting project users
 
-public class FinanceContactModel {
+public class ProjectUserInviteModel {
     private String name;
     private String status;
     private Long id;
 
-    public FinanceContactModel(final FinanceContactStatus status, final String name, final Long id) {
+    public ProjectUserInviteModel(final ProjectUserInviteStatus status, final String name, final Long id) {
         this.status = status.name();
         this.name = name;
         this.id = id;
