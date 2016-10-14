@@ -57,6 +57,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         verify(rules, times(2)).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(2)).projectFinanceUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(2)).systemRegistrationUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).projectPartnerUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
     }
 
@@ -69,6 +70,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
             verify(rules).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).projectFinanceUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).systemRegistrationUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectPartnerUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }

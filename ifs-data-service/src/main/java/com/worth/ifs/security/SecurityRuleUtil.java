@@ -20,6 +20,10 @@ public class SecurityRuleUtil {
         return hasRole(user, PROJECT_FINANCE);
     }
 
+    public static boolean isProjectPartnerUser(UserResource user) {
+        return hasRole(user, APPLICANT);
+    }
+
     public static boolean isSystemMaintenanceUser(UserResource user) {
         return hasRole(user, SYSTEM_MAINTAINER);
     }

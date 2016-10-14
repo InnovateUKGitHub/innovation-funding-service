@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
-import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -39,6 +37,13 @@ public class OrganisationPermissionRules {
     public boolean projectFinanceUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isProjectFinanceUser(user);
     }
+    //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
+    //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
+    @PermissionRule(value = "READ", description = "Project Finance Users can see all Organisations")
+    public boolean projectPartnerUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isProjectPartnerUser(user);
+    }
+
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
