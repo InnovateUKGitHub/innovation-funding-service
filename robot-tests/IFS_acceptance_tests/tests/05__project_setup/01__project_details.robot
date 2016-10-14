@@ -299,8 +299,8 @@ Inviting finance contact client side validations
 Partner invites a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
-    When the user enters text to a text field    id=name-finance-contact1    John Smith
-    And the user enters text to a text field    id=email-finance-contact1    ${test_mailbox_one}+invitedfinancecontact@gmail.com
+    When the user enters text to a text field    id=name-finance-contact    John Smith
+    And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
