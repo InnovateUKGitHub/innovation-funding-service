@@ -2,6 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -9,6 +10,7 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
@@ -80,6 +82,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserMapper userMapper;
 
     @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
 
     @Value("${ifs.web.baseURL}")
@@ -106,9 +111,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<UserResource> createUser(@P("user") UserResource userResource) {
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser ->
-                createUserWithUid(userMapper.mapToDomain(userResource), userResource.getPassword()));
+    public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
+        final UserResource userResource = userRegistrationResource.toUserResource();
+
+        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    user.setProfile(new Profile(user));
+                    user.getProfile().setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
+                    return createUserWithUid(user, userResource.getPassword());
+                });
     }
 
     @Override

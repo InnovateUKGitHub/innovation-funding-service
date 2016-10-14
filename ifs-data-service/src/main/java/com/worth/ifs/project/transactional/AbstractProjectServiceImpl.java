@@ -34,7 +34,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Arrays.asList;
@@ -122,7 +121,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
             Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
-            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isSeekingFunding) {
+            if (!isSeekingFunding) {
                 return NOT_REQUIRED;
             } else {
                 return ACTION_REQUIRED;

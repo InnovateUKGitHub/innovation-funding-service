@@ -143,7 +143,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
         List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
 
-        if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+        if(spendProfiles.isEmpty()) {
+            return serviceSuccess(ApprovalType.EMPTY);
+        } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
            return serviceSuccess(ApprovalType.REJECTED);
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
            return serviceSuccess(ApprovalType.APPROVED);

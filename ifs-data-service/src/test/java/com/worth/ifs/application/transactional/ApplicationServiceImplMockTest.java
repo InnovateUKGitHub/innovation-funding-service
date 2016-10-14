@@ -58,6 +58,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -618,7 +619,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         ProcessRole processRole = newProcessRole().withOrganisation(organisation).build();
-        User user = newUser().with(id(userId)).withOrganisations(organisation).withProcessRole(processRole).build();
+        User user = newUser().with(id(userId)).withOrganisations(asList(organisation)).withProcessRoles(asList(processRole)).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(ApplicationStatusConstants.CREATED.getName()).build();
 
         String applicationName = "testApplication";

@@ -25,6 +25,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -94,6 +95,7 @@ public class FinanceCheckController {
                 () -> updateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form, validationHandler));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
                                           @ModelAttribute FinanceCheckSummaryForm form,
@@ -102,6 +104,7 @@ public class FinanceCheckController {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value = "/generate", method = POST)
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute FinanceCheckSummaryForm form,

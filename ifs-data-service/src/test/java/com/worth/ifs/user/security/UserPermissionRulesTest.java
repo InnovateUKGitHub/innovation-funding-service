@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -12,6 +13,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -90,6 +93,17 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
             } else {
                 assertFalse(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testSystemRegistrationUserCanCreateUsers_UserRegistrationResource() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserRegistrationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanCreateUsers(newUserRegistrationResource().build(), user));
             }
         });
     }
@@ -291,6 +305,38 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void testUsersCanChangeTheirOwnPasswords() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanChangeTheirOwnPassword(user, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnAffiliations() {
+        UserResource user = newUserResource().build();
+        AffiliationResource affiliation = newAffiliationResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnAffiliations(affiliation, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToUpdateAnotherUsersAffiliation() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        AffiliationResource affiliation = newAffiliationResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnAffiliations(affiliation, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirAffiliations() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanUpdateTheirOwnAffiliations(user, user));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirAffiliationsButAttemptingToUpdateAnotherUsersProfile() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.usersCanUpdateTheirOwnAffiliations(anotherUser, user));
     }
 
     @Test

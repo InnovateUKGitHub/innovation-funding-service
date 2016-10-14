@@ -215,25 +215,19 @@
         </div>
     </div>
 </div>
-<div th:fragment="modal-partner-confirm-bank-details">
-    <div class="modal-partner-confirm-bank-details" role="dialog" aria-hidden="true">
+<div th:fragment="modal-partner-approve-bank-details">
+    <div class="modal-partner-approve-bank-details" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
-        <h2 class="heading-medium no-margin">Update bank account details</h2>
-        <p>You must confirm that updates match the information supplied by the finance contact. This action will overwrite your previous bank account details.</p>
-        <p>Experian checks will be made on updated account details.</p>
+        <h2 class="heading-medium no-margin">Approve bank account</h2>
+        <p>Approving the bank account will enable the finance checks to begin on the account</p>
+        <p>This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
         <hr/>
         <div class="alignright-button">
-          <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
             <button type="button" class="js-close button buttonlink large">Cancel</button>
-            <button class="button large" name="submit-change-bank-details">Update bank account details</button>
-          </form>
+            <button class="button large" name="submit-approve-bank-details">Approve account</button>
         </div>
     </div>
 </div>
-
-
-
-
 
 <!-- Accept Documents On Review -->
 <div th:fragment="modal-accept-docs">

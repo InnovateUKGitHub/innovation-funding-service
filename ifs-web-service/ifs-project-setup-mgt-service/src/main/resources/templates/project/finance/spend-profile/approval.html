@@ -33,43 +33,54 @@
         </div>
     </th:block>
 
+    <th:block th:if="${model.empty}">
+        <div class="warning-alert extra-margin-bottom">
+            <h2 class="heading-small no-margin-top">The spend profile is not generated.</h2>
+        </div>
+    </th:block>
+
     <th:block th:if="${model.rejected}">
         <div class="warning-alert extra-margin-bottom">
             <h3 class="heading-small">The spend profile has been rejected.</h3>
         </div>
     </th:block>
 
-    <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
-    <h2 class="heading-medium">Lead technologist</h2>
-    <p th:text="${model.leadTechnologist}">
-        Lead technologist
-    </p>
-    <h2 class="heading-medium">Project spend profile</h2>
+    <th:block th:unless="${model.empty}">
+        <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+        <h2 class="heading-medium">Lead technologist</h2>
+        <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
+            Lead technologist
+        </p>
+        <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
+            Robin Wilson
+        </p>
+        <h2 class="heading-medium">Project spend profile</h2>
 
-    <ul>
-        <li th:each="organisation : ${model.organisations}">
-            <a th:href="'/project-setup/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
-               th:text="${organisation.name} + '-spend-profile.csv'"
-               target="_blank">spend-profile.csv</a>
-        </li>
-    </ul>
+        <ul>
+            <li th:each="organisation : ${model.organisations}">
+                <a th:href="'/project-setup/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
+                   th:text="${organisation.name} + '-spend-profile.csv'"
+                   target="_blank">spend-profile.csv</a>
+            </li>
+        </ul>
 
-    <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
-        <h2 class="heading-medium">Approved by Lead technologist</h2>
-        <p>The spend profile must be sent to the lead technologist for their review and approval.</p>
-        <div class="form-group">
-        <label class="block-label" for="approvedByLeadTechnologist" >
-            <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
-            The spend profile has been approved by the lead technologist
-        </label>
+        <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
+            <h2 class="heading-medium">Approved by Lead technologist</h2>
+            <p>The spend profile must be sent to the lead technologist for their review and approval.</p>
+            <div class="form-group">
+            <label class="block-label" for="approvedByLeadTechnologist" >
+                <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
+                The spend profile has been approved by the lead technologist
+            </label>
+            </div>
+            <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
+                Approved
+            </button>
+            <button data-js-modal="modal-reject-profile" class="button button-warning large">
+                Reject spend profile
+            </button>
         </div>
-        <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
-            Approved
-        </button>
-        <button data-js-modal="modal-reject-profile" class="button button-warning large">
-            Reject spend profile
-        </button>
-    </div>
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

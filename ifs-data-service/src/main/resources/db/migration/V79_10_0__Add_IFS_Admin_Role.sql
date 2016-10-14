@@ -1,0 +1,1 @@
+INSERT IGNORE INTO `role` (`id`,`name`) VALUES (14,'ifs_administrator');

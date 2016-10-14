@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Manage Applications'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -22,29 +22,46 @@
 	<p class="subtitle">Technology inspired, (12345A)</p>
 	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
 
-	<div class="grid-row extra-margin">
-		<div class="column-three-quarters">
-			<p>
-				<span id="assessors" class="heading-large">60</span> Assessors
+	<!--<div class="grid-row extra-margin">-->
+		<!--<div class="column-three-quarters">-->
+			<!--<p>-->
+				<!--<span id="assessors" class="heading-large">60</span> Assessors-->
 
-				<span id="applications" class="heading-large extra-margin-left">28</span> Applications
-			</p>
+				<!--<span id="applications" class="heading-large extra-margin-left">28</span> Applications-->
+			<!--</p>-->
 
-			<h2 class="heading-small">Assign invited assessors to assess applications</h2>
+			<!--<h2 class="heading-small">Assign invited assessors to assess applications</h2>-->
 
-			<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
+			<!---->
+		<!--</div>-->
+		<!--<div class="column-quarter">-->
+			<!--<div class="alignright">-->
+			<!--<a href="/prototypes/5388-notify-assessors?status=incomplete" class="button large">Notify Assessors</a>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
 
-		</div>
-		<div class="column-quarter">
-			<div class="alignright">
-			<a href="/prototypes/5388-notify-assessors?status=incomplete" class="button large">Notify Assessors</a>
-			</div>
-		</div>
-	</div>
+	<p class="extra-margin">Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=true,sortByType=1" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=1" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list-table" th:remove="tag" />
+
+	<ul class="pagination">
+
+		<li class="prev">
+			<a href="#" rel="prev" title="Navigate to previous part">
+				<span class="pagination-label">Previous</span>
+				<!--<span class="pagination-part-title">0 to 20</span>-->
+			</a>
+		</li>
+		<li class="next">
+			<a href="#" rel="next" title="Navigate to next part">
+				<span class="pagination-label">Next</span>
+				<!--<span class="pagination-part-title">21 to 40</span>-->
+			</a>
+		</li>
+	</ul>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

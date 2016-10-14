@@ -27,13 +27,17 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.SpendProfileDocs.*;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileCSVFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -76,7 +80,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void approveOrRejectSpendProfile() throws Exception {
 
-        when(projectFinanceServiceMock.approveOrRejectSpendProfile(any(Long.class), any(ApprovalType.class)))
+        when(projectFinanceServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
@@ -94,7 +98,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void getSpendProfileStatusByProjectId() throws Exception {
 
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(any(Long.class)))
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(isA(Long.class)))
                 .thenReturn(serviceSuccess(ApprovalType.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
@@ -117,6 +121,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         SpendProfileTableResource table = new SpendProfileTableResource();
+        table.setMarkedAsComplete(FALSE);
         table.setMonths(asList(new LocalDateResource(2016, 1, 1), new LocalDateResource(2016, 2, 1), new LocalDateResource(2016, 3, 1)));
         table.setEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap());
         table.setMonthlyCostsPerCategoryMap(buildSpendProfileCostsPerCategoryMap());
@@ -277,12 +282,13 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         SpendProfileTableResource table = new SpendProfileTableResource();
         table.setMarkedAsComplete(false);
+        table.setMonths(asList(new LocalDateResource(2016, 1, 1), new LocalDateResource(2016, 2, 1), new LocalDateResource(2016, 3, 1)));
         table.setEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap());
         table.setMonthlyCostsPerCategoryMap(buildSpendProfileCostsPerCategoryMap());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveSpendProfile(eq(projectOrganisationCompositeId), isA(SpendProfileTableResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
