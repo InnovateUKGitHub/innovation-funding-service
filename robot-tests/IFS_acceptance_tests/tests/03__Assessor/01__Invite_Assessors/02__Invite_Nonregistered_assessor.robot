@@ -107,7 +107,7 @@ Create assessor account: Postcode lookup and save
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
-    [Tags]
+    [Tags]    Pending
     When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
