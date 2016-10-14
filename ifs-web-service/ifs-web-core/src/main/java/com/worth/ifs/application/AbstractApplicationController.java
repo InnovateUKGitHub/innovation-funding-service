@@ -486,9 +486,8 @@ public abstract class AbstractApplicationController extends BaseController {
         
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
         
-        if(hasFinanceSection && competitionResource.isOpen()) {
+        if(hasFinanceSection) {
 	        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 	        
 	        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);

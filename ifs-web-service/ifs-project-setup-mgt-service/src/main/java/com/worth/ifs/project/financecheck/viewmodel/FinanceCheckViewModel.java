@@ -1,5 +1,6 @@
 package com.worth.ifs.project.financecheck.viewmodel;
 
+import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,8 +21,11 @@ public class FinanceCheckViewModel {
     private boolean financeChecksApproved;
     private String approverName;
     private LocalDate approvalDate;
+    private FileDetailsViewModel jesFileDetails;
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
+                                 Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch,
+                                 boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
         this.formattedCompetitionNumber = formattedCompetitionNumber;
         this.competitionName = competitionName;
         this.organisationName = organisationName;
@@ -34,10 +38,15 @@ public class FinanceCheckViewModel {
         this.financeChecksApproved = financeChecksApproved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
+        this.jesFileDetails = jesFileDetails;
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, Long projectId, Long organisationId, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
-        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner, projectId, organisationId, null, null, isResearch, financeChecksApproved, approverName, approvalDate);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
+                                 Long projectId, Long organisationId, boolean isResearch,
+                                 boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
+        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner,
+                projectId, organisationId, null, null, isResearch,
+                financeChecksApproved, approverName, approvalDate, jesFileDetails);
     }
 
     public String getFinanceContactName() {
@@ -96,6 +105,10 @@ public class FinanceCheckViewModel {
         return isLeadPartner;
     }
 
+    public FileDetailsViewModel getJesFileDetails() {
+        return jesFileDetails;
+    }
+
     public void setFinanceContactName(String financeContactName) {
         this.financeContactName = financeContactName;
     }
@@ -125,6 +138,7 @@ public class FinanceCheckViewModel {
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(approverName, that.approverName)
                 .append(approvalDate, that.approvalDate)
+                .append(jesFileDetails, that.jesFileDetails)
                 .isEquals();
     }
 
@@ -161,6 +175,7 @@ public class FinanceCheckViewModel {
                 .append("financeChecksApproved", financeChecksApproved)
                 .append("approverName", approverName)
                 .append("approvalDate", approvalDate)
+                .append("jesFileDetails", jesFileDetails)
                 .toString();
     }
 }
