@@ -208,7 +208,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(spendprofile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
