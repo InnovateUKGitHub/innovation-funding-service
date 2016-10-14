@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competitions dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <!--<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />-->
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<h1 class="heading-xlarge">Competitions dashboard</h1>
+
+	<h2 class="heading-medium">Open</h2>
+	<ul>
+		<li><a href="/prototypes/5062-manage-assessors" target="_blank">Invite assessors</a></li>
+		<li><a href="/prototypes/5062-open-applications" target="_blank">All applications</a></li>
+	</ul>
+
+
+	<h2 class="heading-medium">Closed</h2>
+	<ul>
+		<li><a href="/prototypes/5385-application-allocation" target="_blank">Allocate applications</a></li>
+		<li><a href="/prototypes/5472-assign-assessors" target="_blank">Allocate assessors</a></li>
+		<li><a href="/prototypes/5062-manage-assessors" target="_blank">Invite assessors</a></li>
+		<li><a href="/prototypes/5062-submitted-applications?closed&#38;status=assessment" target="_blank">All submitted applications</a></li>
+		<li><a href="/prototypes/5062-not-submitted-applications?closed&#38;status=assessment" target="_blank">Applications not submitted</a></li>
+	</ul>
+
+	<h2 class="heading-medium">In assessment</h2>
+	<ul>
+		<li><a href="/prototypes/5389-manage-assessors" target="_blank">Manage assessors</a></li>
+		<li><a href="/prototypes/5470-manage-applications" target="_blank">Allocate assessors</a></li>
+		<li><a href="/prototypes/5062-submitted-applications?closed&#38;status=assessment" target="_blank">All submitted applications</a></li>
+		<li><a href="/prototypes/5062-not-submitted-applications?closed&#38;status=assessment" target="_blank">Applications not submitted</a></li>
+	</ul>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>
