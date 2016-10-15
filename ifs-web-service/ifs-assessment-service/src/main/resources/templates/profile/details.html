@@ -12,29 +12,28 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
-            <div class="hgroup">
-                <h1 class="heading-xlarge no-margin extra-margin">Your details</h1>
-                <small><a th:href="@{/profile/details-edit}">Edit your details</a></small>
-            </div>
+            <h1 class="heading-large">Your profile</h1>
 
-            <h2 class="heading-small">Your name</h2>
+            <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a th:href="@{/profile/details-edit}"> Edit your details</a></small></h2>
+
+            <h3 class="heading-small">Your name</h3>
             <p>Mr Joe Bloggs</p>
-
-            <h2 class="heading-small">Gender</h2>
+            <h3 class="heading-small">Gender</h3>
             <p>Male</p>
-
-            <h2 class="heading-small">Address</h2>
+            <h3 class="heading-small">Your ethnic group</h3>
+            <p>White</p>
+            <h3 class="heading-small">Do you consider yourself disabled?</h3>
+            <p>No</p>
+            <h3 class="heading-small">Address</h3>
             <p>
                 4 Station Road<br />
-                Swindon<br />
-                Wiltshire<br />
+                Swindon <br />
+                Wiltshire <br />
                 SN1 2BD
             </p>
-
-            <h2 class="heading-small">Phone number</h2>
+            <h3 class="heading-small">Phone number</h3>
             <p>01234 567891</p>
-
-            <h2 class="heading-small">Email address</h2>
+            <h3 class="heading-small">Email address</h3>
             <p>J.b@assessor.com</p>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

@@ -51,6 +51,9 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.standard.disability.selectionrequired}")
     private Disability disability;
 
+    @Valid
+    private AddressForm addressForm = new AddressForm();
+
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List({
             @Size(min = 8, message = "{validation.standard.phonenumber.length.min}"),
@@ -107,6 +110,14 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
         this.disability = disability;
     }
 
+    public AddressForm getAddressForm() {
+        return addressForm;
+    }
+
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -130,6 +141,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
                 .append(gender, that.gender)
                 .append(ethnicity, that.ethnicity)
                 .append(disability, that.disability)
+                .append(addressForm, that.addressForm)
                 .append(phoneNumber, that.phoneNumber)
                 .isEquals();
     }
@@ -143,6 +155,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
                 .append(gender)
                 .append(ethnicity)
                 .append(disability)
+                .append(addressForm)
                 .append(phoneNumber)
                 .toHashCode();
     }
