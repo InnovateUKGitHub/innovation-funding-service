@@ -1,7 +1,6 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
