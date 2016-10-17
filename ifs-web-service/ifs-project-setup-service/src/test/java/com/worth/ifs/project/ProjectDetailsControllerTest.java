@@ -1,5 +1,12 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
@@ -13,10 +20,17 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.ProjectUserInviteModel;
+import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
+import com.worth.ifs.project.viewmodel.SelectProjectManagerViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,16 +38,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static com.worth.ifs.address.resource.OrganisationAddressType.*;
+import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -49,18 +59,26 @@ import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.viewmodel.ProjectUserInviteStatus.PENDING;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -136,6 +154,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
+        List<InviteProjectResource> invitedUsers = newInviteProjectResource().build(2);
+
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource().
@@ -145,15 +165,24 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(invitedUsers));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+
+        List<ProjectUserInviteModel> users = new ArrayList<>();
+
+        List<ProjectUserInviteModel> invites = invitedUsers.stream()
+            .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()))
+            .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
+            .collect(toList());
+
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("project", project))
-                .andExpect(model().attribute("app", applicationResource))
+                .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("project/project-manager"));
     }
     
@@ -192,8 +221,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
-        
-        verify(projectService).updateProjectManager(projectId, projectManagerUserId);
+
     }
 
     @Test
