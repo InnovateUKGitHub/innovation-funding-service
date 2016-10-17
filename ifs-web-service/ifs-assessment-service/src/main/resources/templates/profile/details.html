@@ -17,24 +17,26 @@
             <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a th:href="@{/profile/details-edit}"> Edit your details</a></small></h2>
 
             <h3 class="heading-small">Your name</h3>
-            <p>Mr Joe Bloggs</p>
+            <p><span th:text="${model.firstName}" th:remove="tag" /> <span th:text="${model.lastName}" th:remove="tag" /></p>
             <h3 class="heading-small">Gender</h3>
-            <p>Male</p>
+            <p th:text="${model.gender}" />
             <h3 class="heading-small">Your ethnic group</h3>
-            <p>White</p>
+            <p th:text="${model.ethnicity.description}" />
             <h3 class="heading-small">Do you consider yourself disabled?</h3>
-            <p>No</p>
+            <p th:text="${model.disability}" />
             <h3 class="heading-small">Address</h3>
             <p>
-                4 Station Road<br />
-                Swindon <br />
-                Wiltshire <br />
-                SN1 2BD
+                <span th:text="${model.address.addressLine1}" th:remove="tag" /><br />
+                <span th:text="${model.address.addressLine2}" th:remove="tag" /><br />
+                <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
+                <span th:text="${model.address.town}" th:remove="tag" /><br />
+                <span th:text="${model.address.county}" th:remove="tag" /><br />
+                <span th:text="${model.address.postcode}" th:remove="tag" />
             </p>
             <h3 class="heading-small">Phone number</h3>
-            <p>01234 567891</p>
+            <p th:text="${model.phoneNumber}" />
             <h3 class="heading-small">Email address</h3>
-            <p>J.b@assessor.com</p>
+            <p th:text="${model.email}" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
