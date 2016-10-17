@@ -104,8 +104,7 @@ Bank details submission
 
 Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621
-    [Tags]    Experian    HappyPath    Pending
-    # Todo Pending due to INFUND-5287   Note: the bank details are used for Jessica!
+    [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs
