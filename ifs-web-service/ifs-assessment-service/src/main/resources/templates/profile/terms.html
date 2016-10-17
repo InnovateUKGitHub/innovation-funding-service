@@ -35,7 +35,7 @@
                             </span>
                         </legend>
                         <label class="block-label">
-                            <input type="checkbox" th:field="*{agreesToTerms}" />
+                            <input data-required-errormessage="Please agree to the terms and conditions" required="required" type="checkbox" th:field="*{agreesToTerms}" />
                             I agree to the terms of contract for becoming an assessor
                         </label>
                     </fieldset>
