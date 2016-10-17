@@ -17,6 +17,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-4428 As a Partner, I should have access to the various Project Setup sections when they become available, so that I can access them when it is valid to
 ...
 ...               INFUND-5610 As a user I want to check the selected Project Manager value persists
+...
+...               INFUND-5368 Once finance contact is submitted, do not allow it to be changed again
 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
@@ -224,7 +226,7 @@ Project details can be submitted with PM, project address and start date
     Submit project details button should be enabled
 
 Partners nominate finance contacts
-    [Documentation]    INFUND-2620
+    [Documentation]    INFUND-2620, INFUND-5368
     [Tags]    HappyPath
     [Setup]    Logout as user
     When Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
@@ -237,6 +239,10 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
+    And the user should not see the element    link=Ludlow
+    # TODO the following two steps are Pending due to INFUND-5368
+    # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
+    # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     Then Logout as user
     When Log in as user    pete.tom@egg.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
@@ -248,6 +254,10 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
+    And the user should not see the element    link=EGGS
+    # TODO the following two steps are Pending due to INFUND-5368
+    # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
+    # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     [Teardown]    logout as user
 
 Option to invite a finance contact
@@ -289,8 +299,8 @@ Inviting finance contact client side validations
 Partner invites a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
-    When the user enters text to a text field    id=name-finance-contact1    John Smith
-    And the user enters text to a text field    id=email-finance-contact1    ${test_mailbox_one}+invitedfinancecontact@gmail.com
+    When the user enters text to a text field    id=name-finance-contact    John Smith
+    And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
@@ -316,6 +326,12 @@ Lead partner chooses an existing finance contact
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    3    yes
+    And the user should not see the element    link=Vitruvius Stonework Limited
+    And the user should not see the element    link=Ludlow
+    And the user should not see the element    link=EGGS
+    # TODO the following two steps are Pending due to INFUND-5368
+    # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
+    # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
 
 Non-lead partner cannot change start date, project manager or project address
     [Tags]
