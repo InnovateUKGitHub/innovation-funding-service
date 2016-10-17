@@ -270,6 +270,8 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
                 () -> classUnderTest.getFileContents(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
