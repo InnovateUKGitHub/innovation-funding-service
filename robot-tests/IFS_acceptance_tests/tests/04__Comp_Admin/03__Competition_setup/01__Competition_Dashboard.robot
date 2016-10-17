@@ -51,8 +51,8 @@ Project setup Competitions
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
-    Then the total calculation in dashboard should be correct    Project set up    //section[1]/ul/li
-    And the total calculation in dashboard should be correct    Project set up    //section/ul/li
+    Then the total calculation in dashboard should be correct    Project setup    //section[1]/ul/li
+    And the total calculation in dashboard should be correct    Project setup    //section/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610
