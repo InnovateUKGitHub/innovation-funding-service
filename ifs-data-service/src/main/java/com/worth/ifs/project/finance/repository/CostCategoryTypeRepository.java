@@ -14,4 +14,8 @@ public interface CostCategoryTypeRepository extends PagingAndSortingRepository<C
 
     @Override
     List<CostCategoryType> findAll();
+
+    CostCategoryType findByCostCategoryGroupId(Long costCategoryGroupId);
+
+
 }

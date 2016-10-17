@@ -39,8 +39,8 @@ public class ProjectTeamStatusResource {
     }
 
     @JsonIgnore
-    public Optional<ProjectPartnerStatusResource> getMatchingPartnerStatus(OrganisationResource organisation) {
-        return simpleFindFirst(partnerStatuses, status -> status.getOrganisationId().equals(organisation.getId()));
+    public Optional<ProjectPartnerStatusResource> getPartnerStatusForOrganisation(Long organisationId) {
+        return simpleFindFirst(partnerStatuses, status -> organisationId.equals(status.getOrganisationId()));
     }
 
     @Override

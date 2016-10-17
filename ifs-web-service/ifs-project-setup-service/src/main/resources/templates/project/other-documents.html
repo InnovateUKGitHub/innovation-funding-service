@@ -180,15 +180,14 @@
                 partner</p>
         </th:block>
     </div>
+    <p>The Project Manager must upload both documents for submission. If we need further clarification we will contact the Project Manager.</p>
 
     <th:block th:if="${model.isShowSubmitDocumentsButton()}">
-        <p>Once you have uploaded these documents, they must be submitted to Innovate UK for review.
-            We will contact you if we need clarification.</p>
         <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
        data-js-modal="modal-partner-documents">Submit partner documents</a>
     </th:block>
+
      <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-        <p>You are not able to submit until all files are uploaded. And you must be the project manager</p>
         <button disabled="disabled" class="button extra-margin">Submit partner documents</button>
      </th:block>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

@@ -3,6 +3,7 @@ package com.worth.ifs.user.security;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -39,6 +40,11 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
     public boolean systemRegistrationUserCanCreateUsers(UserResource userToCreate, UserResource user) {
+        return isSystemRegistrationUser(user);
+    }
+
+    @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
+    public boolean systemRegistrationUserCanCreateUsers(UserRegistrationResource userToCreate, UserResource user) {
         return isSystemRegistrationUser(user);
     }
 

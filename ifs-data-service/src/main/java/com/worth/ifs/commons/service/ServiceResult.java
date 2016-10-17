@@ -368,6 +368,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
                 serviceSuccess(emptyList()));
     }
 
+    public static <T> ServiceResult<List<T>> aggregate(final ServiceResult<T>... inputs) {
+        List<ServiceResult<T>> input = asList(inputs);
+        return aggregate(input);
+    }
+
 
 
 }

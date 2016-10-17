@@ -34,7 +34,7 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((projectTitle, psr) -> setField("projectTitle", projectTitle, psr), projectTitles);
     }
 
-    public ProjectStatusResourceBuilder withProjectNumber(String... projectNumbers) {
+    public ProjectStatusResourceBuilder withProjectNumber(Long... projectNumbers) {
         return withArray((projectNumber, psr) -> setField("projectNumber", projectNumber, psr), projectNumbers);
     }
 
@@ -50,27 +50,27 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((projectDetailsStatus, psr) -> setField("projectDetailsStatus", projectDetailsStatus, psr), projectDetailsStatuses);
     }
 
-    public ProjectStatusResourceBuilder withBankDetailsStatus(String... bankDetailsStatuses) {
+    public ProjectStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses) {
         return withArray((bankDetailsStatus, psr) -> setField("bankDetailsStatus", bankDetailsStatus, psr), bankDetailsStatuses);
     }
 
-    public ProjectStatusResourceBuilder withFinanceChecksStatus(String... financeChecksStatuses) {
+    public ProjectStatusResourceBuilder withFinanceChecksStatus(ProjectActivityStates... financeChecksStatuses) {
         return withArray((financeChecksStatus, psr) -> setField("financeChecksStatus", financeChecksStatus, psr), financeChecksStatuses);
     }
 
-    public ProjectStatusResourceBuilder withSpendProfileStatus(String... spendProfileStatuses) {
+    public ProjectStatusResourceBuilder withSpendProfileStatus(ProjectActivityStates... spendProfileStatuses) {
         return withArray((spendProfileStatus, psr) -> setField("spendProfileStatus", spendProfileStatus, psr), spendProfileStatuses);
     }
 
-    public ProjectStatusResourceBuilder withMonitoringOfficerStatus(String... monitoringOfficerStatuses) {
+    public ProjectStatusResourceBuilder withMonitoringOfficerStatus(ProjectActivityStates... monitoringOfficerStatuses) {
         return withArray((monitoringOfficerStatus, psr) -> setField("monitoringOfficerStatus", monitoringOfficerStatus, psr), monitoringOfficerStatuses);
     }
 
-    public ProjectStatusResourceBuilder withOtherDocumentsStatus(String... otherDocumentsStatuses) {
+    public ProjectStatusResourceBuilder withOtherDocumentsStatus(ProjectActivityStates... otherDocumentsStatuses) {
         return withArray((otherDocumentsStatus, psr) -> setField("otherDocumentsStatus", otherDocumentsStatus, psr), otherDocumentsStatuses);
     }
 
-    public ProjectStatusResourceBuilder withGrantOfferLetterStatus(String... grantOfferLetterStatuses) {
+    public ProjectStatusResourceBuilder withGrantOfferLetterStatus(ProjectActivityStates... grantOfferLetterStatuses) {
         return withArray((grantOfferLetterStatus, psr) -> setField("grantOfferLetterStatus", grantOfferLetterStatus, psr), grantOfferLetterStatuses);
     }
 }

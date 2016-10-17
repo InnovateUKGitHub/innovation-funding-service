@@ -45,7 +45,7 @@ class ProjectSetupProgressChecker {
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
-        return projectTeamStatus.getMatchingPartnerStatus(organisation).get();
+        return projectTeamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
     }
 
     public boolean isLeadPartnerOrganisation(OrganisationResource organisation) {

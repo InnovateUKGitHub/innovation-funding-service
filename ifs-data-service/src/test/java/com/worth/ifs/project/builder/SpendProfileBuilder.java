@@ -4,7 +4,9 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -38,6 +40,14 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
 
     public SpendProfileBuilder withOrganisation(Organisation... organisations) {
         return withArray((organisation, spendProfile) -> setField("organisation", organisation, spendProfile), organisations);
+    }
+
+    public SpendProfileBuilder withGeneratedBy(User... users) {
+        return withArray((user, spendProfile) -> setField("generatedBy", user, spendProfile), users);
+    }
+
+    public SpendProfileBuilder withGeneratedDate(Calendar... dates) {
+        return withArray((date, spendProfile) -> setField("generatedDate", date, spendProfile), dates);
     }
 
     public SpendProfileBuilder withApproval(ApprovalType... approvalTypes) {

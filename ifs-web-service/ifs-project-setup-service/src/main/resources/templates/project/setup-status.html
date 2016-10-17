@@ -79,11 +79,12 @@
       </li>
       <!--/* ========================= Finance Check ========================= */-->
 
-      <li>
+      <!-- TODO: This needs to look at FC status -->
+      <li th:classappend="${model.financeChecksSection.accessible ? 'waiting' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.financeChecksSection.accessible}" href="#">Finance checks</a>
+            Finance checks
             <th:block th:if="${model.financeChecksSection.notAccessible}">Finance checks</th:block>
             <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
           </h2>
@@ -116,8 +117,8 @@
             <a th:if="${model.otherDocumentsSection.accessible}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
           </h2>
-          <p th:if="${model.leadPartner}">As the lead partner in the consortium, you will need to upload documents including:</p>
-          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload documents including:</p>
+          <p th:if="${model.leadPartner}">As lead partner in the consortium you will need to upload the following documents:</p>
+          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload the following documents:</p>
           <ul class="list-bullet">
             <li>a collaboration agreement</li>
             <li>exploitation plan</li>

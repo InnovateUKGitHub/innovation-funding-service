@@ -3,11 +3,8 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
@@ -49,9 +46,6 @@ public class ProjectSetupStatusController {
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
-
-    @Autowired
-    private ApplicationFinanceRestService financeService;
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
@@ -95,7 +89,7 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        Optional<ProjectActivityStates> bankDetailsState = teamStatus.getMatchingPartnerStatus(organisation).map(ProjectPartnerStatusResource::getBankDetailsStatus);
+        Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
                 organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,

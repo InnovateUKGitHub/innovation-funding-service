@@ -100,20 +100,17 @@ Create assessor account: Postcode lookup and save
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
     And the address fields should be filled
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    # TODO due to INFUND-5556
-    # Then the user reloads the page
-    # And the assessor should see the data entered
-    # Then the assessor should be able to edit the data entered
-    # And the user reloads the page
-    # Then the assessor should see the changed data
+    And The user enters text to a text field    id=password    Passw0rd123
+    And The user enters text to a text field    id=retypedPassword    Passw0rd123
+    And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]    Pending
-    # TODO remove the pending once the devs have merged their changes into development (11/10/16)
-    When guest user log-in    worth.email.test+assessor3@gmail.com    Password1Password1
+    When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
+    And The user enters text to a text field    id=password    Passw0rd123
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Juggling Craziness
     And the user clicks the button/link    link=Juggling Craziness
     And The user should see the text in the page    Juggling Craziness
@@ -153,48 +150,9 @@ the assessor fills in all fields
     The user should not see the text in the page    This field cannot be left blank
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
 
-the assessor fills in contact details
-    Select From List By Index    id=title    0
-    The user enters text to a text field    id=firstName    Thomas
-    The user enters text to a text field    id=lastName    Fister
-    the user selects the radio button    gender    gender2
-    the user selects the radio button    ethnicity    ethnicity2
-    the user selects the radio button    disability    disability2
-    The user enters text to a text field    id=phoneNumber    08549741414
-    The user enters text to a text field    id=password    Password1Password1
-    The user enters text to a text field    id=retypedPassword    Password1Password1
-
 the email displayed should be correct
     ${Email}=    Get Text    css=div:nth-child(10) p strong
     Should Be Equal    ${Email}    worth.email.test+assessor3@gmail.com
-
-the assessor should see the data entered
-    the user should see the text in the page    Thomas
-    the user should see the text in the page    Fister
-    Radio Button Should Be Set To    gender
-    Radio Button Should Be Set To    ethnicity
-    Radio Button Should Be Set To    disability
-    the user should see the text in the page    08549741414
-
-the assessor should be able to edit the data entered
-    Select From List By Index    id=title    1
-    The user enters text to a text field    id=firstName    Annabelle
-    The user enters text to a text field    id=lastName    Wallis
-    the user selects the radio button    gender    gender1
-    the user selects the radio button    ethnicity    ethnicity3
-    the user selects the radio button    disability    disability3
-    The user enters text to a text field    id=phoneNumber    09761963636
-    The user enters text to a text field    id=password    Password1Password1
-    The user enters text to a text field    id=retypedPassword    Password1Password1
-
-the assessor should see the changed data
-    Element Text Should Be    id=title    Miss
-    the user should see the text in the page    Annabelle
-    the user should see the text in the page    Wallis
-    Radio Button Should Be Set To    gender
-    Radio Button Should Be Set To    ethnicity
-    Radio Button Should Be Set To    disability
-    the user should see the text in the page    08549741414
 
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
