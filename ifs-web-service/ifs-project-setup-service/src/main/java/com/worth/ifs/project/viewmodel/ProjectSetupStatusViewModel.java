@@ -2,6 +2,7 @@ package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.sections.SectionAccess;
@@ -23,7 +24,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean grantOfferLetterSubmitted;
     private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
-    private BankDetailsResource bankDetails;
+    private ProjectActivityStates bankDetails;
     private Long organisationId;
     private boolean leadPartner;
     private SectionAccess companiesHouseSection;
@@ -37,7 +38,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
-                                       Optional<BankDetailsResource> bankDetails, Long organisationId,
+                                       Optional<ProjectActivityStates> bankDetails, Long organisationId,
                                        boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
@@ -51,7 +52,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.bankDetails = bankDetails.orElse(null);
+        this.bankDetails = bankDetails.orElse(ProjectActivityStates.NOT_REQUIRED);
         this.organisationId = organisationId;
         this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
         this.leadPartner = leadPartner;
@@ -98,7 +99,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return monitoringOfficerName;
     }
 
-    public BankDetailsResource getBankDetails() {
+    public ProjectActivityStates getBankDetails() {
         return bankDetails;
     }
 
@@ -152,5 +153,15 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public boolean isSpendProfileSubmitted() {
         return spendProfileSubmitted;
+    }
+
+    public String bankDetailsToCssClass() {
+        if (ProjectActivityStates.ACTION_REQUIRED.equals(bankDetails)) {
+            return "require-action";
+        } else if (ProjectActivityStates.COMPLETE.equals(bankDetails)) {
+            return "complete";
+        } else {
+            return "waiting";
+        }
     }
 }

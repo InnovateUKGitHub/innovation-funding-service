@@ -1,12 +1,16 @@
 package com.worth.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * A wrapping object that encompasses the status for the whole team.
@@ -32,6 +36,11 @@ public class ProjectTeamStatusResource {
     @JsonIgnore
     public List<ProjectPartnerStatusResource> getOtherPartnersStatuses(){
         return partnerStatuses.stream().filter(status -> !(status instanceof ProjectLeadStatusResource)).collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    public Optional<ProjectPartnerStatusResource> getMatchingPartnerStatus(OrganisationResource organisation) {
+        return simpleFindFirst(partnerStatuses, status -> status.getOrganisationId().equals(organisation.getId()));
     }
 
     @Override
