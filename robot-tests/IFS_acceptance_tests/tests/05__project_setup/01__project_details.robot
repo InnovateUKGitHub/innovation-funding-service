@@ -58,7 +58,7 @@ Non-lead partner can see the project setup page
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-    # Test case needs to be executed once INFUND-5510 is fixed.
+    # TODO Test case needs to be executed once INFUND-5510 is fixed.
     # This test case can be part of above one. (If included then ensure a successful HappyPath run)
     # This test case covers non lead partner.
 
@@ -240,7 +240,7 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should not see the element    link=Ludlow
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     Then Logout as user
@@ -255,7 +255,7 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
     And the user should not see the element    link=EGGS
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     [Teardown]    logout as user
@@ -329,7 +329,7 @@ Lead partner chooses an existing finance contact
     And the user should not see the element    link=Vitruvius Stonework Limited
     And the user should not see the element    link=Ludlow
     And the user should not see the element    link=EGGS
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
 
