@@ -30,7 +30,7 @@ Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    And The user should see the text in the page    The Project Manager must upload both documents for submission. If we need further clarification we will contact the Project Manager.
+    And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     When the user navigates to the page    ${project_in_setup_page}
