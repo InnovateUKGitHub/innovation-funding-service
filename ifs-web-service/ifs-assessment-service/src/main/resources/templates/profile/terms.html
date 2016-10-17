@@ -12,7 +12,11 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
-            <form th:action="@{/profile/terms}" method="post" th:object="${form}">
+            <div class="hgroup">
+                <h1 class="heading-xlarge">Terms of contract</h1>
+            </div>
+
+            <div th:object="${form}" th:remove="tag">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         You were unable to sign the contract
@@ -22,30 +26,36 @@
                     </ul>
                 </div>
 
-                <div ifs:utext="${model.text}"/>
+                <div ifs:utext="${model.text}" />
 
-                <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
+                <p class="form-hint">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error" th:unless="${model.currentAgreement}">
-                    <fieldset>
-                        <legend>
-                            <span class="visuallyhidden">Terms of contract</span>
-                            <span th:if="${#fields.hasErrors('agreesToTerms')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('agreesToTerms')}" th:text="${err}" />
-                            </span>
-                        </legend>
-                        <label class="block-label">
-                            <input type="checkbox" th:field="*{agreesToTerms}" />
-                            I agree to the terms of contract for becoming an assessor
-                        </label>
-                    </fieldset>
-                </div>
+                <form class="extra-margin" th:action="@{/profile/terms}" method="post" th:unless="${model.currentAgreement}">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
+                        <fieldset>
+                            <legend>
+                                <span class="visuallyhidden">Terms of contract</span>
+                                <span th:if="${#fields.hasErrors('agreesToTerms')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('agreesToTerms')}" th:text="${err}" />
+                                </span>
+                            </legend>
+                            <label class="block-label">
+                                <input data-required-errormessage="Please agree to the terms and conditions" required="required" type="checkbox" th:field="*{agreesToTerms}" />
+                                I agree to the terms of contract for becoming an assessor
+                            </label>
+                        </fieldset>
+                    </div>
 
-                <p th:text="|You agreed to the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">You agreed to the contract on 1 January 1970.</p>
+                    <button class="button button-large extra-margin" type="submit">Save and continue</button>
+                </form>
 
-                <button class="button button-large extra-margin" type="submit" th:unless="${model.currentAgreement}">Save and continue</button>
-                <a role="button" tabindex="0" class="button" th:href="@{/assessor/dashboard}" th:if="${model.currentAgreement}">Continue</a>
-            </form>
+                <p class="extra-margin" th:text="|You agreed to the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+                    <span class="icon icon-important"></span>
+                    You agreed to the contract on 1 January 1970.
+                </p>
+
+                <a class="button-secondary app-submit-btn" th:href="@{/assessor/dashboard}" th:if="${model.currentAgreement}">Back to assessor dashboard</a>
+            </div>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
