@@ -514,8 +514,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Function<InviteProjectResource, ProjectUserInviteModel> inviteeMappingFn = invite ->
                 !invite.getStatus().equals(InviteStatus.OPENED)
-                ? new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId)
-                : new ProjectUserInviteModel(EXISTING, invite.getName(), projectId);
+                ? new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId())
+                : new ProjectUserInviteModel(EXISTING, invite.getName(), invite.getId());
 
         Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation());
 
