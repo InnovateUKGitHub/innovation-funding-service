@@ -85,7 +85,7 @@ public class AssessorRegistrationController {
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                    BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
@@ -123,7 +123,7 @@ public class AssessorRegistrationController {
         registrationForm.getAddressForm().setTriedToSearch(true);
 
         if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
-            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcode.required");
+            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
         }
 
         return validationHandler.failNowOrSucceedWith(view, view);
@@ -143,9 +143,9 @@ public class AssessorRegistrationController {
         if (postcodeIsSelected(assessorRegistrationForm)) {
             validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
         } else {
-            FieldError fieldError = new FieldError("address", "address", "Please enter your address details");
-            bindingResult.addError(fieldError);
+            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
         }
+        assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
         assessorRegistrationForm.getAddressForm().setTriedToSave(true);
     }
 
