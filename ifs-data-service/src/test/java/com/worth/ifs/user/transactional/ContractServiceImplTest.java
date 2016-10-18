@@ -7,7 +7,7 @@ import com.worth.ifs.user.resource.ContractResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.user.builder.ContractBuilder.newContract;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static org.junit.Assert.assertEquals;
@@ -21,8 +21,7 @@ public class ContractServiceImplTest extends BaseServiceUnitTest<ContractService
 
     @Override
     protected ContractServiceImpl supplyServiceUnderTest() {
-        final ContractServiceImpl service = new ContractServiceImpl();
-        return service;
+        return new ContractServiceImpl();
     }
 
     @Test
@@ -38,6 +37,7 @@ public class ContractServiceImplTest extends BaseServiceUnitTest<ContractService
         assertEquals(contractResource, result.getSuccessObject());
 
         verify(contractRepositoryMock, only()).findByCurrentTrue();
+        verify(contractMapperMock, only()).mapToResource(same(contract));
     }
 
     @Test
@@ -50,9 +50,10 @@ public class ContractServiceImplTest extends BaseServiceUnitTest<ContractService
 
         ServiceResult<ContractResource> result = contractService.getCurrent();
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().get(0).getErrorKey(), GENERAL_NOT_FOUND.getErrorKey());
+        assertTrue(result.getFailure().is(notFoundError(Contract.class)));
 
         verify(contractRepositoryMock, only()).findByCurrentTrue();
+        verifyZeroInteractions(contractMapperMock);
     }
 
 }
