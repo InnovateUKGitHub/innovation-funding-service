@@ -214,6 +214,7 @@ Initial details should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725
+    Given the user navigates to the page    ${server}/management/competition/setup/8
     Then The user should see the element    link=Funding Information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
@@ -224,7 +225,8 @@ User should have access to all the sections
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
-    Given The user clicks the button/link    link=All competitions
+    Given the user navigates to the page    ${server}/management/competition/setup/8
+    And The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
@@ -262,7 +264,7 @@ Funding information Autosave
     [Documentation]    INFUND-4581
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
-    and the user clicks the button/link    link=Funding Information
+    And the user clicks the button/link    link=Funding Information
     Then the user should see the correct details in the funding information form
 
 Funding informations calculations
