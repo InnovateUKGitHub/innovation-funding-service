@@ -24,7 +24,7 @@ Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821
     [Tags]  HappyPath    Failing
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page          ${server}/project-setup-management/project/1/spend-profile/summary
+    Given the user navigates to the page          ${server}/project-setup-management/project/1/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
@@ -34,7 +34,7 @@ Other internal users do not have access to the Summary Overview
     [Documentation]    INFUND-4821
     [Tags]    Failing
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/spend-profile/summary    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
     [Teardown]  Logout as user
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
@@ -83,7 +83,7 @@ Comp Admin user cannot see the finance check summary page
     [Documentation]    INFUND-4821
     [Tags]    Failing
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/spend-profile/summary    You do not have the necessary permissions for your request
+    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049
