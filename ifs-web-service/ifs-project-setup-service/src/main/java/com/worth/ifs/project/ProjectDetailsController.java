@@ -26,7 +26,6 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -458,7 +457,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             .map(user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser()))
             .collect(toList());
         List<ProjectUserInviteModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-            .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()))
+            .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()) && invite.getStatus() != InviteStatus.OPENED)
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
             .collect(toList());
 
@@ -507,22 +506,26 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
-        List<ProcessRoleResource> organisationProcessRoles = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation());
-        List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        List<ProjectUserResource> organisationProjectUsers = simpleFilter(projectUsers, pu ->
+                pu.getOrganisation().equals(form.getOrganisation()));
 
-        Function<ProcessRoleResource, ProjectUserInviteModel> financeContactModelMappingFn = user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
+        List<InviteProjectResource> inviteProjectResourceList =
+                projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
+
+        Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn =
+                user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
 
         Function<InviteProjectResource, ProjectUserInviteModel> inviteeMappingFn = invite ->
-                !invite.getStatus().equals(InviteStatus.OPENED)
-                ? new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId())
-                : new ProjectUserInviteModel(EXISTING, invite.getName(), invite.getId());
+                new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId());
 
-        Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation());
+        Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite ->
+                form.getOrganisation().equals(invite.getOrganisation()) &&
+                invite.getStatus() != InviteStatus.OPENED;
 
-        List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(organisationProcessRoles, financeContactModelMappingFn);
+        List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(organisationProjectUsers, financeContactModelMappingFn);
         List<InviteProjectResource> inviteProjectResources = simpleFilter(inviteProjectResourceList, inviteProjectResourceFilterFn);
         List<ProjectUserInviteModel> invitedUsers = simpleMap(inviteProjectResources, inviteeMappingFn);
-
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 

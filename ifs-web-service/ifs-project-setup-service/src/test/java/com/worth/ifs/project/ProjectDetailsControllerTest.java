@@ -550,7 +550,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testFinanceContactInviteAcceptedByInvitee() throws Exception {
+    public void testFinanceContactInviteAcceptedByInviteeSoNoLongerInInvitesList() throws Exception {
 
         long applicationId = 16L;
         long projectId = 4L;
@@ -592,7 +592,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals("EXISTING", model.getInvitedUsers().get(0).getStatus());
+        assertTrue(model.getInvitedUsers().isEmpty());
     }
 
 }
