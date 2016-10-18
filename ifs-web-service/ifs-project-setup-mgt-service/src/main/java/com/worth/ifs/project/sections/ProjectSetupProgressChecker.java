@@ -51,4 +51,8 @@ class ProjectSetupProgressChecker {
     public boolean isFinanceChecksSubmitted() {
         return COMPLETE.equals(projectStatus.getFinanceChecksStatus());
     }
+
+    public boolean isGrantOfferLetterSubmitted() {
+        return ACTION_REQUIRED.equals(projectStatus.getGrantOfferLetterStatus());
+    }
 }

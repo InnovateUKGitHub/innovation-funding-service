@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<div th:include="fragments/layout :: head" th:with="pageTitle='Join an application'" th:remove="tag"/>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Join an application'" th:remove="tag"/>
 </head>
 <body th:with="context='applicant'" class="create-application-eligibility">
 
@@ -9,48 +9,56 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
 
 <main id="content">
-	<h1 class="heading-large">Join a project</h1>
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub"
+         th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}"
+         th:remove="tag"/>
+    <h1 class="heading-large">Join a project</h1>
 
-	<div class="panel-indent">
-		<p>You have been invited to join a collaborative project.</p>
+    <div class="panel-indent">
+        <p>You have been invited to join a collaborative project.</p>
 
-		<dl class="standard-definition-list">
-			<dt>Project</dt>
-			<dd>A novel solution to an old problem</dd>
+        <dl class="standard-definition-list">
+            <dt>Project</dt>
+            <dd th:text="${model.projectName}"></dd>
 
-			<dt>Competition</dt>
-			<dd>Technology inspired</dd>
+            <dt>Competition</dt>
+            <dd th:text="${model.competitionName}"></dd>
 
-			<dt>Lead organisation</dt>
-			<dd>Empire Ltd</dd>
+            <dt>Lead organisation</dt>
+            <dd th:text="${model.leadOrganisationName}"></dd>
 
-			<dt>Lead applicant</dt>
-			<dd>Steve Smith</dd>
-		</dl>
+            <dt>Lead applicant</dt>
+            <dd th:text="${model.leadApplicantName}"></dd>
+        </dl>
 
-		<p>You have been invited to join this project on behalf of the following organisation: <strong>Nomensa</strong></p>
-	</div>
+        <p>You have been invited to join this project on behalf of the following organisation: <strong th:text="${model.organisationName}"></strong>
+        </p>
+    </div>
 
-	<h2 class="heading-medium">Your Organisation</h2>
+    <h2 class="heading-medium">Your Organisation</h2>
 
-	<fieldset>
-		<legend class="visuallyhidden">Your Organisation</legend>
-		<div class="form-block">
-			<h3 class="heading-small">Organisation name</h3>
-			<p>Nomensa</p>
-			<h3 class="heading-small">Registration number</h3>
-			<p>0123456789</p>
-			<h3 class="heading-small">Address</h3>
-			<p>13 Queens Square <br />
-				Bristol <br />
-				BS1 4NT
-			</p>
-		</div>
-	</fieldset>
+    <fieldset>
+        <legend class="visuallyhidden">Your Organisation</legend>
+        <div class="form-block">
+            <h3 class="heading-small">Organisation name</h3>
+            <p th:text="${model.organisationName}"></p>
+            <h3 class="heading-small">Registration number</h3>
+            <p th:text="${model.organisationResgistrationNumber}"></p>
+            <h3 class="heading-small">Address</h3>
+            <p  th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine1 : ''}"><br/>
+                <div th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine2 : ''}" ><br/>
+        </div>
+            <div th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine3: ''}"></div>
+            </p>
+        </div>
+    </fieldset>
 
-	<a th:href="@{/registration/accept-invite-user-exist-confirm}" class="button button-large extra-margin" name="select-org-size" th:unless="${!userExists}">Continue to project</a>
+    <a th:href="@{/registration/accept-invite-user-exist-confirm}" class="button button-large extra-margin"
+       name="select-org-size" th:unless="${!userExists}">Continue to project</a>
 
-	<a th:href="@{/registration/register}" class="button button-large extra-margin" name="select-org-size" th:unless="${userExists}">Create account</a>
+    <a th:href="@{/registration/register}" class="button button-large extra-margin" name="select-org-size"
+       th:unless="${userExists}">Create account</a>
 
 </main>
 

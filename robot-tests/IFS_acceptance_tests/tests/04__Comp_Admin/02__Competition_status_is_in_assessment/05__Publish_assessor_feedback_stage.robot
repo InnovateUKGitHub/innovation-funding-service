@@ -17,6 +17,7 @@ Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 ${assessor_feedback_competition_url}    ${server}/management/competition/3
 ${successful_application_overview}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
+${project_setup_status_view}    ${server}/project-setup-management/competition/3/status
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.    # note that this will change!
 
 *** Test Cases ***
@@ -68,8 +69,8 @@ Choosing to Notify the applicants in the dialogue
     [Documentation]    INFUND-2672
     [Tags]    HappyPath
     When the user clicks the button/link    name=publish
-    Then the user should be redirected to the correct page    ${assessor_feedback_competition_url}
-    And the user should see the text in the page    Project setup
+    Then the user should be redirected to the correct page    ${project_setup_status_view}
+    And the user should see the text in the page    Projects in setup
 
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
@@ -85,7 +86,7 @@ Unsuccessful applicant gets feedback email
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646
     [Tags]
-    When the user should see the text in the page    Project setup
+    When the user should see the text in the page    Projects in setup
 
 *** Keywords ***
 The option to publish feedback is enabled
