@@ -53,7 +53,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 		mockMvc.perform(
     				post("/competition/" + COMPETITION_ID + "/assessorfeedbacksubmit")
     			)
-                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID));
+                .andExpect(redirectedUrl("http://localhost:80/project-setup-management/competition/" + COMPETITION_ID + "/status/"));
     	
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	
