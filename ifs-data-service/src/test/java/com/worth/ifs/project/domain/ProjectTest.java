@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -57,8 +58,8 @@ public class ProjectTest {
     public void testGetOrganisations() {
         Organisation org1 = newOrganisation().build();
         Organisation org2 = newOrganisation().build();
-        List<ProjectUser> pu = newProjectUser().withOrganisation(org1, org2).build(2);
-        Project project = newProject().withProjectUsers(pu).build();
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(org1, org2).build(2);
+        Project project = newProject().withPartnerOrganisations(partnerOrganisations).build();
         assertNotNull(project.getOrganisations());
         assertEquals(org1, project.getOrganisations().get(0));
         assertEquals(org2, project.getOrganisations().get(1));
@@ -68,8 +69,8 @@ public class ProjectTest {
     public void testGetOrganisationsFilter() {
         String orgName = "a name to filter on";
         Organisation org1 = newOrganisation().withName(orgName).build();
-        List<ProjectUser> pu = newProjectUser().withOrganisation(org1).build(1);
-        Project project = newProject().withProjectUsers(pu).build();
+        newPartnerOrganisation().withProject(project).withOrganisation(org1).build(2);
+
         Predicate<Organisation> shouldRemove = o -> !orgName.equals(o.getName());
         Predicate<Organisation> shouldNotRemove = o -> orgName.equals(o.getName());
         assertNotNull(project.getOrganisations(shouldRemove));

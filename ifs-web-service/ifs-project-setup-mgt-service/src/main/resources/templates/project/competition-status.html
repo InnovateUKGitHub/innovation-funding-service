@@ -64,7 +64,7 @@
                         th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" />
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
                         th:include="project/fragments :: project-status-table(${project.financeChecksStatus})"/>
 

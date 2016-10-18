@@ -1,5 +1,9 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -11,11 +15,8 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.core.io.ByteArrayResource;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -104,7 +105,9 @@ public interface ProjectService {
 
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
+    ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
+
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
-    ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
+    ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
 }

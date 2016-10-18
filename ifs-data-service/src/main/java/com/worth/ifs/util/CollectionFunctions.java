@@ -1,9 +1,11 @@
 package com.worth.ifs.util;
 
+import com.worth.ifs.project.finance.domain.CostCategory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
@@ -225,6 +227,20 @@ public final class CollectionFunctions {
         return list.stream().map(mappingFn).collect(toList());
     }
 
+    public static <T, R> R[] simpleMapArray(T[] array, Function<T, R> mappingFn, Class<R> clazz) {
+        if (array == null || array.length == 0){
+            return (R[]) Array.newInstance(clazz, 0);
+        } else {
+            R[] result = (R[]) Array.newInstance(clazz, array.length);
+            for (int index = 0; index < array.length; index++){
+                result[index] = mappingFn.apply(array[index]);
+            }
+            return result;
+        }
+
+
+    }
+
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      */
@@ -265,7 +281,7 @@ public final class CollectionFunctions {
     public static <S, T, R, U> Map<R, U> simpleMapKeyAndValue(Map<S, T> map, Function<S, R> keyMappingFn, Function<T, U> valueMappingFn) {
 
         List<Pair<R, U>> list = simpleMap(map.entrySet(), entry ->
-            Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
+                Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
 
         return simpleToMap(list, Pair::getKey, Pair::getValue);
     }
@@ -432,7 +448,9 @@ public final class CollectionFunctions {
     }
 
     private static <T> BinaryOperator<T> throwingMerger() {
-        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
+        return (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        };
     }
 
     /**
@@ -491,7 +509,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilter(Collection<T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilter(Collection<? extends T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
             return emptyList();
         }
@@ -506,7 +524,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilterNot(List<? extends T> list, Predicate<T> filterFn) {
         return simpleFilter(list, element -> !filterFn.test(element));
     }
 
@@ -536,6 +554,13 @@ public final class CollectionFunctions {
             return "";
         }
         return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
+    }
+
+    public static <T> String simpleJoiner(List<T> list, Function<T, String> transformer, String joinString) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return simpleJoiner(list.stream().map(transformer).collect(toList()), joinString);
     }
 
     /**
@@ -626,6 +651,7 @@ public final class CollectionFunctions {
 
     /**
      * Wrap a {@link BinaryOperator} with null checks
+     *
      * @param notNullSafe
      * @param <T>
      * @return
@@ -657,7 +683,7 @@ public final class CollectionFunctions {
         return flattenLists(allPermutations);
     }
 
-    public static <T, R>  List<Pair<T, R>> asListOfPairs(Object... entries) {
+    public static <T, R> List<Pair<T, R>> asListOfPairs(Object... entries) {
 
         if (entries.length % 2 != 0) {
             throw new IllegalArgumentException("Should have an even number of names and values in list");
@@ -684,6 +710,62 @@ public final class CollectionFunctions {
 
         List<List<List<T>>> furtherPermutations = mapWithIndex(remainingWords, (i, remainingWord) -> findPermutations(newPermutationStringSoFar, remainingWord, removeElement(remainingWords, i)));
         return flattenLists(furtherPermutations);
+    }
+
+    public static final <T, R> boolean containsAll(Collection<T> containing, Collection<R> contained, BiFunction<T,R,Boolean> equalsFunction){
+        if (containing == null && contained != null) {
+            return false;
+        } else if (contained == null) {
+            return true;
+        }
+        boolean notContained = contained.stream().filter(containedItem ->
+                    !containing.stream().filter(containingItem -> equalsFunction.apply(containingItem, containedItem)).findAny().isPresent()
+        ).findAny().isPresent();
+        return !notContained;
+    }
+
+    public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
+        if (containing == null && contained != null) {
+            return false;
+        } else if (contained == null) {
+            return true;
+        }
+        List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
+        List<S> transformedContained = contained.stream().map(transformer2).collect(toList());
+        return transformedContaining.containsAll(transformedContained);
+    }
+
+    public static <T extends Comparable<T>> List<T> sorted(Collection<T> toSort){
+        List<T> sorted = new ArrayList<T>(toSort);
+        Collections.sort(sorted);
+        return sorted;
+    }
+
+    public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+        SortedMap<T, List<R>> orderedMap = new TreeMap<>();
+        if (orderedList != null) {
+            orderedList.stream().forEachOrdered(s -> {
+                        if (s != null) {
+                            T key = keyTransform.apply(s);
+                            R value = valueTransform.apply(s);
+                            if (!orderedMap.containsKey(key)) {
+                                orderedMap.put(key, new ArrayList<>());
+                            }
+                            orderedMap.get(key).add(value);
+                        }
+                    }
+            );
+        }
+        return orderedMap;
+    }
+
+    public static <S, T> T unique(Collection<S> collectionToSearch, Function<S, T> property) {
+        List<T> distinct = collectionToSearch.stream().map(property).distinct().collect(toList());
+        if (distinct.size() != 1) {
+            throw new IllegalArgumentException("Collection to search:" + collectionToSearch + " does not have a unique property:" + property);
+        } else {
+            return distinct.get(0);
+        }
     }
 
 }

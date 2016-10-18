@@ -28,6 +28,14 @@ public class ServiceResultTest {
     }
 
     @Test
+    public void testAggregateVarargsSuccess() {
+        final ServiceResult<List<String>> serviceResult = aggregate(serviceSuccess("1"), serviceSuccess("2"), serviceSuccess("3")); // Method under test
+        assertTrue(serviceResult.isSuccess());
+        assertFalse(serviceResult.getSuccessObject().isEmpty());
+        assertEquals(asList("1", "2", "3"), serviceResult.getSuccessObject());
+    }
+
+    @Test
     public void testAggregateFailure() {
         final List<ServiceResult<String>> list = asList("1", "2","3").stream().map(i -> ServiceResult.<String>serviceFailure(new Error(i, INTERNAL_SERVER_ERROR))).collect(toList());
         final ServiceResult<List<String>> serviceResult = aggregate(list); // Method under test
@@ -66,4 +74,7 @@ public class ServiceResultTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(badRequestError("Error 1"), internalServerErrorError(), badRequestError("Error 3")));
     }
+
+
+
 }

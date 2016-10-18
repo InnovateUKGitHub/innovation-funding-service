@@ -9,7 +9,6 @@ import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
-import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,29 +125,5 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
                 .withPayload(SUBMIT)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
-    }
-
-    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, Project project) {
-        return fireEvent(event, getCurrentProcess(project));
-    }
-
-    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsProcess currentState) {
-        return fireEvent(event, currentState.getActivityState());
-    }
-
-    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsState currentState) {
-        return stateHandler.handleEventWithState(event.build(), currentState);
-    }
-
-    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, Project project) {
-        return testEvent(event, getCurrentProcess(project).getActivityState());
-    }
-
-    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsState currentState) {
-        return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
-    }
-
-    private ProjectDetailsProcess getCurrentProcess(Project project) {
-        return getProcessByTargetId(project.getId());
     }
 }

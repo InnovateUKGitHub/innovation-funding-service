@@ -10,6 +10,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.ProjectStatusDocs.competitionProjectsStatusResourceFields;
 import static com.worth.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
+import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -29,9 +31,25 @@ public class ProjectStatusControllerDocumentation extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testGetCompetitionStatus() throws Exception {
+    public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().build();
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().
+                withCompetitionName("ABC").
+                withCompetitionNumber(competitionId).
+                withProjectStatusResources(newProjectStatusResource().
+                        withProjectNumber(1L, 2L, 3L).
+                        withProjectTitles("Project ABC", "Project PMQ", "Project XYZ").
+                        withProjectLeadOrganisationName("Hive IT").
+                        withNumberOfPartners(3, 3, 3).
+                        withProjectDetailStatus(COMPLETE, PENDING, COMPLETE).
+                        withMonitoringOfficerStatus(PENDING, PENDING, COMPLETE).
+                        withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
+                        withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
+                        withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
+                        withOtherDocumentsStatus(PENDING, PENDING, COMPLETE).
+                        withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
+                        build(3)).
+                build();
 
         when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
