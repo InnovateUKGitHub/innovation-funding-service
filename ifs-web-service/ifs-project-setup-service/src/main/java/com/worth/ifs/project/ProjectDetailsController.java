@@ -13,6 +13,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
@@ -510,7 +511,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<InviteProjectResource> inviteProjectResourceList = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
 
         Function<ProcessRoleResource, ProjectUserInviteModel> financeContactModelMappingFn = user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
-        Function<InviteProjectResource, ProjectUserInviteModel> inviteeMappingFn = invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId);
+
+        Function<InviteProjectResource, ProjectUserInviteModel> inviteeMappingFn = invite ->
+                !invite.getStatus().equals(InviteStatus.OPENED)
+                ? new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId)
+                : new ProjectUserInviteModel(EXISTING, invite.getName(), projectId);
 
         Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite -> form.getOrganisation().equals(invite.getOrganisation());
 
