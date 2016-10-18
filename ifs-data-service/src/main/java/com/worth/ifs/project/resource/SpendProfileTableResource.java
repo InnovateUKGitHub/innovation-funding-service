@@ -2,6 +2,8 @@ package com.worth.ifs.project.resource;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.project.finance.domain.CostCategory;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -21,10 +23,14 @@ public class SpendProfileTableResource {
     /*
      * Holds the cost per category for each month, the first entry in the list representing the first month and so on.
      */
-    private Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap;
-    private Map<String, BigDecimal> eligibleCostPerCategoryMap;
+    private Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap;
+    private Map<Long, BigDecimal> eligibleCostPerCategoryMap;
 
     private ValidationMessages validationMessages;
+
+    private Map<Long, CostCategoryResource> costCategoryResourceMap;
+
+    private Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap;
 
     public List<LocalDateResource> getMonths() {
         return months;
@@ -34,19 +40,19 @@ public class SpendProfileTableResource {
         this.months = months;
     }
 
-    public Map<String, List<BigDecimal>> getMonthlyCostsPerCategoryMap() {
+    public Map<Long, List<BigDecimal>> getMonthlyCostsPerCategoryMap() {
         return monthlyCostsPerCategoryMap;
     }
 
-    public void setMonthlyCostsPerCategoryMap(Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap) {
+    public void setMonthlyCostsPerCategoryMap(Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap) {
         this.monthlyCostsPerCategoryMap = monthlyCostsPerCategoryMap;
     }
 
-    public Map<String, BigDecimal> getEligibleCostPerCategoryMap() {
+    public Map<Long, BigDecimal> getEligibleCostPerCategoryMap() {
         return eligibleCostPerCategoryMap;
     }
 
-    public void setEligibleCostPerCategoryMap(Map<String, BigDecimal> eligibleCostPerCategoryMap) {
+    public void setEligibleCostPerCategoryMap(Map<Long, BigDecimal> eligibleCostPerCategoryMap) {
         this.eligibleCostPerCategoryMap = eligibleCostPerCategoryMap;
     }
 
@@ -65,6 +71,22 @@ public class SpendProfileTableResource {
 
     public void setValidationMessages(ValidationMessages validationMessages) {
         this.validationMessages = validationMessages;
+    }
+
+    public Map<Long, CostCategoryResource> getCostCategoryResourceMap() {
+        return costCategoryResourceMap;
+    }
+
+    public void setCostCategoryResourceMap(Map<Long, CostCategoryResource> costCategoryResourceMap) {
+        this.costCategoryResourceMap = costCategoryResourceMap;
+    }
+
+    public Map<String, List<Map<Long, List<BigDecimal>>>> getCostCategoryGroupMap() {
+        return costCategoryGroupMap;
+    }
+
+    public void setCostCategoryGroupMap(Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap) {
+        this.costCategoryGroupMap = costCategoryGroupMap;
     }
 
     @Override
