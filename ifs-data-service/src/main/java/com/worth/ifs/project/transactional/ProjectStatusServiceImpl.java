@@ -8,7 +8,6 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -117,7 +116,6 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project){
-        List<Organisation> organisations = project.getOrganisations();
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
         if(ApprovalType.APPROVED.equals(approvalType)) {
@@ -127,24 +125,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         }
 
         if (project.getSpendProfileSubmittedDate() != null) {
-            return COMPLETE;
+            return ACTION_REQUIRED;
         }
 
-        for(Organisation organisation : organisations) {
-            Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-
-            ProjectActivityStates financeChecksStatus = ACTION_REQUIRED;
-            if (spendProfile.isPresent()) {
-                ProjectActivityStates orgSpendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
-                if (orgSpendProfileStatus != COMPLETE) {
-                    return PENDING;
-                } else {
-                    return ACTION_REQUIRED;
-                }
-            }
-        }
-
-        return NOT_STARTED;
+        return PENDING;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
