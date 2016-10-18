@@ -208,7 +208,7 @@ Initial details can be edited again except from Comp Type and Date
 Initial details should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/management/competition/setup/8
+    When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(0)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 

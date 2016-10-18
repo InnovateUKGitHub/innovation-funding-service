@@ -45,7 +45,7 @@ class ProjectSetupProgressChecker {
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
-        return simpleFindFirst(projectTeamStatus.getPartnerStatuses(), status -> status.getOrganisationId().equals(organisation.getId())).get();
+        return projectTeamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
     }
 
     public boolean isLeadPartnerOrganisation(OrganisationResource organisation) {
