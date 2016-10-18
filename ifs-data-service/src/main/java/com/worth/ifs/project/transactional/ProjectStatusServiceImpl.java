@@ -162,7 +162,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
-        // TODO: Set status when GOL internal view is completed.
-        return createGrantOfferLetterStatus();
+        if(project.getOfferSubmittedDate() != null) {
+            return ACTION_REQUIRED;
+        }
+        return NOT_STARTED;
     }
 }

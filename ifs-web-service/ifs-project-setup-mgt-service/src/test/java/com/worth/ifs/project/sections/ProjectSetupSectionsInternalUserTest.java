@@ -114,32 +114,15 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isFinanceChecksSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
 
-        verifyInteractions(
-                mock -> mock.isProjectDetailsSubmitted(),
-                mock -> mock.isMonitoringOfficerSubmitted(),
-                mock -> mock.isBankDetailsApproved(),
-                mock -> mock.isFinanceChecksSubmitted(),
-                mock -> mock.isSpendProfileSubmitted(),
-                mock -> mock.isOtherDocumentsSubmitted()
-        );
+        verifyInteractions(mock -> mock.isGrantOfferLetterSubmitted());
     }
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionButOtherSectionsAreIncomplete() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isFinanceChecksSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
     }
 

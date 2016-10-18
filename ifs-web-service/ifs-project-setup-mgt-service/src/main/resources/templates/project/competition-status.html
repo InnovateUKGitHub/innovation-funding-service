@@ -80,7 +80,7 @@
 
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetter}"
-                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" th:with="url=${''}" />
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetter}"
                         th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" />
 
