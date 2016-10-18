@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Holder of model attributes for the Assessor user details view.
  */
 public class AssessorProfileDetailsViewModel {
+    private String title;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -22,6 +23,7 @@ public class AssessorProfileDetailsViewModel {
     private String email;
 
     public AssessorProfileDetailsViewModel(UserResource user, AddressResource address, EthnicityResource ethnicity) {
+        this.title = user.getTitle();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.gender = user.getGender();
@@ -30,6 +32,14 @@ public class AssessorProfileDetailsViewModel {
         this.disability = user.getDisability();
         this.phoneNumber = user.getPhoneNumber();
         this.email = user.getEmail();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getFirstName() {
@@ -105,6 +115,7 @@ public class AssessorProfileDetailsViewModel {
         AssessorProfileDetailsViewModel that = (AssessorProfileDetailsViewModel) o;
 
         return new EqualsBuilder()
+                .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(gender, that.gender)
@@ -119,6 +130,7 @@ public class AssessorProfileDetailsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(title)
                 .append(firstName)
                 .append(lastName)
                 .append(gender)

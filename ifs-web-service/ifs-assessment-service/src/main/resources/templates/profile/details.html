@@ -17,7 +17,11 @@
             <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a th:href="@{/profile/details-edit}"> Edit your details</a></small></h2>
 
             <h3 class="heading-small">Your name</h3>
-            <p><span th:text="${model.firstName}" th:remove="tag" /> <span th:text="${model.lastName}" th:remove="tag" /></p>
+            <p>
+                <span th:text="${model.title}" th:remove="tag" />
+                <span th:text="${model.firstName}" th:remove="tag" />
+                <span th:text="${model.lastName}" th:remove="tag" />
+            </p>
             <h3 class="heading-small">Gender</h3>
             <p th:text="${model.gender}? ${model.gender.displayName}" />
             <h3 class="heading-small">Your ethnic group</h3>
