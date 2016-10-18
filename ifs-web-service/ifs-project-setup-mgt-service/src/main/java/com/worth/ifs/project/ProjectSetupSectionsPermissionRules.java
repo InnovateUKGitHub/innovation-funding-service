@@ -90,7 +90,6 @@ public class ProjectSetupSectionsPermissionRules {
 
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN)
-                || user.hasRole(UserRoleType.PROJECT_FINANCE)
-                || user.hasRole(UserRoleType.APPLICANT);
+                || user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 }
