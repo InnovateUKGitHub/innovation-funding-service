@@ -1,11 +1,12 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -19,7 +20,6 @@ import java.util.List;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectPartnerUser;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
@@ -33,7 +33,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired  //TODO - INFUND-3530 - to be remove later
+
+    @Autowired
     private ProjectRepository projectRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
@@ -109,11 +110,17 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     public boolean projectFinanceUsersCanViewApplications(final ApplicationResource application, final UserResource user){
         return isProjectFinanceUser(user);
     }
-    //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-    //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-    @PermissionRule(value = "READ", description = "Project Partner can see application resources")
-    public boolean projectPartnerCanViewApplications(final ApplicationResource application, final UserResource user){
-        return isProjectPartnerUser(user);
+
+    @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
+    public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user){
+
+        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
+
+        if (linkedProject == null) {
+            return false;
+        }
+
+        return isPartner(linkedProject.getId(), user.getId());
     }
 
 

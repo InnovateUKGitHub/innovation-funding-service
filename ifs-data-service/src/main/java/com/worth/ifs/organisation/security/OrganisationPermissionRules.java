@@ -1,9 +1,12 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.project.domain.PartnerOrganisation;
+import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -28,6 +32,9 @@ public class OrganisationPermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
     @PermissionRule(value = "READ", description = "Comp Admins can see all Organisations")
     public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isCompAdmin(user);
@@ -36,12 +43,6 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Project Finance Users can see all Organisations")
     public boolean projectFinanceUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isProjectFinanceUser(user);
-    }
-    //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-    //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-    @PermissionRule(value = "READ", description = "Project Finance Users can see all Organisations")
-    public boolean projectPartnerUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isProjectPartnerUser(user);
     }
 
 
@@ -100,6 +101,17 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
     public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
         return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")
+    public boolean projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(OrganisationResource organisation, UserResource user) {
+
+        List<ProjectUser> projectRoles = projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+
+        return projectRoles.stream().anyMatch(projectUser -> {
+            List<PartnerOrganisation> partnerOrganisations = projectUser.getProject().getPartnerOrganisations();
+            return partnerOrganisations.stream().anyMatch(org -> org.getOrganisation().getId().equals(organisation.getId()));
+        });
     }
 
     private boolean isMemberOfOrganisation(OrganisationResource organisation, UserResource user) {
