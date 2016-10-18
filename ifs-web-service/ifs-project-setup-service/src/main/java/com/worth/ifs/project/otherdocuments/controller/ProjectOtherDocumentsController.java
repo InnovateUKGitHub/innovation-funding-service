@@ -9,6 +9,7 @@ import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -219,4 +222,5 @@ public class ProjectOtherDocumentsController {
     private String redirectToOtherDocumentsPage(Long projectId) {
         return "redirect:/project/" + projectId + "/partner/documents";
     }
+
 }
