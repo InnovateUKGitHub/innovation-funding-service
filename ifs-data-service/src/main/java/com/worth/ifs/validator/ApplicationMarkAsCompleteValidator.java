@@ -3,6 +3,7 @@ package com.worth.ifs.validator;
 import com.worth.ifs.application.domain.Application;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.proxy.HibernateProxyHelper;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,6 +21,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
+        //Check subclasses for in case we receive hibernate proxy class.
         return Application.class.isAssignableFrom(clazz);
     }
 
