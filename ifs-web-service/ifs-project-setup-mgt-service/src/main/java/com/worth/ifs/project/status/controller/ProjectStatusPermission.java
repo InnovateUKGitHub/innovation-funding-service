@@ -11,11 +11,12 @@ public class ProjectStatusPermission {
     private Boolean canAccessFinanceChecks;
     private Boolean canAccessSpendProfile;
     private Boolean canAccessOtherDocuments;
+    private Boolean canAccessGrantOfferLetter;
 
     public ProjectStatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
                                    Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
-                                   Boolean canAccessOtherDocuments) {
+                                   Boolean canAccessOtherDocuments, Boolean canAccessGrantOfferLetter) {
         this.canAccessCompaniesHouse = canAccessCompaniesHouse;
         this.canAccessProjectDetails = canAccessProjectDetails;
         this.canAccessMonitoringOfficer = canAccessMonitoringOfficer;
@@ -23,6 +24,7 @@ public class ProjectStatusPermission {
         this.canAccessFinanceChecks = canAccessFinanceChecks;
         this.canAccessSpendProfile = canAccessSpendProfile;
         this.canAccessOtherDocuments = canAccessOtherDocuments;
+        this.canAccessGrantOfferLetter = canAccessGrantOfferLetter;
     }
 
     public Boolean getCanAccessCompaniesHouse() {
@@ -52,4 +54,6 @@ public class ProjectStatusPermission {
     public Boolean getCanAccessOtherDocuments() {
         return canAccessOtherDocuments;
     }
+
+    public Boolean getCanAccessGrantOfferLetter() { return canAccessGrantOfferLetter; }
 }

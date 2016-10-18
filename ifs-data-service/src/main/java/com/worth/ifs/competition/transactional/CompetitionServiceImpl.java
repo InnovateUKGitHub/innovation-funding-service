@@ -92,24 +92,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findLive(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findProjectSetup(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findUpcoming(), this::searchResultFromCompetition));
     }
 
     @Override
