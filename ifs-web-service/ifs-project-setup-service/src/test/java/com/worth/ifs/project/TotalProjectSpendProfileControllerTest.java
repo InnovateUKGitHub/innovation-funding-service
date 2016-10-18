@@ -39,6 +39,7 @@ import static com.worth.ifs.project.builder.SpendProfileResourceBuilder.newSpend
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -105,14 +106,14 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         ));
 
         expectedTable.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("100"),
-                "Materials", new BigDecimal("150"),
-                "Other costs", new BigDecimal("55")));
+                1L, new BigDecimal("100"),
+                2L, new BigDecimal("150"),
+                3L, new BigDecimal("55")));
 
         expectedTable.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
 
         List<LocalDate> months = IntStream.range(0, projectResource.getDurationInMonths().intValue()).mapToObj(projectResource.getTargetStartDate()::plusMonths).collect(toList());
@@ -128,22 +129,23 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
         List<LocalDateResource> months = tableOne.getMonths();
-        Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap = asMap(
-                organisations.get(0).getName(), asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100")),
-                organisations.get(1).getName(),  asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100")));
+        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = asMap(
+                organisations.get(0).getId(), asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100")),
+                organisations.get(1).getId(),  asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100")));
 
-        Map<String, BigDecimal> eligibleCostPerOrganisationMap = asMap(
-                organisations.get(0).getName(), new BigDecimal("305"),
-                organisations.get(1).getName(), new BigDecimal("305"));
+        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = asMap(
+                organisations.get(0).getId(), new BigDecimal("305"),
+                organisations.get(1).getId(), new BigDecimal("305"));
 
-        Map<String, BigDecimal> organisationToActualTotal = asMap(
-                organisations.get(0).getName(), new BigDecimal("335"),
-                organisations.get(1).getName(), new BigDecimal("335"));
+        Map<Long, BigDecimal> organisationToActualTotal = asMap(
+                organisations.get(0).getId(), new BigDecimal("335"),
+                organisations.get(1).getId(), new BigDecimal("335"));
 
         List<BigDecimal> totalForEachMonth = asList(new BigDecimal("300"), new BigDecimal("170"), new BigDecimal("200"));
         BigDecimal totalOfAllActualTotals = new BigDecimal("670");
         BigDecimal totalOfAllEligibleTotals = new BigDecimal("610");
-        TotalProjectSpendProfileTableViewModel table = new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals);
+        TotalProjectSpendProfileTableViewModel table = new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap,
+                organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
 
 
        return new TotalSpendProfileViewModel(projectResource, table, summary);

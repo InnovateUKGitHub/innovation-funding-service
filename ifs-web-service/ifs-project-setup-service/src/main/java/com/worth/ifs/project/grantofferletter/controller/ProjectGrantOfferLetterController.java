@@ -9,6 +9,7 @@ import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
 import com.worth.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -22,11 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.singletonList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -183,11 +187,14 @@ public class ProjectGrantOfferLetterController {
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
+        boolean isProjectManager = getProjectManager(projectId)
+                .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
+
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(), project.isOfferRejected(), false);
+                project.getOfferSubmittedDate(), project.isOfferRejected(), false, isProjectManager);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
@@ -208,6 +215,11 @@ public class ProjectGrantOfferLetterController {
         } else {
             throw new ObjectNotFoundException("Could not find Collaboration Agreement for project " + projectId, singletonList(projectId));
         }
+    }
+
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
 }
