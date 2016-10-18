@@ -506,8 +506,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        List<ProjectUserResource> organisationProjectUsers = simpleFilter(projectUsers, pu ->
+        List<ProjectUserResource> partnerUsers = projectService.getProjectUsersWithPartnerRole(projectId);
+
+        List<ProjectUserResource> organisationProjectUsers = simpleFilter(partnerUsers, pu ->
                 pu.getOrganisation().equals(form.getOrganisation()));
 
         List<InviteProjectResource> inviteProjectResourceList =
