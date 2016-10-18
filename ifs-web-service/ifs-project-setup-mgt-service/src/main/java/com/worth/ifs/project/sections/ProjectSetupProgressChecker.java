@@ -33,7 +33,7 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isSpendProfileSubmitted() {
-        return COMPLETE.equals(projectStatus.getSpendProfileStatus());
+        return ACTION_REQUIRED.equals(projectStatus.getSpendProfileStatus());
     }
 
     public boolean isOtherDocumentsSubmitted() {

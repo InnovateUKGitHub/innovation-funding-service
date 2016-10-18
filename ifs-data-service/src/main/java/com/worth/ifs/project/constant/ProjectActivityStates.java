@@ -9,4 +9,5 @@ public enum  ProjectActivityStates {
     ACTION_REQUIRED,
     PENDING,
     COMPLETE;
+
 }
