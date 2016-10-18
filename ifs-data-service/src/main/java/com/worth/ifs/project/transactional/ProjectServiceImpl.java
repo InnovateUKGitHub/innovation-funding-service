@@ -655,12 +655,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
-
-        if (existingUser != null) {
-            project.removeProjectUser(existingUser);
-        }
-
         project.addProjectUser(financeContact);
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
@@ -828,6 +822,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+
+        Organisation organisation = getOrganisation(organisationId).getSuccessObjectOrThrowException();
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation);
+
+        if (existingUser != null) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION);
+        }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
 
