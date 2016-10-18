@@ -19,11 +19,11 @@
             <h3 class="heading-small">Your name</h3>
             <p><span th:text="${model.firstName}" th:remove="tag" /> <span th:text="${model.lastName}" th:remove="tag" /></p>
             <h3 class="heading-small">Gender</h3>
-            <p th:text="${model.gender}" />
+            <p th:text="${model.gender}? ${model.gender.displayName}" />
             <h3 class="heading-small">Your ethnic group</h3>
-            <p th:text="${model.ethnicity.description}" />
+            <p th:text="${model.ethnicity}? ${model.ethnicity.description}" />
             <h3 class="heading-small">Do you consider yourself disabled?</h3>
-            <p th:text="${model.disability}" />
+            <p th:text="${model.disability}? ${model.disability.displayName}" />
             <h3 class="heading-small">Address</h3>
             <p>
                 <span th:text="${model.address.addressLine1}" th:remove="tag" /><br />

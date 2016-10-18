@@ -64,6 +64,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
+        EthnicityResource ethnicity = newEthnicityResource().build();
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile/details"));

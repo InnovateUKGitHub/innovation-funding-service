@@ -17,7 +17,7 @@ public class AssessorProfileDetailsModelPopulator {
     @Autowired
     EthnicityRestService ethnicityRestService;
 
-    public AssessorProfileDetailsViewModel populateModel(UserResource user) {
+    public AssessorProfileDetailsViewModel populateModel(UserResource user, EthnicityResource ethnicity) {
 
         AddressResource address = new AddressResource();
   /*      ProfileResource profile = user.getProfile();
@@ -26,6 +26,6 @@ public class AssessorProfileDetailsModelPopulator {
         }*/
 
 
-        return new AssessorProfileDetailsViewModel(user, address, new EthnicityResource());
+        return new AssessorProfileDetailsViewModel(user, address, ethnicity);
     }
 }

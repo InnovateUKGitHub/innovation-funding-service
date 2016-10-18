@@ -204,7 +204,8 @@ public class AssessorProfileDetailsController {
     }
 
     private String doViewYourDetails(UserResource loggedInUser, Model model) {
-        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser));
+        retrieveEthnicityOptions();
+        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser, getEthnicity(loggedInUser.getEthnicity())));
         return "profile/details";
     }
 
