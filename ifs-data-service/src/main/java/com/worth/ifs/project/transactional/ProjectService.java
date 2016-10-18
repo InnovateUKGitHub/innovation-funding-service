@@ -137,4 +137,7 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
+    @PreAuthorize("hasAuthority('system_maintainer')")
+    ServiceResult<Void> generateFinanceChecksForAllProjects();
 }

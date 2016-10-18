@@ -54,7 +54,6 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
-import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -81,13 +80,8 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
@@ -96,8 +90,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -1042,5 +1035,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
+    }
+
+    /**
+     * A temporary method for generating finance checks for existing projects.
+     * See INFUND-5591 for an explanation.
+     * This is required temporarily and will be removed in near future.
+     * @return result of attempting to generate finance checks for all projects
+     */
+    @Override
+    public ServiceResult<Void> generateFinanceChecksForAllProjects() {
+        return find(projectRepository.findAll(), notFoundError(Project.class, emptyList())).
+                andOnSuccess(projects -> {
+                    List<ServiceResult> results = projects.stream().filter(p -> find(financeCheckRepository.findByProjectId(p.getId()), notFoundError(FinanceCheck.class, emptyList())).isFailure()).
+                            map(project -> generateFinanceCheckEntitiesForNewProject(project).
+                                    handleSuccessOrFailure(
+                                            failure -> {
+                                                LOG.error("Could not generate finance checks manually for project no. " + project.getId());
+                                                return serviceFailure(new Error(FINANCE_CHECKS_CANNOT_GENERATE_FOR_PROJECT, project.getId()));
+                                            },
+                                            success -> {
+                                                LOG.debug("Finance check entries generated for project no. " + project.getId());
+                                                return serviceSuccess();
+                                            }
+                                    )
+                            ).collect(toList());
+
+                    return results.stream().filter(result -> result.isFailure()).findFirst().orElse(serviceSuccess());
+                });
     }
 }

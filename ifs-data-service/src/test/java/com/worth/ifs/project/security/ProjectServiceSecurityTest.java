@@ -589,6 +589,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> generateFinanceChecksForAllProjects() {
+            return null;
+        }
     }
 }
 
