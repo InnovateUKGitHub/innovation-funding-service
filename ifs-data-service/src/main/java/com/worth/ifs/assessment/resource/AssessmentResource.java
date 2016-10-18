@@ -16,6 +16,7 @@ public class AssessmentResource {
     private LocalDate endDate;
     private List<Long> processOutcomes;
     private Long processRole;
+    private Long internalParticipant;
     private Boolean submitted;
     private Boolean started;
     private Long application;
@@ -115,6 +116,14 @@ public class AssessmentResource {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    public Long getInternalParticipant() {
+        return internalParticipant;
+    }
+
+    public void setInternalParticipant(Long internalParticipant) {
+        this.internalParticipant = internalParticipant;
     }
 
     @Override

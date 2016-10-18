@@ -17,6 +17,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,11 +56,13 @@ public class ProjectSpendProfileApprovalController {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/approval", method = GET)
     public String viewSpendProfileApproval(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileApproval(projectId, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/approval/{approvalType}", method = POST)
     public String saveSpendProfileApproval(@PathVariable Long projectId,
                                            @PathVariable ApprovalType approvalType,

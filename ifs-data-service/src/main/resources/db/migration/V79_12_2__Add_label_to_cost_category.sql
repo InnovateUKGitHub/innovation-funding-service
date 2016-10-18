@@ -1,0 +1,1 @@
+ALTER TABLE `cost_category` ADD COLUMN `label` VARCHAR(255) DEFAULT NULL;

@@ -1,10 +1,9 @@
 package com.worth.ifs.registration.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -62,5 +61,17 @@ public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistratio
 
     public UserRegistrationResourceBuilder withPassword(String... passwords) {
         return withArray((password, userRegistrationResource) -> setField("password", password, userRegistrationResource), passwords);
+    }
+
+    public UserRegistrationResourceBuilder withAddress(AddressResource... addresses) {
+        return withArray((address, userRegistrationResource) -> setField("address", address, userRegistrationResource), addresses);
+    }
+
+    public UserRegistrationResourceBuilder withEmail(String... emails) {
+        return withArray((email, userRegistrationResource) -> setField("email", email, userRegistrationResource), emails);
+    }
+
+    public UserRegistrationResourceBuilder withRoles(List<RoleResource>... roles) {
+        return withArray((roleList, userRegistrationResource) -> setField("roles", roleList, userRegistrationResource), roles);
     }
 }

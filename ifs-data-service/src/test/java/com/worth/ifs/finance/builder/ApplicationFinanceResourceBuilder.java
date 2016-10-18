@@ -2,12 +2,18 @@ package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.GrantClaimCategory;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
+import com.worth.ifs.project.builder.CostBuilder;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static java.util.Collections.emptyList;
@@ -35,12 +41,20 @@ public class ApplicationFinanceResourceBuilder extends BaseBuilder<ApplicationFi
         return new ApplicationFinanceResource();
     }
 
-    public ApplicationFinanceResourceBuilder withApplication(Long applicationId) {
-        return with(finance -> finance.setApplication(applicationId));
+    public ApplicationFinanceResourceBuilder withApplication(Long... applicationIds) {
+        return withArray((applicationId, applicationFinanceResource) -> setField("application", applicationId, applicationFinanceResource), applicationIds);
     }
 
-    public ApplicationFinanceResourceBuilder withOrganisation(Long organisationId) {
-        return with(finance -> finance.setOrganisation(organisationId));
+    public ApplicationFinanceResourceBuilder withOrganisation(Long... organisationIds) {
+        return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
+    }
+
+    public ApplicationFinanceResourceBuilder withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
+        return withArray((financeOrganisationDetail, applicationFinanceResource) -> setField("financeOrganisationDetails", financeOrganisationDetail, applicationFinanceResource), financeOrganisationDetails);
+    }
+
+    public ApplicationFinanceResourceBuilder withFinanceFileEntry(Long financeFileEntry) {
+        return with(finance -> finance.setFinanceFileEntry(financeFileEntry));
     }
 
     public ApplicationFinanceResourceBuilder withGrantClaimPercentage(Integer percentage) {

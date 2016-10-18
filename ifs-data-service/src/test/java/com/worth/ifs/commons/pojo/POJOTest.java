@@ -43,6 +43,7 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
@@ -66,7 +67,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 39;
+    private static final int EXPECTED_RESOURCES = 38;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -128,6 +129,12 @@ public class POJOTest {
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
             UserRegistrationResource.class,
+            FinanceCheckResource.class,
+            FinanceCheckProcessResource.class,
+            PartnerOrganisationResource.class,
+            SpendProfileCSVResource.class,
+            FinanceCheckSummaryResource.class,
+            FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,
             ProfileSkillsResource.class

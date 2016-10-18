@@ -17,16 +17,6 @@ public enum ProjectDetailsState implements ProcessStates {
     //the status string value
     private State backingState;
 
-    private static final Map<String, ProjectDetailsState> assessmentStatesMap;
-
-    static {
-        assessmentStatesMap = new HashMap<>();
-
-        for (ProjectDetailsState assessmentState : ProjectDetailsState.values()) {
-            assessmentStatesMap.put(assessmentState.getStateName(), assessmentState);
-        }
-    }
-
     // creates the enum with the chosen type.
     ProjectDetailsState(State backingState) {
         this.backingState = backingState;
@@ -42,16 +32,8 @@ public enum ProjectDetailsState implements ProcessStates {
         return backingState;
     }
 
-    public static List<String> getStates() {
-        return new ArrayList<>(assessmentStatesMap.keySet());
-    }
-
     public static List<State> getBackingStates() {
         return simpleMap(ProjectDetailsState.values(), ProcessStates::getBackingState);
-    }
-
-    public static ProjectDetailsState getByState(String state) {
-       return  assessmentStatesMap.get(state);
     }
 
     public static ProjectDetailsState fromState(State state) {

@@ -27,9 +27,10 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011, INFUND-2621
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
+    And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     When the user navigates to the page    ${project_in_setup_page}
@@ -138,8 +139,8 @@ Non-lead partner cannot remove or submit right
 
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
-    [Setup]    Logout as user
     [Tags]
+    [Setup]    Logout as user
     Given Guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -213,8 +214,8 @@ Status in the dashboard remains pending after uploads
 
 Mandatory document submission
     [Documentation]    INFUND-3011
-    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     [Tags]    HappyPath
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -224,13 +225,11 @@ Mandatory document submission
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
-    # TODO the following step is Pending due to INFUND-5424
-    # And the user should see the text in the page    These documents have been approved by Innovate UK.
-    And the user clicks the button/link    link=Project setup status
+    When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link     link=What's the status of each of my partners?
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -246,7 +245,6 @@ PM can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     And the user goes back to the previous page
-
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -293,7 +291,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link     link=What's the status of each of my partners?
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
 
@@ -304,6 +302,7 @@ CompAdmin can see uploaded files
     When the user navigates to the page              ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link              link=Killer Riffs
     Then the user should see the element             jQuery=h2:contains("Projects in setup")
+    # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
     When the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration Agreement
     When the user clicks the button/link             jQuery=.uploaded-file:nth-of-type(1)
@@ -326,6 +325,26 @@ CompAdmin rejects other documents
     Then the user should see the text in the page     These documents after review have been rejected and returned to the project team.
     [Teardown]  logout as user
 
+Partners can see the documents rejected
+    [Documentation]    INFUND-5559, INFUND-5424
+    [Tags]    HappyPath
+    Given log in as user  worth.email.test+projectlead@gmail.com    Passw0rd  #Project Manager
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    And Logout as user
+    Given log in as user   steve.smith@empire.com   Passw0rd  #Lead Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    And Logout as user
+    Given log in as user   pete.tom@egg.com   Passw0rd  #Academic Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    And Logout as user
+    Given log in as user   jessica.doe@ludlow.co.uk   Passw0rd  #Other Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    And Logout as user
+
 Project Finance is able to Approve and Reject
     [Documentation]  INFUND-4621, INFUND-5440
     [Tags]
@@ -340,9 +359,7 @@ Project Finance is able to Approve and Reject
     When the user clicks the button/link              jQuery=button:contains("Reject documents")
     And the user clicks the button/link               jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    [Teardown]  logout as user
-
-#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents approved
+    [Teardown]    logout as user
 
 CompAdmin approves other documents
     [Documentation]    INFUND-4621
@@ -364,16 +381,35 @@ CompAdmin approves other documents
     Then the user should see the text in the page     The documents provided have been approved.
     [Teardown]  Logout as user
 
+Partners can see the documents approved
+    [Documentation]    INFUND-5559, INFUND-5424
+    [Tags]    HappyPath
+    Given log in as user  worth.email.test+projectlead@gmail.com    Passw0rd  #Project Manager
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
+    And Logout as user
+    Given log in as user   steve.smith@empire.com   Passw0rd  #Lead Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
+    And Logout as user
+    Given log in as user   pete.tom@egg.com   Passw0rd  #Academic Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
+    And Logout as user
+    Given log in as user   jessica.doe@ludlow.co.uk   Passw0rd  #Other Partner
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
+    And Logout as user
+
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
     [Tags]    HappyPath
-    [Setup]  Log in as user                           john.doe@innovateuk.test    Passw0rd
+    [Setup]  Log in as user                john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page   ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=Killer Riffs
     Then the user should see the element   jQuery=tr:nth-child(1):contains("best riffs")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
-
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
@@ -381,14 +417,12 @@ Status updates correctly for internal user's table
     [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    # bank details are ok only when all 3 bank details are approved TODO
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok
 
-
-
-#TODO INFUND-5424 & INFUND-5559 Partners should be able to see documents rejected
 
 *** Keywords ***
 the user uploads to the collaboration agreement question

@@ -13,21 +13,21 @@
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="page-title">
-          <p class="subtitle no-margin" th:text="${model.formattedCompetitionNumber+': Innovate UK'}" />
-          <h1 class="heading-xlarge" th:text="${model.competitionName}" />
+          <p class="subtitle no-margin" th:text="${model.competitionProjectsStatusResource.formattedCompetitionNumber+': Innovate UK'}" />
+          <h1 class="heading-xlarge" th:text="${model.competitionProjectsStatusResource.competitionName}" />
         </div>
       </div>
         <div class="column-third alignright extra-margin">
           <h2 class="bold-small blue-block">Projects in setup</h2>
       </div>
     </div>
-    <div th:if="${#lists.isEmpty(model.projectStatusResources)}">
+    <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
       <hr />
       <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
     </div>
   </div>
   <div class="grid-container constrain-width">
-    <div class="table-overflow" th:unless="${#lists.isEmpty(model.projectStatusResources)}">
+    <div class="table-overflow" th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
       <table id="table-project-status">
         <thead>
           <tr>
@@ -42,21 +42,42 @@
           </tr>
         </thead>
         <tbody class="cell-border-right">
-          <tr th:each="project : ${model.projectStatusResources}">
+          <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
               <th scope="row">
                 <div class="heading-small no-margin" th:text="${project.projectTitle}" />
-                <a th:text="${project.formattedApplicationNumber}" th:href="${'/management/competition/'+model.competitionNumber+'/application/'+project.applicationNumber}" />
+                <a th:text="${project.formattedApplicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber}" />
                 <small>
                   <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                 </small>
               </th>
               <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" />
-              <th:block th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
-              <th:block th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
-              <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
-              <th:block th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
-              <th:block th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                        th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                        th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" />
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                        th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                        th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" />
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:include="project/fragments :: project-status-table(${project.financeChecksStatus})"/>
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                        th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                        th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" />
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                        th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                        th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" />
+
               <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})"/>
           </tr>
         </tbody>

@@ -33,6 +33,10 @@ public class ProjectBankDetailsStatusSummaryBuilder extends BaseBuilder<ProjectB
         return withArray((competitionId, bankDetailsSummary) -> setField("competitionId", competitionId, bankDetailsSummary), competitionIds);
     }
 
+    public ProjectBankDetailsStatusSummaryBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, bankDetailsSummary) -> setField("competitionName", competitionName, bankDetailsSummary), competitionNames);
+    }
+
     public ProjectBankDetailsStatusSummaryBuilder withProjectId(Long... projectIds) {
         return withArray((projectId, bankDetailsSummary) -> setField("projectId", projectId, bankDetailsSummary), projectIds);
     }
