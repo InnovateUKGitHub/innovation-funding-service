@@ -84,6 +84,7 @@ the user opens the local mailbox and verifies the email
     Delete All Emails
     close mailbox
 
+#Please save this keywords, so that we can base our Email keyword refactoring
 the user opens the mailbox and reads his own email
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}==1    the user opens the local mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
