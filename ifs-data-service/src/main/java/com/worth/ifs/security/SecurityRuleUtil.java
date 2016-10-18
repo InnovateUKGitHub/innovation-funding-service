@@ -20,13 +20,6 @@ public class SecurityRuleUtil {
         return hasRole(user, PROJECT_FINANCE);
     }
 
-    //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-    //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-    //TODO - Method will be removed shortly. DO NOT USE.
-    public static boolean isProjectPartnerUser(UserResource user) {
-        return hasRole(user, APPLICANT);
-    }
-
     public static boolean isSystemMaintenanceUser(UserResource user) {
         return hasRole(user, SYSTEM_MAINTAINER);
     }

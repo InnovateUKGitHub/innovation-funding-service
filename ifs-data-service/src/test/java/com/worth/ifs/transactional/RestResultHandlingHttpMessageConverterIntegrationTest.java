@@ -32,6 +32,7 @@ import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN
 import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -89,15 +90,11 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
-            //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-            //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-//            assertEquals(FORBIDDEN, e.getStatusCode());
+            assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.name(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
-            //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-            //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-//            assertEquals(expectedResponse, restErrorResponse);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
@@ -110,9 +107,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
             // We have set the future going but now we need to call it. This call should not throw
             final RestResult<Double> doubleRestResult = completeQuestionsPercentage.get();
             assertTrue(doubleRestResult.isFailure());
-            //TODO - Workaround for INFUND-3530 - To give project partners access to competition.
-            //TODO - Will be removed later when ProjectSatatusController logic is refactored to data layer
-//            assertEquals(FORBIDDEN, doubleRestResult.getStatusCode());
+            assertEquals(FORBIDDEN, doubleRestResult.getStatusCode());
         }
         finally {
             SecuritySetter.swapOutForUser(initial);
