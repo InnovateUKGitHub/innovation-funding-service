@@ -22,23 +22,27 @@
                 <span th:text="${model.firstName}" th:remove="tag" />
                 <span th:text="${model.lastName}" th:remove="tag" />
             </p>
-            <h3 class="heading-small">Gender</h3>
-            <p th:text="${model.gender}? ${model.gender.displayName}" />
-            <h3 class="heading-small">Your ethnic group</h3>
-            <p th:text="${model.ethnicity}? ${model.ethnicity.description}" />
-            <h3 class="heading-small">Do you consider yourself disabled?</h3>
-            <p th:text="${model.disability}? ${model.disability.displayName}" />
+            <h3 class="heading-small" th:if="${model.gender}">Gender</h3>
+            <p th:if="${model.gender}" th:text="${model.gender}? ${model.gender.displayName}" />
+            <h3 class="heading-small" th:if="${model.ethnicity}">Your ethnic group</h3>
+            <p th:if="${model.ethnicity}" th:text="${model.ethnicity}? ${model.ethnicity.description}" />
+            <h3 class="heading-small" th:if="${model.disability}">Do you consider yourself disabled?</h3>
+            <p th:if="${model.disability}" th:text="${model.disability}? ${model.disability.displayName}" />
             <h3 class="heading-small">Address</h3>
             <p>
                 <span th:text="${model.address.addressLine1}" th:remove="tag" /><br />
-                <span th:text="${model.address.addressLine2}" th:remove="tag" /><br />
-                <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
+                <div th:if="${model.address.addressLine2}" th:remove="tag">
+                    <span th:if="${model.address.addressLine2}" th:text="${model.address.addressLine2}" th:remove="tag" /><br />
+                </div>
+                <div th:if="${model.address.addressLine3}" th:remove="tag">
+                    <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
+                </div>
                 <span th:text="${model.address.town}" th:remove="tag" /><br />
                 <span th:text="${model.address.county}" th:remove="tag" /><br />
                 <span th:text="${model.address.postcode}" th:remove="tag" />
             </p>
-            <h3 class="heading-small">Phone number</h3>
-            <p th:text="${model.phoneNumber}" />
+            <h3 class="heading-small" th:if="${model.phoneNumber}">Phone number</h3>
+            <p th:if="${model.phoneNumber}" th:text="${model.phoneNumber}" />
             <h3 class="heading-small">Email address</h3>
             <p th:text="${model.email}" />
 
