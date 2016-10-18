@@ -86,4 +86,12 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         assertFalse(bindingResult.hasErrors());
     }
+
+    @Test
+    public void testSupportsApplicationAndSubclasses() {
+        assertTrue(validator.supports(Application.class));
+        assertTrue(validator.supports(new Application() {
+            //empty extension of application;
+        }.getClass()));
+    }
 }

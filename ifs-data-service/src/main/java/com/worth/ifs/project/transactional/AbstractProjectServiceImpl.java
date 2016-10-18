@@ -89,11 +89,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createGrantOfferLetterStatus() {
-        //TODO update logic when GrantOfferLetter is implemented
-        return NOT_STARTED;
-    }
-
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
 
         Optional<ProjectUser> financeContactForOrganisation = simpleFindFirst(project.getProjectUsers(), pu ->

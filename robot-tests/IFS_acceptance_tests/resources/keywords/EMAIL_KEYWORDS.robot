@@ -241,7 +241,7 @@ the user should get a remote confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
+    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user should get a local confirmation email
@@ -253,13 +253,12 @@ the user should get a local confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    #    Delete All Emails
+    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user opens the remote mailbox and clicks the reset link
     [Arguments]    ${receiver}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    #    ${LATEST} =    wait for email
     ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Reset your password
     ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}

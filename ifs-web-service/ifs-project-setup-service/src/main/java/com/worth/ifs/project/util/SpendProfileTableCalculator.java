@@ -23,14 +23,14 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 @Component
 public class SpendProfileTableCalculator {
 
-    public Map<String, BigDecimal> calculateRowTotal(Map<String, List<BigDecimal>> tableData) {
+    public Map<Long, BigDecimal> calculateRowTotal(Map<Long, List<BigDecimal>> tableData) {
         return simpleMapValue(tableData, rows -> {
             return rows.stream()
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
         });
     }
 
-    public List<BigDecimal> calculateMonthlyTotals(Map<String, List<BigDecimal>> tableData, int numberOfMonths) {
+    public List<BigDecimal> calculateMonthlyTotals(Map<Long, List<BigDecimal>> tableData, int numberOfMonths) {
         return IntStream.range(0, numberOfMonths).mapToObj(index -> {
             return tableData.values()
                     .stream()
@@ -39,7 +39,7 @@ public class SpendProfileTableCalculator {
         }).collect(Collectors.toList());
     }
 
-    public BigDecimal calculateTotalOfAllActualTotals(Map<String, List<BigDecimal>> tableData) {
+    public BigDecimal calculateTotalOfAllActualTotals(Map<Long, List<BigDecimal>> tableData) {
         return tableData.values()
                 .stream()
                 .map(list -> {
@@ -49,23 +49,23 @@ public class SpendProfileTableCalculator {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal calculateTotalOfAllEligibleTotals(Map<String, BigDecimal> eligibleCostData) {
+    public BigDecimal calculateTotalOfAllEligibleTotals(Map<Long, BigDecimal> eligibleCostData) {
         return eligibleCostData
                 .values()
                 .stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public SpendProfileSummaryModel createSpendProfileSummary(ProjectResource project, Map<String, List<BigDecimal>> tableData, List<LocalDateResource> months) {
+    public SpendProfileSummaryModel createSpendProfileSummary(ProjectResource project, Map<Long, List<BigDecimal>> tableData, List<LocalDateResource> months) {
         Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
         Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
         List<SpendProfileSummaryYearModel> years = IntStream.range(startYear, endYear + 1).
                 mapToObj(
                         year -> {
-                            Set<String> keys = tableData.keySet();
+                            Set<Long> keys = tableData.keySet();
                             BigDecimal totalForYear = BigDecimal.ZERO;
 
-                            for (String key : keys) {
+                            for (Long key : keys) {
                                 List<BigDecimal> values = tableData.get(key);
                                 for (int i = 0; i < values.size(); i++) {
                                     LocalDateResource month = months.get(i);
