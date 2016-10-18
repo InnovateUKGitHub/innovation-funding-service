@@ -158,8 +158,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
-                project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
+        return find(
+                spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+                project(projectOrganisationCompositeId.getProjectId())).
+                andOnSuccess((spendProfile, project) -> {
 
             List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
             Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());

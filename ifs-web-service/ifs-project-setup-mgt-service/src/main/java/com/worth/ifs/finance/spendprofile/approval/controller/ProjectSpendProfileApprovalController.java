@@ -74,7 +74,7 @@ public class ProjectSpendProfileApprovalController {
         ServiceResult<Void> generateResult = projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
-                redirectToViewSpendProfileApproval(projectId)
+                redirectToCompetitionSummaryPage(projectId)
         );
     }
 
@@ -99,7 +99,11 @@ public class ProjectSpendProfileApprovalController {
         return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources);
     }
 
-    private String redirectToViewSpendProfileApproval(Long projectId) {
-        return "redirect:/project/" + projectId + "/spend-profile/approval";
+    private String redirectToCompetitionSummaryPage(Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        return "redirect:/competition/" + competition.getId() + "/status";
     }
 }

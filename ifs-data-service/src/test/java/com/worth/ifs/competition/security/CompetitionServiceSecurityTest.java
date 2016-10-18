@@ -6,6 +6,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -50,8 +52,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -61,8 +63,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
             verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-            verify(rules).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-            verify(rules).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).compAdminUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).projectFinanceUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -71,12 +73,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindLiveCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = classUnderTest.findLiveCompetitions();
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findLiveCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -84,12 +85,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindProjectSetupCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = classUnderTest.findProjectSetupCompetitions();
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -97,12 +97,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindUpcomingCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = classUnderTest.findUpcomingCompetitions();
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findUpcomingCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -145,18 +144,18 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
-            return serviceSuccess(newCompetitionResource().build(2));
+        public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
 
         @Override
-        public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-            return serviceSuccess(newCompetitionResource().build(2));
+        public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
 
         @Override
-        public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
-            return serviceSuccess(newCompetitionResource().build(2));
+        public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
 
         @Override
