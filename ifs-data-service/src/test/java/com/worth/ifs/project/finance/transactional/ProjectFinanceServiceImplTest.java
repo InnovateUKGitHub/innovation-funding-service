@@ -301,6 +301,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                         2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
                         3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
         );
+        CostCategory testCostCategory = new CostCategory();
+        testCostCategory.setId(1L);
+        testCostCategory.setName("One");
 
         OrganisationType organisationType = new OrganisationType();
         organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
@@ -308,7 +311,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
-
+        when(costCategoryRepositoryMock.findOne(anyLong())).thenReturn(testCostCategory);
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
@@ -634,6 +637,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                         2L, asList(new BigDecimal("70"), new BigDecimal("10"), new BigDecimal("60")),
                         3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
         );
+
+
         OrganisationType organisationType = new OrganisationType();
         organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
