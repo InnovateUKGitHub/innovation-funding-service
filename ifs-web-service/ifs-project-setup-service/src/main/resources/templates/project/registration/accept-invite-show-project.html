@@ -46,10 +46,10 @@
             <h3 class="heading-small">Registration number</h3>
             <p th:text="${model.organisationResgistrationNumber}"></p>
             <h3 class="heading-small">Address</h3>
-            <p th:text="${model.organisationAddress.address.addressLine1}"><br/>
-                <div th:text="${model.organisationAddress.address.addressLine2}" ><br/>
+            <p  th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine1 : ''}"><br/>
+                <div th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine2 : ''}" ><br/>
         </div>
-            <div th:text="${model.organisationAddress.address.addressLine3}"></div>
+            <div th:text="${model.organisationAddress != null ? model.organisationAddress.address.addressLine3: ''}"></div>
             </p>
         </div>
     </fieldset>
