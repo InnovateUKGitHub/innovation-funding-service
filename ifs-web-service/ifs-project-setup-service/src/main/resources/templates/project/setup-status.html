@@ -67,7 +67,9 @@
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
-      <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}" th:classappend="${model.bankDetailsToCssClass()}">
+
+      <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
+          th:classappend="${model.isBankDetailsActionRequired() ? 'require-action' : (model.isBankDetailsComplete() ? 'complete' : 'waiting')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">

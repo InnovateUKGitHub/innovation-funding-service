@@ -155,13 +155,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return spendProfileSubmitted;
     }
 
-    public String bankDetailsToCssClass() {
-        if (ProjectActivityStates.ACTION_REQUIRED.equals(bankDetails)) {
-            return "require-action";
-        } else if (ProjectActivityStates.COMPLETE.equals(bankDetails)) {
-            return "complete";
-        } else {
-            return "waiting";
-        }
-    }
+    public boolean isBankDetailsActionRequired() { return ProjectActivityStates.ACTION_REQUIRED.equals(bankDetails); }
+
+    public boolean isBankDetailsComplete() { return ProjectActivityStates.COMPLETE.equals(bankDetails); }
+
 }
