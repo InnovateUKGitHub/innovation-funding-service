@@ -135,13 +135,11 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
             ProjectActivityStates financeChecksStatus = ACTION_REQUIRED;
             if (spendProfile.isPresent()) {
-                if(!financeChecksStatus.equals(COMPLETE)){
-                    return NOT_STARTED;
+                ProjectActivityStates orgSpendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
+                if (orgSpendProfileStatus != COMPLETE) {
+                    return PENDING;
                 } else {
-                    ProjectActivityStates orgSPStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
-                    if (orgSPStatus != COMPLETE) {
-                        return PENDING;
-                    }
+                    return ACTION_REQUIRED;
                 }
             }
         }
