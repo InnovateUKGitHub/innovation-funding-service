@@ -1,10 +1,7 @@
 package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +33,17 @@ public class CompetitionController {
     }
 
     @RequestMapping(value="/live", method= RequestMethod.GET)
-    public RestResult<List<CompetitionResource>> live() {
+    public RestResult<List<CompetitionSearchResultItem>> live() {
         return competitionService.findLiveCompetitions().toGetResponse();
     }
 
     @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
-    public RestResult<List<CompetitionResource>> projectSetup() {
+    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
         return competitionService.findProjectSetupCompetitions().toGetResponse();
     }
 
     @RequestMapping(value="/upcoming", method= RequestMethod.GET)
-    public RestResult<List<CompetitionResource>> upcoming() {
+    public RestResult<List<CompetitionSearchResultItem>> upcoming() {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 

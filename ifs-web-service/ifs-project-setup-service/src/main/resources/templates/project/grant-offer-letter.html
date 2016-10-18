@@ -84,7 +84,9 @@
                   </th:block>
             </div>
 
-            <a th:unless="${model.submitted}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+            <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+            <a th:if="${model.isShowDisabledSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" disabled="disabled" class="button">Submit signed offer letter</a>
+
             <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
             <div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
 

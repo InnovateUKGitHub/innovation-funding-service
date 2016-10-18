@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.commons.security.NotSecured;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -27,13 +28,13 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionResource>> findAll();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> findLiveCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);

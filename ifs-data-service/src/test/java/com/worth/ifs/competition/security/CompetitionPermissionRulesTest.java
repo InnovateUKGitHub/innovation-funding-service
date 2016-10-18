@@ -9,6 +9,7 @@ import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +34,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void testCompAdminCanViewCompetitionInSetup(){
         //Comp admin can see competition in setup
-        assertTrue(rules.compAdminUserCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
+        assertTrue(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
                 UserResourceBuilder.newUserResource().withRolesGlobal(
                         Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build()));
     }
@@ -41,8 +42,56 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void testProjectFinanceUserCanViewCompetitionInSetup(){
         //Comp admin can see competition in setup
-        assertTrue(rules.projectFinanceUserCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
+        assertTrue(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
                 UserResourceBuilder.newUserResource().withRolesGlobal(
                         Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build()));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanViewAllCompetitions() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user == projectFinanceUser()) {
+                assertTrue(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testCompAdminCanViewAllCompetitions() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user == compAdminUser()) {
+                assertTrue(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUserCanViewAllCompetitionSearchResults() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user == projectFinanceUser()) {
+                assertTrue(rules.projectFinanceUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testCompAdminCanViewAllCompetitionSearchResults() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user == compAdminUser()) {
+                assertTrue(rules.compAdminUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            } else {
+                assertFalse(rules.compAdminUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            }
+        });
     }
 }
