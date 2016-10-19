@@ -380,6 +380,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -397,43 +398,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWithExistingFinanceContactChosenForSameOrganisation() {
-
-        Project project = newProject().withId(123L).build();
-        Organisation organisation = newOrganisation().withId(5L).build();
-
-        User newFinanceContactUser = newUser().withId(7L).build();
-        newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
-
-        User existingFinanceContactUser = newUser().withId(9999L).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-
-        List<ProjectUser> existingFinanceContactForOrganisation = simpleFilter(project.getProjectUsers(), projectUser ->
-                projectUser.getOrganisation().equals(organisation) &&
-                        projectUser.getProcess().equals(project) &&
-                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
-
-        assertEquals(1, existingFinanceContactForOrganisation.size());
-
-        setLoggedInUser(newUserResource().withId(existingFinanceContactUser.getId()).build());
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
-
-        assertTrue(updateResult.isSuccess());
-
-        List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
-                projectUser.getOrganisation().equals(organisation) &&
-                        projectUser.getUser().equals(newFinanceContactUser) &&
-                        projectUser.getProcess().equals(project) &&
-                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
-
-        assertEquals(1, foundFinanceContacts.size());
-    }
-
-    @Test
     public void testUpdateFinanceContactButUserIsNotExistingPartner() {
 
         Project project = newProject().withId(123L).build();
@@ -442,6 +406,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
@@ -462,6 +427,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
 
         Organisation organisation = newOrganisation().withId(5L).build();
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
 
@@ -469,6 +436,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+    }
+
+    @Test
+    public void testUpdateFinanceContactWhenFinanceContactAlreadySet() {
+
+        Project existingProject = newProject().withId(123L).build();
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        Organisation organisation = newOrganisation().withId(5L).build();
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(existingProject).withRole(PROJECT_FINANCE_CONTACT).build();
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 6L);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION));
+
     }
 
     @Test
