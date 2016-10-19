@@ -12,7 +12,9 @@ public class SpendProfileDocs {
             fieldWithPath("monthlyCostsPerCategoryMap").description("Map which holds costs per month per category on the Spend Profile page"),
             fieldWithPath("months[]").description("List of months covered in the Spend Profile"),
             fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
-            fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table")
+            fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table"),
+            fieldWithPath("costCategoryResourceMap").description("Cost category Id to Cost category resource mapping"),
+            fieldWithPath("costCategoryGroupMap").description("Cost category grouped based on labels"),
     };
 
     public static final FieldDescriptor[] spendProfileCSVFields = {

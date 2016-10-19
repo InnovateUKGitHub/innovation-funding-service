@@ -1,7 +1,9 @@
 package com.worth.ifs.competition.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.worth.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +40,7 @@ public class AssessorFeedbackController {
     }
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/assessorfeedbacksubmit")
-    public String submitAssessorFeedback(HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
+    public String submitAssessorFeedback(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
 		
 		if(!assessorFeedbackService.feedbackUploaded(competitionId)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "feedbackNotUploadedForAllApplications");
@@ -47,7 +49,7 @@ public class AssessorFeedbackController {
 		
 		assessorFeedbackService.submitAssessorFeedback(competitionId);
 
-		return "redirect:/competition/" + competitionId;
+		return RedirectUtils.redirectToProjectSetupManagementService(request, "competition/" + competitionId + "/status/");
     }
 	
 }

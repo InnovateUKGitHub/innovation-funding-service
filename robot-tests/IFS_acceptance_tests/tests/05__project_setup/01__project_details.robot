@@ -58,13 +58,13 @@ Non-lead partner can see the project setup page
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-    # Test case needs to be executed once INFUND-5510 is fixed.
+    # TODO Test case needs to be executed once INFUND-5510 is fixed.
     # This test case can be part of above one. (If included then ensure a successful HappyPath run)
     # This test case covers non lead partner.
 
-Links to other sections in Project setup dependant on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428,
-    [Tags]    Pending
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -73,8 +73,7 @@ Links to other sections in Project setup dependant on project details (applicabl
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
-    And the user should not see the element    link = Grant offer letter
-    [Teardown]    logout as user
+    # And the user should not see the element    link = Grant offer letter
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
@@ -182,12 +181,12 @@ Lead partner can change the project manager
     And the user clicks the button/link    link=Project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
-    When the user selects the radio button    projectManager    projectManager2
+    When the user selects the radio button    projectManager    1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project manager
-    And the user can see selected radio button
+    And the user sees that the radio button is selected    projectManager    1
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
@@ -240,7 +239,7 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should not see the element    link=Ludlow
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     Then Logout as user
@@ -255,7 +254,7 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
     And the user should not see the element    link=EGGS
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
     [Teardown]    logout as user
@@ -329,7 +328,7 @@ Lead partner chooses an existing finance contact
     And the user should not see the element    link=Vitruvius Stonework Limited
     And the user should not see the element    link=Ludlow
     And the user should not see the element    link=EGGS
-    # TODO the following two steps are Pending due to INFUND-5368
+    # TODO the following two steps are Pending due to INFUND-5624
     # When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
     # Then the user should not see the element    name=financeContact    # testing here that the selection is now read-only
 
@@ -438,9 +437,6 @@ the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}
     the user should see the element    ${table_id}
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
-
-the user can see selected radio button 
-    the user should see the element    xpath =//*[@id="projectManager2" and @checked ="checked"]
 
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months

@@ -412,7 +412,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();;
 
-        List<CompetitionResource> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
 
         Set<Long> liveCompetitionIds = Sets.newHashSet(openCompetition.getId(),
                 closedCompetition.getId(), inAssessmentCompetition.getId(), inPanelCompetition.getId(),
@@ -432,7 +432,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             }
         });
 
-        List<CompetitionResource> projectSetupCompetitions = controller.projectSetup().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> projectSetupCompetitions = controller.projectSetup().getSuccessObjectOrThrowException();
 
         Set<Long> projectSetupCompetitionIds = Sets.newHashSet(projectSetup.getId());
         Set<Long> notProjectSetupCompetitionIds = Sets.newHashSet(notStartedCompetition.getId(), openCompetition.getId(),
@@ -447,7 +447,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             assertFalse(notProjectSetupCompetitionIds.contains(competitionResource.getId()));
         });
 
-        List<CompetitionResource> upcomingCompetitions = controller.upcoming().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> upcomingCompetitions = controller.upcoming().getSuccessObjectOrThrowException();
 
         //One existing comp is upcoming and the new one.
         assertThat(upcomingCompetitions.size(), equalTo(2));
