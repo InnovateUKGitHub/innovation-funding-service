@@ -2,6 +2,7 @@ package com.worth.ifs.project.sections;
 
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,7 +51,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return ACCESSIBLE;
+        return userResource.hasRole(UserRoleType.PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {

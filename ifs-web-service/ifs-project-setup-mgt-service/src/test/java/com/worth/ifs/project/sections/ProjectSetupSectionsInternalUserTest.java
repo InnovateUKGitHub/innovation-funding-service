@@ -2,14 +2,20 @@ package com.worth.ifs.project.sections;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import static com.worth.ifs.project.sections.SectionAccess.*;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -76,8 +82,17 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCheckAccessToFinanceChecksSectionButProjectDetailsSectionIncomplete() {
-        assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(null));
+    public void testCheckAccessToFinanceChecksSectionAsFinanceTeamMembers() {
+        List<RoleResource> roles = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        UserResource financeTeam = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(financeTeam));
+    }
+
+    @Test
+    public void testCheckAccessToFinanceChecksSectionAsCompAdmins() {
+        List<RoleResource> roles = newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1);
+        UserResource financeTeam = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessFinanceChecksSection(financeTeam));
     }
 
     @Test
