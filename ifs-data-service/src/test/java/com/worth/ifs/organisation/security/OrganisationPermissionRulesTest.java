@@ -3,6 +3,8 @@ package com.worth.ifs.organisation.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -10,16 +12,24 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -207,6 +217,96 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertFalse(rules.systemRegistrationUserCanSeeOrganisationSearchResults(new OrganisationSearchResult(), user));
             }
         });
+    }
+
+    @Test
+    public void testProjectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects() {
+
+        UserResource user = newUserResource().build();
+
+        Organisation differentOrganisation = newOrganisation().build();
+        Organisation organisationBeingChecked = newOrganisation().build();
+        Organisation anotherDifferentOrganisation = newOrganisation().build();
+
+        Project projectWithoutLinkedOrganisation = newProject().
+                withPartnerOrganisations(newPartnerOrganisation().withOrganisation(differentOrganisation).build(1)).
+                build();
+
+        Project projectWithLinkedOrganisation = newProject().
+                withPartnerOrganisations(newPartnerOrganisation().
+                        withOrganisation(organisationBeingChecked, anotherDifferentOrganisation).
+                        build(2)).
+                build();
+
+        // a project that doesn't include the Organisation being checked
+        List<ProjectUser> thisUsersProjectUserEntriesWithoutLinkedOrganisation = newProjectUser().
+                withProject(projectWithoutLinkedOrganisation).
+                withOrganisation(differentOrganisation).
+                build(1);
+
+        // a project that DOES include the Organisation being checked
+        List<ProjectUser> thisUsersProjectUserEntriesIncludingLinkedOrganisation = newProjectUser().
+                withProject(projectWithLinkedOrganisation).
+                withOrganisation(organisationBeingChecked, anotherDifferentOrganisation).
+                build(2);
+
+        List<ProjectUser> allProjectUserEntries =
+                combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
+
+        when(projectUserRepositoryMock.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+
+        OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
+                withId(organisationBeingChecked.getId()).
+                build();
+
+        assertTrue(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
+
+        verify(projectUserRepositoryMock).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testProjectPartnerUserCanSeePartnerOrganisationsWithinTheirProjectsButNoLinkWithOrganisationViaProjects() {
+
+        UserResource user = newUserResource().build();
+
+        Organisation differentOrganisation = newOrganisation().build();
+        Organisation organisationBeingChecked = newOrganisation().build();
+        Organisation anotherDifferentOrganisation = newOrganisation().build();
+
+        Project projectWithoutLinkedOrganisation = newProject().
+                withPartnerOrganisations(newPartnerOrganisation().withOrganisation(differentOrganisation).build(1)).
+                build();
+
+        Project anotherProjectWithoutLinkedOrganisation = newProject().
+                withPartnerOrganisations(newPartnerOrganisation().
+                        withOrganisation(anotherDifferentOrganisation).
+                        build(2)).
+                build();
+
+        // a project that doesn't include the Organisation being checked
+        List<ProjectUser> thisUsersProjectUserEntriesWithoutLinkedOrganisation = newProjectUser().
+                withProject(projectWithoutLinkedOrganisation).
+                withOrganisation(differentOrganisation).
+                build(1);
+
+        // another project that also doesn't include the Organisation being checked
+        List<ProjectUser> thisUsersProjectUserEntriesIncludingLinkedOrganisation = newProjectUser().
+                withProject(anotherProjectWithoutLinkedOrganisation).
+                withOrganisation(anotherDifferentOrganisation).
+                build(1);
+
+        List<ProjectUser> allProjectUserEntries =
+                combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
+
+        when(projectUserRepositoryMock.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+
+        OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
+                withId(organisationBeingChecked.getId()).
+                build();
+
+        assertFalse(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
+
+        verify(projectUserRepositoryMock).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
     }
 
     @Override
