@@ -19,6 +19,10 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5610 As a user I want to check the selected Project Manager value persists
 ...
 ...               INFUND-5368 Once finance contact is submitted, do not allow it to be changed again
+...
+...               INFUND-3483 As a lead partner I want to invite a new contributor to our organisation so that they can be assigned as our project manager
+...
+...               INFUND-3550 As a potential Project Manager, I can receive an email with a Join link, so that I can start the registration process and collaborate with the project
 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
@@ -170,6 +174,57 @@ Lead partner can change the Start Date
     And the user should see the text in the page    1 Jan 2018
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
+
+Option to invite a project manager
+    [Documentation]    INFUND-3483
+    [Tags]    HappyPath
+    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Project details
+    And the user clicks the button/link    link=Project manager
+    And the user should see the text in the page    Who will be the project manager for your project?
+    When the user selects the radio button    projectManager    new
+    Then the user should see the element    id=invite-project-manager
+    When the user selects the radio button    projectManager    projectManager1
+    Then the user should not see the element    id=project-manager   # testing that the element disappears when the option is deselected
+    [Teardown]    the user selects the radio button    projectManager    new
+
+Inviting project manager server side validations
+    [Documentation]    INFUND-3483
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user clicks the button/link    id=invite-project-manager
+    Then the user should see the text in the page    Please enter a contact name
+    And the user should see the text in the page    Please enter an email address
+
+Inviting project manager client side validations
+    [Documentation]    INFUND-3483
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user enters text to a text field    id=name-project-manager1    John Smith
+    Then the user should not see the text in the page    Please enter a contact name
+    When the user enters text to a text field    id=email-project-manager1    test
+    Then the user should not see the text in the page    Please enter an email address
+    And the user should see the text in the page    Please enter a valid email address
+    When the user enters text to a text field    id=email-project-manager1    test@example.com
+    Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see an error in the page
+
+Partner invites a project manager
+    [Documentation]    INFUND-3483
+    [Tags]    HappyPath
+    When the user enters text to a text field    id=name-project-manager    John Smith
+    And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
+    And the user clicks the button/link    id=invite-project-manager
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+
+
+Invited project manager receives an email
+    [Documentation]    INFUND-3550
+    [Tags]    HappyPath    Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    You will be managing the project on behalf of    Project Manager invitation
+    # note that currently the link in the email isn't functional, as that is covered by an upcoming story
+
 
 Lead partner can change the project manager
     [Documentation]    INFUND-2616
@@ -485,4 +540,4 @@ Submit project details button should be enabled
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
-    Should Be Equal As Integers    ${NO_OPTIONs}    4
+    Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
