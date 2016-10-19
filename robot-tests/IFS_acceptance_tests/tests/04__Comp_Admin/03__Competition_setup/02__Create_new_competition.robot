@@ -498,7 +498,7 @@ Application questions: Client side validations
 Application questions: Autosave
     [Documentation]    INFUND-4586
     [Tags]    Pending
-    # Pending due to INFUND-5538
+    # TODO Pending due to INFUND-5538
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
     And The user clicks the button/link    link=Application Questions

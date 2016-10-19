@@ -16,6 +16,10 @@ public class SecurityRuleUtil {
         return hasRole(user, COMP_ADMIN);
     }
 
+    private boolean isInternal(UserResource user) {
+        return hasRole(user, UserRoleType.COMP_ADMIN) || hasRole(user, UserRoleType.PROJECT_FINANCE);
+    }
+
     public static boolean isProjectFinanceUser(UserResource user) {
         return hasRole(user, PROJECT_FINANCE);
     }
@@ -26,6 +30,10 @@ public class SecurityRuleUtil {
 
     public static boolean isSystemRegistrationUser(UserResource user) {
         return hasRole(user, SYSTEM_REGISTRATION_USER);
+    }
+
+    public static boolean isAssessor(UserResource user) {
+        return hasRole(user, ASSESSOR);
     }
 
     private static boolean hasRole(UserResource user, UserRoleType type) {
@@ -49,11 +57,11 @@ public class SecurityRuleUtil {
         return processRole != null && processRole.getRole().getName().equals(userRoleType.getName());
     }
 
-    public static boolean isAnonymous(final UserResource user){
+    public static boolean isAnonymous(final UserResource user) {
         return CustomPermissionEvaluator.isAnonymous(user);
     }
 
-    public static UserResource getAnonymous(){
+    public static UserResource getAnonymous() {
         return CustomPermissionEvaluator.getAnonymous();
     }
 

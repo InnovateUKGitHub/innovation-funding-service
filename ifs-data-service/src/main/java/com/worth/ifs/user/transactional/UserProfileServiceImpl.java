@@ -3,16 +3,22 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
+import com.worth.ifs.user.mapper.ContractMapper;
 import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
@@ -35,10 +41,19 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private UserMapper userMapper;
 
     @Autowired
+    private ContractRepository contractRepository;
+
+    @Autowired
+    private ContractMapper contractMapper;
+
+    @Autowired
     private AffiliationMapper affiliationMapper;
 
+    private Clock clock = Clock.systemDefaultZone();
+
+
     public enum ServiceFailures {
-        UNABLE_TO_UPDATE_USER
+        UNABLE_TO_UPDATE_USER;
     }
 
     @Override
@@ -62,10 +77,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
-        if (user.getProfile() == null) {
-            user.setProfile(new Profile(user));
-        }
-
+        setUserProfileIfNoneExists(user);
         Profile profile = user.getProfile();
 
         profile.setBusinessType(profileSkills.getBusinessType());
@@ -74,6 +86,42 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         userRepository.save(user);
 
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user ->
+                        getCurrentContract().andOnSuccess(currentContract -> {
+                            Profile profile = user.getProfile();
+                            boolean hasAgreement = profile.getContract() != null;
+                            boolean hasCurrentAgreement = hasAgreement && currentContract.getId().equals(profile.getContract().getId());
+                            ProfileContractResource profileContract = new ProfileContractResource();
+                            profileContract.setUser(user.getId());
+                            profileContract.setContract(contractMapper.mapToResource(currentContract));
+                            profileContract.setCurrentAgreement(hasCurrentAgreement);
+                            if (hasCurrentAgreement) {
+                                profileContract.setContractSignedDate(profile.getContractSignedDate());
+                            }
+                            return serviceSuccess(profileContract);
+                        })
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    setUserProfileIfNoneExists(user);
+                    return getCurrentContract().andOnSuccess(currentContract ->
+                            validateContract(currentContract, user).andOnSuccess(() -> {
+                                user.getProfile().setContractSignedDate(LocalDateTime.now(clock));
+                                user.getProfile().setContract(currentContract);
+                                userRepository.save(user);
+                                return serviceSuccess();
+                            })
+                    );
+                });
     }
 
     @Override
@@ -114,5 +162,23 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> validateContract(Contract contract, User user) {
+        if (user.getProfile().getContract() != null && contract.getId().equals(user.getProfile().getContract().getId())) {
+            return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
+        }
+        return serviceSuccess();
+    }
+
+
+    private void setUserProfileIfNoneExists(User user) {
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile(user));
+        }
+    }
+
+    private ServiceResult<Contract> getCurrentContract() {
+        return find(contractRepository.findByCurrentTrue(), notFoundError(Contract.class));
     }
 }
