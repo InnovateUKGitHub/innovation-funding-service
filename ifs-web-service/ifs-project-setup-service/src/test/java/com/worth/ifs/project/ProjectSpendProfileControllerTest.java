@@ -325,7 +325,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

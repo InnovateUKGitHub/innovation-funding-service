@@ -13,15 +13,18 @@ public class ProjectSpendProfileProjectManagerViewModel {
     private Long projectId;
     private String projectName;
     private Map<String, Boolean> partnerSpendProfileProgress;
+    private Map<String, Boolean> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
     private boolean submitted;
 
-    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress, List<OrganisationResource> partnerOrganisations, boolean submitted) {
+    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
+                                                      List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
         this.submitted = submitted;
+        this.editablePartners = editablePartners;
     }
 
     public Long getProjectId() {
@@ -42,6 +45,10 @@ public class ProjectSpendProfileProjectManagerViewModel {
 
     public Map<String, Boolean> getPartnerSpendProfileProgress() {
         return partnerSpendProfileProgress;
+    }
+
+    public Map<String, Boolean> getEditablePartners() {
+        return editablePartners;
     }
 
     public void setPartnerSpendProfileProgress(Map<String, Boolean> partnerSpendProfileProgress) {
