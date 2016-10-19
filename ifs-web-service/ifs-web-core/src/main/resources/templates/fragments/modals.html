@@ -338,8 +338,8 @@
     <div class="modal-accept-profile" role="dialog" aria-hidden="true">
       <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <div>
-            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
-            <p>The project spend profile has been approved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <h2 class="heading-medium no-margin">Approved by Innovate Lead</h2>
+            <p>The project spend profile has been approved and accepted by the Innovate Lead, by confirming the project manager will be notified of this decision via email.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
                 <div class="column-half">

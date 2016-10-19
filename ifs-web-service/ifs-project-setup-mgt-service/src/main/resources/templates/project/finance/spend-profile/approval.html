@@ -47,9 +47,9 @@
 
     <th:block th:unless="${model.empty}">
         <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
-        <h2 class="heading-medium">Lead technologist</h2>
+        <h2 class="heading-medium">Innovate Lead</h2>
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
-            Lead technologist
+            Innovate Lead
         </p>
         <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
             Robin Wilson
@@ -65,12 +65,12 @@
         </ul>
 
         <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
-            <h2 class="heading-medium">Approved by Lead technologist</h2>
-            <p>The spend profile must be sent to the lead technologist for their review and approval.</p>
+            <h2 class="heading-medium">Approved by Innovate Lead</h2>
+            <p>The spend profile must be sent to the Innovate Lead for their review and approval.</p>
             <div class="form-group">
             <label class="block-label" for="approvedByLeadTechnologist" >
                 <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
-                The spend profile has been approved by the lead technologist
+                The spend profile has been approved by the Innovate Lead
             </label>
             </div>
             <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
