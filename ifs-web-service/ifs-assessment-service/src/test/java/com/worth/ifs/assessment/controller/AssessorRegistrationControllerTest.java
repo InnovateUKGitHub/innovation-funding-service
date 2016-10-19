@@ -16,7 +16,6 @@ import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -175,7 +174,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
 
-    @Ignore
     @Test
     public void submitYourDetails_weakPassword() throws Exception {
         String title = "Mr";
@@ -212,6 +210,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         addressForm.setSelectedPostcode(addressResource);
         addressForm.setTriedToSave(true);
+        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
