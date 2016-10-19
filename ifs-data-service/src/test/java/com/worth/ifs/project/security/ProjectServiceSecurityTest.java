@@ -218,6 +218,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
             verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -230,8 +231,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
-            verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+                    verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+                    verify(projectPermissionRules).projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+                    verifyNoMoreInteractions(projectPermissionRules);
         });
     }
 
