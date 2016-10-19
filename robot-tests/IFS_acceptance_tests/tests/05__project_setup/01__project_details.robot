@@ -171,6 +171,50 @@ Lead partner can change the Start Date
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
 
+Option to invite a project manager
+    [Documentation]    INFUND-3579
+    [Tags]    HappyPath
+    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Project details
+    And the user clicks the button/link    link=Project manager
+    And the user should see the text in the page    Who will be the project manager for your project?
+    When the user selects the radio button    projectManager    new
+    Then the user should see the element    id=invite-project-manager
+    When the user selects the radio button    projectManager    projectManager1
+    Then the user should not see the element    id=project-manager   # testing that the element disappears when the option is deselected
+    [Teardown]    the user selects the radio button    projectManager    new
+
+Inviting project manager server side validations
+    [Documentation]    INFUND-3579
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user clicks the button/link    id=invite-project-manager
+    Then the user should see the text in the page    Please enter a contact name
+    And the user should see the text in the page    Please enter an email address
+
+Inviting project manager client side validations
+    [Documentation]    INFUND-3579
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user enters text to a text field    id=name-project-manager1    John Smith
+    Then the user should not see the text in the page    Please enter a contact name
+    When the user enters text to a text field    id=email-project-manager1    test
+    Then the user should not see the text in the page    Please enter an email address
+    And the user should see the text in the page    Please enter a valid email address
+    When the user enters text to a text field    id=email-project-manager1    test@example.com
+    Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see an error in the page
+
+Partner invites a project manager
+    [Documentation]    INFUND-3579
+    [Tags]    HappyPath
+    When the user enters text to a text field    id=name-project-manager    John Smith
+    And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
+    And the user clicks the button/link    id=invite-project-manager
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+
+
 Lead partner can change the project manager
     [Documentation]    INFUND-2616
     ...
@@ -485,4 +529,4 @@ Submit project details button should be enabled
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
-    Should Be Equal As Integers    ${NO_OPTIONs}    4
+    Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
