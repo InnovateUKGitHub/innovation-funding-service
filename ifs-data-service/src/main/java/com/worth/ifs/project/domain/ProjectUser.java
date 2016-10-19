@@ -130,6 +130,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         this.invite = invite;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
