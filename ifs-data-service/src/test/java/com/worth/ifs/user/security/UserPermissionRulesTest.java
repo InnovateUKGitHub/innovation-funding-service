@@ -6,6 +6,8 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -16,6 +18,8 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -308,6 +312,44 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testUsersCanViewTheirOwnProfileSkills() {
+        UserResource user = newUserResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkills, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnProfileSkills((profileSkills), anotherUser));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileContract() {
+        UserResource user = newUserResource().build();
+        ProfileContractResource profileContract = newProfileContractResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnProfileContract(profileContract, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileContractButAttemptingToViewAnotherUsersProfileContract() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        ProfileContractResource profileContract = newProfileContractResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnProfileContract(profileContract, anotherUser));
+    }
+
+    @Test
     public void testUsersCanViewTheirOwnAffiliations() {
         UserResource user = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
@@ -317,26 +359,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToUpdateAnotherUsersAffiliation() {
+    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToViewAnotherUsersAffiliation() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
                 .withUser(user.getId())
                 .build();
         assertFalse(rules.usersCanViewTheirOwnAffiliations(affiliation, anotherUser));
-    }
-
-    @Test
-    public void testUsersCanUpdateTheirAffiliations() {
-        UserResource user = newUserResource().build();
-        assertTrue(rules.usersCanUpdateTheirOwnAffiliations(user, user));
-    }
-
-    @Test
-    public void testUsersCanUpdateTheirAffiliationsButAttemptingToUpdateAnotherUsersProfile() {
-        UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.usersCanUpdateTheirOwnAffiliations(anotherUser, user));
     }
 
     @Test
