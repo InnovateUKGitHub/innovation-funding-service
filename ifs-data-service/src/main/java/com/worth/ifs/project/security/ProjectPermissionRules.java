@@ -74,6 +74,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "ASSIGN_MONITORING_OFFICER",
+            description = "Project finance users can assign Monitoring Officers on any Project")
+    public boolean projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
             value = "UPLOAD_OTHER_DOCUMENTS",
             description = "The lead partners can upload Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
     public boolean leadPartnersCanUploadOtherDocuments(ProjectResource project, UserResource user) {

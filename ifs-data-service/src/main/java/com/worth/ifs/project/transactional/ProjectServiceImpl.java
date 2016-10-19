@@ -83,7 +83,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -712,7 +712,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
@@ -746,6 +746,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
 
         return projectPartnerStatusResource;
+    }
+
+    private ProjectActivityStates createGrantOfferLetterStatus(Project project) {
+        if(project.getOfferSubmittedDate() != null) {
+            return COMPLETE;
+        }
+        return NOT_STARTED;
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

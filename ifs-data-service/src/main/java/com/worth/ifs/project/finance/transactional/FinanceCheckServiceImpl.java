@@ -103,17 +103,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        return getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(this::getFinanceCheckApprovalStatus);
+        return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }
 
-    private FinanceCheckProcessResource getFinanceCheckApprovalStatus(PartnerOrganisation partnerOrganisation) {
-        FinanceCheckProcess process = financeCheckProcessRepository.findOneByTargetId(partnerOrganisation.getId());
-        return new FinanceCheckProcessResource(
+    private ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(PartnerOrganisation partnerOrganisation) {
+
+        return findFinanceCheckProcess(partnerOrganisation).andOnSuccessReturn(process ->
+                new FinanceCheckProcessResource(
                         process.getActivityState(),
                         projectUserMapper.mapToResource(process.getParticipant()),
                         userMapper.mapToResource(process.getInternalParticipant()),
                         LocalDateTime.ofInstant(process.getLastModified().toInstant(), ZoneId.systemDefault()),
-                        false);
+                        false));
+    }
+
+    private ServiceResult<FinanceCheckProcess> findFinanceCheckProcess(PartnerOrganisation partnerOrganisation) {
+        return find(financeCheckProcessRepository.findOneByTargetId(partnerOrganisation.getId()), notFoundError(FinanceCheckProcess.class, partnerOrganisation.getId()));
     }
 
     @Override
@@ -147,7 +152,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations) {
         return mapWithIndex(partnerOrganisations, (i, org) -> {
-                    FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org);
+                    FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
                     boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
                     return new FinanceCheckPartnerStatusResource(
                             org.getOrganisation().getId(),

@@ -56,7 +56,8 @@ public class CompetitionProjectsStatusController {
                     internalUser.canAccessBankDetailsSection(userResource).isAccessibleOrNotRequired(),
                     internalUser.canAccessFinanceChecksSection(userResource).isAccessibleOrNotRequired(),
                     internalUser.canAccessSpendProfileSection(userResource).isAccessibleOrNotRequired(),
-                    internalUser.canAccessOtherDocumentsSection(userResource).isAccessibleOrNotRequired());
+                    internalUser.canAccessOtherDocumentsSection(userResource).isAccessibleOrNotRequired(),
+                    internalUser.canAccessGrantOfferLetterSection(userResource).isAccessibleOrNotRequired());
 
             projectStatusPermissionMap.put(projectStatusResource.getApplicationNumber(), projectStatusPermission);
         });
