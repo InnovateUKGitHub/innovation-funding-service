@@ -107,6 +107,8 @@ public interface ProjectService {
 
     ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
 
+    List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
+
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);

@@ -108,6 +108,7 @@ public class AcceptProjectInviteController extends BaseController {
                                     japvm.setOrganisationAddress(organisation.getAddresses().get(0));
                                 }
                                 japvm.setOrganisationName(organisation.getName());
+                                japvm.setLeadOrganisationName(invite.getLeadOrganisation());
                                 japvm.setProjectName(invite.getProjectName());
                                 model.addAttribute("model", japvm);
                                 return ACCEPT_INVITE_SHOW_PROJECT;
