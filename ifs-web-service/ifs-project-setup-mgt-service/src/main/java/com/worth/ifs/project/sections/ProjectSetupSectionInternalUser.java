@@ -2,12 +2,12 @@ package com.worth.ifs.project.sections;
 
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -43,6 +43,11 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
+
+        if (!userResource.hasRole(PROJECT_FINANCE)) {
+            return NOT_ACCESSIBLE;
+        }
+
         if(!projectSetupProgressChecker.isBankDetailsApproved()
                 && !projectSetupProgressChecker.isBankDetailsActionRequired()) {
             return NOT_ACCESSIBLE;
@@ -51,7 +56,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return userResource.hasRole(UserRoleType.PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
