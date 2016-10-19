@@ -215,6 +215,13 @@ Partner invites a project manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
 
+Invited project manager receives an email
+    [Documentation]    INFUND-3524
+    [Tags]    HappyPath    Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    You will be managing the project on behalf of    Project Manager invitation
+    # note that currently the link in the email isn't functional, as that is covered by an upcoming story
+
+
 Lead partner can change the project manager
     [Documentation]    INFUND-2616
     ...
