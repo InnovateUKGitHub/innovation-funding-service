@@ -1,6 +1,5 @@
 package com.worth.ifs.user.builder;
 
-import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.resource.ContractResource;
 import org.junit.Test;
 
