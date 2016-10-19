@@ -22,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -31,7 +32,9 @@ import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static java.lang.String.format;
@@ -165,6 +168,76 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
+
+        verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
+    }
+
+
+    @Test
+    public void submitYourDetails_weakPassword() throws Exception {
+        String title = "Mr";
+        String firstName = "Felix";
+        String lastName = "Wilson";
+        String phoneNumber = "12345678";
+        Gender gender = Gender.MALE;
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        Disability disability = Disability.NO;
+        String password = "P@ssword1234";
+
+        String addressLine1 = "address1";
+        String town = "town";
+        String postcode = "postcode";
+
+        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
+        expectedForm.setTitle(title);
+        expectedForm.setFirstName(firstName);
+        expectedForm.setLastName(lastName);
+        expectedForm.setPhoneNumber(phoneNumber);
+        expectedForm.setGender(gender);
+        expectedForm.setEthnicity(ethnicity);
+        expectedForm.setDisability(disability);
+        expectedForm.setPassword(password);
+        expectedForm.setRetypedPassword(password);
+
+        AddressForm addressForm = expectedForm.getAddressForm();
+
+        AddressResource addressResource = new AddressResource();
+
+        addressResource.setAddressLine1(addressLine1);
+        addressResource.setPostcode(postcode);
+        addressResource.setTown(town);
+
+        addressForm.setSelectedPostcode(addressResource);
+        addressForm.setTriedToSave(true);
+
+        String inviteHash = "hash";
+
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm)).thenReturn(
+                serviceFailure(asList(fieldError("password", HttpStatus.CONFLICT.getReasonPhrase(), "INVALID_PASSWORD", HttpStatus.CONFLICT))));
+
+        mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("title", title)
+                .param("firstName", firstName)
+                .param("lastName", lastName)
+                .param("phoneNumber", phoneNumber)
+                .param("gender", gender.name())
+                .param("ethnicity", ethnicity.getId().toString())
+                .param("disability", disability.name())
+                .param("password", password)
+                .param("retypedPassword", password)
+                .param("addressForm.selectedPostcode.addressLine1", addressLine1)
+                .param("addressForm.selectedPostcode.town", town)
+                .param("addressForm.selectedPostcode.postcode", postcode))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrorCode("form", "password", "registration.INVALID_PASSWORD"))
+                .andReturn();
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }

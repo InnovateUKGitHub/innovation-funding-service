@@ -41,7 +41,7 @@
 
 
 .spend-profile-table tfoot .fix-right,
-.spend-profile-table tfoot .fix-left{
+.spend-profile-table tfoot  th[scope="row"]{
   margin-top:-2px;
 }
 .spend-profile-table input[readonly]{
@@ -65,16 +65,30 @@
   .spend-profile-table th[scope="row"] {
     left: 0;
     position: absolute;
-    width: 210px;
+    width: 310px;
     @include box-sizing(border-box);
     border-right: 1px solid $grey-2;
     background-color: #fff;
 
-    +td,
-    +th {
-      padding-left:210px;
+    + td {
+      padding-left:310px;
     }
   }
+
+  .spend-profile-table.academic th[scope="row"]{
+    width:155px;
+    font-weight: normal;
+    border-right:none;
+    + th[scope="row"] {
+      left:155px;
+      border-right: 1px solid $border-colour;
+    }
+    &[colspan="2"]{
+      width:310px;
+      border-right:1px solid $border-colour;
+    }
+  }
+
 
       @supports (display:flex){
 
@@ -89,7 +103,7 @@
             flex: 1 1 100%;
           }
           .spend-profile-table .flex-table-before {
-            flex: 0 0 210px;
+            flex: 0 0 310px;
           }
           .spend-profile-table .flex-table-after {
             flex: 0 0 300px;

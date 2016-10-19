@@ -13,6 +13,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private final Long projectId;
     private final String projectName;
     private final boolean leadPartner;
+    private final boolean projectManager;
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
@@ -22,7 +23,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
 
     public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                             FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                            LocalDateTime submitDate, boolean offerRejected, boolean offerAccepted) {
+                                            LocalDateTime submitDate, boolean offerRejected, boolean offerAccepted, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -32,6 +33,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         this.submitDate = submitDate;
         this.offerRejected = offerRejected;
         this.offerAccepted = offerAccepted;
+        this.projectManager = projectManager;
     }
 
     @Override
@@ -46,10 +48,6 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
 
     public boolean isLeadPartner() {
         return leadPartner;
-    }
-
-    public boolean isShowSubmitButton() {
-        return !offerRejected;
     }
 
     public boolean isSubmitted() {
@@ -106,5 +104,13 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
 
     public void setOfferAccepted(boolean offerAccepted) {
         this.offerAccepted = offerAccepted;
+    }
+
+    public boolean isShowSubmitButton() { return projectManager && !isSubmitted() && isOfferSigned(); }
+
+    public boolean isShowDisabledSubmitButton() { return leadPartner && (!isOfferSigned() || !projectManager); }
+
+    public boolean isProjectManager() {
+        return projectManager;
     }
 }

@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -19,6 +20,7 @@ import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,8 +203,10 @@ public class ProjectSpendProfileController {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
 
-        Map<String, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
+        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
         BigDecimal totalOfAllActualTotals = spendProfileTableCalculator.calculateTotalOfAllActualTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
@@ -210,7 +214,8 @@ public class ProjectSpendProfileController {
 
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
-                totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null);
+                totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch);
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId) {
@@ -218,6 +223,65 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
     }
+
+    private Map<Long, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
+
+        return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
+                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+    }
+
+    private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
+
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+
+        List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
+
+        for (int index = 0; index < totalForEachMonth.size(); index++) {
+
+            BigDecimal totalForThisMonth = totalForEachMonth.get(index);
+
+            for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+
+                BigDecimal costForThisMonthForCategory = entry.getValue().get(index);
+                totalForThisMonth = totalForThisMonth.add(costForThisMonthForCategory);
+            }
+
+            totalForEachMonth.set(index, totalForThisMonth);
+        }
+
+        return totalForEachMonth;
+    }
+
+    private BigDecimal buildTotalOfTotals(Map<Long, BigDecimal> input) {
+
+        return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+    }
+
+    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
+        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
+        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
+        return IntStream.range(startYear, endYear + 1).
+                mapToObj(
+                        year -> {
+                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
+                            BigDecimal totalForYear = BigDecimal.ZERO;
+
+                            for(Long key : keys){
+                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
+                                for(int i = 0; i < values.size(); i++){
+                                    LocalDateResource month = table.getMonths().get(i);
+                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
+                                    if(year == financialYearDate.getFiscalYear()){
+                                        totalForYear = totalForYear.add(values.get(i));
+                                    }
+                                }
+                            }
+                            return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
+                        }
+
+                ).collect(toList());
+    }
+
 
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);

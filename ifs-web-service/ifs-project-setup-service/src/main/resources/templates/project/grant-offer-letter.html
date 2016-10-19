@@ -26,7 +26,7 @@
         </div>
 
         <th:block th:if="${model.submitted}">
-          <th:block th:unless="${model.offerAcceptwed or model.offerRejected}">
+          <th:block th:unless="${model.offerAccepted or model.offerRejected}">
               <p>The signed grant offer letter has been received by Innovate UK, and is awaiting review.</p>
               <p>The unsigned grant offer letter is available for your records.</p>
           </th:block>
@@ -84,7 +84,9 @@
                   </th:block>
             </div>
 
-            <a th:unless="${model.submitted}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+            <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+            <a th:if="${model.isShowDisabledSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" disabled="disabled" class="button">Submit signed offer letter</a>
+
             <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
             <div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
 

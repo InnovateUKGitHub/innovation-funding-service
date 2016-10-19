@@ -33,6 +33,10 @@ public class CostCategory {
         return id;
     }
 
+    public String getIdString() {
+        return String.valueOf(id);
+    }
+
     public CostCategoryGroup getCostCategoryGroup() {
         return costCategoryGroup;
     }

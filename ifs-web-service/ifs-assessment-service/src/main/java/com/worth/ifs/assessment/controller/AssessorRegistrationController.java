@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static java.lang.String.format;
 
 /**
@@ -96,7 +94,16 @@ public class AssessorRegistrationController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
-            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
+
+            result.getErrors().forEach(error -> {
+                if (StringUtils.hasText(error.getFieldName())) {
+                    bindingResult.rejectValue(error.getFieldName(), "registration."+error.getErrorKey());
+                } else {
+                    bindingResult.reject("registration."+error.getErrorKey());
+                }
+            });
+
+            return validationHandler.
                     failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
         });
     }

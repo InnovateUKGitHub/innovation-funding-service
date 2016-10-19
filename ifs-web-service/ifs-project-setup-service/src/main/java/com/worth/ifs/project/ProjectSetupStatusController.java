@@ -3,14 +3,10 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
@@ -76,14 +72,10 @@ public class ProjectSetupStatusController {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
-        // TODO - INFUND-5285 - can we do away with getting monitoring officer here, if we are getting a ProjectTeamStatusResource anyway?
         Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
 
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
 
-        // TODO - INFUND-5285 - can we do away with getting bank details here, if we are getting a ProjectTeamStatusResource anyway?
-        RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
-        Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
@@ -97,7 +89,9 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails,
+        Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
                 organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
