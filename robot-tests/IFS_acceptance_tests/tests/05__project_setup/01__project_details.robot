@@ -19,6 +19,10 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5610 As a user I want to check the selected Project Manager value persists
 ...
 ...               INFUND-5368 Once finance contact is submitted, do not allow it to be changed again
+...
+...               INFUND-3483 As a lead partner I want to invite a new contributor to our organisation so that they can be assigned as our project manager
+...
+...               INFUND-3550 As a potential Project Manager, I can receive an email with a Join link, so that I can start the registration process and collaborate with the project
 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
@@ -172,7 +176,7 @@ Lead partner can change the Start Date
     [Teardown]    the user changes the start date back again
 
 Option to invite a project manager
-    [Documentation]    INFUND-3579
+    [Documentation]    INFUND-3483
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
@@ -186,7 +190,7 @@ Option to invite a project manager
     [Teardown]    the user selects the radio button    projectManager    new
 
 Inviting project manager server side validations
-    [Documentation]    INFUND-3579
+    [Documentation]    INFUND-3483
     [Tags]    Pending
     # TODO Pending due to INFUND-5704
     When the user clicks the button/link    id=invite-project-manager
@@ -194,7 +198,7 @@ Inviting project manager server side validations
     And the user should see the text in the page    Please enter an email address
 
 Inviting project manager client side validations
-    [Documentation]    INFUND-3579
+    [Documentation]    INFUND-3483
     [Tags]    Pending
     # TODO Pending due to INFUND-5704
     When the user enters text to a text field    id=name-project-manager1    John Smith
@@ -207,7 +211,7 @@ Inviting project manager client side validations
     And the user should not see an error in the page
 
 Partner invites a project manager
-    [Documentation]    INFUND-3579
+    [Documentation]    INFUND-3483
     [Tags]    HappyPath
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
@@ -216,7 +220,7 @@ Partner invites a project manager
 
 
 Invited project manager receives an email
-    [Documentation]    INFUND-3524
+    [Documentation]    INFUND-3550
     [Tags]    HappyPath    Email
     When Open mailbox and confirm received email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    You will be managing the project on behalf of    Project Manager invitation
     # note that currently the link in the email isn't functional, as that is covered by an upcoming story
