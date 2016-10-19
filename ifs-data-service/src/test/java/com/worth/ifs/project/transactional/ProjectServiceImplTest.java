@@ -1072,6 +1072,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
         when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().build());
+        when(organisationRepositoryMock.findOne(invite.getOrganisation())).thenReturn(newOrganisation().build());
 
         ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
 
