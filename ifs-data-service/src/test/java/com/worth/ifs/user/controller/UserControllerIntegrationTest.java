@@ -6,7 +6,9 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
 import org.junit.Ignore;
@@ -21,6 +23,7 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ContractBuilder.newContract;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
@@ -45,6 +48,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
     }
+
+    @Autowired
+    private ContractRepository contractRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -212,6 +218,31 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
         RestResult<Void> restResult = controller.updateProfileSkills(1L, profileSkills);
         assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void testUpdateProfileContract() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        // Save a contract as the current contract
+        contractRepository.deleteAll();
+        Contract contract = contractRepository.save(newContract()
+                .with(id(null))
+                .withCurrent(Boolean.TRUE)
+                .withText("Contract text...")
+                .withAnnexOne("Annex one...")
+                .withAnnexTwo("Annex two...")
+                .withAnnexThree("Annex three...")
+                .build());
+
+        RestResult<Void> restResult = controller.updateProfileContract(userId);
+        assertTrue(restResult.isSuccess());
+
+        User userAfterUpdate = userRepository.findOne(userId);
+        assertEquals(contract, userAfterUpdate.getProfile().getContract());
     }
 
     @Ignore("TODO DW - INFUND-936 - this test will cause issues when not running Shib or on an environment like Bamboo where no Shib is available")
