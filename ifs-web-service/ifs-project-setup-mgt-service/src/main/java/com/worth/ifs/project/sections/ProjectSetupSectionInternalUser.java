@@ -70,12 +70,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isProjectDetailsSubmitted()
-                || !projectSetupProgressChecker.isMonitoringOfficerSubmitted()
-                || !projectSetupProgressChecker.isBankDetailsApproved()
-                || !projectSetupProgressChecker.isFinanceChecksSubmitted()
-                || !projectSetupProgressChecker.isSpendProfileSubmitted()
-                || !projectSetupProgressChecker.isOtherDocumentsSubmitted()) {
+        if(!projectSetupProgressChecker.isGrantOfferLetterSubmitted()) {
             return NOT_ACCESSIBLE;
         }
 

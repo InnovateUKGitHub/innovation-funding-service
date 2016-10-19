@@ -1,10 +1,12 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -31,6 +33,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -105,6 +110,19 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     public boolean projectFinanceUsersCanViewApplications(final ApplicationResource application, final UserResource user){
         return isProjectFinanceUser(user);
     }
+
+    @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
+    public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user){
+
+        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
+
+        if (linkedProject == null) {
+            return false;
+        }
+
+        return isPartner(linkedProject.getId(), user.getId());
+    }
+
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {

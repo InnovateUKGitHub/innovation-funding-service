@@ -44,15 +44,15 @@ Live competition calculations
 
 Project setup Competitions
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610
-    When the user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    Then the user should see the text in the page    Project set up
+    When the user clicks the button/link    jQuery=a:contains(Project setup)    # We have used the JQuery selector for the link because the title will change according to the competitions number
+    Then the user should see the text in the page    Project setup
     And the user should see the text in the page    Killer Riffs
     And the user should not see the text in the page    Sarcasm Stupendousness    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
-    Then the total calculation in dashboard should be correct    Project set up    //section[1]/ul/li
-    And the total calculation in dashboard should be correct    Project set up    //section/ul/li
+    Then the total calculation in dashboard should be correct    Project setup    //section[1]/ul/li
+    And the total calculation in dashboard should be correct    Project setup    //section/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610
