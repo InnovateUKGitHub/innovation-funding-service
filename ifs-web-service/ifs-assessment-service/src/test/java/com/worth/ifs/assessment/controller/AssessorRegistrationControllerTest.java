@@ -210,6 +210,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         addressForm.setSelectedPostcode(addressResource);
         addressForm.setTriedToSave(true);
+        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
