@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
@@ -20,6 +21,9 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -376,5 +380,52 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         });
     }
 
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjects() {
 
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(newProjectUser().build(1));
+
+        assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(null);
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock, never()).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(emptyList());
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
 }

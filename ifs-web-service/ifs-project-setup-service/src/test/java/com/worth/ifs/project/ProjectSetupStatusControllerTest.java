@@ -26,6 +26,7 @@ import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
@@ -85,7 +86,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertFalse(viewModel.isProjectDetailsSubmitted());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
-        assertNull(viewModel.getBankDetails());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
         assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
     }
 
@@ -130,7 +132,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
-        assertNull(viewModel.getBankDetails());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
     }
 
     @Test
@@ -144,6 +147,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         build()).
                 build();
@@ -174,7 +178,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
-        assertNull(viewModel.getBankDetails());
+        assertTrue(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
     }
 
     @Test
@@ -190,6 +195,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
                         build()).
                 build();
@@ -219,6 +225,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isProjectDetailsSubmitted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
-        assertEquals(bankDetailsResource, viewModel.getBankDetails());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertTrue(viewModel.isBankDetailsComplete());
     }
 }

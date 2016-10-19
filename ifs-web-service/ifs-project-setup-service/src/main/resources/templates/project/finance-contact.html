@@ -45,6 +45,7 @@
                     <div th:each="user : ${model.invitedUsers}" th:remove="tag">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
+                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
                     </div>
