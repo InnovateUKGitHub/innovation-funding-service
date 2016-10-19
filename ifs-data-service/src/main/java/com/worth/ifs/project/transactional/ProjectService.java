@@ -138,6 +138,7 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
+    //TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
     @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<Void> generateFinanceChecksForAllProjects();
 }

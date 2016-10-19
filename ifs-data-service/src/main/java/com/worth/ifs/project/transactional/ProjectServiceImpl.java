@@ -1048,6 +1048,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
      * A temporary method for generating finance checks for existing projects.
      * See INFUND-5591 for an explanation.
      * This is required temporarily and will be removed in near future.
+     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
      * @return result of attempting to generate finance checks for all projects
      */
     @Override

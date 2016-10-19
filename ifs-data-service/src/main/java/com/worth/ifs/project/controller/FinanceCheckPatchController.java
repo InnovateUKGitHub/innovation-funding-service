@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * ProjectController exposes Project data and operations through a REST API.
+ * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
  */
 @RestController
 @RequestMapping("/project/patch")
