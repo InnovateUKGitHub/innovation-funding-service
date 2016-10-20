@@ -182,7 +182,7 @@ Option to invite a project manager
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
-    And the user should see the text in the page    Who will be the project manager for your project?
+    And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
     When the user selects the radio button    projectManager    new
     Then the user should see the element    id=invite-project-manager
     When the user selects the radio button    projectManager    projectManager1
