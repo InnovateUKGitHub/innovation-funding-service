@@ -10,7 +10,7 @@ gulp.task('default',['js','css']);
 //build all js
 gulp.task('js', function () {
    return gulp.src([
-      'js/ifsApplicationLoader.js',
+      'js/ifsCompetitionManagementLoader.js',
       'js/ifs_modules/*.js',
       'js/ifs_pages/*.js',
    	])
