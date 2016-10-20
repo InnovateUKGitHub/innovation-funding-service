@@ -1,6 +1,8 @@
 package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -71,5 +73,31 @@ public class ProjectSpendProfileProjectManagerViewModel {
 
     public boolean isSubmitted() {
         return submitted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileProjectManagerViewModel that = (ProjectSpendProfileProjectManagerViewModel) o;
+
+        return new EqualsBuilder()
+                .append(submitted, that.submitted)
+                .append(projectId, that.projectId)
+                .append(projectName, that.projectName)
+                .append(partnerSpendProfileProgress, that.partnerSpendProfileProgress)
+                .append(editablePartners, that.editablePartners)
+                .append(partnerOrganisations, that.partnerOrganisations)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(projectName)
+                .toHashCode();
     }
 }

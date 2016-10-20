@@ -318,7 +318,7 @@ public class ProjectSpendProfileController {
     }
 
     private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
-        HashMap<String, Boolean> editablePartnersMap = new HashMap<>();
+        Map<String, Boolean> editablePartnersMap = new HashMap<>();
         partnerOrganisations.stream().forEach(organisation -> {
             boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
             editablePartnersMap.put(organisation.getName(),isUserPartOfThisOrganisation);
