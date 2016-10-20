@@ -192,6 +192,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).systemMaintenanceUsersCanViewProjects(project, getLoggedInUser()); //TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -589,6 +590,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> generateFinanceChecksForAllProjects() {
             return null;
         }
     }
