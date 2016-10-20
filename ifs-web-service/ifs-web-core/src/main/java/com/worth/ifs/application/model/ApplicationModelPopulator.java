@@ -119,8 +119,6 @@ public class ApplicationModelPopulator {
         form.setFormInput(formInputs);
     }
 
-
-
     public void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
         List<FormInputResponseResource> responses = getFormInputResponses(application);
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
@@ -146,26 +144,12 @@ public class ApplicationModelPopulator {
         model.addAttribute("leadApplicant", leadApplicant);
     }
 
-
-
-    protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseService.getByApplication(application.getId());
-    }
-
     public boolean userIsLeadApplicant(ApplicationResource application, Long userId) {
         return userService.isLeadApplicant(userId, application);
     }
 
-    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
-        if(userOrganisation.isPresent()) {
-            organisationId = userOrganisation.get().getId();
-        }
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
-
     public void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-                                        Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
+                                     Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
 
         if (isApplicationInViewMode(model, application, userOrganisation))
             return;
@@ -200,31 +184,9 @@ public class ApplicationModelPopulator {
         model.addAttribute("notifications", notifications);
     }
 
-    private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
-        if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
-            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
-            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
-            return true;
-        }
-        return false;
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
-    }
-
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
-                                            Optional<SectionResource> currentSection,
-                                            Optional<OrganisationResource> userOrganisation) {
+                                         Optional<SectionResource> currentSection,
+                                         Optional<OrganisationResource> userOrganisation) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
@@ -277,19 +239,6 @@ public class ApplicationModelPopulator {
         Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
     }
-
-    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
-        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
-    }
-
-    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getQuestion().equals(id));
-    }
-
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
     public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
@@ -347,28 +296,13 @@ public class ApplicationModelPopulator {
         return getSection(allSections, sectionId, selectFirstSectionIfNoneCurrentlySelected);
     }
 
-    protected Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-
-        if (sectionId.isPresent()) {
-            Long id = sectionId.get();
-
-            // get the section that we want to show, so we can use this on to show the correct questions.
-            return sections.stream().filter(x -> x.getId().equals(id)).findFirst();
-
-        } else if (selectFirstSectionIfNoneCurrentlySelected) {
-            return sections.isEmpty() ? Optional.empty() : Optional.ofNullable(sections.get(0));
-        }
-
-        return Optional.empty();
-    }
-
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
-                                                            CompetitionResource competition,
-                                                            Long userId,
-                                                            Optional<SectionResource> section,
-                                                            Optional<Long> currentQuestionId,
-                                                            Model model,
-                                                            ApplicationForm form) {
+                                                         CompetitionResource competition,
+                                                         Long userId,
+                                                         Optional<SectionResource> section,
+                                                         Optional<Long> currentQuestionId,
+                                                         Model model,
+                                                         ApplicationForm form) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
@@ -380,7 +314,7 @@ public class ApplicationModelPopulator {
     }
 
     public void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
-                                                        Model model, ApplicationForm form) {
+                                                     Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
 
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
@@ -425,5 +359,64 @@ public class ApplicationModelPopulator {
         }
     }
 
+    private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
+        return formInputResponseService.getByApplication(application.getId());
+    }
 
+    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+        Long organisationId=0L;
+        if(userOrganisation.isPresent()) {
+            organisationId = userOrganisation.get().getId();
+        }
+        return questionService.getMarkedAsComplete(application.getId(), organisationId);
+    }
+
+    private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
+        if(!application.isOpen() || userOrganisation == null){
+            //Application Not open, so add empty lists
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
+            model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
+            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
+            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
+            return true;
+        }
+        return false;
+    }
+
+    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
+        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
+
+        return pendingAssignableUsersResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(0),
+                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
+                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
+                        .collect(Collectors.toList()));
+    }
+
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
+        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
+    }
+
+    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list, input -> input.getQuestion().equals(id));
+    }
+
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
+    }
+
+    private Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
+
+        if (sectionId.isPresent()) {
+            Long id = sectionId.get();
+
+            // get the section that we want to show, so we can use this on to show the correct questions.
+            return sections.stream().filter(x -> x.getId().equals(id)).findFirst();
+
+        } else if (selectFirstSectionIfNoneCurrentlySelected) {
+            return sections.isEmpty() ? Optional.empty() : Optional.ofNullable(sections.get(0));
+        }
+
+        return Optional.empty();
+    }
 }
