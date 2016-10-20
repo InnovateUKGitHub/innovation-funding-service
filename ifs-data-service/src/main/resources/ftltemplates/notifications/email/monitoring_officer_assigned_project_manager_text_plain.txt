@@ -17,8 +17,5 @@ If there are any further questions about this appointment please contact Innovat
 
 Yours sincerely,
 
-Competitions Team
-Innovate UK
-Tel: 0300 321 4357
-Email: competitions@innovateuk.gov.uk
+<@layout.senderPlainText />
 </@layout.defaultPlainText>
