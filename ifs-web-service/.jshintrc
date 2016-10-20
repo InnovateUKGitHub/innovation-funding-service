@@ -1,6 +1,6 @@
 {
   "undef": true,
-  "strict" : false,
+  "strict" : true,
   "unused": true,
   "predef": [ "jQuery","setTimeout","clearTimeout","window","document","IFS","showdown","md","Cookies"],
   "esversion" : 3
