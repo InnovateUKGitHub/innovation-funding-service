@@ -7,11 +7,7 @@ Documentation     INFUND-1683 As a user of IFS application, if I attempt to perf
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Assessor
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${ASSESSOR_DASHBOARD}    ${SERVER}/assessment/assessor/dashboard

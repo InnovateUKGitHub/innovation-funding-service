@@ -6,12 +6,7 @@ Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.te
 ...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessor_feedback_competition_url}    ${server}/management/competition/3

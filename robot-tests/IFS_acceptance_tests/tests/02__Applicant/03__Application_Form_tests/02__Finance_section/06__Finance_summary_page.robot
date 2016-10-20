@@ -19,13 +19,7 @@ Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Default Tags
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
