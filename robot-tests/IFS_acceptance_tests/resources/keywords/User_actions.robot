@@ -331,6 +331,20 @@ The user should see an error
     wait until page contains element    jQuery=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
+The user should see a field error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-message:contains('${ERROR_TEXT}')    5s
+
+
+The user should see a summary error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-summary:contains('${ERROR_TEXT}')    5s
+
+The user should see a field and summary error
+    [Arguments]    ${ERROR_TEXT}
+    the user should see a field error    ${ERROR_TEXT}
+    the user should see a summary error    ${ERROR_TEXT}
+
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
     Input Text    id=username    ${USER_NAME}
