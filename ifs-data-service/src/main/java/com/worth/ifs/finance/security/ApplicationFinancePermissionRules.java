@@ -47,6 +47,14 @@ public class ApplicationFinancePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    /**
+     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
+     */
+    @PermissionRule(value = "READ", description = "System maintenance users can see application finances for organisations")
+    public boolean systemMaintenanceUsersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isSystemMaintenanceUser(user);
+    }
+
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
