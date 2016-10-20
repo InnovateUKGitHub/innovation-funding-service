@@ -1,4 +1,5 @@
 include 'ifs-data-service'
+include 'ifs-rest-api-service'
 include 'ifs-web-service'
 include 'ifs-web-service:ifs-web-core'
 include 'ifs-web-service:ifs-application-service'
