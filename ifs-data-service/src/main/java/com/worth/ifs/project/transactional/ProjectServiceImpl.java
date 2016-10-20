@@ -66,7 +66,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -790,10 +789,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
-        Organisation representedOrganisation = organisationRepository.findOne(inviteResource.getOrganisation());
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName()))
-                ? representedOrganisation.getName()
-                : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }

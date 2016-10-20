@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${inviteOrganisationName} to participate in their project for the ${competitionName} competition.
+${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${organisationName} to participate in their project for the ${competitionName} competition.
 
 If this is not the correct organisation, email the application lead: ${leadApplicantEmail}
 

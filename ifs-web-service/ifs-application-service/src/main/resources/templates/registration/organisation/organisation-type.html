@@ -22,7 +22,7 @@
         <p>The lead applicant has invited you to join this application on behalf of the following organisation:
             <strong>
                 <span th:if="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationNameConfirmed}"></span>
-                <span th:unless="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationName}"></span>
+                <span th:unless="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.organisationName}"></span>
             </strong></p>
 
         <p>If this is not the correct organisation <a th:href="'mailto:'+ ${invite.leadApplicantEmail}">email the application lead</a></p>

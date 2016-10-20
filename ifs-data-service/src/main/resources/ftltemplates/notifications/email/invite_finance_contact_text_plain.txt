@@ -4,7 +4,7 @@ Dear ${notificationTarget.name},
 
 You have been invited to join the collaborative project ${projectName} as a named finance contact.
 
-You will be providing finance details on behalf of ${inviteOrganisationName}.
+You will be providing finance details on behalf of ${organisationName}.
 
 The project is being led by ${leadOrganisation}.
 
