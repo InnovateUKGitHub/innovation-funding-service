@@ -1,6 +1,7 @@
 // jshint ignore: start
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
+var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
@@ -12,12 +13,16 @@ gulp.task('js', function () {
       'js/ifsApplicationLoader.js',
       'js/ifs_modules/*.js',
       'js/ifs_pages/*.js',
-   		])
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'))
-  	  .pipe(concat('application.min.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest('js/dest'))
+   	])
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'))
+    // .pipe(jshint.reporter('fail'))
+    .pipe(jscs())
+    .pipe(jscs.reporter())
+    // .pipe(jscs.reporter('fail'))
+    .pipe(concat('application.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('js/dest'))
 });
 gulp.task('css', function () {});
 gulp.task('css:watch', function () {});
