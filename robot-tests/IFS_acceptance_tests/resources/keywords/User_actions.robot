@@ -1,6 +1,7 @@
 *** Settings ***
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 
@@ -327,7 +328,7 @@ The user should see an error
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
     sleep    100ms
-    wait until page contains element    css=.error-message
+    wait until page contains element    jQuery=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
@@ -520,7 +521,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
+    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123

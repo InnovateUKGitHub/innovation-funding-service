@@ -134,6 +134,7 @@ public class POJOTest {
             FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,
+            ProfileContractResource.class,
             ProfileSkillsResource.class,
             ProfileAddressResource.class
     );

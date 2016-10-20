@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -42,6 +43,11 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
+
+        if (!userResource.hasRole(PROJECT_FINANCE)) {
+            return NOT_ACCESSIBLE;
+        }
+
         if(!projectSetupProgressChecker.isBankDetailsApproved()
                 && !projectSetupProgressChecker.isBankDetailsActionRequired()) {
             return NOT_ACCESSIBLE;
@@ -50,7 +56,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return ACCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
@@ -70,12 +76,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isProjectDetailsSubmitted()
-                || !projectSetupProgressChecker.isMonitoringOfficerSubmitted()
-                || !projectSetupProgressChecker.isBankDetailsApproved()
-                || !projectSetupProgressChecker.isFinanceChecksSubmitted()
-                || !projectSetupProgressChecker.isSpendProfileSubmitted()
-                || !projectSetupProgressChecker.isOtherDocumentsSubmitted()) {
+        if(!projectSetupProgressChecker.isGrantOfferLetterSubmitted()) {
             return NOT_ACCESSIBLE;
         }
 

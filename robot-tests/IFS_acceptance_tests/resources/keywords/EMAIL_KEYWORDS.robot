@@ -1,6 +1,7 @@
 *** Settings ***
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 
@@ -81,6 +82,50 @@ the user opens the local mailbox and verifies the email
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
     Delete All Emails
+    close mailbox
+
+#Please save this keywords, so that we can base our Email keyword refactoring
+the user opens the mailbox and reads his own email
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}==1    the user opens the local mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}!=1    the user opens the remote mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
+
+the user opens the local mailbox and reads his own email
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH EMAIL}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    log    ${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES}=    Get Matches From Email    ${WHICH EMAIL}    ${pattern}
+    log    ${MATCHES}
+    Should Not Be Empty    ${MATCHES}
+    ${ALLLINKS}=    Get Links From Email    ${WHICH EMAIL}
+    log    ${ALLLINKS}
+    ${LINK}=    Get From List    ${ALLLINKS}    1
+    log    ${LINK}
+    go to    ${LINK}
+    Capture Page Screenshot
+    delete email    ${WHICH EMAIL}
+    close mailbox
+
+the user opens the remote mailbox and reads his own email
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${WHICH EMAIL} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    log    ${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES}=    Get Matches From Email    ${WHICH EMAIL}    ${pattern}
+    log    ${MATCHES}
+    Should Not Be Empty    ${MATCHES}
+    ${ALLLINKS}=    Get Links From Email    ${WHICH EMAIL}
+    log    ${ALLLINKS}
+    ${LINK}=    Get From List    ${ALLLINKS}    1
+    log    ${LINK}
+    go to    ${LINK}
+    Capture Page Screenshot
+    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user opens the mailbox and accepts the invitation to collaborate
@@ -196,7 +241,7 @@ the user should get a remote confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
+    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user should get a local confirmation email
@@ -208,13 +253,12 @@ the user should get a local confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    #    Delete All Emails
+    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user opens the remote mailbox and clicks the reset link
     [Arguments]    ${receiver}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    #    ${LATEST} =    wait for email
     ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Reset your password
     ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}

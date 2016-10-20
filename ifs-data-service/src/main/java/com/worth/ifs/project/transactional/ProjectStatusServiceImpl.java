@@ -113,11 +113,17 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
-        return ACTION_REQUIRED;
+
+        List<SpendProfile> spendProfile = spendProfileRepository.findByProjectId(project.getId());
+
+        if (spendProfile.isEmpty()) {
+            return ACTION_REQUIRED;
+        }
+
+        return COMPLETE;
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project){
-        List<Organisation> organisations = project.getOrganisations();
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
         if(ApprovalType.APPROVED.equals(approvalType)) {
@@ -127,26 +133,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         }
 
         if (project.getSpendProfileSubmittedDate() != null) {
-            return COMPLETE;
+            return ACTION_REQUIRED;
         }
 
-        for(Organisation organisation : organisations) {
-            Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-
-            ProjectActivityStates financeChecksStatus = ACTION_REQUIRED;
-            if (spendProfile.isPresent()) {
-                if(!financeChecksStatus.equals(COMPLETE)){
-                    return NOT_STARTED;
-                } else {
-                    ProjectActivityStates orgSPStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
-                    if (orgSPStatus != COMPLETE) {
-                        return PENDING;
-                    }
-                }
-            }
-        }
-
-        return NOT_STARTED;
+        return PENDING;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
@@ -162,7 +152,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
-        // TODO: Set status when GOL internal view is completed.
-        return createGrantOfferLetterStatus();
+        if(project.getOfferSubmittedDate() != null) {
+            return ACTION_REQUIRED;
+        }
+        return NOT_STARTED;
     }
 }

@@ -54,7 +54,6 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
-import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -81,23 +80,17 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -655,12 +648,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
-
-        if (existingUser != null) {
-            project.removeProjectUser(existingUser);
-        }
-
         project.addProjectUser(financeContact);
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
@@ -719,7 +706,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
@@ -753,6 +740,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
 
         return projectPartnerStatusResource;
+    }
+
+    private ProjectActivityStates createGrantOfferLetterStatus(Project project) {
+        if(project.getOfferSubmittedDate() != null) {
+            return COMPLETE;
+        }
+        return NOT_STARTED;
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
@@ -828,6 +822,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+
+        ServiceResult<ProjectUser> result = find(organisation(organisationId))
+                .andOnSuccessReturn(organisation -> project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation));
+
+        if (result.isFailure()) {
+            return result;
+        }
+
+        ProjectUser existingUser = result.getSuccessObject();
+
+        if (existingUser != null) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION);
+        }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
 
@@ -1042,5 +1049,34 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
+    }
+
+    /**
+     * A temporary method for generating finance checks for existing projects.
+     * See INFUND-5591 for an explanation.
+     * This is required temporarily and will be removed in near future.
+     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
+     * @return result of attempting to generate finance checks for all projects
+     */
+    @Override
+    public ServiceResult<Void> generateFinanceChecksForAllProjects() {
+        return find(projectRepository.findAll(), notFoundError(Project.class, emptyList())).
+                andOnSuccess(projects -> {
+                    List<ServiceResult> results = projects.stream().filter(p -> find(financeCheckRepository.findByProjectId(p.getId()), notFoundError(FinanceCheck.class, emptyList())).isFailure()).
+                            map(project -> generateFinanceCheckEntitiesForNewProject(project).
+                                    handleSuccessOrFailure(
+                                            failure -> {
+                                                LOG.error("Could not generate finance checks manually for project no. " + project.getId());
+                                                return serviceFailure(new Error(FINANCE_CHECKS_CANNOT_GENERATE_FOR_PROJECT, project.getId()));
+                                            },
+                                            success -> {
+                                                LOG.debug("Finance check entries generated for project no. " + project.getId());
+                                                return serviceSuccess();
+                                            }
+                                    )
+                            ).collect(toList());
+
+                    return results.stream().filter(result -> result.isFailure()).findFirst().orElse(serviceSuccess());
+                });
     }
 }

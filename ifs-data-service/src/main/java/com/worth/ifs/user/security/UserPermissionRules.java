@@ -9,6 +9,8 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileAddressResource;
+import com.worth.ifs.user.resource.ProfileContractResource;
+import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,9 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
-import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
@@ -110,6 +110,16 @@ public class UserPermissionRules {
     @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
     public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "A user can read their own profile skills")
+    public boolean usersCanViewTheirOwnProfileSkills(ProfileSkillsResource profileSkills, UserResource user) {
+        return user.getId().equals(profileSkills.getUser());
+    }
+
+    @PermissionRule(value = "READ", description = "A user can read their own profile contract")
+    public boolean usersCanViewTheirOwnProfileContract(ProfileContractResource profileContract, UserResource user) {
+        return user.getId().equals(profileContract.getUser());
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own affiliations")

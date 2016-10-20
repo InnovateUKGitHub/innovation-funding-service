@@ -57,6 +57,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         verify(rules, times(2)).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(2)).projectFinanceUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(2)).systemRegistrationUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).systemMaintenanceUsersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser())); // TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
         verifyNoMoreInteractions(rules);
     }
 
@@ -69,6 +71,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
             verify(rules).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).projectFinanceUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).systemRegistrationUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).systemMaintenanceUsersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser())); // TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
             verifyNoMoreInteractions(rules);
         });
     }

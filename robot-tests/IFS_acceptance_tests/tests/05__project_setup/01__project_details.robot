@@ -19,18 +19,15 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5610 As a user I want to check the selected Project Manager value persists
 ...
 ...               INFUND-5368 Once finance contact is submitted, do not allow it to be changed again
+...
+...               INFUND-3483 As a lead partner I want to invite a new contributor to our organisation so that they can be assigned as our project manager
+...
+...               INFUND-3550 As a potential Project Manager, I can receive an email with a Join link, so that I can start the registration process and collaborate with the project
 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
@@ -62,9 +59,9 @@ Non-lead partner can see the project setup page
     # This test case can be part of above one. (If included then ensure a successful HappyPath run)
     # This test case covers non lead partner.
 
-Links to other sections in Project setup dependant on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428,
-    [Tags]    Pending
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -73,8 +70,7 @@ Links to other sections in Project setup dependant on project details (applicabl
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
-    And the user should not see the element    link = Grant offer letter
-    [Teardown]    logout as user
+    # And the user should not see the element    link = Grant offer letter
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
@@ -172,6 +168,57 @@ Lead partner can change the Start Date
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
 
+Option to invite a project manager
+    [Documentation]    INFUND-3483
+    [Tags]    HappyPath
+    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Project details
+    And the user clicks the button/link    link=Project manager
+    And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
+    When the user selects the radio button    projectManager    new
+    Then the user should see the element    id=invite-project-manager
+    When the user selects the radio button    projectManager    projectManager1
+    Then the user should not see the element    id=project-manager   # testing that the element disappears when the option is deselected
+    [Teardown]    the user selects the radio button    projectManager    new
+
+Inviting project manager server side validations
+    [Documentation]    INFUND-3483
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user clicks the button/link    id=invite-project-manager
+    Then the user should see the text in the page    Please enter a contact name
+    And the user should see the text in the page    Please enter an email address
+
+Inviting project manager client side validations
+    [Documentation]    INFUND-3483
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5704
+    When the user enters text to a text field    id=name-project-manager1    John Smith
+    Then the user should not see the text in the page    Please enter a contact name
+    When the user enters text to a text field    id=email-project-manager1    test
+    Then the user should not see the text in the page    Please enter an email address
+    And the user should see the text in the page    Please enter a valid email address
+    When the user enters text to a text field    id=email-project-manager1    test@example.com
+    Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see an error in the page
+
+Partner invites a project manager
+    [Documentation]    INFUND-3483
+    [Tags]    HappyPath
+    When the user enters text to a text field    id=name-project-manager    John Smith
+    And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
+    And the user clicks the button/link    id=invite-project-manager
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+
+
+Invited project manager receives an email
+    [Documentation]    INFUND-3550
+    [Tags]    HappyPath    Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    You will be managing the project on behalf of    Project Manager invitation
+    # note that currently the link in the email isn't functional, as that is covered by an upcoming story
+
+
 Lead partner can change the project manager
     [Documentation]    INFUND-2616
     ...
@@ -182,12 +229,12 @@ Lead partner can change the project manager
     And the user clicks the button/link    link=Project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
-    When the user selects the radio button    projectManager    projectManager2
+    When the user selects the radio button    projectManager    1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project manager
-    And the user can see selected radio button
+    And the user sees that the radio button is selected    projectManager    1
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
@@ -439,9 +486,6 @@ the matching status checkbox is updated
     the user should see the element    ${table_id}
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
 
-the user can see selected radio button 
-    the user should see the element    xpath =//*[@id="projectManager2" and @checked ="checked"]
-
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months
 
@@ -489,4 +533,4 @@ Submit project details button should be enabled
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
-    Should Be Equal As Integers    ${NO_OPTIONs}    4
+    Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
