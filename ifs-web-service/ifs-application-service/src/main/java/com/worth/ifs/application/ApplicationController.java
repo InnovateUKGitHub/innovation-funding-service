@@ -2,20 +2,27 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.AssessorFeedbackRestService;
+import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +41,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static com.worth.ifs.application.AbstractApplicationController.*;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -70,7 +78,10 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
     public String applicationDetails(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request) {
 
-        assignQuestion(request, applicationId);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+
+        questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/"+applicationId;
     }
 
@@ -86,13 +97,13 @@ public class ApplicationController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
         return "application-details";
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return userIsLeadApplicant(application, user.getId()) && application.isSubmitable();
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmitable();
     }
 
     @ProfileExecution
@@ -109,7 +120,7 @@ public class ApplicationController extends AbstractApplicationController {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
 
         if (competition.isOpen()) {
-            addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         } else {
             model.addAttribute("currentUser", user);
         }
@@ -126,7 +137,8 @@ public class ApplicationController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            assignQuestion(request, applicationId);
+            ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+            questionService.assignQuestion(applicationId, request, assignedBy);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
             String questionformInputKey = String.format("formInput[%1$s]", markQuestionCompleteId);
@@ -258,7 +270,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value="/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") Long applicationId,
                                              Model model, HttpServletRequest request) {
-        return print(applicationId, model, request);
+        return applicationPrintPopulator.print(applicationId, model, request);
     }
 
     private String doAssignQuestionAndReturnSectionFragment(Model model,
@@ -274,13 +286,13 @@ public class ApplicationController extends AbstractApplicationController {
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
 
-        Optional<SectionResource> currentSection = getSectionByIds(competition.getId(), sectionId, false);
+        Optional<SectionResource> currentSection = applicationModelPopulator.getSectionByIds(competition.getId(), sectionId, false);
 
-        Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
+        Long questionId = questionService.extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
-        super.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.get());
@@ -330,7 +342,10 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
-        assignQuestion(request, applicationId);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+
+        questionService.assignQuestion(applicationId, request, assignedBy);
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
@@ -340,6 +355,6 @@ public class ApplicationController extends AbstractApplicationController {
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
         organisationDetailsModelPopulator.populateModel(model, application.getId());
-        addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -62,6 +64,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Spy
     @InjectMocks
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationModelPopulator applicationModelPopulator;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -270,7 +276,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
 
-        verify(questionService, times(1)).assign(question.getId(), app.getId(), user.getId(), processRole.getId());
+        verify(questionService, times(1)).assignQuestion(Mockito.eq(app.getId()), Mockito.any(), Mockito.any());
     }
 
     @Test
