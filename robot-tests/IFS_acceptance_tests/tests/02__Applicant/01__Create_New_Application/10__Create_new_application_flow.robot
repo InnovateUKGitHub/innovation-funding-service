@@ -9,12 +9,7 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 Suite Setup       Delete the emails from both test mailboxes
 Test Teardown     The user closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9

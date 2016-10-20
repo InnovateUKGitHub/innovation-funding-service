@@ -13,13 +13,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com

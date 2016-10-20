@@ -27,14 +27,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
@@ -182,7 +175,7 @@ Option to invite a project manager
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
-    And the user should see the text in the page    Who will be the project manager for your project?
+    And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
     When the user selects the radio button    projectManager    new
     Then the user should see the element    id=invite-project-manager
     When the user selects the radio button    projectManager    projectManager1
