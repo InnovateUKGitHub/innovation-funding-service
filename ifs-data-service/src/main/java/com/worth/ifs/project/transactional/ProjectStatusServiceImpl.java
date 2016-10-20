@@ -8,6 +8,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -112,7 +113,14 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
-        return ACTION_REQUIRED;
+
+        List<SpendProfile> spendProfile = spendProfileRepository.findByProjectId(project.getId());
+
+        if (spendProfile.isEmpty()) {
+            return ACTION_REQUIRED;
+        }
+
+        return COMPLETE;
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project){

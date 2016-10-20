@@ -15,6 +15,8 @@ Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 
 *** Test Cases ***
 Edit skills and expertise: client-side validations
+    [Documentation]    INFUND-5182
+    [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your skills")
     Given the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     When the user clicks the button/link    jQuery=button:contains("Continue")
@@ -22,6 +24,8 @@ Edit skills and expertise: client-side validations
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
 
 Edit skills and expertise: server-side validations
+    [Documentation]    INFUND-5182
+    [Tags]
     Given the user clicks the button/link    jQuery=label:contains("Business")
     Given the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     When the user clicks the button/link    jQuery=button:contains("Continue")
@@ -31,12 +35,16 @@ Edit skills and expertise: server-side validations
     Then the user should see an error    This field cannot contain more than 5,000 characters
 
 Edit skills and expertise: save new skills and business type redirects to dashboard
+    [Documentation]    INFUND-5182
+    [Tags]
     Given the user clicks the button/link    jQuery=label:contains("Business")
-    The user enters text to a text field    id=skillAreas    assessor skill areas text
-    When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then location should be    ${assessor_dashboard_url}
+    When the user enters text to a text field    id=skillAreas    assessor skill areas text
+    And the user clicks the button/link    jQuery=button:contains("Continue")
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Edit skills and expertise: skills and business type are saved correctly
+    [Documentation]    INFUND-5182
+    [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your skills")
     Then radio button should be set to    assessorType    BUSINESS
-    Then element text should be    id=skillAreas    assessor skill areas text
+    Then the user sees the text in the element    id=skillAreas    assessor skill areas text

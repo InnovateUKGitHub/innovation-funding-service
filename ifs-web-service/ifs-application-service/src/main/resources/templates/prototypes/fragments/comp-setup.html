@@ -65,7 +65,7 @@
                     th:with="rowTitle=${'Technology inspired'},
                     rowType=${'Programme'},
                     rowSector=${'Advanced materials'},
-                    rowUrl=${'/prototypes/1348-open-applications'},
+                    rowUrl=${'/prototypes/5721-dashboard'},
                     rowStatus=${'132 applications'}">
                 </th:block>
                 <th:block 
@@ -124,7 +124,7 @@
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Programme'},
                     rowSector=${'Emerging &#38; enabling technology'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=Closed'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -136,7 +136,18 @@
         
         <h2 class="heading-medium">In assessment (1)</h2>
 
-        
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable power station'}, 
+                    rowType=${'SBRI'},
+                    rowSector=${'Emerging &#38; enabling technology'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=assessment'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -151,7 +162,7 @@
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Special'},
                     rowSector=${'Manufacturing &#38; materials'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=panel'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -170,7 +181,7 @@
                     th:with="rowTitle=${'Solving problems with data'}, 
                     rowType=${'Managed service'},
                     rowSector=${'Health &#38; life sciences'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=Inform'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -566,13 +577,13 @@
 
             <div class="form-group">
                 <label class="form-label" for="compLeadTechnologist">
-                    <span class="form-label-bold">Competition lead technologist</span>
+                    <span class="form-label-bold">Competition Innovate Lead</span>
                 </label>
                 <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
-                    <option value="">Lead technologist 1</option>
-                    <option value="">Lead technologist 2</option>
-                    <option value="">Lead technologist 3</option>
+                    <option value="">Innovate Lead 1</option>
+                    <option value="">Innovate Lead 2</option>
+                    <option value="">Innovate Lead 3</option>
                 </select>
             </div>
 
@@ -636,7 +647,7 @@
                 <dt>Opening date</dt>
                 <dd>15/07/2017</dd>
 
-                <dt>Competition lead technologist</dt>
+                <dt>Competition Innovate Lead</dt>
                 <dd>Natalie Wilson</dd>
 
                 <dt>Competition executive</dt>

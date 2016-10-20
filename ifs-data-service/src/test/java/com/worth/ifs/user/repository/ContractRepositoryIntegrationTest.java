@@ -22,7 +22,9 @@ public class ContractRepositoryIntegrationTest extends BaseRepositoryIntegration
     public void findByCurrentTrue() throws Exception {
         loginPaulPlum();
 
+        repository.deleteAll();
         List<Contract> contracts = newContract()
+                .withId(null, null)
                 .withText("foo", "bar")
                 .withAnnexOne("annex11", "annex12")
                 .withAnnexTwo("annex21", "annex22")

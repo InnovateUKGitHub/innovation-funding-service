@@ -59,10 +59,7 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.project.finance.repository.CostCategoryRepository;
-import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
-import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
-import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
@@ -81,10 +78,7 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
-import com.worth.ifs.user.mapper.AffiliationMapper;
-import com.worth.ifs.user.mapper.EthnicityMapper;
-import com.worth.ifs.user.mapper.RoleMapper;
-import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.mapper.*;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
@@ -428,6 +422,18 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Mock
+    protected FinanceCheckRepository financeCheckRepositoryMock;
+
+    @Mock
+    protected ContractService contractServiceMock;
+
+    @Mock
+    protected ContractRepository contractRepositoryMock;
+
+    @Mock
+    protected ContractMapper contractMapperMock;
 
     @Before
     public void setupMockInjection() {
