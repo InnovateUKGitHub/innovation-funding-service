@@ -51,7 +51,10 @@ gulp.task('css', function () {
   return gulp.src('./sass/**/*.scss')
     .pipe(sassLint({
       files: {
-        ignore: '**/{prototype,vendor}/**/*.scss'
+        ignore: [
+          '**/prototype.scss',
+          '**/{prototype,vendor}/**/*.scss'
+        ]
       },
       config: '.sass-lint.yml'
     }))
