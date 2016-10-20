@@ -1,16 +1,23 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.function.Consumer;
 
-import static com.worth.ifs.project.sections.SectionAccess.*;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -21,8 +28,6 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @InjectMocks
     private ProjectSetupSectionInternalUser internalUser;
-
-    private OrganisationResource organisation = newOrganisationResource().build();
 
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPath() {
@@ -60,7 +65,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToBankDetailsSectionHappyPath() {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
 
         verifyInteractions(
                 mock -> mock.isBankDetailsApproved(),
@@ -69,15 +74,43 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCheckAccessToBankDetailsSectionButProjectDetailsSectionIncomplete() {
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
+    public void testCheckAccessToBankDetailsSectionButNotFinanceTeamMember() {
+
+        stream(UserRoleType.values()).forEach(role -> {
+            if (role != PROJECT_FINANCE) {
+
+                List<RoleResource> roles = newRoleResource().withType(role).build(1);
+                UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
+                assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));
+
+                verify(projectSetupProgressCheckerMock, never()).isBankDetailsApproved();
+                verify(projectSetupProgressCheckerMock, never()).isBankDetailsActionRequired();
+            }
+        });
+
     }
 
     @Test
-    public void testCheckAccessToFinanceChecksSectionButProjectDetailsSectionIncomplete() {
-        assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(null));
+    public void testCheckAccessToBankDetailsSectionButProjectDetailsSectionIncomplete() {
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
+    }
+
+    @Test
+    public void testCheckAccessToFinanceChecksSectionAsFinanceTeamMembers() {
+        assertEquals(ACCESSIBLE, internalUser.canAccessFinanceChecksSection(getFinanceTeamMember()));
+    }
+
+    @Test
+    public void testCheckAccessToFinanceChecksSectionAsNonFinanceTeamMambers() {
+        stream(UserRoleType.values()).forEach(role -> {
+            if (role != PROJECT_FINANCE) {
+                List<RoleResource> roles = newRoleResource().withType(role).build(1);
+                UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
+                assertEquals(NOT_ACCESSIBLE, internalUser.canAccessFinanceChecksSection(nonFinanceTeam));
+            }
+        });
     }
 
     @Test
@@ -93,7 +126,12 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToSpendProfileSectionButSpendProfileSectionIsNotSubmitted() {
         when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(null));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
+    }
+
+    private UserResource getFinanceTeamMember() {
+        List<RoleResource> roles = newRoleResource().withType(PROJECT_FINANCE).build(1);
+        return newUserResource().withRolesGlobal(roles).build();
     }
 
     @Test
