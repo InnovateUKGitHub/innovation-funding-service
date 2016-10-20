@@ -40,12 +40,12 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetFinanceCheckApprovalStatus(){
-        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L));
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L), PROJECT_FINANCE);
     }
 
     @Test
     public void testGetFinanceCheckSummary(){
-        assertInternalRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L));
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
     }
 
     private void assertInternalRolesCanPerform(Runnable actionFn) {
