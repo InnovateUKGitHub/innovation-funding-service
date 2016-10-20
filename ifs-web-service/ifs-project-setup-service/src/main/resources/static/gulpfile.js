@@ -20,7 +20,7 @@ gulp.task('js', function () {
     .pipe(jscs())
     .pipe(jscs.reporter())
     // .pipe(jscs.reporter('fail'))
-    .pipe(concat('application.min.js'))
+    .pipe(concat('project-setup.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('js/dest'))
 });
