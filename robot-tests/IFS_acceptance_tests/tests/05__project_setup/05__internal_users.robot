@@ -12,13 +12,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 

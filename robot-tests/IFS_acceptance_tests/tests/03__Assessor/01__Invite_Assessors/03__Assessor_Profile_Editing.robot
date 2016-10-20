@@ -3,13 +3,7 @@ Documentation     INFUND-5182 - As an assessor creating an account I need to sup
 Suite Setup       guest user log-in    ${assessor2_credentials["email"]}    ${assessor2_credentials["password"]}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 

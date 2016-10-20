@@ -27,14 +27,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK

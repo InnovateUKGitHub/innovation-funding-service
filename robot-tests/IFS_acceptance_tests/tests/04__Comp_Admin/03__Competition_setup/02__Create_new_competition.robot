@@ -41,12 +41,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 User can create a new competition
