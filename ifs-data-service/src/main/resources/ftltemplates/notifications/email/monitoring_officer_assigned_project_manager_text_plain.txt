@@ -2,19 +2,23 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-The project ${projectName} for which you are the project manager has been assigned a Monitoring officer,
-who will be the primary point of contact for the project,
-and will monitor and report progress to Innovate UK.
+The project ${projectName} for which you are the Project Manager has been assigned a Monitoring Officer.
+The Monitoring Officer will be the primary point of contact for the project.
+They will monitor and report progress to Innovate UK.
 
-Monitoring officer
+Monitoring Officer
 ${monitoringOfficerName}
 ${monitoringOfficerTelephone}
 ${monitoringOfficerEmail}
 
 No action needs to be taken by your team.
-Your Monitoring officer will make contact for an introduction to your project.
+Your Monitoring Officer will make contact for an introduction to your project.
 If there are any further questions about this appointment please contact Innovate UK for further information.
 
+Yours sincerely,
+
+Competitions Team
 Innovate UK
-    
+Tel: 0300 321 4357
+Email: competitions@innovateuk.gov.uk
 </@layout.defaultPlainText>
