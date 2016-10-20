@@ -11,13 +11,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Failing
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}

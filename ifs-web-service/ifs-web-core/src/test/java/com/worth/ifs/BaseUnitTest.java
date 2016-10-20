@@ -188,6 +188,7 @@ public class BaseUnitTest {
     public ProjectStatusService projectStatusServiceMock;
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
+
     @Spy
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;

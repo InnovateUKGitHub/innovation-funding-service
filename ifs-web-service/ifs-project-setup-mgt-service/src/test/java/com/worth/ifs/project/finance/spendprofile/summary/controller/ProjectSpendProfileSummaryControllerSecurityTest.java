@@ -25,7 +25,7 @@ public class ProjectSpendProfileSummaryControllerSecurityTest extends BaseProjec
 
     @Test
     public void testViewSpendProfileSummary() {
-        assertSecured(() -> classUnderTest.viewFinanceCheckSummary(123L, null, null, null, null));
+        assertSecured(() -> classUnderTest.viewFinanceCheckSummary(123L, null, null));
     }
 
     @Override

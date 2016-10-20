@@ -7,11 +7,7 @@ Documentation     INFUND-2312: Competition status in assessment
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_not_submitted_message}    This application has not been entered into the competition
