@@ -1,11 +1,14 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -16,10 +19,12 @@ import java.util.List;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ContractBuilder.newContract;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -174,6 +179,73 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
         inOrder.verify(affiliationMapperMock, times(2)).mapToResource(isA(Affiliation.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testGetUserProfileAddress() {
+        User existingUser = newUser().build();
+
+        Profile profile = newProfile()
+                .withUser(existingUser)
+                .withAddress(newAddress().withId(1L).build())
+                .withContract(newContract().build())
+                .withBusinessType(ACADEMIC)
+                .withSkillsAreas("Skills")
+                .build();
+        existingUser.setProfile(profile);
+
+        AddressResource addressResource = newAddressResource().withId(1L).build();
+
+        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(addressMapperMock.mapToResource(profile.getAddress())).thenReturn(addressResource);
+
+        ProfileAddressResource expected = newProfileAddressResource()
+                .withUser(existingUser.getId())
+                .withAddress(newAddressResource().withId(1L).build())
+                .build();
+
+        ProfileAddressResource response = service.getProfileAddress(existingUser.getId()).getSuccessObject();
+        assertEquals(expected, response);
+
+        verify(userRepositoryMock).findOne(existingUser.getId());
+        verifyNoMoreInteractions(userRepositoryMock);
+    }
+
+    @Test
+    public void testUpdateProfileAddress() {
+        Long userId = 1L;
+
+        User existingUser = newUser().build();
+        Profile profile = newProfile()
+                .withUser(existingUser)
+                .withAddress(newAddress().build())
+
+                .build();
+        existingUser.setProfile(profile);
+
+        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+
+        User expectedUser = createLambdaMatcher(
+                user -> {
+                    assertEquals(userId, user.getId());
+                    assertEquals(existingUser.getProfile().getId(), user.getProfile().getId());
+                    assertEquals(existingUser.getProfile().getUser(), user.getProfile().getUser().getId());
+                    assertEquals(existingUser.getProfile().getAddress(), user.getProfile().getAddress());
+                }
+        );
+
+        when(userRepositoryMock.save(expectedUser)).thenReturn(newUser().build());
+        ProfileAddressResource addressResource = newProfileAddressResource().build();
+        when(addressMapperMock.mapToDomain(addressResource.getAddress())).thenReturn(newAddress().build());
+
+        ServiceResult<Void> result = service.updateProfileAddress(existingUser.getId(), addressResource);
+
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(userRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).save(isA(User.class));
         inOrder.verifyNoMoreInteractions();
     }
 }

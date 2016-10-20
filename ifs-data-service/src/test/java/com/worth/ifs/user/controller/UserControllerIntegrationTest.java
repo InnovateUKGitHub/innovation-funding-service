@@ -2,6 +2,7 @@ package com.worth.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -18,9 +19,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
@@ -295,5 +299,44 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(2, getAfterUpdateResponse.size());
         assertEquals(PROFESSIONAL, getAfterUpdateResponse.get(0).getAffiliationType());
         assertEquals(FAMILY_FINANCIAL, getAfterUpdateResponse.get(1).getAffiliationType());
+    }
+
+    @Test
+    public void testGetProfileAddress() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        Address address = newAddress()
+                .withAddressLine1("10 Test St")
+                .withTown("Test Town")
+                .build();
+
+        user.setProfile(newProfile()
+                .with(id(null))
+                .withAddress(address)
+                .build());
+        userRepository.save(user);
+
+        ProfileAddressResource response = controller.getProfileAddress(userId).getSuccessObjectOrThrowException();
+        assertEquals(userId, response.getUser());
+        assertEquals(address.getAddressLine1(), response.getAddress().getAddressLine1());
+        assertEquals(address.getTown(), response.getAddress().getTown());
+    }
+
+    @Test
+    public void testUpdateProfileAddress() {
+        loginCompAdmin();
+        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        setLoggedInUser(userOne);
+
+        ProfileAddressResource profileAddress = newProfileAddressResource()
+                .withUser(1L)
+                .withAddress(newAddressResource().build())
+                .build();
+
+        RestResult<Void> restResult = controller.updateProfileAddress(1L, profileAddress);
+        assertTrue(restResult.isSuccess());
     }
 }

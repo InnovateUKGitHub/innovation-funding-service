@@ -3,6 +3,7 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
@@ -161,4 +163,27 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> response = service.updateUserAffiliations(userId, expected);
         assertTrue(response.isSuccess());
     }
+
+    @Test
+    public void getProfileAddress() {
+        Long userId = 1L;
+        ProfileAddressResource expected = newProfileAddressResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileAddress", usersUrl, userId), ProfileAddressResource.class, expected, OK);
+
+        ProfileAddressResource response = service.getProfileAddress(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void updateProfileAddress() {
+        Long userId = 1L;
+        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileAddress", usersUrl, userId), profileAddress, OK);
+
+        RestResult<Void> response = service.updateProfileAddress(userId, profileAddress);
+        assertTrue(response.isSuccess());
+    }
+
 }

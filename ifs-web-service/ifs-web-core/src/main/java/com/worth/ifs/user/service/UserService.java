@@ -1,5 +1,6 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -39,4 +40,7 @@ public interface UserService {
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
+    ProfileAddressResource getProfileAddress(Long userId);
+    ServiceResult<Void> updateProfileAddress(Long userId, AddressResource address);
+
 }

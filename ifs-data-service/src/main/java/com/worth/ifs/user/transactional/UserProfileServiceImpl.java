@@ -1,5 +1,6 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
@@ -8,6 +9,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private AffiliationMapper affiliationMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
 
     public enum ServiceFailures {
         UNABLE_TO_UPDATE_USER
@@ -105,6 +110,38 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
             userRepository.save(user);
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<ProfileAddressResource> getProfileAddress(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    ProfileAddressResource profileAddress = new ProfileAddressResource();
+                    profileAddress.setUser(user.getId());
+                    if (user.getProfile() != null) {
+                        profileAddress.setAddress(addressMapper.mapToResource(user.getProfile().getAddress()));
+                    }
+                    return serviceSuccess(profileAddress);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileAddress(Long userId, ProfileAddressResource profileAddress) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> updateUserProfileAddress(user, profileAddress));
+
+    }
+
+    private ServiceResult<Void> updateUserProfileAddress(User user, ProfileAddressResource profileAddress) {
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile(user));
+        }
+
+        Profile profile = user.getProfile();
+        profile.setAddress(addressMapper.mapToDomain(profileAddress.getAddress()));
+        userRepository.save(user);
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {

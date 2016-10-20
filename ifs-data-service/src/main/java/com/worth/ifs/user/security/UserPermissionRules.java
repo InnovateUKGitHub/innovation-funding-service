@@ -8,6 +8,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -118,6 +119,16 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "UPDATE_AFFILIATIONS", description = "A User can update their own affiliations")
     public boolean usersCanUpdateTheirOwnAffiliations(UserResource userToUpdate, UserResource user) {
+        return user.getId().equals(userToUpdate.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "A user can read their own address")
+    public boolean usersCanViewTheirOwnAddress(ProfileAddressResource address, UserResource user) {
+        return user.getId().equals(address.getUser());
+    }
+
+    @PermissionRule(value = "UPDATE_PROFILE_ADDRESS", description = "A User can update their own address")
+    public boolean usersCanUpdateTheirOwnAddress(UserResource userToUpdate, UserResource user) {
         return user.getId().equals(userToUpdate.getId());
     }
 

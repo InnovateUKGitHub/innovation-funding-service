@@ -100,16 +100,20 @@ public class AssessorProfileDetailsController {
         Supplier<String> failureView = () -> doViewEditYourDetails(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            loggedInUser.setTitle(form.getTitle());
-            loggedInUser.setFirstName(form.getFirstName());
-            loggedInUser.setLastName(form.getLastName());
-            loggedInUser.setEthnicity(form.getEthnicity().getId());
-            loggedInUser.setGender(form.getGender());
-            loggedInUser.setDisability(form.getDisability());
-            loggedInUser.setPhoneNumber(form.getPhoneNumber());
-            RestResult<UserResource> result = userService.updateDetails(loggedInUser);
-            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
+            ServiceResult<Void> addressResult = userService.updateProfileAddress(loggedInUser.getId(), form.getAddressForm().getSelectedPostcode());
+            return validationHandler.addAnyErrors(addressResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                        loggedInUser.setTitle(form.getTitle());
+                        loggedInUser.setFirstName(form.getFirstName());
+                        loggedInUser.setLastName(form.getLastName());
+                        loggedInUser.setEthnicity(form.getEthnicity().getId());
+                        loggedInUser.setGender(form.getGender());
+                        loggedInUser.setDisability(form.getDisability());
+                        loggedInUser.setPhoneNumber(form.getPhoneNumber());
+                        RestResult<UserResource> detailsResult = userService.updateDetails(loggedInUser);
+                        return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                                failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
+                    } );
         });
     }
 
@@ -227,6 +231,7 @@ public class AssessorProfileDetailsController {
         form.setEthnicity(getEthnicity(loggedInUser.getEthnicity()));
         form.setDisability(loggedInUser.getDisability());
         form.setPhoneNumber(loggedInUser.getPhoneNumber());
+        form.getAddressForm().setSelectedPostcode(userService.getProfileAddress(loggedInUser.getId()).getAddress());
     }
 
     private void retrieveEthnicityOptions() {

@@ -7,12 +7,10 @@ import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.profile.AssessorProfileDetailsModelPopulator;
 import com.worth.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,6 +24,7 @@ import org.springframework.validation.Validator;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
@@ -66,6 +65,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         EthnicityResource ethnicity = newEthnicityResource().build();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        when(userService.getProfileAddress(user.getId())).thenReturn(profileAddress);
 
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
@@ -79,6 +80,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
         AssessorProfileEditDetailsForm expectedForm = new AssessorProfileEditDetailsForm();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        when(userService.getProfileAddress(user.getId())).thenReturn(profileAddress);
 
         mockMvc.perform(get("/profile/details-edit"))
                 .andExpect(status().isOk())
@@ -116,6 +119,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         addressForm.setTriedToSave(true);
 
         when(userService.updateDetails(user)).thenReturn(restSuccess(newUserResource().build()));
+        when(userService.updateProfileAddress(user.getId(), addressResource)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details-edit")

@@ -1,5 +1,6 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
+    @Override
 	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
 		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
 		if(leadProcessRole == null) {
@@ -127,6 +128,19 @@ public class UserServiceImpl implements UserService {
         profileSkills.setBusinessType(businessType);
         profileSkills.setSkillsAreas(skillsAreas);
         return userRestService.updateProfileSkills(userId, profileSkills).toServiceResult();
+    }
+
+    @Override
+    public ProfileAddressResource getProfileAddress(Long userId) {
+        return userRestService.getProfileAddress(userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileAddress(Long userId, AddressResource address) {
+        ProfileAddressResource profileAddress = new ProfileAddressResource();
+        profileAddress.setUser(userId);
+        profileAddress.setAddress(address);
+        return userRestService.updateProfileAddress(userId, profileAddress).toServiceResult();
     }
 
     @Override

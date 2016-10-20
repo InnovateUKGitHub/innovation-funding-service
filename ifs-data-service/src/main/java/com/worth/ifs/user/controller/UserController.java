@@ -177,4 +177,15 @@ public class UserController {
                                                    @RequestBody List<AffiliationResource> affiliations) {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
+
+    @RequestMapping(value = "/id/{userId}/getProfileAddress", method = GET)
+    public RestResult<ProfileAddressResource> getProfileAddress(@PathVariable("userId") Long userId) {
+        return userProfileService.getProfileAddress(userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/updateProfileAddress", method = PUT)
+    public RestResult<Void> updateProfileAddress(@PathVariable("userId") Long userId,
+                                                @RequestBody ProfileAddressResource profileAddress) {
+        return userProfileService.updateProfileAddress(userId, profileAddress).toPutResponse();
+    }
 }

@@ -6,6 +6,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -337,6 +339,38 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanUpdateTheirOwnAffiliations(anotherUser, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnAddress() {
+        UserResource user = newUserResource().build();
+        ProfileAddressResource profileAddress = newProfileAddressResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnAddress(profileAddress, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnAddressButNotAnotherUsersAddress() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        ProfileAddressResource profileAddress = newProfileAddressResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnAddress(profileAddress, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirAddress() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanUpdateTheirOwnAddress(user, user));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirAddressButNotAnotherUsersAddress() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.usersCanUpdateTheirOwnAddress(anotherUser, user));
     }
 
     @Test

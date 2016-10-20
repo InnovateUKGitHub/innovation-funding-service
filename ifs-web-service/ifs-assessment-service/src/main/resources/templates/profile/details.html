@@ -31,10 +31,10 @@
             <h3 class="heading-small">Address</h3>
             <p>
                 <span th:text="${model.address.addressLine1}" th:remove="tag" /><br />
-                <div th:if="${model.address.addressLine2}" th:remove="tag">
-                    <span th:if="${model.address.addressLine2}" th:text="${model.address.addressLine2}" th:remove="tag" /><br />
+                <div th:unless="${#strings.isEmpty(model.address.addressLine2)}" th:remove="tag">
+                    <span th:text="${model.address.addressLine2}" th:remove="tag" /><br />
                 </div>
-                <div th:if="${model.address.addressLine3}" th:remove="tag">
+                <div th:unless="${#strings.isEmpty(model.address.addressLine3)}" th:remove="tag">
                     <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
                 </div>
                 <span th:text="${model.address.town}" th:remove="tag" /><br />

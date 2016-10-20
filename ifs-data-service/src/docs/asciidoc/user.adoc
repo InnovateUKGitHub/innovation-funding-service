@@ -107,3 +107,29 @@ include::{snippets}/user/update-user-affiliations/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/update-user-affiliations/curl-request.adoc[]
+
+== Retrieve user address
+==== Success case
+==== Request
+include::{snippets}/user/get-profile-address/http-request.adoc[]
+include::{snippets}/user/get-profile-address/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/get-profile-address/http-response.adoc[]
+include::{snippets}/user/get-profile-address/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-profile-address/curl-request.adoc[]
+
+== Update user address
+==== Success case
+==== Request
+include::{snippets}/user/update-profile-address/http-request.adoc[]
+include::{snippets}/user/update-profile-address/path-parameters.adoc[]
+include::{snippets}/user/update-profile-address/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/update-profile-address/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/update-profile-address/curl-request.adoc[]

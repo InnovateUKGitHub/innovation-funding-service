@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
@@ -326,5 +328,35 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk());
 
         verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
+    }
+
+    @Test
+    public void getProfileAddress() throws Exception {
+        Long userId = 1L;
+        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+
+        when(userProfileServiceMock.getProfileAddress(userId)).thenReturn(serviceSuccess(profileAddress));
+
+        mockMvc.perform(get("/user/id/{userId}/getProfileAddress", userId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(profileAddress)));
+
+        verify(userProfileServiceMock, only()).getProfileAddress(userId);
+    }
+
+    @Test
+    public void updateProfileAddress() throws Exception {
+        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        Long userId = 1L;
+
+        when(userProfileServiceMock.updateProfileAddress(userId, profileAddress)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{userId}/updateProfileAddress", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileAddress)))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, only()).updateProfileAddress(userId, profileAddress);
     }
 }
