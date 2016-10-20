@@ -142,6 +142,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         addressForm.setSelectedPostcode(addressResource);
         addressForm.setTriedToSave(true);
+        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
@@ -209,6 +210,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         addressForm.setSelectedPostcode(addressResource);
         addressForm.setTriedToSave(true);
+        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
@@ -292,9 +294,10 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertEquals(3, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
+        assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
         assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
-        assertEquals("Please enter your address details", bindingResult.getFieldError("address").getDefaultMessage());
+        assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
     }
 
     @Test

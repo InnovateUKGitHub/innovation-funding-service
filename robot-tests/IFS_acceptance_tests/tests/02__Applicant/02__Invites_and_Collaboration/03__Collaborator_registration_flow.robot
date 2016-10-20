@@ -3,12 +3,7 @@ Documentation     INFUND-1231: As a collaborator registering my company as Acade
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a

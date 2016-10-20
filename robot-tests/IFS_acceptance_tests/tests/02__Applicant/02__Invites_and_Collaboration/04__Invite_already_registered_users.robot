@@ -9,12 +9,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Email    Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -63,7 +58,7 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk
+    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    to participate in their project
 
 *** Keywords ***
 the user enters profile details
@@ -96,10 +91,11 @@ Existing user creates a new application and invites a user from the same organis
     And the user closes the browser
 
 The invited user should get a message to contact the helpdesk
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user opens the mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
     When the user clicks the button/link    link=Click here to sign in
-    And the guest user inserts user email & password    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${recipient}    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
     And the user should see the text in the page    If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357
