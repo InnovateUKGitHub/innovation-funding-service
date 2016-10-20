@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -12,6 +13,7 @@ import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ProcessRepository;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static java.util.Optional.ofNullable;
 
 /**
  * {@code AssessmentWorkflowService} is the entry point for triggering the workflow.
@@ -58,12 +61,12 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
                 .build(), assessment.getActivityState());
     }
 
-    public boolean recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
+    public boolean recommend(Long processRoleId, Assessment assessment, AssessmentFundingDecisionResource assessmentFundingDecision) {
         return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(RECOMMEND)
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", processOutcome)
+                .setHeader("processOutcome", new ProcessOutcome(ofNullable(assessmentFundingDecision.getFundingConfirmation()).map(BooleanUtils::toStringYesNo).orElse(null), assessmentFundingDecision.getFeedback(), assessmentFundingDecision.getComment()))
                 .build(), assessment.getActivityState());
     }
 

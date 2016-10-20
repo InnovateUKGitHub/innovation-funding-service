@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
@@ -21,7 +22,7 @@ public interface AssessmentService {
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
-    ServiceResult<Void> recommend(Long assessmentId, ProcessOutcomeResource processOutcome);
+    ServiceResult<Void> recommend(Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision);
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(Long assessmentId, ProcessOutcomeResource processOutcome);

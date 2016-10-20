@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
@@ -58,17 +59,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Void> recommend(Long assessmentId, ProcessOutcomeResource processOutcome) {
-        // TODO lookup word limit: INFUND-4512
-        int wordLimit = 100;
-
-        ValidationMessages validationMessages = getValidationMessagesWithDescriptionAsFeedback(validate(processOutcome, wordLimit));
-        if (validationMessages.hasErrors()) {
-            return serviceFailure(validationMessages.getErrors());
-        }
-
+    public ServiceResult<Void> recommend(Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowService.recommend(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
+            if (!assessmentWorkflowService.recommend(found.getParticipant().getId(), found, assessmentFundingDecision)) {
                 return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
             }
             return serviceSuccess();
@@ -88,12 +81,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
             return serviceSuccess();
         });
-    }
-
-    private ValidationMessages getValidationMessagesWithDescriptionAsFeedback(ValidationMessages validationMessages) {
-        ValidationMessages result = new ValidationMessages(validationMessages.getErrors().stream().filter(error -> !"description".equals(error.getFieldName())).collect(toList()));
-        result.addAll(new ValidationMessages(validationMessages.getFieldErrors("description")), toField("feedback"));
-        return result;
     }
 
     private ValidationMessages validate(ProcessOutcomeResource processOutcome, int wordLimit) {

@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.AssessmentController;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
@@ -13,6 +14,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionFields;
+import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceBuilder;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
@@ -24,6 +27,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -82,22 +86,18 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void recommend() throws Exception {
         Long assessmentId = 1L;
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcome("yes")
-                .withDescription("Decision feedback that will be sent to the applicant")
-                .withComment("Other comments about this application")
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
+        AssessmentFundingDecisionResource assessmentFundingDecision = assessmentFundingDecisionResourceBuilder.build();
 
-        when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecision)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId, processOutcome)
+        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(processOutcome)))
+                .content(new ObjectMapper().writeValueAsString(assessmentFundingDecision)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to recommend")
-                        )
+                        ),
+                        requestFields(assessmentFundingDecisionFields)
                 ));
     }
 

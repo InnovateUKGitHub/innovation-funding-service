@@ -26,6 +26,7 @@ include::{snippets}/assessment/find-by-user-and-competition/curl-request.adoc[]
 ==== Request
 include::{snippets}/assessment/recommend/http-request.adoc[]
 include::{snippets}/assessment/recommend/path-parameters.adoc[]
+include::{snippets}/assessment/recommend/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/assessment/recommend/http-response.adoc[]

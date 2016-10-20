@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -13,6 +14,7 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -61,18 +63,18 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Test
     public void recommend() {
-        final Long assessmentId = 1L;
-        ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
+        Long assessmentId = 1L;
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> classUnderTest.recommend(assessmentId, outcome),
+                () -> classUnderTest.recommend(assessmentId, assessmentFundingDecision),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void rejectInvitation() {
-        final Long assessmentId = 1L;
+        Long assessmentId = 1L;
         ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
@@ -93,7 +95,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, ProcessOutcomeResource processOutcome) {
+        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
             return null;
         }
 

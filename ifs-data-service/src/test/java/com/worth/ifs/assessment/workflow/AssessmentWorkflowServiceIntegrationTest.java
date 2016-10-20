@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.workflow;
 
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
@@ -55,7 +56,7 @@ public class AssessmentWorkflowServiceIntegrationTest extends BaseIntegrationTes
     public void testStateChangeOpenToAssessed() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.OPEN,assessment.getActivityState());
-        assessmentWorkflowService.recommend(OPEN_PROCESS_ROLE,assessment,new ProcessOutcome());
+        assessmentWorkflowService.recommend(OPEN_PROCESS_ROLE,assessment, new AssessmentFundingDecisionResource());
         Assessment update = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.ASSESSED,update.getActivityState());
     }

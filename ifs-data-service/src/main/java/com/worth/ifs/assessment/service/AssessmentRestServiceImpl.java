@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -36,8 +37,8 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Void> recommend(Long id, ProcessOutcomeResource processOutcome) {
-        return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), processOutcome, Void.class);
+    public RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), assessmentFundingDecision, Void.class);
     }
 
     @Override

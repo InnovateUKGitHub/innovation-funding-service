@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.controller;
 
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -35,9 +37,9 @@ public class AssessmentController {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}/recommend", method = PUT)
-    public RestResult<Void> recommend(@PathVariable("id") Long id,@RequestBody ProcessOutcomeResource processOutcome) {
-        return assessmentService.recommend(id, processOutcome).toPutResponse();
+    @RequestMapping(value = "/{id}/recommend", method = PUT)
+    public RestResult<Void> recommend(@PathVariable("id") Long id, @RequestBody @Valid AssessmentFundingDecisionResource assessmentFundingDecision) {
+        return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
     @RequestMapping(value= "/{id}/rejectInvitation", method = PUT)

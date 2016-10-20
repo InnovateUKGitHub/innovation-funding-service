@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
@@ -9,6 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
@@ -60,9 +62,9 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void recommend() throws Exception {
         Long assessmentId = 1L;
 
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), processOutcome, OK);
-        RestResult<Void> response = service.recommend(assessmentId, processOutcome);
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecision, OK);
+        RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecision);
         assertTrue(response.isSuccess());
     }
 

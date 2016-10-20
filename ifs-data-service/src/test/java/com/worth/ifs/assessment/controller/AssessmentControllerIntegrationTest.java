@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
@@ -14,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static java.util.Collections.nCopies;
@@ -92,10 +93,9 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
-        RestResult<Void> result = controller.recommend(assessmentResource.getId(), processOutcome);
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+
+        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecision);
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
@@ -113,17 +113,16 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
-        RestResult<Void> result = controller.recommend(assessmentResource.getId(), processOutcome);
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+
+        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecision);
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.ASSESSED, assessmentResult.getAssessmentState());
 
         // Now recommend the assessment again
-        assertTrue(controller.recommend(assessmentResource.getId(), processOutcome).isFailure());
+        assertTrue(controller.recommend(assessmentResource.getId(), assessmentFundingDecision).isFailure());
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
@@ -86,54 +88,18 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        ProcessOutcome processOutcome = newProcessOutcome().build();
-
-        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowService.recommend(processRoleId, assessment, processOutcome)).thenReturn(true);
+        when(assessmentWorkflowService.recommend(processRoleId, assessment, assessmentFundingDecision)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecision);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
-        inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, assessmentFundingDecision);
         inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void recommend_exceedsWordLimit() throws Exception {
-        Long assessmentId = 1L;
-        Long processRoleId = 2L;
-        String feedback = String.join(" ", nCopies(101, "feedback"));
-        String comment = String.join(" ", nCopies(101, "comment"));
-
-        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withParticipant(processRole)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
-                .build();
-
-        ProcessOutcome processOutcome = newProcessOutcome().build();
-
-        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withDescription(feedback)
-                .withComment(comment)
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
-
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", "", 100), fieldError("comment", comment, "validation.field.max.word.count", "", 100)));
     }
 
     @Test
@@ -148,24 +114,18 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        ProcessOutcome processOutcome = newProcessOutcome().build();
-
-        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowService.recommend(processRoleId, assessment, processOutcome)).thenReturn(false);
+        when(assessmentWorkflowService.recommend(processRoleId, assessment, assessmentFundingDecision)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecision);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
-        inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, assessmentFundingDecision);
         inOrder.verifyNoMoreInteractions();
     }
 
