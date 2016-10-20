@@ -109,7 +109,7 @@ public class ProjectOtherDocumentsController {
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
         Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
 
-        String leadPartnerOrganisationName = projectService.getLeadOrganisation(projectId).getName();
+        OrganisationResource leadPartnerOrganisation = projectService.getLeadOrganisation(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
 
         Optional<ProjectUserResource> projectManager = getProjectManagerResource(project);
@@ -118,11 +118,11 @@ public class ProjectOtherDocumentsController {
         String projectManagerEmail = projectManager.map(ProjectUserResource::getEmail).orElse("");
 
         List<String> partnerOrganisationNames = projectService.getPartnerOrganisationsForProject(projectId).stream()
+                .filter(org -> !org.getId().equals(leadPartnerOrganisation.getId()))
                 .map(OrganisationResource::getName)
-                .filter(s -> s != leadPartnerOrganisationName)
                 .collect(Collectors.toList());
 
-        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), applicationResource.getCompetition(), leadPartnerOrganisationName,
+        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
