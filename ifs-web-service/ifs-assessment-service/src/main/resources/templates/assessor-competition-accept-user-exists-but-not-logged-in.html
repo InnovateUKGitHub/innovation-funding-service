@@ -12,14 +12,14 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
             <div class="hgroup">
-                <h1 class="heading-xlarge no-margin-bottom">Assess competition </h1>
+                <h1 class="heading-xlarge no-margin-bottom">Assess competition</h1>
                 <p th:text="|You have been invited to assess competition ${model.competitionName}|"></p>
             </div>
 
             <div class="grid-row">
                 <section class="column-half">
                     <div>
-                        <h2 class="heading-medium">We've found an existing user account with the invited email address</h2>
+                        <p class="heading-medium">We've found an existing user account with the invited email address. Please sign in with your existing account.</p>
                         <p>Please sign in with your existing account.</p>
                         <p><a th:href="@{/invite-accept/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}">Click here to sign in</a></p>
                     </div>
