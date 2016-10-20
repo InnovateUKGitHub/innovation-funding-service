@@ -46,11 +46,8 @@ Other internal users cannot see Bank details
     And the user clicks the button/link           link=Killer Riffs
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
-    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
-    # This should be waiting and not action. Since Bank details is an action to be completed by Proj Finance.
-    Then the user navigates to the page           ${server}/project-setup-management/project/1/review-all-bank-details
-    And the user should see the text in the page  each partner has submitted their bank details
-    And the user should not see the element       jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Vitruvius Stonework Limited")
+    And the user should not see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
 
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
