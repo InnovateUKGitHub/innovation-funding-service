@@ -14,9 +14,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
-
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
+    <th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
 		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
 	</th:block>
 
@@ -178,12 +177,14 @@
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
-			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+			<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
 				<input type="hidden" name="version" value="v2" />
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
+			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
+			  <button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
+
 		</div>
 
 		<div th:if="${param.edit != null}" th:remove="tag">
