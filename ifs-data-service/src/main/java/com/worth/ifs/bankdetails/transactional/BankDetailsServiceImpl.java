@@ -32,7 +32,6 @@ import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -110,33 +109,26 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Override
     public ServiceResult<Void> submitBankDetails(BankDetailsResource bankDetailsResource) {
-        return projectDetailsExist(bankDetailsResource.getProject()).
+        return bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
                 andOnSuccess(() ->
-                        bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
-                                andOnSuccess(() ->
-                                        validateBankDetails(bankDetailsResource).
-                                                andOnSuccess(
-                                                        accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
-                                                andOnSuccess(accountDetails -> {
-                                                    BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
-                                                    return verifyBankDetails(accountDetails, bankDetails);
-                                                })
-                                )
+                        validateBankDetails(bankDetailsResource).
+                                andOnSuccess(
+                                        accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
+                                andOnSuccess(accountDetails -> {
+                                    BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+                                    return verifyBankDetails(accountDetails, bankDetails);
+                                })
                 );
     }
 
     @Override
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
-        return projectDetailsExist(bankDetailsResource.getProject()).
-                andOnSuccess(() -> {
-                            Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
-                            AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);
-                            return updateExistingBankDetails(accountDetails, bankDetailsResource).handleSuccessOrFailure(
-                                    failure -> serviceFailure(failure.getErrors()),
-                                    success -> serviceSuccess()
-                            );
-                        }
-                );
+        Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
+        AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);
+        return updateExistingBankDetails(accountDetails, bankDetailsResource).handleSuccessOrFailure(
+                failure -> serviceFailure(failure.getErrors()),
+                success -> serviceSuccess()
+        );
     }
 
     @Override
@@ -172,17 +164,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     private Address toExperianAddressFormat(AddressResource addressResource){
         return new Address(null, addressResource.getAddressLine1(), addressResource.getAddressLine2(), addressResource.getAddressLine3(), addressResource.getTown(), addressResource.getPostcode());
-    }
-
-    private ServiceResult<Void> projectDetailsExist(final Long projectId){
-        return find(projectRepository.findOne(projectId),
-                new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS)).
-                andOnSuccess(project -> {
-                    if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
-                        return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
-                    }
-                    return serviceSuccess();
-                });
     }
 
     private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
