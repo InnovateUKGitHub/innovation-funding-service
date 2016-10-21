@@ -169,9 +169,11 @@ task client(type: Jar) {
     }
 }
 task clientCopy(type: Copy){
-    into "../ifs-web-service/libs"
-    from "build/libs/"
-    include "ifs-data-service-api*"
+    ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
+        into it
+        from "build/libs/"
+        include "ifs-data-service-api*"
+    }
 }
 
 task testCommonCode(type: Jar) {
@@ -187,9 +189,11 @@ task testCommonCode(type: Jar) {
     }
 }
 task testCommonCodeCopy(type: Copy){
-    into "../ifs-web-service/libs"
-    from "build/libs/"
-    include("ifs-data-service-tests*")
+    ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
+        into it
+        from "build/libs/"
+        include("ifs-data-service-tests*")
+    }
 }
 
 artifacts {

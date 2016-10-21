@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.SecuritySetter;
+import com.worth.ifs.commons.security.UidAuthenticationService;
+import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -48,7 +51,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public ApplicationRestService applicationRestService;
 
     @Autowired
-    public UserRestService userRepository;
+    public UserRestService userRestService;
 
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
@@ -120,9 +123,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     private UserResource getUserResourceForSecurity(String email) {
-
-        User user = userRepository.findByEmail(email).get();
-
+        UserResource user = userRestService.findUserByEmail(email).getSuccessObject();
         UserResource resource = new UserResource();
         resource.setId(user.getId());
         resource.setUid(user.getUid());

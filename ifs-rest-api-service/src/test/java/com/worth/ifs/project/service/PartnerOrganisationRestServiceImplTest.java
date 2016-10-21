@@ -2,13 +2,13 @@ package com.worth.ifs.project.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.partnerOrganisationResourceList;
 import static com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.junit.Assert.assertTrue;
 

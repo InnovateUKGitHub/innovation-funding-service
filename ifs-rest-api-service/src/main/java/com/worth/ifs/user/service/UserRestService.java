@@ -1,14 +1,13 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.concurrent.Future;
 
 /**
- * Interface for CRUD operations on {@link User} related data.
+ * Interface for CRUD operations on {@link UserResource} related data.
  */
 public interface UserRestService {
     RestResult<UserResource> retrieveUserResourceByUid(String uid);

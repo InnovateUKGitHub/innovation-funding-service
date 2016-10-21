@@ -3,13 +3,12 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link Organisation} related data.
+ * Interface for CRUD operations on {@link OrganisationResource} related data.
  */
 public interface OrganisationRestService {
 

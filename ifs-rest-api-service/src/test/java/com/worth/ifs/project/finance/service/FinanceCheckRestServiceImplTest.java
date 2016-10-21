@@ -5,7 +5,7 @@ import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceChec
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
+import static com.worth.ifs.project.finance.builderFinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
