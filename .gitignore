@@ -93,7 +93,7 @@ robot-tests/ubuntu-vm-headless/logs
 jmeter/jmeter.log
 **/docker/shibImages/*
 !**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
-!.gradletasknamecache
+!.gradletasknamecache 
 
 
 classes/
@@ -108,3 +108,4 @@ ifs-web-service.iws
 
 # python bytecode nonsense
 *.pyc
+*/libs/
