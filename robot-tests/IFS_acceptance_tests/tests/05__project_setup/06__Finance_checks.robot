@@ -190,3 +190,4 @@ the user fills in project costs
     Input Text    name=costs[6].value    £ 10,000
     Focus    id=costs-reviewed
     the user sees the text in the element    css=#content tfoot td    £ 60,000
+    Element Should Be Disabled    jQuery=.button:contains("Approve eligible costs")
