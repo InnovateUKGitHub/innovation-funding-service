@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface AssessmentRestService {
 
     RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision);
 
-    RestResult<Void> rejectInvitation(Long id, ProcessOutcomeResource processOutcome);
+    RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection);
 }

@@ -1,13 +1,13 @@
 package com.worth.ifs.assessment.workflow;
 
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,49 +33,49 @@ public class AssessmentWorkflowServiceIntegrationTest extends BaseIntegrationTes
     @Test
     public void testStateChangePendingToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
-        assertEquals(AssessmentStates.PENDING,assessment.getActivityState());
-        assessmentWorkflowService.rejectInvitation(PENDING_PROCESS_ROLE,assessment,createProcessOutcome());
+        assertEquals(AssessmentStates.PENDING, assessment.getActivityState());
+        assessmentWorkflowService.rejectInvitation(PENDING_PROCESS_ROLE, assessment, createRejection());
         Assessment update = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
-        assertEquals(AssessmentStates.REJECTED,update.getActivityState());
-        assertEquals(COMMENT,update.getLastOutcome().getComment());
-        assertEquals(DESCRIPTION,update.getLastOutcome().getDescription());
+        assertEquals(AssessmentStates.REJECTED, update.getActivityState());
+        assertEquals(COMMENT, update.getLastOutcome().getComment());
+        assertEquals(DESCRIPTION, update.getLastOutcome().getDescription());
     }
 
     @Test
     public void testStateChangeOpenToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
-        assertEquals(AssessmentStates.OPEN,assessment.getActivityState());
-        assessmentWorkflowService.rejectInvitation(OPEN_PROCESS_ROLE,assessment,createProcessOutcome());
+        assertEquals(AssessmentStates.OPEN, assessment.getActivityState());
+        assessmentWorkflowService.rejectInvitation(OPEN_PROCESS_ROLE, assessment, createRejection());
         Assessment update = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
-        assertEquals(AssessmentStates.REJECTED,update.getActivityState());
-        assertEquals(COMMENT,update.getLastOutcome().getComment());
-        assertEquals(DESCRIPTION,update.getLastOutcome().getDescription());
+        assertEquals(AssessmentStates.REJECTED, update.getActivityState());
+        assertEquals(COMMENT, update.getLastOutcome().getComment());
+        assertEquals(DESCRIPTION, update.getLastOutcome().getDescription());
     }
 
     @Test
     public void testStateChangeOpenToAssessed() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
-        assertEquals(AssessmentStates.OPEN,assessment.getActivityState());
-        assessmentWorkflowService.recommend(OPEN_PROCESS_ROLE,assessment, new AssessmentFundingDecisionResource());
+        assertEquals(AssessmentStates.OPEN, assessment.getActivityState());
+        assessmentWorkflowService.recommend(OPEN_PROCESS_ROLE, assessment, new AssessmentFundingDecisionResource());
         Assessment update = assessmentRepository.findOneByParticipantId(OPEN_PROCESS_ROLE);
-        assertEquals(AssessmentStates.ASSESSED,update.getActivityState());
+        assertEquals(AssessmentStates.ASSESSED, update.getActivityState());
     }
 
     @Test
     public void testStateChangeAssessedToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(ASSESSED_PROCESS_ROLE);
-        assertEquals(AssessmentStates.ASSESSED,assessment.getActivityState());
-        assessmentWorkflowService.rejectInvitation(ASSESSED_PROCESS_ROLE,assessment,createProcessOutcome());
+        assertEquals(AssessmentStates.ASSESSED, assessment.getActivityState());
+        assessmentWorkflowService.rejectInvitation(ASSESSED_PROCESS_ROLE, assessment, createRejection());
         Assessment update = assessmentRepository.findOneByParticipantId(ASSESSED_PROCESS_ROLE);
-        assertEquals(AssessmentStates.REJECTED,update.getActivityState());
-        assertEquals(COMMENT,update.getLastOutcome(AssessmentOutcomes.REJECT).getComment());
-        assertEquals(DESCRIPTION,update.getLastOutcome(AssessmentOutcomes.REJECT).getDescription());
+        assertEquals(AssessmentStates.REJECTED, update.getActivityState());
+        assertEquals(COMMENT, update.getLastOutcome(AssessmentOutcomes.REJECT).getComment());
+        assertEquals(DESCRIPTION, update.getLastOutcome(AssessmentOutcomes.REJECT).getDescription());
     }
 
-    private ProcessOutcome createProcessOutcome() {
-        ProcessOutcome processOutcome = new ProcessOutcome();
-        processOutcome.setComment(COMMENT);
-        processOutcome.setDescription(DESCRIPTION);
-        return processOutcome;
+    private ApplicationRejectionResource createRejection() {
+        ApplicationRejectionResource applicationRejection = new ApplicationRejectionResource();
+        applicationRejection.setRejectReason(DESCRIPTION);
+        applicationRejection.setRejectComment(COMMENT);
+        return applicationRejection;
     }
 }

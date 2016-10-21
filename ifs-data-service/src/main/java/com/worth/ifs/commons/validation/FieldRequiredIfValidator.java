@@ -1,6 +1,6 @@
-package com.worth.ifs.validator;
+package com.worth.ifs.commons.validation;
 
-import com.worth.ifs.validator.constraints.FieldRequiredIf;
+import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;

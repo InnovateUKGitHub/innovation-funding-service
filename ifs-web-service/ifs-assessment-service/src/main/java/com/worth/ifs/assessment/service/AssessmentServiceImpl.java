@@ -1,10 +1,9 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResourceBuilder;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,11 +40,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment) {
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(reason);
+        ApplicationRejectionResource applicationRejection = new ApplicationRejectionResource();
+        applicationRejection.setRejectReason(reason);
+        applicationRejection.setRejectComment(comment);
 
-        return assessmentRestService.rejectInvitation(assessmentId, processOutcome).toServiceResult();
+        return assessmentRestService.rejectInvitation(assessmentId, applicationRejection).toServiceResult();
     }
 }

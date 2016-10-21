@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
@@ -53,11 +54,11 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return new Assessment(target, participant);
     }
 
-    public boolean rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
+    public boolean rejectInvitation(Long processRoleId, Assessment assessment, ApplicationRejectionResource applicationRejection) {
         return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(REJECT)
                 .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", processOutcome)
+                .setHeader("processOutcome", new ProcessOutcome(null, applicationRejection.getRejectReason(), applicationRejection.getRejectComment()))
                 .build(), assessment.getActivityState());
     }
 

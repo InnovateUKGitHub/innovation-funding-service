@@ -38,6 +38,7 @@ include::{snippets}/assessment/recommend/curl-request.adoc[]
 ==== Request
 include::{snippets}/assessment/reject/http-request.adoc[]
 include::{snippets}/assessment/reject/path-parameters.adoc[]
+include::{snippets}/assessment/reject/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/assessment/reject/http-response.adoc[]

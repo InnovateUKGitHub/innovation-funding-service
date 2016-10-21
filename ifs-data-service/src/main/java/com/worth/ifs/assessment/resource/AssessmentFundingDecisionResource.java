@@ -1,16 +1,20 @@
 package com.worth.ifs.assessment.resource;
 
+import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
 import com.worth.ifs.commons.validation.constraints.WordCount;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
  * DTO for recommending applications for funding during assessment.
  */
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecision.feedback.required}")
 public class AssessmentFundingDecisionResource {
 
+    @NotNull(message = "{validation.assessmentFundingDecision.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")

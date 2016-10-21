@@ -1,15 +1,15 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -73,16 +73,16 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         String reason = "reason for rejection";
         String comment = "comment for rejection";
 
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(reason);
+        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource()
+                .withRejectReason(reason)
+                .withRejectComment(comment)
+                .build();
 
-        when(assessmentRestService.rejectInvitation(assessmentId, processOutcome)).thenReturn(restSuccess());
+        when(assessmentRestService.rejectInvitation(assessmentId, applicationRejection)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.rejectInvitation(assessmentId, reason, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).rejectInvitation(assessmentId, processOutcome);
+        verify(assessmentRestService, only()).rejectInvitation(assessmentId, applicationRejection);
     }
 }

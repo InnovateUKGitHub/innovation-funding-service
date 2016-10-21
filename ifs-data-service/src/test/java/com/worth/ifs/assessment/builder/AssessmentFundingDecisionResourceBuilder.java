@@ -26,7 +26,7 @@ public class AssessmentFundingDecisionResourceBuilder extends BaseBuilder<Assess
 
     @Override
     protected AssessmentFundingDecisionResource createInitial() {
-        return new com.worth.ifs.assessment.resource.AssessmentFundingDecisionResourceBuilder().createAssessmentFundingDecisionResource();
+        return new AssessmentFundingDecisionResource();
     }
 
     public AssessmentFundingDecisionResourceBuilder withFundingConfirmation(Boolean... fundingConfirmations) {

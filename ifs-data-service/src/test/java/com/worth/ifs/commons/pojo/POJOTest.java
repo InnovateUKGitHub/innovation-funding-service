@@ -20,6 +20,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
@@ -77,6 +78,7 @@ public class POJOTest {
             AffiliationResource.class,
             Alert.class,
             AlertResource.class,
+            ApplicationRejectionResource.class,
             AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
