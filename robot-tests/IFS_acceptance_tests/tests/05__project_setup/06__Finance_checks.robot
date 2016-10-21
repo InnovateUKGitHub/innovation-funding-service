@@ -27,7 +27,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=review
-    Then the user should see that the element is disabled    jQuery=.button:contains("Generate spend profile")
+    Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -47,14 +47,11 @@ Finance checks client-side validations
     Then the user should see an error    Please enter a travel and subsistence cost
     When the user enters text to a text field    name=costs[6].value    ${Empty}
     Then the user should see an error    Please enter any other cost
-
-Finance checks server-side validations
-    [Documentation]    INFUND-5193
-    [Tags]
     When the user enters text to a text field    name=costs[0].value    -1
     And the user moves focus to the element    id=costs-reviewed
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
+    
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
