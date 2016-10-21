@@ -1,14 +1,13 @@
 *** Settings ***
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup    Upload
+Force Tags        Project Setup    Upload    Pending    # TODO Pending completion of INFUND-5828
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Partners should not be able to submit the Grant Offer
     [Documentation]    INFUND-4851
-    [Tags]    Pending
-    #TODO pending the generation of Offer Letter
+    [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=00000001: best riffs
     And the user clicks the button/link    link=Grant offer letter
@@ -18,8 +17,7 @@ Partners should not be able to submit the Grant Offer
 
 PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851
-    [Tags]    Pending
-    #TODO pending the generation of Offer Letter
+    [Tags]
     [Setup]    log in as user    worth.email.test+projectlead@gmail.com    Passw0rd
     Given the user clicks the button/link    link=00000001: best riffs
     And the user clicks the button/link    link=Grant offer letter
@@ -29,26 +27,23 @@ PM should not be able to upload big Grant Offer files
 
 PM should be able upload a file and then access the Submit button
     [Documentation]    INFUND-4851
-    [Tags]    Pending
-    #TODO pending the generation of Offer Letter
+    [Tags]
     [Setup]
-    #TO DO remove the comment from the last check when the infund-5567 is ready
+    # TO DO remove the comment from the last check when the infund-5567 is ready
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     #And the Grant offer submit button should be enabled
 
 PM can view the upload Grant Offer file
     [Documentation]    INFUND-4851
-    [Tags]    Pending
-    #TODO pending the generation of Offer Letter
+    [Tags]
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
 PM Submits the Grant Offer letter
     [Documentation]    INFUND-4851
-    [Tags]    Pending
-    #TODO pending the generation of Offer Letter
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
     and the user clicks the button/link    jQuery=button:contains("Confirm Submission")
     Then the user should see the element    css=li.complete:nth-child(8)
