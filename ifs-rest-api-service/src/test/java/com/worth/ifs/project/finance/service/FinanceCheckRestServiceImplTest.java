@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.junit.Assert;
 import org.junit.Test;

@@ -3,6 +3,7 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
+import com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
