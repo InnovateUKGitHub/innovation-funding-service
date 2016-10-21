@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="comp-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'#'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
+
+	<div>
+
+		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+
+		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:remove="tag" />
+
+		<hr />
+
+		<div class="extra-margin">
+			<a href="/prototypes/634-print-application.html" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
+		</div>
+
+		<h2 class="heading-medium">Appendices</h2>
+
+			<div class="form-group download">
+		        <h3 class="heading-small no-margin">View project management appendix:</h3>
+		        <a href="#">Project-plan.pdf (161.96 KB)</a>
+		    </div>
+
+		    <div class="form-group download">
+		        <h3 class="heading-small no-margin">View innovation appendix:</h3>
+		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
+		    </div>
+
+		    <div class="form-group download">
+		        <h3 class="heading-small no-margin">View project team appendix:</h3>
+		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
+		    </div>
+
+		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp'}">
+		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
+		    </div>
+
+			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+				<form action="/prototypes/5698-draft-email" id="removeApp">
+					<fieldset>
+						<legend class="heading-medium">Remove application from assessment</legend>
+					</fieldset>
+					<div class="form-group no-margin-bottom">
+						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
+						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
+						<div class="textarea-footer">
+							<span class="count-label">
+								<span class="count-down">Words remaing: 400</span>
+							</span>
+						</div>
+					</div>
+					
+					<div class="grid-row">
+						<div class="column-half">
+							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
+						</div>
+						<div class="column-half alignright">
+							<button class="button no-margin-right">Continue and draft email</button>
+						</div>
+					</div>
+				</form>
+			</th:block>
+
+		</div>
+
+
+
+
+
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>
