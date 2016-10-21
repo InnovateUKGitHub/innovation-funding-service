@@ -8,12 +8,7 @@ Documentation     INFUND-399: As a client, I would like to demo the system with 
 ...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Log-out

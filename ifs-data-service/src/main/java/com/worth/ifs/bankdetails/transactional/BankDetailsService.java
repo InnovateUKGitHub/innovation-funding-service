@@ -21,7 +21,7 @@ public interface BankDetailsService {
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
     ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource);
 
-    @PreAuthorize("hasAuthority('project_finance') || hasAuthority('comp_admin')")
-    @SecuredBySpring(value = "READ", description = "All internal global users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", description = "Project Finance users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
     ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(final Long projectId);
 }

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=live'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${(param.status != null ? param.status[0] : 'Open')}, ${null})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel'}" />
+
+	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'In assessment'}, ${null})" th:remove="tag"  />
+
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessors panel'}, ${null})" th:remove="tag"  />
+	
+	<th:block th:if="${param.status == null or param.status[0] == 'Open'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Submission date</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Briefing event</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Allocate assessors</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessor dashboard</h2>
+				<p>18 October 2016</p>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Allocate assesors</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessor accepts</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessor deadline</h2>
+				<p>18 October 2016</p>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessor accepts</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessor deadline</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Line draw</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessment panel</h2>
+				<p>18 October 2016</p>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Line draw</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Assessment panel</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Panel date</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Funders panel</h2>
+				<p>18 October 2016</p>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Funders panel</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Notifications</h2>
+				<p>18 October 2016</p>
+			</div>
+			<div class="column-quarter">
+				<h2 class="heading-medium no-margin-bottom">Release feedback</h2>
+				<p>18 October 2016</p>
+			</div>
+		</div>
+	</th:block>
+
+	<hr />
+
+	<dl class="standard-definition-list extra-margin-bottom">
+		<dt>Competition type</dt>
+		<dd>Study of feasibility</dd>
+
+		<dt>Innovation area</dt>
+		<dd>High tech manufacturing</dd>
+
+		<dt>Funding available</dt>
+		<dd>&pound;250,000</dd>
+
+		<dt>Lead tech</dt>
+		<dd>Mike baddle</dd>
+
+		<dt>Comp exec</dt>
+		<dd>Jess Smith</dd>
+	</dl>
+	
+	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
+		<a href="#" class="button button-large">Notify assessors</a>	
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
+		<div class="grid-row">
+			<div class="column-quarter">
+				<a href="#" class="button button-large width-full aligncentre">Export panel sheet</a>
+			</div>
+			<div class="column-quarter">
+				<a href="#" class="button button-large width-full aligncentre">Update assessors</a>
+			</div>
+			<div class="column-half">
+				<p><span class="heading-large">5</span> changes since last update</p>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
+		<a href="#" class="button button-large">Export panel sheet</a>	
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
+		<a href="#" class="button button-large">Export panel sheet</a>	
+	</th:block>
+
+	<h2 class="heading-medium">Review progress</h2>
+
+	<th:block th:if="${param.status == null or param.status[0] == 'Open'}">
+		<ul class="list-overview">
+			<li><h3 class="heading-small"><a href="/prototypes/5062-open-applications?comp=Open">All applications</a></h3></li>
+			<li><h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=Open">Invite assessors</a></h3></li>
+			<li><h3 class="heading-small"><a href="#">Update competition details</a></h3></li>
+		</ul>
+	</th:block>
+
+
+	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
+		<ul class="list-overview">
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5472-assign-assessors?comp=Closed">Allocate assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=Closed">Invite assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-submitted-applications?comp=Closed&#38;status=assessment">Submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-not-submitted-applications?comp=Closed&#38;status=assessment">Not submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Update competition details</a></h3>
+			</li>
+		</ul>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
+		<ul class="list-overview">
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5389-manage-assessors?comp=assessment">Manage assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5470-manage-applications?comp=assessment">Manage applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=assessment">Invite assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-submitted-applications?comp=assessment&#38;status=assessment">Submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-not-submitted-applications?comp=assessment&#38;status=assessment">Not submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Update competitiion details</a></h3>
+			</li>
+		</ul>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
+		<ul class="list-overview">
+			<li>
+				<h3 class="heading-small"><a href="#">Setup panel</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Manage assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Manage applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=panel">Invite assessors</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Not submitted applications</a></h3>
+			</li>
+		</ul>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
+		<ul class="list-overview">
+			<li>
+				<h3 class="heading-small"><a href="#">Funding decision</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Submitted applications</a></h3>
+			</li>
+			<li>
+				<h3 class="heading-small"><a href="#">Not submitted applications</a></h3>
+			</li>
+		</ul>
+	</th:block>
+
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+	
+	// ]]>
+</script>
+</body>
+</html>

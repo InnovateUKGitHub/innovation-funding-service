@@ -2,12 +2,7 @@
 Documentation     INNFUND-1040: As an applicant I want to be able to create more than one application so that i can enter the same competition more than once
 Suite Setup       Delete the emails from both test mailboxes
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Logged in user can create a new application

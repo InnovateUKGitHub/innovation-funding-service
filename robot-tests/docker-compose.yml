@@ -2,7 +2,7 @@ version: '2'
 services:
   hub:
     container_name: hub
-    image: selenium/hub
+    image: selenium/hub:3.0.0-dubnium
     environment:
       - GRID_BROWSER_TIMEOUT=90000
       - GRID_TIMEOUT=100000
@@ -14,9 +14,14 @@ services:
         aliases:
           - hub
   chrome:
-    build:
-      context: .
-      dockerfile: chrome-dockerfile
+    image: selenium/node-chrome-debug:3.0.0-dubnium
+    environment:
+      - NODE_MAX_SESSION=20
+      - NODE_MAX_INSTANCES=20
+      - NODE_REGISTER_CYCLE=600
+      - HUB_PORT_4444_TCP_ADDR=hub
+      - HUB_PORT_4444_TCP_PORT=4444
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
     volumes:
       - /dev/shm:/dev/shm
     ports:
