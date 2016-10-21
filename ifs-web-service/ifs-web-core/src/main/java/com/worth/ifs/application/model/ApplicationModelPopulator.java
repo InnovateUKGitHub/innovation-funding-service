@@ -1,4 +1,4 @@
-package com.worth.ifs.application.populator;
+package com.worth.ifs.application.model;
 
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
@@ -116,9 +116,9 @@ public class ApplicationModelPopulator {
 
 
     public void addUserDetails(Model model, ApplicationResource application, Long userId) {
+        Boolean userIsLeadApplicant = userIsLeadApplicant(application, userId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-        Boolean userIsLeadApplicant = leadApplicant.getId().equals(userId);
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);

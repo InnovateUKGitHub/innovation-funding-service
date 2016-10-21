@@ -1,4 +1,4 @@
-package com.worth.ifs.application.populator;
+package com.worth.ifs.application.model;
 
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
@@ -114,7 +114,7 @@ public class ApplicationModelPopulatorTest {
         verify(model).addAttribute("completedQuestionsPercentage", application.getCompletion());
         verifyNoMoreInteractions(model);
 
-        //Verify other populator calls
+        //Verify other model calls
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, form);
         verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation);
         verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, userId, section, currentQuestionId);
@@ -155,7 +155,7 @@ public class ApplicationModelPopulatorTest {
         verify(model).addAttribute("currentUser", user);
         verifyNoMoreInteractions(model);
 
-        //Verify populator calls
+        //Verify model calls
         verify(financeOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
         verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
 

@@ -8,7 +8,7 @@ import com.worth.ifs.competitionsetup.form.AssessorsForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 
 /**
- * Form populator for the assessors form competition setup section.
+ * Form model for the assessors form competition setup section.
  */
 @Service
 public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {

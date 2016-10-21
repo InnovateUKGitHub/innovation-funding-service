@@ -2,7 +2,7 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.populator.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;

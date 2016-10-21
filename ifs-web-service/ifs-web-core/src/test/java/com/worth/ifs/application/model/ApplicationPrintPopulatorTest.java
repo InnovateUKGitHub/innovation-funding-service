@@ -1,21 +1,12 @@
-package com.worth.ifs.application.populator;
+package com.worth.ifs.application.model;
 
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
-import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.builder.SectionResourceBuilder;
-import com.worth.ifs.application.finance.view.FinanceHandler;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.builder.FormInputResourceBuilder;
 import com.worth.ifs.form.builder.FormInputResponseResourceBuilder;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -27,23 +18,18 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 

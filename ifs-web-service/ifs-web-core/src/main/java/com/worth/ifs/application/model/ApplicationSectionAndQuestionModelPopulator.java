@@ -1,8 +1,5 @@
-package com.worth.ifs.application.populator;
+package com.worth.ifs.application.model;
 
-import com.worth.ifs.application.finance.view.FinanceHandler;
-import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.OrganisationService;
@@ -20,9 +17,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;

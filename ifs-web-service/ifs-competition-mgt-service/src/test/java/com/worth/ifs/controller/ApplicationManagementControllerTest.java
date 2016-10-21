@@ -1,7 +1,8 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.populator.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
@@ -41,6 +42,10 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
     @Spy
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Test
     public void testDisplayApplicationForCompetitionAdministrator() throws Exception {

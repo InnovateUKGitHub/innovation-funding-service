@@ -2,10 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
-import com.worth.ifs.application.populator.ApplicationModelPopulator;
-import com.worth.ifs.application.populator.ApplicationNavigationPopulator;
-import com.worth.ifs.application.model.OpenSectionModelPopulator;
-import com.worth.ifs.application.model.QuestionModelPopulator;
+import com.worth.ifs.application.model.*;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -63,6 +60,9 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
+
+    @Mock
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;

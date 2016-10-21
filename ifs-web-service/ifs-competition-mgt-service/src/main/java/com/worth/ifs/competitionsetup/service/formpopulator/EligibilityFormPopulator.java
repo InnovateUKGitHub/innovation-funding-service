@@ -11,7 +11,7 @@ import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.stereotype.Service;
 
 /**
- * Form populator for the eligibility competition setup section.
+ * Form model for the eligibility competition setup section.
  */
 @Service
 public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {

@@ -1,9 +1,9 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.populator.ApplicationModelPopulator;
-import com.worth.ifs.application.populator.ApplicationPrintPopulator;
-import com.worth.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
+import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
