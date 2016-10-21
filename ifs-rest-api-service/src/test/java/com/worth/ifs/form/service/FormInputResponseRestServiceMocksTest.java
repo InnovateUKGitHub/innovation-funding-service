@@ -6,6 +6,7 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
+import com.worth.ifs.form.builder.FormInputResponseResourceBuilder;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Assert;
 import org.junit.Test;

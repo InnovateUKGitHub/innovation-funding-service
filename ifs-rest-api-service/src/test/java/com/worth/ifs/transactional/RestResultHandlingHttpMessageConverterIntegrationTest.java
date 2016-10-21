@@ -11,8 +11,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
 import org.junit.Assert;

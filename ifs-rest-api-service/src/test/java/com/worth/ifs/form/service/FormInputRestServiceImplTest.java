@@ -2,6 +2,8 @@ package com.worth.ifs.form.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
+import com.worth.ifs.form.builder.FormInputResourceBuilder;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import org.junit.Assert;

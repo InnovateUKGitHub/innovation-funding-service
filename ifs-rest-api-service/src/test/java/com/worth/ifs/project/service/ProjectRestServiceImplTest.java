@@ -1,6 +1,7 @@
 package com.worth.ifs.project.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.address.builder.AddressResourceBuilder;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.error.CommonFailureKeys;
@@ -8,8 +9,13 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.resource.builders.FileEntryResourceBuilder;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.ProjectResourceBuilder;
+import com.worth.ifs.project.builder.ProjectStatusResourceBuilder;
+import com.worth.ifs.project.builder.ProjectUserResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
