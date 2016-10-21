@@ -27,7 +27,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=review
-    Then the Generate spend profile button should be disabled
+    Then the user should see that the element is disabled    jQuery=.button:contains("Generate spend profile")
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -95,7 +95,7 @@ Approve Eligibility: Lead partner organisation
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath    Pending
-    #TODO INFUND-5720
+    #TODO Pending due to INFUND-5720
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
@@ -177,8 +177,7 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-the Generate spend profile button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Generate Spend Profile")
+
 
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
@@ -188,6 +187,6 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    Focus    id=costs-reviewed
+    the user moves focus to the element    id=costs-reviewed
     the user sees the text in the element    css=#content tfoot td    £ 60,000
-    Element Should Be Disabled    jQuery=.button:contains("Approve eligible costs")
+    the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
