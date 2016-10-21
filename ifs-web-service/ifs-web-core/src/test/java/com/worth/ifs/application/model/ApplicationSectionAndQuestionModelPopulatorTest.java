@@ -228,8 +228,5 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         verify(model).addAttribute("sectionQuestions", currentSectionQuestions);
         verify(model).addAttribute("title", currentSection.getName());
         verifyNoMoreInteractions(model);
-
-
     }
-
 }
