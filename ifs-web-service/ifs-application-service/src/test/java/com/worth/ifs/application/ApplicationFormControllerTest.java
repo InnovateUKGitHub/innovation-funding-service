@@ -2,12 +2,11 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
-import com.worth.ifs.application.model.ApplicationNavigationPopulator;
+import com.worth.ifs.application.populator.ApplicationModelPopulator;
+import com.worth.ifs.application.populator.ApplicationNavigationPopulator;
 import com.worth.ifs.application.model.OpenSectionModelPopulator;
 import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -31,7 +30,6 @@ import java.util.HashSet;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setType;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.error.Error.fieldError;

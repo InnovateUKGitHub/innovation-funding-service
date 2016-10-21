@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application.populator;
 
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;

@@ -1,7 +1,7 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.populator.ApplicationModelPopulator;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
@@ -10,7 +10,6 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;

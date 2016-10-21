@@ -1,44 +1,18 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.finance.view.FinanceHandler;
-import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
-import com.worth.ifs.application.model.ApplicationPrintPopulator;
+import com.worth.ifs.application.populator.ApplicationModelPopulator;
+import com.worth.ifs.application.populator.ApplicationPrintPopulator;
+import com.worth.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatus;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -92,6 +66,9 @@ public abstract class AbstractApplicationController extends BaseController {
 
     @Autowired
     protected ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    protected ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Autowired
     protected FormInputResponseService formInputResponseService;

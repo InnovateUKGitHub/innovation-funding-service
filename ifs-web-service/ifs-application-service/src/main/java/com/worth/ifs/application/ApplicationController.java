@@ -2,27 +2,18 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
-import com.worth.ifs.application.model.ApplicationPrintPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +32,6 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static com.worth.ifs.application.AbstractApplicationController.*;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -286,7 +276,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
 
-        Optional<SectionResource> currentSection = applicationModelPopulator.getSectionByIds(competition.getId(), sectionId, false);
+        Optional<SectionResource> currentSection = applicationSectionAndQuestionModelPopulator.getSectionByIds(competition.getId(), sectionId, false);
 
         Long questionId = questionService.extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);

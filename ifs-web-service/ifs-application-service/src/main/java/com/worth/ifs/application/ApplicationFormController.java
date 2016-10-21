@@ -12,6 +12,8 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
+import com.worth.ifs.application.populator.ApplicationNavigationPopulator;
+import com.worth.ifs.application.populator.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
@@ -25,17 +27,13 @@ import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.util.AjaxResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -78,7 +76,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
-import static com.worth.ifs.application.AbstractApplicationController.*;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -625,7 +622,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationNavigationPopulator.addNavigation(section, applicationId, model);
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
-        applicationModelPopulator.addCompletedDetails(model, application, userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
     }
 
     private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,

@@ -1,19 +1,12 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.BaseController;
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
-import com.worth.ifs.application.model.ApplicationPrintPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.populator.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
 import com.worth.ifs.controller.ValidationHandler;
@@ -22,12 +15,10 @@ import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,7 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -55,7 +45,6 @@ import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUND
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 

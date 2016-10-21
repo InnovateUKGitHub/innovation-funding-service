@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application.populator;
 
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.QuestionService;

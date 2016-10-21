@@ -2,7 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.populator.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;

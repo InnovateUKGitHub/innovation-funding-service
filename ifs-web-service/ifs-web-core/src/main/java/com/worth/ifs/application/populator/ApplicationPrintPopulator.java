@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application.populator;
 
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.resource.*;
@@ -41,6 +41,9 @@ public class ApplicationPrintPopulator {
     private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
@@ -63,10 +66,10 @@ public class ApplicationPrintPopulator {
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        applicationModelPopulator.addQuestionsDetails(model, application, null);
+        applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, null);
         applicationModelPopulator.addUserDetails(model, application, user.getId());
         applicationModelPopulator.addApplicationInputs(application, model);
-        applicationModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
 
         return "/application/print";
