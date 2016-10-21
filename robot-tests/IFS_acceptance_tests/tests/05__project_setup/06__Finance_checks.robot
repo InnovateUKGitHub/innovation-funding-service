@@ -51,7 +51,7 @@ Finance checks client-side validations
     And the user moves focus to the element    id=costs-reviewed
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
-    
+
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
