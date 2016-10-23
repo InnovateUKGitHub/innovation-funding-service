@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.commons;
 
 import com.worth.ifs.commons.BaseIntegrationTest;
 import org.springframework.boot.test.WebIntegrationTest;

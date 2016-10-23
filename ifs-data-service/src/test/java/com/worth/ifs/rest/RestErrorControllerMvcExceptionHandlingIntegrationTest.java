@@ -1,7 +1,7 @@
 package com.worth.ifs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseWebIntegrationTest;
+import com.worth.ifs.commons.BaseWebIntegrationTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.HttpHeadersUtils;

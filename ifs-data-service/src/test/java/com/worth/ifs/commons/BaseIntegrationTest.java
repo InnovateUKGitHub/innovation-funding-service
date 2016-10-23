@@ -2,7 +2,6 @@ package com.worth.ifs.commons;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
-import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;

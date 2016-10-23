@@ -1,9 +1,9 @@
 package com.worth.ifs.transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.commons.BaseWebIntegrationTest;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
