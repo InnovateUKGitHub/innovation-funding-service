@@ -86,8 +86,7 @@
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            Finance checks
-            <th:block th:if="${model.financeChecksSection.notAccessible}">Finance checks</th:block>
+            <th:block th:unless="${model.financeChecksSection.notRequired}">Finance checks</th:block>
             <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
           </h2>
           <p>We will review all project costs and contact you if we have any queries.</p>
