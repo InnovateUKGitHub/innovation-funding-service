@@ -60,6 +60,7 @@
         </thead>
         <tbody>
         <form method="POST" th:action="@{/project/{projectId}/details/invite-project-manager(projectId=${model.projectId})}" th:object="${inviteForm}">
+            <span class="error-message" th:each="err : ${#fields.globalErrors()}" th:text="${err}" />
             <tr>
                 <td>
                     <label for="name-project-manager" class="visuallyhidden">name</label>
@@ -68,9 +69,6 @@
                 <td>
                     <label for="email-project-manager" class="visuallyhidden">email</label>
                     <input type="email" class="form-control width-full" value="" name="email" id="email-project-manager" required="required"/>
-                </td>
-                <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
-                    <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>
                 </td>
                 <td class="alignright">
                     <button class="buttonlink no-margin-bottom" id="invite-project-manager">Invite to project</button>
