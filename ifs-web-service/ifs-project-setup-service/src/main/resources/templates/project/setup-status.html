@@ -43,7 +43,7 @@
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
-      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : ''}">
+      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : (model.projectDetailsSubmitted ? 'waiting' : '')}">
         <div class="progress-status" />
         <div class="progress-info">
 
