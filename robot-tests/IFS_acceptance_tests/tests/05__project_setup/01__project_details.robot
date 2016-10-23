@@ -75,7 +75,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
-    # And the user should not see the element    link = Grant offer letter
+    And the user should not see the element    link = Grant offer letter
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426

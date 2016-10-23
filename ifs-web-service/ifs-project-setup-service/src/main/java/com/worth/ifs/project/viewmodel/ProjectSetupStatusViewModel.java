@@ -1,6 +1,5 @@
 package com.worth.ifs.project.viewmodel;
 
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
@@ -147,12 +146,12 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return otherDocumentsSection;
     }
 
-    public SectionAccess getGrantOfferLetterSection() {
-        return grantOfferLetterSection;
-    }
-
     public boolean isSpendProfileSubmitted() {
         return spendProfileSubmitted;
+    }
+
+    public SectionAccess getGrantOfferLetterSection() {
+        return grantOfferLetterSection;
     }
 
     public boolean isBankDetailsActionRequired() { return ProjectActivityStates.ACTION_REQUIRED.equals(bankDetails); }
