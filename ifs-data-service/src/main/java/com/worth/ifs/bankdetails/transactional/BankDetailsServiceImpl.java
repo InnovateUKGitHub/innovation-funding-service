@@ -125,10 +125,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
         AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);
-        return updateExistingBankDetails(accountDetails, bankDetailsResource).handleSuccessOrFailure(
-                failure -> serviceFailure(failure.getErrors()),
-                success -> serviceSuccess()
-        );
+        return updateExistingBankDetails(accountDetails, bankDetailsResource).andOnSuccessReturnVoid();
     }
 
     @Override
