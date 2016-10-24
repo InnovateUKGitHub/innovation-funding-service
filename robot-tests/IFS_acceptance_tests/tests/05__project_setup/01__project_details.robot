@@ -355,7 +355,7 @@ Option to invite a finance contact
 Inviting finance contact server side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5408
+    # TODO Pending due to INFUND-5704
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a contact name
     And the user should see the text in the page    Please enter an email address
@@ -363,7 +363,7 @@ Inviting finance contact server side validations
 Inviting finance contact client side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5409
+    # TODO Pending due to INFUND-5704
     When the user enters text to a text field    id=name-finance-contact1    John Smith
     Then the user should not see the text in the page    Please enter a contact name
     When the user enters text to a text field    id=email-finance-contact1    test
@@ -411,7 +411,6 @@ Invited finance contact shows on the finance contact selection screen
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith
 
-
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620
     ...
@@ -436,7 +435,6 @@ Lead partner selects a finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You have already assigned the finance contact
-
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
