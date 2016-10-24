@@ -41,9 +41,13 @@
             </th:block>
         </ul>
         <p>
-            <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
-            <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
-            <th:block th:text="${model.projectManagerTelephone}"/>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerName)}">
+              <th:block th:text="${model.projectManagerName}"/><br/>
+            </th:block>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
+              <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" /><br/>
+            </th:block>
+            <th:block th:text="${model?.projectManagerTelephone}"/>
         </p>
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
