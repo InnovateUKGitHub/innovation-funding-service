@@ -7,12 +7,54 @@ apply plugin: 'idea'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+configurations {
+    mapstruct
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+    javaLanguageLevel = 1.8
+    generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
+}
+
+sourceSets {
+    client {
+        java {
+            srcDir 'src/main/java'
+            include 'com/worth/ifs/domain'
+        }
+        main {
+            ext.originalJavaSrcDirs = java.srcDirs
+            java.srcDir "${generatedMapperSourcesDir}"
+        }
+    }
+}
+
 repositories {
+    maven { url "https://repo.spring.io/milestone" }
     mavenCentral()
 }
 
-configurations {
-    mapstruct
+bootRepackage.enabled = false
+
+task client(type: Jar) {
+    baseName += '-rest-api'
+    from sourceSets.main.output
+}
+task clientCopy(type: Copy){
+    ["../ifs-web-service/libs"].each {
+        into it
+        from "build/libs/"
+        include "ifs-data-service-api*"
+    }
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    clientCopy.mustRunAfter client
+    dependsOn clean
+    dependsOn build
+    dependsOn clientCopy
 }
 
 dependencies {
@@ -28,7 +70,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-codec:commons-codec:1.10'
-    compile "org.flywaydb:flyway-core:4.0"
+//    compile "org.flywaydb:flyway-core:4.0"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
@@ -43,10 +85,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
 
-//    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-//    compile fileTree(dir: "libs", include: "*.jar")
-
-    // Use this for including the api lib from the data-service.
+//    // Use this for including the api lib from the data-service.
     compile files('./libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
