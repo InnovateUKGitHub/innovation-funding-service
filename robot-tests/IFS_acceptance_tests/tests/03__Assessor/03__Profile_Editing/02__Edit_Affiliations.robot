@@ -52,7 +52,7 @@ Server-side empty position validation
     Then the user should see a field and summary error    Please enter an organisation
     Then the user should see a field and summary error    Please enter a position
 
-Succesful editing with no at yes/no questions
+Successful editing with no at yes/no questions
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user correctly fills out the role, principle employer and accurate fields
@@ -66,7 +66,7 @@ Verify persistence of changes when editing with no at yes/no questions
     Then the user should see correctly filled out the role, employer, affiliation and accurate fields
     And the user should see no selected at yes/no questions
 
-Succesful editing with yes at yes/no questions
+Successful editing with yes at yes/no questions
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user correctly fills out the role, principle employer and accurate fields
