@@ -20,6 +20,8 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
@@ -52,10 +54,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ContractResource;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -79,6 +78,8 @@ public class POJOTest {
             AffiliationResource.class,
             Alert.class,
             AlertResource.class,
+            ApplicationRejectionResource.class,
+            AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
             Address.class,
@@ -137,6 +138,7 @@ public class POJOTest {
             FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,
+            ProfileContractResource.class,
             ProfileSkillsResource.class
     );
 

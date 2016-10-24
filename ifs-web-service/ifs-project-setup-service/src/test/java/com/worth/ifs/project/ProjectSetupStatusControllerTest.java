@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -28,6 +29,7 @@ import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.*;
@@ -60,7 +62,9 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId()).withRoleName(PARTNER).build(1));
+                withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER).build(1));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
@@ -70,6 +74,54 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         withOrganisationId(organisationResource.getId()).
                         build()).
                 build();
+
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(project.getName(), viewModel.getProjectName());
+        assertEquals(competition.getName(), viewModel.getCompetitionName());
+        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isMonitoringOfficerAssigned());
+        assertEquals("", viewModel.getMonitoringOfficerName());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
+        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
+        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
+                withUser(loggedInUser.getId())
+                .withRoleName(PARTNER).build(1));
+
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
+                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectLeadStatusResource()
+                    .withOrganisationId(5L)
+                    .build())
+                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
+                .build();
 
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -112,7 +164,9 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId()).withRoleName(PARTNER).build(1));
+                withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER).build(1));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));

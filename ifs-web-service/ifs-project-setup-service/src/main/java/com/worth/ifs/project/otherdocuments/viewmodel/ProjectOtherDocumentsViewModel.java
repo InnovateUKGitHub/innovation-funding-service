@@ -21,11 +21,23 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean approvalDecisionMade;
     private boolean approved;
     private boolean leadPartner;
+    private boolean projectManager;
     private boolean submitAllowed;
     private LocalDateTime submitDate;
 
-    public ProjectOtherDocumentsViewModel(Long projectId, String projectName, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean approvalDecisionMade, boolean submitAllowed, LocalDateTime submitDate) {
+    public ProjectOtherDocumentsViewModel(Long projectId,
+                                          String projectName,
+                                          FileDetailsViewModel collaborationAgreementFileDetails,
+                                          FileDetailsViewModel exploitationPlanFileDetails,
+                                          List<String> partnerOrganisationNames,
+                                          List<String> rejectionReasons,
+                                          boolean leadPartner,
+                                          boolean projectManager,
+                                          boolean otherDocumentsSubmitted,
+                                          boolean otherDocumentsApproved,
+                                          boolean approvalDecisionMade,
+                                          boolean submitAllowed,
+                                          LocalDateTime submitDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
@@ -36,6 +48,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.approved = otherDocumentsApproved;
         this.approvalDecisionMade = approvalDecisionMade;
         this.leadPartner = leadPartner;
+        this.projectManager = projectManager;
         this.submitAllowed = submitAllowed;
         this.submitDate = submitDate;
     }
@@ -70,10 +83,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowSubmitDocumentsButton() {
-        return leadPartner && !otherDocumentsSubmitted && submitAllowed;
+        return projectManager && !otherDocumentsSubmitted && submitAllowed;
     }
 
-    public boolean isShowDisabledSubmitDocumentsButton() { return !otherDocumentsSubmitted && !submitAllowed; }
+    public boolean isShowDisabledSubmitDocumentsButton() { return projectManager && !otherDocumentsSubmitted && !submitAllowed; }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();
@@ -111,4 +124,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return submitDate;
     }
 
+    public boolean isProjectManager() {
+        return projectManager;
+    }
 }

@@ -296,7 +296,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         InviteProjectResource inviteProjectResource = new InviteProjectResource(invitedUserName, invitedUserEmail, projectId);
         inviteProjectResource.setUser(invitedUserId);
         inviteProjectResource.setOrganisation(organisationId);
-        inviteProjectResource.setInviteOrganisation(organisationId);
         inviteProjectResource.setApplicationId(applicationId);
         inviteProjectResource.setLeadOrganisation(leadOrganisation.getName());
 
@@ -352,7 +351,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getName()).build();
 
-        createdInvite.setInviteOrganisation(organisationId);
+        createdInvite.setOrganisation(organisationId);
         createdInvite.setApplicationId(projectResource.getApplication());
         createdInvite.setApplicationId(applicationId);
 

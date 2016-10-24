@@ -1,5 +1,8 @@
 package com.worth.ifs.user.resource;
 
+/**
+ * Builder for {@link AffiliationResource}s.
+ */
 public class AffiliationResourceBuilder {
 
     private Long user;

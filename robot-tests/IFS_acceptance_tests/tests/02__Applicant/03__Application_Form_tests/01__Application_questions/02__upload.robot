@@ -4,13 +4,10 @@ Documentation     INFUND-832
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../../resources/defaultResources.robot
+# Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
+# If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
+# But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
 ${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download

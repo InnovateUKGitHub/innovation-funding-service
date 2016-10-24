@@ -11,14 +11,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
@@ -36,7 +29,6 @@ Before Monitoring Officer is assigned
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630

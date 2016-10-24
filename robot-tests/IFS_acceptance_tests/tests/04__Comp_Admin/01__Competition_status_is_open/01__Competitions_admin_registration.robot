@@ -6,12 +6,7 @@ Documentation     INFUND-2129 As an internal Innovate UK user I want to be able 
 Suite Setup       The guest user opens the browser
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 If user from the list is not registered shouldn't be able to login

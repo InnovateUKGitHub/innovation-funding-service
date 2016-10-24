@@ -75,8 +75,12 @@
         <li class="width-40-percent">
             <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
         </li>
-        
-        <li class="width-25-percent">
+
+        <li class="width-20-percent">
+            <strong class="show-mobile">Contract and DOI:</strong>  <span class="yes">Yes</span>
+        </li>
+
+        <li class="width-20-percent">
 
             <th:block th:if="${status == null}">
 
@@ -93,10 +97,6 @@
 
         </li>
         
-        <li class="width-15-percent">
-            <strong class="show-mobile">Contract and DOI:</strong>  <span class="yes">Yes</span>
-        </li>
-
         <li class="width-20-percent alignright">
 
             <th:block th:if="${status == null}">
@@ -422,13 +422,13 @@
                 <li class="width-40-percent hide-mobile">
                     Assessor name
                 </li>
-                <li class="width-25-percent">
+                <li id="assessor-contract" class="width-20-percent  hide-mobile">Contract and DOI</li>
+                <li class="width-20-percent">
                     <label for="includeAll">
                         <input id="includeAll" value="Irish" type="checkbox" />
                         Include all for group invite
                     </label>
                 </li>
-                <li id="assessor-contract" class="width-15-percent  hide-mobile">Contract and DOI</li>
                 <li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
             </ul>
 

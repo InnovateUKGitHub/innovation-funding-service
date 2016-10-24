@@ -41,12 +41,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 User can create a new competition
@@ -100,7 +95,7 @@ Initial details server-side validations
     And the user should see an error    Please enter an opening year
     And the user should see an error    Please enter an opening day
     And the user should see an error    Please enter an opening month
-    And the user should see an error    Please select a lead technologist
+    And the user should see an error    Please select a Innovate Lead    # note that this content is going to change!
     And the user should see an error    Please select a competition executive
 
 Initial details correct state aid status
@@ -498,7 +493,7 @@ Application questions: Client side validations
 Application questions: Autosave
     [Documentation]    INFUND-4586
     [Tags]    Pending
-    # Pending due to INFUND-5538
+    # TODO Pending due to INFUND-5538
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
     And The user clicks the button/link    link=Application Questions
