@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Accept application'" th:remove="tag"/>
+    </head>
+
+    <body th:with="context='assessment'" class="reject-invitation-confirm">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+        <div th:include="fragments/assessment :: assessment-reject-assesment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
+        <div th:include="fragments/layout :: body-start" th:remove="tag"/>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})}" th:remove="tag" />
+
+            <div class="page-title">
+                <h1 class="heading-xlarge">Accept application</h1>
+            </div>
+
+            <div class="boxed">
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h2 class="heading-small no-margin">Title:</h2>
+                        <p>Using natural gas to heat homes</p>
+                    </div>
+                    <div class="column-half">
+                        <h2 class="heading-small no-margin">Partners:</h2>
+                        <ul class="list-bullet">
+                            <li>Empire ltd <strong>(Lead)</strong></li>
+                            <li>Ludlow</li>
+                            <li>EGG</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="heading-small no-margin">Project summary:</h2>
+                <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+            </div>
+
+            <p class="heading-small">Review the project summary above to make sure:</p>
+            <ul class="list-bullet">
+                <li>you do not have a conflict of interest with this application</li>
+                <li>the application fits within your area of expertise</li>
+                <li>you have time to assess this application</li>
+            </ul>
+
+            <form th:action="" method="POST">
+                <h2 class="heading-medium">Are you available to assess this application?</h2>
+                <button class="button large extra-margin" type="submit">Accept</button>
+                <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
+            </form>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag"/>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"/>
+    </body>
+</html>
