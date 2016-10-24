@@ -14,7 +14,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static com.worth.ifs.invite.controller.ApplicationInviteController.GET_USER_BY_HASH_MAPPING;
+import static com.worth.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
