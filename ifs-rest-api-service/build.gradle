@@ -37,20 +37,18 @@ repositories {
 
 bootRepackage.enabled = false
 
-task client(type: Jar) {
-    from sourceSets.main.output
-}
+
 task clientCopy(type: Copy){
     ["../ifs-web-service/libs"].each {
         into it
         from "build/libs/"
-        include "ifs-data-service-api*"
+        include "ifs-rest-api-service*"
     }
 }
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    clientCopy.mustRunAfter client
+    clientCopy.mustRunAfter build
     dependsOn clean
     dependsOn build
     dependsOn clientCopy
