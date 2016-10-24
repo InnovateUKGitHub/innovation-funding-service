@@ -27,9 +27,7 @@ import static com.worth.ifs.application.service.QuestionServiceSecurityTest.Test
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in QuestionService interact with Spring Security
@@ -61,7 +59,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     @Test
     public void testGetQuestionById() {
         final Long questionId = 1L;
-        when(questionResourceLookupStrategy.findResourceById(questionId)).thenReturn(QuestionResourceBuilder.newQuestionResource().build());
+        when(questionResourceLookupStrategy.findResourceById(questionId)).thenReturn(newQuestionResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getQuestionById(questionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
@@ -133,7 +131,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetQuestionsByAssessmentId() {
         Long assessmentId = 1L;
 
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(AssessmentResourceBuilder.newAssessmentResource().build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getQuestionsByAssessmentId(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
@@ -182,27 +180,27 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
         @Override
         public ServiceResult<List<QuestionResource>> findByCompetition(Long competitionId) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
         public ServiceResult<QuestionResource> getNextQuestion(Long questionId) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build());
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
         public ServiceResult<QuestionResource> getPreviousQuestionBySection(Long sectionId) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build());
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
         public ServiceResult<QuestionResource> getNextQuestionBySection(Long sectionId) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build());
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
         public ServiceResult<QuestionResource> getPreviousQuestion(Long questionId) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build());
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
@@ -212,12 +210,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
         @Override
         public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
-            return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build());
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
         public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
-            return ServiceResult.serviceSuccess(QuestionBuilder.newQuestion().build());
+            return serviceSuccess(newQuestion().build());
         }
 
         @Override
@@ -250,12 +248,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
             return null;
         }
 
-		@Override
-		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-			 return ServiceResult.serviceSuccess(QuestionResourceBuilder.newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-		}
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+            return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
 
-		@Override
+        @Override
         public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
             return null;
         }
