@@ -74,7 +74,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
-    # And the user should not see the element    link = Grant offer letter
+    And the user should not see the element    link = Grant offer letter
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
@@ -209,7 +209,7 @@ Inviting project manager client side validations
 
 Partner invites a project manager
     [Documentation]    INFUND-3483
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
@@ -226,7 +226,7 @@ Invited project manager receives an email
 
 Invited project manager registration flow
     [Documentation]    INFUND-3554
-    [Tags]    Email    HappyPath
+    [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a collaborative project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -354,7 +354,7 @@ Option to invite a finance contact
 Inviting finance contact server side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5408
+    # TODO Pending due to INFUND-5704
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a contact name
     And the user should see the text in the page    Please enter an email address
@@ -362,7 +362,7 @@ Inviting finance contact server side validations
 Inviting finance contact client side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5409
+    # TODO Pending due to INFUND-5704
     When the user enters text to a text field    id=name-finance-contact1    John Smith
     Then the user should not see the text in the page    Please enter a contact name
     When the user enters text to a text field    id=email-finance-contact1    test
@@ -374,7 +374,7 @@ Inviting finance contact client side validations
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
@@ -390,7 +390,7 @@ Invited finance contact receives an email
 
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
-    [Tags]    Email    HappyPath
+    [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a collaborative project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -409,7 +409,6 @@ Invited finance contact shows on the finance contact selection screen
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith
-
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620
@@ -435,7 +434,6 @@ Lead partner selects a finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You have already assigned the finance contact
-
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
@@ -465,7 +463,6 @@ Project details submission flow
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    id=table-project-status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details read only after submission
@@ -526,7 +523,6 @@ Status updates correctly for internal user's table
     [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
