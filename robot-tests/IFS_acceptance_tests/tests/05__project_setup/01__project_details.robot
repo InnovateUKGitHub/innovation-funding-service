@@ -25,7 +25,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-3550 As a potential Project Manager, I can receive an email with a Join link, so that I can start the registration process and collaborate with the project
 ...
 ...               INFUND-3530 As a potential Finance Contact, I can click on a link to register and to become a Finance Contact for a Partner Organisation, so that I can start collaborating on the Project
-...AC
+...
 ...               INFUND-3554 As a potential Project Manager, I can click on a link to register and to become a Project Manager for the Project, so that I can start collaborating on the Project
 
 
@@ -228,7 +228,7 @@ Invited project manager receives an email
 Invited project manager registration flow
     [Documentation]    INFUND-3554
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a project
+    Given the user should see the text in the page    You have been invited to join a collaborative project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
@@ -392,7 +392,7 @@ Invited finance contact receives an email
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a project
+    Given the user should see the text in the page    You have been invited to join a collaborative project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
