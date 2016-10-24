@@ -47,7 +47,9 @@
             <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
               <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" /><br/>
             </th:block>
-            <th:block th:text="${model?.projectManagerTelephone}"/>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerTelephone)}">
+              <th:block th:text="${model.projectManagerTelephone}"/>
+            </th:block>
         </p>
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
