@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management competition-setup">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application questions',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application(compId = ${competitionId})}" th:remove="tag" />
+
+    <div class="hgroup extra-margin-bottom">
+        <h1 class="heading-xlarge no-margin">Application finances</h1>
+    </div>
+    <div class="panel-indent">
+        Each partner is required to complete the following finance sections, selected by the template for this competition.
+    </div>
+
+
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST">
+
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+            <h2 class="heading-medium error-summary-heading">
+                Unable to save section
+            </h2>
+
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div th:class="${#fields.hasErrors('fullApplicationFinance')}? 'form-group error':'form-group'">
+            <fieldset class="inline">
+                <legend>
+                    <span class="form-label-bold">Finances form</span>
+                    <span th:if="${#fields.hasErrors('fullApplicationFinance')}" th:remove="tag">
+		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
+		                </span>
+                </legend>
+                <label class="block-label" for="full-application-finance-yes">
+                    <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
+                    Full application finances
+                </label>
+                <label class="block-label" for="full-application-finance-no">
+                    <input id="full-application-finance-no" value="false" type="radio" th:field="*{fullApplicationFinance}" required="required" />
+                    Light finances
+                </label>
+            </fieldset>
+        </div>
+
+        <div th:class="${#fields.hasErrors('includeGrowthTable')}? 'form-group error':'form-group'">
+            <fieldset class="inline">
+                <legend>
+                    <span class="form-label-bold">Include Project Growth Table</span>
+                    <span th:if="${#fields.hasErrors('includeGrowthTable')}" th:remove="tag">
+		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
+		                </span>
+                </legend>
+                <label class="block-label" for="include-growth-table-yes">
+                    <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
+                    Yes
+                </label>
+                <label class="block-label" for="include-growth-table-no">
+                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" />
+                    No
+                </label>
+            </fieldset>
+        </div>
+
+
+        <button type="submit" class="button">Done</button>
+
+
+    </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

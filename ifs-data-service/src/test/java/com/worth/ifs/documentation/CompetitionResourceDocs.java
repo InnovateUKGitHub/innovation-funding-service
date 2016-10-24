@@ -44,7 +44,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("funders").description("the funders for this competition")
+            fieldWithPath("funders").description("the funders for this competition"),
+            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applicantions"),
+            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
