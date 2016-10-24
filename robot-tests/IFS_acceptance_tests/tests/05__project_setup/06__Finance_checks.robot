@@ -27,18 +27,36 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=review
-    Then the Generate spend profile button should be disabled
+    Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
 
-Finance details client-side validations
+Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]    Pending
+    [Tags]
+    Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
+    When the user enters text to a text field    name=costs[0].value    ${Empty}
+    Then the user should see an error    Please enter a labour cost
+    When the user enters text to a text field    name=costs[1].value    ${Empty}
+    Then the user should see an error    Please enter an admin support cost
+    When the user enters text to a text field    name=costs[2].value    ${Empty}
+    Then the user should see an error    Please enter a materials cost
+    When the user enters text to a text field    name=costs[3].value    ${Empty}
+    Then the user should see an error    Please enter a capital usage cost
+    When the user enters text to a text field    name=costs[4].value    ${Empty}
+    Then the user should see an error    Please enter subcontracting cost
+    When the user enters text to a text field    name=costs[5].value    ${Empty}
+    Then the user should see an error    Please enter a travel and subsistence cost
+    When the user enters text to a text field    name=costs[6].value    ${Empty}
+    Then the user should see an error    Please enter any other cost
+    When the user enters text to a text field    name=costs[0].value    -1
+    And the user moves focus to the element    id=costs-reviewed
+    Then the user should see an error    This field should be 0 or higher
+    And The user should not see the text in the page    Please enter a labour cost
 
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
     [Tags]
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
-    Then the user fills in project costs
+    When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
@@ -46,7 +64,7 @@ Approve Eligibility: Collaborator partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(1) a    approved
 
-Approve Eligibility: Academic Partner organisation
+Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
@@ -57,7 +75,7 @@ Approve Eligibility: Academic Partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
 
-Approve Eligibility: Lead Partner organisation
+Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
@@ -74,7 +92,7 @@ Approve Eligibility: Lead Partner organisation
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath    Pending
-    #TODO INFUND-5720
+    #TODO Pending due to INFUND-5720
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
@@ -82,7 +100,7 @@ Other internal users do not have access to Finance Checks
 
 *** Keywords ***
 the table row has expected values
-    #TODO update selectors and values after INFUND-5476 & INFUND-5431
+    #TODO update selectors and values after INFUND-5476
     the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[2]    3 months
     the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[3]    £ 10,800
     the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[4]    £ 360
@@ -156,8 +174,7 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-the Generate spend profile button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Generate Spend Profile")
+
 
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
@@ -167,8 +184,6 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    Focus    id=costs-reviewed
+    the user moves focus to the element    id=costs-reviewed
     the user sees the text in the element    css=#content tfoot td    £ 60,000
-
-the Generate spend profile button should be enabled
-    Element Should Be Enabled    jQuery=.button:contains("Generate Spend Profile")
+    the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")

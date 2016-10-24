@@ -11,7 +11,7 @@ Academic organisations search
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
-    Given the lead applicant invites a registered user    ${test_mailbox_one}+invite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
+    Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user opens the mailbox and reads his own email    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
