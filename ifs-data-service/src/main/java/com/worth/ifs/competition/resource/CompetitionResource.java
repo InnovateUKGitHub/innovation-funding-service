@@ -26,8 +26,9 @@ public class CompetitionResource {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private LocalDateTime assessmentStartDate;
-    private LocalDateTime assessmentEndDate;
+    private LocalDateTime assessorAcceptsDate;
+    private LocalDateTime assessorDeadlineDate;
+    private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
     private Status competitionStatus;
@@ -135,12 +136,8 @@ public class CompetitionResource {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getAssessmentEndDate() {
-        return assessmentEndDate;
-    }
-
     public String assementEndDateDisplay() {
-        return displayDate(getAssessmentEndDate(), ASSESSMENT_DATE_FORMAT);
+        return displayDate(getFundersPanelDate(), ASSESSMENT_DATE_FORMAT);
     }
 
     public String startDateDisplay() {
@@ -154,16 +151,28 @@ public class CompetitionResource {
         return "";
     }
 
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-        this.assessmentEndDate = assessmentEndDate;
+    public LocalDateTime getAssessorAcceptsDate() {
+        return assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessmentStartDate() {
-        return assessmentStartDate;
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+        this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate) {
-        this.assessmentStartDate = assessmentStartDate;
+    public LocalDateTime getAssessorDeadlineDate() {
+        return assessorDeadlineDate;
+    }
+
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+        this.assessorDeadlineDate = assessorDeadlineDate;
+    }
+
+    public LocalDateTime getFundersPanelDate() {
+        return fundersPanelDate;
+    }
+
+    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+        this.fundersPanelDate = fundersPanelDate;
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
@@ -181,7 +190,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.assessmentEndDate);
+        return DAYS.between(LocalDateTime.now(), this.assessorDeadlineDate);
     }
 
     @JsonIgnore
@@ -197,7 +206,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getAssessmentTotalDays() {
-        return DAYS.between(this.assessmentStartDate, this.assessmentEndDate);
+        return DAYS.between(this.assessorAcceptsDate, this.assessorDeadlineDate);
     }
 
     @JsonIgnore
