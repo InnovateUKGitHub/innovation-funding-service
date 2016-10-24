@@ -83,7 +83,7 @@ Reset password
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user reads his email and clicks the link    worth.email.test+changepsw@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    worth.email.test+changepsw@gmail.com    Reset your password    If you didn't request this
     And the user should see the text in the page    Password reset
     # TODO INFUND-5582
 
