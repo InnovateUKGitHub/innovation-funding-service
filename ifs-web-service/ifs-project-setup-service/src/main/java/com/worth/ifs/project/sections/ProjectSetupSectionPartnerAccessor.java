@@ -138,6 +138,10 @@ public class ProjectSetupSectionPartnerAccessor {
         return projectSetupProgressChecker.isProjectDetailsSubmitted();
     }
 
+    public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
+        return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
+    }
+
     private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {
 
         // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
