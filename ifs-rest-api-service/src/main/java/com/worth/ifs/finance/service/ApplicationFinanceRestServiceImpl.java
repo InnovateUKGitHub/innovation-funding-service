@@ -8,6 +8,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import static com.worth.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<Double> getResearchParticipationPercentage(Long applicationId){
         return getWithRestResult(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class).andOnSuccess(jsonNode -> {
-            double percentage = jsonNode.get(ApplicationFinanceController.RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
+            double percentage = jsonNode.get(RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
             return restSuccess(percentage);
         });
     }
