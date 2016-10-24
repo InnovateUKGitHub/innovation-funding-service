@@ -38,7 +38,6 @@ repositories {
 bootRepackage.enabled = false
 
 task client(type: Jar) {
-    baseName += '-rest-api'
     from sourceSets.main.output
 }
 task clientCopy(type: Copy){
