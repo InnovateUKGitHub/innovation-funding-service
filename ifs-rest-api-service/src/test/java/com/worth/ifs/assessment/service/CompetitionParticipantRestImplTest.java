@@ -10,7 +10,6 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competit
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static com.worth.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
 import static com.worth.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
-import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -26,15 +25,15 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
 
     @Test
     public void getParticipants() {
-        List<CompetitionParticipantResource> expected = CompetitionParticipantResourceBuilder.newCompetitionParticipantResource()
+        List<CompetitionParticipantResource> expected = newCompetitionParticipantResource()
                 .withUser(1L, 1L)
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR, ASSESSOR)
+                .withStatus(ACCEPTED, ACCEPTED)
                 .withCompetition(2L, 3L)
                 .build(2);
 
-        setupGetWithRestResultExpectations(String.format("%s/user/%s/role/%s/status/%s", restUrl, 1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED), ParameterizedTypeReferences.competitionParticipantResourceListType(), expected, OK);
-        List<CompetitionParticipantResource> actual = service.getParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject();
+        setupGetWithRestResultExpectations(String.format("%s/user/%s/role/%s/status/%s", restUrl, 1L, ASSESSOR, ACCEPTED), competitionParticipantResourceListType(), expected, OK);
+        List<CompetitionParticipantResource> actual = service.getParticipants(1L, ASSESSOR, ACCEPTED).getSuccessObject();
         assertEquals(expected, actual);
     }
 }

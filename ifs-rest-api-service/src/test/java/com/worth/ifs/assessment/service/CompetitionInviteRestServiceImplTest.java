@@ -2,16 +2,15 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.*;
+import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.*;
 import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,7 +26,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void getInvite() throws Exception {
-        CompetitionInviteResource expected = CompetitionInviteResourceBuilder.newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/getInvite", "hash"), CompetitionInviteResource.class, expected);
         CompetitionInviteResource actual = service.getInvite("hash").getSuccessObject();
         Assert.assertEquals(expected, actual);
@@ -35,7 +34,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void openInvite() {
-        CompetitionInviteResource expected = CompetitionInviteResourceBuilder.newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/openInvite", "hash"), CompetitionInviteResource.class, null, expected, OK);
         CompetitionInviteResource actual = service.openInvite("hash").getSuccessObject();
         Assert.assertEquals(expected, actual);
@@ -57,7 +56,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void rejectInvite() {
-        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder.newRejectionReasonResource().withId(1L).build();
+        RejectionReasonResource rejectionReasonResource = newRejectionReasonResource().withId(1L).build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/rejectInvite", "hash"), Void.class, rejectionResource, null, OK);

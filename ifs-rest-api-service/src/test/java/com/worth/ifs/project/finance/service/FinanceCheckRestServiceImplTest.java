@@ -27,7 +27,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     @Test
     public void testGetFinanceCheckApprovalStatus() {
 
-        FinanceCheckProcessResource processStatus = FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource().build();
+        FinanceCheckProcessResource processStatus = newFinanceCheckProcessResource().build();
         setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/status", FinanceCheckProcessResource.class, processStatus);
 
         Assert.assertEquals(processStatus, service.getFinanceCheckApprovalStatus(123L, 456L).getSuccessObject());

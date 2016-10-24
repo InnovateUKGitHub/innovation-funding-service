@@ -24,7 +24,7 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
     public void createAssessorByInviteHash() throws Exception {
         String hash = "testhash";
 
-        UserRegistrationResource userRegistrationResource = UserRegistrationResourceBuilder.newUserRegistrationResource().build();
+        UserRegistrationResource userRegistrationResource = newUserRegistrationResource().build();
         setupPostWithRestResultAnonymousExpectations(format("%s/register/%s", assessorRestUrl, hash), Void.class, userRegistrationResource, null, OK);
 
         RestResult<Void> response = service.createAssessorByInviteHash(hash, userRegistrationResource);

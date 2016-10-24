@@ -33,9 +33,9 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getAll() {
 
-        List<CompetitionResource> returnedResponse = CompetitionResourceBuilder.newCompetitionResource().build(3);
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", ParameterizedTypeReferences.competitionResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
 
         List<CompetitionResource> responses = service.getAll().getSuccessObject();
         assertNotNull(responses);
@@ -45,7 +45,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getCompetitionById() {
 
-        CompetitionResource returnedResponse = CompetitionResourceBuilder.newCompetitionResource().build();
+        CompetitionResource returnedResponse = newCompetitionResource().build();
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
 
@@ -58,7 +58,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_getCompetitionTypes() {
         List<CompetitionTypeResource> returnedResponse = asList(new CompetitionTypeResource(), new CompetitionTypeResource());
 
-        setupGetWithRestResultExpectations("/competition-type/findAll", ParameterizedTypeReferences.competitionTypeResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations("/competition-type/findAll", competitionTypeResourceListType(), returnedResponse);
 
         List<CompetitionTypeResource> response = service.getCompetitionTypes().getSuccessObject();
         assertNotNull(response);
@@ -105,7 +105,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/live", ParameterizedTypeReferences.competitionSearchResultItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findLiveCompetitions().getSuccessObject();
         assertNotNull(responses);
@@ -118,7 +118,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", ParameterizedTypeReferences.competitionSearchResultItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findProjectSetupCompetitions().getSuccessObject();
         assertNotNull(responses);
@@ -131,7 +131,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", ParameterizedTypeReferences.competitionSearchResultItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findUpcomingCompetitions().getSuccessObject();
         assertNotNull(responses);

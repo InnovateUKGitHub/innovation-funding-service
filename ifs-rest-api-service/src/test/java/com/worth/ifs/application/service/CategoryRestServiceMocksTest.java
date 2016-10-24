@@ -30,8 +30,8 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
     public void test_findByType() {
 
         String expectedUrl = categoryRestURL + "/findByType/" + CategoryType.INNOVATION_AREA.getName();
-        List<CategoryResource> returnedCategoryResources = CategoryResourceBuilder.newCategoryResource().build(3);
-        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.categoryResourceListType(), returnedCategoryResources);
+        List<CategoryResource> returnedCategoryResources = newCategoryResource().build(3);
+        setupGetWithRestResultExpectations(expectedUrl, categoryResourceListType(), returnedCategoryResources);
 
         // now run the method under test
         List<CategoryResource> categoryResources = service.getByType(CategoryType.INNOVATION_AREA).getSuccessObjectOrThrowException();
@@ -43,8 +43,8 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
     public void test_findByParent() {
 
         String expectedUrl = categoryRestURL + "/findByParent/1";
-        List<CategoryResource> returnedCategoryResources = CategoryResourceBuilder.newCategoryResource().build(3);
-        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.categoryResourceListType(), returnedCategoryResources);
+        List<CategoryResource> returnedCategoryResources = newCategoryResource().build(3);
+        setupGetWithRestResultExpectations(expectedUrl, categoryResourceListType(), returnedCategoryResources);
 
         // now run the method under test
         List<CategoryResource> categoryResources = service.getByParent(1L).getSuccessObjectOrThrowException();

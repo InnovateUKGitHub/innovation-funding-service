@@ -45,7 +45,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
 
         List<UserResource> userList = asList(user1, user2);
-        setupGetWithRestResultExpectations(usersUrl + "/findAll/", ParameterizedTypeReferences.userListType(), userList);
+        setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList);
 
         List<UserResource> users = service.findAll().getSuccessObject();
         assertEquals(2, users.size());
@@ -55,7 +55,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void findExistingUserByEmailShouldReturnUserResource() {
-        UserResource userResource = UserResourceBuilder.newUserResource().withEmail("testemail@email.com").build();
+        UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
         setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
@@ -86,8 +86,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setLoggedInUser(null);
 
-        UserResource userResource = UserResourceBuilder.newUserResource()
-                .with(BaseBuilderAmendFunctions.id(null))
+        UserResource userResource = newUserResource()
+                .with(id(null))
                 .withEmail("testemail@test.test")
                 .withTitle("testTitle")
                 .withFirstName("testFirstName")
@@ -124,7 +124,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource expected = ProfileSkillsResourceBuilder.newProfileSkillsResource().build();
+        ProfileSkillsResource expected = newProfileSkillsResource().build();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", usersUrl, userId), ProfileSkillsResource.class, expected, OK);
 
@@ -135,7 +135,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = ProfileSkillsResourceBuilder.newProfileSkillsResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
 
@@ -146,7 +146,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileContract() {
         Long userId = 1L;
-        ProfileContractResource expected = ProfileContractResourceBuilder.newProfileContractResource().build();
+        ProfileContractResource expected = newProfileContractResource().build();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileContract", usersUrl, userId), ProfileContractResource.class, expected, OK);
 
@@ -168,9 +168,9 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = AffiliationResourceBuilder.newAffiliationResource().build(2);
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), ParameterizedTypeReferences.affiliationResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), affiliationResourceListType(), expected, OK);
 
         List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
@@ -179,7 +179,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = AffiliationResourceBuilder.newAffiliationResource().build(2);
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateUserAffiliations", usersUrl, userId), expected, OK);
 

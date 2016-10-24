@@ -2,7 +2,7 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.finance.builder.LabourCostBuilder;
+import static com.worth.ifs.finance.builder.LabourCostBuilder.*;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
 
         List<FinanceRowItem> returnedResponse = new ArrayList<>();
 
-        setupGetWithRestResultExpectations(costRestURL + "/get/123", ParameterizedTypeReferences.costItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(costRestURL + "/get/123", costItemListType(), returnedResponse);
         List<FinanceRowItem> costs = service.getCosts(123L).getSuccessObject();
         assertNotNull(costs);
         assertEquals(returnedResponse, costs);
@@ -52,7 +52,7 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
 
     @Test
     public void test_add_byApplicationFinanceIdAndQuestionId() {
-        LabourCost costToUpdate = LabourCostBuilder.newLabourCost().build();
+        LabourCost costToUpdate = newLabourCost().build();
         String expectedUrl = costRestURL + "/add/123/456";
         setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages(), HttpStatus.OK);
         service.add(123L, 456L, costToUpdate).getSuccessObject();
@@ -67,7 +67,7 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
 
     @Test
     public void test_update_byCost() {
-        LabourCost costToUpdate = LabourCostBuilder.newLabourCost().build();
+        LabourCost costToUpdate = newLabourCost().build();
         String expectedUrl = costRestURL + "/update/" + costToUpdate.getId();
         setupPutWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages());
         service.update(costToUpdate).getSuccessObject();

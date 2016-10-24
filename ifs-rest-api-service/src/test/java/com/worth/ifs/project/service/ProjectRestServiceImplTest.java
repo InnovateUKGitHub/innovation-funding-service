@@ -1,21 +1,13 @@
 package com.worth.ifs.project.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.address.builder.AddressResourceBuilder;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.resource.builders.FileEntryResourceBuilder;
-import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import com.worth.ifs.project.builder.ProjectResourceBuilder;
-import com.worth.ifs.project.builder.ProjectStatusResourceBuilder;
-import com.worth.ifs.project.builder.ProjectUserResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -30,12 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -54,7 +45,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Test
     public void testGetProjectById() {
-        ProjectResource returnedResponse = ProjectResourceBuilder.newProjectResource().build();
+        ProjectResource returnedResponse = newProjectResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/123", ProjectResource.class, returnedResponse);
         ProjectResource result = service.getProjectById(123L).getSuccessObject();
         Assert.assertEquals(returnedResponse, result);
@@ -63,7 +54,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Test
     public void testGetStatusByProjectId() {
-        ProjectStatusResource returnedResponse = ProjectStatusResourceBuilder.newProjectStatusResource().build();
+        ProjectStatusResource returnedResponse = newProjectStatusResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);
         ProjectStatusResource result = service.getProjectStatus(123L).getSuccessObject();
         Assert.assertEquals(returnedResponse, result);
@@ -79,8 +70,8 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Test
     public void testGetProjectUsers() {
-        List<ProjectUserResource> users = ProjectUserResourceBuilder.newProjectUserResource().build(3);
-        setupGetWithRestResultExpectations(projectRestURL + "/123/project-users", ParameterizedTypeReferences.projectUserResourceList(), users);
+        List<ProjectUserResource> users = newProjectUserResource().build(3);
+        setupGetWithRestResultExpectations(projectRestURL + "/123/project-users", projectUserResourceList(), users);
         RestResult<List<ProjectUserResource>> result = service.getProjectUsersForProject(123L);
         assertTrue(result.isSuccess());
         Assert.assertEquals(users, result.getSuccessObject());
@@ -89,7 +80,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testUpdateProjectAddress() {
 
-        AddressResource addressResource = AddressResourceBuilder.newAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
 
         setupPostWithRestResultExpectations(projectRestURL + "/123/address?addressType=" + OrganisationAddressType.REGISTERED.name() + "&leadOrganisationId=456", addressResource, OK);
 
@@ -102,9 +93,9 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testFindByUserId() {
 
-        List<ProjectResource> projects = ProjectResourceBuilder.newProjectResource().build(2);
+        List<ProjectResource> projects = newProjectResource().build(2);
 
-        setupGetWithRestResultExpectations(projectRestURL + "/user/" + 1L, ParameterizedTypeReferences.projectResourceListType(), projects);
+        setupGetWithRestResultExpectations(projectRestURL + "/user/" + 1L, projectResourceListType(), projects);
 
         RestResult<List<ProjectResource>> result = service.findByUserId(1L);
 
@@ -116,7 +107,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Test
     public void testGetByApplicationId() {
-        ProjectResource projectResource = ProjectResourceBuilder.newProjectResource().build();
+        ProjectResource projectResource = newProjectResource().build();
 
         setupGetWithRestResultExpectations(projectRestURL + "/application/" + 123L, ProjectResource.class, projectResource);
 
@@ -154,7 +145,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        MonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource()
                 .withId(null)
                 .withProject(projectId)
                 .withFirstName("abc")
@@ -174,7 +165,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testGetMonitoringOfficerForProject() {
 
-        MonitoringOfficerResource expectedMonitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        MonitoringOfficerResource expectedMonitoringOfficerResource = newMonitoringOfficerResource()
                 .withProject(1L)
                 .withFirstName("abc")
                 .withLastName("xyz")
@@ -198,7 +189,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         String fileContentString = "12345678901234567";
         byte[] fileContent = fileContentString.getBytes();
 
-        FileEntryResource response = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource response = newFileEntryResource().build();
 
         setupFileUploadWithRestResultExpectations(
                 projectRestURL + "/123/collaboration-agreement?filename=filename.txt", FileEntryResource.class,
@@ -214,7 +205,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testGetCollaborationAgreementDocumentDetails() {
         String expectedUrl = projectRestURL + "/123/collaboration-agreement/details";
-        FileEntryResource returnedFileEntry = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = newFileEntryResource().build();
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
         // now run the method under test
         FileEntryResource retrievedFileEntry = service.getCollaborationAgreementFileDetails(123L).getSuccessObject().get();
@@ -299,7 +290,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         String fileContentString = "12345678901234567";
         byte[] fileContent = fileContentString.getBytes();
 
-        FileEntryResource response = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource response = newFileEntryResource().build();
 
         setupFileUploadWithRestResultExpectations(
                 projectRestURL + "/123/exploitation-plan?filename=filename.txt", FileEntryResource.class,
@@ -316,7 +307,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     public void testGetExploitationPlanDocumentDetails() {
 
         String expectedUrl = projectRestURL + "/123/exploitation-plan/details";
-        FileEntryResource returnedFileEntry = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = newFileEntryResource().build();
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
@@ -515,7 +506,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testInviteProjectManager() {
         long projectId = 123L;
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = newInviteProjectResource().build();
 
         String expectedUrl = projectRestURL + "/" + projectId + "/invite-project-manager";
         setupPostWithRestResultExpectations(expectedUrl, invite, OK);
@@ -528,7 +519,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testInviteFinanceContact() {
         long projectId = 123L;
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = newInviteProjectResource().build();
 
         String expectedUrl = projectRestURL + "/" + projectId + "/invite-finance-contact";
         setupPostWithRestResultExpectations(expectedUrl, invite, OK);

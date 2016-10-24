@@ -27,9 +27,9 @@ public class FinanceRowMetaFieldRestServiceMocksTest extends BaseRestServiceUnit
     @Test
     public void test_getCostFields() {
 
-        List<FinanceRowMetaFieldResource> returnedResponse = FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().build(3);
+        List<FinanceRowMetaFieldResource> returnedResponse = newFinanceRowMetaFieldResource().build(3);
 
-        setupGetWithRestResultExpectations(costFieldRestURL + "/findAll/", ParameterizedTypeReferences.financeRowMetaFieldResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(costFieldRestURL + "/findAll/", financeRowMetaFieldResourceListType(), returnedResponse);
 
         List<FinanceRowMetaFieldResource> costFields = service.getFinanceRowMetaFields().getSuccessObject();
         assertNotNull(costFields);

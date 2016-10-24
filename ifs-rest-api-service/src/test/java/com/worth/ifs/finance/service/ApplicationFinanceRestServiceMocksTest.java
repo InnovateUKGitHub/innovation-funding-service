@@ -27,7 +27,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void test_getApplicationFinance_forApplicationIdAndOrganisationId() {
 
-        ApplicationFinanceResource returnedResponse = ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build();
+        ApplicationFinanceResource returnedResponse = newApplicationFinanceResource().build();
 
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/findByApplicationOrganisation/123/456", ApplicationFinanceResource.class, returnedResponse);
 
@@ -44,9 +44,9 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
     @Test
     public void test_getApplicationFinances_forApplicationId() {
-        List<ApplicationFinanceResource> returnedResponse = ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build(3);
+        List<ApplicationFinanceResource> returnedResponse = newApplicationFinanceResource().build(3);
 
-        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/findByApplication/123", ParameterizedTypeReferences.applicationFinanceResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/findByApplication/123", applicationFinanceResourceListType(), returnedResponse);
 
         List<ApplicationFinanceResource> finances = service.getApplicationFinances(123L).getSuccessObject();
         assertEquals(returnedResponse, finances);
@@ -59,7 +59,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
     @Test
     public void test_addApplicationFinance_forApplicationIdAndOrganisationId() {
-        ApplicationFinanceResource returnedResponse = ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build();
+        ApplicationFinanceResource returnedResponse = newApplicationFinanceResource().build();
 
         setupPostWithRestResultExpectations(applicationFinanceRestURL + "/add/123/456", ApplicationFinanceResource.class, null, returnedResponse, OK);
 
@@ -70,7 +70,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void test_getFileDetails() {
 
-        FileEntryResource returnedResponse = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource returnedResponse = newFileEntryResource().build();
 
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/financeDocument/fileentry?applicationFinanceId=123", FileEntryResource.class, returnedResponse);
 

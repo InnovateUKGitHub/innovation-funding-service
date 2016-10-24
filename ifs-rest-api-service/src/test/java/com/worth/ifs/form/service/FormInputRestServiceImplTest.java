@@ -33,33 +33,33 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
 
     @Test
     public void testGetByQuestionIdAndScope() throws Exception {
-        List<FormInputResource> expected = FormInputResourceBuilder.newFormInputResource()
+        List<FormInputResource> expected = newFormInputResource()
                 .build(2);
 
         Long questionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
 
-        setupGetWithRestResultExpectations(String.format("%s/findByQuestionId/%s/scope/%s", formInputRestUrl, questionId, scope), ParameterizedTypeReferences.formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(String.format("%s/findByQuestionId/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByQuestionIdAndScope(questionId, scope).getSuccessObject();
         assertSame(expected, response);
     }
 
     @Test
     public void testGetByCompetitionIdAndScope() throws Exception {
-        List<FormInputResource> expected = FormInputResourceBuilder.newFormInputResource()
+        List<FormInputResource> expected = newFormInputResource()
                 .build(2);
 
         Long competitionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
 
-        setupGetWithRestResultExpectations(String.format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), ParameterizedTypeReferences.formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(String.format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccessObject();
         assertSame(expected, response);
     }
 
     @Test
     public void testSave() throws Exception {
-        FormInputResource expected = FormInputResourceBuilder.newFormInputResource().build();
+        FormInputResource expected = newFormInputResource().build();
 
         setupPutWithRestResultExpectations(formInputRestUrl + "/", FormInputResource.class, expected, expected);
         RestResult<FormInputResource> result = service.save(expected);

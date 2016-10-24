@@ -33,7 +33,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
         String expectedUrl = sectionRestUrl + "/getCompletedSections/123/456";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
 
-        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), returnedResponse);
+        setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
 
         // now run the method under test
         List<Long> response = service.getCompletedSectionIds(123L, 456L).getSuccessObject();
@@ -46,7 +46,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
         String expectedUrl = sectionRestUrl + "/getIncompleteSections/123";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
 
-        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), returnedResponse);
+        setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
 
         // now run the method under test
         List<Long> response = service.getIncompletedSectionIds(123L).getSuccessObject();

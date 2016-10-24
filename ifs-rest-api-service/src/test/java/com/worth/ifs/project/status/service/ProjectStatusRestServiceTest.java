@@ -23,7 +23,7 @@ public class ProjectStatusRestServiceTest extends BaseRestServiceUnitTest<Projec
     @Test
     public void testGetProjectById() {
 
-        CompetitionProjectsStatusResource returnedResponse = CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource().build();
+        CompetitionProjectsStatusResource returnedResponse = newCompetitionProjectsStatusResource().build();
 
         setupGetWithRestResultExpectations(competitionURL + "/123", CompetitionProjectsStatusResource.class, returnedResponse);
 

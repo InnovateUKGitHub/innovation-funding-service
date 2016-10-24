@@ -35,9 +35,9 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getResponsesByApplicationId() {
-        List<FormInputResponseResource> returnedResponses = FormInputResponseResourceBuilder.newFormInputResponseResource().build(3);
+        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
 
-        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", ParameterizedTypeReferences.formInputResponseListType(), returnedResponses);
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
 
         List<FormInputResponseResource> responses = service.getResponsesByApplicationId(123L).getSuccessObject();
         assertEquals(returnedResponses, responses);
@@ -63,9 +63,9 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getByFormInputIdAndApplication(){
-        List<FormInputResponseResource> returnedResponses = FormInputResponseResourceBuilder.newFormInputResponseResource().build(3);
+        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
 
-        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", ParameterizedTypeReferences.formInputResponseListType(), returnedResponses);
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
 
         List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccessObject();
         assertEquals(returnedResponses, responses);

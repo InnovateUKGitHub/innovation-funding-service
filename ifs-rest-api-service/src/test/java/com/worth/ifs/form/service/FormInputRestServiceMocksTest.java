@@ -23,9 +23,9 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void test_getFormInputByQuestionId() {
-        List<FormInputResource> returnedFormInputs = FormInputResourceBuilder.newFormInputResource().build(3);
+        List<FormInputResource> returnedFormInputs = newFormInputResource().build(3);
 
-        setupGetWithRestResultExpectations(formInputRestURL + "/findByQuestionId/1", ParameterizedTypeReferences.formInputResourceListType(), returnedFormInputs);
+        setupGetWithRestResultExpectations(formInputRestURL + "/findByQuestionId/1", formInputResourceListType(), returnedFormInputs);
 
         List<FormInputResource> formInputs = service.getByQuestionId(1L).getSuccessObject();
         assertEquals(returnedFormInputs, formInputs);
@@ -33,7 +33,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void getOneTest() {
-        FormInputResource formInputResource = FormInputResourceBuilder.newFormInputResource().build();
+        FormInputResource formInputResource = newFormInputResource().build();
         setupGetWithRestResultExpectations(formInputRestURL + "/1", FormInputResource.class, formInputResource);
 
         FormInputResource returnedFormInputs = service.getById(1L).getSuccessObject();
@@ -44,8 +44,8 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void findByCompetitionIdTest() {
-        List<FormInputResource> formInputResources = FormInputResourceBuilder.newFormInputResource().build(3);
-        setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", ParameterizedTypeReferences.formInputResourceListType(), formInputResources);
+        List<FormInputResource> formInputResources = newFormInputResource().build(3);
+        setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", formInputResourceListType(), formInputResources);
 
         List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccessObject();
 

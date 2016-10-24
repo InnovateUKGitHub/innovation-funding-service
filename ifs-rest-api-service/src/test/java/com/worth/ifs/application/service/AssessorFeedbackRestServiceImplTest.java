@@ -23,7 +23,7 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
     public void testAddAssessorFeedbackDocument() {
 
         String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackDocument?applicationId=123&filename=original.pdf";
-        FileEntryResource returnedFileEntry = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = newFileEntryResource().build();
 
         setupFileUploadWithRestResultExpectations(
                 expectedUrl, FileEntryResource.class, "New content", "text/plain", 1000L, returnedFileEntry, OK);
@@ -39,7 +39,7 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
     public void testGetAssessorFeedbackDocumentDetails() {
 
         String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackDocument/fileentry?applicationId=123";
-        FileEntryResource returnedFileEntry = FileEntryResourceBuilder.newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = newFileEntryResource().build();
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 

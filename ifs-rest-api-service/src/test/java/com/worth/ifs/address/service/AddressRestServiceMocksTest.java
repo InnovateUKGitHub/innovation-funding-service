@@ -25,8 +25,8 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     public void testDoLookup() throws Exception{
         String postcode = "BS348XU";
         String expectedUrl = addressRestURL + "/doLookup?lookup=" + postcode;
-        List<AddressResource> returnedAddresses = AddressResourceBuilder.newAddressResource().build(4);
-        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.addressResourceListType(), returnedAddresses);
+        List<AddressResource> returnedAddresses = newAddressResource().build(4);
+        setupGetWithRestResultExpectations(expectedUrl, addressResourceListType(), returnedAddresses);
 
         // now run the method under test
         List<AddressResource> addresses = service.doLookup(postcode).getSuccessObject();
@@ -36,7 +36,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
 
     @Test
     public void testGetById(){
-        AddressResource addressResource = AddressResourceBuilder.newAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         String url = addressRestURL + "/" + addressResource.getId();
         setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
 

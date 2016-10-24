@@ -2,8 +2,8 @@ package com.worth.ifs.project.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.ParameterizedTypeReferences;
-import com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -20,8 +20,8 @@ public class PartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitT
     @Test
     public void testGetProjectPartnerOrganisations(){
         Long projectId = 123L;
-        List<PartnerOrganisationResource> partnerOrganisations = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().withProject(projectId).build(3);
-        setupGetWithRestResultExpectations(projectRestURL + "/123/partner-organisation", ParameterizedTypeReferences.partnerOrganisationResourceList(), partnerOrganisations);
+        List<PartnerOrganisationResource> partnerOrganisations = newPartnerOrganisationResource().withProject(projectId).build(3);
+        setupGetWithRestResultExpectations(projectRestURL + "/123/partner-organisation", partnerOrganisationResourceList(), partnerOrganisations);
         RestResult result = service.getProjectPartnerOrganisations(projectId);
         assertTrue(result.isSuccess());
     }

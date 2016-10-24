@@ -2,6 +2,7 @@ package com.worth.ifs.alert.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.alert.resource.AlertResource;
+import com.worth.ifs.alert.resource.AlertType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -36,41 +36,41 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
 
     @Test
     public void test_findAllVisible() throws Exception {
-        final AlertResource expected1 = AlertResourceBuilder.newAlertResource()
+        final AlertResource expected1 = newAlertResource()
                 .withId(8888L)
                 .build();
 
-        final AlertResource expected2 = AlertResourceBuilder.newAlertResource()
+        final AlertResource expected2 = newAlertResource()
                 .withId(9999L)
                 .build();
 
         final List<AlertResource> expected = new ArrayList<>(asList(expected1, expected2));
 
-        setupGetWithRestResultExpectations(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(alertRestURL + "/findAllVisible", alertResourceListType(), expected, OK);
         final List<AlertResource> response = service.findAllVisible().getSuccessObject();
         assertSame(expected, response);
     }
 
     @Test
     public void test_findAllVisibleByType() throws Exception {
-        final AlertResource expected1 = AlertResourceBuilder.newAlertResource()
+        final AlertResource expected1 = newAlertResource()
                 .withId(8888L)
                 .build();
 
-        final AlertResource expected2 = AlertResourceBuilder.newAlertResource()
+        final AlertResource expected2 = newAlertResource()
                 .withId(9999L)
                 .build();
 
         final List<AlertResource> expected = new ArrayList<>(asList(expected1, expected2));
 
-        setupGetWithRestResultExpectations(alertRestURL + "/findAllVisible/MAINTENANCE", ParameterizedTypeReferences.alertResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(alertRestURL + "/findAllVisible/MAINTENANCE", alertResourceListType(), expected, OK);
         final List<AlertResource> response = service.findAllVisibleByType(AlertType.MAINTENANCE).getSuccessObject();
         assertSame(expected, response);
     }
 
     @Test
     public void test_getAlertById() throws Exception {
-        final AlertResource expected = AlertResourceBuilder.newAlertResource()
+        final AlertResource expected = newAlertResource()
                 .withId(9999L)
                 .build();
 
@@ -81,7 +81,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
 
     @Test
     public void test_create() throws Exception {
-        final AlertResource alertResource = AlertResourceBuilder.newAlertResource()
+        final AlertResource alertResource = newAlertResource()
                 .build();
 
         setupPostWithRestResultExpectations(alertRestURL + "/", AlertResource.class, alertResource, alertResource, CREATED);

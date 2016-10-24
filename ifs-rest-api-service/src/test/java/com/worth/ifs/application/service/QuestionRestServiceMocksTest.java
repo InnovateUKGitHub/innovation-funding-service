@@ -48,8 +48,8 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void findByCompetitionTest() {
 
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource().build(3);
-        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", ParameterizedTypeReferences.questionResourceListType(), questions);
+        List<QuestionResource> questions = newQuestionResource().build(3);
+        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionResourceListType(), questions);
 
         // now run the method under test
         List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
@@ -61,7 +61,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void findByIdTest() {
 
-        QuestionResource question = QuestionResourceBuilder.newQuestionResource().build();
+        QuestionResource question = newQuestionResource().build();
         setupGetWithRestResultExpectations(questionRestURL + "/id/1", QuestionResource.class, question);
 
         // now run the method under test
@@ -90,7 +90,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void markAsCompleteTest() {
-        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", ParameterizedTypeReferences.validationMessagesListType(), null, null, HttpStatus.OK);
+        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
         assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
     }
 
@@ -108,7 +108,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void getNextQuestionTest() {
-        QuestionResource question = QuestionResourceBuilder.newQuestionResource().build();
+        QuestionResource question = newQuestionResource().build();
         setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", QuestionResource.class, question);
 
         QuestionResource nextQuestion = service.getNextQuestion(1L).getSuccessObject();
@@ -117,7 +117,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void getPreviousQuestionTest() {
-        QuestionResource question = QuestionResourceBuilder.newQuestionResource().build();
+        QuestionResource question = newQuestionResource().build();
         setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", QuestionResource.class, question);
 
         QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
@@ -126,7 +126,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void getQuestionsBySectionIdAndTypeTest() {
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource().build(2);
+        List<QuestionResource> questions = newQuestionResource().build(2);
         setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
@@ -136,7 +136,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void save() {
-        QuestionResource questionResource = QuestionResourceBuilder.newQuestionResource().build();
+        QuestionResource questionResource = newQuestionResource().build();
         setupPutWithRestResultExpectations(questionRestURL + "/", QuestionResource.class, questionResource, questionResource);
 
         QuestionResource result = service.save(questionResource).getSuccessObject();
@@ -147,7 +147,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     public void getQuestionsByAssessmentTest() {
         Long assessmentId = 1L;
 
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource().build(2);
+        List<QuestionResource> questions = newQuestionResource().build(2);
         setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
