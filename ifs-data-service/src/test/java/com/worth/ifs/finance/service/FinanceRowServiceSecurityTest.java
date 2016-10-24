@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.service;
 
+import com.worth.ifs.BaseBuilderAmendFunctions;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
@@ -17,6 +18,7 @@ import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.security.ProjectLookupStrategy;
 import com.worth.ifs.user.resource.UserResource;
@@ -30,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -76,7 +77,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testFindAllCostFields() {
         classUnderTest.findAllCostFields();
         verify(financeRowMetaFieldPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanReadCostFieldReferenceData(isA(FinanceRowMetaFieldResource.class), isA(UserResource.class));
-        Mockito.verifyNoMoreInteractions(financeRowMetaFieldPermissionsRules);
+        verifyNoMoreInteractions(financeRowMetaFieldPermissionsRules);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testFinanceTotals() {
         final Long applicationId = 1L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(ApplicationResourceBuilder.newApplicationResource().with(BaseBuilderAmendFunctions.id(applicationId)).build());
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().with(BaseBuilderAmendFunctions.id(applicationId)).build());
         assertAccessDenied(
                 () -> classUnderTest.financeTotals(applicationId),
                 () -> {
@@ -134,7 +135,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testGetResearchParticipationPercentage() {
         final Long applicationId = 1L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(ApplicationResourceBuilder.newApplicationResource().with(BaseBuilderAmendFunctions.id(applicationId)).build());
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().with(BaseBuilderAmendFunctions.id(applicationId)).build());
         assertAccessDenied(
                 () -> classUnderTest.getResearchParticipationPercentage(applicationId),
                 () -> {
@@ -147,7 +148,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testUpdateCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(FinanceRowBuilder.newFinanceRow().with(BaseBuilderAmendFunctions.id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(BaseBuilderAmendFunctions.id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.updateCost(costId, new AcademicCost()),
                 () -> {
@@ -158,7 +159,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testGetCostField() {
         final Long costFieldId = 1L;
-        when(financeRowMetaFieldLookupStrategy.getCostField(costFieldId)).thenReturn(FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().with(BaseBuilderAmendFunctions.id(costFieldId)).build());
+        when(financeRowMetaFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newFinanceRowMetaFieldResource().with(BaseBuilderAmendFunctions.id(costFieldId)).build());
         assertAccessDenied(
                 () -> classUnderTest.getCostFieldById(costFieldId),
                 () -> {
@@ -169,7 +170,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testDeleteCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(FinanceRowBuilder.newFinanceRow().with(BaseBuilderAmendFunctions.id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(BaseBuilderAmendFunctions.id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.deleteCost(costId),
                 () -> {
@@ -182,7 +183,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testAddCostOnLongId() {
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
@@ -196,7 +197,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         final Long organisationId = 2L;
         final ApplicationFinanceResourceId applicationFinanceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId),
                 () -> {
@@ -209,7 +210,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testUpdateCostOnApplicationFinanceId() {
         final Long applicationFinanceId = 1L;
         final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
                 () -> {
@@ -231,7 +232,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testDeleteFinanceFileEntry() {
         final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.deleteFinanceFileEntry(applicationFinanceId),
                 () -> {
@@ -243,7 +244,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testCreateFinanceFileEntry() {
         final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.createFinanceFileEntry(applicationFinanceId, null, null),
                 () -> {
@@ -255,7 +256,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testUpdateFinanceFileEntry() {
         final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.updateFinanceFileEntry(applicationFinanceId, null, null),
                 () -> {
@@ -266,7 +267,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testGetFileContents() {
         final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getFileContents(applicationFinanceId),
                 () -> {
@@ -321,7 +322,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         final Long organisationId = 1L;
 
-        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(ProjectResourceBuilder.newProjectResource().with(BaseBuilderAmendFunctions.id(projectId)).build());
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().with(BaseBuilderAmendFunctions.id(projectId)).build());
 
         assertAccessDenied(
                 () -> classUnderTest.organisationSeeksFunding(projectId, applicationId, organisationId),
@@ -348,12 +349,12 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<List<FinanceRowMetaFieldResource>> findAllCostFields() {
-            return ServiceResult.serviceSuccess(FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newFinanceRowMetaFieldResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
         public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
-            return ServiceResult.serviceSuccess(new AcademicCost());
+            return serviceSuccess(new AcademicCost());
         }
 
         @Override
@@ -368,7 +369,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<List<FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return ServiceResult.serviceSuccess(FinanceRowBuilder.newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
@@ -381,7 +382,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
             for (int i = 0; i < ARRAY_SIZE_FOR_POST_FILTER_TESTS; i++) {
                 items.add(new AcademicCost());
             }
-            return ServiceResult.serviceSuccess(items);
+            return serviceSuccess(items);
         }
 
         @Override
@@ -396,12 +397,12 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId) {
-            return ServiceResult.serviceSuccess(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+            return serviceSuccess(newApplicationFinanceResource().build());
         }
 
         @Override
         public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
-            return ServiceResult.serviceSuccess(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
@@ -421,7 +422,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
-            return ServiceResult.serviceSuccess(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+            return serviceSuccess(newApplicationFinanceResource().build());
         }
 
         @Override
@@ -431,12 +432,12 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
-            return ServiceResult.serviceSuccess(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build());
+            return serviceSuccess(newApplicationFinanceResource().build());
         }
 
         @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
-            return ServiceResult.serviceSuccess(ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
