@@ -8,16 +8,6 @@ include::{snippets}/applicationfunding/make-funding-decision/http-response.adoc[
 ==== Curl Example
 include::{snippets}/applicationfunding/make-funding-decision/curl-request.adoc[]
 
-=== Get the application funding decision data for a given competition
-==== Request
-include::{snippets}/applicationfunding/get-funding-decision-data/http-request.adoc[]
-
-==== Response
-include::{snippets}/applicationfunding/get-funding-decision-data/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/applicationfunding/get-funding-decision-data/curl-request.adoc[]
-
 === Save the application funding decision data for a given competition
 ==== Request
 include::{snippets}/applicationfunding/save-funding-decision-data/http-request.adoc[]
@@ -26,4 +16,4 @@ include::{snippets}/applicationfunding/save-funding-decision-data/http-request.a
 include::{snippets}/applicationfunding/save-funding-decision-data/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/applicationfunding/save-funding-decision-data/curl-request.adoc[]
+include::{snippets}/applicationfunding/save-funding-decision-data/curl-request.adoc[]a

@@ -10,16 +10,7 @@ include::{snippets}/user/get-all-users/curl-request.adoc[]
 
 === Retrieve users by role
 ==== Request
-include::{snippets}/user/find-by-role/http-request.adoc[]
 include::{snippets}/user/find-by-role/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/user/find-by-role/http-response.adoc[]
-include::{snippets}/user/find-by-role/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/user/find-by-role/curl-request.adoc[]
-
 
 === Retrieve user
 ==== Request
@@ -57,7 +48,7 @@ include::{snippets}/user/update-password/curl-request.adoc[]
 ===== Invalid token
 include::{snippets}/user/update-password-token-not-found/http-response.adoc[]
 
-== Verify email
+=== Verify email
 ==== Success case
 ==== Request
 include::{snippets}/user/verify-email/http-request.adoc[]
@@ -69,41 +60,22 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
 
-== Update Profile Skills
+=== Update Profile Skills
 ==== Success case
 ==== Request
-include::{snippets}/user/update-profile-skills/http-request.adoc[]
 include::{snippets}/user/update-profile-skills/path-parameters.adoc[]
 include::{snippets}/user/update-profile-skills/request-fields.adoc[]
 
-==== Response
-include::{snippets}/user/update-profile-skills/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/user/update-profile-skills/curl-request.adoc[]
-
-== Retrieve user affiliations
+=== Retrieve user affiliations
 ==== Success case
 ==== Request
-include::{snippets}/user/get-user-affiliations/http-request.adoc[]
 include::{snippets}/user/get-user-affiliations/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/user/get-user-affiliations/http-response.adoc[]
 include::{snippets}/user/get-user-affiliations/response-fields.adoc[]
 
-==== Curl Example
-include::{snippets}/user/get-user-affiliations/curl-request.adoc[]
-
-== Update user affiliations
+=== Update user affiliations
 ==== Success case
 ==== Request
-include::{snippets}/user/update-user-affiliations/http-request.adoc[]
 include::{snippets}/user/update-user-affiliations/path-parameters.adoc[]
 include::{snippets}/user/update-user-affiliations/request-fields.adoc[]
-
-==== Response
-include::{snippets}/user/update-user-affiliations/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/user/update-user-affiliations/curl-request.adoc[]
