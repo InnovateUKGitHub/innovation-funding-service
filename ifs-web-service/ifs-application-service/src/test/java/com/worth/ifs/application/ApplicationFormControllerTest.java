@@ -9,6 +9,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Materials;
@@ -127,7 +128,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build());
+        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         // just check if these pages are not throwing errors.

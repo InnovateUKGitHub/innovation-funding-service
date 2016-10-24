@@ -17,7 +17,7 @@
 
         <p><span th:text="${results.totalElements}" class="heading-xlarge"></span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="@{'/dashboard/live'}">Clear filters</a></p>
 
-        <section th:with="openComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).OPEN)}">
+        <section th:with="openComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).OPEN)}">
             <div th:unless="${openComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
@@ -34,7 +34,7 @@
             </div>
         </section>
 
-        <section th:with="closedComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).CLOSED)}">
+        <section th:with="closedComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).CLOSED)}">
             <div th:unless="${closedComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
@@ -51,7 +51,7 @@
             </div>
         </section>
 
-        <section th:with="inAssesmentComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).IN_ASSESSMENT)}">
+        <section th:with="inAssesmentComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
             <div th:unless="${inAssesmentComps == null}">
                 <h2 class="heading-medium"
                     th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
@@ -69,7 +69,7 @@
         </section>
 
 
-        <section th:with="panelComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).FUNDERS_PANEL)}">
+        <section th:with="panelComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
             <div th:unless="${panelComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
@@ -87,7 +87,7 @@
         </section>
 
 
-        <section th:with="informComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).ASSESSOR_FEEDBACK)}">
+        <section th:with="informComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)}">
             <div th:unless="${informComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
@@ -104,7 +104,7 @@
             </div>
         </section>
 
-        <section th:with="inPrepComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)}">
+        <section th:with="inPrepComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
             <div th:unless="${inPrepComps == null}">
                 <h2 class="heading-medium"
                     th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
@@ -121,7 +121,7 @@
             </div>
         </section>
 
-        <section th:with="readyToOpenComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
+        <section th:with="readyToOpenComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
             <div th:unless="${readyToOpenComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Ready to open ('+${readyToOpenComps == null ? '0' : readyToOpenComps.size()}+')'"></h2>
@@ -138,7 +138,7 @@
             </div>
         </section>
 
-        <section th:with="projectSetupComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).PROJECT_SETUP)}">
+        <section th:with="projectSetupComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
             <div th:unless="${projectSetupComps == null}">
                 <h2 class="heading-medium"
                     th:text="'Project set up ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>

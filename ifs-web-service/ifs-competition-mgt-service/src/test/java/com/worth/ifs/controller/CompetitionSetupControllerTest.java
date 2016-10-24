@@ -8,7 +8,7 @@ import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
@@ -115,7 +115,7 @@ public class CompetitionSetupControllerTest {
     
     @Test
     public void initCompetitionSetupSection() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -130,7 +130,7 @@ public class CompetitionSetupControllerTest {
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);
 
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         CompetitionSetupForm compSetupForm = mock(CompetitionSetupForm.class);
@@ -171,7 +171,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitAutoSave() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         String fieldName = "title";
         String value = "New Title";
@@ -198,7 +198,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitAutoSaveValidationErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         String fieldName = "openingDate";
         String value = "20-02-2002";
@@ -230,7 +230,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void generateCompetitionCode() throws Exception {
         LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         competition.setStartDate(time);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionService.generateCompetitionCode(COMPETITION_ID, time)).thenReturn("1612-1");
@@ -242,7 +242,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitSectionInitialDetailsWithErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -255,7 +255,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitSectionInitialDetailsWithoutErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -280,7 +280,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitSectionEligibilityWithErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -293,7 +293,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitSectionEligibilityWithoutErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -340,7 +340,7 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void submitSectionEligibilityWithoutStreamName() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -365,7 +365,7 @@ public class CompetitionSetupControllerTest {
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
-                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFunders(CompetitionFundersFixture.getTestCoFunders())
                 .withId(8L).build();
 
@@ -396,7 +396,7 @@ public class CompetitionSetupControllerTest {
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
-                .withCompetitionStatus(Status.OPEN)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withFunders(CompetitionFundersFixture.getTestCoFunders())
                 .withId(COMPETITION_ID).build();
 
@@ -410,7 +410,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testSetCompetitionAsReadyToOpen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.READY_TO_OPEN)
+                .withCompetitionStatus(CompetitionStatus.READY_TO_OPEN)
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -423,7 +423,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testInitialDetailsRestriction() throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withId(COMPETITION_ID).build();
         Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
         sectionSetupStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
@@ -440,7 +440,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testInitialDetailsNoRestriction() throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);

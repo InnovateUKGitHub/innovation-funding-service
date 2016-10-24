@@ -44,7 +44,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         return competitions
                 .stream()
-                .filter(competition -> competition.getCompetitionStatus() == null || !competition.getCompetitionStatus().equals(CompetitionResource.Status.COMPETITION_SETUP))
+                .filter(competition -> competition.getCompetitionStatus() == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP))
                 .collect(Collectors.toList());
     }
 
@@ -65,17 +65,17 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>>getLiveCompetitions() {
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>>getLiveCompetitions() {
         return mapToStatus(competitionsRestService.findLiveCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
         return mapToStatus(competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
         return mapToStatus(competitionsRestService.findUpcomingCompetitions().getSuccessObjectOrThrowException());
     }
 
@@ -91,7 +91,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
     }
 
-    private Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
+    private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
         return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
     }
 

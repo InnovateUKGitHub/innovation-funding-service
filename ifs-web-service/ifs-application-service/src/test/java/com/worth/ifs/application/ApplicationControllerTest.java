@@ -8,7 +8,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatus;

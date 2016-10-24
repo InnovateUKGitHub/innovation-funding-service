@@ -1,0 +1,2 @@
+ALTER TABLE competition ADD COLUMN applications_distributed BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE competition ADD COLUMN assessment_closed BOOLEAN NOT NULL DEFAULT FALSE;

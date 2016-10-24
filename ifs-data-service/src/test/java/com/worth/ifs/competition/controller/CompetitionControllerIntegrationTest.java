@@ -320,7 +320,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.markAsSetup(competition.getId()).getSuccessObject();
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
-        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.READY_TO_OPEN);
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN);
     }
 
     @Rollback
@@ -337,7 +337,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.returnToSetup(competition.getId()).getSuccessObject();
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
-        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.COMPETITION_SETUP);
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
     @Rollback
     @Test
@@ -390,25 +390,25 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         List<CompetitionResource> existingComps = getAllCompetitions(2);
 
         CompetitionResource notStartedCompetition = createWithDates(oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead);
-        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.READY_TO_OPEN));
+        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.READY_TO_OPEN));
 
         CompetitionResource openCompetition = createWithDates(oneDayAgo, oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead);
-        assertThat(openCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.OPEN));
+        assertThat(openCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.OPEN));
 
         CompetitionResource closedCompetition = createWithDates(twoDaysAgo, oneDayAgo, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead);
-        assertThat(closedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.CLOSED));
+        assertThat(closedCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.CLOSED));
 
         CompetitionResource inAssessmentCompetition = createWithDates(threeDaysAgo, twoDaysAgo, oneDayAgo, threeDaysAhead, fourDaysAhead, fiveDaysAhead);
-        assertThat(inAssessmentCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.IN_ASSESSMENT));
+        assertThat(inAssessmentCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.IN_ASSESSMENT));
 
         CompetitionResource inPanelCompetition = createWithDates(fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo, fourDaysAhead, fiveDaysAhead);
-        assertThat(inPanelCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.FUNDERS_PANEL));
+        assertThat(inPanelCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.FUNDERS_PANEL));
 
         CompetitionResource assessorFeedbackCompetition = createWithDates(fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo, fiveDaysAhead);
-        assertThat(assessorFeedbackCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.ASSESSOR_FEEDBACK));
+        assertThat(assessorFeedbackCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.ASSESSOR_FEEDBACK));
 
         CompetitionResource projectSetup = createWithDates(sixDaysAgo, fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo);
-        assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionResource.Status.PROJECT_SETUP));
+        assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionStatus.PROJECT_SETUP));
 
         CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();;
 
@@ -575,12 +575,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private void checkExistingCompetition(CompetitionResource competition) {
         assertThat(competition, notNullValue());
         assertThat(competition.getName(), is(EXISTING_COMPETITION_NAME));
-        assertThat(competition.getCompetitionStatus(), is(CompetitionResource.Status.OPEN));
+        assertThat(competition.getCompetitionStatus(), is(CompetitionStatus.OPEN));
     }
 
     private void checkNewCompetition(CompetitionResource competition) {
         assertThat(competition, notNullValue());
         assertThat(competition.getName(), isEmptyOrNullString());
-        assertThat(competition.getCompetitionStatus(), is(CompetitionResource.Status.COMPETITION_SETUP));
+        assertThat(competition.getCompetitionStatus(), is(CompetitionStatus.COMPETITION_SETUP));
     }
 }

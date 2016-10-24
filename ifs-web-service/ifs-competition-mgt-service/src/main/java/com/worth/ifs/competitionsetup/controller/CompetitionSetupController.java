@@ -11,7 +11,7 @@ import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Funder;
@@ -386,8 +386,8 @@ public class CompetitionSetupController {
 
     private boolean isSendToDashboard(CompetitionResource competition) {
         return competition == null ||
-                (!Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
-                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
+                (!CompetitionStatus.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
+                !CompetitionStatus.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {

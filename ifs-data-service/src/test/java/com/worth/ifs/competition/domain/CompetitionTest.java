@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -128,19 +129,19 @@ public class CompetitionTest {
 
     @Test
     public void competitionStatusOpen(){
-        assertEquals(CompetitionResource.Status.OPEN, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.OPEN, competition.getCompetitionStatus());
     }
 
     @Test
     public void competitionStatusReadyToOpen(){
         competition.setStartDate(LocalDateTime.now().plusDays(1));
-        assertEquals(CompetitionResource.Status.READY_TO_OPEN, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test
     public void competitionClosingSoon(){
         CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setCompetitionStatus(CompetitionResource.Status.OPEN);
+        competitionResource.setCompetitionStatus(CompetitionStatus.OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
         competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
         assertTrue(competitionResource.isClosingSoon());
@@ -149,7 +150,7 @@ public class CompetitionTest {
     @Test
     public void competitionNotClosingSoon(){
         CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setCompetitionStatus(CompetitionResource.Status.OPEN);
+        competitionResource.setCompetitionStatus(CompetitionStatus.OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
         competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
         assertTrue(competitionResource.isClosingSoon());
@@ -159,7 +160,7 @@ public class CompetitionTest {
     public void competitionStatusInAssessment(){
         competition.setEndDate(LocalDateTime.now().minusDays(1));
         competition.setAssessmentStartDate(LocalDateTime.now().minusDays(1));
-        assertEquals(CompetitionResource.Status.IN_ASSESSMENT, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
     
     @Test
@@ -167,7 +168,7 @@ public class CompetitionTest {
         competition.setEndDate(LocalDateTime.now().minusDays(4));
         competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
         competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -176,7 +177,7 @@ public class CompetitionTest {
         competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
         competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(LocalDateTime.now().plusDays(1));
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -185,6 +186,6 @@ public class CompetitionTest {
         competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
         competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(1));
-        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
 }

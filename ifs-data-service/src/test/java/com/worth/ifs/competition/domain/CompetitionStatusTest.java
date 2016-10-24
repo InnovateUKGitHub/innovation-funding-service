@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.domain;
 
 import com.worth.ifs.competition.domain.Competition.DateProvider;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,13 +38,13 @@ public class CompetitionStatusTest {
     public void competitionInSetup(){
         competition.setSetupComplete(false);
 
-        assertEquals(CompetitionResource.Status.COMPETITION_SETUP, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.COMPETITION_SETUP, competition.getCompetitionStatus());
     }
     @Test
     public void competitionStatusReadyToOpen(){
     	competition.setStartDate(future);
         
-        assertEquals(CompetitionResource.Status.READY_TO_OPEN, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(future);
 
-        assertEquals(CompetitionResource.Status.OPEN, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.OPEN, competition.getCompetitionStatus());
     }
     
     @Test
@@ -60,7 +60,7 @@ public class CompetitionStatusTest {
     	competition.setStartDate(currentDate);
     	competition.setEndDate(future);
 
-        assertEquals(CompetitionResource.Status.OPEN, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.OPEN, competition.getCompetitionStatus());
     }
     
     @Test
@@ -69,7 +69,7 @@ public class CompetitionStatusTest {
     	competition.setEndDate(past);
     	competition.setAssessmentEndDate(future);
 
-        assertEquals(CompetitionResource.Status.IN_ASSESSMENT, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
     
     @Test
@@ -78,7 +78,7 @@ public class CompetitionStatusTest {
     	competition.setEndDate(currentDate);
     	competition.setAssessmentEndDate(future);
 
-        assertEquals(CompetitionResource.Status.IN_ASSESSMENT, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
     
     @Test
@@ -88,7 +88,7 @@ public class CompetitionStatusTest {
     	competition.setAssessmentEndDate(past);
     	competition.setFundersPanelEndDate(future);
 
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -98,7 +98,7 @@ public class CompetitionStatusTest {
     	competition.setAssessmentEndDate(currentDate);
     	competition.setFundersPanelEndDate(future);
 
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -107,7 +107,7 @@ public class CompetitionStatusTest {
     	competition.setEndDate(past);
     	competition.setAssessmentEndDate(past);
 
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -116,7 +116,7 @@ public class CompetitionStatusTest {
     	competition.setEndDate(past);
     	competition.setAssessmentEndDate(currentDate);
 
-        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
@@ -127,7 +127,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(past);
     	competition.setAssessorFeedbackDate(future);
 
-        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
     
     @Test
@@ -138,7 +138,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(currentDate);
     	competition.setAssessorFeedbackDate(future);
 
-        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
     
     @Test
@@ -148,7 +148,7 @@ public class CompetitionStatusTest {
     	competition.setAssessmentEndDate(past);
     	competition.setFundersPanelEndDate(past);
 
-        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
     
     @Test
@@ -159,7 +159,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(currentDate);
     	competition.setAssessorFeedbackDate(future);
 
-        assertEquals(CompetitionResource.Status.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
     
     @Test
@@ -170,7 +170,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(past);
     	competition.setAssessorFeedbackDate(past);
 
-        assertEquals(CompetitionResource.Status.PROJECT_SETUP, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
     }
     
     @Test
@@ -181,7 +181,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(past);
     	competition.setAssessorFeedbackDate(currentDate);
 
-        assertEquals(CompetitionResource.Status.PROJECT_SETUP, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
     }
 
     /**
@@ -191,7 +191,7 @@ public class CompetitionStatusTest {
     @Test
     public void competitionStatusProjectSetupForNewCompetition(){
         Competition newCompetition = new Competition();
-        assertEquals(CompetitionResource.Status.COMPETITION_SETUP, newCompetition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.COMPETITION_SETUP, newCompetition.getCompetitionStatus());
     }
     
 }

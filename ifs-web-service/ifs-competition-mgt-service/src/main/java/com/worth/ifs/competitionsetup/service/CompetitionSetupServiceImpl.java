@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
@@ -108,7 +109,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
-		if (competitionResource.getCompetitionStatus() != CompetitionResource.Status.COMPETITION_SETUP
+		if (competitionResource.getCompetitionStatus() != CompetitionStatus.COMPETITION_SETUP
 				&& competitionResource.getStartDate().isAfter(LocalDateTime.now())) {
 			return false;
 		}
@@ -122,7 +123,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public void setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
-		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
 			return;
 		}
 

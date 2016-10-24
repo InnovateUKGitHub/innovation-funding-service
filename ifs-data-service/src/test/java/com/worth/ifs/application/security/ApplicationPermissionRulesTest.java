@@ -5,7 +5,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -20,7 +20,7 @@ import java.util.List;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -207,7 +207,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -235,7 +235,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -262,7 +262,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
         // For each possible Competition Status...
-        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -292,7 +292,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void testCompAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
-        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -333,7 +333,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ProcessRole assessorProcessRole = newProcessRole().withRole(ASSESSOR).build();
 
         // For each possible Competition Status...
-        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             application.setCompetitionStatus(competitionStatus);
 

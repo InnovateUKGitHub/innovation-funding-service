@@ -10,7 +10,7 @@ import com.worth.ifs.application.mapper.FundingDecisionMapper;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
@@ -85,7 +85,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.APPROVED.getId())).thenReturn(approvedStatus);
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.REJECTED.getId())).thenReturn(rejectedStatus);
     	
-    	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(Status.FUNDERS_PANEL).withId(123L).build();
+    	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withId(123L).build();
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     	
     	when(fundingDecisionMapper.mapToDomain(any(FundingDecision.class))).thenAnswer(new Answer<FundingDecisionStatus>(){
@@ -102,7 +102,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testFailIfCompetitionInWrongState() {
-    	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(Status.IN_ASSESSMENT).withId(123L).build();
+    	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).withId(123L).build();
     	when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
     	
     	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);

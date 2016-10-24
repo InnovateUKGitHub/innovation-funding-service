@@ -12,7 +12,7 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
@@ -192,7 +192,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         cleanUpCompetitionSections(competition);
 
-        if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
+        if(competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 

@@ -32,7 +32,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.OPEN;
+import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**

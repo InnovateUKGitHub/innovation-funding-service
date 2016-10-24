@@ -10,6 +10,7 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -88,7 +89,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
-        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN);
+        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN);
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);

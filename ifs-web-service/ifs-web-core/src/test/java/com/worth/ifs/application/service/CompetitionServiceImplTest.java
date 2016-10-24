@@ -78,7 +78,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getAllCompetitionsNotInSetup() throws Exception {
-        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
+        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
 
@@ -134,44 +134,44 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getLiveCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionResource.Status.OPEN, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionResource.Status.OPEN, "Special");
-        CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", "innovation area 3", 123, "12/02/2016", CompetitionResource.Status.IN_ASSESSMENT, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.OPEN, "Special");
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.OPEN, "Special");
+        CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", "innovation area 3", 123, "12/02/2016", CompetitionStatus.IN_ASSESSMENT, "Special");
 
         when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(asList(resource1, resource2, resource3)));
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getLiveCompetitions();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getLiveCompetitions();
 
-        assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource1));
-        assertTrue(result.get(CompetitionResource.Status.OPEN).contains(resource2));
-        assertTrue(result.get(CompetitionResource.Status.IN_ASSESSMENT).contains(resource3));
-        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+        assertTrue(result.get(CompetitionStatus.OPEN).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.OPEN).contains(resource2));
+        assertTrue(result.get(CompetitionStatus.IN_ASSESSMENT).contains(resource3));
+        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
     }
 
     @Test
     public void test_getProjectSetupCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionResource.Status.PROJECT_SETUP, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionResource.Status.PROJECT_SETUP, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special");
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special");
         when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
 
-        assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionResource.Status.PROJECT_SETUP).contains(resource2));
-        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource2));
+        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
     }
 
     @Test
     public void test_getUpcomingCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionResource.Status.COMPETITION_SETUP, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionResource.Status.READY_TO_OPEN, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.COMPETITION_SETUP, "Special");
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.READY_TO_OPEN, "Special");
         when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> result = service.getUpcomingCompetitions();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getUpcomingCompetitions();
 
-        assertTrue(result.get(CompetitionResource.Status.COMPETITION_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionResource.Status.READY_TO_OPEN).contains(resource2));
-        assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
+        assertTrue(result.get(CompetitionStatus.COMPETITION_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.READY_TO_OPEN).contains(resource2));
+        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
     }
 
     @Test

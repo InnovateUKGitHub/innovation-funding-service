@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSummaryResource, CompetitionSummaryResourceBuilder> {
 
@@ -33,7 +33,7 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
         return withArray((competitionId, competition) -> competition.setCompetitionId(competitionId), competitionIds);
     }
     
-    public CompetitionSummaryResourceBuilder withCompetitionStatus(Status... competitionStatus) {
+    public CompetitionSummaryResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatus) {
         return withArray((competitionState, competition) -> competition.setCompetitionStatus(competitionState), competitionStatus);
     }
 

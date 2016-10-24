@@ -30,7 +30,7 @@ import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -16,7 +16,7 @@
     </form>
     <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})" th:remove="tag" />
 
-    <section th:with="projectSetupComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).PROJECT_SETUP)}">
+    <section th:with="projectSetupComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"
             th:text="'Project set up ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
         <ul class="list-overview">

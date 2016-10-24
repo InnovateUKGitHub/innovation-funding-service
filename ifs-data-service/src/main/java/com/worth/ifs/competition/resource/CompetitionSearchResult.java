@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class CompetitionSearchResult extends PageResource<CompetitionSearchResultItem> {
 
-    private Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mappedCompetitions;
+    private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mappedCompetitions;
 
     @JsonIgnore
-    public Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> getMappedCompetitions() {
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getMappedCompetitions() {
         return mappedCompetitions;
     }
 
-    public void setMappedCompetitions(Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mappedCompetitions) { this.mappedCompetitions = mappedCompetitions; }
+    public void setMappedCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> mappedCompetitions) { this.mappedCompetitions = mappedCompetitions; }
 }

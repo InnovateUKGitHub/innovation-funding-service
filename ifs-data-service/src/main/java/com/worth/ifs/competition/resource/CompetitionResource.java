@@ -30,7 +30,7 @@ public class CompetitionResource {
     private LocalDateTime assessmentEndDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
-    private Status competitionStatus;
+    private CompetitionStatus competitionStatus;
     @Min(0)
     @Max(100)
     private Integer maxResearchRatio;
@@ -84,14 +84,14 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isOpen() {
-        return Status.OPEN.equals(competitionStatus);
+        return CompetitionStatus.OPEN.equals(competitionStatus);
     }
 
-    public Status getCompetitionStatus() {
+    public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
 
-    public void setCompetitionStatus(Status competitionStatus) {
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
     }
 
@@ -391,10 +391,6 @@ public class CompetitionResource {
 
     public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
         this.sectionSetupStatus = sectionSetupStatus;
-    }
-
-    public enum Status {
-        COMPETITION_SETUP,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
     }
 
     public String getActivityCode() {

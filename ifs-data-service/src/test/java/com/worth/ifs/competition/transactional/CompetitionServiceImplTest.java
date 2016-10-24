@@ -9,10 +9,7 @@ import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
@@ -164,7 +161,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(page, response.getNumber());
         assertEquals(size, response.getSize());
 
-        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(), competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type");
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(), competition.getName(), null, 0, "", CompetitionStatus.COMPETITION_SETUP, "Comp Type");
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 

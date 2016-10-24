@@ -44,8 +44,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;

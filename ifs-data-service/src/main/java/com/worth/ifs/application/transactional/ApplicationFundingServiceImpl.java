@@ -8,7 +8,7 @@ import com.worth.ifs.application.mapper.FundingDecisionMapper;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -88,7 +88,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
         }
 
-        if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+        if(!CompetitionStatus.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
             LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competition.getId());
             return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
         }

@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -24,6 +25,7 @@ public class CompetitionParticipantResource {
     private String competitionName;
     private LocalDateTime assessmentStartDate;
     private LocalDateTime assessmentEndDate;
+//    private CompetitionStatus competitionStatus;
 
     public String getCompetitionName() {
         return competitionName;
@@ -114,6 +116,15 @@ public class CompetitionParticipantResource {
     }
 
 
+//    public CompetitionStatus getCompetitionStatus() {
+//        return competitionStatus;
+//    }
+//
+//    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
+//        this.competitionStatus = competitionStatus;
+//    }
+
+
     @JsonIgnore
     public long getAssessmentDaysLeft() {
         return DAYS.between(LocalDateTime.now(), assessmentEndDate);
@@ -128,6 +139,11 @@ public class CompetitionParticipantResource {
     public boolean isInAssessment() {
         return assessmentStartDate.isBefore(LocalDateTime.now()) && assessmentEndDate.isAfter(LocalDateTime.now());
     }
+
+//    @JsonIgnore
+//    public boolean isInAssessment() {
+//        return this.competitionStatus == CompetitionStatus.IN_ASSESSMENT;
+//    }
 
     @JsonIgnore
     public boolean isAnUpcomingAssessment() {
@@ -164,6 +180,7 @@ public class CompetitionParticipantResource {
                 .append(competitionName, that.competitionName)
                 .append(assessmentStartDate, that.assessmentStartDate)
                 .append(assessmentEndDate, that.assessmentEndDate)
+//                .append(competitionStatus, that.competitionStatus)
                 .isEquals();
     }
 
@@ -181,6 +198,7 @@ public class CompetitionParticipantResource {
                 .append(competitionName)
                 .append(assessmentStartDate)
                 .append(assessmentEndDate)
+//                .append(competitionStatus)
                 .toHashCode();
     }
 }
