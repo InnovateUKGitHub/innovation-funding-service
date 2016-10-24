@@ -7,7 +7,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static com.worth.ifs.invite.controller.InviteProjectController.*;
+import static com.worth.ifs.invite.resource.InviteProjectConstants.*;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
