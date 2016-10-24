@@ -19,11 +19,15 @@
 
 if (!Object.keys){
   Object.keys = function(obj) {
-      if (obj !== Object(obj))
-          throw new TypeError('Object.keys called on a non-object');
-      var k = [], p;
-      for (p in obj) if (Object.prototype.hasOwnProperty.call(obj, p)) k.push(p);
-          return k;
+    if (obj !== Object(obj))
+    throw new TypeError('Object.keys called on a non-object');
+    var k = [], p;
+    for (p in obj){
+      if (Object.prototype.hasOwnProperty.call(obj, p)){
+        k.push(p);
+        return k;
+      }
+    }
   };
 }
 
@@ -31,32 +35,32 @@ if (!Object.keys){
 var UTIL = (function(){
   "use strict";
   return {
-      fire : function(func,funcname, args){
-        var keys = Object.keys(IFS);
-        jQuery.each(keys,function(){
-            if(typeof(IFS[this].loadOrder) !== 'undefined'){
-              var namespace = IFS[this].loadOrder;  // indicate your obj literal namespace here
-              funcname = (funcname === undefined) ? 'init' : funcname;
-              if (func !== '' && namespace[func] && typeof namespace[func][funcname] == 'function'){
-                namespace[func][funcname](args);
-              }
-            }
-        });
-      },
-      loadEvents : function(){
-        var bodyId = document.body.id;
-        // hit up common first.
-        UTIL.fire('common');
-        // do all the classes too.
-        jQuery.each(document.body.className.split(/\s+/),function(i,classnm){
-          UTIL.fire(classnm);
-          UTIL.fire(classnm,bodyId);
-        });
-        UTIL.fire('common','finalize');
-      }
+    fire : function(func, funcname, args){
+      var keys = Object.keys(IFS);
+      jQuery.each(keys, function(){
+        if(typeof(IFS[this].loadOrder) !== 'undefined'){
+          var namespace = IFS[this].loadOrder;  // indicate your obj literal namespace here
+          funcname = (funcname === undefined) ? 'init' : funcname;
+          if (func !== '' && namespace[func] && typeof namespace[func][funcname] == 'function'){
+            namespace[func][funcname](args);
+          }
+        }
+      });
+    },
+    loadEvents : function(){
+      var bodyId = document.body.id;
+      // hit up common first.
+      UTIL.fire('common');
+      // do all the classes too.
+      jQuery.each(document.body.className.split(/\s+/), function(i, classnm){
+        UTIL.fire(classnm);
+        UTIL.fire(classnm, bodyId);
+      });
+      UTIL.fire('common', 'finalize');
+    }
   };
 })();
 // kick it all off here
 jQuery(document).ready(function(){
-    UTIL.loadEvents();
+  UTIL.loadEvents();
 });
