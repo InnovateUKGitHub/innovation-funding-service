@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
-import static com.worth.ifs.invite.controller.ApplicationInviteController.GET_USER_BY_HASH_MAPPING;
+import static com.worth.ifs.invite.resource.InviteProjectConstants.GET_USER_BY_HASH_MAPPING;
 
 /*
 * A typical RestService to use as a client API on the web-service side for the data-service functionality .
@@ -72,7 +72,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
     @Override
     public RestResult<UserResource> getUser(String inviteHash) {
-        String url = inviteRestUrl + String.format(ApplicationInviteController.GET_USER_BY_HASH_MAPPING + "%s", inviteHash);
+        String url = inviteRestUrl + String.format(GET_USER_BY_HASH_MAPPING + "%s", inviteHash);
         return getWithRestResultAnonymous(url, UserResource.class);
     }
 
