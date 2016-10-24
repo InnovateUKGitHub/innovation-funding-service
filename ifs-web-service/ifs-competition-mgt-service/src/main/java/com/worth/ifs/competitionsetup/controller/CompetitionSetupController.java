@@ -310,15 +310,6 @@ public class CompetitionSetupController {
         }
     }
 
-    @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
-    public String submitFinanceSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
-
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.FINANCE, model);
-    }
-
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
     public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
