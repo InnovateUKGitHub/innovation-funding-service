@@ -3,12 +3,10 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
-import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -45,9 +43,6 @@ public class ProjectSetupStatusController {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private BankDetailsRestService bankDetailsRestService;
-	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -108,7 +103,7 @@ public class ProjectSetupStatusController {
                 statusAccessor.canAccessFinanceChecksSection(organisation),
                 statusAccessor.canAccessSpendProfileSection(organisation),
                 statusAccessor.canAccessOtherDocumentsSection(organisation),
-                SectionAccess.ACCESSIBLE);
+                statusAccessor.canAccessGrantOfferLetterSection(organisation));
     }
 
     private boolean checkLeadPartnerProjectDetailsSubmitted(ProjectTeamStatusResource teamStatus) {
