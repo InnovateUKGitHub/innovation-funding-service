@@ -612,7 +612,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                                                            String email, Long organisationId) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        OrganisationResource inviteOrganisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
         InviteProjectResource inviteResource = new InviteProjectResource();
 
@@ -620,8 +620,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         inviteResource.setName(name);
         inviteResource.setEmail (email);
         inviteResource.setOrganisation(organisationId);
-        inviteResource.setInviteOrganisation(organisationId);
-        inviteResource.setInviteOrganisationName(inviteOrganisation.getName());
+        inviteResource.setOrganisationName(organisationResource.getName());
         inviteResource.setApplicationId(projectResource.getApplication());
         inviteResource.setLeadOrganisation(leadOrganisation.getName());
 

@@ -27,7 +27,7 @@
           <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
           <p class="linkbar">
             <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View application and feedback</a>
-            <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
+            <a th:href="${'/info/terms-and-conditions'}" class="buttonlink">View terms and conditions of grant offer</a>
           </p>
         </div>
       </li>

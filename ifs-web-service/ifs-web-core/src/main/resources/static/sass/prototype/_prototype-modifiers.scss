@@ -317,17 +317,47 @@ ul.underline{
 /*--- Inline Nav ---*/
 
 ul.inline-nav{
-	li a{
+
+	@include media-down(mobile) {
+		padding: 0;
+
+		li{
+			
+			a{
+				padding: 10px;
+			}
+
+			&.selected a{
+				border-bottom: 1px solid $border-colour;
+				padding: 9px 10px;
+				margin-left: 2px;
+			}
+		}
+
+		&:after{
+			content: none;
+		}
+	}
+	/*li a{
 		text-decoration: none;
 		color: $black;
-	}
+	}*/
 	li{
 		&.not-selected{
 			background: $grey-3;
-			margin-right: 2px;
+			//margin-right: 2px;
 			margin-left: 2px;
+
+			@include media-down(mobile) {
+				a{
+					padding: 10px;
+				}
+			}
+
 		}
 	}
+
+
 }
 
 
