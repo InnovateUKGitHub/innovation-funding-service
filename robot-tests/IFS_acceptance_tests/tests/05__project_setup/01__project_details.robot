@@ -25,7 +25,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-3550 As a potential Project Manager, I can receive an email with a Join link, so that I can start the registration process and collaborate with the project
 ...
 ...               INFUND-3530 As a potential Finance Contact, I can click on a link to register and to become a Finance Contact for a Partner Organisation, so that I can start collaborating on the Project
-...
+...AC
 ...               INFUND-3554 As a potential Project Manager, I can click on a link to register and to become a Project Manager for the Project, so that I can start collaborating on the Project
 
 
@@ -210,7 +210,7 @@ Inviting project manager client side validations
 
 Partner invites a project manager
     [Documentation]    INFUND-3483
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
@@ -227,7 +227,7 @@ Invited project manager receives an email
 
 Invited project manager registration flow
     [Documentation]    INFUND-3554
-    [Tags]    Email    HappyPath
+    [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -375,7 +375,7 @@ Inviting finance contact client side validations
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
@@ -391,7 +391,7 @@ Invited finance contact receives an email
 
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
-    [Tags]    Email    HappyPath
+    [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
