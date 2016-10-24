@@ -12,13 +12,14 @@ log in and create new application for collaboration if there is not one already
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new invite application with the same user
 
-Log in create a new invite application invite academic collaborators and accept the invite
+Login new application invite academic
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
     ...    AND    Delete the emails from both test mailboxes
-    ...    AND    Invite and accept the invitation
+    ...    AND    Invite and accept the invitation        ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
 
 new account complete all but one
@@ -40,7 +41,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
-    When the user opens the mailbox and verifies the email from    ${test_mailbox_one}+submittest@gmail.com
+    When the user opens the mailbox and reads his own email    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
@@ -120,6 +121,7 @@ Create new academic application with the same user
     And the user clicks the button/link    jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user should see the text in the page    view team members and add collaborators
@@ -133,7 +135,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     And the user closes the browser
     And the guest user opens the browser
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user opens the mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -152,7 +154,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Arsene    Wenger
-    And the user opens the mailbox and verifies the email from    ${test_mailbox_one}+academictest@gmail.com
+    And the user opens the mailbox and reads his own email    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
 

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot

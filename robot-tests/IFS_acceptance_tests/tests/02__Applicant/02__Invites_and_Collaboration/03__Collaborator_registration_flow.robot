@@ -137,7 +137,7 @@ Catapult search (accept invitation flow)
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user opens the mailbox and verifies the email
+    Given the user opens the mailbox and reads his own email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
