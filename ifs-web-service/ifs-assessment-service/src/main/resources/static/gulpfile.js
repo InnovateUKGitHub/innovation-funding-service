@@ -9,20 +9,20 @@ gulp.task('default',['js','css']);
 
 //build all js
 gulp.task('js', function () {
-   return gulp.src([
-      'js/ifsAssessmentLoader.js',
-      'js/ifs_modules/*.js',
-      'js/ifs_pages/*.js',
-   	])
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    // .pipe(jshint.reporter('fail'))
-    .pipe(jscs())
-    .pipe(jscs.reporter())
-    // .pipe(jscs.reporter('fail'))
-    .pipe(concat('assessment.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('js/dest'))
+  return gulp.src([
+    'js/ifsAssessmentLoader.js',
+    'js/ifs_modules/*.js',
+    'js/ifs_pages/*.js'
+  ])
+  .pipe(jshint())
+  .pipe(jshint.reporter('jshint-stylish'))
+  // .pipe(jshint.reporter('fail'))
+  .pipe(jscs())
+  .pipe(jscs.reporter())
+  // .pipe(jscs.reporter('fail'))
+  .pipe(concat('assessment.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
 });
 gulp.task('css', function () {});
 gulp.task('css:watch', function () {});
