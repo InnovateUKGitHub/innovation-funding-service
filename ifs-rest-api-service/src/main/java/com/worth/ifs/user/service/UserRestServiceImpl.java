@@ -12,8 +12,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static java.lang.String.format;
