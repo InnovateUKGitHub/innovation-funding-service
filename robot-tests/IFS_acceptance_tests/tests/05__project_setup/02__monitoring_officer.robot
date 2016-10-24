@@ -104,8 +104,8 @@ MO details(email step)
     ...    INFUND-2633
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you    New Monitoring Officer assignment
-    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer    Monitoring Officer assigned to your project
+    When the user reads his email    ${test_mailbox_two}@gmail.com    New Monitoring Officer assignment    has been assigned to you
+    And the user reads his email    worth.email.test@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring officer
 
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-2630, INFUND-2621
@@ -137,8 +137,8 @@ MO details edit(email step)
     ...    INFUND-2634
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you    New Monitoring Officer assignment
-    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer    Monitoring Officer assigned to your project
+    When the user reads his email    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
+    And the user reads his email    worth.email.test@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621

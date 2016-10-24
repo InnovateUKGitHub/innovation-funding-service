@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation     INFUND-2612 As a partner I want to have a overview of where I am in the process and what outstanding tasks I have to complete so that I can understand our project setup steps
 ...
-...
 ...               INFUND-2613 As a lead partner I need to see an overview of project details for my project so that I can edit the project details in order for Innovate UK to be able to assign an appropriate Monitoring Officer
 ...
 ...               INFUND-2614 As a lead partner I need to provide a target start date for the project so that Innovate UK has correct details for my project setup
@@ -221,7 +220,7 @@ Partner invites a project manager
 Invited project manager receives an email
     [Documentation]    INFUND-3550
     [Tags]    HappyPath    Email
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Project Manager invitation    You will be managing the project
     Then the user should see the text in the page    Vitruvius Stonework Limited
 
 
@@ -232,7 +231,7 @@ Invited project manager registration flow
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
-    And the user opens the mailbox and accepts the invitation to collaborate
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
@@ -385,7 +384,7 @@ Partner invites a finance contact
 Invited finance contact receives an email
     [Documentation]    INFUND-3524
     [Tags]    HappyPath    Email
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
     Then the user should see the text in the page    Vitruvius Stonework Limited
 
 
@@ -396,7 +395,7 @@ Invited finance contact registration flow
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
-    And the user opens the mailbox and accepts the invitation to collaborate
+    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
