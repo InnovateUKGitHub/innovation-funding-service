@@ -134,8 +134,18 @@ public class ProjectSetupSectionPartnerAccessor {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
+
+        // TODO DW - implement when the ability to generate a Grant Offer Letter is enabled
+        return NOT_ACCESSIBLE;
+    }
+
     public boolean isProjectDetailsSubmitted() {
         return projectSetupProgressChecker.isProjectDetailsSubmitted();
+    }
+
+    public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
+        return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }
 
     private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {
