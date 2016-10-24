@@ -70,12 +70,12 @@ Choosing to Notify the applicants in the dialogue
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then the user reads his email    worth.email.test@gmail.com    Feedback for your application into the competition La Fromage is now available    Dear test ten
+    Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    Feedback for your application into the competition La Fromage is now available.    Dear test ten
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then the user reads his email    worth.email.test.two@gmail.com    Feedback for your application into the competition La Fromage is now available    Dear test eleven
+    Then the user reads his email    ${test_mailbox_two}+fundfailure@gmail.com    Feedback for your application into the competition La Fromage is now available.    Dear test eleven
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
