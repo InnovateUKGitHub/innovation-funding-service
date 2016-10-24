@@ -36,13 +36,14 @@ public class ProjectSpendProfileViewModel {
     private Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap;
     private Map<Long, CostCategoryResource> costCategoryResourceMap;
     private boolean submitted;
+    private boolean userPartOfThisOrganisation;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<Long, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
-                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research) {
+                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -60,6 +61,7 @@ public class ProjectSpendProfileViewModel {
         this.costCategoryResourceMap = costCategoryResourceMap;
         this.research = research;
         this.submitted = submitted;
+        this.userPartOfThisOrganisation = userPartOfThisOrganisation;
     }
 
     public Long getProjectId() {
@@ -194,6 +196,10 @@ public class ProjectSpendProfileViewModel {
             return submitted;
     }
 
+    public boolean isUserPartOfThisOrganisation() {
+        return userPartOfThisOrganisation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -218,6 +224,7 @@ public class ProjectSpendProfileViewModel {
                 .append(totalForEachMonth, that.totalForEachMonth)
                 .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
                 .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
+                .append(userPartOfThisOrganisation, that.userPartOfThisOrganisation)
                 .isEquals();
     }
 
@@ -260,6 +267,7 @@ public class ProjectSpendProfileViewModel {
                 .append("totalOfAllActualTotals", totalOfAllActualTotals)
                 .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
                 .append("submitted", submitted)
+                .append("userPartOfThisOrganisation", userPartOfThisOrganisation)
                 .toString();
     }
 }
