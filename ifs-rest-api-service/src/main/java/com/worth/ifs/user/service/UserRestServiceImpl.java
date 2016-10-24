@@ -17,6 +17,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static java.lang.String.format;
+import static com.worth.ifs.user.resource.UserRelatedURLs.*;
+
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link UserResource}.
@@ -45,7 +47,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(email))
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
 
-        return getWithRestResultAnonymous(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+        return getWithRestResultAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
 
     @Override
@@ -55,8 +57,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
-        return getWithRestResultAnonymous(userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
+        LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
+        return getWithRestResultAnonymous(userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
     }
 
     @Override
@@ -66,8 +68,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+" body: "+password);
-        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
+        LOG.warn("resetPassword 2 " + userRestURL + "/"+ URL_PASSWORD_RESET+"/"+hash+" body: "+password);
+        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 
     @Override
@@ -140,12 +142,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_VERIFY_EMAIL, hash), Void.class);
+        return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_VERIFY_EMAIL, hash), Void.class);
     }
 
     @Override
     public RestResult<Void> resendEmailVerificationNotification(String email) {
-        return putWithRestResultAnonymous(String.format("%s/%s/%s/", userRestURL, UserController.URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
+        return putWithRestResultAnonymous(String.format("%s/%s/%s/", userRestURL, URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
     }
 
     @Override

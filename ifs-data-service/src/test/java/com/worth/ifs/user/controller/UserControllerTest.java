@@ -23,8 +23,7 @@ import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliati
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
-import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
+import static com.worth.ifs.user.resource.UserRelatedURLs.*;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.time.LocalDateTime.now;
