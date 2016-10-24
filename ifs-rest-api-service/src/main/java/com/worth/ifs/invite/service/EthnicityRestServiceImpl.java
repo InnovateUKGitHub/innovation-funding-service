@@ -11,10 +11,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.ethnicit
 import static java.lang.String.format;
 
 /**
- * Service for CRUD operations on {@link com.worth.ifs.user.domain.Ethnicity}s.
- * <p>
- * This class connects to the {@link com.worth.ifs.invite.controller.EthnicityController}
- * through a REST call.
+ * Service for CRUD operations on {@link EthnicityResource}s.
  */
 @Service
 public class EthnicityRestServiceImpl extends BaseRestService implements EthnicityRestService {

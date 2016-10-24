@@ -6,7 +6,7 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.invite.domain.RejectionReason} related data.
+ * Interface for CRUD operations on {@link RejectionReasonResource} related data.
  */
 public interface RejectionReasonRestService {
 

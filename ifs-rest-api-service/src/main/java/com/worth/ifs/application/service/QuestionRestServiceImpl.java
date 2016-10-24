@@ -1,11 +1,11 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import static com.worth.ifs.application.service.Futures.adapt;
@@ -22,8 +22,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.question
 import static java.util.Arrays.asList;
 
 /**
- * QuestionRestServiceImpl is a utility for CRUD operations on {@link Question}.
- * This class connects to the {@link com.worth.ifs.application.controller.QuestionController}
+ * QuestionRestServiceImpl is a utility for CRUD operations on {@link QuestionResource}.
+ * This class connects to the { com.worth.ifs.application.controller.QuestionController}
  * through a REST call.
  */
 @Service

@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
@@ -11,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * Interface for CRUD operations on {@link Question} related data.
+ * Interface for CRUD operations on {@link QuestionResource} related data.
  */
 public interface QuestionRestService {
     RestResult<List<ValidationMessages>> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 /**
- * REST service for managing {@link com.worth.ifs.invite.domain.Invite}s to {@link com.worth.ifs.competition.domain.Competition}s
+ * REST service for managing {@link com.worth.ifs.invite.resource.InviteResource} to {@link com.worth.ifs.competition.resource.CompetitionResource}s
  */
 @Service
 public class CompetitionInviteRestServiceImpl extends BaseRestService implements CompetitionInviteRestService {

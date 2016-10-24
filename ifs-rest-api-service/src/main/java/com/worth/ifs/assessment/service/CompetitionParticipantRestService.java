@@ -8,7 +8,7 @@ import com.worth.ifs.invite.resource.ParticipantStatusResource;
 import java.util.List;
 
 /**
- * REST service for retrieving {@link com.worth.ifs.invite.domain.CompetitionParticipant}s
+ * REST service for retrieving {@link com.worth.ifs.invite.resource.CompetitionParticipantResource}s
  */
 public interface CompetitionParticipantRestService {
 

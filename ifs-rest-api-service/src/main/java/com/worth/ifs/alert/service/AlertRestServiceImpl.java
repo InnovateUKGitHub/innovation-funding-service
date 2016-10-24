@@ -4,6 +4,7 @@ import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,7 +2,6 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,8 +15,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competit
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
- * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
- * This class connects to the {@link com.worth.ifs.competition.controller.CompetitionController}
+ * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
+ * This class connects to the { com.worth.ifs.competition.controller.CompetitionController}
  * through a REST call.
  */
 @Service

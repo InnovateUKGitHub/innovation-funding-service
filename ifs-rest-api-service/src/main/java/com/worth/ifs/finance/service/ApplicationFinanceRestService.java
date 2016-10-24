@@ -2,14 +2,13 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link ApplicationFinance} related data.
+ * Interface for CRUD operations on {@link ApplicationFinanceResource} related data.
  */
 public interface ApplicationFinanceRestService {
     RestResult<ApplicationFinanceResource> getApplicationFinance(Long applicationId, Long organisationId);

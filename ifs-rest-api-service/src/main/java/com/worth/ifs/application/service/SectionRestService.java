@@ -5,14 +5,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 
 /**
- * Interface for CRUD operations on {@link Section} related data.
+ * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionRestService {
     RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);

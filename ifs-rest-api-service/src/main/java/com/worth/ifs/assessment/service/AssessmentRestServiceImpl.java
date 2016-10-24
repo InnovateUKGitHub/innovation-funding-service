@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessme
 import static java.lang.String.format;
 
 /**
- * AssessmentFeedbackRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.assessment.domain.Assessment}.
- * This class connects to the {@link com.worth.ifs.assessment.controller.AssessmentController}
+ * AssessmentFeedbackRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.assessment.resource.AssessmentResource}.
+ * This class connects to the {com.worth.ifs.assessment.controller.AssessmentController}
  * through a REST call.
  */
 @Service

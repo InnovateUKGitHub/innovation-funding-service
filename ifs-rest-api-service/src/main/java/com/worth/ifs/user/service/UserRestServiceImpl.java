@@ -1,9 +1,8 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.user.controller.UserController;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,8 +19,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static java.lang.String.format;
 
 /**
- * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
- * This class connects to the {@link com.worth.ifs.user.controller.UserController}
+ * UserRestServiceImpl is a utility for CRUD operations on {@link UserResource}.
+ * This class connects to the {com.worth.ifs.user.controller.UserController}
  * through a REST call.
  */
 @Service
@@ -36,7 +35,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
         if(StringUtils.isEmpty(uid))
-            return restFailure(CommonErrors.notFoundError(User.class, uid));
+            return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
         return getWithRestResult(userRestURL + "/uid/" + uid, UserResource.class);
     }
@@ -44,7 +43,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> sendPasswordResetNotification(String email) {
         if(StringUtils.isEmpty(email))
-            return restFailure(CommonErrors.notFoundError(User.class, email));
+            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
 
         return getWithRestResultAnonymous(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
@@ -74,7 +73,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> findUserByEmail(String email) {
         if(StringUtils.isEmpty(email)) {
-            return restFailure(CommonErrors.notFoundError(User.class, email));
+            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
         return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
@@ -83,7 +82,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
         if(StringUtils.isEmpty(email)) {
-            return restFailure(CommonErrors.notFoundError(User.class, email));
+            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
         return getWithRestResultAnonymous(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
@@ -92,7 +91,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> retrieveUserById(Long id) {
         if(id == null || id.equals(0L)) {
-            return restFailure(CommonErrors.notFoundError(User.class, id));
+            return restFailure(CommonErrors.notFoundError(UserResource.class, id));
         }
 
         return getWithRestResult(userRestURL + "/id/" + id, UserResource.class);

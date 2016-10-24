@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +12,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessor
 import static java.lang.String.format;
 
 /**
- * AssessorFormInputResponseRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.assessment.domain.AssessorFormInputResponse}.
- * This class connects to the {@link com.worth.ifs.assessment.controller.AssessorFormInputResponseController}
+ * AssessorFormInputResponseRestServiceImpl is a utility for CRUD operations on {com.worth.ifs.assessment.domain.AssessorFormInputResponse}.
+ * This class connects to the {com.worth.ifs.assessment.controller.AssessorFormInputResponseController}
  * through a REST call.
  */
 @Service

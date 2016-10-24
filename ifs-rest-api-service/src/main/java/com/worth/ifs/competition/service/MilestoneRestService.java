@@ -7,7 +7,7 @@ import com.worth.ifs.competition.resource.MilestoneType;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.competition.domain.Milestone} related data.
+ * Interface for CRUD operations on {@link MilestoneResource} related data.
  */
 public interface MilestoneRestService {
 

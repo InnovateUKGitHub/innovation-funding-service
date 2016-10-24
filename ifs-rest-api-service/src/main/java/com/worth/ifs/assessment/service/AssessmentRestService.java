@@ -7,7 +7,7 @@ import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.assessment.domain.Assessment} related data.
+ * Interface for CRUD operations on {@link com.worth.ifs.assessment.resource.AssessmentResource} related data.
  */
 public interface AssessmentRestService {
 

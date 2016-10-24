@@ -3,15 +3,14 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.Organisation;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * OrganisationRestServiceImpl is a utility for CRUD operations on {@link Organisation}.
- * This class connects to the {@link com.worth.ifs.user.controller.OrganisationController}
+ * OrganisationRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.user.resource.OrganisationResource}.
+ * This class connects to the {com.worth.ifs.user.controller.OrganisationController}
  * through a REST call.
  */
 @Service

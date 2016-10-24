@@ -5,22 +5,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
-
 /**
- * SectionRestServiceImpl is a utility for CRUD operations on {@link Section}.
- * This class connects to the {@link com.worth.ifs.application.controller.SectionController}
+ * SectionRestServiceImpl is a utility for CRUD operations on {@link SectionResource}.
+ * This class connects to the {com.worth.ifs.application.controller.SectionController}
  * through a REST call.
  */
 @Service

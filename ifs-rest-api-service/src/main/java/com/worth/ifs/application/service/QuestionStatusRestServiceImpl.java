@@ -3,6 +3,8 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
+import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

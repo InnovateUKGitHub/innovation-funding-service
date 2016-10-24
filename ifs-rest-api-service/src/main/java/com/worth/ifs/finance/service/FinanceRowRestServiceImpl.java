@@ -3,7 +3,6 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +11,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costItemListType;
 
 /**
- * FinanceRowRestServiceImpl is a utility for CRUD operations on {@link FinanceRow}.
- * This class connects to the {@link com.worth.ifs.finance.controller.FinanceRowController}
- * through a REST call.
+ * FinanceRowRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.finance.resource.FinanceRowResource}.
  */
 @Service
 public class FinanceRowRestServiceImpl extends BaseRestService implements FinanceRowRestService {
@@ -25,7 +22,7 @@ public class FinanceRowRestServiceImpl extends BaseRestService implements Financ
     public RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {
         return postWithRestResult(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem, ValidationMessages.class);
     }
-    
+
     @Override
     public RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId) {
         return postWithRestResult(costRestURL + "/add-without-persisting/" + applicationFinanceId + "/" + questionId, FinanceRowItem.class);

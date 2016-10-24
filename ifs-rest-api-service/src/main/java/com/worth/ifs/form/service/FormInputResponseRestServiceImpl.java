@@ -18,9 +18,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
 
 /**
- * ResponseRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.form.domain.FormInputResponse}'s.
- * This class connects to the {@link com.worth.ifs.form.controller.FormInputResponseController}
- * through a REST call.
+ * ResponseRestServiceImpl is a utility for CRUD operations on {@link FormInputResponseResource}'s.
  */
 @Service
 public class FormInputResponseRestServiceImpl extends BaseRestService implements FormInputResponseRestService {

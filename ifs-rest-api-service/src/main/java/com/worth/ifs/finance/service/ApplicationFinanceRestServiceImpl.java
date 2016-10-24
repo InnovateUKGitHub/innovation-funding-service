@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.finance.controller.ApplicationFinanceController;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +15,9 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationFinanceResourceListType;
 
 /**
- * ApplicationFinanceRestServiceImpl is a utility for CRUD operations on {@link ApplicationFinance}.
- * This class connects to the {@link com.worth.ifs.finance.controller.ApplicationFinanceController}
- * through a REST call.
+ * ApplicationFinanceRestServiceImpl is a utility for CRUD operations on {@link ApplicationFinanceResource}.
+ * This class connects to the k com.worth.ifs.finance.controller.ApplicationFinanceController}
+ * through a REST call
  */
 @Service
 public class ApplicationFinanceRestServiceImpl extends BaseRestService implements ApplicationFinanceRestService {

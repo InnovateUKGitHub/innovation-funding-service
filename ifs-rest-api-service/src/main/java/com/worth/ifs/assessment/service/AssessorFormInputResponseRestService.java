@@ -6,7 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.assessment.domain.AssessorFormInputResponse} related data.
+ * Interface for CRUD operations on {com.worth.ifs.assessment.domain.AssessorFormInputResponse} related data.
  */
 public interface AssessorFormInputResponseRestService {
 

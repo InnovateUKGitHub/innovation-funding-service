@@ -11,9 +11,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.rejectio
 import static java.lang.String.format;
 
 /**
- * RejectionReasonRestServiceImpl is a utility for CRUD operations on {@link com.worth.ifs.invite.domain.RejectionReason}.
- * This class connects to the {@link com.worth.ifs.invite.controller.RejectionReasonController}
- * through a REST call.
+ * RejectionReasonRestServiceImpl is a utility for CRUD operations on {@link RejectionReasonResource}.
  */
 @Service
 public class RejectionReasonRestServiceImpl extends BaseRestService implements RejectionReasonRestService {

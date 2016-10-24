@@ -4,7 +4,6 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,8 +16,8 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
 
 /**
- * OrganisationRestServiceImpl is a utility for CRUD operations on {@link Organisation}.
- * This class connects to the {@link com.worth.ifs.user.controller.OrganisationController}
+ * OrganisationRestServiceImpl is a utility for CRUD operations on {@link OrganisationResource}.
+ * This class connects to the {com.worth.ifs.user.controller.OrganisationController}
  * through a REST call.
  */
 @Service

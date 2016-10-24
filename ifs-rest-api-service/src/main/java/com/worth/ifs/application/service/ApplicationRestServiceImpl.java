@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.controller.ApplicationController;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import com.worth.ifs.user.resource.UserRoleType;
 
 import org.springframework.stereotype.Service;
@@ -17,8 +16,8 @@ import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
 /**
- * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
- * This class connects to the {@link ApplicationController}
+ * ApplicationRestServiceImpl is a utility for CRUD operations on {@link ApplicationResource}.
+ * This class connects to the {ApplicationController}
  * through a REST call.
  */
 @Service

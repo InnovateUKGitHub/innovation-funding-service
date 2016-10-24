@@ -5,7 +5,7 @@ import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 
 /**
- * REST service for managing {@link com.worth.ifs.invite.domain.Invite}s to {@link com.worth.ifs.competition.domain.Competition}s
+ * REST service for managing {@link com.worth.ifs.invite.resource.InviteResource} to {@link com.worth.ifs.competition.resource.CompetitionResource }
  */
 public interface CompetitionInviteRestService {
 

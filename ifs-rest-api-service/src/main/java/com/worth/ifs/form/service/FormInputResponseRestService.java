@@ -10,7 +10,7 @@ import org.springframework.core.io.ByteArrayResource;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.form.domain.FormInputResponse} related data.
+ * Interface for CRUD operations on {@link FormInputResponseResource} related data.
  */
 public interface FormInputResponseRestService {
     RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(Long applicationId);

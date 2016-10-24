@@ -6,7 +6,7 @@ import com.worth.ifs.user.resource.EthnicityResource;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link com.worth.ifs.user.domain.Ethnicity} related data.
+ * Interface for CRUD operations on {@link EthnicityResource} related data.
  */
 public interface EthnicityRestService {
 
