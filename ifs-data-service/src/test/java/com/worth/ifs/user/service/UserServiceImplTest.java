@@ -1,10 +1,15 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.builder.UserBuilder;
+import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;

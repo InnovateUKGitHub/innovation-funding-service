@@ -11,7 +11,6 @@ import com.worth.ifs.user.security.UserPermissionRules;
 import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.security.access.method.P;
 
 import java.util.List;
@@ -89,7 +88,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     @Test
     public void testSendPasswordResetNotification() {
 
-        UserResource user = UserResourceBuilder.newUserResource().build();
+        UserResource user = newUserResource().build();
         assertAccessDenied(() -> classUnderTest.sendPasswordResetNotification(user), () -> {
             verify(userRules).usersCanChangeTheirOwnPassword(user, getLoggedInUser());
             verify(userRules).systemRegistrationUserCanChangePasswordsForUsers(user, getLoggedInUser());
@@ -122,8 +121,8 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     private void verifyNoMoreInteractionsWithRules() {
-        Mockito.verifyNoMoreInteractions(tokenRules);
-        Mockito.verifyNoMoreInteractions(userRules);
+        verifyNoMoreInteractions(tokenRules);
+        verifyNoMoreInteractions(userRules);
     }
 
     @Override
@@ -138,42 +137,42 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         @Override
         public ServiceResult<UserResource> getUserResourceByUid(String uid) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build());
+            return serviceSuccess(newUserResource().build());
         }
 
         @Override
         public ServiceResult<UserResource> getUserById(Long id) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build());
+            return serviceSuccess(newUserResource().build());
         }
 
         @Override
         public ServiceResult<List<UserResource>> findAll() {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build(2));
+            return serviceSuccess(newUserResource().build(2));
         }
 
         @Override
         public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build(2));
+            return serviceSuccess(newUserResource().build(2));
         }
 
         @Override
         public ServiceResult<UserResource> findByEmail(String email) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build());
+            return serviceSuccess(newUserResource().build());
         }
 
         @Override
         public ServiceResult<UserResource> findInactiveByEmail(String email) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().build());
+            return serviceSuccess(newUserResource().build());
         }
 
         @Override
         public ServiceResult<Set<UserResource>> findAssignableUsers(Long applicationId) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().buildSet(2));
+            return serviceSuccess(newUserResource().buildSet(2));
         }
 
         @Override
         public ServiceResult<Set<UserResource>> findRelatedUsers(Long applicationId) {
-            return ServiceResult.serviceSuccess(UserResourceBuilder.newUserResource().buildSet(2));
+            return serviceSuccess(newUserResource().buildSet(2));
         }
 
         @Override
