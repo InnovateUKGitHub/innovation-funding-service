@@ -60,7 +60,6 @@
         <button class="visuallyhidden" type="submit" id="save">Save</button>
     </form>
     <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
-
     <table aria-hidden="true" id="finance-contact-table">
         <thead>
         <tr>
@@ -70,7 +69,6 @@
         </tr>
         </thead>
         <tbody>
-        <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
             <tr class="form-group-row">
                 <th scope="row">
                     <span class="visuallyhidden">invitee</span>
