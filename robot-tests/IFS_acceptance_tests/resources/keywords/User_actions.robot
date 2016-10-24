@@ -593,3 +593,10 @@ The user enters a long random alphanumeric string into a text field
     Wait Until Element Is Visible    ${field}
     wait until keyword succeeds    30s    30s    Input Text    ${field}    ${string}
 
+
+the user should see that the element is disabled
+    [Arguments]    ${element}
+    the user should not see an error in the page
+    wait until element is visible    ${element}
+    element should be disabled    ${element}
+

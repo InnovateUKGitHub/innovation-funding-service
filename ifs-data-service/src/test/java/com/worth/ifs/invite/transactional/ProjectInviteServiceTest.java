@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -26,6 +27,7 @@ import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static junit.framework.TestCase.assertEquals;
@@ -120,9 +122,10 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     public void testSaveFinanceContactInviteSuccess() throws Exception {
         Organisation organisation = newOrganisation().build();
         Project project = newProject().withName("project name").build();
-        User user = newUser().withEmailAddress("email@example.com").build();
+        User user = newUser().withEmailAddress("email@example.com").withOrganisations(singletonList(organisation)).build();
         ProjectInvite projectInvite = newInvite().withProject(project).withOrganisation(organisation).withName("project name").withEmailAddress(user.getEmail()).build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInvite);
+        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(inviteProjectMapperMock.mapToDomain(inviteProjectResource)).thenReturn(projectInvite);
         ServiceResult<Void> result = inviteProjectService.saveProjectInvite(inviteProjectResource);
         assertTrue(result.isSuccess());
