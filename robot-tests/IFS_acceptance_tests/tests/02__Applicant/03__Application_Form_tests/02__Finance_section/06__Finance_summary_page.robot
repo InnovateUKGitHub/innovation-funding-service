@@ -78,7 +78,7 @@ Green check should show when the finances are complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]     Log in create a new invite application invite academic collaborators and accept the invite
+    [Setup]    Login new application invite academic
     # Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
