@@ -4,6 +4,5 @@
   "requireSpaceAfterBinaryOperators": true,
   "requireSpaceBeforeBinaryOperators": true,
   "requireSpaceAfterComma": true,
-  "validateIndentation": 2,
-  "validateQuoteMarks": "'"
+  "validateIndentation": 2
 }
