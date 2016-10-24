@@ -3,8 +3,8 @@ package com.worth.ifs.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
+import com.worth.ifs.user.resource.UserProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +15,11 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static com.worth.ifs.documentation.AffiliationDocs.affiliationResourceFields;
-import static com.worth.ifs.documentation.ProfileAddressDocs.profileAddressResourceBuilder;
-import static com.worth.ifs.documentation.ProfileAddressDocs.profileAddressResourceFields;
 import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceBuilder;
 import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceFields;
 import static com.worth.ifs.documentation.UserDocs.userResourceFields;
+import static com.worth.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
+import static com.worth.ifs.documentation.UserProfileResourceDocs.userProfileResourceFields;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static java.util.Arrays.asList;
@@ -203,38 +203,38 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void getProfileAddress() throws Exception {
+    public void getProfileDetails() throws Exception {
         Long userId = 1L;
-        ProfileAddressResource profileAddress = profileAddressResourceBuilder.build();
+        UserProfileResource profileDetails = userProfileResourceBuilder.build();
 
-        when(userProfileServiceMock.getProfileAddress(userId)).thenReturn(serviceSuccess(profileAddress));
+        when(userProfileServiceMock.getProfileDetails(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileAddress", userId))
+        mockMvc.perform(get("/user/id/{id}/getProfileDetails", userId))
                 .andExpect(status().isOk())
                 .andDo(this.document.document(
                         pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile address being requested")
+                                parameterWithName("id").description("Identifier of the user associated with the profile being requested")
                         ),
-                        responseFields(profileAddressResourceFields)
+                        responseFields(userProfileResourceFields)
                 ));
     }
 
     @Test
-    public void updateProfileAddress() throws Exception {
+    public void updateProfileDetails() throws Exception {
         Long userId = 1L;
-        ProfileAddressResource profileAddress = profileAddressResourceBuilder.build();
+        UserProfileResource profileDetails = userProfileResourceBuilder.build();
 
-        when(userProfileServiceMock.updateProfileAddress(userId, profileAddress)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileDetails(userId, profileDetails)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{id}/updateProfileAddress", userId)
+        mockMvc.perform(put("/user/id/{id}/updateProfileDetails", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profileAddress)))
+                .content(new ObjectMapper().writeValueAsString(profileDetails)))
                 .andExpect(status().isOk())
                 .andDo(this.document.document(
                         pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile address for")
+                                parameterWithName("id").description("Identifier of the user to update the profile for")
                         ),
-                        requestFields(profileAddressResourceFields)
+                        requestFields(userProfileResourceFields)
                 ));
     }
 }

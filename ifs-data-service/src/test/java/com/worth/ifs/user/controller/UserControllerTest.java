@@ -5,11 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,9 +17,9 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
@@ -360,30 +356,30 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Test
     public void getProfileAddress() throws Exception {
         Long userId = 1L;
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        UserProfileResource profileDetails = newUserProfileResource().build();
 
-        when(userProfileServiceMock.getProfileAddress(userId)).thenReturn(serviceSuccess(profileAddress));
+        when(userProfileServiceMock.getProfileDetails(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{userId}/getProfileAddress", userId)
+        mockMvc.perform(get("/user/id/{userId}/getProfileDetails", userId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileAddress)));
+                .andExpect(content().string(toJson(profileDetails)));
 
-        verify(userProfileServiceMock, only()).getProfileAddress(userId);
+        verify(userProfileServiceMock, only()).getProfileDetails(userId);
     }
 
     @Test
     public void updateProfileAddress() throws Exception {
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        UserProfileResource profileDetails = newUserProfileResource().build();
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileAddress(userId, profileAddress)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileDetails(userId, profileDetails)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{userId}/updateProfileAddress", userId)
+        mockMvc.perform(put("/user/id/{userId}/updateProfileDetails", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profileAddress)))
+                .content(new ObjectMapper().writeValueAsString(profileDetails)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateProfileAddress(userId, profileAddress);
+        verify(userProfileServiceMock, only()).updateProfileDetails(userId, profileDetails);
     }
 }

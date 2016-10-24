@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.controller.profile;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.assessment.form.profile.AssessorProfileEditDetailsForm;
-import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.profile.AssessorProfileDetailsModelPopulator;
 import com.worth.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
 import com.worth.ifs.commons.rest.RestResult;
@@ -22,9 +21,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
@@ -65,8 +64,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         EthnicityResource ethnicity = newEthnicityResource().build();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
-        when(userService.getProfileAddress(user.getId())).thenReturn(profileAddress);
+        UserProfileResource profileDetails = newUserProfileResource().build();
+        when(userService.getProfileDetails(user.getId())).thenReturn(profileDetails);
 
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
@@ -80,8 +79,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
         AssessorProfileEditDetailsForm expectedForm = new AssessorProfileEditDetailsForm();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
-        when(userService.getProfileAddress(user.getId())).thenReturn(profileAddress);
+        UserProfileResource profileDetails = newUserProfileResource().build();
+        when(userService.getProfileDetails(user.getId())).thenReturn(profileDetails);
 
         mockMvc.perform(get("/profile/details-edit"))
                 .andExpect(status().isOk())
@@ -109,17 +108,28 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         AssessorProfileEditDetailsForm expectedForm = new AssessorProfileEditDetailsForm();
         AddressForm addressForm = expectedForm.getAddressForm();
 
-        AddressResource addressResource = new AddressResource();
-
-        addressResource.setAddressLine1(addressLine1);
-        addressResource.setPostcode(postcode);
-        addressResource.setTown(town);
+        AddressResource addressResource = newAddressResource()
+                .withId(null)
+                .withAddressLine1(addressLine1)
+                .withPostcode(postcode)
+                .withTown(town)
+                .build();
 
         addressForm.setSelectedPostcode(addressResource);
         addressForm.setTriedToSave(true);
+        UserProfileResource profileDetails = newUserProfileResource()
+                .withTitle(title)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withEthnicity(ethnicity)
+                .withDisability(disability)
+                .withGender(gender)
+                .withPhoneNumber(phoneNumber)
+                .withEmail(email)
+                .withAddress(addressResource)
+                .build();
 
-        when(userService.updateDetails(user)).thenReturn(restSuccess(newUserResource().build()));
-        when(userService.updateProfileAddress(user.getId(), addressResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(userService.updateProfileDetails(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details-edit")
@@ -148,7 +158,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(disability, form.getDisability());
         assertEquals(addressResource.getPostcode(), form.getAddressForm().getSelectedPostcode().getPostcode());
 
-        verify(userService).updateDetails(user);
+        verify(userService).updateProfileDetails(user.getId(), profileDetails);
     }
 
     @Test

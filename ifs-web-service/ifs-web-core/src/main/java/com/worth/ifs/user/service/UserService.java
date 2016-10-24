@@ -42,7 +42,7 @@ public interface UserService {
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
-    ProfileAddressResource getProfileAddress(Long userId);
-    ServiceResult<Void> updateProfileAddress(Long userId, AddressResource address);
+    UserProfileResource getProfileDetails(Long userId);
+    ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource address);
 
 }

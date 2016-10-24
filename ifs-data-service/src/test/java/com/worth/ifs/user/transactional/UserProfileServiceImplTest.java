@@ -1,18 +1,10 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.Affiliation;
-import com.worth.ifs.user.domain.Contract;
-import com.worth.ifs.user.domain.Profile;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ContractResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -30,12 +22,14 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ContractBuilder.newContract;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
+import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.time.ZoneId.systemDefault;
@@ -546,7 +540,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void testGetUserProfileAddress() {
+    public void testGetUserProfileDetails() {
         User existingUser = newUser().build();
 
         Profile profile = newProfile()
@@ -562,13 +556,18 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(addressMapperMock.mapToResource(profile.getAddress())).thenReturn(addressResource);
+        EthnicityResource ethnicity = newEthnicityResource().build();
+        when(ethnicityMapperMock.mapToResource(newEthnicity().build())).thenReturn(ethnicity);
 
-        ProfileAddressResource expected = newProfileAddressResource()
+        UserProfileResource expected = newUserProfileResource()
                 .withUser(existingUser.getId())
-                .withAddress(newAddressResource().withId(1L).build())
+                .withFirstName(existingUser.getFirstName())
+                .withLastName(existingUser.getLastName())
+                .withEmail(existingUser.getEmail())
+                .withAddress(addressResource)
                 .build();
 
-        ProfileAddressResource response = service.getProfileAddress(existingUser.getId()).getSuccessObject();
+        UserProfileResource response = service.getProfileDetails(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
         verify(userRepositoryMock).findOne(existingUser.getId());
@@ -576,16 +575,17 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void testUpdateProfileAddress() {
+    public void testUpdateProfileDetails() {
         Long userId = 1L;
 
         User existingUser = newUser().build();
         Profile profile = newProfile()
                 .withUser(existingUser)
                 .withAddress(newAddress().build())
-
                 .build();
         existingUser.setProfile(profile);
+        Ethnicity ethnicity = newEthnicity().withId(1L).build();
+        existingUser.setEthnicity(ethnicity);
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
@@ -598,11 +598,16 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 }
         );
 
+        EthnicityResource ethnicityResource = newEthnicityResource().build();
         when(userRepositoryMock.save(expectedUser)).thenReturn(newUser().build());
-        ProfileAddressResource addressResource = newProfileAddressResource().build();
-        when(addressMapperMock.mapToDomain(addressResource.getAddress())).thenReturn(newAddress().build());
+        AddressResource address = newAddressResource().build();
+        when(addressMapperMock.mapToDomain(address)).thenReturn(newAddress().build());
+        UserProfileResource userDetails = newUserProfileResource()
+                .withEthnicity(ethnicityResource)
+                .withAddress(address)
+                .build();
 
-        ServiceResult<Void> result = service.updateProfileAddress(existingUser.getId(), addressResource);
+        ServiceResult<Void> result = service.updateProfileDetails(existingUser.getId(), userDetails);
 
         assertTrue(result.isSuccess());
 

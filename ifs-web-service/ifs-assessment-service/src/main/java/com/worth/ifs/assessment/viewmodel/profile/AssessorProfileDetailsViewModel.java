@@ -1,10 +1,7 @@
 package com.worth.ifs.assessment.viewmodel.profile;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -22,16 +19,16 @@ public class AssessorProfileDetailsViewModel {
     private String phoneNumber;
     private String email;
 
-    public AssessorProfileDetailsViewModel(UserResource user, AddressResource address, EthnicityResource ethnicity) {
-        this.title = user.getTitle();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.gender = user.getGender();
-        this.address = address;
-        this.ethnicity = ethnicity;
-        this.disability = user.getDisability();
-        this.phoneNumber = user.getPhoneNumber();
-        this.email = user.getEmail();
+    public AssessorProfileDetailsViewModel(UserProfileResource profileDetails) {
+        this.title = profileDetails.getTitle();
+        this.firstName = profileDetails.getFirstName();
+        this.lastName = profileDetails.getLastName();
+        this.gender = profileDetails.getGender();
+        this.address = profileDetails.getAddress();
+        this.ethnicity = profileDetails.getEthnicity();
+        this.disability = profileDetails.getDisability();
+        this.phoneNumber = profileDetails.getPhoneNumber();
+        this.email = profileDetails.getEmail();
     }
 
     public String getTitle() {

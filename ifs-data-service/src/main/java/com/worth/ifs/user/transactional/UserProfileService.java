@@ -1,11 +1,7 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -40,9 +36,9 @@ public interface UserProfileService {
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProfileAddressResource> getProfileAddress(Long userId);
+    @PostAuthorize("hasPermission(returnObject, 'READ_DETAILS')")
+    ServiceResult<UserProfileResource> getProfileDetails(Long userId);
 
-    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_PROFILE_ADDRESS')")
-    ServiceResult<Void> updateProfileAddress(Long userId, ProfileAddressResource profileAddress);
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_DETAILS')")
+    ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails);
 }

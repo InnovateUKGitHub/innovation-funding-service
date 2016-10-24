@@ -2,11 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -16,9 +12,9 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -191,22 +187,22 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileAddress() {
         Long userId = 1L;
-        ProfileAddressResource expected = newProfileAddressResource().build();
+        UserProfileResource expected = newUserProfileResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileAddress", usersUrl, userId), ProfileAddressResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileDetails", usersUrl, userId), UserProfileResource.class, expected, OK);
 
-        ProfileAddressResource response = service.getProfileAddress(userId).getSuccessObjectOrThrowException();
+        UserProfileResource response = service.getProfileDetails(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
     }
 
     @Test
     public void updateProfileAddress() {
         Long userId = 1L;
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        UserProfileResource profileDetails = newUserProfileResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileAddress", usersUrl, userId), profileAddress, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileDetails", usersUrl, userId), profileDetails, OK);
 
-        RestResult<Void> response = service.updateProfileAddress(userId, profileAddress);
+        RestResult<Void> response = service.updateProfileDetails(userId, profileDetails);
         assertTrue(response.isSuccess());
     }
 

@@ -13,6 +13,7 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.UserProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
@@ -59,8 +60,6 @@ public class AssessorProfileDetailsController {
     @Autowired
     private EthnicityRestService ethnicityRestService;
 
-    private List<EthnicityResource> ethnicityOptions;
-
     private static final String FORM_ATTR_NAME = "form";
 
     private static final Log LOG = LogFactory.getLog(AssessorProfileDetailsController.class);
@@ -74,24 +73,24 @@ public class AssessorProfileDetailsController {
 
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     public String getDetails(Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return doViewYourDetails(loggedInUser, model);
     }
 
     @RequestMapping(value = "/details-edit", method = RequestMethod.GET)
     public String getDetailsEdit(Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
-                            BindingResult bindingResult) {
+                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
+                                 BindingResult bindingResult) {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
     @RequestMapping(value = "/details-edit", method = RequestMethod.POST)
     public String submitDetails(Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
-                               BindingResult bindingResult,
-                               ValidationHandler validationHandler) {
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler) {
 
         addAddressOptions(form);
         addSelectedAddress(form);
@@ -100,20 +99,19 @@ public class AssessorProfileDetailsController {
         Supplier<String> failureView = () -> doViewEditYourDetails(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> addressResult = userService.updateProfileAddress(loggedInUser.getId(), form.getAddressForm().getSelectedPostcode());
-            return validationHandler.addAnyErrors(addressResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> {
-                        loggedInUser.setTitle(form.getTitle());
-                        loggedInUser.setFirstName(form.getFirstName());
-                        loggedInUser.setLastName(form.getLastName());
-                        loggedInUser.setEthnicity(form.getEthnicity().getId());
-                        loggedInUser.setGender(form.getGender());
-                        loggedInUser.setDisability(form.getDisability());
-                        loggedInUser.setPhoneNumber(form.getPhoneNumber());
-                        RestResult<UserResource> detailsResult = userService.updateDetails(loggedInUser);
-                        return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                                failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
-                    } );
+            UserProfileResource profileDetails = new UserProfileResource();
+            profileDetails.setTitle(form.getTitle());
+            profileDetails.setFirstName(form.getFirstName());
+            profileDetails.setLastName(form.getLastName());
+            profileDetails.setEthnicity(form.getEthnicity());
+            profileDetails.setGender(form.getGender());
+            profileDetails.setDisability(form.getDisability());
+            profileDetails.setPhoneNumber(form.getPhoneNumber());
+            profileDetails.setAddress(form.getAddressForm().getSelectedPostcode());
+            profileDetails.setEmail(loggedInUser.getEmail());
+            ServiceResult<Void> detailsResult = userService.updateProfileDetails(loggedInUser.getId(), profileDetails);
+            return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
     }
 
@@ -208,41 +206,33 @@ public class AssessorProfileDetailsController {
     }
 
     private String doViewYourDetails(UserResource loggedInUser, Model model) {
-        retrieveEthnicityOptions();
-        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser, getEthnicity(loggedInUser.getEthnicity())));
+        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser));
         return "profile/details";
     }
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
-        retrieveEthnicityOptions();
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        model.addAttribute("ethnicityOptions", ethnicityOptions);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser.getEmail()));
         return "profile/details-edit";
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileEditDetailsForm form) {
-        form.setTitle(loggedInUser.getTitle());
-        form.setFirstName(loggedInUser.getFirstName());
-        form.setLastName(loggedInUser.getLastName());
-        form.setGender(loggedInUser.getGender());
-        form.setEthnicity(getEthnicity(loggedInUser.getEthnicity()));
-        form.setDisability(loggedInUser.getDisability());
-        form.setPhoneNumber(loggedInUser.getPhoneNumber());
-        form.getAddressForm().setSelectedPostcode(userService.getProfileAddress(loggedInUser.getId()).getAddress());
+        UserProfileResource profileDetails = userService.getProfileDetails(loggedInUser.getId());
+        form.setTitle(profileDetails.getTitle());
+        form.setFirstName(profileDetails.getFirstName());
+        form.setLastName(profileDetails.getLastName());
+        form.setGender(profileDetails.getGender());
+        form.setEthnicity(profileDetails.getEthnicity());
+        form.setDisability(profileDetails.getDisability());
+        form.setPhoneNumber(profileDetails.getPhoneNumber());
+        form.getAddressForm().setSelectedPostcode(profileDetails.getAddress());
     }
 
-    private void retrieveEthnicityOptions() {
-        this.ethnicityOptions = ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
-    }
-
-    private EthnicityResource getEthnicity(Long ethnicityId ) {
-        return ethnicityOptions.stream()
-                .filter(option -> option.getId().equals(ethnicityId))
-                .findAny()
-                .orElse(null);
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 }
 

@@ -44,7 +44,7 @@ public interface UserRestService {
     RestResult<Void> updateProfileContract(Long userId);
     RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);
     RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
-    RestResult<ProfileAddressResource> getProfileAddress(Long userId);
-    RestResult<Void> updateProfileAddress(Long userId, ProfileAddressResource profileAddress);
+    RestResult<UserProfileResource> getProfileDetails(Long userId);
+    RestResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails);
 
 }

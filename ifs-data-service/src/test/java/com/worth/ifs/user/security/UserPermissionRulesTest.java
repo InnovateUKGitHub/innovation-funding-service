@@ -5,11 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -21,13 +17,11 @@ import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliati
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
@@ -329,7 +323,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         ProfileSkillsResource profileSkills = newProfileSkillsResource()
                 .withUser(user.getId())
                 .build();
-        assertFalse(rules.usersCanViewTheirOwnProfileSkills((profileSkills), anotherUser));
+        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkills, anotherUser));
     }
 
     @Test
@@ -371,35 +365,30 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAddress() {
+    public void testUsersCanViewTheirOwnDetails() {
         UserResource user = newUserResource().build();
-        ProfileAddressResource profileAddress = newProfileAddressResource()
-                .withUser(user.getId())
-                .build();
-        assertTrue(rules.usersCanViewTheirOwnAddress(profileAddress, user));
+        UserProfileResource userDetails = newUserProfileResource().withUser(user.getId()).build();
+        assertTrue(rules.usersCanViewTheirOwnDetails(userDetails, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAddressButNotAnotherUsersAddress() {
+    public void testUsersCanViewTheirOwnDetailsButNotAnotherUsersDetails() {
+        UserResource anotherUser = newUserResource().withId(1L).build();
+        UserProfileResource userDetails = newUserProfileResource().withUser(2L).build();
+        assertFalse(rules.usersCanViewTheirOwnDetails(userDetails, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirDetails() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanUpdateTheirOwnDetails(user, user));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirDetailsButNotAnotherUsersDetails() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        ProfileAddressResource profileAddress = newProfileAddressResource()
-                .withUser(user.getId())
-                .build();
-        assertFalse(rules.usersCanViewTheirOwnAddress(profileAddress, anotherUser));
-    }
-
-    @Test
-    public void testUsersCanUpdateTheirAddress() {
-        UserResource user = newUserResource().build();
-        assertTrue(rules.usersCanUpdateTheirOwnAddress(user, user));
-    }
-
-    @Test
-    public void testUsersCanUpdateTheirAddressButNotAnotherUsersAddress() {
-        UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.usersCanUpdateTheirOwnAddress(anotherUser, user));
+        assertFalse(rules.usersCanUpdateTheirOwnDetails(anotherUser, user));
     }
 
     @Test

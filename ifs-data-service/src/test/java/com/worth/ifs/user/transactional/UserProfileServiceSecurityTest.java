@@ -1,28 +1,20 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileAddressResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -130,25 +122,28 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Test
-    public void getUserAddress() {
+    public void getUserProfileDetails() {
         Long userId = 1L;
 
-        assertAccessDenied(() -> classUnderTest.getProfileAddress(userId), () -> {
-            verify(rules, times(1)).usersCanViewTheirOwnAddress(isA(ProfileAddressResource.class), eq(getLoggedInUser()));
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.getProfileDetails(userId), () -> {
+            verify(rules).usersCanViewTheirOwnDetails(isA(UserProfileResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
 
     @Test
-    public void updateUserAddress() {
+    public void updateUserDetails() {
         Long userId = 1L;
-        ProfileAddressResource profileAddress = newProfileAddressResource().build();
+        UserProfileResource profile = newUserProfileResource().build();
 
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateProfileAddress(userId, profileAddress), () -> {
-            verify(rules).usersCanUpdateTheirOwnAddress(user, getLoggedInUser());
+        assertAccessDenied(() -> classUnderTest.updateProfileDetails(userId, profile), () -> {
+            verify(rules).usersCanUpdateTheirOwnDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -196,12 +191,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<ProfileAddressResource> getProfileAddress(Long userId) {
-            return serviceSuccess(newProfileAddressResource().build());
+        public ServiceResult<UserProfileResource> getProfileDetails(Long userId) {
+            return serviceSuccess(newUserProfileResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileAddress(Long userId, ProfileAddressResource profileAddress) {
+        public ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails) {
             return null;
         }
     }

@@ -27,9 +27,10 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICA
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ContractBuilder.newContract;
-import static com.worth.ifs.user.builder.ProfileAddressResourceBuilder.newProfileAddressResource;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.lang.Boolean.TRUE;
@@ -333,7 +334,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
-    public void testGetProfileAddress() {
+    public void testGetProfileDetails() {
         loginPaulPlum();
 
         User user = userRepository.findOne(getPaulPlum().getId());
@@ -350,24 +351,23 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .build());
         userRepository.save(user);
 
-        ProfileAddressResource response = controller.getProfileAddress(userId).getSuccessObjectOrThrowException();
-        assertEquals(userId, response.getUser());
+        UserProfileResource response = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
         assertEquals(address.getAddressLine1(), response.getAddress().getAddressLine1());
         assertEquals(address.getTown(), response.getAddress().getTown());
     }
 
     @Test
-    public void testUpdateProfileAddress() {
+    public void testUpdateProfileDetails() {
         loginCompAdmin();
         UserResource userOne = controller.getUserById(1L).getSuccessObject();
         setLoggedInUser(userOne);
 
-        ProfileAddressResource profileAddress = newProfileAddressResource()
-                .withUser(1L)
+        UserProfileResource profileDetails = newUserProfileResource()
                 .withAddress(newAddressResource().build())
+                .withEthnicity(newEthnicityResource().build())
                 .build();
 
-        RestResult<Void> restResult = controller.updateProfileAddress(1L, profileAddress);
+        RestResult<Void> restResult = controller.updateProfileDetails(1L, profileDetails);
         assertTrue(restResult.isSuccess());
     }
 }
