@@ -22,8 +22,7 @@ public class InviteProjectResource extends InviteResource {
     private String hash;
     private InviteStatus status;
     private String leadOrganisation;
-    private Long inviteOrganisation;
-    private String inviteOrganisationName;
+    private String organisationName;
     private String leadApplicant;
     private String competitionName;
 
@@ -104,20 +103,12 @@ public class InviteProjectResource extends InviteResource {
         this.leadOrganisation = leadOrganisation;
     }
 
-    public String getInviteOrganisationName() {
-        return inviteOrganisationName;
+    public String getOrganisationName() {
+        return organisationName;
     }
 
-    public void setInviteOrganisationName(String inviteOrganisationName) {
-        this.inviteOrganisationName = inviteOrganisationName;
-    }
-
-    public Long getInviteOrganisation() {
-        return inviteOrganisation;
-    }
-
-    public void setInviteOrganisation(Long inviteOrganisation) {
-        this.inviteOrganisation = inviteOrganisation;
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
     }
 
     public String getLeadApplicant() {
@@ -157,8 +148,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(hash, that.hash)
                 .append(status, that.status)
                 .append(leadOrganisation, that.leadOrganisation)
-                .append(inviteOrganisation, that.inviteOrganisation)
-                .append(inviteOrganisationName, that.inviteOrganisationName)
+                .append(organisationName, that.organisationName)
                 .append(leadApplicant, that.leadApplicant)
                 .append(competitionName, that.competitionName)
                 .isEquals();
@@ -179,8 +169,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(hash)
                 .append(status)
                 .append(leadOrganisation)
-                .append(inviteOrganisation)
-                .append(inviteOrganisationName)
+                .append(organisationName)
                 .append(leadApplicant)
                 .append(competitionName)
                 .toHashCode();
@@ -201,8 +190,7 @@ public class InviteProjectResource extends InviteResource {
                 .append("hash", hash)
                 .append("status", status)
                 .append("leadOrganisation", leadOrganisation)
-                .append("inviteOrganisation", inviteOrganisation)
-                .append("inviteOrganisationName", inviteOrganisationName)
+                .append("organisationName", organisationName)
                 .append("leadApplicant", leadApplicant)
                 .append("competitionName", competitionName)
                 .toString();
