@@ -2,7 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.domain.Milestone;
+import com.worth.ifs.competition.builder.MilestoneResourceBuilder;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
@@ -36,7 +36,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, ParameterizedTypeReferences.milestoneResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
         List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
@@ -75,7 +75,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, ParameterizedTypeReferences.milestoneResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
         List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
 
         assertNotNull(response);
@@ -111,7 +111,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     private MilestoneResource getOpenDateMilestone() {
-        MilestoneResource milestone = MilestoneResourceBuilder.newMilestoneResource()
+        MilestoneResource milestone = newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
                 .withDate(LocalDateTime.now())
@@ -120,7 +120,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     private MilestoneResource getBriefingEventMilestone() {
-        MilestoneResource milestone = MilestoneResourceBuilder.newMilestoneResource()
+        MilestoneResource milestone = newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.BRIEFING_EVENT)
                 .withDate(LocalDateTime.of(2026,3,15,9,0))

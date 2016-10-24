@@ -50,7 +50,7 @@ public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityT
 
         @Override
         public ServiceResult<FinanceRowMetaValueResource> findOne(FinanceRowMetaValueId id) {
-            return ServiceResult.serviceSuccess(FinanceRowMetaValueResourceBuilder.newFinanceRowMetaValue().build());
+            return serviceSuccess(newFinanceRowMetaValue().build());
         }
     }
 }
