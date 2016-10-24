@@ -285,30 +285,36 @@ public class ApplicationController extends AbstractApplicationController {
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
-        model.addAttribute("section", currentSection.get());
+        model.addAttribute("section", currentSection.orElse(null));
 
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
-        if(questionId != null && question.isPresent()){
-            sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
-        }else{
-            sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
+        if (currentSection.isPresent()) {
+            if (questionId != null && question.isPresent()) {
+                sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
+            } else {
+                sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
+            }
         }
 
         Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
 
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
-        List<SectionResource> childSections = simpleMap(currentSection.get().getChildSections(), sectionService::getById);
+        List<SectionResource> childSections = simpleMap(currentSection.map(section -> section.getChildSections()).orElse(null), sectionService::getById);
         model.addAttribute("childSections", childSections);
         model.addAttribute("childSectionsSize", childSections.size());
         return "application/single-section-details";
     }
 
     private Optional<QuestionResource> getQuestion(Optional<SectionResource> currentSection, Long questionId) {
-        return currentSection.get().getQuestions().stream()
+        if (currentSection.isPresent()) {
+            return currentSection.get().getQuestions().stream()
                     .map(questionService::getById)
                     .filter(q -> q.getId().equals(questionId))
                     .findAny();
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -331,7 +337,7 @@ public class ApplicationController extends AbstractApplicationController {
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
     }
 
-    private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
+    private void doAssignQuestion(Long applicationId, HttpServletRequest request, HttpServletResponse response) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 

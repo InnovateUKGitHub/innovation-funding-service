@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,9 +33,6 @@ public class ApplicationCreationController {
     public static final String USER_ID = "userId";
     private static final String APPLICATION_ID = "applicationId";
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
-
-    @Autowired
-    private Validator validator;
 
     @Autowired
     private ApplicationService applicationService;
