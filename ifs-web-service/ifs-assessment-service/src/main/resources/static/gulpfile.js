@@ -5,7 +5,7 @@ var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
-gulp.task('default',['js','css']);
+gulp.task('default', ['js', 'css']);
 
 //build all js
 gulp.task('js', function () {
