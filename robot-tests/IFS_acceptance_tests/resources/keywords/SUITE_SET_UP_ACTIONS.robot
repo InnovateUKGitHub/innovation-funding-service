@@ -41,7 +41,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
-    When the user opens the mailbox and reads his own email    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
+    When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
@@ -135,7 +135,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     And the user closes the browser
     And the guest user opens the browser
-    When the user opens the mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -154,7 +154,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Arsene    Wenger
-    And the user opens the mailbox and reads his own email    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
 

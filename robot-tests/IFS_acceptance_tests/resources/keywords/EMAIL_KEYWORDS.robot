@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../defaultResources.robot
+Resource    ../defaultResources.robot
 
 *** Keywords ***
 The user verifies their email
@@ -8,12 +8,12 @@ The user verifies their email
     Page Should Contain    Account verified
 
 #Please save these keywords, so that we can base our Email keyword refactoring
-the user opens the mailbox and reads his own email
+the user reads his email and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}==1    the user opens the local mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user opens the remote mailbox and reads his own email    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}!=1    the user reads his email and clicks the link remotely    ${recipient}    ${subject}    ${pattern}
 
-the user opens the local mailbox and reads his own email
+the user reads his email and clicks the link locally
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
     ${WHICH EMAIL}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
@@ -32,7 +32,7 @@ the user opens the local mailbox and reads his own email
     delete email    ${WHICH EMAIL}
     close mailbox
 
-the user opens the remote mailbox and reads his own email
+the user reads his email and clicks the link remotely
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${WHICH EMAIL} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
@@ -50,6 +50,51 @@ the user opens the remote mailbox and reads his own email
     Capture Page Screenshot
     delete email    ${WHICH EMAIL}
     close mailbox
+
+the user reads his email
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}!=1    the user reads his email remotely    ${recipient}    ${subject}    ${pattern}
+
+the user reads his email locally
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH EMAIL}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    log    ${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES}=    Get Matches From Email    ${WHICH EMAIL}    ${pattern}
+    log    ${MATCHES}
+    Should Not Be Empty    ${MATCHES}
+    delete email    ${WHICH EMAIL}
+    close mailbox
+
+the user reads his email remotely
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${WHICH EMAIL} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    log    ${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES}=    Get Matches From Email    ${WHICH EMAIL}    ${pattern}
+    log    ${MATCHES}
+    Should Not Be Empty    ${MATCHES}
+    delete email    ${WHICH EMAIL}
+    close mailbox
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Open mailbox and confirm received email
     [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
