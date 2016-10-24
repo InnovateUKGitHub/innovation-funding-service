@@ -380,14 +380,14 @@ include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents
 
 === Save Documents Submitted DateTime
 
-===== Request
+==== Request
 include::{snippets}/project/set-partner-documents-submitted-date/http-request.adoc[]
 include::{snippets}/project/set-partner-documents-submitted-date/path-parameters.adoc[]
 
-===== Response
+==== Response
 include::{snippets}/project/set-partner-documents-submitted-date/http-response.adoc[]
 
-===== Curl Example
+==== Curl Example
 include::{snippets}/project/set-partner-documents-submitted-date/curl-request.adoc[]
 
 === Get Spend Profile
