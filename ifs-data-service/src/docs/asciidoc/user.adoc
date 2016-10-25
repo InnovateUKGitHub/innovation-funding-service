@@ -69,6 +69,42 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
 
+== Retrieve Profile Contract
+==== Success case
+==== Request
+include::{snippets}/user/get-profile-contract/http-request.adoc[]
+include::{snippets}/user/get-profile-contract/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/get-profile-contract/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-profile-contract/curl-request.adoc[]
+
+== Update Profile Contract
+==== Success case
+==== Request
+include::{snippets}/user/update-profile-contract/http-request.adoc[]
+include::{snippets}/user/update-profile-contract/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/update-profile-contract/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/update-profile-contract/curl-request.adoc[]
+
+== Retrieve Profile Skills
+==== Success case
+==== Request
+include::{snippets}/user/get-profile-skills/http-request.adoc[]
+include::{snippets}/user/get-profile-skills/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/get-profile-skills/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/get-profile-skills/curl-request.adoc[]
+
 == Update Profile Skills
 ==== Success case
 ==== Request

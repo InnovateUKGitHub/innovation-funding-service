@@ -167,14 +167,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         FinanceContactForm financeForm = new FinanceContactForm();
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, form, false);
-
-        if (!validateEmailIsUnique(form.getEmail()))
-        {
-            InviteeForm inviteeForm = new InviteeForm();
-            inviteeForm.setEmailExistsError(form.getEmail());
-
-            return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, inviteeForm, true);
-        }
+        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -182,17 +175,16 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
-            InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                    .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite);
+                InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
 
-            return validationHandler.addAnyErrors(inviteResult, toField("financeContact")).
-                    addAnyErrors(saveResult, toField("financeContact")).
-                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+                ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite);
 
+                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+            });
         });
-
     }
 
     private boolean validateEmailIsUnique(String email) {
@@ -242,31 +234,25 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectManagerForm projectManagerForm = populateOriginalProjectManagerForm(projectId);
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
-
-        if (!validateEmailIsUnique(form.getEmail()))
-        {
-            form.setEmailExistsError(form.getEmail());
-
-            return doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
-        }
+        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
             Long organisation = projectService.getLeadOrganisation(projectId).getId();
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
-            InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite);
+                InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
 
-            return validationHandler.addAnyErrors(inviteResult, toField("projectManager")).
-                addAnyErrors(saveResult, toField("projectManager")).
-                failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+                ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite);
 
+                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+            });
         });
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")

@@ -244,7 +244,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			section.setDescription(sectionTemplate.getDescription());
 			section.setAssessorGuidanceDescription(sectionTemplate.getAssessorGuidanceDescription());
 			section.setCompetition(competition);
-			if(!competition.getSections().contains(section)){
+            if(!competition.getSections().contains(section)){
 				competition.getSections().add(section);
 			}
 
@@ -277,6 +277,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			question.setCompetition(competition);
 			question.setSection(section);
             question.setQuestionNumber(questionTemplate.getQuestionNumber());
+            question.setPriority(questionTemplate.getPriority());
 
             questionRepository.save(question);
 
