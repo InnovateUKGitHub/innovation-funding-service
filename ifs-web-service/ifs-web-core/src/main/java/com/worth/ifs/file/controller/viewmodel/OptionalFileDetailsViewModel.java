@@ -1,6 +1,5 @@
-package com.worth.ifs.competition.viewmodel;
+package com.worth.ifs.file.controller.viewmodel;
 
-import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,30 +9,30 @@ import java.math.BigDecimal;
 /**
  * Holder of model attributes around the uploaded Assessor Feedback
  */
-public class AssessorFeedbackViewModel {
+public class OptionalFileDetailsViewModel {
 
     private FileDetailsViewModel fileDetails;
     private boolean readonly;
 
-    private AssessorFeedbackViewModel(boolean readonly, String filename, Long filesizeBytes) {
+    private OptionalFileDetailsViewModel(boolean readonly, String filename, Long filesizeBytes) {
         this(readonly, new FileDetailsViewModel(filename, filesizeBytes));
     }
 
-    private AssessorFeedbackViewModel(boolean readonly, FileDetailsViewModel fileDetails) {
+    private OptionalFileDetailsViewModel(boolean readonly, FileDetailsViewModel fileDetails) {
         this.readonly = readonly;
         this.fileDetails = fileDetails;
     }
 
-    public static AssessorFeedbackViewModel withExistingFile(FileEntryResource fileEntry, boolean readonly) {
+    public static OptionalFileDetailsViewModel withExistingFile(FileEntryResource fileEntry, boolean readonly) {
         return withExistingFile(fileEntry.getName(), fileEntry.getFilesizeBytes(), readonly);
     }
 
-    public static AssessorFeedbackViewModel withExistingFile(String filename, long filesizeBytes, boolean readonly) {
-        return new AssessorFeedbackViewModel(readonly, filename, filesizeBytes);
+    public static OptionalFileDetailsViewModel withExistingFile(String filename, long filesizeBytes, boolean readonly) {
+        return new OptionalFileDetailsViewModel(readonly, filename, filesizeBytes);
     }
 
-    public static AssessorFeedbackViewModel withNoFile(boolean readonly) {
-        return new AssessorFeedbackViewModel(readonly, null);
+    public static OptionalFileDetailsViewModel withNoFile(boolean readonly) {
+        return new OptionalFileDetailsViewModel(readonly, null);
     }
 
     public boolean isReadonly() {
@@ -58,7 +57,7 @@ public class AssessorFeedbackViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorFeedbackViewModel that = (AssessorFeedbackViewModel) o;
+        OptionalFileDetailsViewModel that = (OptionalFileDetailsViewModel) o;
 
         return new EqualsBuilder()
                 .append(readonly, that.readonly)

@@ -7,13 +7,13 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
@@ -28,11 +28,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -115,8 +120,14 @@ public class ApplicationController extends AbstractApplicationController {
         }
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
+        if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
+            OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
+            model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+        }
+
         return "application-summary";
     }
+
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
     public String applicationSummarySubmit(@PathVariable("applicationId") final Long applicationId,
@@ -287,7 +298,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         if(questionId != null && question.isPresent()){
-            sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
+            sectionQuestions.put(currentSection.get().getId(), asList(questionService.getById(questionId)));
         }else{
             sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
         }
@@ -327,6 +338,20 @@ public class ApplicationController extends AbstractApplicationController {
         doAssignQuestion(applicationId, request, response);
 
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
+    }
+
+    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
+
+        boolean readonly = true;
+
+        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
+
+        if (assessorFeedbackFileEntry != null) {
+            RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
+            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
+        } else {
+            return OptionalFileDetailsViewModel.withNoFile(readonly);
+        }
     }
 
     private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
