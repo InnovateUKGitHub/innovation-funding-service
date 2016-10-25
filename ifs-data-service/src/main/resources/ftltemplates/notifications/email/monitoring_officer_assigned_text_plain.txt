@@ -14,6 +14,5 @@ ${projectManagerEmail}
 
 If you were not aware of this appointment or you have any queries, please contact Innovate UK.
 
-Competitions Team
-Innovate UK
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

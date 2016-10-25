@@ -131,60 +131,102 @@
                     <th scope="col">Title</th>
                     <th scope="col">Innovation Area</th>
                     <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assigned Assessors</th>
-                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+
+                    <th:block th:unless="${status == 'removed'}">
+                        <th class="aligncentre" scope="col">Assigned Assessors</th>
+                        <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <th scope="col">Removed by</th>
+                    </th:block>
+
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#">10001000000</a></td>
+                    <td><a th:href="${(status == 'removed' ? '/prototypes/5698-admin-readonly-application?status=removed' : '#')}">10001000000</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Wessex University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Peter Kault</td>
+                    </th:block>
+
                 </tr>
                 <tr>
                     <td><a href="#">10001000001</a></td>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Plymouth University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
+                
                 </tr>
                 <tr>
                     <td><a href="#">10001000002</a></td>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Horizon Ltd</td>
-                    <td class="aligncentre">0</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">0</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
                 <tr>
                     <td><a href="#">10001000003</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Zodiac Industries Ltd</td>
-                    <td class="aligncentre">5</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">5</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
                 <tr>
                     <td><a href="#">10001000004</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Durham University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
             </tbody>
         </table>
