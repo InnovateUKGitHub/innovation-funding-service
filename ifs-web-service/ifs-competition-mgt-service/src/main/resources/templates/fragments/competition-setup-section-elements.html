@@ -19,9 +19,6 @@
             <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
             <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
         </dl>
-        <div class="extra-margin">
-            <a role="button" class="button" href="edit">Edit this question</a>
-        </div>
     </th:block>
     <th:block th:if="${editable}">
         <form method="post" th:object="${competitionSetupForm}" th:action="@{${question.id}}" novalidate="novalidate"

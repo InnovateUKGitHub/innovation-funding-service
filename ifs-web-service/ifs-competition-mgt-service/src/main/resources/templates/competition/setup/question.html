@@ -145,6 +145,10 @@
             </div>
         </th:block>
     </fieldset>
+    <div th:if="${editable}"
+         class="extra-margin">
+        <a role="button" class="button" th:href="${question.id + '/edit'}">Edit this question</a>
+    </div>
     <div th:if="${param.status == null}" class="extra-margin">
         <a href="/prototypes/5085-application-process" class="button-secondary">Return to application questions</a>
     </div>

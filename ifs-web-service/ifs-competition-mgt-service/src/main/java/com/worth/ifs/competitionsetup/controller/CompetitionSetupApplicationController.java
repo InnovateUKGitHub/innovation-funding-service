@@ -27,13 +27,14 @@ import static com.worth.ifs.competitionsetup.controller.CompetitionSetupControll
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
- * Controller for showing and handling the different competition setup application question section
+ * Controller to manage the Application Questions and it's sub-sections in the
+ * competition setup process
  */
 @Controller
-@RequestMapping("/competition/setup/{competitionId}/section/application/question")
-public class CompetitionSetupQuestionController {
+@RequestMapping("/competition/setup/{competitionId}/section/application")
+public class CompetitionSetupApplicationController {
 
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionController.class);
+    private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
 
     @Autowired
     private CompetitionService competitionService;
@@ -44,7 +45,7 @@ public class CompetitionSetupQuestionController {
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
-    @RequestMapping(value = "/{questionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
@@ -62,7 +63,7 @@ public class CompetitionSetupQuestionController {
         return "competition/setup/question";
     }
 
-    @RequestMapping(value = "/{questionId}/edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.GET)
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
@@ -80,7 +81,7 @@ public class CompetitionSetupQuestionController {
         return "competition/setup/question";
     }
 
-    @RequestMapping(value = "/{questionId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
     public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFormForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
