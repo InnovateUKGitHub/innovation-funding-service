@@ -19,7 +19,7 @@ import org.junit.Rule;
 import org.mockito.InjectMocks;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -86,7 +86,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected abstract ControllerType supplyControllerUnderTest();
 
     @Rule
-    public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");// having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
+    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");// having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
 
     // than JSON and XML
     private final String dummyFileContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
