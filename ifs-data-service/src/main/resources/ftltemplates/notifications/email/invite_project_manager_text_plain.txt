@@ -11,6 +11,6 @@ Sign in or create an account to accept this invitation. Please note that if you 
 ${inviteUrl}
 
 Yours sincerely
-Competitions Team
-Innovate UK
+
+<@layout.senderPlainText />
 </@layout.defaultPlainText>
