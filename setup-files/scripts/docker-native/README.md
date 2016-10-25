@@ -52,6 +52,13 @@ for ease of consumption:
 before shutting down. Bear in mind that the entire environment is relatively resource intensive (even at idle) and it 
 is advisable not to have them running all the time (eating your RAM).
 
+- `teardown.sh` removes the existing Docker containers for the project. Don't run this unless you want to purposefully
+want to destroy your environment e.g. in the event of a rebuild.
+
+## Additional information
+
+The following scripts 
+
 - `setup.sh` builds the entire environment using Docker and Docker Compose. Then creates the required databases in the 
  `mysql` container, runs the Flyway migrations, syncs the `shib` and `mysql` user databases and finally runs the 
   Gradle deployment tasks via `deploy.sh` (see below).
@@ -71,12 +78,13 @@ Docker container.
     Note: `gradleOpts` is not required. If you do specify some options they will be passed to the sub-project's 
     `cleanDeploy` task run.
     
-- `frontend.sh` runs various Gulp tasks across all the projects (this might be better located somewhere else).
-    
-- `syncShib.sh` syncs the `shib` container users into the `mysql` container database (`ifs-database`).
+- `frontend.sh` runs various Gulp tasks (for building CSS/JS files) across all the projects (this might be better located somewhere else).
 
-- `teardown.sh` removes the existing Docker containers for the project. Don't run this unless you want to purposefully
-want to destroy your environment e.g. in the event of a rebuild.
+    Usage as follows:
+
+        ./frontend.sh {all|css|js|js-core|js-ps|js-comp-mgt|js-app|js-ass}
+        
+- `syncShib.sh` syncs the `shib` container users into the `mysql` container database (`ifs-database`).
 
 ## Troubleshooting
 
