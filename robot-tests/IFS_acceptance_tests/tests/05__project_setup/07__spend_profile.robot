@@ -415,7 +415,7 @@ the users fill out project details
     And the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    the user clicks the button/link    jQuery=.button:contains("Submit all project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 
@@ -449,4 +449,3 @@ other partners spend profiles get submitted
     Connect to Database    @{database}
     execute sql string     UPDATE `${database_name}`.`spend_profile` SET `marked_as_complete`='1' WHERE `id`='2';
     execute sql string     UPDATE `${database_name}`.`spend_profile` SET `marked_as_complete`='1' WHERE `id`='3';
-
