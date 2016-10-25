@@ -32,15 +32,15 @@ IFS.application.loadOrder = {
     }
   },
   'app-details' : {
-    init : function(){ IFS.application.application_page.init(); }
+    init : function(){ IFS.application.applicationPage.init(); }
   },
   'app-invite': {
       init : function(){ IFS.application.invites.init(); }
     },
   'app-invite-display': {
-    init : function(){ IFS.application.invite_display.init(); }
+    init : function(){ IFS.application.inviteDisplay.init(); }
   },
   'competition-management': {
-    init : function(){ IFS.application.competition_management.init(); }
+    init : function(){ IFS.application.competitionManagement.init(); }
   }
 };
