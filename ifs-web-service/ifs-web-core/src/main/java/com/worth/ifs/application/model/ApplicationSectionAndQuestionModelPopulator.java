@@ -82,38 +82,13 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
-        Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
-        if(currentSection.isPresent()){
-            Map<Long, List<SectionResource>>  subSections = new HashMap<>();
-            subSections.put(currentSection.get().getId(), getSectionsFromListByIdList(currentSection.get().getChildSections(), allSections));
-
-            model.addAttribute("subSections", subSections);
-            subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
-                    .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
-                    ));
-            model.addAttribute("subsectionQuestions", subsectionQuestions);
-        }else{
-            Map<Long, List<SectionResource>>   subSections = parentSections.stream()
-                    .collect(Collectors.toMap(
-                            SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
-                    ));
-            model.addAttribute("subSections", subSections);
-            subsectionQuestions = parentSections.stream()
-                    .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
-                    ));
-            model.addAttribute("subsectionQuestions", subsectionQuestions);
-        }
-
-        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
-        model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
+        addSubSections(currentSection, model, parentSections, allSections, questions, formInputResources);
     }
 
     public void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
-        if(currentSection.isPresent()) {
+        if (currentSection.isPresent()) {
             List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
             questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
@@ -125,6 +100,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             model.addAttribute("title", currentSection.get().getName());
         }
     }
+
     public void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
         List<FormInputResponseResource> responses = getFormInputResponses(application);
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
@@ -144,31 +120,17 @@ public class ApplicationSectionAndQuestionModelPopulator {
     public void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
                                      Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
 
-        if (isApplicationInViewMode(model, application, userOrganisation))
+        if (isApplicationInViewMode(model, application, userOrganisation)) {
             return;
-
-        Map<Long, QuestionStatusResource> questionAssignees;
-        if(currentQuestionId.isPresent()){
-            QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());
-            questionAssignees = new HashMap<>();
-            if(questionStatusResource != null) {
-                questionAssignees.put(currentQuestionId.get(), questionStatusResource);
-            }
-        }else if(currentSection.isPresent()){
-            SectionResource section = currentSection.get();
-            questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(section.getQuestions(), application.getId(), userOrganisation.getId());
-        }else{
-            questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }
 
-        if(currentQuestionId.isPresent()) {
+        Map<Long, QuestionStatusResource> questionAssignees = getQuestionAssignees(currentSection, currentQuestionId, application, userOrganisation);
+        if (currentQuestionId.isPresent()) {
             QuestionStatusResource questionAssignee = questionAssignees.get(currentQuestionId.get());
             model.addAttribute("questionAssignee", questionAssignee);
         }
-
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
@@ -176,8 +138,6 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
     }
-
-
 
     public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
@@ -191,23 +151,11 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
 
-        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        boolean hasFinanceSection;
-        Long financeSectionId;
-        if(financeSection == null) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
-            hasFinanceSection = true;
-            financeSectionId = financeSection.getId();
-        }
-
-        model.addAttribute("hasFinanceSection", hasFinanceSection);
-        model.addAttribute("financeSectionId", financeSectionId);
+        addFinanceDetails(model, application);
 
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES);
         Long eachCollaboratorFinanceSectionId;
-        if(eachOrganisationFinanceSections.isEmpty()) {
+        if (eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = null;
         } else {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
@@ -225,30 +173,28 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-
         if (sectionId.isPresent()) {
             Long id = sectionId.get();
-
             // get the section that we want to show, so we can use this on to show the correct questions.
             return sections.stream().filter(x -> x.getId().equals(id)).findFirst();
 
         } else if (selectFirstSectionIfNoneCurrentlySelected) {
             return sections.isEmpty() ? Optional.empty() : Optional.ofNullable(sections.get(0));
         }
-
         return Optional.empty();
     }
 
     private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
+
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
         return formInputResponseService.getByApplication(application.getId());
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Long organisationId=0L;
-        if(userOrganisation.isPresent()) {
+        if (userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
@@ -280,5 +226,69 @@ public class ApplicationSectionAndQuestionModelPopulator {
         return simpleFilter(list, input -> input.getQuestion().equals(id));
     }
 
+    private void addSubSections(Optional<SectionResource> currentSection, Model model, List<SectionResource> parentSections,
+                                List<SectionResource> allSections, List<QuestionResource> questions, List<FormInputResource> formInputResources) {
+        Map<Long, List<QuestionResource>> subsectionQuestions;
+        if (currentSection.isPresent()) {
+            Map<Long, List<SectionResource>>  subSections = new HashMap<>();
+            subSections.put(currentSection.get().getId(), getSectionsFromListByIdList(currentSection.get().getChildSections(), allSections));
 
+            model.addAttribute("subSections", subSections);
+            subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
+                    .collect(Collectors.toMap(SectionResource::getId,
+                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
+                    ));
+            model.addAttribute("subsectionQuestions", subsectionQuestions);
+        } else {
+            Map<Long, List<SectionResource>>   subSections = parentSections.stream()
+                    .collect(Collectors.toMap(
+                            SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
+                    ));
+            model.addAttribute("subSections", subSections);
+            subsectionQuestions = parentSections.stream()
+                    .collect(Collectors.toMap(SectionResource::getId,
+                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
+                    ));
+            model.addAttribute("subsectionQuestions", subsectionQuestions);
+        }
+
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+        model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
+    }
+
+    private Map<Long, QuestionStatusResource> getQuestionAssignees(Optional<SectionResource> currentSection,
+                                                                   Optional<Long> currentQuestionId,
+                                                                   ApplicationResource application,
+                                                                   OrganisationResource userOrganisation) {
+        Map<Long, QuestionStatusResource> questionAssignees;
+        if (currentQuestionId.isPresent()) {
+            QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());
+            questionAssignees = new HashMap<>();
+            if (questionStatusResource != null) {
+                questionAssignees.put(currentQuestionId.get(), questionStatusResource);
+            }
+        } else if (currentSection.isPresent()) {
+            SectionResource section = currentSection.get();
+            questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(section.getQuestions(), application.getId(), userOrganisation.getId());
+        } else {
+            questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
+        }
+        return questionAssignees;
+    }
+
+    private void addFinanceDetails(Model model, ApplicationResource application) {
+        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
+        final boolean hasFinanceSection;
+        final Long financeSectionId;
+        if (financeSection == null) {
+            hasFinanceSection = false;
+            financeSectionId = null;
+        } else {
+            hasFinanceSection = true;
+            financeSectionId = financeSection.getId();
+        }
+
+        model.addAttribute("hasFinanceSection", hasFinanceSection);
+        model.addAttribute("financeSectionId", financeSectionId);
+    }
 }
