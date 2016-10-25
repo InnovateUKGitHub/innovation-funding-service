@@ -253,7 +253,6 @@ the user should get a local confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    delete email    ${WHICH EMAIL}
     close mailbox
 
 the user opens the remote mailbox and clicks the reset link

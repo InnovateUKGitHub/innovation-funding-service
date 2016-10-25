@@ -116,13 +116,18 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     }
 
     @Test
-    public void testBankDetailsCannotBeSubmittedBeforeProjectDetails(){
-        bankDetailsResource.setOrganisationAddress(null);
+    public void testBankDetailsCanBeSubmittedBeforeProjectDetails(){
+        ValidationResult validationResult = new ValidationResult();
+        VerificationResult verificationResult = new VerificationResult();
+        validationResult.setCheckPassed(true);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(false);
-
+        when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
+        when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
+        when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
         ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+        assertTrue(result.isSuccess());
+        verify(bankDetailsRepositoryMock, times(2)).save(bankDetails);
     }
 
     @Test
@@ -167,8 +172,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(false);
 
         ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+        assertTrue(result.isSuccess());
+        verify(bankDetailsRepositoryMock).save(bankDetails);
     }
 
     @Test

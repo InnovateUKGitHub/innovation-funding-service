@@ -1,4 +1,4 @@
-package com.worth.ifs.validator.constraints;
+package com.worth.ifs.commons.validation.constraints;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
