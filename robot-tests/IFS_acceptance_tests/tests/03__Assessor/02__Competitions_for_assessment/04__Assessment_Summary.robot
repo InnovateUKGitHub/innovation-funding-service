@@ -26,7 +26,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
-    And the days remaining should be correct (Top of the page)    2016-12-31
+    And the days remaining should be correct (Top of the page)    2017-01-28
 
 Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550

@@ -1,11 +1,15 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.BaseController;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -17,12 +21,13 @@ import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.form.service.FormInputRestService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +38,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -49,34 +53,21 @@ import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUND
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-public class ApplicationManagementController extends AbstractApplicationController {
+public class ApplicationManagementController extends BaseController {
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ApplicationManagementController.class);
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private FormInputResponseService formInputResponseService;
 
     @Autowired
     private FileEntryRestService fileEntryRestService;
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
@@ -86,6 +77,33 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    protected ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    protected CompetitionService competitionService;
+
+    @Autowired
+    protected SectionService sectionService;
+
+    @Autowired
+    protected ProcessRoleService processRoleService;
+
+    @Autowired
+    protected ApplicationPrintPopulator applicationPrintPopulator;
+
+    @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    protected FormInputService formInputService;
+
+    @Autowired
+    protected ApplicationService applicationService;
 
     @RequestMapping(value= "/{applicationId}", method = GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
@@ -104,9 +122,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
             application.enableViewMode();
 
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+            applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
             organisationDetailsModelPopulator.populateModel(model, application.getId());
-            addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
             addAppendices(applicationId, responses, model);
 
             model.addAttribute("form", form);
@@ -254,14 +272,14 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                              Model model, HttpServletRequest request) {
 
         return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
-            return print(applicationId, model, request);
+            return applicationPrintPopulator.print(applicationId, model, request);
         });
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
         final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
-                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObject();
+                    FormInputResource formInputResource = formInputService.getOne(fir.getFormInput());
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
                     return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
