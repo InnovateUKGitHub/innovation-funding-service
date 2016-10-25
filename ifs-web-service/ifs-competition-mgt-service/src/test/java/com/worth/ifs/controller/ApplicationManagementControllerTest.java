@@ -1,6 +1,8 @@
 package com.worth.ifs.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
@@ -8,6 +10,8 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,6 +38,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationManagementControllerTest extends BaseControllerMockMVCTest<ApplicationManagementController> {
+
+    @Spy
+    @InjectMocks
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Test
     public void testDisplayApplicationForCompetitionAdministrator() throws Exception {
