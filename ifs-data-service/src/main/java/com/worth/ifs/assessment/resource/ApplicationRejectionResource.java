@@ -1,8 +1,6 @@
-package com.worth.ifs.assessment.form;
-
+package com.worth.ifs.assessment.resource;
 
 import com.worth.ifs.commons.validation.constraints.WordCount;
-import com.worth.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -10,9 +8,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 /**
- * Form field model for the assessment rejection content
+ * DTO for rejecting invites to assess Applications.
  */
-public class AssessmentOverviewForm extends BaseBindingResultTarget {
+public class ApplicationRejectionResource {
 
     @NotEmpty(message = "{validation.applicationRejection.rejectReason.required}")
     private String rejectReason;
@@ -38,15 +36,11 @@ public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentOverviewForm that = (AssessmentOverviewForm) o;
+        ApplicationRejectionResource that = (ApplicationRejectionResource) o;
 
         return new EqualsBuilder()
                 .append(rejectReason, that.rejectReason)
