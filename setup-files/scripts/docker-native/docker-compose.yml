@@ -1,0 +1,114 @@
+version: '2'
+services:
+
+  shib:
+    image: g2g3/ifs-local-dev
+    cap_add:
+      - SYS_PTRACE
+    ports:
+      - "${SHIB_PORT_443}:443"
+      - "${SHIB_PORT_389}:389"
+    links:
+      - web
+      - data
+    networks:
+      front-tier:
+        aliases:
+         - iuk-auth-localdev
+         - ifs-local-dev
+
+  web:
+    build:
+      context: .
+      dockerfile: web-dockerfile
+    ports:
+      - "${WEB_PORT_8080}:8080"
+      - "${WEB_PORT_12345}:12345"
+      - "${WEB_PORT_8081}:8081"
+    links:
+      - data
+    networks:
+      front-tier:
+        aliases:
+          - ifs-web-service
+          - ifs-application-host
+
+  data:
+    build:
+      context: .
+      dockerfile: data-dockerfile
+    volumes:
+      - ./robot-tests/upload_files/:/tmp/ifs-local
+    ports:
+      - "${DATA_PORT_8080}:8080"
+      - "${DATA_PORT_12345}:12345"
+      - "${DATA_PORT_8081}:8081"
+    depends_on:
+      - mysql
+    networks:
+      front-tier:
+        aliases:
+          - data-service
+          - ifs-data-service
+      back-tier:
+        aliases:
+          - data-service
+          - ifs-data-service
+
+  mysql:
+    image: mysql:5.5.49
+    ports:
+      - "${MYSQL_PORT_3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ifs
+    restart: on-failure
+    networks:
+      back-tier:
+        aliases:
+         - database
+         - ifs-database
+
+  smtp:
+    image: camptocamp/smtp-sink
+    expose:
+      - 25
+    networks:
+      back-tier:
+        aliases:
+          - smtp
+
+  imap:
+    image: camptocamp/courier-imap
+    volumes_from:
+      - smtp:rw
+    expose:
+      - 143
+    ports:
+      - "${IMAP_PORT_143}:143"
+    networks:
+      front-tier:
+        aliases:
+          - imap
+      back-tier:
+        aliases:
+          - imap
+
+  webmail:
+    image: camptocamp/sqwebmail
+    ports:
+      - "${WEBMAIL_PORT_80}:80"
+    depends_on:
+      - smtp
+    volumes_from:
+      - smtp:rw
+    networks:
+      back-tier:
+        aliases:
+          - webmail
+
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
