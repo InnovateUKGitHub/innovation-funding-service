@@ -28,6 +28,12 @@
 
                 <div ifs:utext="${model.text}" />
 
+                <ul class="list-bullet extra-margin">
+                    <li th:each="annex : ${T(com.worth.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter).values()}">
+                        <a th:href="@{/profile/terms/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
+                    </li>
+                </ul>
+
                 <p class="form-hint">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
                 <form class="extra-margin" th:action="@{/profile/terms}" method="post" th:unless="${model.currentAgreement}">
