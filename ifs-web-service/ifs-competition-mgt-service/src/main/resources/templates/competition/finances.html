@@ -21,7 +21,8 @@
     </div>
 
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST">
+    <form data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
+          data-th-attr="data-competition=${competitionId}" data-section="application">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
