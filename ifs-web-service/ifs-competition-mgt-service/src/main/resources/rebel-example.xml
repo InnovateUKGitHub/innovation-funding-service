@@ -6,7 +6,7 @@
 		<dir name="/Users/nbijl/Projects/IFS/code/ifs-web-service/ifs-competition-mgt-service/build/classes/main">
 		</dir>
 
-		<jar name="/Users/nbijl/Projects/IFS/code/ifs-web-service/libs/ifs-data-service-public-1.0-SNAPSHOT.jar"></jar>
+		<jar name="/Users/nbijl/Projects/IFS/code/ifs-web-service/libs/ifs-data-service-api-1.0-SNAPSHOT.jar"></jar>
 	</classpath>
 
 	<web>

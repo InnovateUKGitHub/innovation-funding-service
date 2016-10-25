@@ -24,15 +24,13 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
 
     // Use this for including the api lib from the data-service.
-    compile files('../libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
-    compile files('../libs/ifs-rest-api-service-1.0-SNAPSHOT.jar')
+    compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
     testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
-    testCompile files('../libs/ifs-rest-api-service-tests-1.0-SNAPSHOT.jar')
 }
 
 processResources {

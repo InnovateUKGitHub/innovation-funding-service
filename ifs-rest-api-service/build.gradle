@@ -4,13 +4,21 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+configurations {
+    providedRuntime
+    clientCompile
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+    javaLanguageLevel = 1.8
+}
 
 bootRepackage {
     mainClass = 'com.worth.ifs.Application'
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets')
     javaLanguageLevel = 1.8
 }
 
@@ -91,6 +99,7 @@ processTestResources {
         expand project.properties
     }
 }
+
 
 task cleanDeploy() {
     build.mustRunAfter clean

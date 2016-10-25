@@ -1,0 +1,2 @@
+-- set a default Innovation Area of "Earth Observation" to every test Competition
+INSERT INTO category_link (class_name, class_pk, category_id) SELECT 'com.worth.ifs.competition.domain.Competition', id, 5 FROM competition;

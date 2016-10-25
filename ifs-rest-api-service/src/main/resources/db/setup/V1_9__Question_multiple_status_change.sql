@@ -1,0 +1,1 @@
+UPDATE `question` SET `multiple_statuses`=1 where id='20';

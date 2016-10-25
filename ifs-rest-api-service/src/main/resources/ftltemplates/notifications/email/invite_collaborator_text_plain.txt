@@ -1,0 +1,15 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${inviteOrganisationName} to participate in their project for the ${competitionName} competition.
+
+If this is not the correct organisation, email the application lead: ${leadApplicantEmail}
+
+To accept the invitation to collaborate please sign in or register using the link below.
+
+${inviteUrl}
+
+Competitions Team,
+Innovate UK
+</@layout.defaultPlainText>

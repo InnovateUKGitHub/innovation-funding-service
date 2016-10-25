@@ -7,6 +7,7 @@ import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -117,8 +118,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
 
+    @Value("${ifs.data.service.rest.baseURL}")
+    private String dataUrl;
+
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        System.out.println("HEY! mockRestTemplate is null? " + (mockRestTemplate == null) + "and dataUrl is" + dataUrl);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
         return response;
     }

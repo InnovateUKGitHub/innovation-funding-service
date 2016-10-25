@@ -6,7 +6,7 @@
 		<dir name="/Users/nbijl/Projects/Innovation Funding Service/code/ifs-web-service/ifs-application-service/build/classes/main">
 		</dir>
 
-		<jar name="/Users/nbijl/Projects/Innovation Funding Service/code/ifs-web-service/libs/ifs-data-service-public-1.0-SNAPSHOT.jar"></jar>
+		<jar name="/Users/nbijl/Projects/Innovation Funding Service/code/ifs-web-service/libs/ifs-data-service-api-1.0-SNAPSHOT.jar"></jar>
 	</classpath>
 
 	<web>

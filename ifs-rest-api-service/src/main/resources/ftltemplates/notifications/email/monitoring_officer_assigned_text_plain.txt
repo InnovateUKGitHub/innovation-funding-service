@@ -1,0 +1,19 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+The project ${projectName} has been assigned to you. The lead organisation has been informed.
+Please make contact with the lead organisation to review the project details.
+
+Lead
+${leadOrganisation}
+
+Project manager
+${projectManagerName}
+${projectManagerEmail}
+
+If you were not aware of this appointment or you have any queries, please contact Innovate UK.
+
+Competitions Team
+Innovate UK
+</@layout.defaultPlainText>

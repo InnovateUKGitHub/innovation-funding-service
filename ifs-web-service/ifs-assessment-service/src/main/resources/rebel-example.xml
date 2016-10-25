@@ -6,7 +6,7 @@
 		<dir name="/Users/rvanrumpt/projects/ifs/code/ifs-web-service/ifs-assessment-service/build/classes/main">
 		</dir>
 
-		<jar name="/Users/rvanrumpt/projects/ifs/code/ifs-web-service/libs/ifs-data-service-public-1.0-SNAPSHOT.jar"></jar>
+		<jar name="/Users/rvanrumpt/projects/ifs/code/ifs-web-service/libs/ifs-data-service-api-1.0-SNAPSHOT.jar"></jar>
 	</classpath>
 
 </application>

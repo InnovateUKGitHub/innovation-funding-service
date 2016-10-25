@@ -40,6 +40,10 @@ function data() {
     deploy data ifs-data-service "$@"
 }
 
+function api() {
+    deploy api ifs-rest-api-service "$@"
+}
+
 function asm() {
     deploy web ifs-web-service/ifs-assessment-service "$@"
 }
@@ -75,6 +79,9 @@ case "$target" in
     ;;
     data)
         data "$@"
+    ;;
+    api)
+        api "$@"
     ;;
     web)
         core "$@"

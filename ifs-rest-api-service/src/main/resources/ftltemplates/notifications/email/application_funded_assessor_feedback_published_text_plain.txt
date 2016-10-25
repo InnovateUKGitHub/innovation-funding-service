@@ -1,0 +1,17 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+The feedback for your application ${applicationName} is now available for you to view.
+
+Please sign into into your Innovation Funding Service dashboard (${dashboardUrl}).
+
+The feedback provided by the independent assessors has been reviewed by Innovate UK.
+
+Yours sincerely,
+
+Competitions Team
+Innovate UK
+Tel: 0300 321 4357
+Email: competitions@innovateuk.gov.uk
+</@layout.defaultPlainText>

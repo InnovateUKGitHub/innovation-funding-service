@@ -1,0 +1,1 @@
+ALTER TABLE `question_status` ADD UNIQUE `unique_application_question_assignee`(`application_id`, `question_id`, `assignee_id`);
