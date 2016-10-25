@@ -15,10 +15,13 @@ docker-compose -p ifs up -d
 
 # Make sure that the Docker environment have been setup properly
 wait
-sleep 5
+sleep 3
 
 docker-compose -p ifs exec mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ifs_test"'
 docker-compose -p ifs exec mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ifs"'
+
+wait
+sleep 3
 
 cd ../../../
 ./gradlew -Pprofile=docker flywayClean flywayMigrate
