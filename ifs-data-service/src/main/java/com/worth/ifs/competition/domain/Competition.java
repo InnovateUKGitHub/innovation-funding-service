@@ -129,8 +129,7 @@ public class Competition implements ProcessActivity {
                 return CompetitionResource.Status.READY_TO_OPEN;
             } else if (getEndDate() != null && getEndDate().isAfter(today)) {
                 return CompetitionResource.Status.OPEN;
-            } else if (getEndDate() != null && getEndDate().isBefore(today)
-                    && getAssessorAcceptsDate() != null && getAssessorAcceptsDate().isAfter(today)) {
+            } else if (getAssessorAcceptsDate() != null && getAssessorAcceptsDate().isAfter(today)) {
                 // TODO INFUND-5199 - Should not be using the assessor accepts deadline at all here
                 // TODO INFUND-5199 - The competition is closed if we're past the submission date, but haven't distributed applications
                 return CompetitionResource.Status.CLOSED;
