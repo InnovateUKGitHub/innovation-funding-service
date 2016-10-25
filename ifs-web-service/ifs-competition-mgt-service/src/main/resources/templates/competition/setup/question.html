@@ -23,9 +23,8 @@
         </div>
     </div>
 
-    <!-- HARDCODED PROTOTYPE HTML -->
-    <div class="hgroup" style="padding-top: 20px">
-        <p class="subtitle no-margin">//TODO:Connected digital additive manufacturing</p>
+    <div class="hgroup">
+        <p class="subtitle no-margin" th:text="${competitionName}"></p>
         <h1 class="heading-xlarge no-margin">
             <th:block th:if="${editable}">Edit </th:block>
             <th:block th:text="${competitionSetupForm.questionToUpdate.shortTitle}"></th:block>
@@ -145,9 +144,9 @@
             </div>
         </th:block>
     </fieldset>
-    <div th:if="${editable}"
+    <div th:if="${!editable}"
          class="extra-margin">
-        <a role="button" class="button" th:href="${question.id + '/edit'}">Edit this question</a>
+        <a role="button" class="button" th:href="${competitionSetupForm.questionToUpdate.id + '/edit'}">Edit this question</a>
     </div>
     <div th:if="${param.status == null}" class="extra-margin">
         <a href="/prototypes/5085-application-process" class="button-secondary">Return to application questions</a>

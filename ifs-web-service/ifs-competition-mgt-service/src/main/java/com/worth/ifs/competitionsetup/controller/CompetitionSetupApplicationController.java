@@ -95,7 +95,7 @@ public class CompetitionSetupApplicationController {
         } else {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM);
             addQuestionToUpdate(questionId, model, competitionSetupForm);
-            model.addAttribute("competitionSetupForm", competitionSetupForm);
+            model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return "competition/setup/question";
         }
     }
@@ -107,7 +107,8 @@ public class CompetitionSetupApplicationController {
         ApplicationFormForm competitionSetupForm = (ApplicationFormForm) competitionSetupService.getSectionFormData(competition, section);
 
         addQuestionToUpdate(questionId, model, competitionSetupForm);
-        model.addAttribute("competitionSetupForm", competitionSetupForm);
+        model.addAttribute("competitionName", competition.getName());
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
     }
 
     private void addQuestionToUpdate(final Long questionId, Model model, ApplicationFormForm applicationFormForm) {
