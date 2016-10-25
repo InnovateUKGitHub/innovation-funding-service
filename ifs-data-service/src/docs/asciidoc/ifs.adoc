@@ -133,6 +133,10 @@ include::question.adoc[]
 == Section
 include::section.adoc[]
 
+[[contract]]
+== Contract
+include::contract.adoc[]
+
 [[competition]]
 == Competition
 include::competition.adoc[]

@@ -1,7 +1,7 @@
 <#import "layout/default.html" as layout>
     <@layout.default>
     <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-    <p style="margin: 0 0 1em 0;">You have been invited to join the collaborative project <b>${projectName}</b> as a named finance contact.
+    <p style="margin: 0 0 1em 0;">You have been invited to join the project <b>${projectName}</b> as a named finance contact.
 
     <p style="margin: 0 0 1em 0;">You will be providing finance details on behalf of <b>${inviteOrganisationName}</b></p>
 
@@ -22,9 +22,5 @@
             </td>
         </tr>
     </table>
-
-    <p style="margin: 1em 0 1em 0;">
-        Competitions Team<br />
-        Innovate UK
-    </p>
+    <@layout.senderHTML />
 </@layout.default>
