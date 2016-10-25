@@ -6,7 +6,9 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -28,6 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
  * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
  * that the REST services use to exchange data with the "data" layer.
  */
+@RunWith(MockitoJUnitRunner.class)
 public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> {
 
     @Mock
@@ -123,7 +126,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
-        System.out.println("HEY! mockRestTemplate is null? " + (mockRestTemplate == null) + "and dataUrl is" + dataUrl);
+        System.out.println("HEY! mockRestTemplate is null? " + (mockRestTemplate == null) + " and dataUrl is" + dataUrl);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
         return response;
     }
