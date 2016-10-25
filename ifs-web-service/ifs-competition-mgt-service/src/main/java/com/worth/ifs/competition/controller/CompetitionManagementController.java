@@ -150,7 +150,7 @@ public class CompetitionManagementController {
 		
 		CompetitionResource competition = competitionService.getById(competitionSummary.getCompetitionId());
 
-		model.addAttribute("assessmentEndDate", competition.getAssessmentEndDate());
+		model.addAttribute("assessmentEndDate", competition.getFundersPanelDate());
 		model.addAttribute("assessmentDaysLeft", competition.getAssessmentDaysLeft());
 		model.addAttribute("assessmentDaysLeftPercentage", competition.getAssessmentDaysLeftPercentage());
 
