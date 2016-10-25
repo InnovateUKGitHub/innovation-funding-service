@@ -27,8 +27,6 @@ public class Question {
     private Boolean appendix;
     private Boolean scored;
 
-
-
     public Long getId() {
         return id;
     }
