@@ -135,25 +135,16 @@ public class ApplicationOverviewModelPopulator {
             .collect(Collectors.toList());
     }
     
-    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
-        allSections.sort((o1, o2) -> simpleSortByPriority(o1.getPriority(), o2.getPriority()));
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, List<SectionResource> allSections) {
+        allSections.sort(Comparator.comparing(SectionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, List<QuestionResource> questions) {
-        questions.sort((o1, o2) ->  simpleSortByPriority(o1.getPriority(),o2.getPriority()));
+        questions.sort(Comparator.comparing(QuestionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private int simpleSortByPriority(Integer o1Prio, Integer o2Prio) {
-        if(o1Prio == null) {
-            return Integer.MIN_VALUE;
-        } else if (o2Prio == null) {
-            return 0;
-        }
-        return o1Prio - o2Prio;
-    }
-    
     private void addUserDetails(Model model, ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
