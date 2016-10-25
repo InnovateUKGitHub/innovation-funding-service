@@ -138,7 +138,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select a Innovate Lead">
+                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovate Lead">
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Innovate Lead</option>
                 </select>
