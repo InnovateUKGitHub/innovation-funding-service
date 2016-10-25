@@ -95,8 +95,8 @@ public class Competition implements ProcessActivity {
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
-    private boolean fullApplicationFinance;
-    private boolean includeGrowthTable;
+    private boolean fullApplicationFinance = true;
+    private boolean includeGrowthTable = true;
 
     private Boolean setupComplete;
 
