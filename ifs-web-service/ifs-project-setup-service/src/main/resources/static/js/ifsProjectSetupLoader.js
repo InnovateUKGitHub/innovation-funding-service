@@ -21,8 +21,8 @@ IFS.projectSetup = {};
 IFS.projectSetup.loadOrder = {
   'spend-profile' : {
     init : function(){
-        IFS.core.finance.init();
-        IFS.projectSetup.spendProfile.init();
+      IFS.core.finance.init();
+      IFS.projectSetup.spendProfile.init();
     }
   }
 };

@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -9,13 +10,17 @@ public class AssessorCompetitionDashboardViewModel {
 
     private String competitionTitle;
     private String competition;
-    private String fundingBody;
+    private String leadTechnologist;
+    private LocalDateTime acceptDeadline;
+    private LocalDateTime submitDeadline;
     private List<AssessorCompetitionDashboardApplicationViewModel> applications;
 
-    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String fundingBody, List<AssessorCompetitionDashboardApplicationViewModel> applications) {
+    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> applications) {
         this.competitionTitle = competitionTitle;
         this.competition = competition;
-        this.fundingBody = fundingBody;
+        this.leadTechnologist = leadTechnologist;
+        this.acceptDeadline = acceptDeadline;
+        this.submitDeadline = submitDeadline;
         this.applications = applications;
     }
 
@@ -35,12 +40,28 @@ public class AssessorCompetitionDashboardViewModel {
         this.competition = competition;
     }
 
-    public String getFundingBody() {
-        return fundingBody;
+    public String getLeadTechnologist() {
+        return leadTechnologist;
     }
 
-    public void setFundingBody(String fundingBody) {
-        this.fundingBody = fundingBody;
+    public void setLeadTechnologist(String leadTechnologist) {
+        this.leadTechnologist = leadTechnologist;
+    }
+
+    public LocalDateTime getAcceptDeadline() {
+        return acceptDeadline;
+    }
+
+    public void setAcceptDeadline(LocalDateTime acceptDeadline) {
+        this.acceptDeadline = acceptDeadline;
+    }
+
+    public LocalDateTime getSubmitDeadline() {
+        return submitDeadline;
+    }
+
+    public void setSubmitDeadline(LocalDateTime submitDeadline) {
+        this.submitDeadline = submitDeadline;
     }
 
     public List<AssessorCompetitionDashboardApplicationViewModel> getApplications() {
