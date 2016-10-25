@@ -32,7 +32,8 @@
         <li>to accept Innovate UK's terms and conditions</li>
     </ul>
 
-	<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/1176-assessor-create-acc?version=v2': '/prototypes/1176-assessor-create-acc')}" class="button button-large">Create account</a>
+	<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/1176-assessor-create-acc?version=v2': '/prototypes/1176-assessor-create-acc?version=v3')}" class="button button-large">Create account</a>
+    <a th:unless="${(param.version != null)}" href="/prototypes/1176-assessor-create-acc" class="button button-large">Create account</a>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
