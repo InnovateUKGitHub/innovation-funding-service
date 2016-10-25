@@ -5,7 +5,10 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -33,4 +36,6 @@ public interface QuestionService {
     List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
     QuestionResource save(QuestionResource questionResource);
     List<QuestionResource> getQuestionsByAssessment(Long assessmentId);
+    void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy);
+    Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request);
 }
