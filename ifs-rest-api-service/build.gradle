@@ -1,58 +1,32 @@
-group 'worth'
-version '1.0-SNAPSHOT'
+if (project.hasProperty("profile")) {
+    apply from: "${project.profile}-build.gradle"
+} else {
+    apply from: "dev-build.gradle"
+}
 
-apply plugin: 'java'
-apply plugin: 'idea'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-configurations {
-    mapstruct
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
 }
 
 ext {
     snippetsDir = file('build/generated-snippets')
     javaLanguageLevel = 1.8
-    generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
 }
 
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-            include 'com/worth/ifs/domain'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
+sourceCompatibility = 1.8
+
+bootRun {
+    addResources = false
 }
 
-repositories {
-    maven { url "https://repo.spring.io/milestone" }
-    mavenCentral()
+// Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
+ext['spring-restdocs.version']='1.1.2.RELEASE'
+
+configurations {
+    mapstruct
 }
 
-bootRepackage.enabled = false
-
-
-task clientCopy(type: Copy){
-    ["../ifs-web-service/libs"].each {
-        into it
-        from "build/libs/"
-        include "ifs-rest-api-service*"
-    }
-}
-
-task cleanDeploy() {
-    build.mustRunAfter clean
-    clientCopy.mustRunAfter build
-    dependsOn clean
-    dependsOn build
-    dependsOn clientCopy
-}
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -67,7 +41,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-codec:commons-codec:1.10'
-//    compile "org.flywaydb:flyway-core:4.0"
+    compile "org.flywaydb:flyway-core:4.0"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
@@ -82,14 +56,46 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
 
-//    // Use this for including the api lib from the data-service.
     compile files('./libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile files('./libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
-    testCompile files('./libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+}
+
+
+
+
+
+task clientCopy(type: Copy){
+    ["../ifs-web-service/libs"].each {
+        into it
+        from "build/libs/"
+        include "ifs-rest-api-service*"
+    }
+}
+
+//noinspection GroovyMissingReturnStatement
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    clientCopy.mustRunAfter build
+    dependsOn clean
+    dependsOn build
+    dependsOn clientCopy
 }
