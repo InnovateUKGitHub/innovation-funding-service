@@ -110,7 +110,7 @@ public class CompetitionSetupApplicationController {
         model.addAttribute("competitionSetupForm", competitionSetupForm);
     }
 
-    private void addQuestionToUpdate(Long questionId, Model model, ApplicationFormForm applicationFormForm) {
+    private void addQuestionToUpdate(final Long questionId, Model model, ApplicationFormForm applicationFormForm) {
         if(model.containsAttribute("questions")) {
             List<Question> questions = (List<Question>) model.asMap().get("questions");
             Optional<Question> question = questions.stream().filter(questionObject -> questionObject.getId().equals(questionId)).findFirst();

@@ -8,7 +8,6 @@ import java.util.List;
 
 public class CompetitionFundersFixture {
 
-
     public static List<CompetitionFunderResource> getTestCoFunders() {
         List<CompetitionFunderResource> returnList = new ArrayList<>();
         CompetitionFunderResource coFunder1 = new CompetitionFunderResource();
