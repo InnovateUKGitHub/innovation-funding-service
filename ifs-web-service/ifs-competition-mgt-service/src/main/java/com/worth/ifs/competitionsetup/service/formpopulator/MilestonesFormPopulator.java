@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Form model for the milestones competition setup section.
+ * Form populator for the milestones competition setup section.
  */
 @Service
 public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {

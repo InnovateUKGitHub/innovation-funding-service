@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
- * Form model for the additional info competition setup section.
+ * Form populator for the additional info competition setup section.
  */
 @Service
 public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulator {

@@ -7,7 +7,7 @@ import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import org.springframework.stereotype.Service;
 
 /**
- * Form model for the initial details competition setup section.
+ * Form populator for the initial details competition setup section.
  */
 @Service
 public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulator {

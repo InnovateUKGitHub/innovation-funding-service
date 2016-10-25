@@ -20,10 +20,9 @@ import org.springframework.ui.Model;
 
 import java.util.*;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-
 @Component
 public class ApplicationModelPopulator {
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
     protected UserService userService;
@@ -93,7 +92,7 @@ public class ApplicationModelPopulator {
         applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         return application;
     }
 

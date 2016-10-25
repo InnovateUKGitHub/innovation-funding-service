@@ -1,12 +1,18 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.BaseController;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
 import com.worth.ifs.controller.ValidationHandler;
@@ -15,10 +21,12 @@ import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +58,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-public class ApplicationManagementController extends AbstractApplicationController {
+public class ApplicationManagementController extends BaseController {
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ApplicationManagementController.class);
@@ -73,6 +81,29 @@ public class ApplicationManagementController extends AbstractApplicationControll
     @Autowired
     private UserService userService;
 
+    @Autowired
+    protected ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    protected CompetitionService competitionService;
+
+    @Autowired
+    protected SectionService sectionService;
+
+    @Autowired
+    protected ProcessRoleService processRoleService;
+
+    @Autowired
+    protected ApplicationPrintPopulator applicationPrintPopulator;
+
+    @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    protected FormInputService formInputService;
+
+    @Autowired
+    protected ApplicationService applicationService;
 
     @RequestMapping(value= "/{applicationId}", method = GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,

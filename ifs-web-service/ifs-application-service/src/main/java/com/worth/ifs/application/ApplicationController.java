@@ -2,18 +2,27 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
+import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,14 +50,57 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping("/application")
-public class ApplicationController extends AbstractApplicationController {
+public class ApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
+
+    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
+    public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private ApplicationPrintPopulator applicationPrintPopulator;
+
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+
+    @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Autowired
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private FormInputService formInputService;
+
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();

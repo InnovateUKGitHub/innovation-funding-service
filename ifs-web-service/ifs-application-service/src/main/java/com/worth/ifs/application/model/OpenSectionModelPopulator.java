@@ -36,7 +36,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -124,7 +123,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
         addCompletedDetails(model, application, userOrganisation, allSections);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
@@ -181,7 +180,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {

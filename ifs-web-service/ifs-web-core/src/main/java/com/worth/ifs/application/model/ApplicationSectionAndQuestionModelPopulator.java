@@ -27,11 +27,11 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationSectionAndQuestionModelPopulator {
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
     protected FormInputService formInputService;
@@ -138,7 +138,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
     public void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,

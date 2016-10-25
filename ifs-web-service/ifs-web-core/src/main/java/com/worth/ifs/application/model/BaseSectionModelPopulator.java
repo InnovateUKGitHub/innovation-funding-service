@@ -14,13 +14,13 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.application.AbstractApplicationController.*;
-
 /**
  * class with methods that are used on every model for sectionPages
  * these pages are rendered by the ApplicationFormController.applicationFormWithOpenSection method
  */
 abstract class BaseSectionModelPopulator {
+    protected static final String MODEL_ATTRIBUTE_FORM = "form";
+
     @Autowired
     private QuestionService questionService;
 

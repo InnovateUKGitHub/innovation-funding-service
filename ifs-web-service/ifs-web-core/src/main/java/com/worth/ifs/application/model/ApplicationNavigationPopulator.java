@@ -9,11 +9,11 @@ import org.springframework.ui.Model;
 
 import java.util.*;
 
-import static com.worth.ifs.application.AbstractApplicationController.*;
-
-
 @Component
 public class ApplicationNavigationPopulator {
+    public static final String SECTION_URL = "/section/";
+    public static final String QUESTION_URL = "/question/";
+    public static final String APPLICATION_BASE_URL = "/application/";
 
     @Autowired
     private QuestionService questionService;

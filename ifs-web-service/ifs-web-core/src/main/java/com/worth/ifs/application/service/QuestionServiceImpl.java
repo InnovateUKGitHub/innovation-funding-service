@@ -17,8 +17,6 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.ASSIGN_QUESTION_PARAM;
-
 /**
  * This class contains methods to retrieve and store {@link QuestionResource} related data,
  * through the RestService {@link QuestionRestService}.
@@ -27,6 +25,7 @@ import static com.worth.ifs.application.AbstractApplicationController.ASSIGN_QUE
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);
+    private static final String ASSIGN_QUESTION_PARAM = "assign_question";
 
     @Autowired
     private QuestionRestService questionRestService;

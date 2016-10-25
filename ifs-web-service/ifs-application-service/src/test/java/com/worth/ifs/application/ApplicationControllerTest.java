@@ -121,7 +121,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         LOG.debug("Show dashboard for application: " + app.getId());
-        mockMvc.perform(post("/application/" + app.getId()).param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
+        mockMvc.perform(post("/application/" + app.getId()).param(ApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/"+app.getId()));
     }
@@ -277,11 +277,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
+                .param(ApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
 
-        verify(questionService, times(1)).assignQuestion(Mockito.eq(app.getId()), Mockito.any(), Mockito.any());
+        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(), any());
     }
 
     @Test
@@ -294,7 +294,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(AbstractApplicationController.MARK_AS_COMPLETE, question.getId().toString())
+                .param(ApplicationController.MARK_AS_COMPLETE, question.getId().toString())
                 .param("formInput[" + question.getId().toString() + "]", "Test value"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));

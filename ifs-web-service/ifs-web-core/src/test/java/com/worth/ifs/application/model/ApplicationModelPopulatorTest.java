@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -108,7 +107,7 @@ public class ApplicationModelPopulatorTest {
         verify(model).addAttribute("currentApplication", application);
         verify(model).addAttribute("currentCompetition", competition);
         verify(model).addAttribute("userOrganisation", userOrganisation.orElse(null));
-        verify(model).addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        verify(model).addAttribute(ApplicationModelPopulator.MODEL_ATTRIBUTE_FORM, form);
         verify(model).addAttribute("userIsLeadApplicant", false);
         verify(model).addAttribute("leadApplicant", leadApplicant);
         verify(model).addAttribute("completedQuestionsPercentage", application.getCompletion());

@@ -38,7 +38,6 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
@@ -159,7 +158,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         //verify model attributes
         verify(model).addAttribute("responses", mappedResponses);
-        verify(model).addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        verify(model).addAttribute(ApplicationSectionAndQuestionModelPopulator.MODEL_ATTRIBUTE_FORM, form);
         verifyNoMoreInteractions(model);
 
         //verify form

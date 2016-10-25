@@ -8,7 +8,7 @@ import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 
 /**
- * Form model for the application form competition setup section.
+ * Form populator for the application form competition setup section.
  */
 @Service
 public class ApplicationFormFormPopulator implements CompetitionSetupFormPopulator {

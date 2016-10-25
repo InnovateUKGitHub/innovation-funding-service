@@ -27,13 +27,17 @@ import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.util.AjaxResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,10 +85,31 @@ import static org.springframework.util.StringUtils.hasText;
  * This controller will handle all requests that are related to the application form.
  */
 @Controller
-@RequestMapping(AbstractApplicationController.APPLICATION_BASE_URL+"{applicationId}/form")
-public class ApplicationFormController extends AbstractApplicationController {
+@RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form")
+public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
+
+    public static final String QUESTION_URL = "/question/";
+    public static final String QUESTION_ID = "questionId";
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
+    public static final String APPLICATION_ID = "applicationId";
+    public static final String APPLICATION_FORM = "application-form";
+    public static final String SECTION_URL = "/section/";
+    public static final String EDIT_QUESTION = "edit_question";
+    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
+    public static final String MARK_AS_COMPLETE = "mark_as_complete";
+    public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String ADD_COST = "add_cost";
+    public static final String REMOVE_COST = "remove_cost";
+    public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
+    public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String UPLOAD_FILE = "upload_file";
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
+    public static final String TERMS_AGREED_KEY = "termsAgreed";
+    public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+    public static final String APPLICATION_BASE_URL = "/application/";
+    public static final String APPLICATION_START_DATE = "application.startDate";
 
     @Autowired
     private FinanceRowService financeRowService;
@@ -118,6 +143,36 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private FinanceHandler financeHandler;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
