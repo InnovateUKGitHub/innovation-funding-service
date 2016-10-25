@@ -163,7 +163,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<UserProfileResource> getProfileDetails(Long userId) {
+    public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
                     UserProfileResource profileDetails = assignUserProfileDetails(user);
@@ -176,7 +176,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails) {
+    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
     }

@@ -66,16 +66,8 @@ public class UserRegistrationResource extends UserProfileBaseResource{
         UserRegistrationResource that = (UserRegistrationResource) o;
 
         return new EqualsBuilder()
-                .append(getTitle(), that.getTitle())
-                .append(getFirstName(), that.getFirstName())
-                .append(getLastName(), that.getLastName())
-                .append(getPhoneNumber(), that.getPhoneNumber())
-                .append(getGender(), that.getGender())
-                .append(getDisability(), that.getDisability())
-                .append(getEthnicity(), that.getEthnicity())
+                .appendSuper(super.equals(o))
                 .append(password, that.password)
-                .append(getAddress(), that.getAddress())
-                .append(getEmail(), that.getEmail())
                 .append(roles, that.roles)
                 .isEquals();
     }
@@ -83,17 +75,9 @@ public class UserRegistrationResource extends UserProfileBaseResource{
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getTitle())
-                .append(getFirstName())
-                .append(getLastName())
-                .append(getPhoneNumber())
-                .append(getGender())
-                .append(getDisability())
-                .append(getEthnicity())
+                .appendSuper(super.hashCode())
                 .append(password)
                 .append(roles)
-                .append(getAddress())
-                .append(getEmail())
                 .toHashCode();
     }
 

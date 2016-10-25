@@ -189,7 +189,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long userId = 1L;
         UserProfileResource expected = newUserProfileResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileDetails", usersUrl, userId), UserProfileResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", usersUrl, userId), UserProfileResource.class, expected, OK);
 
         UserProfileResource response = service.getProfileDetails(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
@@ -200,7 +200,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long userId = 1L;
         UserProfileResource profileDetails = newUserProfileResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileDetails", usersUrl, userId), profileDetails, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserProfile", usersUrl, userId), profileDetails, OK);
 
         RestResult<Void> response = service.updateProfileDetails(userId, profileDetails);
         assertTrue(response.isSuccess());

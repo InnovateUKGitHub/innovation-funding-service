@@ -114,11 +114,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<UserResource> updateDetails(UserResource user) {
-        return userRestService.updateDetails(user);
-    }
-
-    @Override
     public ProfileSkillsResource getProfileSkills(Long userId) {
         return userRestService.getProfileSkills(userId).getSuccessObjectOrThrowException();
     }

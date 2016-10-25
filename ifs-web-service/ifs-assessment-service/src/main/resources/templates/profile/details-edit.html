@@ -16,7 +16,7 @@
                 <h1 class="heading-xlarge">Edit your details</h1>
             </div>
 
-            <form th:action="@{/profile/details-edit}" method="post" th:object="${form}" novalidate="novalidate">
+            <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to update your account

@@ -128,8 +128,8 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.getProfileDetails(userId), () -> {
-            verify(rules).usersCanViewTheirOwnDetails(isA(UserProfileResource.class), eq(getLoggedInUser()));
+        assertAccessDenied(() -> classUnderTest.getUserProfile(userId), () -> {
+            verify(rules).usersCanViewTheirOwnProfile(isA(UserProfileResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -142,8 +142,8 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateProfileDetails(userId, profile), () -> {
-            verify(rules).usersCanUpdateTheirOwnDetails(user, getLoggedInUser());
+        assertAccessDenied(() -> classUnderTest.updateUserProfile(userId, profile), () -> {
+            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -191,12 +191,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<UserProfileResource> getProfileDetails(Long userId) {
+        public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
             return serviceSuccess(newUserProfileResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails) {
+        public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
             return null;
         }
     }

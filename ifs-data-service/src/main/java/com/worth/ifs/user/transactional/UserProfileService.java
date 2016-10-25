@@ -36,9 +36,9 @@ public interface UserProfileService {
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ_DETAILS')")
-    ServiceResult<UserProfileResource> getProfileDetails(Long userId);
+    @PostAuthorize("hasPermission(returnObject, 'READ_USER_PROFILE')")
+    ServiceResult<UserProfileResource> getUserProfile(Long userId);
 
-    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_DETAILS')")
-    ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails);
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
+    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
 }

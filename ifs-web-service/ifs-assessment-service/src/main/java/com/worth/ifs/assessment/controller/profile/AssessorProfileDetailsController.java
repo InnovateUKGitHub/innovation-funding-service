@@ -42,7 +42,7 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldE
  * Controller to manage the Assessor Profile Skills page
  */
 @Controller
-@RequestMapping("/profile")
+@RequestMapping("/profile/details")
 public class AssessorProfileDetailsController {
 
     @Autowired
@@ -71,13 +71,13 @@ public class AssessorProfileDetailsController {
         this.validator = validator;
     }
 
-    @RequestMapping(value = "/details", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String getDetails(Model model,
                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return doViewYourDetails(loggedInUser, model);
     }
 
-    @RequestMapping(value = "/details-edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String getDetailsEdit(Model model,
                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                  @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -85,7 +85,7 @@ public class AssessorProfileDetailsController {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
-    @RequestMapping(value = "/details-edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String submitDetails(Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -115,7 +115,7 @@ public class AssessorProfileDetailsController {
         });
     }
 
-    @RequestMapping(value = "/details-edit", params = "manual-address", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", params = "manual-address", method = RequestMethod.POST)
     public String manualAddress(Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -126,7 +126,7 @@ public class AssessorProfileDetailsController {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
-    @RequestMapping(value = "/details-edit", params = "search-address", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", params = "search-address", method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -144,7 +144,7 @@ public class AssessorProfileDetailsController {
         return validationHandler.failNowOrSucceedWith(view, view);
     }
 
-    @RequestMapping(value = "/details-edit", params = "select-address", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", params = "select-address", method = RequestMethod.POST)
     public String selectAddress(Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -215,7 +215,7 @@ public class AssessorProfileDetailsController {
             populateFormWithExistingValues(loggedInUser, form);
         }
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
-        model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser.getEmail()));
+        model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser));
         return "profile/details-edit";
     }
 

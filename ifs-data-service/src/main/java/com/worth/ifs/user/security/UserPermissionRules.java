@@ -123,19 +123,9 @@ public class UserPermissionRules {
         return user.getId().equals(affiliation.getUser());
     }
 
-    @PermissionRule(value = "UPDATE_AFFILIATIONS", description = "A User can update their own affiliations")
-    public boolean usersCanUpdateTheirOwnAffiliations(UserResource userToUpdate, UserResource user) {
-        return user.getId().equals(userToUpdate.getId());
-    }
-
-    @PermissionRule(value = "READ_DETAILS", description = "A user can read their own details")
-    public boolean usersCanViewTheirOwnDetails(UserProfileResource profileDetails, UserResource user) {
+    @PermissionRule(value = "READ_USER_PROFILE", description = "A user can read their own profile")
+    public boolean usersCanViewTheirOwnProfile(UserProfileResource profileDetails, UserResource user) {
         return profileDetails.getUser().equals(user.getId());
-    }
-
-    @PermissionRule(value = "UPDATE_DETAILS", description = "A User can update their own details")
-    public boolean usersCanUpdateTheirOwnDetails(UserResource userToUpdate, UserResource user) {
-        return user.getId().equals(userToUpdate.getId());
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

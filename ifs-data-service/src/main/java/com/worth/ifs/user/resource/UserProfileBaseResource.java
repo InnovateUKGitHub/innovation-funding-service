@@ -1,6 +1,8 @@
 package com.worth.ifs.user.resource;
 
 import com.worth.ifs.address.resource.AddressResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -9,6 +11,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+/**
+ * Base class for user profile DTOs
+ */
 public abstract class UserProfileBaseResource {
     @NotEmpty(message = "{validation.standard.title.selectionrequired}")
     @Size(max = 5, message = "{validation.standard.title.length.max}")
@@ -124,5 +129,41 @@ public abstract class UserProfileBaseResource {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserProfileBaseResource that = (UserProfileBaseResource) o;
+
+        return new EqualsBuilder()
+                .append(title, that.title)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(phoneNumber, that.phoneNumber)
+                .append(gender, that.gender)
+                .append(disability, that.disability)
+                .append(ethnicity, that.ethnicity)
+                .append(address, that.address)
+                .append(email, that.email)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(title)
+                .append(firstName)
+                .append(lastName)
+                .append(phoneNumber)
+                .append(gender)
+                .append(disability)
+                .append(ethnicity)
+                .append(address)
+                .append(email)
+                .toHashCode();
     }
 }

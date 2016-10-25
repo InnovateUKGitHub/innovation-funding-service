@@ -188,14 +188,14 @@ public class UserController {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getProfileDetails", method = GET)
+    @RequestMapping(value = "/id/{userId}/getUserProfile", method = GET)
     public RestResult<UserProfileResource> getProfileDetails(@PathVariable("userId") Long userId) {
-        return userProfileService.getProfileDetails(userId).toGetResponse();
+        return userProfileService.getUserProfile(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateProfileDetails", method = PUT)
+    @RequestMapping(value = "/id/{userId}/updateUserProfile", method = PUT)
     public RestResult<Void> updateProfileDetails(@PathVariable("userId") Long userId,
                                                 @RequestBody UserProfileResource profileDetails) {
-        return userProfileService.updateProfileDetails(userId, profileDetails).toPutResponse();
+        return userProfileService.updateUserProfile(userId, profileDetails).toPutResponse();
     }
 }

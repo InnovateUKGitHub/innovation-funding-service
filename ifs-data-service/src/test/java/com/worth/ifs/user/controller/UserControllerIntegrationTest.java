@@ -22,7 +22,6 @@ import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
-import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
@@ -341,6 +340,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         Long userId = user.getId();
 
         Address address = newAddress()
+                .with(id(null))
                 .withAddressLine1("10 Test St")
                 .withTown("Test Town")
                 .build();
@@ -358,16 +358,29 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void testUpdateProfileDetails() {
-        loginCompAdmin();
-        UserResource userOne = controller.getUserById(1L).getSuccessObject();
-        setLoggedInUser(userOne);
+        loginPaulPlum();
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        user.setPhoneNumber("12345678");
+        user.setDisability(Disability.NO);
+        userRepository.save(user);
+
+        UserProfileResource saveResponse = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
+        assertEquals("12345678", saveResponse.getPhoneNumber());
+        assertEquals(Disability.NO, saveResponse.getDisability());
 
         UserProfileResource profileDetails = newUserProfileResource()
-                .withAddress(newAddressResource().build())
                 .withEthnicity(newEthnicityResource().build())
+                .withDisability(Disability.YES)
+                .withPhoneNumber("87654321")
                 .build();
 
-        RestResult<Void> restResult = controller.updateProfileDetails(1L, profileDetails);
+        RestResult<Void> restResult = controller.updateProfileDetails(userId, profileDetails);
         assertTrue(restResult.isSuccess());
+
+        UserProfileResource updateResponse = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
+        assertEquals("87654321", updateResponse.getPhoneNumber());
+        assertEquals(Disability.YES, updateResponse.getDisability());
     }
 }

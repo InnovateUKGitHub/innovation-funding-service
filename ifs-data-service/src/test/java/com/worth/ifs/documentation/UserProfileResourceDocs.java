@@ -27,7 +27,7 @@ public class UserProfileResourceDocs {
             fieldWithPath("gender").description("gender of the user"),
             fieldWithPath("disability").description("disability of the user"),
             fieldWithPath("ethnicity").description("ethnic group of the user"),
-            fieldWithPath("address").description("assess of the user"),
+            fieldWithPath("address").description("address of the user"),
             fieldWithPath("email").description("email address of the user"),
     };
 

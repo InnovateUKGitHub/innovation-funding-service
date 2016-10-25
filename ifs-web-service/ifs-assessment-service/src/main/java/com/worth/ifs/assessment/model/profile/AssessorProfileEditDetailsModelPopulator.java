@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssessorProfileEditDetailsModelPopulator {
 
-    public AssessorProfileEditDetailsViewModel populateModel(String email) {
-        return new AssessorProfileEditDetailsViewModel(email);
+    public AssessorProfileEditDetailsViewModel populateModel(UserResource loggedInUser) {
+        return new AssessorProfileEditDetailsViewModel(loggedInUser.getEmail());
     }
 }

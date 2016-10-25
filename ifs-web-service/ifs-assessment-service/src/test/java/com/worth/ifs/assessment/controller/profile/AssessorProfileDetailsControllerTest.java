@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
@@ -82,7 +83,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserProfileResource profileDetails = newUserProfileResource().build();
         when(userService.getProfileDetails(user.getId())).thenReturn(profileDetails);
 
-        mockMvc.perform(get("/profile/details-edit"))
+        mockMvc.perform(get("/profile/details/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/details-edit"));
@@ -109,7 +110,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         AddressForm addressForm = expectedForm.getAddressForm();
 
         AddressResource addressResource = newAddressResource()
-                .withId(null)
+                .with(id(null))
                 .withAddressLine1(addressLine1)
                 .withPostcode(postcode)
                 .withTown(town)
@@ -132,7 +133,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         when(userService.updateProfileDetails(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
-        MvcResult result = mockMvc.perform(post("/profile/details-edit")
+        MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("title", title)
                 .param("firstName", firstName)
@@ -163,47 +164,41 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void submitDetails_incomplete() throws Exception {
-        String title = "Mr";
-        String firstName = "Felix";
-        String lastName = "Wilson";
-        String phoneNumber = "12345678";
         String email = "felix.wilson@gmail.com";
-        Gender gender = Gender.MALE;
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
 
         UserResource user = newUserResource().withEmail(email).build();
         setLoggedInUser(user);
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
-        MvcResult result = mockMvc.perform(post("/profile/details-edit")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
-                .param("firstName", firstName)
-                .param("lastName", lastName)
-                .param("phoneNumber", phoneNumber)
-                .param("gender", gender.name())
-                .param("ethnicity", ethnicity.getId().toString()))
+        MvcResult result = mockMvc.perform(post("/profile/details/edit")
+                .contentType(APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("form", "lastName"))
+                .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
+                .andExpect(model().attributeHasFieldErrors("form", "gender"))
+                .andExpect(model().attributeHasFieldErrors("form", "ethnicity"))
+                .andExpect(model().attributeHasFieldErrors("form", "title"))
                 .andExpect(model().attributeHasFieldErrors("form", "disability"))
+                .andExpect(model().attributeHasFieldErrors("form", "address"))
                 .andExpect(view().name("profile/details-edit"))
                 .andReturn();
 
         AssessorProfileEditDetailsForm form = (AssessorProfileEditDetailsForm) result.getModelAndView().getModel().get("form");
-        assertEquals(title, form.getTitle());
-        assertEquals(firstName, form.getFirstName());
-        assertEquals(lastName, form.getLastName());
-        assertEquals(phoneNumber, form.getPhoneNumber());
-        assertEquals(gender, form.getGender());
-        assertEquals(ethnicity, form.getEthnicity());
-
         BindingResult bindingResult = form.getBindingResult();
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(2, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("disability"));
+        assertEquals(8, bindingResult.getFieldErrorCount());
+        assertEquals("Please select a title", bindingResult.getFieldError("title").getDefaultMessage());
+        assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter a phone number", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
+        assertEquals("Please select a gender", bindingResult.getFieldError("gender").getDefaultMessage());
+        assertEquals("Please select an ethnicity", bindingResult.getFieldError("ethnicity").getDefaultMessage());
         assertEquals("Please select a disability", bindingResult.getFieldError("disability").getDefaultMessage());
         assertEquals("Please enter your address details", bindingResult.getFieldError("address").getDefaultMessage());
      }

@@ -358,14 +358,14 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         Long userId = 1L;
         UserProfileResource profileDetails = newUserProfileResource().build();
 
-        when(userProfileServiceMock.getProfileDetails(userId)).thenReturn(serviceSuccess(profileDetails));
+        when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{userId}/getProfileDetails", userId)
+        mockMvc.perform(get("/user/id/{userId}/getUserProfile", userId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileDetails)));
 
-        verify(userProfileServiceMock, only()).getProfileDetails(userId);
+        verify(userProfileServiceMock, only()).getUserProfile(userId);
     }
 
     @Test
@@ -373,13 +373,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         UserProfileResource profileDetails = newUserProfileResource().build();
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileDetails(userId, profileDetails)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{userId}/updateProfileDetails", userId)
+        mockMvc.perform(put("/user/id/{userId}/updateUserProfile", userId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(profileDetails)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateProfileDetails(userId, profileDetails);
+        verify(userProfileServiceMock, only()).updateUserProfile(userId, profileDetails);
     }
 }

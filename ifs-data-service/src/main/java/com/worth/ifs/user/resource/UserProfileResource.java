@@ -3,6 +3,9 @@ package com.worth.ifs.user.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * User Profile Data Transfer Object
+ */
 public class UserProfileResource extends UserProfileBaseResource {
 
     private Long user;
@@ -27,15 +30,7 @@ public class UserProfileResource extends UserProfileBaseResource {
         UserProfileResource that = (UserProfileResource) o;
 
         return new EqualsBuilder()
-                .append(getTitle(), that.getTitle())
-                .append(getFirstName(), that.getFirstName())
-                .append(getLastName(), that.getLastName())
-                .append(getPhoneNumber(), that.getPhoneNumber())
-                .append(getGender(), that.getGender())
-                .append(getDisability(), that.getDisability())
-                .append(getEthnicity(), that.getEthnicity())
-                .append(getAddress(), that.getAddress())
-                .append(getEmail(), that.getEmail())
+                .appendSuper(super.equals(o))
                 .append(this.user, that.getUser())
                 .isEquals();
     }
@@ -43,15 +38,7 @@ public class UserProfileResource extends UserProfileBaseResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getTitle())
-                .append(getFirstName())
-                .append(getLastName())
-                .append(getPhoneNumber())
-                .append(getGender())
-                .append(getDisability())
-                .append(getEthnicity())
-                .append(getAddress())
-                .append(getEmail())
+                .appendSuper(super.hashCode())
                 .append(this.user)
                 .toHashCode();
     }

@@ -368,27 +368,27 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void testUsersCanViewTheirOwnDetails() {
         UserResource user = newUserResource().build();
         UserProfileResource userDetails = newUserProfileResource().withUser(user.getId()).build();
-        assertTrue(rules.usersCanViewTheirOwnDetails(userDetails, user));
+        assertTrue(rules.usersCanViewTheirOwnProfile(userDetails, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnDetailsButNotAnotherUsersDetails() {
         UserResource anotherUser = newUserResource().withId(1L).build();
         UserProfileResource userDetails = newUserProfileResource().withUser(2L).build();
-        assertFalse(rules.usersCanViewTheirOwnDetails(userDetails, anotherUser));
+        assertFalse(rules.usersCanViewTheirOwnProfile(userDetails, anotherUser));
     }
 
     @Test
     public void testUsersCanUpdateTheirDetails() {
         UserResource user = newUserResource().build();
-        assertTrue(rules.usersCanUpdateTheirOwnDetails(user, user));
+        assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
     }
 
     @Test
     public void testUsersCanUpdateTheirDetailsButNotAnotherUsersDetails() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.usersCanUpdateTheirOwnDetails(anotherUser, user));
+        assertFalse(rules.usersCanUpdateTheirOwnProfiles(anotherUser, user));
     }
 
     @Test

@@ -567,7 +567,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withAddress(addressResource)
                 .build();
 
-        UserProfileResource response = service.getProfileDetails(existingUser.getId()).getSuccessObject();
+        UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
         verify(userRepositoryMock).findOne(existingUser.getId());
@@ -607,7 +607,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withAddress(address)
                 .build();
 
-        ServiceResult<Void> result = service.updateProfileDetails(existingUser.getId(), userDetails);
+        ServiceResult<Void> result = service.updateUserProfile(existingUser.getId(), userDetails);
 
         assertTrue(result.isSuccess());
 

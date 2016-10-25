@@ -62,7 +62,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("emailAddress").description("E-mail address of the user who a verification link should be sent to by e-mail")
                         )
@@ -80,7 +80,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userResource)))
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for")
                         ),
@@ -96,7 +96,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         when(userServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
         mockMvc.perform(get("/user/findByRole/{userRoleName}", COMP_TECHNOLOGIST.getName()))
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("userRoleName").description("The name of the role to get the users by.")
                         ),
@@ -118,7 +118,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userResource)))
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for"),
                                 parameterWithName("competitionId").description("Identifier of the competition that the user is applying for")
@@ -137,7 +137,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user associated with the profile skills being requested")
                         ),
@@ -156,7 +156,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(profileSkills)))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user to update the profile skills for")
                         ),
@@ -172,7 +172,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(get("/user/id/{id}/getUserAffiliations", userId))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user associated with affiliations being requested")
                         ),
@@ -193,7 +193,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(affiliations)))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user associated with affiliations being updated")
                         ),
@@ -207,11 +207,11 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         Long userId = 1L;
         UserProfileResource profileDetails = userProfileResourceBuilder.build();
 
-        when(userProfileServiceMock.getProfileDetails(userId)).thenReturn(serviceSuccess(profileDetails));
+        when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileDetails", userId))
+        mockMvc.perform(get("/user/id/{id}/getUserProfile", userId))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user associated with the profile being requested")
                         ),
@@ -224,13 +224,13 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         Long userId = 1L;
         UserProfileResource profileDetails = userProfileResourceBuilder.build();
 
-        when(userProfileServiceMock.updateProfileDetails(userId, profileDetails)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{id}/updateProfileDetails", userId)
+        mockMvc.perform(put("/user/id/{id}/updateUserProfile", userId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(profileDetails)))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user to update the profile for")
                         ),
