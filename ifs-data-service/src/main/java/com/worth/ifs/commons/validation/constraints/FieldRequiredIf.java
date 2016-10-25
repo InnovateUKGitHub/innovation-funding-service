@@ -1,6 +1,6 @@
-package com.worth.ifs.validator.constraints;
+package com.worth.ifs.commons.validation.constraints;
 
-import com.worth.ifs.validator.FieldRequiredIfValidator;
+import com.worth.ifs.commons.validation.FieldRequiredIfValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

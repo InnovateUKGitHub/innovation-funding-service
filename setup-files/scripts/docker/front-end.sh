@@ -21,6 +21,11 @@ function js-app() {
     gulp js
     cd -
 }
+function js-ass() {
+    cd ifs-web-service/ifs-assessment-service/src/main/resources/static
+    gulp js
+    cd -
+}
 function js-comp-mgt() {
     cd ifs-web-service/ifs-competition-mgt-service/src/main/resources/static
     gulp js
@@ -42,6 +47,7 @@ case "$target" in
         js-comp-mgt
         js-ps
         js-app
+        js-ass
     ;;
     css)
         css
@@ -51,6 +57,7 @@ case "$target" in
         js-comp-mgt
         js-ps
         js-app
+        js-ass
     ;;
     js-core)
         js-core
@@ -64,7 +71,10 @@ case "$target" in
     js-comp-mgt)
         js-comp-mgt
     ;;
+    js-ass)
+        js-ass
+    ;;
     *)
-        echo $"Usage: $0 {all|css|js|js-core|js-ps|js-comp-mgt|js-app}"
+        echo $"Usage: $0 {all|css|js|js-core|js-ps|js-comp-mgt|js-app|js-ass}"
         exit 1
 esac
