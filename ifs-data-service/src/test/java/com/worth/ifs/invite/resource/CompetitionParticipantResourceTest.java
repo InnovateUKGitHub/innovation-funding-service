@@ -20,28 +20,28 @@ public class CompetitionParticipantResourceTest {
     @Before
     public void setUp() throws Exception {
         competitionParticipant = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay().plusDays(4))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(4))
                 .build();
         competitionParticipantEndingToday = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay())
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay())
                 .build();
         competitionParticipantEndingTommorrow = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay().plusDays(1))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(1))
                 .build();
         competitionParticipantEndedYesterday = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay().minusDays(1))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().minusDays(1))
                 .build();
         competitionParticipantStartedToday = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay())
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay().plusDays(6))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay())
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(6))
                 .build();
         competitionParticipantStartingTommorrow = newCompetitionParticipantResource()
-                .withAssessmentStartDate(LocalDate.now().atStartOfDay().plusDays(1))
-                .withAssessmentEndDate(LocalDate.now().atStartOfDay().plusDays(7))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().plusDays(1))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(7))
                 .build();
     }
 
