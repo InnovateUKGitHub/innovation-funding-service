@@ -1,6 +1,6 @@
 //wysiwyg editor for textareas
 //Dependencies to load first : hallo.min.js
-IFS.core.editor = (function(){
+IFS.core.editor = (function() {
   "use strict";
   var s; // private alias to settings
   var converter;
@@ -13,22 +13,22 @@ IFS.core.editor = (function(){
         allowedTags: ['p', 'em', 'strong', 'ol', 'ul', 'li', 'br', 'b', 'div']
       }
     },
-    init : function(){
+    init : function() {
       s = this.settings;
       converter = new showdown.Converter();
 
-      jQuery.each(jQuery(s.editorTextarea), function(){
+      jQuery.each(jQuery(s.editorTextarea), function() {
         IFS.core.editor.prepareEditorHTML(this);
       });
       IFS.core.editor.initEditors();
 
-      jQuery("[data-md-to-html]").each(function(){
+      jQuery("[data-md-to-html]").each(function() {
         var content = jQuery(this).html();
         var html =  IFS.core.editor.markdownToHtml(content);
         jQuery(this).html(html);
       });
     },
-    prepareEditorHTML : function(textarea){
+    prepareEditorHTML : function(textarea) {
       var el = jQuery(textarea);
       var editorType = el.attr('data-editor');
       if(editorType !== ''){
@@ -57,7 +57,7 @@ IFS.core.editor = (function(){
         }
       }
     },
-    initEditors: function(){
+    initEditors: function() {
 
       jQuery('[role="textbox"][data-editor]').hallo({
         plugins: {
@@ -74,7 +74,7 @@ IFS.core.editor = (function(){
         jQuery(source).trigger('keyup');
       });
 
-      jQuery('[role="textbox"][data-editor="html"]').on('hallomodified', function(event, data){
+      jQuery('[role="textbox"][data-editor="html"]').on('hallomodified', function(event, data) {
         var textarea = jQuery(this).next();
         var html =  jQuery.htmlClean(data.content, s.htmlOptions);
         if(html.replace(/<[^>]+>/ig, "").length === 0){
@@ -83,7 +83,7 @@ IFS.core.editor = (function(){
         jQuery(textarea).get(0).value = html;
         jQuery(textarea).trigger('keyup');
       });
-      jQuery('[role="textbox"][data-editor]').on('blur', function(){
+      jQuery('[role="textbox"][data-editor]').on('blur', function() {
         var textarea = jQuery(this).next();
         jQuery(textarea).trigger('change');
       });
@@ -104,13 +104,13 @@ IFS.core.editor = (function(){
       }
       jQuery(sourceEl).get(0).value = markdown;
     },
-    htmlToMarkdown : function(content){
+    htmlToMarkdown : function(content) {
       var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm, ""));
       html = jQuery.htmlClean(html, s.htmlOptions);
 
       return md(html);
     },
-    markdownToHtml : function(content){
+    markdownToHtml : function(content) {
       var html;
       if(content.length === 0){
         html = "<p>&nbsp;</p>";

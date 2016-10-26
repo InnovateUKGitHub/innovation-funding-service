@@ -1,9 +1,9 @@
 // Handlers for single section refreshing when assigning questions to users on the Application Overview
 // dependency on ifs_collpasible
-IFS.application.applicationPage = (function(){
+IFS.application.applicationPage = (function() {
   "use strict";
   return {
-    init: function(){
+    init: function() {
       jQuery(document).on('click', 'form.application-overview [name="assign_question"]', IFS.application.applicationPage.handleAssignQuestionFragmentReload);
     },
     handleAssignQuestionFragmentReload : function(e) {
@@ -18,7 +18,7 @@ IFS.application.applicationPage = (function(){
       if(sectionToUpdate.length && sectionId && questionId){
         jQuery.ajaxProtected({
           type: "POST",
-          beforeSend : function(){
+          beforeSend : function() {
             if(typeof(IFS.application.progressiveSelect.hideAll) == 'function'){ IFS.application.progressiveSelect.hideAll();  }
             //hide the assign button and add an assigning to... text
             var assignButtonContainer =  sectionToUpdate.find('.assign-button');

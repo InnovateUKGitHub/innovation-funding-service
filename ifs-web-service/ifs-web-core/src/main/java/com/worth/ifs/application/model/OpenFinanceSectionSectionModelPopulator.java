@@ -30,7 +30,6 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.singletonList;
 
@@ -39,6 +38,8 @@ import static java.util.Collections.singletonList;
  */
 @Component
 public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPopulator {
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
+
     @Autowired
     private FormInputResponseService formInputResponseService;
 
@@ -126,7 +127,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
         addCompletedDetails(model, application, userOrganisation);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
     }
@@ -144,7 +145,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
             values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
