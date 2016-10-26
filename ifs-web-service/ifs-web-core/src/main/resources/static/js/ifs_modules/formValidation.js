@@ -1,4 +1,4 @@
-IFS.core.formValidation = (function(){
+IFS.core.formValidation = (function() {
   "use strict";
   var s;
   return {
@@ -73,35 +73,35 @@ IFS.core.formValidation = (function(){
       typeTimeout : 1500,
       html5validationMode : false
     },
-    init : function(){
+    init : function() {
       s = this.settings;
       s.html5validationMode =  IFS.core.formValidation.checkHTML5validationMode();
       IFS.core.formValidation.initValidation();
     },
-    initValidation : function(){
+    initValidation : function() {
       //bind the checks if password and retyped password are equal
-      jQuery('body').on('change keyup ifsValidate', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
+      jQuery('body').on('change keyup ifsValidate', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e) {
         switch(e.type){
           case 'keyup':
             clearTimeout(window.IFS.core.formValidationTimer);
-            window.IFS.core.formValidationTimer = setTimeout(function(){IFS.core.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
+            window.IFS.core.formValidationTimer = setTimeout(function() {IFS.core.formValidation.checkEqualPasswords(true);}, s.typeTimeout);
             break;
           default:
             IFS.core.formValidation.checkEqualPasswords(true);
         }
       });
-      jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.core.formValidation.checkPasswordPolicy(jQuery(this), true);});
-      jQuery('body').on('change', s.email.fields , function(){IFS.core.formValidation.checkEmail(jQuery(this), true);});
-      jQuery('body').on('change', s.number.fields , function(){IFS.core.formValidation.checkNumber(jQuery(this), true);});
-      jQuery('body').on('change', s.min.fields , function(){IFS.core.formValidation.checkMin(jQuery(this), true);});
-      jQuery('body').on('change', s.max.fields , function(){IFS.core.formValidation.checkMax(jQuery(this), true);});
-      jQuery('body').on('blur change', s.required.fields, function(){ IFS.core.formValidation.checkRequired(jQuery(this), true); });
-      jQuery('body').on('change', s.minlength.fields, function(){ IFS.core.formValidation.checkMinLength(jQuery(this), true); });
-      jQuery('body').on('change', s.maxlength.fields, function(){ IFS.core.formValidation.checkMaxLength(jQuery(this), true); });
-      jQuery('body').on('change', s.minwordslength.fields, function(){ IFS.core.formValidation.checkMinWordsLength(jQuery(this), true); });
-      jQuery('body').on('change', s.maxwordslength.fields, function(){ IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true); });
-      jQuery('body').on('change', s.tel.fields, function(){ IFS.core.formValidation.checkTel(jQuery(this), true); });
-      jQuery('body').on('change', s.date.fields, function(){  IFS.core.formValidation.checkDate(jQuery(this), true); });
+      jQuery('body').on('change', s.passwordPolicy.fields.password, function() {IFS.core.formValidation.checkPasswordPolicy(jQuery(this), true);});
+      jQuery('body').on('change', s.email.fields , function() {IFS.core.formValidation.checkEmail(jQuery(this), true);});
+      jQuery('body').on('change', s.number.fields , function() {IFS.core.formValidation.checkNumber(jQuery(this), true);});
+      jQuery('body').on('change', s.min.fields , function() {IFS.core.formValidation.checkMin(jQuery(this), true);});
+      jQuery('body').on('change', s.max.fields , function() {IFS.core.formValidation.checkMax(jQuery(this), true);});
+      jQuery('body').on('blur change', s.required.fields, function() { IFS.core.formValidation.checkRequired(jQuery(this), true); });
+      jQuery('body').on('change', s.minlength.fields, function() { IFS.core.formValidation.checkMinLength(jQuery(this), true); });
+      jQuery('body').on('change', s.maxlength.fields, function() { IFS.core.formValidation.checkMaxLength(jQuery(this), true); });
+      jQuery('body').on('change', s.minwordslength.fields, function() { IFS.core.formValidation.checkMinWordsLength(jQuery(this), true); });
+      jQuery('body').on('change', s.maxwordslength.fields, function() { IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true); });
+      jQuery('body').on('change', s.tel.fields, function() { IFS.core.formValidation.checkTel(jQuery(this), true); });
+      jQuery('body').on('change', s.date.fields, function() {  IFS.core.formValidation.checkDate(jQuery(this), true); });
 
       //set data attribute on date fields
       //which has the combined value of the dates
@@ -109,12 +109,12 @@ IFS.core.formValidation = (function(){
       jQuery(s.date.fields).attr({'data-date':'', 'data-autosave-disabled':''});
 
       //will only work on html5 validation browsers
-      jQuery('form:not([novalidate]) input').on('invalid', function(){
+      jQuery('form:not([novalidate]) input').on('invalid', function() {
         jQuery(this).trigger('change');
       });
       IFS.core.formValidation.betterMinLengthSupport();
     },
-    checkEqualPasswords : function(showMessage){
+    checkEqualPasswords : function(showMessage) {
       var pw1 = jQuery(s.passwordEqual.field1);
       var pw2 = jQuery(s.passwordEqual.field2);
       var errorMessage = IFS.core.formValidation.getErrorMessage(pw2, 'passwordEqual');
@@ -138,7 +138,7 @@ IFS.core.formValidation = (function(){
       }
       return false;
     },
-    checkPasswordPolicy : function(field, showMessage){
+    checkPasswordPolicy : function(field, showMessage) {
       var password = field.val();
       var confirmsToPasswordPolicy = true;
 
@@ -194,7 +194,7 @@ IFS.core.formValidation = (function(){
 
       return confirmsToPasswordPolicy;
     },
-    checkEmail : function(field, showMessage){
+    checkEmail : function(field, showMessage) {
       //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val();
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
@@ -210,7 +210,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkNumber : function(field, showMessage){
+    checkNumber : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'number');
       //In modern browsers the number field doesn't allow text input
       //When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
@@ -242,7 +242,7 @@ IFS.core.formValidation = (function(){
         }
       }
     },
-    checkMax : function(field, showMessage){
+    checkMax : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'max');
       if(s.html5validationMode){
         //html5 validation api
@@ -272,7 +272,7 @@ IFS.core.formValidation = (function(){
         }
       }
     },
-    checkMin : function(field, showMessage){
+    checkMin : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'min');
       if(s.html5validationMode){
         var domField = field[0];
@@ -300,7 +300,7 @@ IFS.core.formValidation = (function(){
         }
       }
     },
-    checkRequired : function(field, showMessage){
+    checkRequired : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'required');
 
       if(field.val() !== null){
@@ -310,13 +310,13 @@ IFS.core.formValidation = (function(){
             var fieldGroup = jQuery('[name="'+name+'"]');
             if(jQuery('[name="'+name+'"]:checked').length === 0){
               if(showMessage) {
-                fieldGroup.each(function(){ IFS.core.formValidation.setInvalid(jQuery(this), errorMessage); });
+                fieldGroup.each(function() { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage); });
               }
               return false;
             }
             else {
               if(showMessage) {
-                fieldGroup.each(function(){ IFS.core.formValidation.setValid(jQuery(this), errorMessage); });
+                fieldGroup.each(function() { IFS.core.formValidation.setValid(jQuery(this), errorMessage); });
               }
               return true;
             }
@@ -334,17 +334,17 @@ IFS.core.formValidation = (function(){
         }
       }
     },
-    betterMinLengthSupport : function(){
+    betterMinLengthSupport : function() {
       //if the minlenght is not implemented in the browser we use pattern which is more widely supported
       if((s.html5validationMode) && (typeof(jQuery('input')[0].validity.tooShort) == 'undefined')){
-        jQuery(s.minlength.fields).each(function(){
+        jQuery(s.minlength.fields).each(function() {
           var field = jQuery(this);
           var minlength = parseInt(field.attr('minlength'), 10);
           field.attr('pattern', '.{'+minlength+',}');
         });
       }
     },
-    checkMinLength : function(field, showMessage){
+    checkMinLength : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'minlength');
       var minlength = parseInt(field.attr('minlength'), 10);
       if((field.val().length > 0) && (field.val().length < minlength)){
@@ -356,7 +356,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkMaxLength : function(field, showMessage){
+    checkMaxLength : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'maxlength');
       var maxlength = parseInt(field.attr('maxlength'), 10);
       if(field.val().length > maxlength){
@@ -368,7 +368,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkMinWordsLength : function(field, showMessage){
+    checkMinWordsLength : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'minwordslength');
       var minWordsLength = parseInt(field.attr('data-minwordslength'), 10);
       var value = field.val();
@@ -383,7 +383,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkMaxWordsLength : function(field, showMessage){
+    checkMaxWordsLength : function(field, showMessage) {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'maxwordslength');
       var maxWordsLength = parseInt(field.attr('data-maxwordslength'), 10);
       var value = field.val();
@@ -398,7 +398,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkTel : function(field, showMessage){
+    checkTel : function(field, showMessage) {
       var tel = field.val();
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'tel');
       var re = /^(?=.*[0-9])[- +()0-9]+$/;
@@ -413,7 +413,7 @@ IFS.core.formValidation = (function(){
         return true;
       }
     },
-    checkDate : function(field, showMessage){
+    checkDate : function(field, showMessage) {
       var dateGroup = field.closest('.date-group');
       field.addClass('js-visited');
       var valid;
@@ -474,7 +474,7 @@ IFS.core.formValidation = (function(){
 
       return valid;
     },
-    checkFutureDate : function(dateGroup, date, showMessage){
+    checkFutureDate : function(dateGroup, date, showMessage) {
       var futureErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-future');
       var allFields = dateGroup.find('.day input, .month input, .year input');
       var futureDate;
@@ -498,7 +498,7 @@ IFS.core.formValidation = (function(){
         return false;
       }
     },
-    getErrorMessage : function(field, type){
+    getErrorMessage : function(field, type) {
       //first look if there is a custom message defined on the element
       var errorMessage = field.attr('data-'+type+'-errormessage');
 
@@ -529,7 +529,7 @@ IFS.core.formValidation = (function(){
       }
       return errorMessage;
     },
-    setInvalid : function(field, message){
+    setInvalid : function(field, message) {
       var formGroup = field.closest('.form-group,tr.form-group-row');
       var name = IFS.core.formValidation.getIdentifier(field);
 
@@ -553,7 +553,7 @@ IFS.core.formValidation = (function(){
       jQuery('.error-summary').attr('aria-hidden', false);
       jQuery(window).trigger('updateWysiwygPosition');
     },
-    setValid : function(field, message){
+    setValid : function(field, message) {
       var formGroup = field.closest('.form-group.error,tr.form-group-row.error');
       var errorSummary = jQuery('.error-summary-list');
       var name = IFS.core.formValidation.getIdentifier(field);
@@ -571,7 +571,7 @@ IFS.core.formValidation = (function(){
         if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
           field.removeClass('field-error');
           if(s.html5validationMode){
-            jQuery('[name="'+name+'"]').each(function(){
+            jQuery('[name="'+name+'"]').each(function() {
               this.setCustomValidity('');
             });
           }
@@ -590,7 +590,7 @@ IFS.core.formValidation = (function(){
       }
       jQuery(window).trigger('updateWysiwygPosition');
     },
-    getIdentifier : function(el){
+    getIdentifier : function(el) {
       if(el.is('[data-date]')){
         el =  el.closest('.date-group').find('input[type="hidden"]');
       }
@@ -602,7 +602,7 @@ IFS.core.formValidation = (function(){
       }
       return false;
     },
-    checkHTML5validationMode : function(){
+    checkHTML5validationMode : function() {
       var testField =jQuery('input');
       if(testField.length){
         if(typeof(testField[0].validity) !== 'undefined'){
@@ -613,7 +613,7 @@ IFS.core.formValidation = (function(){
         }
       }
     },
-    countWords : function(value){
+    countWords : function(value) {
       var val = value;
 
       if(typeof(val) !== 'undefined'){

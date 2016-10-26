@@ -73,7 +73,11 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withOrganisationId(organisationResource.getId()).
                         build()).
-                build();
+                withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                    .withOrganisationId(organisationResource.getId())
+                    .withFinanceContactStatus(COMPLETE)
+                    .build(1))
+                .build();
 
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -88,6 +92,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(competition.getName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
         assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
@@ -136,6 +141,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(competition.getName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
         assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
@@ -156,6 +162,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         withProjectDetailsStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
                         build()).
+                withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withFinanceContactStatus(COMPLETE)
+                        .build(1)).
                 build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -184,6 +194,59 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(competition.getName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
         assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
+        assertFalse(viewModel.isMonitoringOfficerAssigned());
+        assertEquals("", viewModel.getMonitoringOfficerName());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() throws Exception {
+
+        ProjectResource project = projectBuilder.
+                build();
+
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource()
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withOrganisationId(organisationResource.getId())
+                        .build())
+                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                    .withOrganisationId(organisationResource.getId())
+                    .withFinanceContactStatus(NOT_STARTED)
+                    .build(1))
+                .build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
+        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
+                withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER).build(1));
+
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
+                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+
+        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(project.getName(), viewModel.getProjectName());
+        assertEquals(competition.getName(), viewModel.getCompetitionName());
+        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
