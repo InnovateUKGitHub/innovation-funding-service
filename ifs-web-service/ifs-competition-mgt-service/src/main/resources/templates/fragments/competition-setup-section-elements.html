@@ -21,133 +21,117 @@
         </dl>
     </th:block>
     <th:block th:if="${editable}">
-        <form method="post" th:object="${competitionSetupForm}" th:action="@{${question.id}}" novalidate="novalidate"
-              data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${question.id}" data-section="application">
-            <input type="hidden"
-                   th:name="question.id"
-                   th:value="${question.id}" />
-            <div class="question">
-                <div th:class="${#fields.hasErrors('questionToUpdate.title')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="question.title">
-                        <span class="form-label-bold">Question title</span>
-                        <span th:if="${#fields.hasErrors('question.title')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('question.title')}" th:text="${err}" />
-                        </span>
-                    </label>
+        <input type="hidden"
+               th:name="questionToUpdate.id"
+               th:value="${question.id}" />
+        <div class="question">
+            <div th:class="${#fields.hasErrors('questionToUpdate.shortTitle')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.shortTitle">
+                    <span class="form-label-bold">Question heading</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.shortTitle')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.shortTitle')}" th:text="${err}" />
+                    </span>
+                </label>
 
-                    <input th:class="${#fields.hasErrors('question.title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                           type="text"
-                           required="required"
-                           id="question.title"
-                           th:name="questionToUpdate.title"
-                           th:value="${question.title}"
-                           maxlength="255"/>
-                    <span class="autosave-info" />
-                </div>
-                <div th:class="${#fields.hasErrors('questionToUpdate.subTitle')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="question.subTitle">
-                        <span class="form-label-bold">Question subtitle</span>
-                        <span th:if="${#fields.hasErrors('questionToUpdate.subTitle')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.subTitle')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('questionToUpdate.subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                           type="text"
-                           id="question.subTitle"
-                           th:name="questionToUpdate.subTitle"
-                           th:value="${question.subTitle}"
-                           maxlength="255"/>
-                    <span class="autosave-info" />
-                </div>
-                <div th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="question.guidanceTitle">
-                        <span class="form-label-bold">Question guidance title</span>
-                        <span th:if="${#fields.hasErrors('questionToUpdate.guidanceTitle')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidanceTitle')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                           type="text"
-                           id="question.guidanceTitle"
-                           required="required"
-                           th:name="questionToUpdate.guidanceTitle"
-                           th:value="${question.guidanceTitle}"
-                           maxlength="255"/>
-                    <span class="autosave-info" />
-                </div>
-                <div th:class="${#fields.hasErrors('questionToUpdate.guidance')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="question.guidance">
-                        <span class="form-label-bold">Question guidance</span>
-                        <span th:if="${#fields.hasErrors('questionToUpdate.guidance')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidance')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <div class="textarea-wrapped ">
-                        <textarea data-max_words="500"
-                                  data-editor="html"
-                                  id="question.guidance"
-                                  th:class="${#fields.hasErrors('questionToUpdate.guidance') ? 'field-error' : ''}"
-                                  th:name="questionToUpdate.guidance"
-                                  required="required"
-                                  ifs:utext="${question.guidance}">
-                        </textarea>
-                    </div>
-                    <span class="autosave-info" />
-                </div>
-                <div th:class="${#fields.hasErrors('questionToUpdate.maxWords')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="question.maxWords">
-                        <span class="form-label-bold">Max word count</span>
-                        <span th:if="${#fields.hasErrors('questionToUpdate.maxWords')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.maxWords')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('questionToUpdate.maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
-                           type="number"
-                           id="question.maxWords"
-                           min="1"
-                           required="required"
-                           th:name="questionToUpdate.maxWords"
-                           th:value="${question.maxWords}"/>
-                    <span class="autosave-info" />
-                </div>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <div class="form-group">
-                            <fieldset class="inline">
-                                <legend class="form-label-bold">Is the answer scored?</legend>
-                                <label class="block-label">
-                                    <input th:name="questionToUpdate.scored" th:checked="${question.scored}" value="1" type="radio" />
-                                    Yes
-                                </label>
-                                <label class="block-label">
-                                    <input  th:name="questionToUpdate.scored" th:checked="${!question.scored}" value="0" type="radio" />
-                                    No
-                                </label>
-                                <span class="autosave-info" />
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div class="column-half">
-                        <div class="form-group">
-                            <fieldset class="inline">
-                                <legend class="form-label-bold">Allow appendix?</legend>
-                                <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" th:checked="${question.appendix}" value="1" type="radio" />
-                                    Yes
-                                </label>
-                                <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
-                                    No
-                                </label>
-                                <span class="autosave-info" />
-                            </fieldset>
-                        </div>
-                    </div>
+                <input th:class="${#fields.hasErrors('questionToUpdate.shortTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       required="required"
+                       id="question.shortTitle"
+                       th:name="questionToUpdate.shortTitle"
+                       th:value="${question.shortTitle}"
+                       maxlength="255"/>
+            </div>
+            <div th:class="${#fields.hasErrors('questionToUpdate.title')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.title">
+                    <span class="form-label-bold">Question title</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.title')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.title')}" th:text="${err}" />
+                    </span>
+                </label>
+
+                <input th:class="${#fields.hasErrors('questionToUpdate.title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       required="required"
+                       id="question.title"
+                       th:name="questionToUpdate.title"
+                       th:value="${question.title}"
+                       maxlength="255"/>
+            </div>
+            <div th:class="${#fields.hasErrors('questionToUpdate.subTitle')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.subTitle">
+                    <span class="form-label-bold">Question subtitle</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.subTitle')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.subTitle')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('questionToUpdate.subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       id="question.subTitle"
+                       th:name="questionToUpdate.subTitle"
+                       th:value="${question.subTitle}"
+                       maxlength="255"/>
+            </div>
+            <div th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.guidanceTitle">
+                    <span class="form-label-bold">Question guidance title</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.guidanceTitle')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidanceTitle')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                       type="text"
+                       id="question.guidanceTitle"
+                       required="required"
+                       th:name="questionToUpdate.guidanceTitle"
+                       th:value="${question.guidanceTitle}"
+                       maxlength="255"/>
+            </div>
+            <div th:class="${#fields.hasErrors('questionToUpdate.guidance')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.guidance">
+                    <span class="form-label-bold">Question guidance</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.guidance')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidance')}" th:text="${err}" />
+                    </span>
+                </label>
+                <div class="textarea-wrapped ">
+                    <textarea data-max_words="500"
+                              data-editor="html"
+                              id="question.guidance"
+                              th:class="${#fields.hasErrors('questionToUpdate.guidance') ? 'field-error' : ''}"
+                              th:name="questionToUpdate.guidance"
+                              required="required"
+                              ifs:utext="${question.guidance}">
+                    </textarea>
                 </div>
             </div>
-            <div class="extra-margin">
-                <input type="submit" class="button button-large" value="Save and close"/>
+            <div th:class="${#fields.hasErrors('questionToUpdate.maxWords')}? 'form-group error':'form-group'">
+                <label class="form-label" for="question.maxWords">
+                    <span class="form-label-bold">Max word count</span>
+                    <span th:if="${#fields.hasErrors('questionToUpdate.maxWords')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.maxWords')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('questionToUpdate.maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                       type="number"
+                       id="question.maxWords"
+                       min="1"
+                       required="required"
+                       th:name="questionToUpdate.maxWords"
+                       th:value="${question.maxWords}"/>
             </div>
-        </form>
+            <div class="form-group">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Appendix</legend>
+                    <label class="block-label">
+                        <input th:name="questionToUpdate.appendix" th:checked="${question.appendix}" value="1" type="radio" />
+                        Yes
+                    </label>
+                    <label class="block-label">
+                        <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
+                        No
+                    </label>
+                </fieldset>
+            </div>
+        </div>
     </th:block>
 </div>

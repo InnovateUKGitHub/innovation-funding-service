@@ -39,118 +39,25 @@
     <legend class="visuallyhidden">Application question</legend>
     <h2 class="heading-medium extra-margin">Application question</h2>
 
-    <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.questionToUpdate}, ${editable})" />
-
-    <fieldset>
-        <legend class="visuallyhidden">Assessment of this question</legend>
-        <h2 class="heading-medium extra-margin">Assessment of this question</h2>
-        <th:block th:if="${param.status == null}">
-
-            <dl class="application-question-list grid-row">
-                <dt class="column-third">Scored</dt>
-                <dd class="column-two-thirds">Yes</dd>
-                <dt class="column-third">Out of</dt>
-                <dd class="column-two-thirds">10</dd>
-                <dt class="column-third">Written feedback</dt>
-                <dd class="column-two-thirds">Yes</dd>
-                <dt class="column-third">Guidance</dt>
-                <dd class="column-two-thirds">Your score should be based on the following:
-                    <dl class="grid-row extra-margin">
-                        <dt class="column-quarter">9-10</dt>
-                        <dd class="column-three-quarters">The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.</dd>
-                        <dt class="column-quarter">7-8</dt>
-                        <dd class="column-three-quarters">The plan is well described and complete. There is a reasonable chance it will meet the objectives if the project.</dd>
-                        <dt class="column-quarter">5-6</dt>
-                        <dd class="column-three-quarters">The plan is not completely described or there may be some deficiencies in some aspects. More work will be required before the plan can be said to be realistic.</dd>
-                        <dt class="column-quarter">3-4</dt>
-                        <dd class="column-three-quarters">The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.</dd>
-                        <dt class="column-quarter">1-2</dt>
-                        <dd class="column-three-quarters">The plan is totally unrealistic or fails to meet the objectives of the project.</dd>
-                    </dl>
-                </dd>
-                <dt class="column-third">Words</dt>
-                <dd class="column-two-thirds">400</dd>
-            </dl>
-        </th:block>
-        <th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-            <div class="form-group">
-                <fieldset class="inline">
-                    <h3 class="heading-small">Scored</h3>
-                    <legend class="visuallyhidden">Scored</legend>
-                    <label class="block-label" for="scored-yes">
-                        <input id="scored-yes" name="scored-group" value="Yes" type="radio" checked="checked" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="scored-no">
-                        <input id="scored-no" name="scored-group" value="No" type="radio" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="out-of">
-                    <span class="form-label-bold">Max word count</span>
-                </label>
-                <input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" />
-            </div>
-            <div class="form-group">
-                <fieldset class="inline">
-                    <h3 class="heading-small">Written feedback</h3>
-                    <legend class="visuallyhidden">Written feedback</legend>
-                    <label class="block-label" for="feedback-yes">
-                        <input id="feedback-yes" name="feedback-group" value="Yes" type="radio" checked="checked" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="feedback-no">
-                        <input id="feedback-no" name="feedback-group" value="No" type="radio" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="assessment-guidance">
-                    <span class="form-label-bold">Guidance</span>
-                </label>
-                <input class="form-control" id="assessment-guidance" name="assessment-guidance" value="Your score should be based on the following:" type="text" />
-            </div>
-            <div class="form-group">
-                <h3 class="heading-small">Guidance table</h3>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Score<span class="visuallyhidden"> from</span></th>
-                        <th><span class="visuallyhidden">Score to</span></th>
-                        <th>Justification</th>
-                        <th><span class="visuallyhidden">Action</span></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=1,scoreFrom=${'9'},scoreTo=${'10'},justification=${'The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.'}" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=2,scoreFrom=${'7'},scoreTo=${'8'},justification=${'The plan is well described and complete. There is a reasonable chance it will meet the objectives if the project.'}" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=3,scoreFrom=${'5'},scoreTo=${'6'},justification=${'The plan is not completely described or there may be some deficiencies in some aspects. More work will be required before the plan can be said to be realistic.'}" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=4,scoreFrom=${'3'},scoreTo=${'4'},justification=${'The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.'}" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=5,scoreFrom=${'1'},scoreTo=${'2'},justification=${'The plan is totally unrealistic or fails to meet the objectives of the project.'}" th:remove="tag"/>
-                    </tbody>
-                </table>
-                <p class="alignright extra-margin">
-                    <a href="#" class="add-new-group">+ add new score group</a>
-                </p>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="max-word-count">
-                    <span class="form-label-bold">Max word count</span>
-                </label>
-                <input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" />
-            </div>
-        </th:block>
-    </fieldset>
-    <div th:if="${!editable}"
-         class="extra-margin">
-        <a role="button" class="button" th:href="${competitionSetupForm.questionToUpdate.id + '/edit'}">Edit this question</a>
-    </div>
-    <div th:if="${param.status == null}" class="extra-margin">
-        <a href="/prototypes/5085-application-process" class="button-secondary">Return to application questions</a>
-    </div>
+    <form th:if="${editable}"
+          method="post"
+          th:object="${competitionSetupForm}"
+          th:action="@{'/competition/setup/' + ${competition.id} + '/section/application/question/' + ${competitionSetupForm.questionToUpdate.id}}" novalidate="novalidate"
+          data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.questionToUpdate.id}" data-section="application">
+        <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.questionToUpdate}, ${editable})" />
+        <div class="extra-margin">
+            <input type="submit" class="button button-large" value="Save and close"/>
+        </div>
+    </form>
+    <th:block th:unless="${editable}">
+        <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.questionToUpdate}, ${editable})" />
+        <div class="extra-margin">
+            <a role="button" class="button" th:href="${competitionSetupForm.questionToUpdate.id + '/edit'}">Edit this question</a>
+        </div>
+        <div class="extra-margin">
+            <a th:href="${'competition/setup/' + competition.id + '/section/application'}" class="button-secondary">Return to application questions</a>
+        </div>
+    </th:block>
 
     <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/competition-setup :: setup-home" th:remove="tag" />
 
