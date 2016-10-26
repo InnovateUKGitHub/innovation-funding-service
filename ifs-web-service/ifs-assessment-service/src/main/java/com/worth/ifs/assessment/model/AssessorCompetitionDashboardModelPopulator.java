@@ -8,15 +8,16 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
-import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,9 +43,15 @@ public class AssessorCompetitionDashboardModelPopulator {
     @Autowired
     private ProcessRoleService processRoleService;
 
+    @Autowired
+    private UserService userService;
+
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), getFunders(competition),
+        String leadTechnologist = getLeadTechnologist(competition);
+        LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
+        LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
+        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline,
                 getApplications(userId, competitionId));
     }
 
@@ -70,11 +77,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .findFirst();
     }
 
-    private String getFunders(CompetitionResource competition) {
-        List<CompetitionFunderResource> funders = competition.getFunders();
-
-        return funders.stream()
-                .map(funder -> funder.getFunder())
-                .collect(Collectors.joining(", "));
+    private String getLeadTechnologist(CompetitionResource competition) {
+        return Optional.ofNullable(competition.getLeadTechnologist()).map(leadTechnologistId -> userService.findById(leadTechnologistId).getName()).orElse(null);
     }
 }

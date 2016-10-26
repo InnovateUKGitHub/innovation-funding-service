@@ -85,8 +85,10 @@ public class ProjectSetupStatusController {
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
         boolean projectDetailsSubmitted;
+        boolean awaitingProjectDetailsActionFromOtherPartners = false;
         if (leadPartner) {
             projectDetailsSubmitted = checkLeadPartnerProjectDetailsSubmitted(teamStatus);
+            awaitingProjectDetailsActionFromOtherPartners = awaitingProjectDetailsActionFromOtherPartners(teamStatus);
 
         } else {
             projectDetailsSubmitted = statusAccessor.isFinanceContactSubmitted(organisation);
@@ -95,7 +97,7 @@ public class ProjectSetupStatusController {
         Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
-                organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
+                organisation.getId(), projectDetailsSubmitted, awaitingProjectDetailsActionFromOtherPartners, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),
@@ -113,6 +115,15 @@ public class ProjectSetupStatusController {
         return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
                 && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
                 && allOtherPartnersFinanceContactStatusComplete(teamStatus.getOtherPartnersStatuses());
+    }
+
+    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && !allOtherPartnersFinanceContactStatusComplete(teamStatus.getOtherPartnersStatuses());
     }
 
     private boolean allOtherPartnersFinanceContactStatusComplete(List<ProjectPartnerStatusResource> otherPartnersStatuses) {

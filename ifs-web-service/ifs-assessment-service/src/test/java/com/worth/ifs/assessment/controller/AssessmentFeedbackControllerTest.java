@@ -408,8 +408,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void setupCompetition() {
         super.setupCompetition();
 
-        competitionResource.setAssessmentStartDate(LocalDateTime.now().minusDays(2));
-        competitionResource.setAssessmentEndDate(LocalDateTime.now().plusDays(4));
+        competitionResource.setAssessorAcceptsDate(LocalDateTime.now().minusDays(2));
+        competitionResource.setAssessorDeadlineDate(LocalDateTime.now().plusDays(4));
 
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
         questionResources.get(QUESTION_ID).setAssessorMaximumScore(50);

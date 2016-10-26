@@ -38,10 +38,6 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return withArray((id, profile) -> setField("id", id, profile) , ids);
     }
 
-    public ProfileBuilder withUser(User... users) {
-        return withArray((user, profile) -> setField("user", user, profile), users);
-    }
-
     public ProfileBuilder withAddress(Address... addresses) {
         return withArray((address, profile) -> setField("address", address, profile), addresses);
     }
