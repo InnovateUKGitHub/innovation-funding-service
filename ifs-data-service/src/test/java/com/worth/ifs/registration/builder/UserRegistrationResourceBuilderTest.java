@@ -103,7 +103,6 @@ public class UserRegistrationResourceBuilderTest {
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedPasswords[0], first.getPassword());
-        assertEquals(expectedPasswords[0], first.getPassword());
         assertEquals(expectedAddresses[0], first.getAddress());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedRoles[0], first.getRoles());
