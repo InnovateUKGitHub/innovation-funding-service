@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
@@ -60,6 +61,9 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	private List<Error> updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
         switch (fieldName) {
+            case "questionToUpdate.shortTitle" :
+                question.setShortTitle(value);
+                break;
             case "questionToUpdate.title" :
                 question.setTitle(value);
                 break;
@@ -74,11 +78,8 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
                 break;
             case "questionToUpdate.maxWords" :
                 question.setMaxWords(Integer.parseInt(value));
-            case "questionToUpdate.scored" :
-                question.setScored(stringValueToBoolean(value));
-                break;
             case "questionToUpdate.appendix" :
-                question.setAppendix(stringValueToBoolean(value));
+                question.setAppendix(textToBoolean(value));
                 break;
             default:
                 return makeErrorList();
@@ -89,10 +90,6 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	private List<Error> makeErrorList() {
         return asList(fieldError("", null, "Unable to save question"));
-    }
-
-	private Boolean stringValueToBoolean(String value) {
-	    return value.equals("1");
     }
 
 	@Override
