@@ -1,4 +1,4 @@
-SELECT @currentcontractid := id FROM contract where `current` = 1;
+SELECT @currentcontractid := id FROM contract where current;
 
 UPDATE ifs.contract SET annex_1 = '<h2 class="heading-medium">
 Technology programme: Assessor services
