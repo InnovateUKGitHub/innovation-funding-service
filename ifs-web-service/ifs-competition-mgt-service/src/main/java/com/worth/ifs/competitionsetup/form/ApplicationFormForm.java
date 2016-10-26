@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
 public class ApplicationFormForm extends CompetitionSetupForm {
     @Valid
     @NotNull
-    private Question questionToUpdate;
+    private Question question;
 
-    public Question getQuestionToUpdate() {
-        return questionToUpdate;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionToUpdate(Question questionToUpdate) {
-        this.questionToUpdate = questionToUpdate;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }

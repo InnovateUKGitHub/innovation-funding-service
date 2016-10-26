@@ -61,24 +61,24 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	private List<Error> updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
         switch (fieldName) {
-            case "questionToUpdate.shortTitle" :
+            case "question.shortTitle" :
                 question.setShortTitle(value);
                 break;
-            case "questionToUpdate.title" :
+            case "question.title" :
                 question.setTitle(value);
                 break;
-            case "questionToUpdate.subTitle" :
+            case "question.subTitle" :
                 question.setSubTitle(value);
                 break;
-            case "questionToUpdate.guidanceTitle" :
+            case "question.guidanceTitle" :
                 question.setGuidanceTitle(value);
                 break;
-            case "questionToUpdate.guidance" :
+            case "question.guidance" :
                 question.setGuidance(value);
                 break;
-            case "questionToUpdate.maxWords" :
+            case "question.maxWords" :
                 question.setMaxWords(Integer.parseInt(value));
-            case "questionToUpdate.appendix" :
+            case "question.appendix" :
                 question.setAppendix(textToBoolean(value));
                 break;
             default:

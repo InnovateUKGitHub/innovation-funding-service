@@ -35,6 +35,6 @@ public class ApplicationFormFormPopulatorTest {
 		
 		assertTrue(result instanceof ApplicationFormForm);
 		ApplicationFormForm form = (ApplicationFormForm) result;
-		assertEquals(null, form.getQuestionToUpdate());
+		assertEquals(null, form.getQuestion());
 	}
 }

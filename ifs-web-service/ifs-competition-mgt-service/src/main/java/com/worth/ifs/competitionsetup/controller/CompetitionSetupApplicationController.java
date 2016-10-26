@@ -88,7 +88,7 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable("questionId") Long questionId,
                                             Model model) {
 
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestionToUpdate());
+        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
 
         if(!bindingResult.hasErrors()) {
             return "redirect:/competition/setup/" + competitionId + "/section/application";
@@ -116,7 +116,7 @@ public class CompetitionSetupApplicationController {
             List<Question> questions = (List<Question>) model.asMap().get("questions");
             Optional<Question> question = questions.stream().filter(questionObject -> questionObject.getId().equals(questionId)).findFirst();
             if(question.isPresent()) {
-                applicationFormForm.setQuestionToUpdate(question.get());
+                applicationFormForm.setQuestion(question.get());
             } else {
                 LOG.error("Question(" + questionId + ") not found");
             }
