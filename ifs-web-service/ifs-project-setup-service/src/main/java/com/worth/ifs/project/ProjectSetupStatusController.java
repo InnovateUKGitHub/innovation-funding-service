@@ -72,7 +72,6 @@ public class ProjectSetupStatusController {
 
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
 
-
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
@@ -84,20 +83,23 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        boolean projectDetailsSubmitted;
+        boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
+
+        boolean projectDetailsProcessCompleted;
         boolean awaitingProjectDetailsActionFromOtherPartners = false;
         if (leadPartner) {
-            projectDetailsSubmitted = checkLeadPartnerProjectDetailsSubmitted(teamStatus);
+            projectDetailsProcessCompleted = checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
             awaitingProjectDetailsActionFromOtherPartners = awaitingProjectDetailsActionFromOtherPartners(teamStatus);
 
         } else {
-            projectDetailsSubmitted = statusAccessor.isFinanceContactSubmitted(organisation);
+            projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
         }
 
         Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
-                organisation.getId(), projectDetailsSubmitted, awaitingProjectDetailsActionFromOtherPartners, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
+                organisation.getId(), projectDetailsSubmitted, projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners,
+                leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),
@@ -108,7 +110,7 @@ public class ProjectSetupStatusController {
                 statusAccessor.canAccessGrantOfferLetterSection(organisation));
     }
 
-    private boolean checkLeadPartnerProjectDetailsSubmitted(ProjectTeamStatusResource teamStatus) {
+    private boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 

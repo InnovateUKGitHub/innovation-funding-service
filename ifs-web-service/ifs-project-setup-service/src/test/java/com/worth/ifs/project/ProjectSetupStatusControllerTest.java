@@ -3,6 +3,7 @@ package com.worth.ifs.project;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
@@ -50,36 +51,31 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     private ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
     private ProjectResourceBuilder projectBuilder = newProjectResource().withId(projectId).withApplication(application);
 
-    @Test
-    public void testViewProjectSetupStatus() throws Exception {
+    private ProjectResource project = projectBuilder.build();
+    private OrganisationResource organisationResource = newOrganisationResource().build();
 
-        ProjectResource project = projectBuilder.build();
-        OrganisationResource organisationResource = newOrganisationResource().build();
+    private BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+    private RestResult<BankDetailsResource> bankDetailsFoundResult = restSuccess(bankDetailsResource);
+    private RestResult<BankDetailsResource> bankDetailsNotFoundResult = restFailure(notFoundError(BankDetailsResource.class, 123L));
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId())
-                .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER).build(1));
+    private MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+    private Optional<MonitoringOfficerResource> monitoringOfficerFoundResult = Optional.of(monitoringOfficer);
+    private Optional<MonitoringOfficerResource> monitoringOfficerNotFoundResult = Optional.empty();
 
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
-                restFailure(notFoundError(BankDetailsResource.class, 1L)));
-
-        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
-                        withOrganisationId(organisationResource.getId()).
-                        build()).
-                withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+    private ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+            withProjectLeadStatus(newProjectLeadStatusResource().
+                    withOrganisationId(organisationResource.getId()).
+                    build()).
+            withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
                     .withOrganisationId(organisationResource.getId())
                     .withFinanceContactStatus(COMPLETE)
                     .build(1))
-                .build();
+            .build();
 
-        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+    @Test
+    public void testViewProjectSetupStatus() throws Exception {
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -87,48 +83,33 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertStandardViewModelValuesCorrect(viewModel);
+
         assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isProjectDetailsProcessCompleted());
         assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
     }
 
     @Test
-    public void testViewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() throws Exception {
-
-        ProjectResource project = projectBuilder.build();
-        OrganisationResource organisationResource = newOrganisationResource().build();
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId())
-                .withRoleName(PARTNER).build(1));
-
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
-                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+    public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedAsLead() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectLeadStatusResource()
-                    .withOrganisationId(5L)
-                    .build())
+                        .withOrganisationId(5L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build())
                 .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
-        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -136,30 +117,57 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
-        assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertStandardViewModelValuesCorrect(viewModel);
+
+        assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isProjectDetailsProcessCompleted());
         assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
     }
 
     @Test
-    public void testViewProjectSetupStatusWithProjectDetailsSubmitted() throws Exception {
+    public void testViewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.
-                build();
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectLeadStatusResource()
+                        .withOrganisationId(5L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .build())
+                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
+                .build();
 
-        OrganisationResource organisationResource = newOrganisationResource().build();
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertStandardViewModelValuesCorrect(viewModel);
+
+        assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isProjectDetailsProcessCompleted());
+        assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
+        assertFalse(viewModel.isMonitoringOfficerAssigned());
+        assertEquals("", viewModel.getMonitoringOfficerName());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertFalse(viewModel.isBankDetailsComplete());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmitted() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withFinanceContactStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
                         build()).
                 withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
@@ -168,20 +176,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         .build(1)).
                 build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId())
-                .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER).build(1));
-
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
-                restFailure(notFoundError(BankDetailsResource.class, 1L)));
-
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -189,11 +184,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertStandardViewModelValuesCorrect(viewModel);
+
         assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isProjectDetailsProcessCompleted());
         assertFalse(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
@@ -204,36 +198,19 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() throws Exception {
 
-        ProjectResource project = projectBuilder.
-                build();
-
-        OrganisationResource organisationResource = newOrganisationResource().build();
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
                         .withOrganisationId(organisationResource.getId())
                         .build())
                 .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
-                    .withOrganisationId(organisationResource.getId())
-                    .withFinanceContactStatus(NOT_STARTED)
-                    .build(1))
+                        .withOrganisationId(organisationResource.getId())
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
                 .build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId())
-                .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER).build(1));
-
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
-                restFailure(notFoundError(BankDetailsResource.class, 1L)));
-
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -241,11 +218,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
-        assertFalse(viewModel.isProjectDetailsSubmitted());
+        assertStandardViewModelValuesCorrect(viewModel);
+
+        assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertFalse(viewModel.isProjectDetailsProcessCompleted());
         assertTrue(viewModel.isAwaitingProjectDetailsActionFromOtherPartners());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());
@@ -256,11 +232,6 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewProjectSetupStatusWithMonitoringOfficerAssigned() throws Exception {
 
-        ProjectResource project = projectBuilder.withId(projectId).build();
-        MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -269,18 +240,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         build()).
                 build();
 
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerResult);
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId()).withRoleName(PARTNER).build(1));
-
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
-                restFailure(notFoundError(BankDetailsResource.class, 1L)));
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -288,11 +248,10 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertStandardViewModelValuesCorrect(viewModel);
+
         assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isProjectDetailsProcessCompleted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertTrue(viewModel.isBankDetailsActionRequired());
@@ -302,13 +261,6 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewProjectSetupStatusWithBankDetailsEntered() throws Exception {
 
-        ProjectResource project = projectBuilder.build();
-
-        MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
-        BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -317,15 +269,9 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         build()).
                 build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerResult);
-        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
-                withUser(loggedInUser.getId()).withRoleName(PARTNER).build(1));
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(bankDetailsFoundResult);
 
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
@@ -335,14 +281,36 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
-        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertStandardViewModelValuesCorrect(viewModel);
+
         assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isProjectDetailsProcessCompleted());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertTrue(viewModel.isBankDetailsComplete());
+    }
+
+    private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerResult);
+        when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
+                withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER).build(1));
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(bankDetailsResult);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+    }
+
+    private void assertStandardViewModelValuesCorrect(ProjectSetupStatusViewModel viewModel) {
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(project.getName(), viewModel.getProjectName());
+        assertEquals(competition.getName(), viewModel.getCompetitionName());
+        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
     }
 }

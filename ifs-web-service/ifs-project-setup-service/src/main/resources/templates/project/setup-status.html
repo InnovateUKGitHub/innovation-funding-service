@@ -32,7 +32,7 @@
         </div>
       </li>
       <!--/* ========================= Project Details ========================= */-->
-      <li th:classappend="${model.projectDetailsSubmitted ? 'complete' : (model.leadPartner and model.awaitingProjectDetailsActionFromOtherPartners ? 'waiting' : 'require-action')}">
+      <li th:classappend="${model.projectDetailsProcessCompleted ? 'complete' : (model.leadPartner and model.awaitingProjectDetailsActionFromOtherPartners ? 'waiting' : 'require-action')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
