@@ -540,7 +540,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         User existingUser = newUser().build();
 
         Profile profile = newProfile()
-                .withUser(existingUser)
                 .withAddress(newAddress().withId(1L).build())
                 .withContract(newContract().build())
                 .withBusinessType(ACADEMIC)
@@ -576,7 +575,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         User existingUser = newUser().build();
         Profile profile = newProfile()
-                .withUser(existingUser)
                 .withAddress(newAddress().build())
                 .build();
         existingUser.setProfile(profile);
@@ -589,7 +587,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 user -> {
                     assertEquals(userId, user.getId());
                     assertEquals(existingUser.getProfile().getId(), user.getProfile().getId());
-                    assertEquals(existingUser.getProfile().getUser(), user.getProfile().getUser().getId());
                     assertEquals(existingUser.getProfile().getAddress(), user.getProfile().getAddress());
                 }
         );

@@ -185,7 +185,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         updateBasicDetails(user, profileDetails);
 
         if (user.getProfile() == null) {
-            user.setProfile(new Profile(user));
+            user.setProfile(new Profile());
         }
 
         Profile profile = user.getProfile();
