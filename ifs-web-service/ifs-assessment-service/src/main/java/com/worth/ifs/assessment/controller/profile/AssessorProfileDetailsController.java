@@ -112,46 +112,6 @@ public class AssessorProfileDetailsController {
         });
     }
 
-    @RequestMapping(value = "/edit", params = "manual-address", method = RequestMethod.POST)
-    public String manualAddress(Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
-                                BindingResult bindingResult) {
-        form.setAddressForm(new AddressForm());
-        form.getAddressForm().setManualAddress(true);
-
-        return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
-    }
-
-    @RequestMapping(value = "/edit", params = "search-address", method = RequestMethod.POST)
-    public String searchAddress(Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
-                                BindingResult bindingResult, ValidationHandler validationHandler) {
-
-        Supplier<String> view = () -> doViewEditYourDetails(loggedInUser, model, form, bindingResult);
-
-        addAddressOptions(form);
-        form.getAddressForm().setTriedToSearch(true);
-
-        if (form.getAddressForm().getPostcodeInput().isEmpty()) {
-            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcode.required");
-        }
-
-        return validationHandler.failNowOrSucceedWith(view, view);
-    }
-
-    @RequestMapping(value = "/edit", params = "select-address", method = RequestMethod.POST)
-    public String selectAddress(Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
-                                BindingResult bindingResult) {
-        addAddressOptions(form);
-        addSelectedAddress(form);
-
-        return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
-    }
-
     private void validateAddressForm(AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
         if (postcodeIsSelected(form)) {
             validator.validate(form.getAddressForm().getSelectedPostcode(), bindingResult);
