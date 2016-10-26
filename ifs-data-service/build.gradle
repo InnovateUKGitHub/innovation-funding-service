@@ -149,7 +149,7 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task client(type: Jar) {
-    baseName += '-api'
+    baseName += '-public'
     from(sourceSets.main.output) {
         // filter to only include certain class files (Ant glob pattern)
         include "com/worth/ifs/**/service/**"
@@ -161,18 +161,20 @@ task client(type: Jar) {
         include "com/worth/ifs/commons/error/**"
         include "com/worth/ifs/commons/validation/**"
         include "com/worth/ifs/mappers/**"
+        include "com/worth/ifs/**/mapper/**"
         exclude "com/worth/ifs/**/transactional/**"
         exclude "com/worth/ifs/notifications/**"
         exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
+        include "com/worth/ifs/config/**"
     }
 }
 task clientCopy(type: Copy){
     ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
         into it
         from "build/libs/"
-        include "ifs-data-service-api*"
+        include "ifs-data-service-public*"
     }
 }
 

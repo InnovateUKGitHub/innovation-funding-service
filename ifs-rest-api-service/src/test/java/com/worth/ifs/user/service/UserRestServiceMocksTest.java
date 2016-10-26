@@ -2,6 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.user.mapper.UserMapperImpl;
 import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
@@ -35,7 +36,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
         return userRestService;
     }
-
     @Test
     public void test_findAll() {
 

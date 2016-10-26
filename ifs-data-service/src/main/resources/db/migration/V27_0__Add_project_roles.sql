@@ -1,1 +1,0 @@
-INSERT INTO role (`name`) VALUES ('finance_contact'), ('partner'), ('project_manager');

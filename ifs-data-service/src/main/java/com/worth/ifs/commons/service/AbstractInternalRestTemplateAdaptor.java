@@ -117,6 +117,7 @@ public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTe
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        System.out.println("exchangeWithRestResult > path: " + path);
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
@@ -125,6 +126,7 @@ public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTe
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        System.out.println("exchangeWithRestResult > path: " + path);
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 

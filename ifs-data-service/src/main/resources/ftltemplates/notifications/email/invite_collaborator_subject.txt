@@ -1,1 +1,0 @@
-Invitation to collaborate in ${competitionName}

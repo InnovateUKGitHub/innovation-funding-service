@@ -1,10 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UidAuthenticationService;
-import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
-import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.commons.service.HttpHeadersUtils;
-import com.worth.ifs.commons.service.RestTemplateAdaptor;
+import com.worth.ifs.commons.service.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

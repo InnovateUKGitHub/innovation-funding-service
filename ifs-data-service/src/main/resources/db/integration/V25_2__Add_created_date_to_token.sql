@@ -1,1 +1,0 @@
-UPDATE `token` SET `created`=now() WHERE `class_name` = 'com.worth.ifs.user.domain.User' AND `class_pk` IN (1,10);

@@ -1,1 +1,0 @@
-ALTER TABLE `question` DROP COLUMN `assessor_confirmation_question`;

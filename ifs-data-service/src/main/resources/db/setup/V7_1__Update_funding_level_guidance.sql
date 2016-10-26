@@ -1,1 +1,0 @@
-UPDATE `question` SET `guidance_answer`='<p>You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received. It must also be within participation levels which you can review on the Finances Overview page.</p>' WHERE `id`='38';
