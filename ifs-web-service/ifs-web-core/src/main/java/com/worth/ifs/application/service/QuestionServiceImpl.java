@@ -5,11 +5,14 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);
+    private static final String ASSIGN_QUESTION_PARAM = "assign_question";
 
     @Autowired
     private QuestionRestService questionRestService;
@@ -146,6 +150,41 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionResource> getQuestionsByAssessment(Long assessmentId) {
         return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy) {
+
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+            Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
+            Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
+
+            assign(questionId, applicationId, assigneeId, assignedBy.getId());
+        }
+    }
+
+    protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
+        Long assigneeId = null;
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+            String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
+            assigneeId = Long.valueOf(assign.split("_")[1]);
+        }
+
+        return assigneeId;
+    }
+
+    @Override
+    public Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
+        Long questionId = null;
+        Map<String, String[]> params = request.getParameterMap();
+        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+            String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
+            questionId = Long.valueOf(assign.split("_")[0]);
+        }
+
+        return questionId;
     }
 
 }

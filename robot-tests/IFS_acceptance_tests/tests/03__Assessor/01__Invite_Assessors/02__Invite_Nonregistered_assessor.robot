@@ -82,9 +82,8 @@ Create assessor account: client-side validations
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
     Then the user should not see the validation error in the create assessor form    Please enter your password
     And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
-    # TODO due to INFUND-5557
-    # When the user clicks the button/link    id=postcode-lookup
-    # And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
+    When the user clicks the button/link    id=postcode-lookup
+    And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
@@ -101,7 +100,7 @@ Create assessor account: Postcode lookup and save
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
-    [Tags]    Pending
+    [Tags]
     When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -134,7 +133,7 @@ Assessor attempts to accept/reject an invitation which is already accepted
     [Documentation]    INFUND-5165
     [Tags]    Pending
     [Setup]    The guest user opens the browser
-    # TODO pending due to INFUND-5566
+    # TODO INFUND-5566
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 

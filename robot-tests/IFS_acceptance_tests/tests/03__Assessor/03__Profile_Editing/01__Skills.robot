@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     INFUND-5182 - As an assessor creating an account I need to supply details of my skills and expertise so that InnovateUK can assign me appropriate applications to assess.
-Suite Setup       guest user log-in    ${assessor2_credentials["email"]}    ${assessor2_credentials["password"]}
+...
+...               INFUND-1481 - As an assessor I need to review and accept the Innovate UK Assessor contract so that I am able to assess a competition.
+Suite Setup       guest user log-in    &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -46,3 +48,26 @@ Edit skills and expertise: skills and business type are saved correctly
     Given the user clicks the button/link    jQuery=a:contains("Your skills")
     Then radio button should be set to    assessorType    BUSINESS
     Then the user sees the text in the element    id=skillAreas    assessor skill areas text
+    And the user clicks the button/link    link=Back
+
+Edit contract: client-side validations
+    [Documentation]    INFUND-1481
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains("Your contract")
+    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    Then the user should see an error    Please agree to the terms and conditions
+
+Edit contract: Download terms and conditions
+    [Documentation]    INFUND-1481
+    When the user clicks the button/link    link=Download terms of contract
+    Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
+    And The user goes back to the previous page
+    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/terms
+
+Edit contract: server-side validations and redirect to dashboard
+    [Documentation]    INFUND-1481
+    [Tags]
+    When the user selects the checkbox    id=agreesToTerms1
+    And the user should not see an error in the page
+    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}

@@ -1,4 +1,6 @@
 *** Variables ***
+${docker}    0
+${smoke_test}     0
 ${BROWSER}        chrome
 ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
@@ -56,7 +58,6 @@ ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/8
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
-${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${SUCCESSFUL_PROJECT_PAGE}    ${server}/project-setup/project/4
 ${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/1/details
 ${project_in_setup_page}    ${server}/project-setup/project/1
@@ -73,33 +74,34 @@ ${verify_link_1}    ${SERVER}/registration/verify-email/4a5bc71c9f3a2bd50fada434
 ${verify_link_2}    ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0
 ${verify_link_3}    ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
-${UPLOAD_FOLDER}    uploaded_files
 ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/1
 ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
-${DOWNLOAD_FOLDER}    ../download_files
-${empty_field_warning_message}    This field cannot be left blank
 ${OPEN_COMPETITION_LINK}    Connected digital additive manufacturing
-${valid_pdf}      testing.pdf
-${too_large_pdf}    large.pdf
-${text_file}      testing.txt
+${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
+${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
+${application_name}    Submit test application
+${test_title}     test title
+
+# File related variables
+${UPLOAD_FOLDER}                  uploaded_files
+${DOWNLOAD_FOLDER}                ../download_files
+${empty_field_warning_message}    This field cannot be left blank
+${valid_pdf}            testing.pdf
+${too_large_pdf}        large.pdf
+${text_file}            testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
+
+# Email related Variables
 ${TEST_MAILBOX_ONE}    worth.email.test
 ${TEST_MAILBOX_TWO}    worth.email.test.two
 ${test_mailbox_one_password}    testtest1
 ${test_mailbox_two_password}    testtest1
-${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
-${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
-${test_title}     test title
 ${unique_email_number}    1
-${smoke_test}     0
-${submit_test_email}    ${test_mailbox_one}+submittest@gmail.com
-${application_name}    Submit test application
-
-${docker}    0
+${submit_test_email}      ${test_mailbox_one}+submittest@gmail.com
 
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
@@ -115,7 +117,6 @@ ${Assessment_overview_11}    ${server}/assessment/11
 ${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
 ${Assessment_summary_open_11}    ${server}/assessment/11/summary
 ${assessment_skills}    ${server}/assessment/profile/declaration
-
 
 # Database variables
 ${database_name}    ifs

@@ -291,11 +291,13 @@ public class CompetitionManagementControllerTest  {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime assessmentStartDate = now.minusDays(7L);
-        LocalDateTime assessmentEndDate = now.plusDays(3L);
+        LocalDateTime assessorDeadlineDate = now.plusDays(2L);
+        LocalDateTime fundersPanelDate = now.plusDays(3L);
         
         CompetitionResource competition = newCompetitionResource()
-        		.withAssessmentStartDate(assessmentStartDate)
-        		.withAssessmentEndDate(assessmentEndDate)
+        		.withAssessorAcceptsDate(assessmentStartDate)
+                .withAssessorDeadlineDate(assessorDeadlineDate)
+        		.withFundersPanelDate(fundersPanelDate)
         		.build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         
@@ -305,9 +307,9 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("activeTab", "overview"))
                 .andExpect(model().attribute("applicationsRequiringFeedback", 3L))
-                .andExpect(model().attribute("assessmentEndDate", assessmentEndDate))
-                .andExpect(model().attribute("assessmentDaysLeft", 2L))
-                .andExpect(model().attribute("assessmentDaysLeftPercentage", 80L));
+                .andExpect(model().attribute("assessmentEndDate", fundersPanelDate))
+                .andExpect(model().attribute("assessmentDaysLeft", 1L))
+                .andExpect(model().attribute("assessmentDaysLeftPercentage", 88L));
     	
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }

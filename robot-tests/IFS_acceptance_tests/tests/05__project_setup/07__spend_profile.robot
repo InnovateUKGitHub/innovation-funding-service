@@ -418,9 +418,6 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-
-
-
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
     # This Keyword performs a for loop that iterates per column (in a specific row)

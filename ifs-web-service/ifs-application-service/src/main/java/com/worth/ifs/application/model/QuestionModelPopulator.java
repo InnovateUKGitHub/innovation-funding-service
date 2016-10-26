@@ -3,6 +3,7 @@ package com.worth.ifs.application.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
@@ -37,12 +38,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
-import static com.worth.ifs.application.AbstractApplicationController.APPLICATION_BASE_URL;
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static com.worth.ifs.application.AbstractApplicationController.QUESTION_URL;
-import static com.worth.ifs.application.AbstractApplicationController.SECTION_URL;
+import static com.worth.ifs.application.ApplicationFormController.*;
 
 /**
  * View model for the single question pages
@@ -132,7 +129,7 @@ public class QuestionModelPopulator {
             model.addAttribute("leadOrganisation", org)
         );
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation);
@@ -157,7 +154,7 @@ public class QuestionModelPopulator {
             values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
     private void addUserDetails(Model model, ApplicationResource application, Long userId) {
