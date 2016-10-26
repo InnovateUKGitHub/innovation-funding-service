@@ -1,34 +1,34 @@
-IFS.competitionManagement.setup = (function(){
+IFS.competitionManagement.setup = (function() {
   "use strict";
   var s;
   return {
     settings: {
       milestonesForm : '[data-section="milestones"]'
     },
-    init: function(){
+    init: function() {
       s = this.settings;
       IFS.competitionManagement.setup.handleCompetitionCode();
 
       IFS.competitionManagement.setup.handleAddCoFunder();
       IFS.competitionManagement.setup.handleRemoveCoFunder();
 
-      jQuery("body.competition-management.competition-setup").on('change', '#competitionTypeId', function(){
+      jQuery("body.competition-management.competition-setup").on('change', '#competitionTypeId', function() {
         IFS.competitionManagement.setup.handleStateAid();
       });
-      jQuery("body.competition-management.competition-setup").on('change', '[name="innovationSectorCategoryId"]', function(){
+      jQuery("body.competition-management.competition-setup").on('change', '[name="innovationSectorCategoryId"]', function() {
         IFS.competitionManagement.setup.handleInnovationSector(false);
       });
       IFS.competitionManagement.setup.innovationSectorOnPageLoad();
 
-      jQuery(s.milestonesForm).on('change', 'input[data-date]', function(){
+      jQuery(s.milestonesForm).on('change', 'input[data-date]', function() {
         IFS.competitionManagement.setup.milestonesExtraValidation();
         IFS.competitionManagement.setup.milestonesSetFutureDate(jQuery(this));
       });
       IFS.competitionManagement.setup.mileStoneValidateOnPageLoad();
 
     },
-    handleCompetitionCode : function(){
-      jQuery(document).on('click', '#generate-code', function(){
+    handleCompetitionCode : function() {
+      jQuery(document).on('click', '#generate-code', function() {
         var button = jQuery(this);
         var competitionId = button.val();
         var field = button.closest('.form-group').find('input');
@@ -53,7 +53,7 @@ IFS.competitionManagement.setup = (function(){
         return false;
       });
     },
-    handleInnovationSector : function(pageLoad){
+    handleInnovationSector : function(pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val();
       var innovationCategorySelected = jQuery('[name="innovationAreaCategoryId"]').val();
       if(typeof(sector) !=='undefined'){
@@ -64,7 +64,7 @@ IFS.competitionManagement.setup = (function(){
           success: function(data) {
             var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
             innovationCategory.children().remove();
-            jQuery.each(data, function(){
+            jQuery.each(data, function() {
               if(this.id == innovationCategorySelected) {
                 innovationCategory.append('<option selected="selected" value="'+this.id+'">'+this.name+'</option>');
               } else {
@@ -92,7 +92,7 @@ IFS.competitionManagement.setup = (function(){
         }
       }
     },
-    handleStateAid : function(){
+    handleStateAid : function() {
       var stateAid =  jQuery('#competitionTypeId').find('[value="'+jQuery('#competitionTypeId').val()+'"]').attr('data-stateaid');
       if(stateAid == 'true'){
         stateAid = 'yes';
@@ -147,7 +147,7 @@ IFS.competitionManagement.setup = (function(){
         $this.val(thisIndex);
       });
     },
-    milestonesExtraValidation : function(){
+    milestonesExtraValidation : function() {
       //some extra javascript to hide the server side messages when the field is valid
       var fieldErrors = jQuery(s.milestonesForm+' .field-error');
       var emptyInputs = jQuery(s.milestonesForm+' input').filter(function() { return !this.value; });
@@ -155,8 +155,8 @@ IFS.competitionManagement.setup = (function(){
         jQuery(s.milestonesForm+' .error-summary').attr('aria-hidden', 'true');
       }
     },
-    mileStoneValidateOnPageLoad : function(){
-      jQuery(s.milestonesForm+' .day input').each(function(index, value){
+    mileStoneValidateOnPageLoad : function() {
+      jQuery(s.milestonesForm+' .day input').each(function(index, value) {
         var field = jQuery(value);
         if(index===0){
           IFS.core.formValidation.checkDate(field, true);
@@ -164,8 +164,8 @@ IFS.competitionManagement.setup = (function(){
         IFS.competitionManagement.setup.milestonesSetFutureDate(field);
       });
     },
-    milestonesSetFutureDate : function(field){
-      setTimeout(function(){
+    milestonesSetFutureDate : function(field) {
+      setTimeout(function() {
         var nextRow = field.closest('tr').next('tr');
         var date = field.attr('data-date');
         if(nextRow.length){

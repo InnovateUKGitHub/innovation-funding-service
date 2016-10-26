@@ -32,12 +32,12 @@ if (!Object.keys){
 }
 
 //util for kicking it off.
-var UTIL = (function(){
+var UTIL = (function() {
   "use strict";
   return {
-    fire : function(func, funcname, args){
+    fire : function(func, funcname, args) {
       var keys = Object.keys(IFS);
-      jQuery.each(keys, function(){
+      jQuery.each(keys, function() {
         if(typeof(IFS[this].loadOrder) !== 'undefined'){
           var namespace = IFS[this].loadOrder;  // indicate your obj literal namespace here
           funcname = (funcname === undefined) ? 'init' : funcname;
@@ -47,12 +47,12 @@ var UTIL = (function(){
         }
       });
     },
-    loadEvents : function(){
+    loadEvents : function() {
       var bodyId = document.body.id;
       // hit up common first.
       UTIL.fire('common');
       // do all the classes too.
-      jQuery.each(document.body.className.split(/\s+/), function(i, classnm){
+      jQuery.each(document.body.className.split(/\s+/), function(i, classnm) {
         UTIL.fire(classnm);
         UTIL.fire(classnm, bodyId);
       });
@@ -61,6 +61,6 @@ var UTIL = (function(){
   };
 })();
 // kick it all off here
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
   UTIL.loadEvents();
 });
