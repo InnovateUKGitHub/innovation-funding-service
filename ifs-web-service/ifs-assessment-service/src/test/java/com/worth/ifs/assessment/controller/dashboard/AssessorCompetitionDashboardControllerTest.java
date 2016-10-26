@@ -7,14 +7,11 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
-import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -32,9 +29,10 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -59,17 +57,21 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         Long competitionId = 1L;
         Long userId = 1L;
 
-        CompetitionFunderResource funder = new CompetitionFunderResource();
-        funder.setFunder("Innovate UK");
-        funder.setCompetitionId(competitionId);
+        UserResource leadTechnologist = newUserResource()
+                .withFirstName("Competition")
+                .withLastName("Technologist")
+                .build();
+
+        LocalDateTime assessorAcceptsDate = LocalDateTime.now().minusDays(2);
+        LocalDateTime assessorDeadlineDate = LocalDateTime.now().plusDays(4);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
-                .withFunders(asList(funder))
-                .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
-                .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
+                .withLeadTechnologist(leadTechnologist.getId())
+                .withAssessorAcceptsDate(assessorAcceptsDate)
+                .withAssessorDeadlineDate(assessorDeadlineDate)
                 .build();
 
         List<AssessmentResource> assessments = newAssessmentResource()
@@ -89,6 +91,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(2);
 
         when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competitionId)).thenReturn(assessments);
         when(applicationService.getById(8L)).thenReturn(applications.get(0));
         when(applicationService.getById(14L)).thenReturn(applications.get(1));
@@ -103,6 +106,19 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
+        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verify(userService).findById(leadTechnologist.getId());
+        inOrder.verify(assessmentService).getByUserAndCompetition(userId, competitionId);
+        inOrder.verifyNoMoreInteractions();
+
+        assessments.stream().forEach(assessment -> {
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
+            inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
+            inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
+            inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+        });
+
         List<AssessorCompetitionDashboardApplicationViewModel> expectedApplications = asList(
                 new AssessorCompetitionDashboardApplicationViewModel(8L, 9L, "Juggling is fun", "The Best Juggling Company"),
                 new AssessorCompetitionDashboardApplicationViewModel(14L, 10L, "Juggling is word that sounds funny to say", "Mo Juggling Mo Problems Ltd")
@@ -112,7 +128,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         assertEquals("Juggling Craziness", model.getCompetitionTitle());
         assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
-        assertEquals("Innovate UK", model.getFundingBody());
+        assertEquals("Competition Technologist", model.getLeadTechnologist());
+        assertEquals(assessorAcceptsDate, model.getAcceptDeadline());
+        assertEquals(assessorDeadlineDate, model.getSubmitDeadline());
         assertEquals(expectedApplications, model.getApplications());
     }
 }

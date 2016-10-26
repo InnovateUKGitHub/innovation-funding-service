@@ -20,11 +20,11 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.assessment = {};
 IFS.assessment.loadOrder = {
   common : {
-    init : function(){},
-    finalize : function(){}
+    init : function() {},
+    finalize : function() {}
   },
   'declaration-form' : {
-    init : function(){
+    init : function() {
       IFS.assessment.repeatableDeclarationRows.init();
     }
   }

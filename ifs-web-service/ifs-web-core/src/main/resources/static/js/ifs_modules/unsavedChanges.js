@@ -1,34 +1,34 @@
 // save the current form state, so we can warn the user if he leaves the page without saving.
-IFS.core.unsavedChanges = (function(){
+IFS.core.unsavedChanges = (function() {
   "use strict";
   var s;
   return {
     settings : {
       formelement : '[data-autosave]'
     },
-    init : function(){
+    init : function() {
       s = this.settings;
       if(jQuery(s.formelement).length){
         IFS.core.unsavedChanges.initUnsavedChangesWarning();
         IFS.core.unsavedChanges.updateSerializedFormState();
 
-        jQuery('body').on('updateSerializedFormState', function(){
+        jQuery('body').on('updateSerializedFormState', function() {
           IFS.core.unsavedChanges.updateSerializedFormState();
         });
       }
     },
-    updateSerializedFormState : function(){
+    updateSerializedFormState : function() {
       var FormEl = jQuery(s.formelement);
       FormEl.data('serializedFormState', FormEl.serialize());
     },
-    initUnsavedChangesWarning : function(){
+    initUnsavedChangesWarning : function() {
       // don't show the warning when the user is submitting the form.
       var formSubmit = false;
-      jQuery('body').on(s.formelement, 'submit', function(){
+      jQuery('body').on(s.formelement, 'submit', function() {
         formSubmit = true;
       });
 
-      jQuery(window).bind('beforeunload', function(e){
+      jQuery(window).bind('beforeunload', function(e) {
         var formEl = jQuery(s.formelement);
         var acceptanceTest = formEl.attr('data-test');
         if (typeof acceptanceTest !== typeof undefined && acceptanceTest !== false) {
