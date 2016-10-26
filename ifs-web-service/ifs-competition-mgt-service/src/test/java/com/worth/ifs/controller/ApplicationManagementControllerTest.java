@@ -3,7 +3,7 @@ package com.worth.ifs.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
+import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
@@ -26,9 +26,7 @@ import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,7 +42,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
         this.setupInvites();
         this.setupOrganisationTypes();
 
-        assertApplicationOverviewExpectations(AssessorFeedbackViewModel.withNoFile(true));
+        assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withNoFile(true));
     }
 
     @Test
@@ -62,7 +60,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
 
             boolean expectedReadonlyState = !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(status);
 
-            assertApplicationOverviewExpectations(AssessorFeedbackViewModel.withNoFile(expectedReadonlyState));
+            assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withNoFile(expectedReadonlyState));
         });
     }
 
@@ -80,7 +78,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
         FileEntryResource existingFileEntry = newFileEntryResource().withName("myfile").withFilesizeBytes(1000).build();
 
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(existingFileEntry));
-        assertApplicationOverviewExpectations(AssessorFeedbackViewModel.withExistingFile("myfile", 1000, true));
+        assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withExistingFile("myfile", 1000, true));
     }
 
     @Test
@@ -152,7 +150,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
         verify(assessorFeedbackRestService).removeAssessorFeedbackDocument(applications.get(0).getId());
     }
 
-    private void assertApplicationOverviewExpectations(AssessorFeedbackViewModel expectedAssessorFeedback) {
+    private void assertApplicationOverviewExpectations(OptionalFileDetailsViewModel expectedAssessorFeedback) {
         Map<Long, FormInputResponseResource> mappedFormInputResponsesToFormInput = new HashMap<>();
 
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
