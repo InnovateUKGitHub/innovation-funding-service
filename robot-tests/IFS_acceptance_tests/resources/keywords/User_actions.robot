@@ -60,6 +60,14 @@ The user is on the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
+the user is on the page or will navigate there
+    [Arguments]    ${TARGET_URL}
+    ${current_location} =    Get Location
+    ${status}    ${value} =     Run Keyword And Ignore Error     Location Should Contain    ${TARGET_URL}
+
+    Run keyword if    '${status}' == 'FAIL'    The user navigates to the assessor page    ${TARGET_URL}
+
+
 The user should be redirected to the correct page
     [Arguments]    ${URL}
     Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
@@ -326,6 +334,20 @@ The user should see an error
     sleep    100ms
     wait until page contains element    jQuery=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
+
+The user should see a field error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-message:contains('${ERROR_TEXT}')    5s
+
+
+The user should see a summary error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-summary:contains('${ERROR_TEXT}')    5s
+
+The user should see a field and summary error
+    [Arguments]    ${ERROR_TEXT}
+    the user should see a field error    ${ERROR_TEXT}
+    the user should see a summary error    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
