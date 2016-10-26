@@ -116,6 +116,7 @@ ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/com
 ${Assessment_overview_11}    ${server}/assessment/11
 ${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
 ${Assessment_summary_open_11}    ${server}/assessment/11/summary
+${assessment_skills}    ${server}/assessment/profile/declaration
 
 # Database variables
 ${database_name}    ifs

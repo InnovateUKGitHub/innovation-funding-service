@@ -1,31 +1,31 @@
-IFS.core.disableSubmitUntilChecked = (function(){
+IFS.core.disableSubmitUntilChecked = (function() {
   "use strict";
   var s;
   return {
     settings : {
       checkBoxesAttribute : 'data-disable-button-until-checked'
     },
-    init : function(){
+    init : function() {
       s = this.settings;
-      jQuery('body').on('change', '['+s.checkBoxesAttribute+']', function(){
+      jQuery('body').on('change', '['+s.checkBoxesAttribute+']', function() {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this);
       });
-      jQuery('['+s.checkBoxesAttribute+']').each(function(){
+      jQuery('['+s.checkBoxesAttribute+']').each(function() {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this);
       });
     },
-    checkButtonStates : function(el){
+    checkButtonStates : function(el) {
       var button = jQuery(el).attr(s.checkBoxesAttribute);
       if(jQuery(button).length){
         var allChecked = IFS.core.disableSubmitUntilChecked.checkAllChecked(button);
         IFS.core.disableSubmitUntilChecked.updateButton(button, allChecked);
       }
     },
-    checkAllChecked : function(submitButton){
+    checkAllChecked : function(submitButton) {
       //we loop over all checkboxes which have the same attribute,
       //if all if them are checked it is true
       var allChecked = true;
-      jQuery('['+s.checkBoxesAttribute+'="'+submitButton+'"]').each(function(){
+      jQuery('['+s.checkBoxesAttribute+'="'+submitButton+'"]').each(function() {
         if(jQuery(this).prop('checked') === false){
           allChecked = false;
         }
