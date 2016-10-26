@@ -1,15 +1,16 @@
 version: '2'
 services:
-
   shib:
-    image: g2g3/ifs-local-dev
+    build:
+      context: setup-files/scripts/docker/shibboleth
+      dockerfile: Dockerfile
     cap_add:
       - SYS_PTRACE
     ports:
       - "443:443"
       - "389:389"
     links:
-      - web
+      - web:ifs-application-host
       - data
     networks:
       front-tier:
@@ -19,32 +20,75 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: web-dockerfile
+      context: setup-files/scripts/docker/nginx
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-      - "12345:12345"
-      - "8081:8081"
+      - "8080:80"
     links:
-      - data
+      - application-service
+      - assessment-service
+      - competition-mgt-service
+      - project-setup-mgt-service
+      - project-setup-service
     networks:
       front-tier:
         aliases:
           - ifs-web-service
-          - ifs-application-host
+
+  application-service:
+    image: worth/application-service:1.0-SNAPSHOT
+    links:
+      - data
+    ports:
+      - "8081:8080"
+    networks:
+      - front-tier
+      - back-tier
+  assessment-service:
+    image: worth/assessment-service:1.0-SNAPSHOT
+    links:
+      - data
+    ports:
+      - "8082:8080"
+    networks:
+      - front-tier
+      - back-tier
+  competition-mgt-service:
+    image: worth/competition-management-service:1.0-SNAPSHOT
+    links:
+      - data
+    ports:
+      - "8083:8080"
+    networks:
+      - front-tier
+      - back-tier
+  project-setup-mgt-service:
+    image: worth/project-setup-management-service:1.0-SNAPSHOT
+    links:
+      - data
+    ports:
+      - "8084:8080"
+    networks:
+      - front-tier
+      - back-tier
+  project-setup-service:
+    image: worth/project-setup-service:1.0-SNAPSHOT
+    links:
+      - data
+    ports:
+      - "8085:8080"
+    networks:
+      - front-tier
+      - back-tier
 
   data:
-    build:
-      context: .
-      dockerfile: data-dockerfile
+    image: worth/data-service:1.0-SNAPSHOT
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
-    ports:
-      - "8090:8080"
-      - "12346:12345"
-      - "8091:8081"
     depends_on:
       - mysql
+    ports:
+      - "8090:8080"
     networks:
       front-tier:
         aliases:
@@ -106,6 +150,14 @@ services:
       back-tier:
         aliases:
           - webmail
+
+  admin:
+    image: enmobile/docker-spring-boot-admin
+    ports:
+    - "3000:8123"
+    networks:
+    - "back-tier"
+    - "front-tier"
 
 networks:
   front-tier:

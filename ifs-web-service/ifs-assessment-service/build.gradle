@@ -1,12 +1,14 @@
-apply plugin: 'war'
+configurations {
+    providedRuntime
+}
 
-war {
-    baseName = 'assessment'
+jar {
+    baseName = 'assessment-service'
     version = '0.0.1-SNAPSHOT'
 }
 
-configurations {
-    providedRuntime
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
 }
 
 dependencies {
@@ -23,31 +25,20 @@ dependencies {
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
-task copyTemplatesInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/assessment/WEB-INF/classes/templates"
-    from 'src/main/resources/templates'
-}
-
-task copyCssInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/assessment/WEB-INF/classes/static/css"
-    from 'src/main/resources/static/css'
-}
-
-task copyJsInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/assessment/WEB-INF/classes/static/js/dest"
-    from 'src/main/resources/static/js/dest'
-}
-
-task deployToTomcat(type: Copy) {
-    from war
-    into "$tomcatWebAppsDir"
-    rename '(.*).war', 'assessment.war'
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
 }
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    deployToTomcat.mustRunAfter build
     dependsOn clean
-    dependsOn build
-    dependsOn deployToTomcat
+    dependsOn buildDocker
 }

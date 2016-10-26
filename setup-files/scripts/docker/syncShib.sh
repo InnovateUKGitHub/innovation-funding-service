@@ -29,7 +29,7 @@ function addUserToShibboleth {
 
       if [ "${userStatus}" == "ACTIVE" ]; then
         echo "User ${emailAddress} is active in MySQL, so activating them in Shibboleth"
-        curl -s -X PUT -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/${uuid}/activateUser --insecure
+        curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/${uuid}/activateUser
       fi
 
     fi
@@ -40,10 +40,10 @@ export -f addUserToShibboleth
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-for item in $( docker-compose -p ifs ps -q shib ); do
+for item in $( docker-compose ps -q shib ); do
     docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
 done
 
-docker-compose -p ifs exec shib /tmp/_delete-shib-users-remote.sh
+docker-compose exec shib /tmp/_delete-shib-users-remote.sh
 
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"

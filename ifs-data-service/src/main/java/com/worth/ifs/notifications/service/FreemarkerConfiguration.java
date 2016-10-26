@@ -1,13 +1,14 @@
 package com.worth.ifs.notifications.service;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateExceptionHandler;
-import org.springframework.context.annotation.Bean;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Locale;
+
+import com.worth.ifs.Application;
+
+import org.springframework.context.annotation.Bean;
+
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
 /**
  *
  */
@@ -24,8 +25,8 @@ public class FreemarkerConfiguration {
 
         // Specify the source where the template files come from. Here I set a
         // plain directory for it, but non-file-system sources are possible too:
-        cfg.setDirectoryForTemplateLoading(new File(Thread.currentThread().getContextClassLoader().getResource("ftltemplates").toURI()));
 
+        cfg.setClassForTemplateLoading(Application.class, "notifications/templates");
         // Set the preferred charset template files are stored in. UTF-8 is
         // a good choice in most applications:
         cfg.setDefaultEncoding("UTF-8");

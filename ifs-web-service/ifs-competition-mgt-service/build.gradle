@@ -1,9 +1,12 @@
-apply plugin: 'war'
-
-war {
-    baseName = 'management'
+jar {
+    baseName = 'competition-management-service'
     version = '0.0.1-SNAPSHOT'
 }
+
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
+}
+
 configurations {
     providedRuntime
 }
@@ -35,32 +38,20 @@ processResources {
     }
 }
 
-task copyTemplatesInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/templates"
-    from 'src/main/resources/templates'
-}
-
-task copyCssInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/css"
-    from 'src/main/resources/static/css'
-}
-
-task copyJsInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/js/dest"
-    from 'src/main/resources/static/js/dest'
-}
-
-
-task deployToTomcat(type: Copy) {
-    from war
-    into "$tomcatWebAppsDir"
-    rename '(.*).war', 'management.war'
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
 }
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    deployToTomcat.mustRunAfter build
     dependsOn clean
-    dependsOn build
-    dependsOn deployToTomcat
+    dependsOn buildDocker
 }

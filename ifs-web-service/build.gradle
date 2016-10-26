@@ -1,15 +1,9 @@
-
-
 if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
-    apply from: "dev-build.gradle"
+    apply from: "docker-build.gradle"
 }
 
-
-task deployToTomcat() {
-    println "Interface for deployToTomcat task"
+task cleanDeploy{
+	println "interface for clean deploy"
 }
-
-
-

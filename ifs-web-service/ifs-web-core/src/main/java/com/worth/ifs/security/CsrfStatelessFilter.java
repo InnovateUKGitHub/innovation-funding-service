@@ -1,5 +1,14 @@
 package com.worth.ifs.security;
 
+import java.io.IOException;
+import java.util.regex.Pattern;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +19,6 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -100,7 +101,8 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
                 uri.contains("/images/") ||
                 uri.contains("/favicon.ico") ||
                 uri.contains("/prototypes") ||
-                uri.contains("/error");
+                uri.contains("/error")  ||
+                uri.contains("/jolokia-endpoint");
     }
 
     private void setTokenAsCookie(final HttpServletResponse response, final CsrfToken token) {
