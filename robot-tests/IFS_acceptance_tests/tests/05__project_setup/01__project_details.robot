@@ -504,7 +504,7 @@ Non-lead partner cannot change any project details
     ...    AND    guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Start date
+    Then the user should see the text in the page    Target start date
     And the user should see the text in the page    1 Jan 2017
     And the user should not see the element    link=Target start date
     And the user should see the text in the page    Project manager
