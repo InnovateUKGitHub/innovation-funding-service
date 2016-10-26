@@ -233,9 +233,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .with(id(null))
                 .withCurrent(Boolean.TRUE)
                 .withText("Contract text...")
-                .withAnnexOne("Annex one...")
-                .withAnnexTwo("Annex two...")
-                .withAnnexThree("Annex three...")
+                .withAnnexA("Annex one text...")
+                .withAnnexB("Annex two text...")
+                .withAnnexC("Annex three text...")
                 .build());
 
         RestResult<Void> restResult = controller.updateProfileContract(userId);

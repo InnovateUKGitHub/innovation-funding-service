@@ -92,20 +92,20 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        String expectedAnnexOne = "Annex one...";
-        String expectedAnnexTwo = "Annex two...";
-        String expectedAnnexThree = "Annex three...";
+        String expectedAnnexA = "Annex A...";
+        String expectedAnnexB = "Annex B...";
+        String expectedAnnexC = "Annex C...";
 
         ContractResource contract = newContractResource()
-                .withAnnexOne(expectedAnnexOne)
-                .withAnnexTwo(expectedAnnexTwo)
-                .withAnnexThree(expectedAnnexThree)
+                .withAnnexA(expectedAnnexA)
+                .withAnnexB(expectedAnnexB)
+                .withAnnexC(expectedAnnexC)
                 .build();
 
         when(contractService.getCurrentContract()).thenReturn(contract);
 
         // Check that each of the possible params returns the correct annex text
-        List<Pair<ContractAnnexParameter, String>> params = asListOfPairs(A, expectedAnnexOne, B, expectedAnnexTwo, C, expectedAnnexThree);
+        List<Pair<ContractAnnexParameter, String>> params = asListOfPairs(A, expectedAnnexA, B, expectedAnnexB, C, expectedAnnexC);
         params.stream().forEach(paramAndExpected -> {
             try {
                 assertProfileTermsAnnexView(paramAndExpected.getLeft(), paramAndExpected.getRight());

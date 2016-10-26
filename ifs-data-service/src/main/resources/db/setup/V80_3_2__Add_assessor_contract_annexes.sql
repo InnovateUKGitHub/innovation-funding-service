@@ -1,6 +1,6 @@
 SELECT @currentcontractid := id FROM contract where current;
 
-UPDATE ifs.contract SET annex_1 = '<h2 class="heading-medium">
+UPDATE contract SET annex_a = '<h2 class="heading-medium">
 Technology programme: Assessor services
 </h2>
 
@@ -21,7 +21,7 @@ For the avoidance of doubt
 	<li>Nothing in these conditions or in any part of the Contract shall impose any liability on any member of the staff of the Contracting Authority or its representatives in their Official or Personal capacity.</li>
 </ol>' WHERE `id` = @currentcontractid;
 
-UPDATE ifs.contract SET annex_2 = '<h2 class="heading-medium">
+UPDATE contract SET annex_b = '<h2 class="heading-medium">
 Travel and subsistence rates for non-civil service contracted personnel
 </h2>
 
@@ -126,7 +126,7 @@ Mileage rates
 <strong>Please ensure that with all your travel claims, receipts and tickets are submitted. </strong>
 </p>' WHERE `id` = @currentcontractid;
 
-UPDATE ifs.contract SET annex_3 = '<h2 class="heading-medium">
+UPDATE contract SET annex_c = '<h2 class="heading-medium">
 	    	Information management
 	    </h2>
 

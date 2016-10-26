@@ -24,11 +24,11 @@ public class AssessorProfileTermsAnnexModelPopulator {
         ContractResource currentContract = contractService.getCurrentContract();
         switch (annex) {
             case A:
-                return currentContract.getAnnexOne();
+                return currentContract.getAnnexA();
             case B:
-                return currentContract.getAnnexTwo();
+                return currentContract.getAnnexB();
             case C:
-                return currentContract.getAnnexThree();
+                return currentContract.getAnnexC();
             default:
                 throw new IllegalArgumentException("Unexpected annex: " + annex + ".");
         }

@@ -25,9 +25,9 @@ public class ProfileContractDocs {
                     .with(id(1L))
                     .withCurrent(TRUE)
                     .withText("Contract text...")
-                    .withAnnexOne("Annex One text...")
-                    .withAnnexTwo("Annex Two...")
-                    .withAnnexThree("Annex Three...")
+                    .withAnnexA("Annex A text...")
+                    .withAnnexB("Annex B text...")
+                    .withAnnexC("Annex C text...")
                     .build())
             .withCurrentAgreement(TRUE)
             .withContractSignedDate(LocalDateTime.now());

@@ -13,9 +13,9 @@ public class ContractResource {
     private boolean current;
     private String text;
 
-    private String annexOne;
-    private String annexTwo;
-    private String annexThree;
+    private String annexA;
+    private String annexB;
+    private String annexC;
 
     public ContractResource() {
     }
@@ -44,28 +44,28 @@ public class ContractResource {
         this.text = text;
     }
 
-    public String getAnnexOne() {
-        return annexOne;
+    public String getAnnexA() {
+        return annexA;
     }
 
-    public void setAnnexOne(String annexOne) {
-        this.annexOne = annexOne;
+    public void setAnnexA(String annexA) {
+        this.annexA = annexA;
     }
 
-    public String getAnnexTwo() {
-        return annexTwo;
+    public String getAnnexB() {
+        return annexB;
     }
 
-    public void setAnnexTwo(String annexTwo) {
-        this.annexTwo = annexTwo;
+    public void setAnnexB(String annexB) {
+        this.annexB = annexB;
     }
 
-    public String getAnnexThree() {
-        return annexThree;
+    public String getAnnexC() {
+        return annexC;
     }
 
-    public void setAnnexThree(String annexThree) {
-        this.annexThree = annexThree;
+    public void setAnnexC(String annexC) {
+        this.annexC = annexC;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class ContractResource {
                 .append(current, that.current)
                 .append(id, that.id)
                 .append(text, that.text)
-                .append(annexOne, that.annexOne)
-                .append(annexTwo, that.annexTwo)
-                .append(annexThree, that.annexThree)
+                .append(annexA, that.annexA)
+                .append(annexB, that.annexB)
+                .append(annexC, that.annexC)
                 .isEquals();
     }
 
@@ -92,9 +92,9 @@ public class ContractResource {
                 .append(id)
                 .append(current)
                 .append(text)
-                .append(annexOne)
-                .append(annexTwo)
-                .append(annexThree)
+                .append(annexA)
+                .append(annexB)
+                .append(annexC)
                 .toHashCode();
     }
 }
