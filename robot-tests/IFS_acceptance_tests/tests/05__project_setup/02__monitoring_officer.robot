@@ -22,7 +22,7 @@ Before Monitoring Officer is assigned
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user should see the text in the page    Innovate UK will assign you a Monitoring Officer
+    And the user should see the text in the page    Innovate UK will assign the project a Monitoring Officer
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
