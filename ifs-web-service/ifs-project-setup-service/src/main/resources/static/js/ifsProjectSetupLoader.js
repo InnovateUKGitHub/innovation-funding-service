@@ -20,7 +20,7 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.projectSetup = {};
 IFS.projectSetup.loadOrder = {
   'spend-profile' : {
-    init : function(){
+    init : function() {
       IFS.core.finance.init();
       IFS.projectSetup.spendProfile.init();
     }
