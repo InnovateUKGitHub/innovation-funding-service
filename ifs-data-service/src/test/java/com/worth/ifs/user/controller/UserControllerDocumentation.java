@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.ProfileSkillsResource;
+import com.worth.ifs.user.resource.UserProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,8 @@ import static com.worth.ifs.documentation.ProfileContractDocs.profileContractRes
 import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceBuilder;
 import static com.worth.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceFields;
 import static com.worth.ifs.documentation.UserDocs.userResourceFields;
+import static com.worth.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
+import static com.worth.ifs.documentation.UserProfileResourceDocs.userProfileResourceFields;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static java.util.Arrays.asList;
@@ -231,6 +234,42 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         ),
                         requestFields(fieldWithPath("[]").description("List of affiliations belonging to the user"))
                                 .andWithPrefix("[].", affiliationResourceFields)
+                ));
+    }
+
+    @Test
+    public void getProfileDetails() throws Exception {
+        Long userId = 1L;
+        UserProfileResource profileDetails = userProfileResourceBuilder.build();
+
+        when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
+
+        mockMvc.perform(get("/user/id/{id}/getUserProfile", userId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Identifier of the user associated with the profile being requested")
+                        ),
+                        responseFields(userProfileResourceFields)
+                ));
+    }
+
+    @Test
+    public void updateProfileDetails() throws Exception {
+        Long userId = 1L;
+        UserProfileResource profileDetails = userProfileResourceBuilder.build();
+
+        when(userProfileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateUserProfile", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileDetails)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Identifier of the user to update the profile for")
+                        ),
+                        requestFields(userProfileResourceFields)
                 ));
     }
 }
