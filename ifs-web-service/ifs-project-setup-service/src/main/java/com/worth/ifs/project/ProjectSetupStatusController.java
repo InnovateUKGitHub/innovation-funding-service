@@ -73,9 +73,12 @@ public class ProjectSetupStatusController {
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
+
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
+        boolean ownFinanceCheckApproved = COMPLETE.equals(ownOrganisation.getFinanceChecksStatus());
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -95,11 +98,11 @@ public class ProjectSetupStatusController {
             projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
         }
 
-        Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
+        ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
                 organisation.getId(), projectDetailsSubmitted, projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners,
-                leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
+                leadPartner, ownFinanceCheckApproved, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),

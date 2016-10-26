@@ -92,6 +92,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -126,6 +127,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -159,6 +161,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -193,6 +196,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -227,6 +231,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -256,6 +261,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertTrue(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     @Test
@@ -289,6 +295,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertTrue(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isOwnFinanceCheckApproved());
     }
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

@@ -81,8 +81,7 @@
       </li>
       <!--/* ========================= Finance Check ========================= */-->
 
-      <!-- TODO: This needs to look at FC status -->
-      <li th:classappend="${model.financeChecksSection.accessible ? 'waiting' : ''}">
+      <li th:classappend="${model.financeChecksSection.notRequired ? '' : (model.ownFinanceCheckApproved ? 'complete' : 'waiting')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">

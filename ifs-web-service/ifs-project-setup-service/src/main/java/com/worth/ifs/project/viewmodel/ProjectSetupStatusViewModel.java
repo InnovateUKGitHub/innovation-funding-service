@@ -22,6 +22,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean awaitingProjectDetailsActionFromOtherPartners;
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
+    private boolean ownFinanceCheckApproved;
     private boolean grantOfferLetterSubmitted;
     private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
@@ -39,9 +40,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
-                                       Optional<ProjectActivityStates> bankDetails, Long organisationId,
+                                       ProjectActivityStates bankDetails, Long organisationId,
                                        boolean projectDetailsSubmitted, boolean projectDetailsProcessCompleted, boolean awaitingProjectDetailsActionFromOtherPartners,
-                                       boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
+                                       boolean leadPartner, boolean ownFinanceCheckApproved, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -56,8 +57,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.bankDetails = bankDetails.orElse(ProjectActivityStates.NOT_REQUIRED);
+        this.bankDetails = bankDetails;
         this.organisationId = organisationId;
+        this.ownFinanceCheckApproved = ownFinanceCheckApproved;
         this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
         this.leadPartner = leadPartner;
         this.companiesHouseSection = companiesHouseSection;
@@ -169,5 +171,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public boolean isProjectDetailsSubmitted() {
         return projectDetailsSubmitted;
+    }
+
+    public boolean isOwnFinanceCheckApproved() {
+        return ownFinanceCheckApproved;
     }
 }
