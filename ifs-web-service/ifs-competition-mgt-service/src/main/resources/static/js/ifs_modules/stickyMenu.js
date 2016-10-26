@@ -1,4 +1,4 @@
-IFS.competitionManagement.stickyMenu = (function(){
+IFS.competitionManagement.stickyMenu = (function() {
   "use strict";
   var calculatedValues = {};
   var resizeTimer;
@@ -9,7 +9,7 @@ IFS.competitionManagement.stickyMenu = (function(){
       container : '.competition-data form',
       breakpoint : 1200 //px
     },
-    init: function(){
+    init: function() {
       s = this.settings;
       IFS.competitionManagement.stickyMenu.getWindowWidth();
       IFS.competitionManagement.stickyMenu.getMenuHeight();
@@ -22,9 +22,9 @@ IFS.competitionManagement.stickyMenu = (function(){
         IFS.competitionManagement.stickyMenu.menuPxToPercentage();
       }
 
-      jQuery(window).resize(function(){
+      jQuery(window).resize(function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function(){
+        resizeTimer = setTimeout(function() {
           IFS.competitionManagement.stickyMenu.getMenuHeight();
           IFS.competitionManagement.stickyMenu.getMenuWidth();
           IFS.competitionManagement.stickyMenu.getContainerHeight();
@@ -33,39 +33,39 @@ IFS.competitionManagement.stickyMenu = (function(){
           IFS.competitionManagement.stickyMenu.stickyScroll();
         }, 250);
       });
-      jQuery(document).scroll(function(){
+      jQuery(document).scroll(function() {
         IFS.competitionManagement.stickyMenu.stickyScroll();
       });
     },
-    getWindowWidth: function(){
+    getWindowWidth: function() {
       calculatedValues.windowWidth = jQuery(window).width();
     },
-    getMenuOffset : function(){
+    getMenuOffset : function() {
       calculatedValues.menuOffsetTop = s.menu.offset().top;
     },
-    getMenuWidth: function(){
+    getMenuWidth: function() {
       calculatedValues.menuWidth = s.menu.width();
     },
-    getMenuHeight : function(){
+    getMenuHeight : function() {
       calculatedValues.menuHeight = s.menu.outerHeight();
     },
-    getContainerHeight : function(){
+    getContainerHeight : function() {
       calculatedValues.containerHeight = jQuery(s.container).outerHeight(true);
     },
-    getContainerOffset : function(){
+    getContainerOffset : function() {
       calculatedValues.containerOffsetTop = jQuery(s.container).offset().top;
     },
-    stickyEnabled: function(){
+    stickyEnabled: function() {
       //not responsively disabled or higher menu than container
       if((s.breakpoint < calculatedValues.windowWidth) && (calculatedValues.menuHeight < calculatedValues.containerHeight)){
         return true;
       }
       return false;
     },
-    menuPxToPercentage : function(){
+    menuPxToPercentage : function() {
       calculatedValues.menuPercentage =  parseFloat((calculatedValues.menuWidth/calculatedValues.windowWidth)*100).toFixed(2);
     },
-    stickyScroll : function(){
+    stickyScroll : function() {
       if(IFS.competitionManagement.stickyMenu.stickyEnabled()){
         var scroll = jQuery(document).scrollTop();
         if((calculatedValues.menuHeight+scroll) > (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)){

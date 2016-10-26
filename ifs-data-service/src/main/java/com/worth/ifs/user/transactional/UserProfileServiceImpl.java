@@ -174,7 +174,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private void setUserProfileIfNoneExists(User user) {
         if (user.getProfile() == null) {
-            user.setProfile(new Profile(user));
+            user.setProfile(new Profile());
         }
     }
 
