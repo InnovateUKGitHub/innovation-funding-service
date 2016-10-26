@@ -64,6 +64,14 @@ The user is on the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
+the user is on the page or will navigate there
+    [Arguments]    ${TARGET_URL}
+    ${current_location} =    Get Location
+    ${status}    ${value} =     Run Keyword And Ignore Error     Location Should Contain    ${TARGET_URL}
+
+    Run keyword if    '${status}' == 'FAIL'    The user navigates to the assessor page    ${TARGET_URL}
+
+
 The user should be redirected to the correct page
     [Arguments]    ${URL}
     Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}

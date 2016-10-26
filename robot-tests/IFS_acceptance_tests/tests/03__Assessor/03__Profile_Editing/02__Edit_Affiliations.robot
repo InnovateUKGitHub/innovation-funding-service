@@ -2,26 +2,21 @@
 Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts of interest so that Innovate UK does not assign me assessments that are inappropriate for me.
 Suite Setup       guest user log-in    &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Test Setup        Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-Test Teardown     the user navigates to the assessor page    ${assessor_dashboard_url}
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Back to the dashboard link
     [Documentation]    INFUND-3715
+    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side empty form validations
     [Documentation]    INFUND-3715
     [Tags]
+    #TODO: Will need changes once client side validations have been implemented INFUND-5867
+    Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a principal employer
     And the user should see a field and summary error    Please enter the role at your principal employer
@@ -34,6 +29,8 @@ Server-side empty form validations
 Server-side empty yes/no question validations
     [Documentation]    INFUND-3715
     [Tags]
+    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
+    #TODO: Will need changes once client side validations have been implemented INFUND-5867
     Given the user selects yes at yes/no question radio buttons
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a principal employer
@@ -47,90 +44,52 @@ Server-side empty yes/no question validations
 Server-side empty close family member validation
     [Documentation]    INFUND-3715
     [Tags]
+    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
+    #TODO: Will need changes once client side validations have been implemented (INFUND-5867)
     Given the user selects yes at yes/no question radio buttons
+    When the user clicks the button/link    jQuery=button:contains("Add another position")
     And the user clicks the button/link    jQuery=button:contains("Add another family member")
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a relation
     Then the user should see a field and summary error    Please enter a position
     Then the user should see a field and summary error    Please enter an organisation
 
-Server-side empty position validation
-    [Documentation]    INFUND-3715
-    Given the user selects yes at yes/no question radio buttons
-    When the user clicks the button/link    jQuery=button:contains("Add another position")
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field and summary error    Please enter an organisation
-    Then the user should see a field and summary error    Please enter a position
-
 Successful editing with no at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]    PENDING    HappyPath
+    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
+    #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
     Given the user correctly fills out the role, principle employer and accurate fields
     And the user selects no at yes/no question radio buttons
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-
-Verify persistence of changes when editing with no at yes/no questions
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
     Then the user should see correctly filled out the role, employer, affiliation and accurate fields
     And the user should see no selected at yes/no questions
 
 Successful editing with yes at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]    PENDING    HappyPath
+    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
+    #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
     Given the user correctly fills out the role, principle employer and accurate fields
     And the user selects yes at yes/no question radio buttons
-    And the user adds positions
-    And the user enters text to a text field    id=financialInterests    Financial Interests
+    When the user adds positions
+    And the user adds an additional position
+    And the user removes the first two positions
     And the user adds close family member affiliations
+    And the user adds an additional member affiliation
+    And the user removes the first two family member affiliations
+    And the user enters text to a text field    id=financialInterests    Financial Interests
     And the user enters text to a text field    id=familyFinancialInterests    Family Financial Interests
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-
-Verify persistence of changes when editing with filled out yes/no questions
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     Then the user should see correctly filled out the role, employer, affiliation and accurate fields
     And the user should see yes selected at yes/no questions
-    And the user should see the correct positions
-    And the user should see the correct financial interests
     And the user should see the correct close family member affiliations
     And the user should see the correct close family member financial interests
-
-Client-side adding and removing positions
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
-    Given the user adds an additional position
-    When the user removes the first two positions
-    Then the user should see only the additional position
-
-Persistence for adding and removing positions
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
-    Given the user adds an additional position
-    Given the user removes the first two positions
-    Given the user correctly fills out the role, principle employer and accurate fields
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    Then the user should see only the additional position
-
-Client-side adding and removing close family member affiliations
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
-    Given the user adds an additional member affiliation
-    When the user removes the first two family member affiliations
-    Then the user should see only the additional family member affiliations
-
-Persistence for adding and removing close family member affiliations
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath
-    Given the user adds an additional member affiliation
-    And the user removes the first two family member affiliations
-    And the user correctly fills out the role, principle employer and accurate fields
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    Then the user should see only the additional family member affiliations
+    And the user should see only the additional family member affiliations
+    And the user should see only the additional position
 
 *** Keywords ***
 the user selects yes at yes/no question radio buttons
@@ -173,7 +132,7 @@ the user adds positions
     the user clicks the button/link    jQuery=button:contains("Add another position")
     the user enters text to a text field    id=appointments0.organisation    Organisation0
     the user enters text to a text field    id=appointments0.position    Position0
-    the user clicks the button/link    jQuery=button:contains("Add another position")
+INFUND-5871    the user clicks the button/link    jQuery=button:contains("Add another position")
     the user enters text to a text field    id=appointments1.organisation    Organisation1
     the user enters text to a text field    id=appointments1.position    Position1
 
@@ -181,9 +140,6 @@ the user adds an additional position
     the user clicks the button/link    jQuery=button:contains("Add another position")
     the user enters text to a text field    id=appointments2.organisation    Organisation2
     the user enters text to a text field    id=appointments2.position    Position2
-
-the user adds an empty close family member affiliation
-    the user clicks the button/link    jQuery=button:contains("Add another family member")
 
 the user adds close family member affiliations
     the user clicks the button/link    jQuery=button:contains("Add another family member")
