@@ -19,7 +19,7 @@ services:
 
   web:
     build:
-      context: .
+      context: ./setup-files
       dockerfile: web-dockerfile
     ports:
       - "${WEB_PORT_8080}:8080"
@@ -35,7 +35,7 @@ services:
 
   data:
     build:
-      context: .
+      context: ./setup-files
       dockerfile: data-dockerfile
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local

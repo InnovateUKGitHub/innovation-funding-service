@@ -21,13 +21,13 @@ beforehand.
     If you would prefer to setup your own port configuration to avoid conflicts ahead of time, please refer to the 
 **'Preventing port conflicts'** section below.
 
-2. Run the `setup.sh` script:
-
-        ./setup.sh
-        
-3. Run `hosts-helper.sh` script (or manually setup your `hosts` file for Windows):
+2. Run `hosts-helper.sh` script (or manually setup your `hosts` file for Windows):
         
         ./hosts-helper.sh
+
+3. Run the `setup.sh` script:
+
+        ./setup.sh
         
 ### Preventing port conflicts
 
@@ -39,7 +39,7 @@ During the setup prescribed above, an `.env` file is created when running `setup
 not already exist. This contains all the ports that will be used within the Docker setup (they are variable substituted 
 into the `docker-compose.yml`).
 
-To setup your own ports, simply provide a modified `.env` file before running the `setup.sh` in step 2 of the setup.
+To setup your own ports, provide a modified `.env` file before running `setup.sh`.
         
 ## Usage
 
@@ -68,8 +68,7 @@ have to manually append the IPs to your `hosts` file which will be in `C:/Window
 changing permissions for the file). 
 
 - `deploy.sh` is the main deployment script to build the entire application within the Docker environment. It 
-essentially just runs a `./gradlew cleanDeploy` on a sub-project and then copies over the build into the required 
-Docker container.
+essentially just runs a `./gradlew cleanDeploy` on a sub-project.
     
     Usage as follows:
 
@@ -78,15 +77,27 @@ Docker container.
     Note: `gradleOpts` is not required. If you do specify some options they will be passed to the sub-project's 
     `cleanDeploy` task run.
     
-- `frontend.sh` runs various Gulp tasks (for building CSS/JS files) across all the projects (this might be better located somewhere else).
+- `frontend.sh` runs various Gulp tasks (for building CSS/JS files) across all the projects (this might be better 
+located somewhere else).
 
     Usage as follows:
 
         ./frontend.sh {all|css|js|js-core|js-ps|js-comp-mgt|js-app|js-ass}
         
-- `syncShib.sh` syncs the `shib` container users into the `mysql` container database (`ifs-database`).
+- `syncShib.sh` syncs the `shib` container users with the `mysql` container database (`ifs-database`).
 
 ## Troubleshooting
 
  - In the event of catastrophic failure of your Docker containers, rebuild the entire environment by running 
- `teardown.sh` and then `startup.sh`.
+ `teardown.sh` and then `setup.sh`.
+ 
+ - There are potential issues during `setup.sh` execution involving the creation of the required MySQL schemas 
+ (specifically `ifs-test`). The following errors will be observable during execution:
+ 
+        ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+        
+        ...
+        
+        Unable to clean unknown schema: `ifs_test`
+ 
+    Running `teardown`.sh` followed by running `setup.sh` is recommended (aka try again).

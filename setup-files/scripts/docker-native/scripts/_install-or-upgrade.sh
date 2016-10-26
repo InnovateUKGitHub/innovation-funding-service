@@ -1,7 +1,8 @@
 #!/bin/bash
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $BASEDIR
+cd ${BASEDIR}
+cd ../
 
 docker-compose -p ifs stop shib
 docker-compose -p ifs rm ifs-local-dev
@@ -16,6 +17,5 @@ if [ -z "$filename" ]; then
   exit 1
 
 fi
-
 
 docker load < ${filename}

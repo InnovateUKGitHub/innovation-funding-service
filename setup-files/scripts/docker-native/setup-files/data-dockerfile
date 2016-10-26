@@ -1,0 +1,32 @@
+FROM davidcaste/alpine-tomcat:jdk8tomcat8
+MAINTAINER David Soff <dsoff@worth.systems>
+
+COPY jrebel.jar /jrebel.jar
+
+ENV CATALINA_OPTS="-showversion"
+ENV CATALINA_OPTS="$CATALINA_OPTS -javaagent:/jrebel.jar"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Drebel.remoting_plugin=true"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Drebel.log=true"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=12345"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+ENV CATALINA_OPTS="$CATALINA_OPTS -agentlib:jdwp=transport=dt_socket,address=8081,server=y,suspend=n"
+ENV JAVA_OPTS="-Xms256m"
+ENV JAVA_OPTS="$JAVA_OPTS -Xmx512m"
+
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 12345
+
+ENTRYPOINT sh /opt/tomcat/bin/catalina.sh run
+
+COPY server.xml /opt/tomcat/conf/server.xml
+
+COPY certificate /certificate
+
+WORKDIR $JAVA_HOME
+
+RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
+
+WORKDIR /

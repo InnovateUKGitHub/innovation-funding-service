@@ -35,8 +35,8 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $BASEDIR
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd ${BASEDIR}
 
 for item in $( docker-compose -p ifs ps -q shib ); do
     docker cp scripts/_delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
@@ -44,4 +44,4 @@ done
 
 docker-compose -p ifs exec shib /tmp/_delete-shib-users-remote.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
+mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}" > /dev/null 2>&1
