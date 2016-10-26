@@ -1,4 +1,0 @@
-*** Settings ***
-Force Tags        Pending
-
-*** Test Cases ***

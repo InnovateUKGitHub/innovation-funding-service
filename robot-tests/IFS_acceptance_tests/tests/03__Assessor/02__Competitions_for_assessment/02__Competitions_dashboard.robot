@@ -26,13 +26,4 @@ Details of the competition are visible
     And the user should see the text in the page    Tuesday 12 January 2016
     And the user should see the text in the page    Saturday 28 January 2017
 
-When the deadline has passed the assessment should not be visible
-    [Documentation]    INFUND-1188
-    [Tags]    MySQL    Pending
-    [Setup]    Connect to Database    @{database}
-    When The assessment deadline for the Juggling Craziness changes to the past
-    And the user reloads the page
-    Then The user should not see the element    link=Juggling is fun
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2016-12-31 00:00:00' WHERE `id`='35';
-
 *** Keywords ***
