@@ -3,11 +3,11 @@
 //This code is a replacement for the GDS application.js code that was overly complex for what it did and didn't work on pageload
 //All behaviours and html are the same as the GDS html so no need to refactor html
 //Original logic: https://raw.githubusercontent.com/alphagov/govuk_elements/master/public/javascripts/application.js
-IFS.core.conditionalForms = (function(){
+IFS.core.conditionalForms = (function() {
   "use strict";
   return {
-    init : function(){
-      jQuery('label[data-target]').each(function(){
+    init : function() {
+      jQuery('label[data-target]').each(function() {
         var label = jQuery(this);
         var dataTarget = label.attr('data-target');
         var inputEl = label.find('input[type="radio"],input[type="checkbox"]');
@@ -24,13 +24,13 @@ IFS.core.conditionalForms = (function(){
           IFS.core.conditionalForms.toggleVisibility(inputEl, '#'+dataTarget, isInverted);
 
           //execute on click
-          jQuery('input[name="'+groupName+'"]').on('click', function(){
+          jQuery('input[name="'+groupName+'"]').on('click', function() {
             IFS.core.conditionalForms.toggleVisibility(inputEl, '#'+dataTarget, isInverted);
           });
         }
       });
     },
-    toggleVisibility : function(input, target, isInverted){
+    toggleVisibility : function(input, target, isInverted) {
       target = jQuery(target);
       var radioStatus = input.is(':checked');
       if(isInverted) {

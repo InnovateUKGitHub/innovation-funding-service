@@ -1,6 +1,6 @@
 //  Progressive collapsibles original code by @Heydonworks altered by Worth Systems
 //-----------------------------------------------------------------------------
-IFS.core.collapsible = (function(){
+IFS.core.collapsible = (function() {
   "use strict";
   var s; // private alias to settings
   var index = 0;
@@ -12,10 +12,10 @@ IFS.core.collapsible = (function(){
       init : function() {
         s = this.settings;
         //if this has to be more dynamicly updated in the future we can add a custom event
-        jQuery(s.collapsibleEl).each(function(){
+        jQuery(s.collapsibleEl).each(function() {
           IFS.core.collapsible.initCollapsibleHTML(this);
         });
-        jQuery('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]' , function(){
+        jQuery('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]' , function() {
           IFS.core.collapsible.toggleCollapsible(this);
         });
       },
@@ -29,7 +29,7 @@ IFS.core.collapsible = (function(){
         inst.wrapInner('<button aria-expanded="'+loadstate+'" aria-controls="'+ id +'" type="button">');
         index++;
       },
-      toggleCollapsible : function(el){
+      toggleCollapsible : function(el) {
         var inst = jQuery(el);
         var panel = jQuery('#'+inst.attr('aria-controls'));
         var state = inst.attr('aria-expanded') === 'false' ? true : false;
@@ -38,7 +38,7 @@ IFS.core.collapsible = (function(){
         panel.attr('aria-hidden', !state);
         IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state);
       },
-      getLoadstateFromCookie : function(index){
+      getLoadstateFromCookie : function(index) {
         if(typeof(Cookies.getJSON('collapsibleStates')) !== 'undefined'){
           var json = Cookies.getJSON('collapsibleStates');
           var pathname = window.location.pathname;
@@ -50,7 +50,7 @@ IFS.core.collapsible = (function(){
         }
         return false;
       },
-      setLoadStateInCookie : function(index, state){
+      setLoadStateInCookie : function(index, state) {
         var json = {};
         if(typeof(Cookies.getJSON('collapsibleStates')) !== 'undefined'){
           json = Cookies.getJSON('collapsibleStates');
@@ -69,7 +69,7 @@ IFS.core.collapsible = (function(){
 
           //options other than looping over for getting the object count break in ie8
           var count = 0;
-          jQuery.each(json[pathname], function(){
+          jQuery.each(json[pathname], function() {
             count++;
           });
           if(count===0){

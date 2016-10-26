@@ -1,4 +1,4 @@
-IFS.projectSetup.spendProfile = (function(){
+IFS.projectSetup.spendProfile = (function() {
   "use strict";
   var s; // private alias to settings
   return {
@@ -6,13 +6,13 @@ IFS.projectSetup.spendProfile = (function(){
       totalElement : 'input[id*=row-total-],#spend-profile-total-total',
       message : 'Your total costs are higher than your eligible costs'
     },
-    init : function(){
+    init : function() {
       s = this.settings;
-      jQuery('body').on('change', s.totalElement, function(){
+      jQuery('body').on('change', s.totalElement, function() {
         IFS.projectSetup.spendProfile.checkSpend(this);
       });
     },
-    checkSpend : function(el){
+    checkSpend : function(el) {
       var inst = jQuery(el);
 
       var totalTd = inst.closest('td');
