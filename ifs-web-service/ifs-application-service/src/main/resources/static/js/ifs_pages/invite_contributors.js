@@ -1,5 +1,5 @@
 /*jshint multistr: true */
-IFS.application.invites = (function(){
+IFS.application.invites = (function() {
   "use strict";
   var s;
   return {
@@ -11,29 +11,29 @@ IFS.application.invites = (function(){
       addOrg : '[name="add_partner"]',
       partnerName : '.js-partner-name'
     },
-    init : function(){
+    init : function() {
       s = this.settings;
-      jQuery('body').on('change', s.inputs, function(){
+      jQuery('body').on('change', s.inputs, function() {
         IFS.application.invites.saveToCookie();
       });
-      jQuery('body').on('click', s.addRow, function(e){
+      jQuery('body').on('click', s.addRow, function(e) {
         IFS.application.invites.addRow(e);
       });
-      jQuery('body').on('click', s.removeRow, function(e){
+      jQuery('body').on('click', s.removeRow, function(e) {
         IFS.application.invites.removeRow(e);
       });
-      jQuery('body').on('click', s.addOrg, function(e){
+      jQuery('body').on('click', s.addOrg, function(e) {
         IFS.application.invites.addOrg(e);
       });
-      jQuery('body').on('keyup', s.partnerName, function(e){
+      jQuery('body').on('keyup', s.partnerName, function(e) {
         IFS.application.invites.parterNameInHeader(e.target);
       });
       //fill out once at pageload
-      jQuery(s.partnerName).each(function(){
+      jQuery(s.partnerName).each(function() {
         IFS.application.invites.parterNameInHeader(this);
       });
     },
-    saveToCookie : function(){
+    saveToCookie : function() {
       //cookie is updated simply by having an ajax call go to the server
       var data = (jQuery(s.formid).serialize());
       jQuery.ajaxProtected({
@@ -43,7 +43,7 @@ IFS.application.invites = (function(){
         data: data
       });
     },
-    addRow : function(e){
+    addRow : function(e) {
       e.preventDefault();
       var orgContainer = jQuery(e.target).closest('[data-invite-org]');
       var orgId = orgContainer.index();
@@ -63,7 +63,7 @@ IFS.application.invites = (function(){
       jQuery('[id="organisations'+orgId+'.invites'+rowId+'.personName"]').focus();
       IFS.application.invites.saveToCookie();
     },
-    addOrg : function(e){
+    addOrg : function(e) {
       e.preventDefault();
       var currentOrgs = jQuery('[data-invite-org]');
       var orgId = currentOrgs.length;
@@ -102,18 +102,18 @@ IFS.application.invites = (function(){
       jQuery('[id="organisations'+orgId+'.organisationName"]').focus();
       IFS.application.invites.saveToCookie();
     },
-    recountRows : function(){
-      jQuery('[data-invite-org]').each(function(orgId, orgEl){
+    recountRows : function() {
+      jQuery('[data-invite-org]').each(function(orgId, orgEl) {
         //update organisations
-        jQuery(orgEl).find('[name*="organisations["]').each(function(){
+        jQuery(orgEl).find('[name*="organisations["]').each(function() {
           var newName = jQuery(this).attr('name').split('.');
           newName[0] = 'organisations['+orgId+']';
           newName = newName.join('.');
           jQuery(this).attr('name', newName);
         });
         //update invite rows
-        jQuery(orgEl).find('[data-invite-row]').each(function(inviteeId, inviteeRow){
-          jQuery(inviteeRow).find('[name*="invites["]').each(function(){
+        jQuery(orgEl).find('[data-invite-row]').each(function(inviteeId, inviteeRow) {
+          jQuery(inviteeRow).find('[name*="invites["]').each(function() {
             var newName = jQuery(this).attr('name').split('.');
             newName[1] = 'invites['+inviteeId+']';
             newName = newName.join('.');
@@ -123,7 +123,7 @@ IFS.application.invites = (function(){
       });
       IFS.application.invites.saveToCookie();
     },
-    removeRow : function(e){
+    removeRow : function(e) {
       e.preventDefault();
       var button = jQuery(e.target);
       //if there is only one row left we remove the organisation from the form
@@ -135,7 +135,7 @@ IFS.application.invites = (function(){
       }
       IFS.application.invites.recountRows();
     },
-    parterNameInHeader : function(element){
+    parterNameInHeader : function(element) {
       var input = jQuery(element);
       var header = input.closest('[data-invite-org]').children('h2');
       if(header.children('span').length === 0){

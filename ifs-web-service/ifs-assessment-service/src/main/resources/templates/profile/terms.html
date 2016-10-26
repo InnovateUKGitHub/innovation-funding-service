@@ -55,9 +55,9 @@
                     <button class="button button-large extra-margin" type="submit">Save and continue</button>
                 </form>
 
-                <p class="extra-margin" th:text="|You agreed to the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+                <p class="extra-margin" th:text="|You signed the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                     <span class="icon icon-important"></span>
-                    You agreed to the contract on 1 January 1970.
+                    You signed the contract on 1 January 1970.
                 </p>
 
                 <a class="button-secondary app-submit-btn" th:href="@{/assessor/dashboard}" th:if="${model.currentAgreement}">Back to assessor dashboard</a>

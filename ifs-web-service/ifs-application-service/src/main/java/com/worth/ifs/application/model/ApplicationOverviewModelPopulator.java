@@ -29,7 +29,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
+import static com.worth.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -82,7 +82,7 @@ public class ApplicationOverviewModelPopulator {
         addSections(model, competition);
         addYourFinancesStatus(model, application);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
