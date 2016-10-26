@@ -351,7 +351,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .build());
         userRepository.save(user);
 
-        UserProfileResource response = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
+        UserProfileResource response = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals(address.getAddressLine1(), response.getAddress().getAddressLine1());
         assertEquals(address.getTown(), response.getAddress().getTown());
     }
@@ -366,7 +366,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         user.setDisability(Disability.NO);
         userRepository.save(user);
 
-        UserProfileResource saveResponse = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
+        UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals("12345678", saveResponse.getPhoneNumber());
         assertEquals(Disability.NO, saveResponse.getDisability());
 
@@ -376,10 +376,10 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .withPhoneNumber("87654321")
                 .build();
 
-        RestResult<Void> restResult = controller.updateProfileDetails(userId, profileDetails);
+        RestResult<Void> restResult = controller.updateUserProfile(userId, profileDetails);
         assertTrue(restResult.isSuccess());
 
-        UserProfileResource updateResponse = controller.getProfileDetails(userId).getSuccessObjectOrThrowException();
+        UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals("87654321", updateResponse.getPhoneNumber());
         assertEquals(Disability.YES, updateResponse.getDisability());
     }

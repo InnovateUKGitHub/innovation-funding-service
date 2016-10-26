@@ -41,7 +41,7 @@ public interface UserService {
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
-    UserProfileResource getProfileDetails(Long userId);
-    ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource address);
+    UserProfileResource getUserProfile(Long userId);
+    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
 
 }

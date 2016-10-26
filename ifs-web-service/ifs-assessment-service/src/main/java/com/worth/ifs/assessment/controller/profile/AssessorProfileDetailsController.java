@@ -2,9 +2,7 @@ package com.worth.ifs.assessment.controller.profile;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.controller.AssessorRegistrationController;
 import com.worth.ifs.assessment.form.profile.AssessorProfileEditDetailsForm;
-import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.profile.AssessorProfileDetailsModelPopulator;
 import com.worth.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
 import com.worth.ifs.commons.rest.RestResult;
@@ -26,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -109,7 +106,7 @@ public class AssessorProfileDetailsController {
             profileDetails.setPhoneNumber(form.getPhoneNumber());
             profileDetails.setAddress(form.getAddressForm().getSelectedPostcode());
             profileDetails.setEmail(loggedInUser.getEmail());
-            ServiceResult<Void> detailsResult = userService.updateProfileDetails(loggedInUser.getId(), profileDetails);
+            ServiceResult<Void> detailsResult = userService.updateUserProfile(loggedInUser.getId(), profileDetails);
             return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
@@ -220,7 +217,7 @@ public class AssessorProfileDetailsController {
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileEditDetailsForm form) {
-        UserProfileResource profileDetails = userService.getProfileDetails(loggedInUser.getId());
+        UserProfileResource profileDetails = userService.getUserProfile(loggedInUser.getId());
         form.setTitle(profileDetails.getTitle());
         form.setFirstName(profileDetails.getFirstName());
         form.setLastName(profileDetails.getLastName());

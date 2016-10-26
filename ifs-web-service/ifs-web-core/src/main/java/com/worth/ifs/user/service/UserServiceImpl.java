@@ -127,13 +127,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileResource getProfileDetails(Long userId) {
-        return userRestService.getProfileDetails(userId).getSuccessObjectOrThrowException();
+    public UserProfileResource getUserProfile(Long userId) {
+        return userRestService.getUserProfile(userId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ServiceResult<Void> updateProfileDetails(Long userId, UserProfileResource profileDetails) {
-        return userRestService.updateProfileDetails(userId, profileDetails).toServiceResult();
+    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile) {
+        return userRestService.updateUserProfile(userId, userProfile).toServiceResult();
     }
 
     @Override

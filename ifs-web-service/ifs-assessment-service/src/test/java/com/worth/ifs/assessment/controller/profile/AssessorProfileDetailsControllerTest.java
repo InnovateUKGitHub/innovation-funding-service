@@ -66,7 +66,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         EthnicityResource ethnicity = newEthnicityResource().build();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
         UserProfileResource profileDetails = newUserProfileResource().build();
-        when(userService.getProfileDetails(user.getId())).thenReturn(profileDetails);
+        when(userService.getUserProfile(user.getId())).thenReturn(profileDetails);
 
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
@@ -81,7 +81,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         AssessorProfileEditDetailsForm expectedForm = new AssessorProfileEditDetailsForm();
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
         UserProfileResource profileDetails = newUserProfileResource().build();
-        when(userService.getProfileDetails(user.getId())).thenReturn(profileDetails);
+        when(userService.getUserProfile(user.getId())).thenReturn(profileDetails);
 
         mockMvc.perform(get("/profile/details/edit"))
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withAddress(addressResource)
                 .build();
 
-        when(userService.updateProfileDetails(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
+        when(userService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
@@ -159,7 +159,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(disability, form.getDisability());
         assertEquals(addressResource.getPostcode(), form.getAddressForm().getSelectedPostcode().getPostcode());
 
-        verify(userService).updateProfileDetails(user.getId(), profileDetails);
+        verify(userService).updateUserProfile(user.getId(), profileDetails);
     }
 
     @Test

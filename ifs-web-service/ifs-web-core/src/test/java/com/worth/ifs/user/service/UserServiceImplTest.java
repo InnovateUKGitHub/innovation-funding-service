@@ -176,11 +176,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         Long userId = 1L;
         UserProfileResource expected = newUserProfileResource().build();
 
-        when(userRestService.getProfileDetails(userId)).thenReturn(restSuccess(expected));
+        when(userRestService.getUserProfile(userId)).thenReturn(restSuccess(expected));
 
-        UserProfileResource response = service.getProfileDetails(userId);
+        UserProfileResource response = service.getUserProfile(userId);
         assertSame(expected, response);
-        verify(userRestService, only()).getProfileDetails(userId);
+        verify(userRestService, only()).getUserProfile(userId);
     }
 
     @Test
@@ -188,11 +188,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         Long userId = 1L;
 
         UserProfileResource profileDetails = newUserProfileResource().build();
-        when(userRestService.updateProfileDetails(userId, profileDetails)).thenReturn(restSuccess());
+        when(userRestService.updateUserProfile(userId, profileDetails)).thenReturn(restSuccess());
 
-        ServiceResult<Void> response = service.updateProfileDetails(userId, profileDetails);
+        ServiceResult<Void> response = service.updateUserProfile(userId, profileDetails);
         assertTrue(response.isSuccess());
 
-        verify(userRestService, only()).updateProfileDetails(userId, profileDetails);
+        verify(userRestService, only()).updateUserProfile(userId, profileDetails);
     }
 }
