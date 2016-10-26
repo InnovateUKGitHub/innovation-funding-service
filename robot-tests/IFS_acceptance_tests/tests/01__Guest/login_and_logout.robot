@@ -76,14 +76,14 @@ Valid login as Project Finance role
 Reset password
     [Documentation]    INFUND-1889
     [Tags]    Email    HappyPath
-    [Setup]    Run Keywords    delete the emails from the main test mailbox
+    [Setup]    Run Keywords    delete the emails from the default test mailbox
     ...    AND    the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user reads his email and clicks the link    worth.email.test+changepsw@gmail.com    Reset your password    If you didn't request this
+    And the user reads his email from the default mailbox and clicks the link    worth.email.test+changepsw@gmail.com    Reset your password    If you didn't request this
     And the user should see the text in the page    Password reset
     # TODO INFUND-5582
 
