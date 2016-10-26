@@ -1,18 +1,8 @@
 package com.worth.ifs.competitiontemplate.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 
 @Entity
 public class QuestionTemplate {
@@ -29,6 +19,8 @@ public class QuestionTemplate {
     private String description;
 
     private String assessorGuidanceQuestion;
+
+	private Integer priority;
 
     @Lob
     private String assessorGuidanceAnswer;
@@ -107,5 +99,12 @@ public class QuestionTemplate {
 	public void setFormInputTemplates(List<FormInputTemplate> formInputTemplates) {
 		this.formInputTemplates = formInputTemplates;
 	}
-    
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
 }

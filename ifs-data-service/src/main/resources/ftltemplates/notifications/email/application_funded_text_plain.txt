@@ -16,8 +16,5 @@ Once again, congratulations on the successful outcome of your application.
 
 Yours sincerely,
 
-Competitions Team
-Innovate UK
-Tel: 0300 321 4357
-Email: competitions@innovateuk.gov.uk
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

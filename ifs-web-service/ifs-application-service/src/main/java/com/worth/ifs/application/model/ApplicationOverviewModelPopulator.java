@@ -1,28 +1,8 @@
 package com.worth.ifs.application.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.AssessorFeedbackRestService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -38,14 +18,18 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -98,7 +82,7 @@ public class ApplicationOverviewModelPopulator {
         addSections(model, competition);
         addYourFinancesStatus(model, application);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
@@ -151,11 +135,13 @@ public class ApplicationOverviewModelPopulator {
             .collect(Collectors.toList());
     }
     
-    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, List<SectionResource> allSections) {
+        allSections.sort(Comparator.comparing(SectionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
 
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, List<QuestionResource> questions) {
+        questions.sort(Comparator.comparing(QuestionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
