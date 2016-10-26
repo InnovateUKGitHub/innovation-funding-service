@@ -51,7 +51,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void getProfileSkills() {
         User existingUser = newUser().build();
         Profile profile = newProfile()
-                .withUser(existingUser)
                 .withAddress(newAddress().build())
                 .withContract(newContract().build())
                 .withBusinessType(ACADEMIC)
@@ -78,7 +77,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void getProfileSkills_noSkills() {
         User existingUser = newUser().build();
         Profile profile = newProfile()
-                .withUser(existingUser)
                 .withAddress(newAddress().build())
                 .withContract(newContract().build())
                 .build();
@@ -103,7 +101,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         User existingUser = newUser().build();
         Profile profile = newProfile()
-                .withUser(existingUser)
                 .withAddress(newAddress().build())
                 .withContract(newContract().build())
                 .withBusinessType(ACADEMIC)
@@ -117,7 +114,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 user -> {
                     assertEquals(userId, user.getId());
                     assertEquals(existingUser.getProfile().getId(), user.getProfile().getId());
-                    assertEquals(existingUser.getProfile().getUser(), user.getProfile().getUser().getId());
                     assertEquals(existingUser.getProfile().getAddress(), user.getProfile().getAddress());
                     assertEquals(existingUser.getProfile().getContract(), user.getProfile().getContract());
                     assertEquals(BUSINESS, user.getProfile().getBusinessType());

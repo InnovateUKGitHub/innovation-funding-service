@@ -40,7 +40,7 @@ public class AssessorDashboardModelPopulator {
                             cpr.getCompetitionName(),
                             1,
                             2,
-                            cpr.getAssessmentEndDate().toLocalDate(),
+                            cpr.getAssessorDeadlineDate().toLocalDate(),
                             cpr.getAssessmentDaysLeft(),
                             cpr.getAssessmentDaysLeftPercentage())
                 )
@@ -53,8 +53,8 @@ public class AssessorDashboardModelPopulator {
                 .map( p -> new AssessorDashboardUpcomingCompetitionViewModel(
                         p.getCompetitionId(),
                         p.getCompetitionName(),
-                        p.getAssessmentStartDate().toLocalDate(),
-                        p.getAssessmentEndDate().toLocalDate())
+                        p.getAssessorAcceptsDate().toLocalDate(),
+                        p.getAssessorDeadlineDate().toLocalDate())
                 )
                 .collect(toList());
     }
