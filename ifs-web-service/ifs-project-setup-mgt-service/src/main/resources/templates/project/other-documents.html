@@ -30,7 +30,7 @@
         </div>
 
         <div class="warning-alert" th:if="${model.approved == false}">
-            <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
+            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the project team.</p>
         </div>
 
         <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.projectId,8)} + ': ' + ${model.projectName} "/>
