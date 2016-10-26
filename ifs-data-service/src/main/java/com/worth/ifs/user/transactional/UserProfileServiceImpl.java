@@ -1,6 +1,8 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.Contract;
@@ -8,13 +10,12 @@ import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.ContractMapper;
+import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.ContractRepository;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -48,6 +49,12 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private AffiliationMapper affiliationMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private EthnicityMapper ethnicityMapper;
 
     private Clock clock = Clock.systemDefaultZone();
 
@@ -155,11 +162,74 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    @Override
+    public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    UserProfileResource profileDetails = assignUserProfileDetails(user);
+
+                    if (user.getProfile() != null) {
+                        profileDetails.setAddress(addressMapper.mapToResource(user.getProfile().getAddress()));
+                    }
+                    return serviceSuccess(profileDetails);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
+    }
+
+    private ServiceResult<Void> updateUserProfileDetails(User user, UserProfileResource profileDetails) {
+        updateBasicDetails(user, profileDetails);
+
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile());
+        }
+
+        Profile profile = user.getProfile();
+        profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
+        userRepository.save(user);
+
+        return serviceSuccess();
+    }
+
+    private void updateBasicDetails(User user, UserProfileResource profileDetails) {
+        user.setTitle(profileDetails.getTitle());
+        user.setFirstName(profileDetails.getFirstName());
+        user.setLastName(profileDetails.getLastName());
+        user.setGender(profileDetails.getGender());
+        user.setDisability(profileDetails.getDisability());
+        user.setEthnicity(ethnicityMapper.mapIdToDomain(profileDetails.getEthnicity().getId()));
+        user.setPhoneNumber(profileDetails.getPhoneNumber());
+    }
+
+    private UserProfileResource assignUserProfileDetails(User user) {
+        UserProfileResource profile = new UserProfileResource();
+
+        profile.setUser(user.getId());
+        profile.setTitle(user.getTitle());
+        profile.setFirstName(user.getFirstName());
+        profile.setLastName(user.getLastName());
+        profile.setGender(user.getGender());
+        profile.setDisability(user.getDisability());
+        profile.setEthnicity(ethnicityMapper.mapToResource(user.getEthnicity()));
+        profile.setEmail(user.getEmail());
+        profile.setPhoneNumber(user.getPhoneNumber());
+
+        return profile;
+    }
+
+
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
+        existingUserResource.setGender(updatedUserResource.getGender());
+        existingUserResource.setDisability(updatedUserResource.getDisability());
+        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
