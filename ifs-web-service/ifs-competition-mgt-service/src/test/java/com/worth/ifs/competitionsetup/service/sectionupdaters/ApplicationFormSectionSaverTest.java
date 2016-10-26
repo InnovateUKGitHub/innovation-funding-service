@@ -53,7 +53,7 @@ public class ApplicationFormSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
 
-        List<Error> errors = service.autoSaveSectionField(competition, "questionToUpdate.title", "New title", Optional.of(questionId));
+        List<Error> errors = service.autoSaveSectionField(competition, "question.title", "New title", Optional.of(questionId));
 
         assertTrue(errors.isEmpty());
         verify(competitionSetupQuestionService).updateQuestion(question);
@@ -79,7 +79,7 @@ public class ApplicationFormSectionSaverTest {
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(question);
 
         CompetitionResource competition = newCompetitionResource().build();
-        List<Error> errors = service.autoSaveSectionField(competition, "questionToUpdate.title", "New title", Optional.empty());
+        List<Error> errors = service.autoSaveSectionField(competition, "question.title", "New title", Optional.empty());
 
         assertTrue(!errors.isEmpty());
         verify(competitionSetupQuestionService, never()).updateQuestion(question);
