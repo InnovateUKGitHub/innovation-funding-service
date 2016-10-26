@@ -32,13 +32,12 @@
 
     <div th:include="fragments/elements :: competition-status-message (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
 
-
     <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
         Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
     </p>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
-      <div th:include="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()})" th:remove="tag"/>
+      <div th:include="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, assessorFeedbackDownloadLink=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.id})})" th:remove="tag"/>
     </form>
 
     <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">

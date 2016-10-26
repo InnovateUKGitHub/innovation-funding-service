@@ -3,15 +3,18 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.AppendixResource;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.viewmodel.AssessorFeedbackViewModel;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -33,7 +36,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -43,13 +45,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -113,7 +114,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
             model.addAttribute("applicationReadyForSubmit", false);
             model.addAttribute("isCompManagementDownload", true);
 
-            AssessorFeedbackViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
+            OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
             return "competition-mgt-application-overview";
@@ -270,7 +271,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         model.addAttribute("appendices", appendices);
     }
 
-    private AssessorFeedbackViewModel getAssessorFeedbackViewModel(ApplicationResource application, CompetitionResource competition) {
+    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application, CompetitionResource competition) {
 
         boolean readonly = !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competition.getCompetitionStatus());
 
@@ -278,9 +279,9 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         if (assessorFeedbackFileEntry != null) {
             RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-            return AssessorFeedbackViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
+            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
         } else {
-            return AssessorFeedbackViewModel.withNoFile(readonly);
+            return OptionalFileDetailsViewModel.withNoFile(readonly);
         }
     }
 
