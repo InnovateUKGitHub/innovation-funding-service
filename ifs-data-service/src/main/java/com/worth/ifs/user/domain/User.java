@@ -71,7 +71,7 @@ public class User implements Serializable {
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
     private Profile profile;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
@@ -284,9 +284,6 @@ public class User implements Serializable {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-        if (profile != null) {
-            profile.setUser(this);
-        }
     }
 
     public List<Affiliation> getAffiliations() {
