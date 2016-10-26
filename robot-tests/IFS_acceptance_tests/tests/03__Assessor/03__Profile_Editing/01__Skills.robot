@@ -30,7 +30,7 @@ Edit skills and expertise: server-side validations
     Given the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     When the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    Given the user enters a long random alphanumeric string into a text field    id=skillAreas    5001
+    Given the user enters multiple strings into a text field    id=skillAreas    e    5001
     When the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    This field cannot contain more than 5,000 characters
 

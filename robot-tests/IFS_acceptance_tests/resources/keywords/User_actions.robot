@@ -595,21 +595,10 @@ invite a new academic
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
-    #Warning: this keyword can be slow for usage with a multiplicity above a couple of 1000
-    #Use a bigger string sample and lower multiplicity if optimization is necessary or use the 'The user enters a long random string into a text field' for strings
-    Set Log Level    NONE
-    ${concatenated_string} =    Set Variable
-    : FOR    ${INDEX}    IN RANGE    0    ${multiplicity}
-    \    ${concatenated_string} =    Catenate    SEPARATOR=    ${concatenated_string}    ${string}
+    #Keyword uses custom IfsLibrary keyword "repeat string"
+    ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible    ${field}
     wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
-
-The user enters a long random alphanumeric string into a text field
-    [Arguments]    ${field}    ${length}
-    Set Log Level    NONE
-    ${string} =   Generate Random String    ${length}    [LOWER]
-    Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${string}
 
 
 the user should see that the element is disabled
