@@ -3,19 +3,19 @@ IFS.assessment.repeatableDeclarationRows = (function() {
   'use strict';
 
   return {
-    init: function(){
-      jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e){
+    init: function() {
+      jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e) {
         e.preventDefault();
 
         IFS.assessment.repeatableDeclarationRows.addRow(this, e);
       });
-      jQuery('body').on('click', '.remove-another-row', function(e){
+      jQuery('body').on('click', '.remove-another-row', function(e) {
         e.preventDefault();
 
         IFS.assessment.repeatableDeclarationRows.removeRow(this, e);
       });
     },
-    addRow : function(el){
+    addRow : function(el) {
       var newRow;
       var target = jQuery(el).attr('data-repeatable-rowcontainer');
       var uniqueRowId = jQuery(target).children().length || 0;
@@ -52,7 +52,7 @@ IFS.assessment.repeatableDeclarationRows = (function() {
       jQuery(target).append(newRow);
       jQuery(newRow).find('input').first().focus();
     },
-    removeRow : function(el){
+    removeRow : function(el) {
       var rowParent = jQuery(el).closest('tbody');
       var rows = [];
 
@@ -62,10 +62,10 @@ IFS.assessment.repeatableDeclarationRows = (function() {
       rows = jQuery(rowParent).children();
 
       if(rows.length !== 0){
-        jQuery(rows).each(function(rowIndex){
+        jQuery(rows).each(function(rowIndex) {
           var rowsInputs = jQuery(this).find('input');
 
-          jQuery(rowsInputs).each(function(){
+          jQuery(rowsInputs).each(function() {
             //regex will replace 1 or more numbers in the string with the new index value
             var newId = jQuery(this).attr('id').replace(/\d+/g, rowIndex);
             var newName = jQuery(this).attr('name').replace(/\d+/g, rowIndex);

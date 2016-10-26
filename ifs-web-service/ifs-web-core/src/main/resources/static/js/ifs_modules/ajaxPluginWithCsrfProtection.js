@@ -5,7 +5,7 @@
  */
 (function ($) {
   "use strict";
-  $.ajaxProtected = function (options) {
+  $.ajaxProtected = function(options) {
 
     var CSRF_HEADER_NAME = "X-CSRF-TOKEN";
     var CSRF_COOKIE_NAME = "CSRF-TOKEN";
@@ -16,7 +16,7 @@
      * @param method the HTTP method
      * @returns {boolean} true if the method requires CSRF protection, otherwise false.
      */
-    function csrfProtectedMethod(method) {
+    function csrfProtectedMethod(method){
       return !(/^(GET|HEAD|TRACE|OPTIONS)$/.test(method));
     }
 

@@ -20,13 +20,13 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.competitionManagement = {};
 IFS.competitionManagement.loadOrder = {
   common : {
-    init : function(){
+    init : function() {
       IFS.competitionManagement.stickyMenu.init();
       IFS.competitionManagement.various.init();
     }
   },
   'competition-setup' : {
-    init : function(){
+    init : function() {
       IFS.competitionManagement.setup.init();
       IFS.core.finance.init();
 

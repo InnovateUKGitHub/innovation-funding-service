@@ -20,27 +20,27 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.application = {};
 IFS.application.loadOrder = {
   common : {
-    init : function(){},
-    finalize : function(){
+    init : function() {},
+    finalize : function() {
       IFS.application.progressiveSelect.init();
     }
   },
   'app-form' : {
-    init : function(){
+    init : function() {
       IFS.application.repeatableRows.init();
       IFS.application.financeSpecifics.init();
     }
   },
   'app-details' : {
-    init : function(){ IFS.application.applicationPage.init(); }
+    init : function() { IFS.application.applicationPage.init(); }
   },
   'app-invite': {
-      init : function(){ IFS.application.invites.init(); }
+      init : function() { IFS.application.invites.init(); }
     },
   'app-invite-display': {
-    init : function(){ IFS.application.inviteDisplay.init(); }
+    init : function() { IFS.application.inviteDisplay.init(); }
   },
   'competition-management': {
-    init : function(){ IFS.application.competitionManagement.init(); }
+    init : function() { IFS.application.competitionManagement.init(); }
   }
 };
