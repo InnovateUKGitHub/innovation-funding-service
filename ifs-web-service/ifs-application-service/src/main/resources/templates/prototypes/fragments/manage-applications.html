@@ -776,7 +776,7 @@
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
-                    <th class="aligncentre" scope="col">Completed</th>
+                    <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -877,7 +877,7 @@
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
-                    <th class="aligncentre" scope="col">Completed</th>
+                    <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Remove</span></th>
                 </tr>
             </thead>
@@ -890,9 +890,9 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"><a href="#">Review</a></td>
+                    <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#">Review</a>
                     </td>
                 </tr>
                 <tr>
@@ -903,9 +903,35 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"></td>
+                    <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">6</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">6</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
                     </td>
                 </tr>
             </tbody>
@@ -1094,6 +1120,30 @@
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Assessors list 7 table =========================== -->
+<div th:fragment="prototype-assessors-list7-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th scope="col">Assessor</th>
+                <th scope="col">Type</th>
+                <th scope="col">Innovation Area</th>
+                <th class="aligncentre" scope="col">Total applications</th>
+                <th class="aligncentre" scope="col">Assigned</th>
+                <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6">There are no assessors previously assigned to this application.</td>
+            </tr>
             </tbody>
         </table>
     </div>
