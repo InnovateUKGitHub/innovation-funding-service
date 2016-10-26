@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -25,12 +24,11 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
+import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.*;
@@ -66,7 +64,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
             withProjectLeadStatus(newProjectLeadStatusResource().
                     withOrganisationId(organisationResource.getId()).
                     build()).
-            withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+            withPartnerStatuses(newProjectPartnerStatusResource()
                     .withOrganisationId(organisationResource.getId())
                     .withFinanceContactStatus(COMPLETE)
                     .build(1))
@@ -77,10 +75,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -92,7 +87,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -104,7 +100,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .build())
-                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
@@ -112,10 +108,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -127,7 +120,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -138,7 +132,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         .withOrganisationId(5L)
                         .withProjectDetailsStatus(COMPLETE)
                         .build())
-                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
@@ -146,10 +140,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -161,7 +152,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -173,7 +165,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         withFinanceContactStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
                         build()).
-                withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                withPartnerStatuses(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withFinanceContactStatus(COMPLETE)
                         .build(1)).
@@ -181,10 +173,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -196,7 +185,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -208,7 +198,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         .withFinanceContactStatus(COMPLETE)
                         .withOrganisationId(organisationResource.getId())
                         .build())
-                .withPartnerStatuses(ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource()
+                .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
@@ -216,10 +206,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -231,7 +218,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -247,10 +235,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -261,7 +246,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertTrue(viewModel.isBankDetailsActionRequired());
         assertFalse(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
     }
 
     @Test
@@ -277,14 +263,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(bankDetailsFoundResult);
-
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-
-        MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+        MvcResult result = performViewProjectStatusCall();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
         assertStandardViewModelValuesCorrect(viewModel);
@@ -295,7 +274,79 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isBankDetailsActionRequired());
         assertTrue(viewModel.isBankDetailsComplete());
-        assertFalse(viewModel.isOwnFinanceCheckApproved());
+        assertTrue(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithAllBankDetailsCompleteOrNotRequired() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(NOT_REQUIRED).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        MvcResult result = performViewProjectStatusCall();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertStandardViewModelValuesCorrect(viewModel);
+
+        assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isProjectDetailsProcessCompleted());
+        assertTrue(viewModel.isMonitoringOfficerAssigned());
+        assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertTrue(viewModel.isBankDetailsComplete());
+        assertTrue(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertFalse(viewModel.isAllFinanceChecksApproved());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithAllFinanceChecksApproved() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(COMPLETE).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceChecksStatus(COMPLETE)
+                        .build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
+
+        MvcResult result = performViewProjectStatusCall();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertStandardViewModelValuesCorrect(viewModel);
+
+        assertTrue(viewModel.isProjectDetailsSubmitted());
+        assertTrue(viewModel.isProjectDetailsProcessCompleted());
+        assertTrue(viewModel.isMonitoringOfficerAssigned());
+        assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
+        assertFalse(viewModel.isBankDetailsActionRequired());
+        assertTrue(viewModel.isBankDetailsComplete());
+        assertFalse(viewModel.isAllBankDetailsApprovedOrNotRequired());
+        assertTrue(viewModel.isAllFinanceChecksApproved());
+    }
+
+    private MvcResult performViewProjectStatusCall() throws Exception {
+        return mockMvc.perform(get("/project/{id}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-status"))
+                .andReturn();
     }
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

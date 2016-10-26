@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -78,7 +80,8 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
-        boolean ownFinanceCheckApproved = COMPLETE.equals(ownOrganisation.getFinanceChecksStatus());
+        boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
+        boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -102,7 +105,7 @@ public class ProjectSetupStatusController {
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
                 organisation.getId(), projectDetailsSubmitted, projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners,
-                leadPartner, ownFinanceCheckApproved, grantOfferLetterSubmitted, spendProfilesSubmitted,
+                leadPartner, allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),
@@ -113,13 +116,22 @@ public class ProjectSetupStatusController {
                 statusAccessor.canAccessGrantOfferLetterSection(organisation));
     }
 
+    private boolean checkAllFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
+    }
+
+    private boolean checkAllBankDetailsApprovedOrNotRequired(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status ->
+                asList(NOT_REQUIRED, COMPLETE).contains(status.getBankDetailsStatus()));
+    }
+
     private boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 
         return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
                 && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && allOtherPartnersFinanceContactStatusComplete(teamStatus.getOtherPartnersStatuses());
+                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
     }
 
     private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
@@ -128,11 +140,10 @@ public class ProjectSetupStatusController {
 
         return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
                 && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && !allOtherPartnersFinanceContactStatusComplete(teamStatus.getOtherPartnersStatuses());
+                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
     }
 
-    private boolean allOtherPartnersFinanceContactStatusComplete(List<ProjectPartnerStatusResource> otherPartnersStatuses) {
-
-        return otherPartnersStatuses.stream().allMatch(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getFinanceContactStatus()));
+    private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
     }
 }

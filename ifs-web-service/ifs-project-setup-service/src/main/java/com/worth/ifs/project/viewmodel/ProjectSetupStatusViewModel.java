@@ -22,7 +22,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean awaitingProjectDetailsActionFromOtherPartners;
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
-    private boolean ownFinanceCheckApproved;
+    private boolean allBankDetailsApprovedOrNotRequired;
+    private boolean allFinanceChecksApproved;
     private boolean grantOfferLetterSubmitted;
     private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
@@ -41,8 +42,11 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
                                        ProjectActivityStates bankDetails, Long organisationId,
-                                       boolean projectDetailsSubmitted, boolean projectDetailsProcessCompleted, boolean awaitingProjectDetailsActionFromOtherPartners,
-                                       boolean leadPartner, boolean ownFinanceCheckApproved, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
+                                       boolean projectDetailsSubmitted, boolean projectDetailsProcessCompleted,
+                                       boolean awaitingProjectDetailsActionFromOtherPartners,
+                                       boolean leadPartner, boolean allBankDetailsApprovedOrNotRequired,
+                                       boolean allFinanceChecksApproved, boolean grantOfferLetterSubmitted,
+                                       boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -59,7 +63,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.bankDetails = bankDetails;
         this.organisationId = organisationId;
-        this.ownFinanceCheckApproved = ownFinanceCheckApproved;
+        this.allBankDetailsApprovedOrNotRequired = allBankDetailsApprovedOrNotRequired;
+        this.allFinanceChecksApproved = allFinanceChecksApproved;
         this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
         this.leadPartner = leadPartner;
         this.companiesHouseSection = companiesHouseSection;
@@ -173,7 +178,11 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return projectDetailsSubmitted;
     }
 
-    public boolean isOwnFinanceCheckApproved() {
-        return ownFinanceCheckApproved;
+    public boolean isAllFinanceChecksApproved() {
+        return allFinanceChecksApproved;
+    }
+
+    public boolean isAllBankDetailsApprovedOrNotRequired() {
+        return allBankDetailsApprovedOrNotRequired;
     }
 }

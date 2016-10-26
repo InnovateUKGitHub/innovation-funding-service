@@ -81,7 +81,7 @@
       </li>
       <!--/* ========================= Finance Check ========================= */-->
 
-      <li th:classappend="${model.financeChecksSection.notRequired ? '' : (model.ownFinanceCheckApproved ? 'complete' : 'waiting')}">
+      <li th:classappend="${model.allBankDetailsApprovedOrNotRequired ? (model.allFinanceChecksApproved ? 'complete' : 'waiting') : ''}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
