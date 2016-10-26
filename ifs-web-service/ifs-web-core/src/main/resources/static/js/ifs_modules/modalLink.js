@@ -1,5 +1,5 @@
 //If there is javascript it becomes a modal, if there is not a links to the original page.
-IFS.core.modal = (function(){
+IFS.core.modal = (function() {
   "use strict";
   var s; // private alias to settings
 
@@ -8,16 +8,16 @@ IFS.core.modal = (function(){
       element: '[data-js-modal]',
       html5validationMode: {}
     },
-    init : function(){
+    init : function() {
       s = this.settings;
       s.html5validationMode =  IFS.core.formValidation.checkHTML5validationMode();
 
       IFS.core.modal.initButtonRole();
 
-      jQuery('body').on('click', s.element, function(e){
+      jQuery('body').on('click', s.element, function(e) {
         IFS.core.modal.openModal(e, this);
       });
-      jQuery('body').on('click', '.js-close', function(){
+      jQuery('body').on('click', '.js-close', function() {
         IFS.core.modal.closeModal();
       });
       jQuery(document).keyup(function(e) {
@@ -26,13 +26,13 @@ IFS.core.modal = (function(){
         }
       });
     },
-    initButtonRole : function(){
+    initButtonRole : function() {
       //for a11y
       if(jQuery(s.element).is('a')){
         jQuery(s.element).attr({'role':'button', 'tabindex':'0'});
       }
     },
-    checkForInputErrors : function(button){
+    checkForInputErrors : function(button) {
       var formValid = true;
       if((button.closest('form:not([novalidate])').length) && (s.html5validationMode)){
         var form = button.closest('form:not([novalidate])');
@@ -40,7 +40,7 @@ IFS.core.modal = (function(){
       }
       return formValid;
     },
-    openModal : function(event, button){
+    openModal : function(event, button) {
       button = jQuery(button);
       var formValid = IFS.core.modal.checkForInputErrors(button);
       var target = jQuery(event.target).attr('data-js-modal');
@@ -51,7 +51,7 @@ IFS.core.modal = (function(){
           IFS.core.modal.disableTabPage();
           target.add('.modal-overlay').attr('aria-hidden', 'false');
           //vertical center,old browser support so no fancy css stuff :(
-          setTimeout(function(){
+          setTimeout(function() {
             var height = target.outerHeight();
             target.css({'margin-top':'-'+(height/2)+'px'});
           }, 50);
@@ -62,7 +62,7 @@ IFS.core.modal = (function(){
       }
 
       if(target.find('form').length){
-        target.find('form').on('submit', function(event){
+        target.find('form').on('submit', function(event) {
           /**
           * Validate the modal form fields before submitting
           * @requires: formValidation.js
@@ -87,8 +87,8 @@ IFS.core.modal = (function(){
         });
       }
     },
-    disableTabPage : function(){
-      jQuery(":tabbable").each(function(){
+    disableTabPage : function() {
+      jQuery(":tabbable").each(function() {
         var el = jQuery(this);
         if(el.closest('[role="dialog"]').length === 0){
           var tabindex = 0;
@@ -99,14 +99,14 @@ IFS.core.modal = (function(){
         }
       });
     },
-    enableTabPage : function(){
-      jQuery('[data-original-tabindex]').each(function(){
+    enableTabPage : function() {
+      jQuery('[data-original-tabindex]').each(function() {
         var el = jQuery(this);
         var orignalTabindex = el.attr('data-original-tabindex');
         el.prop('tabindex', orignalTabindex).removeAttr('data-original-tabindex');
       });
     },
-    closeModal : function(){
+    closeModal : function() {
       IFS.core.modal.enableTabPage();
       jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden', 'true');
     }

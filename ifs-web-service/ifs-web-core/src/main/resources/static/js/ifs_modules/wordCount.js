@@ -1,4 +1,4 @@
-IFS.core.wordCount = (function(){
+IFS.core.wordCount = (function() {
   "use strict";
   var s;
   var typeTimeout;
@@ -7,19 +7,19 @@ IFS.core.wordCount = (function(){
       wordcountEl : ".word-count textarea",
       typeTimeout : 500
     },
-    init : function(){
+    init : function() {
       s = this.settings;
-      jQuery('body').on('change keyup', s.wordcountEl, function(e){
+      jQuery('body').on('change keyup', s.wordcountEl, function(e) {
         if(e.type == 'keyup'){
           clearTimeout(typeTimeout);
-          typeTimeout = setTimeout(function(){IFS.core.wordCount.updateWordCount(e.target); }, s.typeTimeout);
+          typeTimeout = setTimeout(function() { IFS.core.wordCount.updateWordCount(e.target); }, s.typeTimeout);
         }
         else {
           IFS.core.wordCount.updateWordCount(e.target);
         }
       });
     },
-    updateWordCount : function(textarea){
+    updateWordCount : function(textarea) {
       var field = jQuery(textarea);
       var value = field.val();
 

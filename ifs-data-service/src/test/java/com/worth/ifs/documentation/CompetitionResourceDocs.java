@@ -16,8 +16,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
-            fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
-            fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
+            fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
+            fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback"),
+            fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
@@ -55,8 +56,10 @@ public class CompetitionResourceDocs {
             .withDescription("competition description")
             .withStartDate(LocalDateTime.now())
             .withEndDate(LocalDateTime.now().plusDays(30))
-            .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
-            .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
+            .withAssessorAcceptsDate(LocalDateTime.now().plusDays(35))
+            .withAssessorDeadlineDate(LocalDateTime.now().plusDays(40))
+            .withFundersPanelDate(LocalDateTime.now().plusDays(42))
+            .withFundersPanelEndDate(LocalDateTime.now().plusDays(44))
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)
