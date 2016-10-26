@@ -23,24 +23,24 @@ public class Contract extends AuditableEntity {
 
     private String text;
 
-    @Column(name = "annex_1")
-    private String annexOne;
+    @Column(name = "annex_a")
+    private String annexA;
 
-    @Column(name = "annex_2")
-    private String annexTwo;
+    @Column(name = "annex_b")
+    private String annexB;
 
-    @Column(name = "annex_3")
-    private String annexThree;
+    @Column(name = "annex_c")
+    private String annexC;
 
     public Contract() {
         // default constructor
     }
 
-    public Contract(String text, String annexOne, String annexTwo, String annexThree, boolean current) {
+    public Contract(String text, String annexA, String annexB, String annexC, boolean current) {
         setText(text);
-        setAnnexOne(annexOne);
-        setAnnexTwo(annexTwo);
-        setAnnexThree(annexThree);
+        setAnnexA(annexA);
+        setAnnexB(annexB);
+        setAnnexC(annexC);
         this.current = current;
     }
 
@@ -66,33 +66,33 @@ public class Contract extends AuditableEntity {
         this.text = text;
     }
 
-    public String getAnnexOne() {
-        return annexOne;
+    public String getAnnexA() {
+        return annexA;
     }
 
-    public void setAnnexOne(String annexOne) {
-        if (annexOne == null) throw new NullPointerException("annexOne cannot be null");
-        if (annexOne.isEmpty()) throw new IllegalArgumentException("annexOne cannot be empty");
-        this.annexOne = annexOne;
+    public void setAnnexA(String annexA) {
+        if (annexA == null) throw new NullPointerException("annexA cannot be null");
+        if (annexA.isEmpty()) throw new IllegalArgumentException("annexA cannot be empty");
+        this.annexA = annexA;
     }
 
-    public String getAnnexTwo() {
-        return annexTwo;
+    public String getAnnexB() {
+        return annexB;
     }
 
-    public void setAnnexTwo(String annexTwo) {
-        if (annexTwo == null) throw new NullPointerException("annexTwo cannot be null");
-        if (annexTwo.isEmpty()) throw new IllegalArgumentException("annexTwo cannot be empty");
-        this.annexTwo = annexTwo;
+    public void setAnnexB(String annexB) {
+        if (annexB == null) throw new NullPointerException("annexB cannot be null");
+        if (annexB.isEmpty()) throw new IllegalArgumentException("annexB cannot be empty");
+        this.annexB = annexB;
     }
 
-    public String getAnnexThree() {
-        return annexThree;
+    public String getAnnexC() {
+        return annexC;
     }
 
-    public void setAnnexThree(String annexThree) {
-        if (annexThree == null) throw new NullPointerException("annexThree cannot be null");
-        if (annexThree.isEmpty()) throw new IllegalArgumentException("annexThree cannot be empty");
-        this.annexThree = annexThree;
+    public void setAnnexC(String annexC) {
+        if (annexC == null) throw new NullPointerException("annexC cannot be null");
+        if (annexC.isEmpty()) throw new IllegalArgumentException("annexC cannot be empty");
+        this.annexC = annexC;
     }
 }

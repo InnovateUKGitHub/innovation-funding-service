@@ -1,9 +1,7 @@
-
-
 package com.worth.ifs.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.error.Error;
@@ -21,16 +19,13 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.fixtures.CompetitionFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -48,28 +43,21 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionSetupControllerTest {
+public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
 
     private static final Long COMPETITION_ID = Long.valueOf(12);
     private static final String URL_PREFIX = "/competition/setup";
 
-    @InjectMocks
-	private CompetitionSetupController controller;
-	
-    @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private UserService userService;
-
     @Mock
     private CategoryService categoryService;
-    
+
     @Mock
     private CompetitionSetupService competitionSetupService;
 
@@ -77,16 +65,14 @@ public class CompetitionSetupControllerTest {
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Mock
-    private MessageSource messageSource;
-
-    @Mock
     private Validator validator;
 
-    private MockMvc mockMvc;
+    @Override
+    protected CompetitionSetupController supplyControllerUnderTest() { return new CompetitionSetupController(); }
 
     @Before
-    public void setupMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    public void setUp() {
+        super.setUp();
 
         when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Exec").build()));
 
@@ -450,4 +436,38 @@ public class CompetitionSetupControllerTest {
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("restrictInitialDetailsEdit", nullValue()));
     }
+
+    @Test
+    public void testGetCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/finance"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/finances"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testPostCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        final boolean fullApplicationFinance = true;
+        final boolean includeGrowthTable = false;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/finance")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
+                .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"));
+
+        ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
+        verify(competitionService).update(argument.capture());
+        assertThat(argument.getValue().isFullApplicationFinance(), equalTo(fullApplicationFinance));
+        assertThat(argument.getValue().isIncludeGrowthTable(), equalTo(includeGrowthTable));
+    }
+
 }

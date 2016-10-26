@@ -185,7 +185,6 @@ public class AssessorRegistrationController {
                 LOG.info(e);
             }
         }
-
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
