@@ -66,11 +66,6 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
-
-        verifyInteractions(
-                mock -> mock.isBankDetailsApproved(),
-                mock -> mock.isBankDetailsActionRequired()
-        );
     }
 
     @Test
@@ -91,10 +86,10 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCheckAccessToBankDetailsSectionButProjectDetailsSectionIncomplete() {
+    public void testCheckAccessToBankDetailsSectionButBankDetailsNotApproved() {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
     }
 
     @Test
@@ -126,7 +121,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToSpendProfileSectionButSpendProfileSectionIsNotSubmitted() {
         when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessSpendProfileSection(getFinanceTeamMember()));
     }
 
     private UserResource getFinanceTeamMember() {

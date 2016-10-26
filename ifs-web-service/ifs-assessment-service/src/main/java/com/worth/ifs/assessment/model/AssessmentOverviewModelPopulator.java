@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
 
@@ -40,6 +39,7 @@ import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
  */
 @Component
 public class AssessmentOverviewModelPopulator {
+    private static final String MODEL_ATTRIBUTE_FORM = "form";
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -81,7 +81,7 @@ public class AssessmentOverviewModelPopulator {
 
         addSections(model, competition, assessmentId);
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);

@@ -131,60 +131,102 @@
                     <th scope="col">Title</th>
                     <th scope="col">Innovation Area</th>
                     <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assigned Assessors</th>
-                    <th scope="col"><span class="visuallyhidden">Assign</span></th>
+
+                    <th:block th:unless="${status == 'removed'}">
+                        <th class="aligncentre" scope="col">Assigned Assessors</th>
+                        <th scope="col"><span class="visuallyhidden">Assign</span></th>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <th scope="col">Removed by</th>
+                    </th:block>
+
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="#">10001000000</a></td>
+                    <td><a th:href="${(status == 'removed' ? '/prototypes/5698-admin-readonly-application?status=removed' : '#')}">10001000000</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Wessex University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Peter Kault</td>
+                    </th:block>
+
                 </tr>
                 <tr>
                     <td><a href="#">10001000001</a></td>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Plymouth University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
+                
                 </tr>
                 <tr>
                     <td><a href="#">10001000002</a></td>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Horizon Ltd</td>
-                    <td class="aligncentre">0</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">0</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
                 <tr>
                     <td><a href="#">10001000003</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Zodiac Industries Ltd</td>
-                    <td class="aligncentre">5</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">5</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
                 <tr>
                     <td><a href="#">10001000004</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Durham University</td>
-                    <td class="aligncentre">1</td>
-                    <td>
-                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
-                    </td>
+                    <th:block th:unless="${status == 'removed'}">
+                        <td class="aligncentre">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                        </td>
+                    </th:block>
+
+                    <th:block th:if="${status == 'removed'}">
+                        <td>Paul Newbury</td>
+                    </th:block>
                 </tr>
             </tbody>
         </table>
@@ -282,10 +324,10 @@
                     <th scope="col">App No</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Assigned Assessors</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
-                    <th class="aligncentre" scope="col">Completed</th>
+                    <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Remove</span></th>
                 </tr>
             </thead>
@@ -297,9 +339,9 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"><a href="#">Review</a></td>
+                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#">Review</a>
                     </td>
                 </tr>
                 <tr>
@@ -309,9 +351,33 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"></td>
+                    <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000001</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">10001000001</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td class="aligncentre">-</td>
+                    <td>
+                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
                     </td>
                 </tr>
             </tbody>
@@ -328,7 +394,7 @@
                     <th scope="col">App No</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Assigned Assessors</th>
                     <th scope="col">Reason</th>
                 </tr>
             </thead>
@@ -357,7 +423,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Lead Organisation</th>
                     <th class="aligncentre" scope="col">Assigned</th>
-                    <th class="aligncentre" scope="col">Completed</th>
+                    <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
             </thead>
@@ -513,6 +579,35 @@
                 <td class="aligncentre">1</td>
                 <td>
                     <a href="#" class="button-secondary">Assign</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Application list 8 table =========================== -->
+<div th:fragment="prototype-application-list8-table">
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th scope="col">App No</th>
+                <th scope="col">Title</th>
+                <th scope="col">Lead Organisation</th>
+                <th class="aligncentre" scope="col">Assigned Assessors</th>
+                <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="#">10001000003</a></td>
+                <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
+                <td>Zodiac Industries Ltd</td>
+                <td class="aligncentre">4</td>
+                <td>
+                    <a href="#" class="button-secondary">Re-assign</a>
                 </td>
             </tr>
             </tbody>

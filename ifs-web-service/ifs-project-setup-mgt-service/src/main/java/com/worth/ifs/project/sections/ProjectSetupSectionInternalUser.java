@@ -48,10 +48,6 @@ public class ProjectSetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if(!projectSetupProgressChecker.isBankDetailsApproved()
-                && !projectSetupProgressChecker.isBankDetailsActionRequired()) {
-            return NOT_ACCESSIBLE;
-        }
         return ACCESSIBLE;
     }
 
