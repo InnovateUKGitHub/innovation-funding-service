@@ -18,9 +18,12 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private Long applicationId;
     private String competitionName;
     private boolean projectDetailsSubmitted;
+    private boolean projectDetailsProcessCompleted;
     private boolean awaitingProjectDetailsActionFromOtherPartners;
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
+    private boolean allBankDetailsApprovedOrNotRequired;
+    private boolean allFinanceChecksApproved;
     private boolean grantOfferLetterSubmitted;
     private boolean spendProfileSubmitted;
     private String monitoringOfficerName;
@@ -38,9 +41,12 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource,
-                                       Optional<ProjectActivityStates> bankDetails, Long organisationId,
-                                       boolean projectDetailsSubmitted, boolean awaitingProjectDetailsActionFromOtherPartners,
-                                       boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
+                                       ProjectActivityStates bankDetails, Long organisationId,
+                                       boolean projectDetailsSubmitted, boolean projectDetailsProcessCompleted,
+                                       boolean awaitingProjectDetailsActionFromOtherPartners,
+                                       boolean leadPartner, boolean allBankDetailsApprovedOrNotRequired,
+                                       boolean allFinanceChecksApproved, boolean grantOfferLetterSubmitted,
+                                       boolean spendProfileSubmitted,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -50,12 +56,15 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
         this.projectDetailsSubmitted = projectDetailsSubmitted;
+        this.projectDetailsProcessCompleted = projectDetailsProcessCompleted;
         this.awaitingProjectDetailsActionFromOtherPartners = awaitingProjectDetailsActionFromOtherPartners;
         this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.bankDetails = bankDetails.orElse(ProjectActivityStates.NOT_REQUIRED);
+        this.bankDetails = bankDetails;
         this.organisationId = organisationId;
+        this.allBankDetailsApprovedOrNotRequired = allBankDetailsApprovedOrNotRequired;
+        this.allFinanceChecksApproved = allFinanceChecksApproved;
         this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
         this.leadPartner = leadPartner;
         this.companiesHouseSection = companiesHouseSection;
@@ -85,8 +94,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return competitionName;
     }
 
-    public boolean isProjectDetailsSubmitted() {
-        return projectDetailsSubmitted;
+    public boolean isProjectDetailsProcessCompleted() {
+        return projectDetailsProcessCompleted;
     }
 
     public boolean isAwaitingProjectDetailsActionFromOtherPartners() {
@@ -165,4 +174,15 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public boolean isBankDetailsComplete() { return ProjectActivityStates.COMPLETE.equals(bankDetails); }
 
+    public boolean isProjectDetailsSubmitted() {
+        return projectDetailsSubmitted;
+    }
+
+    public boolean isAllFinanceChecksApproved() {
+        return allFinanceChecksApproved;
+    }
+
+    public boolean isAllBankDetailsApprovedOrNotRequired() {
+        return allBankDetailsApprovedOrNotRequired;
+    }
 }
