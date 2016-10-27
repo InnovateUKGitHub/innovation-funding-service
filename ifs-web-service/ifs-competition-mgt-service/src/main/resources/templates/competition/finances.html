@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application questions',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application(compId = ${competitionId})}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application questions',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" th:remove="tag" />
 
     <div class="hgroup extra-margin-bottom">
         <h1 class="heading-xlarge no-margin">Application finances</h1>

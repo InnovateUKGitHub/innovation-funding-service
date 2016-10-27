@@ -436,38 +436,4 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("restrictInitialDetailsEdit", nullValue()));
     }
-
-    @Test
-    public void testGetCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/finance"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/finances"));
-
-        verify(competitionService, never()).update(competition);
-    }
-
-    @Test
-    public void testPostCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        final boolean fullApplicationFinance = true;
-        final boolean includeGrowthTable = false;
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/finance")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
-                .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"));
-
-        ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
-        verify(competitionService).update(argument.capture());
-        assertThat(argument.getValue().isFullApplicationFinance(), equalTo(fullApplicationFinance));
-        assertThat(argument.getValue().isIncludeGrowthTable(), equalTo(includeGrowthTable));
-    }
-
 }
