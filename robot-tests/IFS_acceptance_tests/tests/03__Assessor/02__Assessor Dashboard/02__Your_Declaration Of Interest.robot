@@ -132,9 +132,6 @@ the user adds positions
     the user clicks the button/link    jQuery=button:contains("Add another position")
     the user enters text to a text field    id=appointments0.organisation    Organisation0
     the user enters text to a text field    id=appointments0.position    Position0
-INFUND-5871    the user clicks the button/link    jQuery=button:contains("Add another position")
-    the user enters text to a text field    id=appointments1.organisation    Organisation1
-    the user enters text to a text field    id=appointments1.position    Position1
 
 the user adds an additional position
     the user clicks the button/link    jQuery=button:contains("Add another position")
