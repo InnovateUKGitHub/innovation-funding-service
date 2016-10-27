@@ -113,11 +113,7 @@ public class ApplicationController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
 
-        if (competition.isOpen()) {
-            addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
-        } else {
-            model.addAttribute("currentUser", user);
-        }
+        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
