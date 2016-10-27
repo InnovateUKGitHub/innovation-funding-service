@@ -1,4 +1,4 @@
-package com.worth.ifs.competitionsetup.model;
+package com.worth.ifs.competitionsetup.model.application;
 
 import org.hibernate.validator.constraints.NotBlank;
 

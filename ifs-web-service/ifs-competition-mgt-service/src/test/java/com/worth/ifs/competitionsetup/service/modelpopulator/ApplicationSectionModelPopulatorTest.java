@@ -34,10 +34,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationFormModelPopulatorTest {
+public class ApplicationSectionModelPopulatorTest {
 
 	@InjectMocks
-	private ApplicationFormModelPopulator populator;
+	private ApplicationSectionModelPopulator populator;
 	
 	@Mock
 	private CategoryService categoryService;

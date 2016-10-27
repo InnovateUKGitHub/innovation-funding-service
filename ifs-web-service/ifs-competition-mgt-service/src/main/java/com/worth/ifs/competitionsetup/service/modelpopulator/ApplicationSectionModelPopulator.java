@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.inputsTypeMatching;
+
 /**
- * populates the model for the initial details competition setup section.
+ * populates the model for the application competition setup section.
  */
 @Service
-public class ApplicationFormModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class ApplicationSectionModelPopulator implements CompetitionSetupSectionModelPopulator {
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -86,11 +88,7 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
                 .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
     }
 
-    private Boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
-        return formInputs
-                .stream()
-                .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(typeId));
-    }
+
 
 	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
         Question question = new Question();

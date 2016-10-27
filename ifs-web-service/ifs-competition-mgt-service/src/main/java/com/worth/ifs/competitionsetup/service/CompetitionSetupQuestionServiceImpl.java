@@ -2,7 +2,7 @@ package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.service.FormInputService;

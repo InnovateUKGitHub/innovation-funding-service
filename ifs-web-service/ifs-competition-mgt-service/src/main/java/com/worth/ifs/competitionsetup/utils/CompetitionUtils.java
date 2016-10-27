@@ -1,6 +1,9 @@
 package com.worth.ifs.competitionsetup.utils;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.form.resource.FormInputResource;
+
+import java.util.List;
 
 /**
  * Utility class to keep common re-usable methods
@@ -22,5 +25,11 @@ public class CompetitionUtils {
         return competition == null ||
                 (!CompetitionResource.Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
                         !CompetitionResource.Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
+    }
+
+    public static boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
+        return formInputs
+                .stream()
+                .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(typeId));
     }
 }

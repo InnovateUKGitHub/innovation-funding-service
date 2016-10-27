@@ -12,6 +12,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -53,6 +54,7 @@ public class CompetitionSetupController {
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
+    private static final String SUBSECTION_PATH_KEY = "subsectionPath";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -149,7 +151,43 @@ public class CompetitionSetupController {
     }
 
     /**
-     * This method is for supporting ajax saving from the application form.
+     * This method is for supporting ajax saving from the competition setup subsections forms.
+     */
+    @ProfileExecution
+    @RequestMapping(value = "/{competitionId}/section/{sectionPath}/sub/{subsectionPath}/saveFormElement", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
+                                    @RequestParam("value") String value,
+                                    @RequestParam(name = "objectId", required = false) Long objectId,
+                                    @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                    @PathVariable(SECTION_PATH_KEY) String sectionPath,
+                                    @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath,
+                                    HttpServletRequest request) {
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
+        CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
+
+        List<String> errors = new ArrayList<>();
+        try {
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSubsection(
+                    competitionResource,
+                    section, subsection,
+                    fieldName, value,
+                    Optional.ofNullable(objectId)
+                    )
+            );
+
+            return this.createJsonObjectNode(errors.isEmpty(), errors);
+        } catch (Exception e) {
+            errors.add(e.getMessage());
+            return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+
+    /**
+     * This method is for supporting ajax saving from the competition setup sections forms.
      */
     @ProfileExecution
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/saveFormElement", method = RequestMethod.POST)
@@ -250,31 +288,13 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
 
-    @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
-    public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
-
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
-    }
-
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
     public String submitApplicationFormSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFormForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
+                                                      BindingResult bindingResult,
+                                                      @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                      Model model) {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
-    }
-
-    @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
-    public String submitFinanceSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
-
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.FINANCE, model);
     }
 
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)

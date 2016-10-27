@@ -43,7 +43,9 @@
           method="post"
           th:object="${competitionSetupForm}"
           th:action="@{'/competition/setup/' + ${competition.id} + '/section/application/question/' + ${competitionSetupForm.question.id}}" novalidate="novalidate"
-          data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.question.id}" data-section="application">
+          data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.question.id}"
+          data-section="application"
+          data-subsection="question">
         <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${editable})" />
         <div class="extra-margin">
             <input type="submit" class="button button-large" value="Save and close"/>

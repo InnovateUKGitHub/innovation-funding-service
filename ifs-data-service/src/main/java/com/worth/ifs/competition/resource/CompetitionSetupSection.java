@@ -1,27 +1,31 @@
 package com.worth.ifs.competition.resource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
+import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.PROJECT_DETAILS;
+import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.QUESTIONS;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  * This enum defines all sections of competition setup.
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSection {
-	HOME("home", "Home Page"),
-	INITIAL_DETAILS("initial", "Initial Details"),
-	ADDITIONAL_INFO("additional", "Funding Information"),
-	ELIGIBILITY("eligibility", "Eligibility"),
-	MILESTONES("milestones", "Milestones"),
-	APPLICATION_FORM("application", "Application Questions"),
-	FINANCE("finance", "Application Finances"),
-	ASSESSORS("assessors", "Assessors"),
-	DESCRIPTION_AND_BRIEF("description", "Description and brief");
-
-
+	HOME("home", "Home Page", emptyList()),
+	INITIAL_DETAILS("initial", "Initial Details", emptyList()),
+	ADDITIONAL_INFO("additional", "Funding Information", emptyList()),
+	ELIGIBILITY("eligibility", "Eligibility", emptyList()),
+	MILESTONES("milestones", "Milestones", emptyList()),
+	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES)),
+	DESCRIPTION_AND_BRIEF("description", "Description and brief", emptyList());
 	
 	private String path;
 	private String name;
+	private List<CompetitionSetupSubsection> subsections;
 	
 	private static Map<String, CompetitionSetupSection> PATH_MAP;
 	
@@ -32,9 +36,10 @@ public enum CompetitionSetupSection {
 		}
 	};
 	
-	private CompetitionSetupSection(String path, String name) {
+	CompetitionSetupSection(String path, String name, List<CompetitionSetupSubsection> subsections) {
 		this.path = path;
 		this.name = name;
+		this.subsections = subsections;
 	}
 	
 	public String getName() {
@@ -43,6 +48,10 @@ public enum CompetitionSetupSection {
 	
 	public String getPath() {
 		return path;
+	}
+
+	public List<CompetitionSetupSubsection> getSubsections() {
+		return subsections;
 	}
 
 	public static CompetitionSetupSection fromPath(String path) {
