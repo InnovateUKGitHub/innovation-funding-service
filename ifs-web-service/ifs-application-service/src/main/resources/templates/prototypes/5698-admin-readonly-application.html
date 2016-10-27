@@ -24,6 +24,54 @@
 
 		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
+		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
+			
+			
+			<h3 class="heading-small">
+				Removed by
+			</h3>
+			<p>Peter Kault, 20 December 2016</p>
+	
+
+			<h3 class="heading-small">
+				Reason for removal
+			</h3>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. In vel officia quibusdam quod repudiandae odit quia pariatur quasi obcaecati, dolorum sunt iusto libero, dignissimos nemo architecto blanditiis deserunt autem odio!
+			</p>
+
+			<div class="extra-margin">
+				
+				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
+
+			</div>
+
+
+			<div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Reinstate application</h2>
+
+					<p>Are you sure that you wish to reinstate this application?</p>
+
+					<p>It will be added to applications requiring asessment, and will require assessors to be assigned to it.</p>
+
+					<hr />
+
+	            	<div class="alignright-button">
+						
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
+
+		</th:block>
+
 		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:remove="tag" />
 
 		<hr />
@@ -49,7 +97,7 @@
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
 
-		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp'}">
+		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
 		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
 		    </div>
 

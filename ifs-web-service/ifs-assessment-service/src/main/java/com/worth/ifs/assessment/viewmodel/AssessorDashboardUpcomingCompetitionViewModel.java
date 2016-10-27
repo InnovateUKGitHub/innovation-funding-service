@@ -12,16 +12,14 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
 
     private Long competitionId;
     private String displayLabel;
-    private LocalDate assessmentStartDate;
-    private LocalDate assessmentEndDate;
+    private LocalDate assessmentPeriodDateFrom;
+    private LocalDate assessmentPeriodDateTo;
 
-    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel,
-                                                         LocalDate assessmentStartDate,
-                                                         LocalDate assessmentEndDate) {
+    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel, LocalDate assessmentPeriodDateFrom, LocalDate assessmentPeriodDateTo) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
-        this.assessmentStartDate = assessmentStartDate;
-        this.assessmentEndDate = assessmentEndDate;
+        this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
+        this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
     public Long getCompetitionId() {
@@ -40,35 +38,39 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
         this.displayLabel = displayLabel;
     }
 
-    public LocalDate getAssessmentStartDate() {
-        return assessmentStartDate;
+    public LocalDate getAssessmentPeriodDateFrom() {
+        return assessmentPeriodDateFrom;
     }
 
-    public void setAssessmentStartDate(LocalDate assessmentStartDate) {
-        this.assessmentStartDate = assessmentStartDate;
+    public void setAssessmentPeriodDateFrom(LocalDate assessmentPeriodDateFrom) {
+        this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
     }
 
-    public LocalDate getAssessmentEndDate() {
-        return assessmentEndDate;
+    public LocalDate getAssessmentPeriodDateTo() {
+        return assessmentPeriodDateTo;
     }
 
-    public void setAssessmentEndDate(LocalDate assessmentEndDate) {
-        this.assessmentEndDate = assessmentEndDate;
+    public void setAssessmentPeriodDateTo(LocalDate assessmentPeriodDateTo) {
+        this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AssessorDashboardUpcomingCompetitionViewModel that = (AssessorDashboardUpcomingCompetitionViewModel) o;
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
                 .append(displayLabel, that.displayLabel)
-                .append(assessmentStartDate, that.assessmentStartDate)
-                .append(assessmentEndDate, that.assessmentEndDate)
+                .append(assessmentPeriodDateFrom, that.assessmentPeriodDateFrom)
+                .append(assessmentPeriodDateTo, that.assessmentPeriodDateTo)
                 .isEquals();
     }
 
@@ -77,8 +79,8 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
                 .append(displayLabel)
-                .append(assessmentStartDate)
-                .append(assessmentEndDate)
+                .append(assessmentPeriodDateFrom)
+                .append(assessmentPeriodDateTo)
                 .toHashCode();
     }
 }

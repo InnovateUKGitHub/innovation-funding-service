@@ -7,6 +7,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
 
@@ -35,6 +36,12 @@ public interface UserProfileService {
 
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ_USER_PROFILE')")
+    ServiceResult<UserProfileResource> getUserProfile(Long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
+    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId);

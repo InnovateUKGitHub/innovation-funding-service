@@ -95,6 +95,9 @@ public class Competition implements ProcessActivity {
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
+    private boolean fullApplicationFinance = true;
+    private boolean includeGrowthTable = true;
+
     private Boolean setupComplete;
 
     public Competition() {
@@ -129,10 +132,11 @@ public class Competition implements ProcessActivity {
                 return CompetitionResource.Status.READY_TO_OPEN;
             } else if (getEndDate() != null && getEndDate().isAfter(today)) {
                 return CompetitionResource.Status.OPEN;
-            } else if (getEndDate() != null && getEndDate().isBefore(today)
-                    && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+            } else if (getAssessorAcceptsDate() != null && getAssessorAcceptsDate().isAfter(today)) {
+                // TODO INFUND-5199 - Should not be using the assessor accepts deadline at all here
+                // TODO INFUND-5199 - The competition is closed if we're past the submission date, but haven't distributed applications
                 return CompetitionResource.Status.CLOSED;
-            } else if (getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)) {
+            } else if (getFundersPanelDate() != null && getFundersPanelDate().isAfter(today)) {
                 return CompetitionResource.Status.IN_ASSESSMENT;
             } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
                 return CompetitionResource.Status.FUNDERS_PANEL;
@@ -199,24 +203,13 @@ public class Competition implements ProcessActivity {
         return getDaysBetween(LocalDateTime.now(), this.getEndDate());
     }
     @JsonIgnore
-    public long getAssessmentDaysLeft(){
-        return getDaysBetween(LocalDateTime.now(), this.getAssessmentEndDate());
-    }
-    @JsonIgnore
     public long getTotalDays(){
         return getDaysBetween(this.getStartDate(), this.getEndDate());
     }
-    @JsonIgnore
-    public long getAssessmentTotalDays() {
-        return getDaysBetween(this.getAssessmentStartDate(), this.getAssessmentEndDate());
-    }
+
     @JsonIgnore
     public long getStartDateToEndDatePercentage() {
         return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
-    }
-    @JsonIgnore
-    public long getAssessmentDaysLeftPercentage() {
-        return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
     }
     @JsonIgnore
     public List<Application> getApplications() {
@@ -249,20 +242,28 @@ public class Competition implements ProcessActivity {
         setMilestoneValue(MilestoneType.OPEN_DATE, startDate);
     }
 
-    public LocalDateTime getAssessmentEndDate() {
-    	return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
-    }
-
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-    	setMilestoneValue(MilestoneType.FUNDERS_PANEL, assessmentEndDate);
-    }
-
-    public LocalDateTime getAssessmentStartDate() {
+    public LocalDateTime getAssessorAcceptsDate() {
     	return getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS);
     }
 
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
-    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessmentStartDate);
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate){
+    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessorAcceptsDate);
+    }
+
+    public LocalDateTime getAssessorDeadlineDate() {
+        return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE);
+    }
+
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate){
+        setMilestoneValue(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
+    }
+
+    public LocalDateTime getFundersPanelDate() {
+        return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
+    }
+
+    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+        setMilestoneValue(MilestoneType.FUNDERS_PANEL, fundersPanelDate);
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
@@ -502,6 +503,22 @@ public class Competition implements ProcessActivity {
             return date.format(formatter);
         }
         return "";
+    }
+
+    public boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+        this.includeGrowthTable = includeGrowthTable;
     }
 }
 
