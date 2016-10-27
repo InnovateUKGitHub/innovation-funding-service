@@ -34,6 +34,18 @@ public class UserProfileStatusResource {
         return contractComplete;
     }
 
+    public void setSkillsComplete(boolean skillsComplete) {
+        this.skillsComplete = skillsComplete;
+    }
+
+    public void setAffiliationsComplete(boolean affiliationsComplete) {
+        this.affiliationsComplete = affiliationsComplete;
+    }
+
+    public void setContractComplete(boolean contractComplete) {
+        this.contractComplete = contractComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

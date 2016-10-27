@@ -140,7 +140,8 @@ public class POJOTest {
             ContractResource.class,
             ProfileContractResource.class,
             ProfileSkillsResource.class,
-            UserProfileResource.class
+            UserProfileResource.class,
+            UserProfileStatusResource.class
     );
 
     @Before
