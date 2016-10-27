@@ -58,7 +58,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 leadOrganisationResource.getName(),
-                getProjectManager(projectResource.getId()).orElse(null),
+                getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
 
         return "project/detail";
@@ -79,8 +79,7 @@ public class ProjectDetailsController {
         return new ArrayList<>(organisationSet);
     }
 
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+    private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
