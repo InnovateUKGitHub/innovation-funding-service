@@ -17,14 +17,18 @@
 
             </div>
 
-            <div class="form-group" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
+            <div th:class="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group error' : 'form-group'" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
                 <label class="form-label" for="addressForm.selectedPostcodeIndex">
                     <span class="form-label-bold">Select your address</span>
                 </label>
+                <span th:if="${#fields.hasErrors('*{addressForm.postcodeOptions}')}"  th:remove="tag">
+                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeOptions')}" th:text="${err}" />
+                </span>
                 <select class="form-control" th:field="*{addressForm.selectedPostcodeIndex}">
                     <option th:value="${status.index}" th:each="address,status : ${form.addressForm.postcodeOptions}" th:text="${address.combinedString}"></option>
                 </select>
                 <button type="submit" class="button" name="select-address">Use selected address</button>
+
             </div>
             <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
         </fieldset>

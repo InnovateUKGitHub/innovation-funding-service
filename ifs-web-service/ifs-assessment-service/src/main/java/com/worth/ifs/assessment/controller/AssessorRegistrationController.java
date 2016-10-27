@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,7 +86,6 @@ public class AssessorRegistrationController {
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
-        addSelectedAddress(registrationForm);
         validateAddressForm(registrationForm, bindingResult);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
@@ -97,9 +95,9 @@ public class AssessorRegistrationController {
 
             result.getErrors().forEach(error -> {
                 if (StringUtils.hasText(error.getFieldName())) {
-                    bindingResult.rejectValue(error.getFieldName(), "registration."+error.getErrorKey());
+                    bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
                 } else {
-                    bindingResult.reject("registration."+error.getErrorKey());
+                    bindingResult.reject("registration." + error.getErrorKey());
                 }
             });
 
@@ -128,6 +126,7 @@ public class AssessorRegistrationController {
 
         addAddressOptions(registrationForm);
         registrationForm.getAddressForm().setTriedToSearch(true);
+        registrationForm.getAddressForm().setSelectedPostcodeIndex(null);
 
         if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
             bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
@@ -140,6 +139,8 @@ public class AssessorRegistrationController {
     public String selectAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 @PathVariable("inviteHash") String inviteHash) {
+
+
         addAddressOptions(registrationForm);
         addSelectedAddress(registrationForm);
 
@@ -150,10 +151,19 @@ public class AssessorRegistrationController {
         if (postcodeIsSelected(assessorRegistrationForm)) {
             validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
         } else {
-            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
+                bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
+                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
+            } else {
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
+                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+            }
         }
-        assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
-        assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+    }
+
+    private boolean postcodeIndexIsSubmitted(AssessorRegistrationForm assessorRegistrationForm) {
+        return assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex() != null;
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
@@ -176,8 +186,7 @@ public class AssessorRegistrationController {
         AddressForm addressForm = registrationForm.getAddressForm();
         if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex())) {
             try {
-                AddressResource selectedAddress = new AddressResource();
-                selectedAddress = addressForm.getPostcodeOptions().get(
+                AddressResource selectedAddress = addressForm.getPostcodeOptions().get(
                         Integer.parseInt(
                                 addressForm.getSelectedPostcodeIndex()));
                 addressForm.setSelectedPostcode(selectedAddress);
