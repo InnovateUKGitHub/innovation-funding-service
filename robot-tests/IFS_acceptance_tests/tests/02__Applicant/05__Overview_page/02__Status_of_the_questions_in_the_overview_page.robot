@@ -2,7 +2,7 @@
 Documentation     INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot

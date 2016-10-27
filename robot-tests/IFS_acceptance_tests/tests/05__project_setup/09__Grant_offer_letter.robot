@@ -29,7 +29,7 @@ PM should be able upload a file and then access the Submit button
     [Documentation]    INFUND-4851
     [Tags]
     [Setup]
-    # TO DO remove the comment from the last check when the infund-5567 is ready
+    # TODO remove the comment from the last check when the infund-5567 is ready
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     #And the Grant offer submit button should be enabled
