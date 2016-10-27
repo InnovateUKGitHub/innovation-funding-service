@@ -106,6 +106,11 @@ public class QuestionController {
         return questionService.save(questionResource).toGetResponse();
     }
 
+    @RequestMapping("/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}")
+    public RestResult<QuestionResource> getQuestionByIdAndAssessmentId(@PathVariable("questionId") Long questionId, @PathVariable("assessmentId") Long assessmentId) {
+        return questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).toGetResponse();
+    }
+
     @RequestMapping("/getQuestionsByAssessment/{assessmentId}")
     public RestResult<List<QuestionResource>> getQuestionsByAssessmentId(@PathVariable("assessmentId") final Long assessmentId) {
         return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
