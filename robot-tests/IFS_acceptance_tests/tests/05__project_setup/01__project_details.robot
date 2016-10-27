@@ -314,11 +314,12 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
-    And the user should not see the element    link=Ludlow
-    When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
-    And the user selects the radio button    financeContact    new
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    ## TODO INFUND-5898 - now allowed to change after Project Details submission
+    ## And the user should not see the element    link=Ludlow
+    ## When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
+    ## And the user selects the radio button    financeContact    new
+    ## And the user clicks the button/link    jQuery=.button:contains("Save")
+    ## Then the user should see the text in the page    You have already assigned the finance contact
     Then Logout as user
     When Log in as user    pete.tom@egg.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
@@ -330,11 +331,12 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
-    And the user should not see the element    link=EGGS
-    When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
-    And the user selects the radio button    financeContact    new
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    ## TODO INFUND-5898 - now allowed to change after Project Details submission
+    ## And the user should not see the element    link=EGGS
+    ## When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
+    ## And the user selects the radio button    financeContact    new
+    ## And the user clicks the button/link    jQuery=.button:contains("Save")
+    ## Then the user should see the text in the page    You have already assigned the finance contact
     [Teardown]    logout as user
 
 Option to invite a finance contact
@@ -429,13 +431,14 @@ Lead partner selects a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should see the text in the page    test twenty
-    And the user should not see the element    link=Vitruvius Stonework Limited
-    And the user should not see the element    link=Ludlow
-    And the user should not see the element    link=EGGS
-    And the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
-    And the user selects the radio button    financeContact    financeContact2
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    ## TODO INFUND-5898 - now allowed to change after Project Details submission
+    ## And the user should not see the element    link=Vitruvius Stonework Limited
+    ## And the user should not see the element    link=Ludlow
+    ## And the user should not see the element    link=EGGS
+    ## And the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
+    ## And the user selects the radio button    financeContact    financeContact2
+    ## And the user clicks the button/link    jQuery=.button:contains("Save")
+    ## Then the user should see the text in the page    You have already assigned the finance contact
 
 
 Non-lead partner cannot change start date, project manager or project address
