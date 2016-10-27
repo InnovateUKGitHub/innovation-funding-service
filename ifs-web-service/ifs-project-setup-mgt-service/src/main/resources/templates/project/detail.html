@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
+</head>
+<body th:with="context='project'" class="project-detail">
+
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.project.id}, projectName=${model.project.name})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project setup</h1>
+    </div>
+
+<h2 class="heading-medium">Project details</h2>
+<p>These project details were supplied by the lead partner on behalf of the project.</p>
+
+    <table id="project-details">
+        <thead>
+            <tr>
+                <th scope="col" class="larger-cols">Question</th>
+                <th scope="col" class="larger-cols">Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <span>Target start date</span>
+                </td>
+                <td id="start-date">
+                    <span th:if="${model.project.targetStartDate == null}" th:remove="tag">Not yet completed</span>
+                    <span th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}" th:remove="tag"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Project address</span>
+                </td>
+                <td id="project-address">
+                    <span th:if="${model.project.address.id == null}" th:remove="tag">Not yet completed</span>
+                    <span th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Project manager</span>
+                </td>
+                <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
+                <td id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <h2 class="heading-medium">Partner finance contacts</h2>
+
+    <p>Each of the partners is responsible for submitting their own finance contact.</p>
+
+    <table id="project-details-finance">
+        <thead>
+            <tr>
+                <th scope="col" class="larger-cols">Partner</th>
+                <th scope="col" class="larger-cols">Finance contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
+
+                <td>
+                    <span th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></span>
+                    <span th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></span>
+                </td>
+                <td>
+                  <span th:unless="${organisationFinanceContact.value == null}" th:remove="tag">
+                        <span th:text="${organisationFinanceContact.value.userName}" />
+                  </span>
+                  <span th:if="${organisationFinanceContact.value == null}" th:remove="tag">
+                        <span>Not yet completed</span>
+                  </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
