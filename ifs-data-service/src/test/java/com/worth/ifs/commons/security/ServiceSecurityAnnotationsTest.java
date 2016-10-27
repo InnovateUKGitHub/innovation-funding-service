@@ -2,7 +2,7 @@ package com.worth.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.commons.BaseIntegrationTest;
-import com.worth.ifs.commons.service.BaseRestService;
+//import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
@@ -166,8 +166,9 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         return flattenLists(nonSecuredMethodRowsByService);
     }
 
+    //TODO: weird coupling here
     private List<Object> getApplicableServices() {
-        return simpleFilter(unwrapProxies(servicesToTest()), service -> !BaseRestService.class.isAssignableFrom(service.getClass()));
+        return unwrapProxies(servicesToTest());
     }
 
     private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
