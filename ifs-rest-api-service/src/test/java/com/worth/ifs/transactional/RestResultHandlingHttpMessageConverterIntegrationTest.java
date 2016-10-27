@@ -60,7 +60,8 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         try {
             final String url = String.format("%s/application/%s", dataUrl, applicationId);
-            ResponseEntity<ApplicationResource> response = restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), ApplicationResource.class);
+            ResponseEntity<ApplicationResource> response = restTemplate.exchange(url,
+                    GET, leadApplicantHeadersEntity(), ApplicationResource.class);
             assertEquals(OK, response.getStatusCode());
             assertNotNull(response.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -94,7 +95,8 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         final UserResource initial = SecuritySetter.swapOutForUser(leadApplicantUser());
         try {
             final long applicationIdThatDoesNotExist = -1L;
-            final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
+            final Future<RestResult<Double>> completeQuestionsPercentage
+                    = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
             // We have set the future going but now we need to call it. This call should not throw
             final RestResult<Double> doubleRestResult = completeQuestionsPercentage.get();
             assertTrue(doubleRestResult.isFailure());
