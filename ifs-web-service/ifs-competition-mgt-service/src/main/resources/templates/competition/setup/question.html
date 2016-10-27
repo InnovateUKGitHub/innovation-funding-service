@@ -23,27 +23,25 @@
         </div>
     </div>
 
-    <div class="hgroup">
-        <p class="subtitle no-margin" th:text="${competitionName}"></p>
-        <h1 class="heading-xlarge no-margin">
-            <th:block th:if="${editable}">Edit </th:block>
-            <th:block th:text="${competitionSetupForm.question.shortTitle}"></th:block>
-        </h1>
+    <div class="page-title">
+        <p class="subtitle" th:text="${competitionName}"></p>
+        <h1 class="heading-xlarge" th:if="${editable}">Edit '<th:block th:text="${competitionSetupForm.question.shortTitle}" />'</h1>
+        <h1 class="heading-xlarge" th:unless="${editable}" th:text="${competitionSetupForm.question.shortTitle}" />
     </div>
 
     <p class="extra-margin">
         Make changes to the question '<th:block th:text="${competitionSetupForm.question.shortTitle}"></th:block>'.
         You can amend how this is presented, and also the wording and guidance assessors are given for scoring the question.
     </p>
-
-    <legend class="visuallyhidden">Application question</legend>
-    <h2 class="heading-medium extra-margin">Application question</h2>
-
     <form th:if="${editable}"
           method="post"
           th:object="${competitionSetupForm}"
           th:action="@{'/competition/setup/' + ${competition.id} + '/section/application/question/' + ${competitionSetupForm.question.id}}" novalidate="novalidate"
           data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.question.id}" data-section="application">
+    <legend class="visuallyhidden">Application question</legend>
+    <h2 class="heading-medium extra-margin">Application question</h2>
+
+
         <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${editable})" />
         <div class="extra-margin">
             <input type="submit" class="button button-large" value="Save and close"/>
@@ -52,14 +50,12 @@
     <th:block th:unless="${editable}">
         <th:block th:include="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${editable})" />
         <div class="extra-margin">
-            <a role="button" class="button" th:href="${competitionSetupForm.question.id + '/edit'}">Edit this question</a>
+          <a class="button" th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${competition.id},questionId=${competitionSetupForm.question.id})}">Edit this question</a>
         </div>
         <div class="extra-margin">
-            <a th:href="${'competition/setup/' + competition.id + '/section/application'}" class="button-secondary">Return to application questions</a>
+          <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
         </div>
     </th:block>
-
-    <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/competition-setup :: setup-home" th:remove="tag" />
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
