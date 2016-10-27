@@ -108,69 +108,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails() throws Exception {
-        String title = "Mr";
-        String firstName = "Felix";
-        String lastName = "Wilson";
-        String phoneNumber = "12345678";
-        Gender gender = Gender.MALE;
-        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
-        Disability disability = Disability.NO;
-        String password = "P@ssword1234";
 
-        String addressLine1 = "address1";
-        String town = "town";
-        String postcode = "postcode";
-
-        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
-        expectedForm.setTitle(title);
-        expectedForm.setFirstName(firstName);
-        expectedForm.setLastName(lastName);
-        expectedForm.setPhoneNumber(phoneNumber);
-        expectedForm.setGender(gender);
-        expectedForm.setEthnicity(ethnicity);
-        expectedForm.setDisability(disability);
-        expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
-
-        AddressForm addressForm = expectedForm.getAddressForm();
-
-        AddressResource addressResource = new AddressResource();
-
-        addressResource.setAddressLine1(addressLine1);
-        addressResource.setPostcode(postcode);
-        addressResource.setTown(town);
-
-        addressForm.setSelectedPostcode(addressResource);
-        addressForm.setTriedToSave(true);
-        addressForm.setTriedToSearch(true);
-
-        String inviteHash = "hash";
-
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
-
-        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
-        when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
-                .param("firstName", firstName)
-                .param("lastName", lastName)
-                .param("phoneNumber", phoneNumber)
-                .param("gender", gender.name())
-                .param("ethnicity", ethnicity.getId().toString())
-                .param("disability", disability.name())
-                .param("password", password)
-                .param("retypedPassword", password)
-                .param("addressForm.selectedPostcode.addressLine1", addressLine1)
-                .param("addressForm.selectedPostcode.town", town)
-                .param("addressForm.selectedPostcode.postcode", postcode))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
-
-        verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }
 
 
@@ -209,8 +147,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         addressResource.setTown(town);
 
         addressForm.setSelectedPostcode(addressResource);
-        addressForm.setTriedToSave(true);
-        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
@@ -416,5 +352,56 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(form.getAddressForm().getSelectedPostcode(), addressResourceList.get(1));
+    }
+
+    @Test
+    public void submitYourDetails_withoutSelectedAddressResultsInError() throws Exception {
+        String title = "Mr";
+        String firstName = "Felix";
+        String lastName = "Wilson";
+        String phoneNumber = "12345678";
+        Gender gender = Gender.MALE;
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        Disability disability = Disability.NO;
+        String password = "P@ssword1234";
+
+        String addressLine1 = "address1";
+        String town = "town";
+        String postcode = "postcode";
+
+        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
+        expectedForm.setTitle(title);
+        expectedForm.setFirstName(firstName);
+        expectedForm.setLastName(lastName);
+        expectedForm.setPhoneNumber(phoneNumber);
+        expectedForm.setGender(gender);
+        expectedForm.setEthnicity(ethnicity);
+        expectedForm.setDisability(disability);
+        expectedForm.setPassword(password);
+        expectedForm.setRetypedPassword(password);
+
+        String inviteHash = "hash";
+
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+
+        mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("title", title)
+                .param("firstName", firstName)
+                .param("lastName", lastName)
+                .param("phoneNumber", phoneNumber)
+                .param("gender", gender.name())
+                .param("ethnicity", ethnicity.getId().toString())
+                .param("disability", disability.name())
+                .param("password", password)
+                .param("retypedPassword", password))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
+
+        verifyZeroInteractions(assessorService);
     }
 }
