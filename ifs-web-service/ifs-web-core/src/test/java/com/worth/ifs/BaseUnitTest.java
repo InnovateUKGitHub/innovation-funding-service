@@ -18,6 +18,7 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.contract.service.ContractService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.FinanceRowRestService;
@@ -120,6 +121,8 @@ public class BaseUnitTest {
     public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
+    @Mock
+    public ContractService contractService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
