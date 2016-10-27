@@ -19,6 +19,7 @@ import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
@@ -316,6 +318,33 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
+
+    @RequestMapping(value = "/{competitionId}/section/application/question/finance", method = RequestMethod.GET)
+    public String getApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        CompetitionResource resource = competitionService.getById(competitionId);
+        FinanceForm form = new FinanceForm();
+        form.setFullApplicationFinance(resource.isFullApplicationFinance());
+        form.setIncludeGrowthTable(resource.isIncludeGrowthTable());
+        return getFinancePage(model, form, competitionId);
+    }
+
+    @RequestMapping(value = "/{competitionId}/section/application/question/finance", method = RequestMethod.POST)
+    public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm form,
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+
+        Supplier<String> failureView = () -> getFinancePage(model, form, competitionId);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
+        CompetitionResource resource = competitionService.getById(competitionId);
+        resource.setFullApplicationFinance(form.isFullApplicationFinance());
+        resource.setIncludeGrowthTable(form.isIncludeGrowthTable());
+        competitionService.update(resource);
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     @ResponseBody
@@ -423,5 +452,12 @@ public class CompetitionSetupController {
                 competitionResource.getSectionSetupStatus().containsKey(section)) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
+    }
+
+
+    private String getFinancePage(Model model, FinanceForm form, Long competitionId) {
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
+        model.addAttribute(COMPETITION_ID_KEY, competitionId);
+        return "competition/finances";
     }
 }
