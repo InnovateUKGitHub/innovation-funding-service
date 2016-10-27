@@ -30,10 +30,10 @@ public class CompetitionSetupApplicationController {
     @Autowired
     private CompetitionService competitionService;
 
-    @RequestMapping(value = "/lading-page", method = RequestMethod.GET)
+    @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, CompetitionSetupSection.APPLICATION_FORM);
-        return "";
+        return "competition/setup";
     }
 }

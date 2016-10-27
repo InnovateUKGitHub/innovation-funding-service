@@ -43,7 +43,7 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 
     @Override
 	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.APPLICATION_FORM;
+		return CompetitionSetupSection.ASSESSORS; // TODO Need to change this.
 	}
 
 	@Override

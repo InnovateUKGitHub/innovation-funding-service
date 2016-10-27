@@ -1,4 +1,4 @@
-\<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+<!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
 <div th:fragment="comp-setup-navigation(sections, allCompletedSections, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
@@ -6,8 +6,11 @@
             <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
                 <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'" th:if="${allCompletedSections.contains(section)}" class="section-status" />
                 <h3 class="heading-small">
-                    <a th:if="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
+                    <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() != 'APPLICATION_FORM'}"
                        th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
+                       th:text="${section.name}">Section Name</a>
+                    <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() == 'APPLICATION_FORM'}"
+                       th:href="@{/competition/setup/{competitionId}/application/landing-page(competitionId=${competition.id})}"
                        th:text="${section.name}">Section Name</a>
                     <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
                        th:text="${section.name}">Section Name</th:block>
