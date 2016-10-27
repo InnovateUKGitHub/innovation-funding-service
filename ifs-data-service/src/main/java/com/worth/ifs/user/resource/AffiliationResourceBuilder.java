@@ -2,6 +2,8 @@ package com.worth.ifs.user.resource;
 
 public class AffiliationResourceBuilder {
 
+    // XXX this is odd
+
     private Long user;
     private AffiliationType affiliationType;
     private Boolean exists;

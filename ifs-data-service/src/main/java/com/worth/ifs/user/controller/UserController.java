@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -120,7 +121,7 @@ public class UserController {
                         tokenService.handleExtraAttributes(token);
                         tokenService.removeToken(token);
                     });
-                    return RestResult.restSuccess();
+                    return restSuccess();
                 });
     }
 
@@ -186,5 +187,10 @@ public class UserController {
     public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
                                                    @RequestBody List<AffiliationResource> affiliations) {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/profileStatus", method = GET)
+    public RestResult<UserProfileStatusResource> getUserProfileStatus(@PathVariable("userId") Long userId) {
+        return userProfileService.getUserProfileStatus(userId).toGetResponse();
     }
 }

@@ -10,10 +10,7 @@ import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.ContractMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.ContractRepository;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -153,6 +150,22 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
             userRepository.save(user);
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
+        return getUser(userId).andOnSuccess(this::getProfileStatusForUser);
+    }
+
+    private ServiceResult<UserProfileStatusResource> getProfileStatusForUser(User user) {
+        Profile profile = user.getProfile();
+        return serviceSuccess(
+                new UserProfileStatusResource(
+                    profile != null && profile.getSkillsAreas() != null,
+                    user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
+                    profile != null && profile.getContractSignedDate() != null
+                )
+        );
     }
 
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {

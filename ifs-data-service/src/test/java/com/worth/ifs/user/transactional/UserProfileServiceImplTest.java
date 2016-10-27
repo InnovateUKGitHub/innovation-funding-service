@@ -6,10 +6,7 @@ import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ContractResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -31,9 +28,11 @@ import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.time.ZoneId.systemDefault;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
@@ -533,6 +532,124 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         inOrder.verify(contractRepositoryMock).findByCurrentTrue();
         inOrder.verify(userRepositoryMock).save(isA(User.class));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getUserProfileStatus() throws Exception {
+        User user = newUser().build();
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(newUserProfileStatusResource().build(), result.getSuccessObject());
+
+        verify(userRepositoryMock, only()).findOne(user.getId());
+    }
+
+    @Test
+    public void getUserProfileStatus_complete() throws Exception {
+        User user = newUser()
+                .withAffiliations( asList(newAffiliation().build()) )
+                .withProfile(newProfile()
+                        .withSkillsAreas("skills")
+                        .withContractSignedDate(LocalDateTime.now())
+                        .build())
+                .build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(
+                newUserProfileStatusResource()
+                        .withSkillsComplete(true)
+                        .withAffliliationsComplete(true)
+                        .withContractComplete(true)
+                .build(),
+                result.getSuccessObject()
+        );
+
+        verify(userRepositoryMock, only()).findOne(user.getId());
+    }
+
+    @Test
+    public void getUserProfileStatus_skillsComplete() throws Exception {
+        User user = newUser()
+                .withProfile(newProfile()
+                        .withSkillsAreas("skills")
+                        .build())
+                .build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(
+                newUserProfileStatusResource()
+                        .withSkillsComplete(true)
+                        .withAffliliationsComplete(false)
+                        .withContractComplete(false)
+                        .build(),
+                result.getSuccessObject()
+        );
+
+        verify(userRepositoryMock, only()).findOne(user.getId());
+    }
+
+    @Test
+    public void getUserProfileStatus_affiliationsComplete() throws Exception {
+        User user = newUser()
+                .withAffiliations( asList(newAffiliation().build()) )
+                .build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(
+                newUserProfileStatusResource()
+                        .withSkillsComplete(false)
+                        .withAffliliationsComplete(true)
+                        .withContractComplete(false)
+                        .build(),
+                result.getSuccessObject()
+        );
+
+        verify(userRepositoryMock, only()).findOne(user.getId());
+    }
+
+    @Test
+    public void getUserProfileStatus_contractComplete() throws Exception {
+        User user = newUser()
+                .withProfile(newProfile()
+                        .withContractSignedDate(LocalDateTime.now())
+                        .build())
+                .build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(
+                newUserProfileStatusResource()
+                        .withSkillsComplete(false)
+                        .withAffliliationsComplete(false)
+                        .withContractComplete(true)
+                        .build(),
+                result.getSuccessObject()
+        );
+
+        verify(userRepositoryMock, only()).findOne(user.getId());
     }
 
     private void setClockToTime(LocalDateTime time) {
