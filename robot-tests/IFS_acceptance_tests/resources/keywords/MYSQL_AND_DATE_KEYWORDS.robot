@@ -34,7 +34,7 @@ the total calculation in dashboard should be correct
 The assessment deadline for the Juggling Craziness changes to the past
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='21';
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='35';
     And reload page
 
 the days remaining should be correct (Top of the page)
