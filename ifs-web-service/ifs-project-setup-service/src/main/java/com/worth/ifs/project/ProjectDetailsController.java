@@ -114,9 +114,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        ProjectResource project = projectService.getById(projectId);
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("projectId", projectId);
+        model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
         return "project/confirm-project-details";
