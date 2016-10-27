@@ -1,16 +1,14 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
-import static com.worth.ifs.security.SecurityRuleUtil.isSystemMaintenanceUser;
 
 @PermissionRules
 @Component
@@ -29,14 +27,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Project finance users can see project resources")
     public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
         return isProjectFinanceUser(user);
-    }
-
-    /**
-     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
-     */
-    @PermissionRule(value = "READ", description = "System maintenance users can see project resources.  This is temporary and to be removed with INFUND-5596")
-    public boolean systemMaintenanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
-        return isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(

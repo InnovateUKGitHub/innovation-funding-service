@@ -34,6 +34,10 @@ public class ProjectLeadStatusResourceBuilder extends BaseBuilder<ProjectLeadSta
         return withArray((name, partnerStatus) -> partnerStatus.setName(name), names);
     }
 
+    public ProjectLeadStatusResourceBuilder withFinanceContactStatus(ProjectActivityStates... financeContactStatuses) {
+        return withArray((financeContactStatus, partnerStatus) -> partnerStatus.setFinanceContactStatus(financeContactStatus), financeContactStatuses);
+    }
+
     public ProjectLeadStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses){
         return withArray((bankDetailsStatus, partnerStatus) -> partnerStatus.setBankDetailsStatus(bankDetailsStatus), bankDetailsStatuses);
     }

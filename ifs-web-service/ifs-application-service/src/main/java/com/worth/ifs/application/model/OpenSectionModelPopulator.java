@@ -97,6 +97,12 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
+
+        model.addAttribute("allReadOnly", calculateAllReadOnly(competition));
+    }
+
+    private Boolean calculateAllReadOnly(CompetitionResource competition) {
+        return !competition.isOpen();
     }
 
     private void addApplicationDetails(ApplicationResource application,

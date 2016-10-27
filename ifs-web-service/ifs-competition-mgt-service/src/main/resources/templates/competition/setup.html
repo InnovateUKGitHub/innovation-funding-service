@@ -22,6 +22,7 @@
                 </div>
             </div>
         </div>
+
     <div th:if="${currentSection.toString() == 'HOME'}" th:include="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${allCompletedSections}, ${currentSection}, ${competition}, ${readyToOpen})" th:remove="tag" />
 
     <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
