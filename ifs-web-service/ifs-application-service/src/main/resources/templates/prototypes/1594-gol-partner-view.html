@@ -91,11 +91,13 @@
 			        <p>The uploaded signed grant offer letter agreement must:</p>
 
 			        <ul class="list-bullet">
-			        	<li>only pages with signatures are required</li>
-			        	<li>be in a Portable Document Format (.pdf)</li>
+			        	<li>contain signed pages</li>
+			        	<li>be in a portable document format (pdf)</li>
 			        	<li>be legible at 100% magnification</li>
 			        	<li>be less than 1mb in file size</li>
 			        </ul>
+
+					<p>Unable to upload? Contact Customer Support on 0300 321 4357</p>
 			    </div>
 			</details>
 
@@ -112,7 +114,7 @@
 		<div th:if="${param.status == null or param.status[0] == 'GOLRejected'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" data-js-modal="modal-send" class="button large">Submit signed offer letter</a>
+				<a href="#" data-js-modal="modal-send" class="button large">Submit</a>
 			</div>
 			
 			<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
