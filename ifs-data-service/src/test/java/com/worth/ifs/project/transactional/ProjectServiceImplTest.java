@@ -1427,42 +1427,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         });
     }
 
-    @Test
-    public void testGenerateFinanceChecksForAllProjects() {
-
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        ProjectResource newProjectResource = newProjectResource().build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-
-        PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
-                withOrganisation(organisation).
-                withLeadOrganisation(true).
-                build();
-
-        Project savedProject = newProject().withApplication(application).
-                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
-                withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
-                build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-
-        when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-
-        when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
-
-        when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
-
-        when(projectRepositoryMock.findAll()).thenReturn(singletonList(savedProject));
-
-        when(financeCheckRepositoryMock.findByProjectId(savedProject.getId())).thenReturn(null);
-
-        ServiceResult<Void> project = service.generateFinanceChecksForAllProjects();
-
-        assertTrue(project.isSuccess());
-    }
-
     @Override
     protected ProjectService supplyServiceUnderTest() {
         return new ProjectServiceImpl();

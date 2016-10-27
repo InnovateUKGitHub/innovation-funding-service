@@ -10,8 +10,10 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -38,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -161,15 +164,17 @@ public class ApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
 
-        if (competition.isOpen()) {
-            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
-        } else {
-            model.addAttribute("currentUser", user);
-        }
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
+
+        if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
+            OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
+            model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+        }
 
         return "application-summary";
     }
+
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
     public String applicationSummarySubmit(@PathVariable("applicationId") final Long applicationId,
@@ -387,6 +392,20 @@ public class ApplicationController {
         doAssignQuestion(applicationId, request, response);
 
         return "redirect:/application/" + applicationId + "/section/" +sectionId;
+    }
+
+    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
+
+        boolean readonly = true;
+
+        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
+
+        if (assessorFeedbackFileEntry != null) {
+            RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
+            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
+        } else {
+            return OptionalFileDetailsViewModel.withNoFile(readonly);
+        }
     }
 
     private void doAssignQuestion(Long applicationId, HttpServletRequest request, HttpServletResponse response) {

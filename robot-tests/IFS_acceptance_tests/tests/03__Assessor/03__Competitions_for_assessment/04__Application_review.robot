@@ -174,7 +174,6 @@ Finance overview
     And the user should be redirected to the correct page    ${Assessment_overview_9}
     [Teardown]
 
-
 *** Keywords ***
 the user clicks next and goes to the page
     [Arguments]    ${page_content}
