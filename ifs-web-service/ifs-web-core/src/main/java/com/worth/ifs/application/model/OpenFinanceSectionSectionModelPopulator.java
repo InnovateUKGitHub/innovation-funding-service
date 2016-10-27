@@ -80,9 +80,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
         
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
-        if(competition.isOpen()) {
-            addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
-        }
+        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
         addNavigation(section, application.getId(), model);
 
         form.setBindingResult(bindingResult);
