@@ -2,10 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -17,6 +14,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userList
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -185,4 +183,27 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> response = service.updateUserAffiliations(userId, expected);
         assertTrue(response.isSuccess());
     }
+
+    @Test
+    public void getProfileAddress() {
+        Long userId = 1L;
+        UserProfileResource expected = newUserProfileResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", usersUrl, userId), UserProfileResource.class, expected, OK);
+
+        UserProfileResource response = service.getUserProfile(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void updateProfileAddress() {
+        Long userId = 1L;
+        UserProfileResource profileDetails = newUserProfileResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserProfile", usersUrl, userId), profileDetails, OK);
+
+        RestResult<Void> response = service.updateUserProfile(userId, profileDetails);
+        assertTrue(response.isSuccess());
+    }
+
 }

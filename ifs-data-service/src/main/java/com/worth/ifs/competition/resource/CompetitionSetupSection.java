@@ -14,12 +14,8 @@ public enum CompetitionSetupSection {
 	ELIGIBILITY("eligibility", "Eligibility"),
 	MILESTONES("milestones", "Milestones"),
 	APPLICATION_FORM("application", "Application Questions"),
-	FINANCE("finance", "Application Finances"),
-	ASSESSORS("assessors", "Assessors"),
-	DESCRIPTION_AND_BRIEF("description", "Description and brief");
+	ASSESSORS("assessors", "Assessors");
 
-
-	
 	private String path;
 	private String name;
 	
@@ -32,9 +28,9 @@ public enum CompetitionSetupSection {
 		}
 	};
 	
-	private CompetitionSetupSection(String path, String name) {
-		this.path = path;
-		this.name = name;
+	CompetitionSetupSection(String sectionPath, String sectionName) {
+		this.path = sectionPath;
+		this.name = sectionName;
 	}
 	
 	public String getName() {
