@@ -16,9 +16,6 @@ public class Profile extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(optional = false)
-    private User user;
-
     @ManyToOne(targetEntity = Address.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
@@ -35,14 +32,8 @@ public class Profile extends AuditableEntity {
 
     private LocalDateTime contractSignedDate;
 
-    Profile() {
-        // default constructor
-    }
-
-    public Profile(User user) {
-        if (user == null) throw new NullPointerException("user cannot be null");
-        // default constructor
-        this.user = user;
+    public Profile() {
+        // no-arg constructor
     }
 
     public void signContract(Contract contract, LocalDateTime signedDate) {
@@ -58,14 +49,6 @@ public class Profile extends AuditableEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Address getAddress() {

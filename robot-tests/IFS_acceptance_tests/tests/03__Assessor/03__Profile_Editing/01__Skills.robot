@@ -48,7 +48,7 @@ Edit skills and expertise: skills and business type are saved correctly
     Given the user clicks the button/link    jQuery=a:contains("Your skills")
     Then radio button should be set to    assessorType    BUSINESS
     Then the user sees the text in the element    id=skillAreas    assessor skill areas text
-    And the user clicks the button/link    link=Back
+    And the user clicks the button/link    link=Back to assessor dashboard
 
 Edit contract: client-side validations
     [Documentation]    INFUND-1481

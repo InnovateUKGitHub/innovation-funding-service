@@ -68,14 +68,4 @@ public class CompetitionSetupSectionTest {
 		
 		assertEquals(CompetitionSetupSection.APPLICATION_FORM, result);
 	}
-	
-	@Test
-	public void testFromPathFinance() {
-		String path = "finance";
-		
-		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
-		
-		assertEquals(CompetitionSetupSection.FINANCE, result);
-	}
-
 }
