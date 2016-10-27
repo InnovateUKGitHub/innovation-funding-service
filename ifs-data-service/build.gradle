@@ -95,8 +95,7 @@ dependencies {
     compile "net.sf.opencsv:opencsv:2.3"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-///    compile fileTree(dir: "libs", include: "*.jar")
-    compile project(':ifs-rest-api-service')
+    compile fileTree(dir: "libs", include: "*.jar")
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
