@@ -24,7 +24,8 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
 
     // Use this for including the api lib from the data-service.
-    compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
+    compile files('../libs/ifs-rest-api-service-1.0-SNAPSHOT.jar')
+    compile files('../libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
