@@ -13,9 +13,6 @@ public class AssessorProfileTermsViewModel {
     private boolean currentAgreement;
     private LocalDateTime contractSignedDate;
     private String text;
-    private String annexOne;
-    private String annexTwo;
-    private String annexThree;
 
     public boolean isCurrentAgreement() {
         return currentAgreement;
@@ -41,35 +38,15 @@ public class AssessorProfileTermsViewModel {
         this.text = text;
     }
 
-    public String getAnnexOne() {
-        return annexOne;
-    }
-
-    public void setAnnexOne(String annexOne) {
-        this.annexOne = annexOne;
-    }
-
-    public String getAnnexTwo() {
-        return annexTwo;
-    }
-
-    public void setAnnexTwo(String annexTwo) {
-        this.annexTwo = annexTwo;
-    }
-
-    public String getAnnexThree() {
-        return annexThree;
-    }
-
-    public void setAnnexThree(String annexThree) {
-        this.annexThree = annexThree;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AssessorProfileTermsViewModel that = (AssessorProfileTermsViewModel) o;
 
@@ -77,9 +54,6 @@ public class AssessorProfileTermsViewModel {
                 .append(currentAgreement, that.currentAgreement)
                 .append(contractSignedDate, that.contractSignedDate)
                 .append(text, that.text)
-                .append(annexOne, that.annexOne)
-                .append(annexTwo, that.annexTwo)
-                .append(annexThree, that.annexThree)
                 .isEquals();
     }
 
@@ -89,9 +63,6 @@ public class AssessorProfileTermsViewModel {
                 .append(currentAgreement)
                 .append(contractSignedDate)
                 .append(text)
-                .append(annexOne)
-                .append(annexTwo)
-                .append(annexThree)
                 .toHashCode();
     }
 }

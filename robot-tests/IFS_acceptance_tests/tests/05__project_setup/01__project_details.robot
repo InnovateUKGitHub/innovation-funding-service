@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation     INFUND-2612 As a partner I want to have a overview of where I am in the process and what outstanding tasks I have to complete so that I can understand our project setup steps
 ...
-...
 ...               INFUND-2613 As a lead partner I need to see an overview of project details for my project so that I can edit the project details in order for Innovate UK to be able to assign an appropriate Monitoring Officer
 ...
 ...               INFUND-2614 As a lead partner I need to provide a target start date for the project so that Innovate UK has correct details for my project setup
@@ -27,8 +26,6 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-3530 As a potential Finance Contact, I can click on a link to register and to become a Finance Contact for a Partner Organisation, so that I can start collaborating on the Project
 ...
 ...               INFUND-3554 As a potential Project Manager, I can click on a link to register and to become a Project Manager for the Project, so that I can start collaborating on the Project
-
-
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -60,7 +57,6 @@ Non-lead partner can see the project setup page
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-    # TODO Test case needs to be executed once INFUND-5510 is fixed.
     # This test case can be part of above one. (If included then ensure a successful HappyPath run)
     # This test case covers non lead partner.
 
@@ -221,7 +217,7 @@ Partner invites a project manager
 Invited project manager receives an email
     [Documentation]    INFUND-3550
     [Tags]    HappyPath    Email
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Project Manager invitation    You will be managing the project
     Then the user should see the text in the page    Vitruvius Stonework Limited
 
 
@@ -232,7 +228,7 @@ Invited project manager registration flow
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
-    And the user opens the mailbox and accepts the invitation to collaborate
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
@@ -355,7 +351,7 @@ Option to invite a finance contact
 Inviting finance contact server side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5408
+    # TODO Pending due to INFUND-5704
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a contact name
     And the user should see the text in the page    Please enter an email address
@@ -363,7 +359,7 @@ Inviting finance contact server side validations
 Inviting finance contact client side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
-    # TODO Pending due to INFUND-5409
+    # TODO Pending due to INFUND-5704
     When the user enters text to a text field    id=name-finance-contact1    John Smith
     Then the user should not see the text in the page    Please enter a contact name
     When the user enters text to a text field    id=email-finance-contact1    test
@@ -385,7 +381,7 @@ Partner invites a finance contact
 Invited finance contact receives an email
     [Documentation]    INFUND-3524
     [Tags]    HappyPath    Email
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
     Then the user should see the text in the page    Vitruvius Stonework Limited
 
 
@@ -396,7 +392,7 @@ Invited finance contact registration flow
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
-    And the user opens the mailbox and accepts the invitation to collaborate
+    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
@@ -410,7 +406,6 @@ Invited finance contact shows on the finance contact selection screen
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith
-
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620
@@ -436,7 +431,6 @@ Lead partner selects a finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You have already assigned the finance contact
-
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
