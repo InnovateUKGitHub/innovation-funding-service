@@ -95,7 +95,8 @@ dependencies {
     compile "net.sf.opencsv:opencsv:2.3"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile fileTree(dir: "libs", include: "*.jar")
+///    compile fileTree(dir: "libs", include: "*.jar")
+    compile project(':ifs-rest-api-service')
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -149,30 +150,32 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task client(type: Jar) {
-    baseName += '-api'
+    baseName += '-public'
     from(sourceSets.main.output) {
-        // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/**/service/**"
-        include "com/worth/ifs/**/constant/**"
-        include "com/worth/ifs/**/resource/**"
-        include "com/worth/ifs/util/**"
-        include "com/worth/ifs/commons/security/**"
-        include "com/worth/ifs/commons/rest/**"
-        include "com/worth/ifs/commons/error/**"
-        include "com/worth/ifs/commons/validation/**"
-        include "com/worth/ifs/mappers/**"
-        exclude "com/worth/ifs/**/transactional/**"
-        exclude "com/worth/ifs/notifications/**"
-        exclude "com/worth/ifs/authentication/**"
-        exclude "com/worth/ifs/sil/**"
-        exclude "com/worth/ifs/email/**"
+//        // filter to only include certain class files (Ant glob pattern)
+//        include "com/worth/ifs/**/service/**"
+//        include "com/worth/ifs/**/constant/**"
+//        include "com/worth/ifs/**/resource/**"
+//        include "com/worth/ifs/util/**"
+//        include "com/worth/ifs/commons/security/**"
+//        include "com/worth/ifs/commons/rest/**"
+//        include "com/worth/ifs/commons/error/**"
+//        include "com/worth/ifs/commons/validation/**"
+//        include "com/worth/ifs/mappers/**"
+//        include "com/worth/ifs/**/mapper/**"
+//        exclude "com/worth/ifs/**/transactional/**"
+//        exclude "com/worth/ifs/notifications/**"
+//        exclude "com/worth/ifs/authentication/**"
+//        exclude "com/worth/ifs/sil/**"
+//        exclude "com/worth/ifs/email/**"
+//        include "com/worth/ifs/config/**"
     }
 }
 task clientCopy(type: Copy){
     ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
         into it
         from "build/libs/"
-        include "ifs-data-service-api*"
+        include "ifs-data-service-public*"
     }
 }
 
