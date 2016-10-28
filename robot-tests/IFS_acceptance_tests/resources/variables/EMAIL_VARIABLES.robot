@@ -7,5 +7,4 @@ ${invalid_email_no_username}    @example.com
 ${invalid_email_format}         Joe Smith <email@example.com>
 ${invalid_email_no_at}          email.example.com
 ${invalid_email_no_domain}      joesmith@example
-${sender}                       noreply-innovateuk@example.com
-${senderRemote}                 noresponse@innovateuk.gov.uk
+${sender}                       noreply-innovateuk@example.com    # note that this variable is correct for docker, and is overridden as a pybot argument for other environments
