@@ -261,6 +261,7 @@ Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    #HappyPath
     [Setup]    guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given the user navigates to the page    ${server}/project-setup/project/4/spend-profile/total
     When the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
     And the user should see the element    jQuery=.button:contains("Cancel")
     When the user clicks the button/link    css=div.modal-confirm-spend-profile-totals .button.large
