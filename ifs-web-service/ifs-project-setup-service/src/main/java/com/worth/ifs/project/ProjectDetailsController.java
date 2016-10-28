@@ -6,7 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.project.bankdetails.form.ProjectDetailsAddressForm;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;

@@ -9,7 +9,7 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
-import com.worth.ifs.project.bankdetails.form.BankDetailsForm;
+import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.BankDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
