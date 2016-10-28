@@ -8,7 +8,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
 import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
@@ -561,6 +560,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
             CostCategory cc = costCategoryRepository.findOne(category);
+            if ( cc.getLabel() != null && rows.stream().noneMatch(s -> Arrays.asList(s).contains(cc.getLabel()))) {
+                byCategory.add(cc.getLabel());
+            } else if ( cc.getLabel() != null ){
+                byCategory.add("");
+            }
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val -> {
                 byCategory.add(val.toString());

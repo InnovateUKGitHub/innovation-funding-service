@@ -304,6 +304,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         CostCategory testCostCategory = new CostCategory();
         testCostCategory.setId(1L);
         testCostCategory.setName("One");
+        testCostCategory.setLabel("GroupOne");
 
         OrganisationType organisationType = new OrganisationType();
         organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
@@ -315,7 +316,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
+
         assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
+        assertTrue(serviceResult.getSuccessObject().getCsvData().contains("GroupOne"));
     }
 
     @Test
