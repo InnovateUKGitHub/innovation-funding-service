@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetails.viewmodel;
+package com.worth.ifs.project.bankdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

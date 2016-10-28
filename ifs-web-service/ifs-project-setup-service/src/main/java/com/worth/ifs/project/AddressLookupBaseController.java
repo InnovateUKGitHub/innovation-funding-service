@@ -4,7 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
+import com.worth.ifs.project.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;

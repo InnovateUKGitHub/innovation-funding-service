@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetails.form;
+package com.worth.ifs.project.bankdetails.form;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.form.AddressForm;
