@@ -2,11 +2,11 @@ package com.worth.ifs.project.monitoringofficer.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressTypeResource;
-import com.worth.ifs.bankdetails.controller.BankDetailsManagementController;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
-import com.worth.ifs.bankdetails.viewmodel.ChangeBankDetailsViewModel;
+import com.worth.ifs.project.bankdetails.controller.BankDetailsManagementController;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
+import com.worth.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -21,8 +21,8 @@ import java.util.Map;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
-import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
-import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;

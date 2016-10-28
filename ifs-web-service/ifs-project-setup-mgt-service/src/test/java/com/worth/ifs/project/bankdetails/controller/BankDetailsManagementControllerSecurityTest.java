@@ -1,6 +1,5 @@
 package com.worth.ifs.project.bankdetails.controller;
 
-import com.worth.ifs.bankdetails.controller.BankDetailsManagementController;
 import com.worth.ifs.project.BaseProjectSetupControllerSecurityTest;
 import com.worth.ifs.project.ProjectSetupSectionsPermissionRules;
 import com.worth.ifs.user.resource.UserResource;
