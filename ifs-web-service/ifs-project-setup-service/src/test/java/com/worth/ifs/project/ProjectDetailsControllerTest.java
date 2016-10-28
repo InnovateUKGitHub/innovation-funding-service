@@ -5,7 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.project.bankdetails.form.ProjectDetailsAddressForm;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;

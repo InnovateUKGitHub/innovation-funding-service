@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.project.bankdetails.form.BankDetailsForm;
+import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
