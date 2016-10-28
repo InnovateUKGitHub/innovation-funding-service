@@ -2,9 +2,11 @@ package com.worth.ifs.bankdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class BankDetailsReviewViewModel {
     private Long projectId;
+    private Long applicationId;
     private String projectNumber;
     private String projectName;
     private String financeContactName;
@@ -23,7 +25,7 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
 
-    public BankDetailsReviewViewModel(Long projectId, String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+    public BankDetailsReviewViewModel(Long projectId, Long applicationId, String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
         this.projectId = projectId;
         this.projectNumber = projectNumber;
         this.projectName = projectName;
@@ -196,6 +198,14 @@ public class BankDetailsReviewViewModel {
         return addressScore > 6;
     }
 
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -206,6 +216,7 @@ public class BankDetailsReviewViewModel {
 
         return new EqualsBuilder()
                 .append(projectId, that.projectId)
+                .append(applicationId, that.applicationId)
                 .append(projectNumber, that.projectNumber)
                 .append(projectName, that.projectName)
                 .append(financeContactName, that.financeContactName)
@@ -230,6 +241,7 @@ public class BankDetailsReviewViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(applicationId)
                 .append(projectNumber)
                 .append(projectName)
                 .append(financeContactName)
@@ -248,5 +260,30 @@ public class BankDetailsReviewViewModel {
                 .append(approved)
                 .append(approvedManually)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("projectId", projectId)
+                .append("applicationId", applicationId)
+                .append("projectNumber", projectNumber)
+                .append("projectName", projectName)
+                .append("financeContactName", financeContactName)
+                .append("financeContactEmail", financeContactEmail)
+                .append("financeContactPhoneNumber", financeContactPhoneNumber)
+                .append("organisationId", organisationId)
+                .append("organisationName", organisationName)
+                .append("registrationNumber", registrationNumber)
+                .append("bankAccountNumber", bankAccountNumber)
+                .append("sortCode", sortCode)
+                .append("organisationAddress", organisationAddress)
+                .append("verified", verified)
+                .append("companyNameScore", companyNameScore)
+                .append("registrationNumberMatched", registrationNumberMatched)
+                .append("addressScore", addressScore)
+                .append("approved", approved)
+                .append("approvedManually", approvedManually)
+                .toString();
     }
 }

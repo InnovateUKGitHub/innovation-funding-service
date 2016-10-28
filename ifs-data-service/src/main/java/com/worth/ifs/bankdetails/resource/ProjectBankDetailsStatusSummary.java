@@ -16,14 +16,16 @@ public class ProjectBankDetailsStatusSummary {
     private Long competitionId;
     private String competitionName;
     private Long projectId;
+    private Long applicationId;
     private List<BankDetailsStatusResource> bankDetailsStatusResources;
 
     public ProjectBankDetailsStatusSummary() {
     }
 
-    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
+    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, Long applicationId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
         this.competitionId = competitionId;
         this.projectId = projectId;
+        this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
     }
@@ -70,6 +72,14 @@ public class ProjectBankDetailsStatusSummary {
         this.competitionName = competitionName;
     }
 
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +92,7 @@ public class ProjectBankDetailsStatusSummary {
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(projectId, that.projectId)
+                .append(applicationId, that.applicationId)
                 .append(bankDetailsStatusResources, that.bankDetailsStatusResources)
                 .isEquals();
     }
@@ -92,6 +103,7 @@ public class ProjectBankDetailsStatusSummary {
                 .append(competitionId)
                 .append(competitionName)
                 .append(projectId)
+                .append(applicationId)
                 .append(bankDetailsStatusResources)
                 .toHashCode();
     }
@@ -102,6 +114,7 @@ public class ProjectBankDetailsStatusSummary {
                 .append("competitionId", competitionId)
                 .append("competitionName", competitionName)
                 .append("projectId", projectId)
+                .append("applicationId", applicationId)
                 .append("bankDetailsStatusResources", bankDetailsStatusResources)
                 .toString();
     }
