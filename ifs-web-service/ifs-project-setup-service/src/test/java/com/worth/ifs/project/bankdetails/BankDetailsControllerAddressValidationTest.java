@@ -7,7 +7,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.BankDetailsController;
-import com.worth.ifs.project.bankdetails.form.BankDetailsForm;
+import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
