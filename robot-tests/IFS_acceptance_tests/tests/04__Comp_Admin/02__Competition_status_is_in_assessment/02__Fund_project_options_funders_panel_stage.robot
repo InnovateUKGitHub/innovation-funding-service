@@ -96,7 +96,7 @@ Successful applicants can see the assessment outcome on the dashboard page
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2605, INFUND-2611
     [Tags]    HappyPath
-    When the user clicks the button/link    link=00000004: Cheese is good
+    When the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the text in the page    Project setup status
     And the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
     [Teardown]    Logout as user
