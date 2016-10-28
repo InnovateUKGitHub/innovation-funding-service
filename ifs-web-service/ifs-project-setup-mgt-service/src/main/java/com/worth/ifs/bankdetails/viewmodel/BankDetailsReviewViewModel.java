@@ -27,6 +27,7 @@ public class BankDetailsReviewViewModel {
 
     public BankDetailsReviewViewModel(Long projectId, Long applicationId, String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
         this.projectId = projectId;
+        this.applicationId = applicationId;
         this.projectNumber = projectNumber;
         this.projectName = projectName;
         this.financeContactName = financeContactName;
