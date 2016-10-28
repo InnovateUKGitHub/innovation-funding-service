@@ -11,6 +11,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
 import org.junit.Assert;
@@ -48,20 +49,16 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     @Autowired
     public ApplicationRestService applicationRestService;
 
-    @Autowired
-    public UserRestService userRestService;
-
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
 
         final long applicationId = 1L;
-
         try {
-            final String url = String.format("%s/application/%s", dataUrl, applicationId);
-            ResponseEntity<ApplicationResource> response = restTemplate.exchange(url,
-                    GET, leadApplicantHeadersEntity(), ApplicationResource.class);
+            final String url = String.format("%s/competition/%s", dataUrl, applicationId);
+            ResponseEntity<CompetitionResource> response = restTemplate.exchange(url,
+                    GET, leadApplicantHeadersEntity(), CompetitionResource.class);
             assertEquals(OK, response.getStatusCode());
             assertNotNull(response.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -73,18 +70,14 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public void testFailureRestResultHandledAsARestErrorResponse() throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
-
         try {
-
             String url = dataUrl + "/application/9999";
             restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
-
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = new Error(CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.name(), null);
+            Error expectedError = new Error(CommonFailureKeys.GENERAL_FORBIDDEN.name(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             Assert.assertEquals(expectedResponse, restErrorResponse);
         }
@@ -119,14 +112,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     private UserResource leadApplicantUser(){
-        return getUserResourceForSecurity("steve.smith@empire.com");
+        return SecuritySetter.basicSecurityUser;
     }
 
-    private UserResource getUserResourceForSecurity(String email) {
-        UserResource user = userRestService.findUserByEmail(email).getSuccessObject();
-        UserResource resource = new UserResource();
-        resource.setId(user.getId());
-        resource.setUid(user.getUid());
-        return resource;
-    }
 }
