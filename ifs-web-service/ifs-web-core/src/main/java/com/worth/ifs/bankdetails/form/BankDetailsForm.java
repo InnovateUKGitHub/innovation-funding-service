@@ -1,6 +1,5 @@
 package com.worth.ifs.bankdetails.form;
 
-import com.worth.ifs.project.bankdetails.form.ProjectDetailsAddressForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
