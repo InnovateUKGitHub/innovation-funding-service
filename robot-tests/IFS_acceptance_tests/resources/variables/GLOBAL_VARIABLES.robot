@@ -95,14 +95,6 @@ ${too_large_pdf}        large.pdf
 ${text_file}            testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 
-# Email related Variables
-${TEST_MAILBOX_ONE}    worth.email.test
-${TEST_MAILBOX_TWO}    worth.email.test.two
-${test_mailbox_one_password}    testtest1
-${test_mailbox_two_password}    testtest1
-${unique_email_number}    1
-${submit_test_email}      ${test_mailbox_one}+submittest@gmail.com
-
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
 ${Assessment_summary_complete_9}    ${server}/assessment/9/summary
