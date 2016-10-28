@@ -11,6 +11,10 @@ the user reads his email
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}!=1    the user reads his email remotely    ${recipient}    ${subject}    ${pattern}
 
+the user reads his email from the second mailbox
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
+    run keyword if    ${docker}!=1    the user reads his email from the second mailbox remotely    ${recipient}    ${subject}    ${pattern}
 
 the user reads his email from the default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
@@ -37,7 +41,14 @@ the user reads his email locally
 the user reads his email remotely
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${email_to_test} =  wait for email  sender=dev-dwatson-liferay-portal@hiveit.co.uk    recipient=${recipient}    subject=${subject}    timeout=200
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
+    log    ${subject}
+    check pattern in email    ${email_to_test}    ${pattern}
+
+the user reads his email from the second mailbox remotely
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
 
@@ -45,7 +56,7 @@ the user reads his email remotely
 the user reads his email from the default remote mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
     Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
-    ${email_to_test} =  wait for email  sender=dev-dwatson-liferay-portal@hiveit.co.uk    recipient=${recipient}    subject=${subject}    timeout=200
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
 
@@ -63,10 +74,7 @@ check pattern in email
 
 ####################### CLICKING EMAILED LINKS ############################
 
-#The user verifies their email
-#    [Arguments]    ${verify_link}
-#    Go To    ${verify_link}
-#    Page Should Contain    Account verified
+
 
 the user reads his email and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
@@ -97,7 +105,7 @@ the user reads his email and clicks the link locally
 the user reads his email and clicks the link remotely
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${email_to_test} =  wait for email  sender=dev-dwatson-liferay-portal@hiveit.co.uk    recipient=${recipient}    subject=${subject}    timeout=200
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
 
@@ -105,7 +113,7 @@ the user reads his email and clicks the link remotely
 the user reads his email from the default mailbox and clicks the link remotely
     [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
     Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
-    ${email_to_test} =  wait for email  sender=dev-dwatson-liferay-portal@hiveit.co.uk    recipient=${recipient}    subject=${subject}    timeout=200
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
 

@@ -219,9 +219,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 200px;">&nbsp;</th>
-                        <th scope="col" class="aligncentre">Progress</th>
-                        <th scope="col" class="numeric">Total costs</th>
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="aligncentre width-medium">Progress</th>
+                        <th scope="col" class="numeric width-small">Total costs</th>
                         <th scope="col" class="numeric width-small">
                         % Grant
                     </th>
@@ -250,11 +250,11 @@
                 <tbody>
 
                     <tr>
-                        <th> 
+                        <th scope="col">
                             Aptrans Ltd<br />
                             <small>Lead partner</small>
                         </th>
-                    
+
                         <th:block th:if="${status == null}">
                             <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td>
                             <td class="numeric"><strong>&pound;100,000</strong></td>
@@ -275,7 +275,7 @@
                     </tr>
 
                     <tr>
-                        <th>
+                        <th scope="col">
                             Biotech corp<br />
                             <small>Partner</small>
                         </th>
@@ -300,7 +300,7 @@
 
                     </tr>
                     <tr>
-                        <th>
+                        <th scope="col">
                             University of Cardiff<br />
                             <small>Partner</small>
                         </th>
@@ -327,15 +327,16 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" colspan="2" class="aligncentre">Progress</th>
-                        <th scope="col" class="numeric">Total</th>
-                        <th scope="col" class="numeric">
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="aligncentre width-small">Progress</th>
+                        <th scope="col" class="numeric width-small">Total</th>
+                        <th scope="col" class="numeric width-small">
                            Labour
                         </th>
-                        <th scope="col" class="numeric">
+                        <th scope="col" class="numeric width-small">
                             Overheads
                         </th>
-                        <th scope="col" class="numeric">
+                        <th scope="col" class="numeric width-small">
                             Materials
                         </th>
                         <th scope="col" class="numeric width-small">Capital usage</th>
@@ -360,9 +361,13 @@
                 </tfoot>
                 <tbody>
                     <tr>
-                        <th> 
+                        <th scope="col">
                             Aptrans Ltd<br />
-                            <small>Lead partner</small>
+                            <small>Lead partner<br />
+                              <th:block th:if="${user == 'admin'}">
+                                <a href="/prototypes/5913-admin-view-partner-finances">Detailed finances</a>
+                              </th:block>
+                            </small>
                         </th>
                         <th:block th:if="${status == null}">
                             <td class="aligncentre">&nbsp;</td>
@@ -390,9 +395,13 @@
 
                     </tr>
                     <tr>
-                        <th>
+                        <th scope="row">
                             Biotech corp<br />
-                            <small>Partner</small>
+                            <small>Partner<br />
+                              <th:block th:if="${user == 'admin'}">
+                                <a href="/prototypes/5913-admin-view-partner-finances">Detailed finances</a>
+                              </th:block>
+                            </small>
                         </th>
 
                         <th:block th:if="${status == null}">
@@ -421,9 +430,13 @@
 
                     </tr>
                     <tr>
-                        <th>
+                        <th scope="row">
                             University of Cardiff<br />
-                            <small>Partner</small>
+                            <small>Partner<br />
+                              <th:block th:if="${user == 'admin'}">
+                                <a href="/prototypes/5914-admin-view-academic-finances">Detailed finances</a>
+                              </th:block>
+                            </small>
                         </th>
                         <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td>
                         <td class="numeric"><strong>£38,950</strong></td>
@@ -940,7 +953,7 @@
                     <label class="form-label" for="org-name">
                         <span class="form-label-bold">Find your business on Companies House
                         <span class="form-hint">Enter your company name or registration number</span>
-                        
+
                         <th:block th:if="${status == 'projectSetup'}">
                             <span class="form-hint">Name given in application: Nomensa</span>
                         </th:block>
@@ -1067,7 +1080,7 @@
 <!-- ========Applicant view - feedback score======= -->
 
 <div th:fragment="prototype-spend-year-totals">
-    
+
     <h2 class="heading-medium">Project costs for financial year</h2>
 
     <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.

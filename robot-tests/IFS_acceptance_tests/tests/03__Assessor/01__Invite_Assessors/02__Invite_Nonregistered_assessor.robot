@@ -18,7 +18,6 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
-${Create_account_contact_details_assessor3}    ${server}/assessment/registration/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932/register
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -38,7 +37,7 @@ User can navigate back to the Become an Assessor page
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
-    And the email displayed should be correct
+    And the user should see the text in the page    worth.email.test+assessor3@gmail.com
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
 
@@ -112,9 +111,9 @@ Create assessor account: Accepted competitions should be displayed in dashboard
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631
     ...
-    ...             INFUND-4636
+    ...    INFUND-4636
     ...
-    ...             INFUND-5165
+    ...    INFUND-5165
     [Tags]
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
@@ -126,8 +125,8 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
     # TODO due to INFUND-5566
-   # And the assessor shouldn't be able to accept the rejected competition
-   [Teardown]    The user closes the browser
+    # And the assessor shouldn't be able to accept the rejected competition
+    [Teardown]    The user closes the browser
 
 Assessor attempts to accept/reject an invitation which is already accepted
     [Documentation]    INFUND-5165
@@ -142,10 +141,6 @@ the assessor fills in all fields
     Select From List By Index    id=rejectReason    3
     The user should not see the text in the page    This field cannot be left blank
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
-
-the email displayed should be correct
-    ${Email}=    Get Text    css=div:nth-child(10) p strong
-    Should Be Equal    ${Email}    worth.email.test+assessor3@gmail.com
 
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}

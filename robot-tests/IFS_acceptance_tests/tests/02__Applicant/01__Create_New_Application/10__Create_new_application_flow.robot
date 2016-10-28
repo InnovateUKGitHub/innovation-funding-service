@@ -135,16 +135,16 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
+    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+project.finance1@gmail.com    Please verify your email address    If you did not request an account with us
+    Given the user reads his email from the default mailbox and clicks the link    worth.email.test+project.finance1@gmail.com    Please verify your email address    If you did not request an account with us
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
     [Teardown]    Logout as user

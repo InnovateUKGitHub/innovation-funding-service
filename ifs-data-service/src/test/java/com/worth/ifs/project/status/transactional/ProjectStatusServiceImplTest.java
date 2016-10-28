@@ -2,7 +2,7 @@ package com.worth.ifs.project.status.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
