@@ -4,11 +4,13 @@ import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BankDetailsRestServiceImpl extends BaseRestService implements BankDetailsRestService {
 
+    private String competitionsRestURL = "/competition";
     private String projectRestURL = "/project";
 
     @Override
@@ -34,5 +36,11 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     @Override
     public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsStatusSummaryByProject(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/bank-details/status-summary", ProjectBankDetailsStatusSummary.class);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> downloadByCompetition(Long competitionId) {
+        String url = competitionsRestURL + "/" + competitionId + "/bank-details/export";
+        return getWithRestResult(url, ByteArrayResource.class);
     }
 }
