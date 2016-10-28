@@ -5,7 +5,7 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
@@ -48,7 +48,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
