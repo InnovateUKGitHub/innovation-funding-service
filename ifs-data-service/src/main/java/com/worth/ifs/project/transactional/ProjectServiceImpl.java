@@ -645,9 +645,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        project.addProjectUser(financeContact);
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
+
+        project.addProjectUser(newFinanceContact);
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
             projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
@@ -827,12 +830,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         if (result.isFailure()) {
             return result;
-        }
-
-        ProjectUser existingUser = result.getSuccessObject();
-
-        if (existingUser != null) {
-            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION);
         }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
