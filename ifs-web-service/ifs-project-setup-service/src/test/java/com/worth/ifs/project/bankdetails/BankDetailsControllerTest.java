@@ -5,7 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.form.BankDetailsForm;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -22,7 +22,7 @@ import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddres
 import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
