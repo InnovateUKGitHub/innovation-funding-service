@@ -56,7 +56,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(mapper::mapToResource);
+        return getByHash(inviteHash)
+                .andOnSuccess(invite -> {
+                    CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
+
+                    if (participant == null) {
+                        return ServiceResult.serviceSuccess(invite);
+                    }
+
+                    if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
+                        return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
+                    }
+
+                    return ServiceResult.serviceSuccess(invite);
+                })
+                .andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override
