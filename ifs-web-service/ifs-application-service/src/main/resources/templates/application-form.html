@@ -62,7 +62,7 @@
             <div th:unless="${allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
-            <div th:if="${(currentSection != null) and
+            <div th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
             (currentSection.getName() != null) and
             (#strings.equals(currentSection.getName(), 'Your finances'))
             and !completedSections?.contains(currentSection.getId())}">

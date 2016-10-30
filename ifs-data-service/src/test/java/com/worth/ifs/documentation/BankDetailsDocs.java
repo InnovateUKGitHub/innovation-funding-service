@@ -1,9 +1,9 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder;
+import com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 

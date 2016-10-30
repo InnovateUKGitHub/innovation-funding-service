@@ -9,7 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -1048,34 +1048,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    /**
-     * A temporary method for generating finance checks for existing projects.
-     * See INFUND-5591 for an explanation.
-     * This is required temporarily and will be removed in near future.
-     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
-     * @return result of attempting to generate finance checks for all projects
-     */
-    @Override
-    public ServiceResult<Void> generateFinanceChecksForAllProjects() {
-        return find(projectRepository.findAll(), notFoundError(Project.class, emptyList())).
-                andOnSuccess(projects -> {
-                    List<ServiceResult> results = projects.stream().filter(p -> find(financeCheckRepository.findByProjectId(p.getId()), notFoundError(FinanceCheck.class, emptyList())).isFailure()).
-                            map(project -> generateFinanceCheckEntitiesForNewProject(project).
-                                    handleSuccessOrFailure(
-                                            failure -> {
-                                                LOG.error("Could not generate finance checks manually for project no. " + project.getId());
-                                                return serviceFailure(new Error(FINANCE_CHECKS_CANNOT_GENERATE_FOR_PROJECT, project.getId()));
-                                            },
-                                            success -> {
-                                                LOG.debug("Finance check entries generated for project no. " + project.getId());
-                                                return serviceSuccess();
-                                            }
-                                    )
-                            ).collect(toList());
-
-                    return results.stream().filter(result -> result.isFailure()).findFirst().orElse(serviceSuccess());
-                });
     }
 }
