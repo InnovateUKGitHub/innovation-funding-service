@@ -6,10 +6,14 @@ import com.worth.ifs.assessment.service.CompetitionParticipantRestService;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
+import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
+import com.worth.ifs.user.builder.UserProfileStatusResourceBuilder;
+import com.worth.ifs.user.resource.UserProfileStatusResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +29,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
@@ -44,6 +49,9 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private CompetitionParticipantRestService competitionParticipantRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {
@@ -68,8 +76,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(4))
                 .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(false)
+                .withContractComplete(false)
+                .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -86,8 +100,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         50
                 )
         );
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
@@ -102,8 +118,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(0))
                 .withAssessorDeadlineDate(now().plusDays(6))
                 .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(false)
+                .withAffliliationsComplete(true)
+                .withContractComplete(false)
+                .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -120,8 +142,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         16
                 )
         );
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
@@ -136,8 +160,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
                 .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(false)
+                .withAffliliationsComplete(false)
+                .withContractComplete(true)
+                .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -146,8 +176,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .andReturn();
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
         assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
@@ -163,8 +195,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(1))
                 .withAssessorDeadlineDate(now().plusDays(7))
                 .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withContractComplete(false)
+                .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -181,8 +219,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         LocalDateTime.now().plusDays(7).toLocalDate()
                 )
         );
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
         assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertEquals(expectedUpcomingCompetitions, model.getUpcomingCompetitions());
     }
 
@@ -197,8 +237,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .withAssessorDeadlineDate(now().minusDays(0))
                 .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(false)
+                .withContractComplete(true)
+                .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -208,7 +254,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+
         assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 }

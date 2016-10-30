@@ -41,11 +41,7 @@ public class AssessorDashboardModelPopulator {
     }
 
     private AssessorProfileStatusViewModel getProfileStatus(UserProfileStatusResource assessorProfileStatusResource) {
-        return new AssessorProfileStatusViewModel(
-                assessorProfileStatusResource.isSkillsComplete(),
-                assessorProfileStatusResource.isAffiliationsComplete(),
-                assessorProfileStatusResource.isContractComplete()
-        );
+        return new AssessorProfileStatusViewModel(assessorProfileStatusResource);
     }
 
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
