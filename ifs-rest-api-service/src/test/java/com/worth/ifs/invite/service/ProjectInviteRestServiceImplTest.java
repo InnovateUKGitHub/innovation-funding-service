@@ -6,9 +6,9 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+
 import static com.worth.ifs.invite.resource.InviteProjectConstants.*;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -42,7 +42,8 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
 
     @Test
     public void testGetInviteByHash() {
-        InviteProjectResource invite = newInviteProjectResource().withHash("hash").build();
+        InviteProjectResource invite = new InviteProjectResource();
+        invite.setHash("hash");//.build();
         setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), InviteProjectResource.class, invite);
         RestResult<InviteProjectResource> returnedResponse = service.getInviteByHash(invite.getHash());
         assertTrue(returnedResponse.isSuccess());
@@ -51,7 +52,7 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
 
     @Test
     public void testGetUser() {
-        UserResource user = newUserResource().build();
+        UserResource user = new UserResource();
         String inviteHash = "hash";
         setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_USER_BY_HASH_MAPPING + inviteHash, UserResource.class, user);
         RestResult<UserResource> returnedResponse = service.getUser(inviteHash);

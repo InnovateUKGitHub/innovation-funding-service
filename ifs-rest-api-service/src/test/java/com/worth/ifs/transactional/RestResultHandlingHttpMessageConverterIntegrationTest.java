@@ -10,6 +10,7 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.commons.security.UidAuthenticationService;
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -42,7 +43,7 @@ import static org.springframework.http.HttpStatus.OK;
  * and convert them into {@link RestErrorResponse} objects.
  */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
-
+    UidAuthenticationService
     @Value("${ifs.data.service.rest.baseURL}")
     private String dataUrl;
 

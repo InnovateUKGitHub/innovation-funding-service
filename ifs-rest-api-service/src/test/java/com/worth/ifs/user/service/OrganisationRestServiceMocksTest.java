@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -32,7 +34,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
      public void test_getOrganisationsByApplicationId() {
 
         String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/findByApplicationId/123";
-        List<OrganisationResource> returnedResponse = newOrganisationResource().build(3);
+        List<OrganisationResource> returnedResponse = Arrays.asList(1,2,3).stream().map(i -> new OrganisationResource()).collect(Collectors.toList());// newOrganisationResource().build(3);
         ResponseEntity<List<OrganisationResource>> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), organisationResourceListType())).thenReturn(responseEntity);
@@ -46,7 +48,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     public void test_getOrganisationById() {
 
         String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/findById/123";
-        OrganisationResource returnedResponse = newOrganisationResource().build();
+        OrganisationResource returnedResponse =  new OrganisationResource();
         ResponseEntity<OrganisationResource> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), OrganisationResource.class)).thenReturn(responseEntity);
@@ -59,18 +61,18 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     public void updateOrganisationNameAndRegistation() throws UnsupportedEncodingException {
         Long organisationId = 1L;
 
-        OrganisationResource organisationResource= newOrganisationResource()
-                .withId(organisationId)
-                .withName("Vitruvius Stonework Limited")
-                .withCompanyHouseNumber("60674010")
-                .build();
+        OrganisationResource organisation = new OrganisationResource();
+        organisation.setId(organisationId);
+        organisation.setName("Vitruvius Stonework Limited");
+        organisation.setCompanyHouseNumber("60674010");
 
-        String organisationNameEncoded = UriUtils.encode(organisationResource.getName(), "UTF-8");
 
-        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisationResource.getCompanyHouseNumber(), OrganisationResource.class, null, organisationResource, OK);
+        String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
-        OrganisationResource receivedResource = service.updateNameAndRegistration(organisationResource).getSuccessObject();
+        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
 
-        Assert.assertEquals(organisationResource, receivedResource);
+        OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccessObject();
+
+        Assert.assertEquals(organisation, receivedResource);
     }
 }

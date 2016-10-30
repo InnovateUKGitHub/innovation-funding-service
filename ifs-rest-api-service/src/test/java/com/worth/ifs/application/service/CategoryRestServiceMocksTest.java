@@ -4,11 +4,14 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.service.CategoryRestServiceImpl;
+import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.worth.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.categoryResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,7 +33,8 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
     public void test_findByType() {
 
         String expectedUrl = categoryRestURL + "/findByType/" + CategoryType.INNOVATION_AREA.getName();
-        List<CategoryResource> returnedCategoryResources = newCategoryResource().build(3);
+        List<CategoryResource> returnedCategoryResources = Arrays.asList(1,2,3).stream().map(i -> new CategoryResource()).collect(Collectors.toList());
+
         setupGetWithRestResultExpectations(expectedUrl, categoryResourceListType(), returnedCategoryResources);
 
         // now run the method under test
@@ -43,7 +47,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
     public void test_findByParent() {
 
         String expectedUrl = categoryRestURL + "/findByParent/1";
-        List<CategoryResource> returnedCategoryResources = newCategoryResource().build(3);
+        List<CategoryResource> returnedCategoryResources = Arrays.asList(1,2,3).stream().map(i -> new CategoryResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(expectedUrl, categoryResourceListType(), returnedCategoryResources);
 
         // now run the method under test

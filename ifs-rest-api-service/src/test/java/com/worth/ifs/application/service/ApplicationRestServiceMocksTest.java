@@ -1,6 +1,8 @@
 package com.worth.ifs.application.service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,7 +14,7 @@ import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
@@ -40,7 +42,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void test_getApplicationById() {
 
         String expectedUrl = applicationRestURL + "/" + 123;
-        ApplicationResource response = newApplicationResource().build();
+        ApplicationResource response = new ApplicationResource();//newApplicationResource().build();
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, response);
 
         // now run the method under test
@@ -53,7 +55,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void test_getApplicationsByCompetitionIdAndUserId() {
 
         String expectedUrl = applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/123/456/APPLICANT";
-        List<ApplicationResource> returnedApplications = newApplicationResource().build(3);
+        List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());// newApplicationResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
@@ -66,7 +68,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void test_getApplicationsByUserId() {
 
         String expectedUrl = applicationRestURL + "/findByUser/123";
-        List<ApplicationResource> returnedApplications = newApplicationResource().build(3);
+        List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());//newApplicationResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
@@ -95,8 +97,8 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void test_saveApplication() {
 
         String expectedUrl = applicationRestURL + "/saveApplicationDetails/123";
-        ApplicationResource applicationToUpdate = newApplicationResource().withId(123L).build();
-
+        ApplicationResource applicationToUpdate = new ApplicationResource(); // newApplicationResource().withId(123L).build();
+        applicationToUpdate.setId(123L);
         ResponseEntity<String> response = new ResponseEntity<>("", OK);
         setupPostWithRestResultExpectations(expectedUrl, Void.class, applicationToUpdate, null, OK);
 

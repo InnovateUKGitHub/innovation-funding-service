@@ -34,7 +34,6 @@ sourceSets {
     client {
         java {
             srcDir 'src/main/java'
-            include 'com/worth/ifs/domain'
         }
         main {
             ext.originalJavaSrcDirs = java.srcDirs
@@ -151,23 +150,22 @@ task generateMainMapperClasses(type: JavaCompile) {
 task client(type: Jar) {
     baseName += '-public'
     from(sourceSets.main.output) {
-//        // filter to only include certain class files (Ant glob pattern)
+        // filter to only include certain class files (Ant glob pattern)
 //        include "com/worth/ifs/**/service/**"
-//        include "com/worth/ifs/**/constant/**"
-//        include "com/worth/ifs/**/resource/**"
-//        include "com/worth/ifs/util/**"
-//        include "com/worth/ifs/commons/security/**"
-//        include "com/worth/ifs/commons/rest/**"
-//        include "com/worth/ifs/commons/error/**"
-//        include "com/worth/ifs/commons/validation/**"
-//        include "com/worth/ifs/mappers/**"
-//        include "com/worth/ifs/**/mapper/**"
-//        exclude "com/worth/ifs/**/transactional/**"
-//        exclude "com/worth/ifs/notifications/**"
-//        exclude "com/worth/ifs/authentication/**"
-//        exclude "com/worth/ifs/sil/**"
-//        exclude "com/worth/ifs/email/**"
-//        include "com/worth/ifs/config/**"
+        include "com/worth/ifs/**/constant/**"
+        include "com/worth/ifs/**/resource/**"
+        include "com/worth/ifs/util/**"
+        include "com/worth/ifs/commons/security/**"
+        include "com/worth/ifs/commons/rest/**"
+        include "com/worth/ifs/commons/error/**"
+        include "com/worth/ifs/commons/validation/**"
+        include "com/worth/ifs/mappers/**"
+        exclude "com/worth/ifs/**/transactional/**"
+        exclude "com/worth/ifs/notifications/**"
+        exclude "com/worth/ifs/authentication/**"
+        exclude "com/worth/ifs/sil/**"
+        exclude "com/worth/ifs/email/**"
+        include "com/worth/ifs/config/**"
     }
 }
 task clientCopy(type: Copy){
@@ -182,10 +180,10 @@ task testCommonCode(type: Jar) {
     baseName += '-tests'
     from(sourceSets.test.output) {
         // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/Builder.class"
-        include "com/worth/ifs/BaseBuilder.class"
-        include "com/worth/ifs/**/*Builder.class"
-        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
+//        include "com/worth/ifs/Builder.class"
+//        include "com/worth/ifs/BaseBuilder.class"
+//        include "com/worth/ifs/**/*Builder.class"
+//        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
         include "**/application-web-integration-test.properties"
         include "com/worth/ifs/commons/**/*.class"
     }

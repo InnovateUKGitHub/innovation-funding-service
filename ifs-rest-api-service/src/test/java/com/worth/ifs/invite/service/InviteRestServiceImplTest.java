@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.abstractions.CList;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -12,10 +13,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
-import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+
+
 import static com.worth.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -42,8 +43,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     @Test
     public void test_createInvitesByInviteOrganisation() throws Exception {
         final String organisationName = "OrganisationName";
-        final List<ApplicationInviteResource> invites = asList(newApplicationInviteResource().build());
-
+        final List<ApplicationInviteResource> invites = asList(new ApplicationInviteResource());
         InviteOrganisationResource inviteOrganisationResource = new InviteOrganisationResource();
         inviteOrganisationResource.setOrganisationName(organisationName);
         inviteOrganisationResource.setInviteResources(invites);
@@ -61,7 +61,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     @Test
     public void test_createInvitesByOrganisation() throws Exception {
         final Long organisationId = 1289124L;
-        final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
+        final List<ApplicationInviteResource> invites = CList.listOf(42, () -> new ApplicationInviteResource());
 
         InviteOrganisationResource inviteOrganisationResource = new InviteOrganisationResource();
         inviteOrganisationResource.setOrganisation(organisationId);
@@ -79,7 +79,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
 
     @Test
     public void test_saveInvites() throws Exception {
-        final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(40);
+        final List<ApplicationInviteResource> invites = CList.listOf(40, () -> new ApplicationInviteResource());
 
         InviteResultsResource expected = new InviteResultsResource();
         expected.setInvitesSendSuccess(21);
@@ -125,7 +125,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
 
     @Test
     public void test_getUser() throws Exception {
-        UserResource expected = newUserResource().build();
+        UserResource expected = new UserResource();
 
         String url = inviteRestURL + String.format(GET_USER_BY_HASH_MAPPING + "%s", inviteHash);
         setupGetWithRestResultAnonymousExpectations(url, UserResource.class, expected);
@@ -137,7 +137,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
 
     @Test
     public void test_getInviteByHash() throws Exception {
-        ApplicationInviteResource expected = newApplicationInviteResource().build();
+        ApplicationInviteResource expected = new ApplicationInviteResource();
 
         String url = inviteRestURL + "/getInviteByHash/" + inviteHash;
         setupGetWithRestResultAnonymousExpectations(url, ApplicationInviteResource.class, expected);
@@ -149,7 +149,8 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
 
     @Test
     public void test_getInviteOrganisationByHash() throws Exception {
-        InviteOrganisationResource expected = newInviteOrganisationResource().withId(1234L).build();
+        InviteOrganisationResource expected = new InviteOrganisationResource();
+        expected.setId(1234L);
 
         String url = inviteRestURL + "/getInviteOrganisationByHash/" + inviteHash;
         setupGetWithRestResultAnonymousExpectations(url, InviteOrganisationResource.class, expected);
@@ -162,8 +163,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     @Test
     public void test_getInvitesByApplication() throws Exception {
         Long applicationId = 2341L;
-        List<InviteOrganisationResource> expected = newInviteOrganisationResource().build(2);
-
+        List<InviteOrganisationResource> expected = CList.listOf(2, () -> new InviteOrganisationResource());
         String url = inviteRestURL + "/getInvitesByApplicationId/" + applicationId;
         setupGetWithRestResultExpectations(url, inviteOrganisationResourceListType(), expected, OK);
         RestResult<List<InviteOrganisationResource>> response = service.getInvitesByApplication(applicationId);

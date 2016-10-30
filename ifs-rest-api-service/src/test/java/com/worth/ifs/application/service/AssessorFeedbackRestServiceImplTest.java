@@ -1,6 +1,6 @@
 package com.worth.ifs.application.service;
 
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -23,7 +23,7 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
     public void testAddAssessorFeedbackDocument() {
 
         String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackDocument?applicationId=123&filename=original.pdf";
-        FileEntryResource returnedFileEntry = newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = new FileEntryResource();
 
         setupFileUploadWithRestResultExpectations(
                 expectedUrl, FileEntryResource.class, "New content", "text/plain", 1000L, returnedFileEntry, OK);
@@ -39,7 +39,7 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
     public void testGetAssessorFeedbackDocumentDetails() {
 
         String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackDocument/fileentry?applicationId=123";
-        FileEntryResource returnedFileEntry = newFileEntryResource().build();
+        FileEntryResource returnedFileEntry = new FileEntryResource();
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 

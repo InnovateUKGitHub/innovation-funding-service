@@ -3,18 +3,21 @@ package com.worth.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
-import com.worth.ifs.form.builder.FormInputResponseResourceBuilder;
+
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -35,7 +38,8 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getResponsesByApplicationId() {
-        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
+        List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
+
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
 
@@ -63,7 +67,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getByFormInputIdAndApplication(){
-        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
+        List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
 

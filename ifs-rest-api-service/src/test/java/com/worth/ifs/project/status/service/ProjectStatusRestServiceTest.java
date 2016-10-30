@@ -7,7 +7,7 @@ import com.worth.ifs.project.service.ProjectStatusRestServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.worth.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +23,7 @@ public class ProjectStatusRestServiceTest extends BaseRestServiceUnitTest<Projec
     @Test
     public void testGetProjectById() {
 
-        CompetitionProjectsStatusResource returnedResponse = newCompetitionProjectsStatusResource().build();
+        CompetitionProjectsStatusResource returnedResponse = new CompetitionProjectsStatusResource();
 
         setupGetWithRestResultExpectations(competitionURL + "/123", CompetitionProjectsStatusResource.class, returnedResponse);
 

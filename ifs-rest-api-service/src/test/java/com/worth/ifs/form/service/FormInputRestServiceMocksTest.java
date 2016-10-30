@@ -5,10 +5,12 @@ import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
-import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -23,7 +25,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void test_getFormInputByQuestionId() {
-        List<FormInputResource> returnedFormInputs = newFormInputResource().build(3);
+        List<FormInputResource> returnedFormInputs = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(formInputRestURL + "/findByQuestionId/1", formInputResourceListType(), returnedFormInputs);
 
@@ -33,7 +35,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void getOneTest() {
-        FormInputResource formInputResource = newFormInputResource().build();
+        FormInputResource formInputResource = new FormInputResource();
         setupGetWithRestResultExpectations(formInputRestURL + "/1", FormInputResource.class, formInputResource);
 
         FormInputResource returnedFormInputs = service.getById(1L).getSuccessObject();
@@ -44,7 +46,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void findByCompetitionIdTest() {
-        List<FormInputResource> formInputResources = newFormInputResource().build(3);
+        List<FormInputResource> formInputResources = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());;
         setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", formInputResourceListType(), formInputResources);
 
         List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccessObject();

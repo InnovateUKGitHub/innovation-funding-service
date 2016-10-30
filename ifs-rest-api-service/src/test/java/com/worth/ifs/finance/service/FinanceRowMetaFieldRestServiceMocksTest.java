@@ -4,10 +4,12 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.financeRowMetaFieldResourceListType;
-import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -27,7 +29,7 @@ public class FinanceRowMetaFieldRestServiceMocksTest extends BaseRestServiceUnit
     @Test
     public void test_getCostFields() {
 
-        List<FinanceRowMetaFieldResource> returnedResponse = newFinanceRowMetaFieldResource().build(3);
+        List<FinanceRowMetaFieldResource> returnedResponse = Arrays.asList(1,2,3).stream().map(i -> new FinanceRowMetaFieldResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(costFieldRestURL + "/findAll/", financeRowMetaFieldResourceListType(), returnedResponse);
 

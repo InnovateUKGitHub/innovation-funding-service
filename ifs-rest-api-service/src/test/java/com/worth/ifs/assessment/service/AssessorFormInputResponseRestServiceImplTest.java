@@ -3,11 +3,14 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -26,8 +29,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
 
     @Test
     public void testGetAllAssessorFormInputResponses() throws Exception {
-        List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
-                .build(2);
+        List<AssessorFormInputResponseResource> expected = Arrays.asList(1,2,3).stream().map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         Long assessmentId = 1L;
 
@@ -38,8 +40,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
 
     @Test
     public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
-        List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
-                .build(2);
+        List<AssessorFormInputResponseResource> expected = Arrays.asList(1,2,3).stream().map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         Long assessmentId = 1L;
         Long questionId = 2L;
@@ -55,11 +56,10 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         Long formInputId = 2L;
         String value = "Feedback";
 
-        AssessorFormInputResponseResource formInputResponse = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
+        AssessorFormInputResponseResource formInputResponse = new AssessorFormInputResponseResource();
+        formInputResponse.setAssessment(assessmentId);
+        formInputResponse.setFormInput(formInputId);
+        formInputResponse.setValue(value);
         setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), formInputResponse, OK);
         final RestResult<Void> response = service.updateFormInputResponse(formInputResponse);
         assertTrue(response.isSuccess());

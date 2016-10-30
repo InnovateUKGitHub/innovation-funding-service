@@ -10,15 +10,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
+
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
-import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
-import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+
+
+
+
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +57,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void findExistingUserByEmailShouldReturnUserResource() {
-        UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
+        UserResource userResource = new UserResource();
+        userResource.setEmail("testemail@email.com");
 
         setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
@@ -86,15 +89,14 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setLoggedInUser(null);
 
-        UserResource userResource = newUserResource()
-                .with(id(null))
-                .withEmail("testemail@test.test")
-                .withTitle("testTitle")
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
-                .withPassword("testPassword")
-                .withPhoneNumber("1234567890")
-                .build();
+        UserResource userResource = new UserResource();
+        userResource.setId(null);
+        userResource.setEmail("testemail@test.test");
+        userResource.setTitle("testTitle");
+        userResource.setFirstName("testFirstName");
+        userResource.setLastName("testLastName");
+        userResource.setPassword("testPassword");
+        userResource.setPhoneNumber("1234567890");
 
         Long organisationId = 1L;
 
@@ -124,7 +126,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource expected = newProfileSkillsResource().build();
+        ProfileSkillsResource expected = new ProfileSkillsResource();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", usersUrl, userId), ProfileSkillsResource.class, expected, OK);
 
@@ -135,7 +137,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+        ProfileSkillsResource profileSkills = new ProfileSkillsResource();
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
 
@@ -146,7 +148,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileContract() {
         Long userId = 1L;
-        ProfileContractResource expected = newProfileContractResource().build();
+        ProfileContractResource expected = new ProfileContractResource();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileContract", usersUrl, userId), ProfileContractResource.class, expected, OK);
 
@@ -168,7 +170,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = newAffiliationResource().build(2);
+        List<AffiliationResource> expected = Arrays.asList(1,2).stream().map(i -> new AffiliationResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), affiliationResourceListType(), expected, OK);
 
@@ -179,7 +181,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = newAffiliationResource().build(2);
+        List<AffiliationResource> expected = Arrays.asList(1,2).stream().map(i -> new AffiliationResource()).collect(Collectors.toList());
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateUserAffiliations", usersUrl, userId), expected, OK);
 

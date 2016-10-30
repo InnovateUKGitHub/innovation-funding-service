@@ -5,9 +5,11 @@ import com.worth.ifs.address.resource.AddressResource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.addressResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +27,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     public void testDoLookup() throws Exception{
         String postcode = "BS348XU";
         String expectedUrl = addressRestURL + "/doLookup?lookup=" + postcode;
-        List<AddressResource> returnedAddresses = newAddressResource().build(4);
+        List<AddressResource> returnedAddresses = Arrays.asList(1,2,3,4).stream().map(i -> new AddressResource()).collect(Collectors.toList());// newAddressResource().build(4);
         setupGetWithRestResultExpectations(expectedUrl, addressResourceListType(), returnedAddresses);
 
         // now run the method under test
@@ -36,7 +38,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
 
     @Test
     public void testGetById(){
-        AddressResource addressResource = newAddressResource().build();
+        AddressResource addressResource = new AddressResource();;
         String url = addressRestURL + "/" + addressResource.getId();
         setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
 

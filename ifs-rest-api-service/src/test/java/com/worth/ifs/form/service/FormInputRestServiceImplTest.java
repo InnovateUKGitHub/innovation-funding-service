@@ -3,17 +3,20 @@ package com.worth.ifs.form.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
-import com.worth.ifs.form.builder.FormInputResourceBuilder;
+
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
-import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static java.lang.String.format;
 import static org.junit.Assert.*;
@@ -33,8 +36,8 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
 
     @Test
     public void testGetByQuestionIdAndScope() throws Exception {
-        List<FormInputResource> expected = newFormInputResource()
-                .build(2);
+        List<FormInputResource> expected = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
+
 
         Long questionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
@@ -46,8 +49,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
 
     @Test
     public void testGetByCompetitionIdAndScope() throws Exception {
-        List<FormInputResource> expected = newFormInputResource()
-                .build(2);
+        List<FormInputResource> expected = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
 
         Long competitionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
@@ -59,7 +61,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
 
     @Test
     public void testSave() throws Exception {
-        FormInputResource expected = newFormInputResource().build();
+        FormInputResource expected = new FormInputResource();
 
         setupPutWithRestResultExpectations(formInputRestUrl + "/", FormInputResource.class, expected, expected);
         RestResult<FormInputResource> result = service.save(expected);

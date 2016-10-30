@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
-import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
+
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -28,7 +28,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     public void testGetById(){
         Long projectId = 123L;
         Long bankDetailsId = 1L;
-        BankDetailsResource returnedResponse = newBankDetailsResource().build();
+        BankDetailsResource returnedResponse = new BankDetailsResource();//new BankDetailsResource();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class, returnedResponse);
         BankDetailsResource response = service.getByProjectIdAndBankDetailsId(projectId, bankDetailsId).getSuccessObject();
         assertEquals(response, returnedResponse);
@@ -38,7 +38,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     public void testGetBankDetailsByProjectAndOrganisation(){
         Long projectId = 123L;
         Long organisationId = 100L;
-        BankDetailsResource returnedResponse = newBankDetailsResource().build();
+        BankDetailsResource returnedResponse = new BankDetailsResource();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?organisationId=" + organisationId, BankDetailsResource.class, returnedResponse);
         BankDetailsResource response = service.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccessObject();
         assertEquals(response, returnedResponse);
@@ -57,7 +57,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     @Test
     public void testUpdateBankDetails(){
         Long projectId = 123L;
-        BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+        BankDetailsResource bankDetailsResource = new BankDetailsResource();
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, OK);
         RestResult result = service.updateBankDetails(projectId, bankDetailsResource);
         assertTrue(result.isSuccess());
@@ -66,7 +66,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     @Test
     public void testSubmitBankDetails(){
         Long projectId = 123L;
-        BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+        BankDetailsResource bankDetailsResource = new BankDetailsResource();
         setupPutWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, OK);
         RestResult result = service.submitBankDetails(projectId, bankDetailsResource);
         assertTrue(result.isSuccess());
@@ -75,7 +75,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     @Test
     public void testgetBankDetailsByProject(){
         Long projectId = 123L;
-        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = newProjectBankDetailsStatusSummary().build();
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary();// newProjectBankDetailsStatusSummary().build();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details/status-summary", ProjectBankDetailsStatusSummary.class, projectBankDetailsStatusSummary, OK);
         RestResult<ProjectBankDetailsStatusSummary> response = service.getBankDetailsStatusSummaryByProject(projectId);
         assertTrue(response.isSuccess());

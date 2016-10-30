@@ -2,6 +2,7 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.abstractions.CList;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.*;
 import org.junit.Assert;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
@@ -33,10 +34,8 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getAll() {
 
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
-
+        List<CompetitionResource> returnedResponse = CList.listOf(3, () -> new CompetitionResource());
         setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
-
         List<CompetitionResource> responses = service.getAll().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
@@ -45,7 +44,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getCompetitionById() {
 
-        CompetitionResource returnedResponse = newCompetitionResource().build();
+        CompetitionResource returnedResponse = new CompetitionResource();
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
 

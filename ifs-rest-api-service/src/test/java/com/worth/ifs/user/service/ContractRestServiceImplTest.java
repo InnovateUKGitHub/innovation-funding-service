@@ -5,7 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.ContractResource;
 import org.junit.Test;
 
-import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
+
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -19,7 +19,7 @@ public class ContractRestServiceImplTest extends BaseRestServiceUnitTest<Contrac
 
     @Test
     public void getCurrentContract() {
-        ContractResource contractResource = newContractResource().build();
+        ContractResource contractResource = new ContractResource();
 
         setupGetWithRestResultExpectations(contractUrl + "/findCurrent", ContractResource.class, contractResource, OK);
         final RestResult<ContractResource> result = service.getCurrentContract();

@@ -2,7 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.builder.MilestoneResourceBuilder;
+
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
-import static com.worth.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -111,20 +111,20 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     private MilestoneResource getOpenDateMilestone() {
-        MilestoneResource milestone = newMilestoneResource()
-                .withId(1L)
-                .withName(MilestoneType.OPEN_DATE)
-                .withDate(LocalDateTime.now())
-                .withCompetitionId(competitionId).build();
-        return milestone;
+        return milestone(1L, MilestoneType.OPEN_DATE, LocalDateTime.now(), competitionId);
+
     }
 
     private MilestoneResource getBriefingEventMilestone() {
-        MilestoneResource milestone = newMilestoneResource()
-                .withId(1L)
-                .withName(MilestoneType.BRIEFING_EVENT)
-                .withDate(LocalDateTime.of(2026,3,15,9,0))
-                .withCompetitionId(competitionId).build();
+        return milestone(1L, MilestoneType.BRIEFING_EVENT, LocalDateTime.of(2026,3,15,9,0), competitionId);
+    }
+
+    private MilestoneResource milestone(Long id, MilestoneType type, LocalDateTime date, Long competitionId) {
+        MilestoneResource milestone = new MilestoneResource();
+        milestone.setId(id);
+        milestone.setType(type);
+        milestone.setDate(date);
+        milestone.setCompetition(competitionId);
         return milestone;
     }
 }
