@@ -37,7 +37,8 @@ public class BankDetailsDocs {
     public static final FieldDescriptor[] projectBankDetailsStatusSummaryFields = {
             fieldWithPath("competitionId").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition name"),
-            fieldWithPath("projectId").description("Project id to which the "),
+            fieldWithPath("projectId").description("Project id for bank details status summary"),
+            fieldWithPath("applicationId").description("Application id for bank details status summary"),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status")
     };
 }

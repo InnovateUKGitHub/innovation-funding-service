@@ -125,10 +125,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void testProjectManagerViewSpendProfile() throws Exception {
-        long projectId = 123L;
         long organisationId = 1L;
 
-        ProjectResource projectResource = newProjectResource().withId(123L).build();
+        ProjectResource projectResource = newProjectResource().withId(123L).withApplication(456L).build();
         List<ProjectUserResource> projectUserResources = newProjectUserResource()
                 .withUser(1L)
                 .withRoleName(UserRoleType.PROJECT_MANAGER)
@@ -141,15 +140,15 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         SpendProfileResource spendProfileResource = newSpendProfileResource().build();
         List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_MANAGER).build(1);
         loggedInUser.setRoles(roleResources);
-        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
 
-        when(projectFinanceService.getSpendProfile(projectId, organisationId)).thenReturn(Optional.of(spendProfileResource));
+        when(projectFinanceService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
-        ProjectSpendProfileProjectManagerViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectId, projectResource, partnerOrganisations);
+        ProjectSpendProfileProjectManagerViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations);
 
-        mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/spend-profile-review"))
                 .andExpect(model().attribute("model", expectedViewModel))
@@ -304,7 +303,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         return expectedTable;
     }
 
-    private ProjectSpendProfileProjectManagerViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(long projectId, ProjectResource projectResource, List<OrganisationResource> partnerOrganisations) {
+    private ProjectSpendProfileProjectManagerViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations) {
 
         Map<String, Boolean> partnersSpendProfileProgress = new HashMap<>();
         partnersSpendProfileProgress.put("abc", false);
@@ -312,8 +311,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         Map<String, Boolean> editablePartners = new HashMap<>();
         editablePartners.put("abc", false);
 
-        return new ProjectSpendProfileProjectManagerViewModel(projectId,
-                projectResource.getName(),
+        return new ProjectSpendProfileProjectManagerViewModel(projectResource.getId(),
+                projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
                 partnerOrganisations,
                 projectResource.getSpendProfileSubmittedDate() != null,
