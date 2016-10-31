@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -34,6 +35,8 @@ public class ProjectSetupSectionsPermissionRules {
 
     @Autowired
     private ProjectService projectService;
+
+    private ProjectSetupSectionPartnerAccessorSupplier accessorSupplier = new ProjectSetupSectionPartnerAccessorSupplier();
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
@@ -104,7 +107,7 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(pu.getOrganisation()).get();
 
-            ProjectSetupSectionPartnerAccessor sectionAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
+            ProjectSetupSectionPartnerAccessor sectionAccessor = accessorSupplier.apply(teamStatus);
             OrganisationResource organisation = new OrganisationResource();
             organisation.setId(partnerStatusForUser.getOrganisationId());
             organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
@@ -115,5 +118,13 @@ public class ProjectSetupSectionsPermissionRules {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
             return false;
         });
+    }
+
+    class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionPartnerAccessor> {
+
+        @Override
+        public ProjectSetupSectionPartnerAccessor apply(ProjectTeamStatusResource teamStatus) {
+            return new ProjectSetupSectionPartnerAccessor(teamStatus);
+        }
     }
 }
