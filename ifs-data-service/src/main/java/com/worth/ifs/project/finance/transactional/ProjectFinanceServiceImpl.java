@@ -579,8 +579,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
             if ( monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
                 monthsRow.remove(EMPTY_CELL);
+                rows.add(monthsRow.stream().toArray(String[]::new));
+            } else if (monthsRow.size() > 0 ){
+                rows.add(monthsRow.stream().toArray(String[]::new));
             }
-            rows.add(monthsRow.stream().toArray(String[]::new));
+            monthsRow.clear();
             rows.add(byCategory.stream().toArray(String[]::new));
             columnSize[0] = byCategory.size();
             byCategory.clear();
