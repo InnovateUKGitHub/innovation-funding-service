@@ -301,7 +301,7 @@ Project details can be submitted with PM, project address and start date
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
-    Submit project details button should be enabled
+    Mark as complete button should be enabled
 
 Partners nominate finance contacts
     [Documentation]    INFUND-2620, INFUND-5368
@@ -548,16 +548,16 @@ the user should see the dummy data
     the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
 the submit button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Submit project details")
+    Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 all the fields are completed
@@ -573,8 +573,8 @@ the user changes the start date back again
     the user enters text to a text field    id=projectStartDate_year    2017
     the user clicks the button/link    jQuery=.button:contains("Save")
 
-Submit project details button should be enabled
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
+Mark as complete button should be enabled
+    Then Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
