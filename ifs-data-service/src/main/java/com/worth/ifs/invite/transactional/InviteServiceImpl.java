@@ -312,7 +312,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
             List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
 
-            setAssignedQuestionsToLeadApplicant(applicationInvite, processRoles);
+            setAssignedQuestionsToLeadApplicant(applicationInvite.getTarget().getLeadApplicantProcessRole(), processRoles);
             setMarkedAsCompleteQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
             setAssignedQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
 
@@ -522,12 +522,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         });
     }
 
-    private void setAssignedQuestionsToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+    private void setAssignedQuestionsToLeadApplicant(ProcessRole leadApplicantProcessRole, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
             List<FormInputResponse> collaboratorQuestions = formInputResponseRepository.findByUpdatedById(processRole.getId());
             if (!collaboratorQuestions.isEmpty()) {
                 collaboratorQuestions.forEach(collaboratorQuestion -> {
-                    collaboratorQuestion.setUpdatedBy(applicationInvite.getTarget().getLeadApplicantProcessRole());
+                    collaboratorQuestion.setUpdatedBy(leadApplicantProcessRole);
                     formInputResponseRepository.save(collaboratorQuestion);
                 });
             }
