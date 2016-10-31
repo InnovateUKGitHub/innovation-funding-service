@@ -6,8 +6,8 @@ services:
     cap_add:
       - SYS_PTRACE
     ports:
-      - "${SHIB_PORT_443}:443"
-      - "${SHIB_PORT_389}:389"
+      - "443:443"
+      - "389:389"
     links:
       - web
       - data
@@ -22,7 +22,7 @@ services:
       context: ./setup-files
       dockerfile: web-dockerfile
     ports:
-      - "${WEB_PORT_8080}:8080"
+      - "8080:8080"
       - "${WEB_PORT_12345}:12345"
       - "${WEB_PORT_8081}:8081"
     links:
@@ -40,7 +40,7 @@ services:
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
-      - "${DATA_PORT_8080}:8080"
+      - "8090:8080"
       - "${DATA_PORT_12345}:12345"
       - "${DATA_PORT_8081}:8081"
     depends_on:
@@ -58,7 +58,7 @@ services:
   mysql:
     image: mysql:5.5.49
     ports:
-      - "${MYSQL_PORT_3306}:3306"
+      - "38606:3306"
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs
@@ -85,7 +85,7 @@ services:
     expose:
       - 143
     ports:
-      - "${IMAP_PORT_143}:143"
+      - "9876:143"
     networks:
       front-tier:
         aliases:
@@ -97,7 +97,7 @@ services:
   webmail:
     image: camptocamp/sqwebmail
     ports:
-      - "${WEBMAIL_PORT_80}:80"
+      - "1234:80"
     depends_on:
       - smtp
     volumes_from:
