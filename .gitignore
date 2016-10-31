@@ -24,7 +24,8 @@ bin/
 **/*-build.gradle
 **/application-*.properties
 !**/application-local.properties
-!**/application-integration-test.properties
+!**/application-integration-test.propertie
+!**/application-seeding-db.properties
 !**/application-hibernate-generate-ddl.properties
 !**/docker-build.gradle
 
