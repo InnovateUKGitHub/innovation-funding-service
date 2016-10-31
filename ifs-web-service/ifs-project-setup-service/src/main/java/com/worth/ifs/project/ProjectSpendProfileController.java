@@ -300,7 +300,7 @@ public class ProjectSpendProfileController {
         Map<String, Boolean> editablePartners = determineEditablePartners(projectId, partnerOrganisations, loggedInUser);
 
         return new ProjectSpendProfileProjectManagerViewModel(projectId,
-                projectResource.getName(),
+                projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
                 partnerOrganisations,
                 projectResource.getSpendProfileSubmittedDate() != null,

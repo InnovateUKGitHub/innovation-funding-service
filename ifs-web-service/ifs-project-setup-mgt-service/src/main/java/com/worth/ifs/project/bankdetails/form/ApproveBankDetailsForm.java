@@ -1,4 +1,4 @@
-package com.worth.ifs.bankdetails.form;
+package com.worth.ifs.project.bankdetails.form;
 
 /**
  * Empty form class to provide errors to template if approving bank details fails.
