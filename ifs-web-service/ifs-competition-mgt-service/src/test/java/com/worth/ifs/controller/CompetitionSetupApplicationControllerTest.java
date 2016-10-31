@@ -1,5 +1,6 @@
 package com.worth.ifs.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.category.resource.CategoryResource;
@@ -17,6 +18,7 @@ import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.service.modelpopulator.ApplicationLandingModelPopulator;
 import com.worth.ifs.fixtures.CompetitionFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -75,30 +77,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Before
     public void setUp() {
         super.setUp();
-
-        when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Exec").build()));
-
-        when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
-
-        CategoryResource c1 = new CategoryResource();
-        c1.setType(CategoryType.INNOVATION_SECTOR);
-        c1.setName("A Innovation Sector");
-        c1.setId(1L);
-        when(categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR)).thenReturn(asList(c1));
-
-        CategoryResource c2 = new CategoryResource();
-        c2.setType(CategoryType.INNOVATION_AREA);
-        c2.setName("A Innovation Area");
-        c2.setId(2L);
-        c2.setParent(1L);
-        when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(asList(c2));
-
-        CompetitionTypeResource ct1 = new CompetitionTypeResource();
-        ct1.setId(1L);
-        ct1.setName("Comptype with stateAid");
-        ct1.setStateAid(true);
-        ct1.setCompetitions(asList(COMPETITION_ID));
-        when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
     }
 
     @Test
@@ -134,4 +112,31 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertThat(argument.getValue().isIncludeGrowthTable(), equalTo(includeGrowthTable));
     }
 
+    @Test
+    public void testApplicationProcessLandingPage() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/landing-page"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+        ArgumentCaptor<Model> model = ArgumentCaptor.forClass(Model.class);
+        ArgumentCaptor<CompetitionResource> competitionResource = ArgumentCaptor.forClass(CompetitionResource.class);
+        ArgumentCaptor<CompetitionSetupSection> competitionSetupSection = ArgumentCaptor.forClass(CompetitionSetupSection.class);
+        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(model.capture(), competitionResource.capture(), competitionSetupSection.capture());
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testSetApplicationProcessAsComplete() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/mark-as-complete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/setup/"+COMPETITION_ID+"/section/application/landing-page"));
+        verify(competitionService, atMost(1)).update(competition);
+    }
 }

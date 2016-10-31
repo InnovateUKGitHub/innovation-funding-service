@@ -801,7 +801,7 @@
             <div class="comp-setup-questions">
                 <h3 class="heading-small no-margin">Assessed questions</h3>
                 <ol class="list-number">
-                    <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortTitle}">Question Title</a></li>
+                    <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
                 </ol>
             </div>
         </div>
