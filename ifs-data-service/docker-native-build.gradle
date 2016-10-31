@@ -7,7 +7,7 @@ ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
+project.ext['flyway.url']='jdbc:mysql://ifs-database:38606?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"

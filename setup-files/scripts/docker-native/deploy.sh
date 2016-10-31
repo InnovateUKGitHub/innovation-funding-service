@@ -35,7 +35,7 @@ function deploy() {
 
     cd ${dir}
     echo `pwd`
-    ../gradlew -Pprofile=docker cleanDeploy "$@"
+    ../gradlew -Pprofile=docker-native cleanDeploy "$@"
 
     echo
     echo "Copying ${name} war to container..."
@@ -52,7 +52,7 @@ function deploy() {
 
 function core() {
     cd ifs-web-service/ifs-web-core
-    ../gradlew -Pprofile=docker cleanDeploy "$@"
+    ../gradlew -Pprofile=docker-native cleanDeploy "$@"
     cd ../..
 }
 

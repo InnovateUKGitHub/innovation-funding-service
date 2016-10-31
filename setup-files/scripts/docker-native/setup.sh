@@ -29,11 +29,11 @@ wait
 sleep 3
 
 cd ../../../
-./gradlew -Pprofile=docker flywayClean flywayMigrate
+./gradlew -Pprofile=docker-native flywayClean flywayMigrate
 cd ${BASEDIR}
 ./scripts/_delete-shib-users-remote.sh
 ./syncShib.sh
 
 # Make sure that the Docker environment have been setup properly
 echo "Starting cleanDeploy for all projects..."
-./deploy.sh all
+./deploy.sh all "$@"

@@ -43,6 +43,8 @@ services:
       - "8090:8080"
       - "${DATA_PORT_12345}:12345"
       - "${DATA_PORT_8081}:8081"
+    links:
+      - mysql
     depends_on:
       - mysql
     networks:

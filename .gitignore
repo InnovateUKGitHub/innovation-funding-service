@@ -27,6 +27,7 @@ bin/
 !**/application-integration-test.properties
 !**/application-hibernate-generate-ddl.properties
 !**/docker-build.gradle
+!**/docker-native-build.gradle
 
 # Created with help from https://www.gitignore.io
 
