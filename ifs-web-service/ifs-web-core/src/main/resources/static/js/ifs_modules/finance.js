@@ -1,12 +1,12 @@
 //Innovation Funding Services javascript for calculating the finance fields
-IFS.core.finance = (function(){
+IFS.core.finance = (function() {
   "use strict";
   return {
     MathOperation : {
-      '+': function (x, y) { return x + y; },
-      '-': function (x, y) { return x - y; },
-      '*': function (x, y) { return x * y; },
-      '/': function (x, y) {
+      '+': function(x, y) { return x + y; },
+      '-': function(x, y) { return x - y; },
+      '*': function(x, y) { return x * y; },
+      '/': function(x, y) {
         if(y === 0) {
           return 0;
         }
@@ -14,20 +14,20 @@ IFS.core.finance = (function(){
       },
       'negativeRoundUp': function(x, y) { return x < 0 ? 0 : x;  } //jshint ignore:line
     },
-    init : function(){
+    init : function() {
       IFS.core.finance.bindCalculationActionToFields(); // Bind calculations
       // Used for calculations
     },
-    bindCalculationActionToFields : function(){
+    bindCalculationActionToFields : function() {
       //we watch for changes in inputs as a calculation always starts with an input
       jQuery('body').on('change', 'input', function() {
         //if the calculation field is not binded we bind this field to the selector that is defined in the field
         if(jQuery('[data-calculation-fields]:not([data-calculation-binded])').length){
-          jQuery('[data-calculation-fields]:not([data-calculation-binded])').each(function(){
+          jQuery('[data-calculation-fields]:not([data-calculation-binded])').each(function() {
             var element = jQuery(this);
             var fields = element.attr('data-calculation-fields');
 
-            jQuery(document).on('change updateFinances', fields, function(){
+            jQuery(document).on('change updateFinances', fields, function() {
               IFS.core.finance.doMath(element, fields.split(','));
             });
             //we only want to bind a field once
@@ -36,9 +36,9 @@ IFS.core.finance = (function(){
         }
       });
       //force recalculate, only used for removal of finances
-      jQuery('body').on('recalculateAllFinances', function(){
+      jQuery('body').on('recalculateAllFinances', function() {
         if(jQuery('[data-calculation-fields]').length){
-          jQuery('[data-calculation-fields]').each(function(){
+          jQuery('[data-calculation-fields]').each(function() {
             var element = jQuery(this);
             var fields = element.attr('data-calculation-fields');
             IFS.core.finance.doMath(element, fields.split(','));
@@ -46,7 +46,7 @@ IFS.core.finance = (function(){
         }
       });
     },
-    getElementValue : function(element){
+    getElementValue : function(element) {
       var rawValue = jQuery(element).attr("data-calculation-rawvalue");
 
       //would be better to force all fields to have a raw value at the start rather than these fallback cases
@@ -61,17 +61,17 @@ IFS.core.finance = (function(){
       }
       return parseFloat(0);
     },
-    doMath : function(element, calcFields){
+    doMath : function(element, calcFields) {
       var operation = element.attr('data-calculation-operations').split(',');
       var values = [];
-      jQuery.each(calcFields, function(index, field){
+      jQuery.each(calcFields, function(index, field) {
         if(jQuery.isNumeric(field)){
           //we use a static number not a selector to another field
           values.push(parseFloat(field));
         }
         else if(jQuery(field).length > 1){
           //we use a selector with multiple inputs and get the value
-          jQuery.each(jQuery(field), function(index, field2){
+          jQuery.each(jQuery(field), function(index, field2) {
             values.push(IFS.core.finance.getElementValue(field2));
           });
         }

@@ -1,4 +1,4 @@
-IFS.core.autoSave = (function(){
+IFS.core.autoSave = (function() {
   "use strict";
   var s; // private alias to settings
   var promiseList = {};
@@ -16,28 +16,28 @@ IFS.core.autoSave = (function(){
       minimumUpdateTime : 800,// the minimum time between the ajax request, and displaying the result of the ajax call.
       ajaxTimeOut : 15000
     },
-    init : function(){
+    init : function() {
       s = this.settings;
       jQuery('[data-autosave]').attr('data-save-status', 'done');
-      jQuery('body').on('change keyup', s.textareas, function(e){
+      jQuery('body').on('change keyup', s.textareas, function(e) {
         if(e.type == 'keyup'){
           //wait until the user stops typing
           clearTimeout(autoSaveTimer);
-          autoSaveTimer = setTimeout(function(){ IFS.core.autoSave.fieldChanged(e.target); }, s.typeTimeout);
+          autoSaveTimer = setTimeout(function() { IFS.core.autoSave.fieldChanged(e.target); }, s.typeTimeout);
         }
         else {
           IFS.core.autoSave.fieldChanged(e.target);
         }
       });
-      jQuery('body').on('change', s.inputs+','+s.select, function(e){
+      jQuery('body').on('change', s.inputs+','+s.select, function(e) {
         IFS.core.autoSave.fieldChanged(e.target);
       });
       //events for other javascripts
-      jQuery('body').on('ifsAutosave', function(e){
+      jQuery('body').on('ifsAutosave', function(e) {
         IFS.core.autoSave.fieldChanged(e.target);
       });
     },
-    fieldChanged : function (element){
+    fieldChanged : function(element) {
       var field = jQuery(element);
 
       //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
@@ -57,7 +57,7 @@ IFS.core.autoSave = (function(){
 
       promiseList[promiseListName] = promiseList[promiseListName].then(IFS.core.autoSave.processAjax(field));
     },
-    getPostObject : function(field, form){
+    getPostObject : function(field, form) {
       //traversing from field as we might get the situation in the future where we have 2 different type autosaves on 1 page within two seperate <form>'s
       var applicationId = jQuery("#application_id").val();
       var saveType = form.attr('data-autosave');
@@ -119,7 +119,7 @@ IFS.core.autoSave = (function(){
       }
       return jsonObj;
     },
-    getUrl : function(field, form){
+    getUrl : function(field, form) {
       var saveType = form.attr('data-autosave');
       var url;
       var competitionId;
@@ -153,8 +153,8 @@ IFS.core.autoSave = (function(){
       }
       return url;
     },
-    processAjax : function(field){
-      return function(){
+    processAjax : function(field) {
+      return function() {
         var form = field.closest('[data-autosave]');
         form.attr('data-save-status', 'progress');
         var data = IFS.core.autoSave.getPostObject(field, form);
@@ -186,7 +186,7 @@ IFS.core.autoSave = (function(){
           },
           timeout: s.ajaxTimeOut
         })
-        .done(function(data){
+        .done(function(data) {
           var doneAjaxTime = new Date().getTime();
           var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
@@ -204,7 +204,7 @@ IFS.core.autoSave = (function(){
           jQuery('body').trigger('updateSerializedFormState');
 
           //save message
-          setTimeout(function(){
+          setTimeout(function() {
             IFS.core.autoSave.populateValidationErrorsOnPageLoad(field);
             IFS.core.autoSave.clearServerSideValidationErrors(field);
             autoSaveInfo.html('Saved!');
@@ -213,7 +213,7 @@ IFS.core.autoSave = (function(){
             //would be nice to fix this on the server
             // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
             if(typeof(data.validation_errors) !== 'undefined'){
-              jQuery.each(data.validation_errors, function(index, value){
+              jQuery.each(data.validation_errors, function(index, value) {
                 IFS.core.formValidation.setInvalid(field, value);
                 serverSideValidationErrors.push(value);
               });
@@ -230,7 +230,7 @@ IFS.core.autoSave = (function(){
               autoSaveInfo.html('<span class="error-message">'+errorMessage+'</span>');
             }
           }
-        }).always(function(){
+        }).always(function() {
           form.attr('data-save-status', 'done');
           defer.resolve();
         });
@@ -238,7 +238,7 @@ IFS.core.autoSave = (function(){
         return defer.promise();
       };
     },
-    getErrorMessage : function(data){
+    getErrorMessage : function(data) {
       //when something goes wrong server side this will not show validation messages but system errors like timeouts
       var errorMessage;
       if((typeof(data.responseJson) !== 'undefined') && (typeof(data.responseJson.errorMessage) !== 'undefined')){
@@ -252,12 +252,12 @@ IFS.core.autoSave = (function(){
       }
       return errorMessage;
     },
-    clearServerSideValidationErrors : function(field){
+    clearServerSideValidationErrors : function(field) {
       for (var i = 0; i < serverSideValidationErrors.length; i++){
         IFS.core.formValidation.setValid(field, serverSideValidationErrors[i]);
       }
     },
-    populateValidationErrorsOnPageLoad : function(field){
+    populateValidationErrorsOnPageLoad : function(field) {
       var formGroup = field.closest('.form-group.error');
       if(formGroup.find('.error-message').text().length > 0 && serverSideValidationErrors.length === 0){
         var errormsgonLoad = formGroup.find('.error-message').text();

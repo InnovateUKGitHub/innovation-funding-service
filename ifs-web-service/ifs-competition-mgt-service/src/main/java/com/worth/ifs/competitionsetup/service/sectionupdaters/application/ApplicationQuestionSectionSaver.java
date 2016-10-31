@@ -1,5 +1,6 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
@@ -26,7 +27,10 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsectionSaver {
 
     @Autowired
-    CompetitionSetupQuestionService competitionSetupQuestionService;
+    private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
 	public CompetitionSetupSubsection sectionToSave() {
@@ -54,7 +58,16 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            return makeErrorList();
+            if ("fullApplicationFinance".equals(fieldName)) {
+                competitionResource.setFullApplicationFinance(Boolean.valueOf(value));
+                competitionService.update(competitionResource);
+            } else if ("includeGrowthTable".equals(fieldName)) {
+                competitionResource.setIncludeGrowthTable(Boolean.valueOf(value));
+                competitionService.update(competitionResource);
+            } else {
+                return makeErrorList();
+            }
+
         }
 
         return Collections.emptyList();

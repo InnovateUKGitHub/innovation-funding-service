@@ -5,7 +5,7 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
@@ -48,7 +48,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -1425,42 +1425,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertEquals(organisation, partnerOrganisations.get(0).getOrganisation());
             assertTrue(partnerOrganisations.get(0).isLeadOrganisation());
         });
-    }
-
-    @Test
-    public void testGenerateFinanceChecksForAllProjects() {
-
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        ProjectResource newProjectResource = newProjectResource().build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-
-        PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
-                withOrganisation(organisation).
-                withLeadOrganisation(true).
-                build();
-
-        Project savedProject = newProject().withApplication(application).
-                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
-                withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
-                build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-
-        when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-
-        when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
-
-        when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
-
-        when(projectRepositoryMock.findAll()).thenReturn(singletonList(savedProject));
-
-        when(financeCheckRepositoryMock.findByProjectId(savedProject.getId())).thenReturn(null);
-
-        ServiceResult<Void> project = service.generateFinanceChecksForAllProjects();
-
-        assertTrue(project.isSuccess());
     }
 
     @Override

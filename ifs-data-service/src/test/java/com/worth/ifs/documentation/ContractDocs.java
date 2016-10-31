@@ -14,16 +14,16 @@ public class ContractDocs {
             fieldWithPath("id").description("Id of the contract"),
             fieldWithPath("current").description("Flag to signify if this is the current contract"),
             fieldWithPath("text").description("Text of the contract"),
-            fieldWithPath("annexOne").description("Text of annex one"),
-            fieldWithPath("annexTwo").description("Text of annex two"),
-            fieldWithPath("annexThree").description("Text of annex three")
+            fieldWithPath("annexA").description("Text of annex A"),
+            fieldWithPath("annexB").description("Text of annex B"),
+            fieldWithPath("annexC").description("Text of annex C")
     };
 
     public static final ContractResourceBuilder contractResourceBuilder = newContractResource()
             .with(id(1L))
             .withCurrent(TRUE)
             .withText("Contract text...")
-            .withAnnexOne("Annex one...")
-            .withAnnexTwo("Annex two...")
-            .withAnnexThree("Annex three...");
+            .withAnnexA("Annex A text...")
+            .withAnnexB("Annex B text...")
+            .withAnnexC("Annex C text...");
 }

@@ -5,7 +5,7 @@
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="comp-dashboard">
+<body class="comp-dashboard full-width">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -18,20 +18,25 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" /> -->
+
+  <h1 class="heading-xlarge">
+    <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
+    Application overview
+  </h1>
 
 	<div>
 
 		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
-			
-			
+
+
 			<h3 class="heading-small">
 				Removed by
 			</h3>
 			<p>Peter Kault, 20 December 2016</p>
-	
+
 
 			<h3 class="heading-small">
 				Reason for removal
@@ -41,7 +46,7 @@
 			</p>
 
 			<div class="extra-margin">
-				
+
 				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
 
 			</div>
@@ -60,8 +65,8 @@
 					<hr />
 
 	            	<div class="alignright-button">
-						
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
 	            	</div>
@@ -72,7 +77,7 @@
 
 		</th:block>
 
-		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:remove="tag" />
+		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:with="user=admin" th:remove="tag" />
 
 		<hr />
 
@@ -115,7 +120,7 @@
 							</span>
 						</div>
 					</div>
-					
+
 					<div class="grid-row">
 						<div class="column-half">
 							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
