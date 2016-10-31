@@ -74,7 +74,7 @@
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-appointments">
-                                <input value="yes" type="radio" th:field="*{hasAppointments}" />
+                                <input value="yes" type="radio" th:field="*{hasAppointments}" data-repeatable-rowcontainer="#position-table tbody" />
                                 Yes
                             </label>
                             <label class="block-label">
@@ -169,7 +169,7 @@
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-familyAffiliations">
-                                <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" />
+                                <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" data-repeatable-rowcontainer="#family-table tbody" />
                                 Yes
                             </label>
                             <label class="block-label">
