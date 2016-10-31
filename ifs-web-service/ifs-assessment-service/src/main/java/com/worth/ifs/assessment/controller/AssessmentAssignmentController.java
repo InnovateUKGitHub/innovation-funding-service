@@ -1,7 +1,9 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseController;
+import com.worth.ifs.assessment.form.AssessmentAssignmentForm;
 import com.worth.ifs.assessment.form.RejectCompetitionForm;
+import com.worth.ifs.assessment.model.AssessmentAssignmentModelPopulator;
 import com.worth.ifs.assessment.model.CompetitionInviteModelPopulator;
 import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
@@ -42,32 +44,30 @@ public class AssessmentAssignmentController extends BaseController {
     private RejectionReasonRestService rejectionReasonRestService;
 
     @Autowired
-    private CompetitionInviteModelPopulator competitionInviteModelPopulator;
+    private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;
 
     @Autowired
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
     @RequestMapping(value = "assignment", method = RequestMethod.GET)
-    public String viewAssignment(@PathVariable("id") String id,
-                                 @ModelAttribute("form") RejectCompetitionForm form,
-                                 @PathVariable("assessmentId") Long assessmentId,
+    public String viewAssignment(@PathVariable("assessmentId") Long assessmentId,
+                                 @ModelAttribute("form") AssessmentAssignmentForm form,
                                  Model model) {
-       // model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash));
+        model.addAttribute("model", assessmentAssignmentModelPopulator.populateModel(assessmentId));
         return "assessment/assessment-invitation";
     }
 
     @RequestMapping(value = "assignment/accept", method = RequestMethod.POST)
-    public String acceptAssignment(@PathVariable("id") String id,
+    public String acceptAssignment(@PathVariable("assessmentId") Long assessmentId,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                Model model) {
-        return format("redirect:/assign-accept/application/%s/accept", id);
-
+        return format("redirect:/%s/assignment/accepted", assessmentId);
     }
 
     @RequestMapping(value = "assignment/reject", method = RequestMethod.POST)
     public String rejectAssignment(Model model,
                                @PathVariable("id") String id,
-                               @Valid @ModelAttribute("form") RejectCompetitionForm form,
+                               @Valid @ModelAttribute("form") AssessmentAssignmentForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewRejectAssignmentConfirm(model, id);
@@ -87,15 +87,8 @@ public class AssessmentAssignmentController extends BaseController {
         return "assessor-competition-reject";
     }
 
-    @ModelAttribute("rejectionReasons")
-    public List<RejectionReasonResource> populateRejectionReasons() {
-        return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
-    }
-
     private String doViewRejectAssignmentConfirm(Model model, String inviteHash) {
         model.addAttribute("model", rejectCompetitionModelPopulator.populateModel(inviteHash));
         return "assignment/reject-invitation-confirm";
     }
-
-
 }

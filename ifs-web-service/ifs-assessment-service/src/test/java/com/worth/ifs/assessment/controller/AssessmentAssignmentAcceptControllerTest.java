@@ -25,9 +25,9 @@ public class AssessmentAssignmentAcceptControllerTest extends BaseControllerMock
 
     @Test
     public void acceptInvite() throws Exception {
+        Long assignmentId = 1L;
 
-
-        mockMvc.perform(get(restUrl + "application/{id}/accept", 1))
+        mockMvc.perform(get("/{assignmentId}/assignment/accepted", assignmentId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/assessor-competition-dashboard"));
 
