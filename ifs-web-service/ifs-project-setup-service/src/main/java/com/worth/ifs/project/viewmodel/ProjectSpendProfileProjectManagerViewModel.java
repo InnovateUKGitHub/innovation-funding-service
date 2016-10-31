@@ -13,15 +13,17 @@ import java.util.Map;
  **/
 public class ProjectSpendProfileProjectManagerViewModel {
     private Long projectId;
+    private Long applicationId;
     private String projectName;
     private Map<String, Boolean> partnerSpendProfileProgress;
     private Map<String, Boolean> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
     private boolean submitted;
 
-    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
+    public ProjectSpendProfileProjectManagerViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
                                                       List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners) {
         this.projectId = projectId;
+        this.applicationId = applicationId;
         this.projectName = projectName;
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
@@ -75,6 +77,10 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return submitted;
     }
 
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +92,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return new EqualsBuilder()
                 .append(submitted, that.submitted)
                 .append(projectId, that.projectId)
+                .append(applicationId, that.applicationId)
                 .append(projectName, that.projectName)
                 .append(partnerSpendProfileProgress, that.partnerSpendProfileProgress)
                 .append(editablePartners, that.editablePartners)
@@ -97,7 +104,12 @@ public class ProjectSpendProfileProjectManagerViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(applicationId)
                 .append(projectName)
+                .append(partnerSpendProfileProgress)
+                .append(editablePartners)
+                .append(partnerOrganisations)
+                .append(submitted)
                 .toHashCode();
     }
 }
