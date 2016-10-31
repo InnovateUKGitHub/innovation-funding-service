@@ -48,13 +48,13 @@ function addTestFiles() {
 }
 
 function resetLDAP() {
-    cd ../setup-files/scripts/docker
+    cd ../setup-files/scripts/docker-native
     ./syncShib.sh
 }
 
 function resetDB(){
   cd ${dataServiceCodeDir}
-  ./gradlew -Pprofile=docker flywayClean flywayMigrate
+  ./gradlew -Pprofile=docker-native flywayClean flywayMigrate
   resetLDAP
 }
 
@@ -63,16 +63,16 @@ function buildAndDeploy() {
     cd ${dataServiceCodeDir}
     ## Before we start the build we need to have an webtest test build environment
     echo "********SWAPPING IN THE WEBTEST BUILD PROPERTIES********"
-    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/setup,db\/webtest"/' docker-build.gradle > webtest.gradle.tmp
-    mv docker-build.gradle docker-build.gradle.tmp
-    mv webtest.gradle.tmp docker-build.gradle
-    ./gradlew -Pprofile=docker clean deployToTomcat
+    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/setup,db\/webtest"/' docker-native-build.gradle > webtest.gradle.tmp
+    mv docker-native-build.gradle docker-native-build.gradle.tmp
+    mv webtest.gradle.tmp docker-native-build.gradle
+    ./gradlew -Pprofile=docker-native clean deployToTomcat
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
-    mv docker-build.gradle.tmp docker-build.gradle
+    mv docker-native-build.gradle.tmp docker-native-build.gradle
 
     cd ${webServiceCodeDir}
-    ./gradlew -Pprofile=docker clean deployToTomcat
+    ./gradlew -Pprofile=docker-native clean deployToTomcat
 
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE DATASERVICE**********"
     docker-compose -p ifs logs -ft --tail 10 data | while read logLine
@@ -194,7 +194,7 @@ virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
 
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
-postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
+postcodeLookupKey=`sed '/^\#/d' docker-native-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
 if [ "$postcodeLookupKey" = '' ]
 then
