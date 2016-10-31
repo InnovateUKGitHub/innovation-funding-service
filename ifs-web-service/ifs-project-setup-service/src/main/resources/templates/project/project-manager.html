@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Project Manager</h1>
     </div>
 

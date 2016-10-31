@@ -199,13 +199,6 @@ public class BankDetailsManagementController {
         return "project/review-bank-details";
     }
 
-    private String doViewChangeBankDetailsUpdated(OrganisationResource organisationResource,
-                                           ProjectResource projectResource,
-                                           BankDetailsResource bankDetailsResource,
-                                           Model model) {
-        return doViewChangeBankDetails(organisationResource, projectResource, bankDetailsResource, true, model);
-    }
-
     private String doViewChangeBankDetailsNotUpdated(OrganisationResource organisationResource,
                                                   ProjectResource projectResource,
                                                   BankDetailsResource bankDetailsResource,
@@ -219,7 +212,7 @@ public class BankDetailsManagementController {
                                            boolean updated,
                                            Model model) {
         BankDetailsReviewViewModel bankDetailsReviewViewModel = populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
-        ChangeBankDetailsViewModel changeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), updated);
+        ChangeBankDetailsViewModel changeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getApplicationId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), updated);
         model.addAttribute("model", changeBankDetailsViewModel);
         return "project/change-bank-details";
     }
@@ -233,6 +226,7 @@ public class BankDetailsManagementController {
     private BankDetailsReviewViewModel buildViewModel(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
         return new BankDetailsReviewViewModel(
                 project.getId(),
+                project.getApplication(),
                 project.getFormattedId(),
                 project.getName(),
                 financeContact.getUserName(),
