@@ -319,7 +319,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
         assertTrue(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
-        assertTrue(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("/r")).stream().allMatch(s -> s.contains("Group Name")));
+        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+                && !s.contains("Month") && !s.contains("TOTAL")).count(), 3);
     }
 
     @Test
@@ -358,7 +359,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
         assertFalse(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
-        assertTrue(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("/r")).stream().noneMatch(s -> s.contains("Group Name")));
+        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+                && !s.contains("Month") && !s.contains("TOTAL")).count(), 0);
     }
 
 

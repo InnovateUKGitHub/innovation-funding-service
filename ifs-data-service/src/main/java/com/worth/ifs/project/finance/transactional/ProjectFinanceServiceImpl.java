@@ -66,6 +66,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
     private static final String CSV_FILE_NAME_DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
     private static final List<String> RESEARCH_CAT_GROUP_ORDER = new LinkedList<>();
+    public static final String EMPTY_CELL = "";
 
     @Autowired
     private ProjectService projectService;
@@ -551,6 +552,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ArrayList<String[]> rows = new ArrayList<>();
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
+        monthsRow.add(EMPTY_CELL);
         spendProfileTableResource.getMonths().forEach(
                 value -> monthsRow.add(value.getLocalDate().toString()));
         monthsRow.add(CSV_TOTAL);
@@ -575,6 +577,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ArrayList<String> totals = new ArrayList<>();
         totals.add(CSV_TOTAL);
+        totals.add(EMPTY_CELL);
         totalForEachMonth.forEach(value -> totals.add(value.toString()));
         totals.add(totalOfAllActualTotals.toString());
         totals.add(totalOfAllEligibleTotals.toString());
