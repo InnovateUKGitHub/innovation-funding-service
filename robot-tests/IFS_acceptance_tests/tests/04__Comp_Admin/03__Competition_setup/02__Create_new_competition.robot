@@ -95,7 +95,7 @@ Initial details server-side validations
     And the user should see an error    Please enter an opening year
     And the user should see an error    Please enter an opening day
     And the user should see an error    Please enter an opening month
-    And the user should see an error    Please select a Innovate Lead    # note that this content is going to change!
+    And the user should see an error    Please select an Innovate Lead    
     And the user should see an error    Please select a competition executive
 
 Initial details correct state aid status
@@ -214,9 +214,7 @@ User should have access to all the sections
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application Questions
-    And The user should see the element    link=Application Finances
     And The user should see the element    link=Assessors
-    And The user should see the element    link=Description and brief
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980

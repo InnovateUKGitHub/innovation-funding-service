@@ -32,7 +32,7 @@
 
 		<section>
 			<h2 class="heading-medium">Assessor - Create account</h2>
-			
+
 			<ul class="list-bullet">
 				<li>
 					<h3 class="heading-small">INFUND-5645</h3>
@@ -48,7 +48,7 @@
 		</section>
 
 		<section>
-			
+
 			<h2 class="heading-medium">Internal user - Assessor invites and assessor management</h2>
 
 			<ul class="list-bullet">
@@ -74,20 +74,32 @@
 
 					</ul>
 				</li>
+
+				<li>
+					<h3 class="heading-small">INFUND-1559</h3>
+					<p>As comps team I want to action a mass removal of applications from assessors if they fail to accept before the a/r deadline so that I can reassign the applications to another assessor</p>
+					<ul class="list-bullet">
+						<li>
+							<a href="/prototypes/5390-assessor-progress">INFUND-5841</a> Update to (5390) - add previously assigned table &amp; amend text
+						</li>
+						<li>
+							<a href="/prototypes/5471-assign-to-application">INFUND-5842</a> Update to (5471) - add previously assigned table &amp; amend text
+						</li>
+					</ul>
+				</li>
 			</ul>
 		</section>
 
 		<section>
 
 			<h2 class="heading-medium">Assessor account creation</h2>
-
 			<ul class="list-bullet">
 				<li>
 					<h3 class="heading-small">INFUND-5697</h3>
 					<p>Addition of a speed bump in the assessor journey</p>
 					<ul class="list-bullet">
 						<li>
-							<a href="/prototypes/5742">INFUND-5742</a> Create a page to act as a speedbump in the assessor sign in journey
+							<a href="/prototypes/1360-assessor-invite-start?version=v3">INFUND-5742</a> Create a page to act as a speedbump in the assessor sign in journey
 						</li>
 					</ul>
 				</li>
@@ -96,22 +108,62 @@
 
 		<section>
 			<h2 class="heading-medium">Internal user - appplication admin</h2>
-			
+
 			<ul class="list-bullet">
 				<li>
-					<h3 class="heading-small">INFUND-5668</h3>
+					<h3 class="heading-small">INFUND-5698</h3>
 					<p>As a Comp Exec i need to be able to remove applications and not send them for assessment as they may not be eligible for funding.</p>
 					<ul class="list-bullet">
 						<li><a href="/prototypes/5698-admin-readonly-application">INFUND-5810</a> Create a new view for the application overview allowing the application to be removed</li>
-						<li><a href="#">INFUND-5811</a> Create a a view allowing a draft email to be sent to the applicant</li>
-						<li><a href="#">INFUND-5812</a> Create an overview detailing removed applications</li>
-						<li><a href="#">INFUND-5813</a> Create a view allowing removed applications to be reinstateds</li>
+						<li><a href="/prototypes/5698-draft-email">INFUND-5811</a> Create a a view allowing a draft email to be sent to the applicant</li>
+						<li><a href="/prototypes/5698-removed-applications">INFUND-5812</a> Create an overview detailing removed applications</li>
+						<li><a href="/prototypes/5698-admin-readonly-application?status=removed">INFUND-5813</a> Create a view allowing removed applications to be reinstated</li>
+					</ul>
+				</li>
+				<li>
+				  	<h3 class="heading-small">INFUND-5688</h3>
+				  	<p>Sprint 17 support</p>
+				  	<ul class="list-bullet">
+  						<li><a href="/prototypes/5698-admin-readonly-application">INFUND-5919</a> Link through to financial breakdown</li>
+              <li><a href="/prototypes/5913-admin-view-partner-finances">INFUND-5913</a> Create a view allowing comp execs to view detailed finances of an applicant (Standard)</li>
+              <li><a href="/prototypes/5914-admin-view-academic-finances">INFUND-5914</a> Create a view allowing comp execs to view detailed finances of an applicant (Jes)</li>
+
+				  	</ul>
+        		</li>
+			</ul>
+
+		</section>
+
+		<section>
+			<h2 class="heading-medium">Competition setup</h2>
+
+			<ul class="list-bullet">
+				<li>
+					<h3 class="heading-small">INFUND-5600</h3>
+					<p>ASector competition application amendments.</p>
+					<ul class="list-bullet">
+						<li><a href="/prototypes/2469-comp-setup?section=essential">INFUND-5905</a> Adding Sector competitions to comp setup</li>
 					</ul>
 				</li>
 			</ul>
 
 		</section>
-			
+
+		<section>
+		  	<h2 class="heading-medium">Internal pages</h2>
+
+		  	<ul class="list-bullet">
+				<li>
+			  		<h3 class="heading-small">INFUND-3101</h3>
+			  		<p>Work on the global header design for all internal views</p>
+			  		<ul class="list-bullet">
+						<li><a href="/prototypes/3101-internal-titles-examples">Internal page example</a></li>
+			  		</ul>
+				</li>
+		  	</ul>
+
+		</section>
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

@@ -41,13 +41,38 @@
 		<a href="#">Review application</a>
 	</div>
 
-	<h2 class="heading-medium">Assigned(2)</h2>
+	<h2 class="heading-medium">Assigned(4)</h2>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list3-table" th:remove="tag" />
+
+	<div class="remove-assigned-assessor" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		<button class="js-close close" aria-label="Close Popup">X</button>
+		<div>
+
+			<h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
+
+			<p>They have started the assessment of this application and their assessment will be preminantly deleted if you click Remove.</p>
+
+			<hr />
+
+			<div class="alignright-button">
+
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+				<a class="button" href="#">Remove</a>
+
+			</div>
+
+		</div>
+	</div>
 
 	<h2 class="heading-medium">Rejected(1)</h2>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list4-table" th:remove="tag" />
+
+	<h2 class="heading-medium">Previously assigned(0)</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list7-table" th:remove="tag" />
 
 	<h2 class="heading-medium">Available Assessors</h2>
 

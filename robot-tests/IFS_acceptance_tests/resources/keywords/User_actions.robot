@@ -1,9 +1,5 @@
 *** Settings ***
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
+Resource    ../defaultResources.robot
 
 *** Keywords ***
 The user navigates to the page
@@ -63,6 +59,14 @@ The user is on the page
     # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
+
+the user is on the page or will navigate there
+    [Arguments]    ${TARGET_URL}
+    ${current_location} =    Get Location
+    ${status}    ${value} =     Run Keyword And Ignore Error     Location Should Contain    ${TARGET_URL}
+
+    Run keyword if    '${status}' == 'FAIL'    The user navigates to the assessor page    ${TARGET_URL}
+
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
@@ -331,6 +335,20 @@ The user should see an error
     wait until page contains element    jQuery=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
+The user should see a field error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-message:contains('${ERROR_TEXT}')    5s
+
+
+The user should see a summary error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-summary:contains('${ERROR_TEXT}')    5s
+
+The user should see a field and summary error
+    [Arguments]    ${ERROR_TEXT}
+    the user should see a field error    ${ERROR_TEXT}
+    the user should see a summary error    ${ERROR_TEXT}
+
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
     Input Text    id=username    ${USER_NAME}
@@ -521,7 +539,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
+    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    If you did not request an account with us
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
@@ -548,7 +566,7 @@ invite a registered user
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
+    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
@@ -577,21 +595,10 @@ invite a new academic
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
-    #Warning: this keyword can be slow for usage with a multiplicity above a couple of 1000
-    #Use a bigger string sample and lower multiplicity if optimization is necessary or use the 'The user enters a long random string into a text field' for strings
-    Set Log Level    NONE
-    ${concatenated_string} =    Set Variable
-    : FOR    ${INDEX}    IN RANGE    0    ${multiplicity}
-    \    ${concatenated_string} =    Catenate    SEPARATOR=    ${concatenated_string}    ${string}
+    #Keyword uses custom IfsLibrary keyword "repeat string"
+    ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible    ${field}
     wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
-
-The user enters a long random alphanumeric string into a text field
-    [Arguments]    ${field}    ${length}
-    Set Log Level    NONE
-    ${string} =   Generate Random String    ${length}    [LOWER]
-    Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${string}
 
 
 the user should see that the element is disabled

@@ -6,6 +6,7 @@ import com.worth.ifs.project.resource.ProjectResource;
  * View model that backs the Project Details - Start Date page
  */
 public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsViewModel {
+    private Long applicationId;
     private Long projectId;
     private String projectNumber;
     private String projectName;
@@ -16,6 +17,7 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
         this.projectNumber = project.getFormattedId();
         this.projectName = project.getName();
         this.projectDurationInMonths = project.getDurationInMonths();
+        this.applicationId = project.getApplication();
     }
 
     public String getProjectNumber() {
@@ -32,5 +34,9 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
 
     public Long getProjectId() {
         return projectId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
     }
 }
