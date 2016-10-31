@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.commons.BaseIntegrationTest;
@@ -15,22 +16,31 @@ import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.category.resource.CategoryType.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -38,10 +48,14 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 @ActiveProfiles({"integration-test,seeding-db"})
@@ -49,6 +63,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
+
     @Value("${flyway.url}")
     private String databaseUrl;
 
@@ -83,6 +98,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompAdminEmailRepository compAdminEmailRepository;
 
     @Autowired
+    private RegistrationService registrationService;
+
+    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Before
@@ -90,8 +108,19 @@ public class GenerateTestData extends BaseIntegrationTest {
         freshDb();
     }
 
+    @PostConstruct
+    public void replaceExternalDependencies() {
+
+        IdentityProviderService idpService = mock(IdentityProviderService.class);
+
+        when(idpService.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
+                user -> serviceSuccess(UUID.randomUUID().toString()));
+
+        ReflectionTestUtils.setField(unwrapProxy(registrationService), "idpService", idpService);
+    }
+
     @Test
-    public void createTestData() {
+    public void test() {
 
         createOrganisations();
         createInternalUsers();
@@ -105,7 +134,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @SuppressWarnings("unused")
     private void createInternalUsers() {
-        User johnDoe = createInternalUser("John", "Doe", COMP_ADMIN_EMAIL, COMP_ADMIN);
+        UserResource johnDoe = createInternalUser("John", "Doe", COMP_ADMIN_EMAIL, COMP_ADMIN);
     }
 
     @SuppressWarnings("unused")
@@ -175,7 +204,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
     }
 
-    private User createInternalUser(String firstName, String lastName, String emailAddress, UserRoleType role) {
+    private UserResource createInternalUser(String firstName, String lastName, String emailAddress, UserRoleType role) {
 
         switch (role) {
             case COMP_ADMIN: {
@@ -186,17 +215,18 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
 
         List<Role> rolesByName = roleRepository.findByNameIn(singletonList(role.getName()));
+        List<RoleResource> roleResources = simpleMap(rolesByName, r -> newRoleResource().withId(r.getId()).build());
 
-        User newUser = newUser().
+        UserResource newUser = newUserResource().
                 withFirstName(firstName).
                 withLastName(lastName).
-                withEmailAddress(emailAddress).
-                withRoles(rolesByName).
+                withEmail(emailAddress).
+                withRolesGlobal(roleResources).
                 withUid(UUID.randomUUID().toString()).
-                withOrganisations(singletonList(organisation(INNOVATE_UK_ORG_NAME))).
+                withPassword("Passw0rd").
                 build();
 
-        return userRepository.save(newUser);
+        return doAsSystemRegistrar(() -> registrationService.createOrganisationUser(organisation(INNOVATE_UK_ORG_NAME).getId(), newUser).getSuccessObjectOrThrowException());
     }
 
     private <T> T doAsSystemRegistrar(Supplier<T> action) {
@@ -255,6 +285,31 @@ public class GenerateTestData extends BaseIntegrationTest {
         } catch (Exception e){
             fail("Exception thrown migrating with script directories: " + asList("db/migration", "db/setup") + e.getMessage());
         }
+    }
+
+    private Object unwrapProxy(Object services) {
+        try {
+            return unwrapProxies(asList(services)).get(0);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Object> unwrapProxies(Collection<Object> services) {
+        List<Object> unwrappedProxies = new ArrayList<>();
+        for (Object service : services) {
+            if (AopUtils.isJdkDynamicProxy(service)) {
+                try {
+                    unwrappedProxies.add(((Advised) service).getTargetSource().getTarget());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                unwrappedProxies.add(service);
+            }
+        }
+        return unwrappedProxies;
     }
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
