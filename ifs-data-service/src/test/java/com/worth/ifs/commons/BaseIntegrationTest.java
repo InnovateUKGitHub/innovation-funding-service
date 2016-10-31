@@ -7,6 +7,7 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,15 +34,29 @@ public abstract class BaseIntegrationTest extends BaseTest {
      *
      * @param user
      */
-    protected static void setLoggedInUser(UserResource user) {
+    protected static UserResource setLoggedInUser(UserResource user) {
+        UserResource currentUser = getLoggedInUser();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+        return currentUser;
     }
 
     /**
      * Get the user on the Spring Security ThreadLocals
      */
-    protected UserResource getLoggedInUser() {
-        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+    protected static UserResource getLoggedInUser() {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        if (context == null) {
+            return null;
+        }
+
+        UserAuthentication authentication = (UserAuthentication) context.getAuthentication();
+
+        if (authentication == null) {
+            return null;
+        }
+
+        return authentication.getDetails();
     }
 
 }

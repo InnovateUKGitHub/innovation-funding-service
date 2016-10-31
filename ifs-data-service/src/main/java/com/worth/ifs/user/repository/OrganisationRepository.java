@@ -12,4 +12,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface OrganisationRepository extends PagingAndSortingRepository<Organisation, Long> {
     Organisation findByProcessRoles(@Param("processRoles") ProcessRole processRole);
+
+    Organisation findOneByName(String name);
 }
