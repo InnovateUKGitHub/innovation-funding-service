@@ -91,8 +91,7 @@ Approve Eligibility: Lead partner organisation
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
-    [Tags]    HappyPath    Pending
-    #TODO Pending due to INFUND-5720
+    [Tags]    HappyPath
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request

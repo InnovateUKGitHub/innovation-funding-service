@@ -44,8 +44,9 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(1)
+    When The user clicks the button/link    link=00000026: best riffs
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
