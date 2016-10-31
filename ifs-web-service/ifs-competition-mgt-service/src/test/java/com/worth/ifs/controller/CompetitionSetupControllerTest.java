@@ -37,14 +37,14 @@ import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDeta
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
@@ -296,33 +296,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
     }
-
-//    @Test
-//    public void submitSectionApplicationQuestionWithErrors() throws Exception {
-//        Long questionId = 4L;
-//        Question question = new Question();
-//
-//        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/" + questionId))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("competition/setup"));
-//
-//        verify(competitionSetupQuestionService, never()).updateQuestion(question);
-//    }
-//
-//    @Test
-//    public void submitSectionApplicationQuestionWithoutErrors() throws Exception {
-//        Long questionId = 4L;
-//
-//        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/" + questionId)
-//                    .param("questionToUpdate.id", questionId.toString())
-//                    .param("questionToUpdate.title", "My Title")
-//                    .param("questionToUpdate.guidanceTitle", "My Title")
-//                    .param("questionToUpdate.guidance", "My guidance"))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"));
-//
-//        verify(competitionSetupQuestionService).updateQuestion(isA(Question.class));
-//    }
 
     @Test
     public void submitSectionEligibilityWithoutStreamName() throws Exception {

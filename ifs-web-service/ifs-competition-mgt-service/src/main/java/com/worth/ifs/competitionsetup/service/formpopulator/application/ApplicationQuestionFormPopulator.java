@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.formpopulator.application;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -30,9 +31,6 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 	@Autowired
 	private FormInputService formInputService;
 
-	private Long appendixTypeId = 4L;
-	private Long scoreTypeId = 23L;
-
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
 		return CompetitionSetupSubsection.QUESTIONS;
@@ -42,13 +40,20 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
 
-		QuestionResource questionResource = questionService.getById(objectId.get());
-		competitionSetupForm.setQuestion(initQuestionForForm(questionResource));
+		if(objectId.isPresent()) {
+            QuestionResource questionResource = questionService.getById(objectId.get());
+            competitionSetupForm.setQuestion(initQuestionForForm(questionResource));
+        } else {
+            throw new ObjectNotFoundException();
+        }
 
 		return competitionSetupForm;
 	}
 
 	private Question initQuestionForForm(QuestionResource questionResource) {
+        Long appendixTypeId = 4L;
+        Long scoreTypeId = 23L;
+
 		List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
 		List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
 
@@ -61,32 +66,12 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 
 		Question result = null;
 		if(foundInputs.isPresent()) {
-			result = createQuestionObjectFromQuestionResource(questionResource, foundInputs.get(), appendix, scored);
+			result = new Question(questionResource, foundInputs.get(), appendix, scored);
 		}
 
 		return result;
 	}
 
-	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
-		Question question = new Question();
-		question.setId(questionResource.getId());
-		question.setNumber(questionResource.getQuestionNumber());
-		question.setShortTitle(questionResource.getShortName());
-		question.setTitle(questionResource.getName());
-		question.setSubTitle(questionResource.getDescription());
 
-		question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
-		question.setGuidance(formInputResource.getGuidanceAnswer());
-		if(formInputResource.getWordCount() > 0) {
-			question.setMaxWords(formInputResource.getWordCount());
-		} else {
-			question.setMaxWords(400);
-		}
-
-		question.setScored(scored);
-		question.setAppendix(appendix);
-
-		return question;
-	}
 
 }

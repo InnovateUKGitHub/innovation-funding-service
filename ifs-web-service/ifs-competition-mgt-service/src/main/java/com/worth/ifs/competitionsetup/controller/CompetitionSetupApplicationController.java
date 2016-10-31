@@ -34,6 +34,7 @@ import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDash
 public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
+    private final String questionView = "competition/setup/question";
 
     @Autowired
     private CompetitionService competitionService;
@@ -59,7 +60,7 @@ public class CompetitionSetupApplicationController {
         setupQuestionToModel(competition, questionId, model);
         model.addAttribute("editable", false);
 
-        return "competition/setup/question";
+        return questionView;
     }
 
     @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.GET)
@@ -77,14 +78,13 @@ public class CompetitionSetupApplicationController {
         setupQuestionToModel(competition, questionId, model);
         model.addAttribute("editable", true);
 
-        return "competition/setup/question";
+        return questionView;
     }
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/question", method = RequestMethod.POST)
     public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            @PathVariable("questionId") Long questionId,
                                             Model model) {
 
         competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
@@ -94,7 +94,7 @@ public class CompetitionSetupApplicationController {
         } else {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
-            return "competition/setup/question";
+            return questionView;
         }
     }
 

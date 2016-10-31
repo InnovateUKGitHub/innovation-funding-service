@@ -85,31 +85,6 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
 
         formInputs.stream()
                 .filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId))
-                .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
+                .forEach(formInputResource -> questions.add(new Question(questionResource, formInputResource, appendix, scored)));
     }
-
-
-
-	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
-        Question question = new Question();
-        question.setId(questionResource.getId());
-        question.setNumber(questionResource.getQuestionNumber());
-        question.setShortTitle(questionResource.getShortName());
-        question.setTitle(questionResource.getName());
-        question.setSubTitle(questionResource.getDescription());
-
-        question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
-        question.setGuidance(formInputResource.getGuidanceAnswer());
-        if(formInputResource.getWordCount() > 0) {
-            question.setMaxWords(formInputResource.getWordCount());
-        } else {
-            question.setMaxWords(400);
-        }
-
-        question.setScored(scored);
-        question.setAppendix(appendix);
-
-	    return question;
-    }
-
 }
