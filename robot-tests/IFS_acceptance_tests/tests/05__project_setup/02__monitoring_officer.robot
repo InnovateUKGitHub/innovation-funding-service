@@ -47,6 +47,27 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Vitruvius Stonework Limited
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
+    [Teardown]    logout as user
+
+
+Project finance user can view MO page, and go on to assign MO
+    [Documentation]    INFUND-5666
+    [Tags]
+    [Setup]    guest user log-in    project.finance1@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
+    Then the user should see the text in the page    Monitoring Officer
+    And the user should see the text in the page    Supporting information
+    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    Earth Observation
+    And the user should see the text in the page    Riff Street
+    And the user should see the text in the page    Bath
+    And the user should see the text in the page    BA1 5LR
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
+    And the user should see the text in the page    test twenty
+    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    EGGS
+    And the user should see the text in the page    Ludlow
+
 
 MO server-side validation
     [Documentation]    INFUND-2630
