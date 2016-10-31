@@ -14,7 +14,7 @@
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
         <div class="page-title">
-            <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
+            <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
                  th:remove="tag"/>
             <h1 class="heading-xlarge">Other documents</h1>
         </div>
@@ -33,7 +33,7 @@
             <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
         </div>
 
-        <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.projectId,8)} + ': ' + ${model.projectName} "/>
+        <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.applicationId,8)} + ': ' + ${model.projectName} "/>
         <ul class="list-bullet">
             <li th:text="${model.leadPartnerOrganisationName}" />
             <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
@@ -41,9 +41,15 @@
             </th:block>
         </ul>
         <p>
-            <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
-            <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
-            <th:block th:text="${model.projectManagerTelephone}"/>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerName)}">
+              <th:block th:text="${model.projectManagerName}"/><br/>
+            </th:block>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
+              <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" /><br/>
+            </th:block>
+            <th:block th:unless="${#strings.isEmpty(model.projectManagerTelephone)}">
+              <th:block th:text="${model.projectManagerTelephone}"/>
+            </th:block>
         </p>
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">

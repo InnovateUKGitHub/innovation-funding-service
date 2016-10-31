@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Finance contact</h1>
     </div>
 
@@ -69,6 +69,7 @@
         </thead>
         <tbody>
         <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
+            <span class="error-message" th:each="err : ${#fields.globalErrors()}" th:text="${err}" />
             <tr>
                 <td>
                     <label for="name-finance-contact" class="visuallyhidden">name</label>
@@ -78,9 +79,6 @@
                     <label for="email-finance-contact" class="visuallyhidden">email</label>
                     <input type="email" class="form-control width-full" value="" name="email" id="email-finance-contact" required="required"/>
                 </td>
-                <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
-                    <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>
-                </td>
                 <td class="alignright">
                     <button class="buttonlink no-margin-bottom" id="invite-finance-contact">Invite to project</button>
                 </td>
@@ -88,6 +86,7 @@
         </form>
         </tbody>
     </table>
+    <p>If you add a new team member this section will remain in a pending state until they have accepted.</p>
     <label for="save" tabindex="0" role="button" class="button no-margin-right">Save</label>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

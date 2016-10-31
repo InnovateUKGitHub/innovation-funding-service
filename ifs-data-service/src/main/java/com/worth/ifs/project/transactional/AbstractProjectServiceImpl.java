@@ -1,7 +1,7 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -104,7 +104,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
+            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
         } else {
             return NOT_STARTED;
         }

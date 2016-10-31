@@ -17,36 +17,18 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 
 *** Test Cases ***
-Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821
-    [Tags]  HappyPath
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page          ${server}/project-setup-management/project/1/finance-check
-    Then the user should see the element          jQuery=h2:contains("Finance Checks")
-    And the user should see the text in the page  Overview
-    And the table row has expected values
-    [Teardown]  Logout as user
-
-Other internal users do not have access to Finannce Checks
-    [Documentation]    INFUND-4821
-    [Tags]    HappyPath    Pending
-    #TODO INFUND-5720
-    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
-    # This is added to HappyPath because CompAdmin should NOT have access to FC page
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
-    [Teardown]  Logout as user
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
-Other internal users cannot see Bank details
-    [Documentation]    INFUND-4903
-    [Tags]    Experian    HappyPath    Pending
-    #TODO INFUND-5720
+Other internal users cannot see Bank details or Finance checks
+    [Documentation]    INFUND-4903, INFUND-5720
+    [Tags]    Experian    HappyPath
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=Killer Riffs
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user should not see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
 
 Project Finance user can view the Project setup status page
@@ -57,7 +39,6 @@ Project Finance user can view the Project setup status page
     Then the user should not see an error in the page
     And the user should see the text in the page   Projects in setup
     [Teardown]  Logout as user
-
 
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049
@@ -75,8 +56,7 @@ Project Finance user can see the internal project summary page
     And the user should not see an error in the page
     [Teardown]    logout as user
 
-
-Comp Admin user cannot see the finance check summary page
+Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
     [Tags]    Failing
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
@@ -117,7 +97,7 @@ Project Finance has a dashboard and can see projects in PS
 
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300
-    [Tags]
+    [Tags]    Failing
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
@@ -127,11 +107,3 @@ Project Finance can see the status of projects in PS
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
 
 
-*** Keywords ***
-the table row has expected values
-    #TODO update selectors and values after INFUND-5476 & INFUND-5431
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[2]    36 months
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[3]    £ 356,202
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[4]    £ 71,240
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[5]    £ 0
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[6]    20%

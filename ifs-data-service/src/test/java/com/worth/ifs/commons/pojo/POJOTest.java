@@ -20,13 +20,15 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -76,6 +78,8 @@ public class POJOTest {
             AffiliationResource.class,
             Alert.class,
             AlertResource.class,
+            ApplicationRejectionResource.class,
+            AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
             Address.class,
@@ -135,7 +139,8 @@ public class POJOTest {
             SpendProfileCSVResource.class,
             ContractResource.class,
             ProfileContractResource.class,
-            ProfileSkillsResource.class
+            ProfileSkillsResource.class,
+            UserProfileResource.class
     );
 
     @Before

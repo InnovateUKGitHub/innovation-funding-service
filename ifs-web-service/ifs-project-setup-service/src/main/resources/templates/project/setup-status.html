@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
     <p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
@@ -27,12 +27,12 @@
           <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
           <p class="linkbar">
             <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View application and feedback</a>
-            <a href="#" class="buttonlink">View terms and conditions of grant offer</a>
+            <a th:href="${'/info/terms-and-conditions'}" class="buttonlink">View terms and conditions of grant offer</a>
           </p>
         </div>
       </li>
       <!--/* ========================= Project Details ========================= */-->
-      <li th:classappend="${model.projectDetailsSubmitted ? 'complete' : 'require-action'}">
+      <li th:classappend="${model.projectDetailsProcessCompleted ? 'complete' : (model.leadPartner and model.awaitingProjectDetailsActionFromOtherPartners ? 'waiting' : 'require-action')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -43,7 +43,7 @@
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
-      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : ''}">
+      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : (model.projectDetailsSubmitted ? 'waiting' : '')}">
         <div class="progress-status" />
         <div class="progress-info">
 
@@ -81,13 +81,11 @@
       </li>
       <!--/* ========================= Finance Check ========================= */-->
 
-      <!-- TODO: This needs to look at FC status -->
-      <li th:classappend="${model.financeChecksSection.accessible ? 'waiting' : ''}">
+      <li th:classappend="${model.allBankDetailsApprovedOrNotRequired ? (model.allFinanceChecksApproved ? 'complete' : 'waiting') : ''}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            Finance checks
-            <th:block th:if="${model.financeChecksSection.notAccessible}">Finance checks</th:block>
+            <th:block th:unless="${model.financeChecksSection.notRequired}">Finance checks</th:block>
             <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
           </h2>
           <p>We will review all project costs and contact you if we have any queries.</p>
@@ -132,7 +130,10 @@
       <li th:classappend="${model.grantOfferLetterSubmitted ? 'complete' : ''}">
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a></h2>
+          <h2 class="heading-medium">
+            <a th:if="${model.grantOfferLetterSection.accessible}" th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
+            <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
+          </h2>
           <p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
         </div>
       </li>

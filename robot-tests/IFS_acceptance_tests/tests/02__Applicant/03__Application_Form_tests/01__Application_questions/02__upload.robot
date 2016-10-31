@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
@@ -23,10 +23,10 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    the user can see the option to upload a file on the question    link=5. Technical approach
-    the user can see the option to upload a file on the question    link=6. Innovation
+    the user can see the option to upload a file on the question       link=5. Technical approach
+    the user can see the option to upload a file on the question       link=6. Innovation
     the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question    link=8. Project team
+    the user can see the option to upload a file on the question       link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
     the user cannot see the option to upload a file on the question    link=10. Adding value
 
