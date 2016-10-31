@@ -39,24 +39,28 @@ public class JESFinanceModelManager implements FinanceModelManager {
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
-        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-        OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisation());
+        if (applicationFinanceResource != null) {
 
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
-        AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-        if(applicationFinanceResource.getFinanceFileEntry() != null) {
-            financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
-                    fileEntry -> {
-                        model.addAttribute("filename", fileEntry.getName());
-                        return fileEntry;
-                    }
-            );
+            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisation());
+
+            Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
+            AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
+            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+                financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
+                        fileEntry -> {
+                            model.addAttribute("filename", fileEntry.getName());
+                            return fileEntry;
+                        }
+                );
+            }
+
+            model.addAttribute("title", organisationResource.getName() + " finances");
+            model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());
+            model.addAttribute("academicFinance", academicFinance);
         }
 
-        model.addAttribute("title", organisationResource.getName() + " finances");
-        model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("financeView", "academic-finance");
-        model.addAttribute("academicFinance", academicFinance);
     }
 
     @Override

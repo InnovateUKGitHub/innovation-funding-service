@@ -102,6 +102,9 @@
                               required="required"
                               ifs:utext="${question.guidance}">
                     </textarea>
+                    <div class="textarea-footer">
+                        <span class="autosave-info"></span>
+                    </div>
                 </div>
             </div>
             <div th:class="${#fields.hasErrors('question.maxWords')}? 'form-group error':'form-group'">
