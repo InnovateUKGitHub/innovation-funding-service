@@ -70,8 +70,8 @@ Approve Eligibility: Academic partner organisation
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
+    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
 
@@ -84,7 +84,7 @@ Approve Eligibility: Lead partner organisation
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
+    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
     [Teardown]  Logout as user
