@@ -377,7 +377,7 @@ CompAdmin approves other documents
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     Given log in as user  worth.email.test+projectlead@gmail.com    Passw0rd  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element  jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
