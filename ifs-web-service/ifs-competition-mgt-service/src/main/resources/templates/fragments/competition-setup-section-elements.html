@@ -85,7 +85,7 @@
                                th:name="questionToUpdate.title"
                                th:value="${question.title}"
                                maxlength="255"/>
-                        <span class="autosave-info" />
+
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.subTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.subTitle">
@@ -100,7 +100,7 @@
                                th:name="questionToUpdate.subTitle"
                                th:value="${question.subTitle}"
                                maxlength="255"/>
-                        <span class="autosave-info" />
+
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.guidanceTitle">
@@ -116,7 +116,6 @@
                                th:name="questionToUpdate.guidanceTitle"
                                th:value="${question.guidanceTitle}"
                                maxlength="255"/>
-                        <span class="autosave-info" />
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.guidance')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.guidance">
@@ -134,8 +133,11 @@
                                       required="required"
                                       ifs:utext="${question.guidance}">
                             </textarea>
+                            <div class="textarea-footer">
+                                  <span class="autosave-info"></span>
+                            </div>
                         </div>
-                        <span class="autosave-info" />
+
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.maxWords')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.maxWords">
@@ -151,7 +153,7 @@
                                required="required"
                                th:name="questionToUpdate.maxWords"
                                th:value="${question.maxWords}"/>
-                        <span class="autosave-info" />
+
                     </div>
                     <div class="grid-row">
                         <div class="column-half">
@@ -166,7 +168,7 @@
                                         <input  th:name="questionToUpdate.scored" th:checked="${!question.scored}" value="0" type="radio" />
                                         No
                                     </label>
-                                    <span class="autosave-info" />
+
                                 </fieldset>
                             </div>
                         </div>
@@ -182,7 +184,7 @@
                                         <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                                         No
                                     </label>
-                                    <span class="autosave-info" />
+
                                 </fieldset>
                             </div>
                         </div>
