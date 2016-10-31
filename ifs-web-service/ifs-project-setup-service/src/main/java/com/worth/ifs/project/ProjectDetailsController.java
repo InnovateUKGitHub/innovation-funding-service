@@ -7,7 +7,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -114,9 +114,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        ProjectResource project = projectService.getById(projectId);
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("projectId", projectId);
+        model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
         return "project/confirm-project-details";

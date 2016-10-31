@@ -214,9 +214,7 @@ User should have access to all the sections
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application Questions
-    And The user should see the element    link=Application Finances
     And The user should see the element    link=Assessors
-    And The user should see the element    link=Description and brief
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980

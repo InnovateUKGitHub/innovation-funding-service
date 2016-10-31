@@ -2,9 +2,9 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import com.worth.ifs.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
