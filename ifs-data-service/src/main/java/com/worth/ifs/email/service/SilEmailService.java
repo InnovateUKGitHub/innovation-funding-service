@@ -35,13 +35,21 @@ public class SilEmailService implements EmailService {
         SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
         // TODO improve the logging and change the logging levels to INFO and control whether they are output on a environmental basis
-        for (SilEmailAddress silEmailAddress : toEmails){
-            LOG.error("About to send email to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+        if (toEmails != null) {
+            for (SilEmailAddress silEmailAddress : toEmails) {
+                LOG.error("About to send email to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+            }
+        } else {
+            LOG.error("toEmails is null");
         }
         ServiceResult<List<EmailAddress>> listServiceResult = endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccessReturn(successfullySent -> to);
         // TODO improve the logging and change the logging levels to INFO and control whether they are output on a environmental basis
-        for (SilEmailAddress silEmailAddress : toEmails){
-            LOG.error("Email sent to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+        if (toEmails != null) {
+            for (SilEmailAddress silEmailAddress : toEmails) {
+                LOG.error("Email sent to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+            }
+        } else {
+            LOG.error("toEmails is null");
         }
         return  listServiceResult;
     }
