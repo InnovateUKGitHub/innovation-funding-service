@@ -439,21 +439,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWhenFinanceContactAlreadySet() {
+    public void testUpdateFinanceContactAllowedWhenFinanceContactAlreadySet() {
 
-        Project existingProject = newProject().withId(123L).build();
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        User anotherUser = newUser().build();
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
 
-        Organisation organisation = newOrganisation().withId(5L).build();
-        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+        Organisation organisation = newOrganisation().build();
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
 
-        newProjectUser().withOrganisation(organisation).withUser(user).withProject(existingProject).withRole(PROJECT_FINANCE_CONTACT).build();
+        newProjectUser().
+                withOrganisation(organisation).
+                withUser(user, anotherUser).
+                withProject(existingProject).
+                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 6L);
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION));
+        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
 
+        assertTrue(updateResult.isSuccess());
+
+        List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
+                pu.getOrganisation().equals(organisation));
+
+        assertEquals(1, organisationFinanceContacts.size());
+        assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
     }
 
     @Test
