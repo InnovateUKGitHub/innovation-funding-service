@@ -1,8 +1,8 @@
 package com.worth.ifs.bankdetails;
 
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
