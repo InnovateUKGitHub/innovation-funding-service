@@ -10,6 +10,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-4919 As an assessor and I have completed setting up my account I can see my dashboard so that I can see the competitions I have accepted to assess.
 ...
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
+...
+...               INFUND-4895 Securing of services related to Assessor Journey changes
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -20,6 +22,15 @@ ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition
 ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 
 *** Test Cases ***
+Permission check: logged in user should get permission denied while accepting other assessor competiion invite
+    [Documentation]    INFUND-4895
+    [Tags]    Pending
+    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
+    Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
+    When the user clicks the button/link    jQuery=.button:contains("Accept")
+    Then The user should see permissions error message
+    [Teardown]    logout as user
+
 Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
@@ -32,7 +43,7 @@ Non-registered assessor: Accept invitation
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
 
-User can navigate back to the Become an Assessor page
+User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")

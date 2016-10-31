@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
-Suite Setup       guest user log-in    &{nonregistered_assessor3_credentials}
+Suite Setup       guest user log-in    &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor    Pending
 Resource          ../../../resources/defaultResources.robot
@@ -38,7 +38,8 @@ the assessor updates profile details
     Select From List By Index    id=title    4
     The user enters text to a text field    id=firstName    Joy
     The user enters text to a text field    id=lastName    Archer
-    the user selects the radio button    gender    gender1
+    the user moves focus to the element    id=gender2
+    the user selects the radio button    gender    gender2
     the user selects the radio button    ethnicity    ethnicity1
     the user selects the radio button    disability    disability3
     the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    7, Phoenix house
