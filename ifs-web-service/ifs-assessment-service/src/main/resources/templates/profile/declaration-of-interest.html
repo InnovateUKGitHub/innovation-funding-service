@@ -22,7 +22,7 @@
 
             <h2 class="heading-large">Your affiliations</h2>
 
-            <form th:action="@{/profile/declaration}" method="post" th:object="${form}">
+            <form th:action="@{/profile/declaration}" method="post" th:object="${form}" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                     <ul class="error-summary-list">
@@ -40,7 +40,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control width-full" type="text" th:field="*{principalEmployer}" th:errorclass="field-error" />
+                    <input class="form-control width-full" type="text" th:field="*{principalEmployer}" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a principal employer" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
@@ -50,7 +50,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control width-full" type="text" th:field="*{role}" th:errorclass="field-error" />
+                    <input class="form-control width-full" type="text" th:field="*{role}" th:errorclass="field-error" required="required" data-required-errormessage="Please enter the role at your principal employer" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
@@ -256,13 +256,22 @@
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')}? error">
-                    <span th:if="${#fields.hasErrors('accurateAccount')}" th:remove="tag">
-                        <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}" />
-                    </span>
-                    <label class="block-label">
-                        <input type="checkbox" th:field="*{accurateAccount}" />
-                        <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
-                    </label>
+                  <fieldset>
+                      <legend>
+                          <span class="visuallyhidden">Confirm declaration of interest</span>
+                          <span th:if="${#fields.hasErrors('accurateAccount')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}" />
+                          </span>
+                      </legend>
+                      <label class="block-label">
+                          <input type="checkbox" th:field="*{accurateAccount}" required="required" data-required-errormessage="In order to register an account you have to agree that this is an accurate account" />
+                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                      </label>
+                  </fieldset>
+
+
+
+
                 </div>
 
                 <button class="button button-large extra-margin" type="submit">Save and continue</button>
