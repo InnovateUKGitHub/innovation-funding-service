@@ -245,7 +245,7 @@ Invited project manager registration flow
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]    Email
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
     Then the user should see the text in the page    Bob Jones
@@ -401,7 +401,7 @@ Invited finance contact registration flow
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]    Email
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith

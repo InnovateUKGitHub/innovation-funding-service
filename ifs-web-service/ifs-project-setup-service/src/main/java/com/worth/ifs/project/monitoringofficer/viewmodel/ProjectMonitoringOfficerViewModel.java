@@ -12,6 +12,7 @@ import java.util.Optional;
 public class ProjectMonitoringOfficerViewModel {
 
     private Long projectId;
+    private Long applicationId;
     private String projectName;
     private boolean monitoringOfficerAssigned;
     private String monitoringOfficerName;
@@ -20,6 +21,7 @@ public class ProjectMonitoringOfficerViewModel {
 
     public ProjectMonitoringOfficerViewModel(ProjectResource project, Optional<MonitoringOfficerResource> monitoringOfficer) {
         this.projectId = project.getId();
+        this.applicationId = project.getApplication();
         this.projectName = project.getName();
         this.monitoringOfficerAssigned = monitoringOfficer.isPresent();
         this.monitoringOfficerName = monitoringOfficer.map(mo -> mo.getFullName()).orElse("");
@@ -49,5 +51,9 @@ public class ProjectMonitoringOfficerViewModel {
 
     public String getMonitoringOfficerPhoneNumber() {
         return monitoringOfficerPhoneNumber;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
     }
 }
