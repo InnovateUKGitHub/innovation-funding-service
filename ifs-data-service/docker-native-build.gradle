@@ -1,9 +1,11 @@
+// DatasourceUrl is the container port (as the containers will communicate
+// directly rather than through the host:container mapping).
 ext.ifsDatasourceHost = "ifs-database"
 ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:38606/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
