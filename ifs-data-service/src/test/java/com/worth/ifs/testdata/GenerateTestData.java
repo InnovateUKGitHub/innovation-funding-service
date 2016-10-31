@@ -1,12 +1,10 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.commons.BaseIntegrationTest;
-import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.user.domain.CompAdminEmail;
 import com.worth.ifs.user.domain.Organisation;
@@ -19,6 +17,7 @@ import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
@@ -39,18 +38,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -75,6 +71,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Value("${flyway.locations}")
     private String locations;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -103,6 +102,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    private CompetitionDataBuilder competitionDataBuilder;
+
     @Before
     public void setup() throws Exception {
         freshDb();
@@ -117,6 +118,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 user -> serviceSuccess(UUID.randomUUID().toString()));
 
         ReflectionTestUtils.setField(unwrapProxy(registrationService), "idpService", idpService);
+
+        competitionDataBuilder = newCompetitionData(competitionService, competitionTypeRepository,
+                categoryRepository, competitionSetupService).createCompetition();
     }
 
     @Test
@@ -146,6 +150,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         doAsCompAdmin(() -> {
             createCompetition1();
+            createCompetition2();
         });
     }
 
@@ -158,38 +163,22 @@ public class GenerateTestData extends BaseIntegrationTest {
                 "competition is to meet user needs by connecting people and/or goods to transport products and " +
                 "services. New or improved systems will be tested in environment laboratories.";
 
-        CompetitionResource newCompetition = createBasicCompetitionDetails(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility");
-        createApplicationFormForCompetition(newCompetition);
-    }
-
-    private void createApplicationFormForCompetition(CompetitionResource newCompetition) {
-        competitionSetupService.initialiseFormForCompetitionType(newCompetition.getId(), newCompetition.getCompetitionType()).getSuccessObjectOrThrowException();
-    }
-
-    private CompetitionResource createBasicCompetitionDetails(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName) {
-
-        CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-        Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
-        Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
-        Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
-
-        CompetitionResource newCompetition = competitionSetupService.
-                create().
-                getSuccessObjectOrThrowException();
-
-        CompetitionResource newCompetitionDetails = newCompetitionResource().
-                withId(newCompetition.getId()).
-                withName(name).
-                withDescription(description).
-                withInnovationArea(innovationArea.getId()).
-                withInnovationSector(innovationSector.getId()).
-                withResearchCategories(singleton(researchCategory.getId())).
-                withMaxResearchRatio(30).
-                withAcademicGrantClaimPercentage(0).
-                withCompetitionType(competitionType.getId()).
+        competitionDataBuilder.
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
                 build();
+    }
 
-        return competitionSetupService.update(newCompetition.getId(), newCompetitionDetails).getSuccessObjectOrThrowException();
+    private void createCompetition2() {
+
+        String name = "Another Comp";
+
+        String description = "Another desc.";
+
+        competitionDataBuilder.
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                build();
     }
 
     private UserResource compAdminUser() {
@@ -270,6 +259,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withEmailAddress(emailAddress).
                 withRoles(roleRepository.findByNameIn(singletonList(role.getName()))).
                 withUid(UUID.randomUUID().toString()).
+                withStatus(UserStatus.ACTIVE).
                 build();
 
         return userRepository.save(newUser);
