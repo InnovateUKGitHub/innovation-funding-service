@@ -14,18 +14,22 @@ You could run this setup from within your own custom VM setup (maybe something l
 
 ## Setting Up
 
-1. Make sure you don't have any processes running on your host machine that may have conflicting ports with the 
+1. Setup your the `docker-build.gradle` files in both services `ifs-web-service` and `ifs-data-service`. 
+You should be able to copy and paste these from the existing `docker-build-example.gradle` (with modifications 
+if required).
+
+2. Make sure you don't have any processes running on your host machine that may have conflicting ports with the 
 application stack. For example, MySQL runs on port `3306`, so make sure that you run `sudo service mysql stop` 
 beforehand. 
 
     If you would prefer to setup your own port configuration to avoid conflicts ahead of time, please refer to the 
 **'Preventing port conflicts'** section below.
 
-2. Run `hosts-helper.sh` script (or manually setup your `hosts` file for Windows):
+3. Run `hosts-helper.sh` script (or manually setup your `hosts` file for Windows):
         
         ./hosts-helper.sh
 
-3. Run the `setup.sh` script:
+4. Run the `setup.sh` script:
 
         ./setup.sh
         
@@ -39,8 +43,21 @@ During the setup prescribed above, an `.env` file is created when running `setup
 not already exist. This contains all the ports that will be used within the Docker setup (they are variable substituted 
 into the `docker-compose.yml`).
 
-To setup your own ports, provide a modified `.env` file before running `setup.sh`.
-        
+To setup your own ports, provide a modified `.env` file before running `setup.sh`. You will also have to modify 
+the URL ports in the relevant `docker-build.gradle` files in each service before you can successfully build and run it.
+The following properties will be relevant:
+
+- `ifs-data-service/docker-build.gradle`
+    - `ifsDatasourceUrl` - Relevant if changing MySQL port.
+    - `ifsSmtpPort`
+    - `testIfsDatasourceUrl` - Relevant if changing MySQL port.
+    - `flyway.url` - Relevant if changing MySQL port.
+    - `serverPort`
+    - `silRestBaseURL`
+- `ifs-web-service/docker-build.gradle`
+    - `ifsDataServiceRestBaseURL`
+    - `serverPort`
+
 ## Usage
 
 Standard Docker + Compose usage applies from this point onwards. If in doubt, some utility scripts have been provided 
