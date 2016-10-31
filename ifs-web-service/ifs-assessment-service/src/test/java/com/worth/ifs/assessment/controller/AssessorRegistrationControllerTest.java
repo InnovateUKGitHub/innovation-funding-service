@@ -35,15 +35,11 @@ import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -356,30 +352,10 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_withoutSelectedAddressResultsInError() throws Exception {
-        String title = "Mr";
-        String firstName = "Felix";
-        String lastName = "Wilson";
-        String phoneNumber = "12345678";
-        Gender gender = Gender.MALE;
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
-        Disability disability = Disability.NO;
-        String password = "P@ssword1234";
 
-        String addressLine1 = "address1";
-        String town = "town";
-        String postcode = "postcode";
-
-        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
-        expectedForm.setTitle(title);
-        expectedForm.setFirstName(firstName);
-        expectedForm.setLastName(lastName);
-        expectedForm.setPhoneNumber(phoneNumber);
-        expectedForm.setGender(gender);
-        expectedForm.setEthnicity(ethnicity);
-        expectedForm.setDisability(disability);
-        expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
-
+        String title = "Mr";
+        Long selectedPostcodeIndex = 0L;
         String inviteHash = "hash";
 
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
@@ -390,17 +366,9 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("title", title)
-                .param("firstName", firstName)
-                .param("lastName", lastName)
-                .param("phoneNumber", phoneNumber)
-                .param("gender", gender.name())
-                .param("ethnicity", ethnicity.getId().toString())
-                .param("disability", disability.name())
-                .param("password", password)
-                .param("retypedPassword", password))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
+                .param("addressForm.selectedPostcodeIndex", selectedPostcodeIndex.toString()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeHasFieldErrorCode("form", "addressForm.postcodeOptions", "validation.standard.postcodeoptions.required"));
 
         verifyZeroInteractions(assessorService);
     }
