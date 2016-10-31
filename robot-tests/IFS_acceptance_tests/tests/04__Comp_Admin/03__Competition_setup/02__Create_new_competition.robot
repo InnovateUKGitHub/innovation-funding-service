@@ -213,7 +213,7 @@ User should have access to all the sections
     Then The user should see the element    link=Funding Information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
-    And The user should see the element    link=Application Questions
+    And The user should see the element    link=Application
     And The user should see the element    link=Assessors
 
 New application shows in Preparation section with the new name
