@@ -26,6 +26,11 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-3530 As a potential Finance Contact, I can click on a link to register and to become a Finance Contact for a Partner Organisation, so that I can start collaborating on the Project
 ...
 ...               INFUND-3554 As a potential Project Manager, I can click on a link to register and to become a Project Manager for the Project, so that I can start collaborating on the Project
+...
+...               INFUND-5898 As a partner I want to be able to change my Finance Contact in Project Setup so that I can submit updates to our partner details as appropriate
+
+
+
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -39,8 +44,9 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(1)
+    When The user clicks the button/link    link=00000026: best riffs
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
@@ -238,7 +244,7 @@ Invited project manager registration flow
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]    Email
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
     Then the user should see the text in the page    Bob Jones
@@ -310,11 +316,7 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
-    And the user should not see the element    link=Ludlow
-    When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=4
-    And the user selects the radio button    financeContact    new
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    And the user should see the element    link=Ludlow
     Then Logout as user
     When Log in as user    pete.tom@egg.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
@@ -326,11 +328,7 @@ Partners nominate finance contacts
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
-    And the user should not see the element    link=EGGS
-    When the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=6
-    And the user selects the radio button    financeContact    new
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    And the user should see the element    link=EGGS
     [Teardown]    logout as user
 
 Option to invite a finance contact
@@ -402,15 +400,13 @@ Invited finance contact registration flow
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]    Email
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith
 
 Lead partner selects a finance contact
-    [Documentation]    INFUND-2620
-    ...
-    ...    INFUND-5571
+    [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
     [Tags]    HappyPath
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -424,13 +420,8 @@ Lead partner selects a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should see the text in the page    test twenty
-    And the user should not see the element    link=Vitruvius Stonework Limited
-    And the user should not see the element    link=Ludlow
-    And the user should not see the element    link=EGGS
-    And the user navigates to the page    ${server}/project-setup/project/1/details/finance-contact?organisation=31
-    And the user selects the radio button    financeContact    financeContact2
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You have already assigned the finance contact
+    And the user should see the element    link=Vitruvius Stonework Limited
+
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157

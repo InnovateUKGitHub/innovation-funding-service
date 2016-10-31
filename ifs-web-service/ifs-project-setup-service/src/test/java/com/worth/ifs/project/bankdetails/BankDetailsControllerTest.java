@@ -60,6 +60,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         mockMvc.perform(get("/project/{id}/bank-details", projectResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("project", projectResource))
+                .andExpect(model().attribute("applicationId", projectResource.getApplication()))
                 .andExpect(model().attribute("currentUser", loggedInUser))
                 .andExpect(model().attribute("organisation", organisationResource))
                 .andExpect(model().attribute(FORM_ATTR_NAME, form))

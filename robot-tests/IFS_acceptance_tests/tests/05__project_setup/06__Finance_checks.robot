@@ -12,7 +12,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/4
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821
+    [Documentation]    INFUND-4821, INFUND-5476
     [Tags]  HappyPath
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
@@ -91,8 +91,7 @@ Approve Eligibility: Lead partner organisation
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
-    [Tags]    HappyPath    Pending
-    #TODO Pending due to INFUND-5720
+    [Tags]    HappyPath
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
@@ -100,12 +99,11 @@ Other internal users do not have access to Finance Checks
 
 *** Keywords ***
 the table row has expected values
-    #TODO update selectors and values after INFUND-5476
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[2]    3 months
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[3]    £ 10,800
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[4]    £ 360
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[5]    £ 0
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[6]    3%
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 10,800
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 360
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 0
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    3%
 
 Moving La Fromage into project setup
     the project finance user moves La Fromage into project setup if it isn't already

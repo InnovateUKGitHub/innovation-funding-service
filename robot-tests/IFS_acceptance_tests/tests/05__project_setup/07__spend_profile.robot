@@ -25,7 +25,7 @@ Lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    #HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
-    Given the user clicks the button/link    link=00000004: Cheese is good
+    Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -149,7 +149,7 @@ Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    #HappyPath
     [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    Given the user clicks the button/link    link=00000004: Cheese is good
+    Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -174,7 +174,7 @@ Project Manager doesn't have the option to submit spend profiles until all partn
     [Documentation]    INFUND-3767
     [Tags]
     [Setup]    guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000004: Cheese is good
+    Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.button:contains("Review and submit total project profile spend")
     [Teardown]    logout as user
@@ -183,7 +183,7 @@ Academic partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]
     [Setup]    Log in as user    pete.tom@egg.com    Passw0rd
-    Given the user clicks the button/link    link=00000004: Cheese is good
+    Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -208,7 +208,7 @@ Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766
     [Tags]    #HappyPath
     [Setup]    guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000004: Cheese is good
+    Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
@@ -279,19 +279,19 @@ Partners can see the Spend Profile section completed
     [Documentation]  INFUND-3767,INFUND-3766
     [Tags]
     Given guest user log-in                worth.email.test+fundsuccess@gmail.com    Passw0rd
-    And the user clicks the button/link    link=00000004: Cheese is good
+    And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                steve.smith@empire.com    Passw0rd
-    And the user clicks the button/link    link=00000004: Cheese is good
+    And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                jessica.doe@ludlow.co.uk    Passw0rd
-    And the user clicks the button/link    link=00000004: Cheese is good
+    And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000004: Cheese is good
+    And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
 

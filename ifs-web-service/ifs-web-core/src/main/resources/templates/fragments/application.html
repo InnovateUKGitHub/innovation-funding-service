@@ -93,8 +93,7 @@
           </h3>
           <div class="question">
               <p>This is the overview of the finances provided by all partners in this project.</p>
-              <p th:if="${currentApplication.isOpen()}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your
-                  finances</a> section.</p>
+              <p th:if="${currentApplication.isOpen()}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
 
               <div th:replace="finance/finance-summary :: application_finances_summary"></div>
               <div th:replace="finance/finance-summary :: research_participation_alert" th:if="${currentApplication.isOpen()}"></div>
