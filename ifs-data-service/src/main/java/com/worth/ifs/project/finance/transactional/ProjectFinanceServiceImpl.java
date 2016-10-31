@@ -560,11 +560,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
             CostCategory cc = costCategoryRepository.findOne(category);
-            if ( cc.getLabel() != null && rows.stream().noneMatch(s -> Arrays.asList(s).contains(cc.getLabel()))) {
+            if ( cc.getLabel() != null ) {
                 byCategory.add(cc.getLabel());
-            } else if ( cc.getLabel() != null ){
-                byCategory.add("");
-            }
+                }
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val -> {
                 byCategory.add(val.toString());
