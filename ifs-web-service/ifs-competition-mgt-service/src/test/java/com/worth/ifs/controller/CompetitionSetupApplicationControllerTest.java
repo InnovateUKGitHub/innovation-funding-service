@@ -1,27 +1,14 @@
 package com.worth.ifs.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.category.resource.CategoryType;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
-import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
-import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
-import com.worth.ifs.competitionsetup.service.modelpopulator.ApplicationLandingModelPopulator;
-import com.worth.ifs.fixtures.CompetitionFundersFixture;
-import com.worth.ifs.user.builder.UserResourceBuilder;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,20 +17,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -139,4 +117,34 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(redirectedUrl("/competition/setup/"+COMPETITION_ID+"/section/application/landing-page"));
         verify(competitionService, atMost(1)).update(competition);
     }
+
+    @Test
+    public void submitSectionApplicationQuestionWithErrors() throws Exception {
+        Long questionId = 4L;
+        Question question = new Question();
+        question.setId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX +"/question"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
+    public void submitSectionApplicationQuestionWithoutErrors() throws Exception {
+        Long questionId = 4L;
+
+        mockMvc.perform(post(URL_PREFIX + "/question")
+                .param("question.id", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX));
+
+        verify(competitionSetupQuestionService).updateQuestion(isA(Question.class));
+    }
+
 }
