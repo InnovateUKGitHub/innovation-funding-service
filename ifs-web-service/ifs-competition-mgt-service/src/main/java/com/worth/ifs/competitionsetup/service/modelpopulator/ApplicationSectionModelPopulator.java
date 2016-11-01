@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.inputsTypeMatching;
+
 /**
- * populates the model for the initial details competition setup section.
+ * populates the model for the application competition setup section.
  */
 @Service
-public class ApplicationFormModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class ApplicationSectionModelPopulator implements CompetitionSetupSectionModelPopulator {
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -37,9 +39,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 
     @Autowired
     private FormInputService formInputService;
-
-    private Long appendixTypeId = 4L;
-    private Long scoreTypeId = 23L;
 
     @Override
 	public CompetitionSetupSection sectionToPopulateModel() {
@@ -75,6 +74,9 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
     }
 
     private void initQuestionForForm(List<Question> questions, QuestionResource questionResource) {
+        final Long appendixTypeId = 4L;
+        final Long scoreTypeId = 23L;
+
         List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
         List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
 
@@ -83,35 +85,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 
         formInputs.stream()
                 .filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId))
-                .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
+                .forEach(formInputResource -> questions.add(new Question(questionResource, formInputResource, appendix, scored)));
     }
-
-    private Boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
-        return formInputs
-                .stream()
-                .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(typeId));
-    }
-
-	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
-        Question question = new Question();
-        question.setId(questionResource.getId());
-        question.setNumber(questionResource.getQuestionNumber());
-        question.setShortTitle(questionResource.getShortName());
-        question.setTitle(questionResource.getName());
-        question.setSubTitle(questionResource.getDescription());
-
-        question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
-        question.setGuidance(formInputResource.getGuidanceAnswer());
-        if(formInputResource.getWordCount() > 0) {
-            question.setMaxWords(formInputResource.getWordCount());
-        } else {
-            question.setMaxWords(400);
-        }
-
-        question.setScored(scored);
-        question.setAppendix(appendix);
-
-	    return question;
-    }
-
 }

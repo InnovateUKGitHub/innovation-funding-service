@@ -153,9 +153,9 @@
                                 <small>Partner</small>
                             </div>
 
-                            <a th:if="${form.isAdminMode()}"
-                               th:href="@{'/competition/'+${currentCompetition.id}+'/application/'+${currentApplication.id}+'/finances/'+${applicationOrganisation.id}}">
-                                Organisation Finance Details
+                            <a th:if="${!form.isAdminMode() and !currentCompetition.isOpen() and applicationOrganisation.id.equals(userOrganisation.id)}"
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>
+                                Detailed Organisation Finances
                             </a>
 
                             <div th:remove="tag" th:if="${currentApplication.isOpen()}">

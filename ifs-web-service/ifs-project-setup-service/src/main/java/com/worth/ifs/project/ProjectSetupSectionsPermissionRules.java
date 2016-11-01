@@ -5,19 +5,24 @@ import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -30,6 +35,8 @@ public class ProjectSetupSectionsPermissionRules {
 
     @Autowired
     private ProjectService projectService;
+
+    private ProjectSetupSectionPartnerAccessorSupplier accessorSupplier = new ProjectSetupSectionPartnerAccessorSupplier();
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
@@ -81,25 +88,43 @@ public class ProjectSetupSectionsPermissionRules {
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
-        ProjectTeamStatusResource teamStatus;
 
-        try {
-            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
-        } catch (ForbiddenActionException e) {
-            LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId);
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+
+        Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
+                user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
+
+        return projectUser.map(pu -> {
+
+            ProjectTeamStatusResource teamStatus;
+
+            try {
+                teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            } catch (ForbiddenActionException e) {
+                LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
+                return false;
+            }
+
+            ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(pu.getOrganisation()).get();
+
+            ProjectSetupSectionPartnerAccessor sectionAccessor = accessorSupplier.apply(teamStatus);
+            OrganisationResource organisation = new OrganisationResource();
+            organisation.setId(partnerStatusForUser.getOrganisationId());
+            organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
+
+            return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
+
+        }).orElseGet(() -> {
+            LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
             return false;
+        });
+    }
+
+    class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionPartnerAccessor> {
+
+        @Override
+        public ProjectSetupSectionPartnerAccessor apply(ProjectTeamStatusResource teamStatus) {
+            return new ProjectSetupSectionPartnerAccessor(teamStatus);
         }
-
-        ProjectPartnerStatusResource partnerStatusForUser =
-                !teamStatus.getOtherPartnersStatuses().isEmpty() ?
-                        teamStatus.getOtherPartnersStatuses().get(0) :
-                        teamStatus.getLeadPartnerStatus();
-
-        ProjectSetupSectionPartnerAccessor sectionAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
-        OrganisationResource organisation = new OrganisationResource();
-        organisation.setId(partnerStatusForUser.getOrganisationId());
-        organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
-
-        return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
     }
 }

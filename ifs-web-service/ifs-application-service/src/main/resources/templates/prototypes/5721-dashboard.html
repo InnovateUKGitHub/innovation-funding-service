@@ -13,17 +13,20 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=live'})" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=live'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${(param.status != null ? param.status[0] : 'Open')}, ${null})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel'}" />
+  <th:block th:if="${param.status == null or param.status[0] == 'Open'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, competition open'}, ${'Open'}, ${null})" />
 
-	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'In assessment'}, ${null})" th:remove="tag"  />
+  <th:block th:if="${param.status != null and param.status[0] == 'Closed'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, competition closed'}, ${'Closed'}, ${null})" />
 
-	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessors panel'}, ${null})" th:remove="tag"  />
-	
+  <th:block th:if="${param.status != null and param.status[0] == 'assessment'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, in assessment'}, ${'In assessment'}, ${null})" />
+
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, assessors panel'}, ${'Assessors panel'}, ${null})" />
+
 	<th:block th:if="${param.status == null or param.status[0] == 'Open'}">
 		<div class="grid-row">
 			<div class="column-quarter">
@@ -139,9 +142,9 @@
 		<dt>Comp exec</dt>
 		<dd>Jess Smith</dd>
 	</dl>
-	
+
 	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-		<a href="#" class="button button-large">Notify assessors</a>	
+		<a href="#" class="button button-large">Notify assessors</a>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
@@ -159,11 +162,11 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-		<a href="#" class="button button-large">Export panel sheet</a>	
+		<a href="#" class="button button-large">Export panel sheet</a>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-		<a href="#" class="button button-large">Export panel sheet</a>	
+		<a href="#" class="button button-large">Export panel sheet</a>
 	</th:block>
 
 	<h2 class="heading-medium">Review progress</h2>
@@ -260,7 +263,7 @@
 		</ul>
 	</th:block>
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -273,7 +276,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>
