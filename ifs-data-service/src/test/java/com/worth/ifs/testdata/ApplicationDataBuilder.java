@@ -7,10 +7,12 @@ import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -40,41 +42,59 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
+    public ApplicationDataBuilder withStartDate(LocalDate startDate) {
+        return asLeadApplicant(data -> doApplicationDetailsUpdate(data, application -> application.setStartDate(startDate)));
+    }
+
+    public ApplicationDataBuilder withDurationInMonths(long durationInMonths) {
+        return asLeadApplicant(data -> doApplicationDetailsUpdate(data, application ->
+                application.setDurationInMonths(durationInMonths)));
+    }
+
     public ApplicationDataBuilder inviteCollaborator(UserResource collaborator) {
 
-        return with(data -> {
+        return asLeadApplicant(data -> {
 
-            doAs(data.getLeadApplicant(), () -> {
+            inviteService.createApplicationInvites(newInviteOrganisationResource().
+                    withOrganisation(collaborator.getOrganisations().get(0)).
+                    withInviteResources(newApplicationInviteResource().
+                            withUsers(collaborator.getId()).
+                            withApplication(data.getApplication().getId()).
+                            withName(collaborator.getFirstName()).
+                            withEmail(collaborator.getEmail()).
+                            build(1)).
+                    build()).getSuccessObjectOrThrowException();
 
-                inviteService.createApplicationInvites(newInviteOrganisationResource().
-                        withOrganisation(collaborator.getOrganisations().get(0)).
-                        withInviteResources(newApplicationInviteResource().
-                                withUsers(collaborator.getId()).
-                                withApplication(data.getApplication().getId()).
-                                withName(collaborator.getFirstName()).
-                                withEmail(collaborator.getEmail()).
-                                build(1)).
-                        build()).getSuccessObjectOrThrowException();
+            Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
 
-                Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
+            InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).isPresent()).get();
+            ApplicationInviteResource singleInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).get();
 
-                InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).isPresent()).get();
-                ApplicationInviteResource singleInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).get();
-
-                doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
-            });
+            doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
         });
     }
 
     public ApplicationDataBuilder submitApplication() {
 
-        return with(data -> {
+        return asLeadApplicant(data ->
+            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()));
+    }
 
-            doAs(data.getLeadApplicant(), () -> {
+    private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {
+        return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
+    }
 
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId());
-            });
-        });
+    private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {
+
+        ApplicationResource application =
+                applicationService.getApplicationById(data.getApplication().getId()).getSuccessObjectOrThrowException();
+
+        updateFn.accept(application);
+
+        ApplicationResource updated = applicationService.saveApplicationDetails(application.getId(), application).
+                getSuccessObjectOrThrowException();
+
+        data.setApplication(updated);
     }
 
     public static ApplicationDataBuilder newApplicationData(ServiceLocator serviceLocator) {

@@ -14,7 +14,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.category.resource.CategoryType.*;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -49,29 +48,35 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            CompetitionResource competition = data.getCompetition();
+            doCompetitionDetailsUpdate(data, competition -> {
 
-            CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-            Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
-            Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
-            Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
+                CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
+                Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
+                Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
 
-            CompetitionResource newCompetitionDetails = newCompetitionResource().
-                    withId(competition.getId()).
-                    withName(name).
-                    withDescription(description).
-                    withInnovationArea(innovationArea.getId()).
-                    withInnovationSector(innovationSector.getId()).
-                    withResearchCategories(singleton(researchCategory.getId())).
-                    withMaxResearchRatio(30).
-                    withAcademicGrantClaimPercentage(100).
-                    withCompetitionType(competitionType.getId()).
-                    build();
-
-            competitionSetupService.update(competition.getId(), newCompetitionDetails).getSuccessObjectOrThrowException();
-
-            updateCompetitionInCompetitionData(data, competition.getId());
+                competition.setName(name);
+                competition.setDescription(description);
+                competition.setInnovationArea(innovationArea.getId());
+                competition.setInnovationSector(innovationSector.getId());
+                competition.setResearchCategories(singleton(researchCategory.getId()));
+                competition.setMaxResearchRatio(30);
+                competition.setAcademicGrantPercentage(100);
+                competition.setCompetitionType(competitionType.getId());
+            });
         });
+    }
+
+    private void doCompetitionDetailsUpdate(CompetitionData data, Consumer<CompetitionResource> updateFn) {
+
+        CompetitionResource competition =
+                competitionService.getCompetitionById(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+
+        updateFn.accept(competition);
+
+        competitionSetupService.update(competition.getId(), competition).getSuccessObjectOrThrowException();
+
+        updateCompetitionInCompetitionData(data, competition.getId());
     }
 
     public CompetitionDataBuilder withApplicationFormFromTemplate() {

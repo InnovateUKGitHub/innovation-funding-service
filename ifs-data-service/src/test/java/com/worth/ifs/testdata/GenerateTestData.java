@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -171,18 +172,18 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createOpenCompetition() {
 
+        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
+        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
+        UserResource applicant3 = retrieveUserByEmail("worth.email.test+submit@gmail.com");
+        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
+        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
+
         String name = "Connected digital additive manufacturing";
 
         String description = "Innovate UK is to invest up to £9 million in collaborative research and development to " +
                 "stimulate innovation in integrated transport solutions for local authorities. The aim of this " +
                 "competition is to meet user needs by connecting people and/or goods to transport products and " +
                 "services. New or improved systems will be tested in environment laboratories.";
-
-        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
-        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
-        UserResource applicant3 = retrieveUserByEmail("worth.email.test+submit@gmail.com");
-        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
-        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
         competitionDataBuilder.
                 withExistingCompetition(1L).
@@ -196,30 +197,44 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withApplications(
                     builder -> builder.
                             withBasicDetails(applicant1, "A novel solution to an old problem").
+                            withStartDate(LocalDate.of(2016, 3, 1)).
+                            withDurationInMonths(51).
                             inviteCollaborator(applicant2).
                             inviteCollaborator(applicant4).
                             inviteCollaborator(applicant5),
                     builder -> builder.
                             withBasicDetails(applicant1, "Providing sustainable childcare").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(20).
                             inviteCollaborator(applicant2).
                             inviteCollaborator(applicant4),
                     builder -> builder.
                             withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(10).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant1, "Using natural gas to heat homes").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(43).
                             inviteCollaborator(applicant2).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant1, "A new innovative solution").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(20).
                             inviteCollaborator(applicant2).
                             inviteCollaborator(applicant4).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant2, "Security for the Internet of Things").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(23).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant3, "Marking it as complete").
+                            withStartDate(LocalDate.of(2015, 11, 1)).
+                            withDurationInMonths(23).
                             inviteCollaborator(applicant2)
                 ).
                 build();
