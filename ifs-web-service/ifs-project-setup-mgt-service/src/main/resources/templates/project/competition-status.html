@@ -51,7 +51,7 @@
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                 </small>
               </th>
-              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" />
+              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                         th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
