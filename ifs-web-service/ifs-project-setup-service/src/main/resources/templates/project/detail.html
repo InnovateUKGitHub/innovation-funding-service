@@ -81,10 +81,10 @@
         </tbody>
     </table>
 
-    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
     <div class="extra-margin"  th:if="${model.anySectionIncomplete}">
         <p>You are not able to submit until all sections above are marked as complete.</p>
-        <button disabled="disabled" class="button">Submit project details</button>
+        <button disabled="disabled" class="button">Mark as complete</button>
     </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
