@@ -17,7 +17,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.project.id}, projectName=${model.project.name})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.project.application}, projectName=${model.project.name})" th:remove="tag" />
         <h1 class="heading-xlarge">Project setup</h1>
     </div>
 
@@ -34,25 +34,25 @@
         <tbody>
             <tr>
                 <td>
-                    <span>Target start date</span>
+                    Target start date
                 </td>
                 <td id="start-date">
-                    <span th:if="${model.project.targetStartDate == null}" th:remove="tag">Not yet completed</span>
-                    <span th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}" th:remove="tag"></span>
+                    <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
+                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span>Project address</span>
+                    Project address
                 </td>
                 <td id="project-address">
-                    <span th:if="${model.project.address.id == null}" th:remove="tag">Not yet completed</span>
-                    <span th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}" th:remove="tag"></span>
+                    <th:block th:if="${model.project.address.id == null}">Not yet completed</th:block>
+                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}"></th:block>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span>Project manager</span>
+                    Project manager
                 </td>
                 <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
                 <td id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>
@@ -76,16 +76,16 @@
             <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
 
                 <td>
-                    <span th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></span>
-                    <span th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></span>
+                    <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
+                    <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
                 </td>
                 <td>
-                  <span th:unless="${organisationFinanceContact.value == null}" th:remove="tag">
-                        <span th:text="${organisationFinanceContact.value.userName}" />
-                  </span>
-                  <span th:if="${organisationFinanceContact.value == null}" th:remove="tag">
-                        <span>Not yet completed</span>
-                  </span>
+                  <th:block th:unless="${organisationFinanceContact.value == null}">
+                        <th:block th:text="${organisationFinanceContact.value.userName}" />
+                  </th:block>
+                  <th:block th:if="${organisationFinanceContact.value == null}">
+                        Not yet completed
+                  </th:block>
                 </td>
             </tr>
         </tbody>
