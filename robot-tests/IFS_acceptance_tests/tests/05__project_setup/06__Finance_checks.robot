@@ -2,6 +2,9 @@
 Documentation     INFUND-5190: As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
 ...
 ...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
+...
+...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
+
 Suite Setup       Moving La Fromage into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -12,7 +15,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/4
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821
+    [Documentation]    INFUND-4821, INFUND-5476
     [Tags]  HappyPath
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
@@ -70,8 +73,8 @@ Approve Eligibility: Academic partner organisation
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
+    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
 
@@ -84,15 +87,26 @@ Approve Eligibility: Lead partner organisation
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
+    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
     [Teardown]  Logout as user
 
+
+#Please note this test needs test data to be created [INFUND-5879]
+
+Project Finance user to view Je-S Download form and then approve finances
+    [Documentation]     INFUND-5220
+    [Tags]    HappyPath    Pending
+    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
+    And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
+    Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
+    And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
+
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
-    [Tags]    HappyPath    Pending
-    #TODO Pending due to INFUND-5720
+    [Tags]    HappyPath
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
@@ -100,12 +114,11 @@ Other internal users do not have access to Finance Checks
 
 *** Keywords ***
 the table row has expected values
-    #TODO update selectors and values after INFUND-5476
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[2]    3 months
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[3]    £ 10,800
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[4]    £ 360
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[5]    £ 0
-    the user sees the text in the element    xpath=//*[@id="content"]/table[1]/tbody/tr/td[6]    3%
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 10,800
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 360
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 0
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    3%
 
 Moving La Fromage into project setup
     the project finance user moves La Fromage into project setup if it isn't already
