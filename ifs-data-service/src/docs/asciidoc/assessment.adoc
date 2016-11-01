@@ -45,3 +45,14 @@ include::{snippets}/assessment/reject/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessment/reject/curl-request.adoc[]
+
+=== Accept an invitation for an assessment
+==== Request
+include::{snippets}/assessment/accept/http-request.adoc[]
+include::{snippets}/assessment/accept/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/accept/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/accept/curl-request.adoc[]

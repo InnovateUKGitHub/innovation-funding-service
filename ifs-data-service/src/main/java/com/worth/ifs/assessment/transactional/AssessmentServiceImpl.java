@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_ACCEPT_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -63,6 +64,16 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowService.rejectInvitation(found.getParticipant().getId(), found, applicationRejection)) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
+            }
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> acceptInvitation(Long assessmentId) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowService.acceptInvitation(found.getParticipant().getId(), found)) {
+                return serviceFailure(new Error(ASSESSMENT_ACCEPT_FAILED));
             }
             return serviceSuccess();
         });

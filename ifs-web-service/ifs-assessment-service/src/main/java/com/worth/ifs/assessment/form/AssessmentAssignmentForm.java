@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
  */
 public class AssessmentAssignmentForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.assessmentoverviewform.rejectReason.required}")
+    @NotEmpty(message = "{validation.applicationRejection.rejectReason.required}")
     private String rejectReason;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")

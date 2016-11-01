@@ -22,7 +22,7 @@
                 <div class="grid-row">
                     <div class="column-half">
                         <h2 class="heading-small no-margin">Title:</h2>
-                        <p th:text="${model.application.name}">Using natural gas to heat homes</p>
+                        <p th:text="${model.application.name}"></p>
                     </div>
                     <div class="column-half">
                         <h2 class="heading-small no-margin">Partners:</h2>
@@ -51,7 +51,7 @@
             <form th:action="@{/{assessmentId}/assignment/accept(assessmentId=${model.assessmentId})}" method="POST">
                 <h2 class="heading-medium">Are you available to assess this application?</h2>
                 <button class="button large extra-margin" type="submit">Accept</button>
-                <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
+                <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/assignment/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
