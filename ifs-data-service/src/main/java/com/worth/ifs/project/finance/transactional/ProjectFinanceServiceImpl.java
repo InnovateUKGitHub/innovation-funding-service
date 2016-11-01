@@ -561,7 +561,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         monthsRow.add(CSV_TOTAL);
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 
-
         final int[] columnSize = new int[1];
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
 
@@ -571,7 +570,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             }
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val -> {
-                int columns;
                 byCategory.add(val.toString());
             });
             byCategory.add(categoryToActualTotal.get(category).toString());
@@ -588,8 +586,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             columnSize[0] = byCategory.size();
             byCategory.clear();
         });
-
-
 
         ArrayList<String> totals = new ArrayList<>();
         totals.add(CSV_TOTAL);
