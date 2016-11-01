@@ -25,9 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.worth.ifs.assessment.resource.AssessmentOutcomes.ACCEPT;
-import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
-import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Optional.ofNullable;
 

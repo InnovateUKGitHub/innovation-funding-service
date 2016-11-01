@@ -11,13 +11,11 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import java.util.*;
 import java.util.function.Supplier;

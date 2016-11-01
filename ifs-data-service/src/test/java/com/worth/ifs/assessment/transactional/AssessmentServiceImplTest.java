@@ -9,7 +9,6 @@ import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ActivityState;
-import com.worth.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -23,9 +22,7 @@ import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResource
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_ACCEPT_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;

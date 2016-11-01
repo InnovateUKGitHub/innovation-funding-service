@@ -2,19 +2,13 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseController;
 import com.worth.ifs.assessment.form.AssessmentAssignmentForm;
-import com.worth.ifs.assessment.form.RejectCompetitionForm;
 import com.worth.ifs.assessment.model.AssessmentAssignmentModelPopulator;
-import com.worth.ifs.assessment.model.CompetitionInviteModelPopulator;
 import com.worth.ifs.assessment.model.RejectAssessmentModelPopulator;
-import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.invite.resource.CompetitionRejectionResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
