@@ -58,6 +58,10 @@ public class CompetitionResource {
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
 
+    private boolean fullApplicationFinance;
+    private boolean includeGrowthTable;
+
+
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
@@ -428,5 +432,21 @@ public class CompetitionResource {
 
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
+    }
+
+    public boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+        this.includeGrowthTable = includeGrowthTable;
     }
 }

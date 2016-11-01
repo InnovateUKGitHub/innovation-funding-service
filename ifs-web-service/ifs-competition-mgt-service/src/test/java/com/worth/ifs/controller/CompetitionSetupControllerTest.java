@@ -1,9 +1,7 @@
-
-
 package com.worth.ifs.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.error.Error;
@@ -15,25 +13,22 @@ import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.fixtures.CompetitionFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -42,6 +37,8 @@ import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDeta
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -53,23 +50,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Class for testing public functions of {@link CompetitionSetupController}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionSetupControllerTest {
+public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
 
     private static final Long COMPETITION_ID = Long.valueOf(12);
     private static final String URL_PREFIX = "/competition/setup";
 
-    @InjectMocks
-	private CompetitionSetupController controller;
-	
-    @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private UserService userService;
-
     @Mock
     private CategoryService categoryService;
-    
+
     @Mock
     private CompetitionSetupService competitionSetupService;
 
@@ -77,16 +65,14 @@ public class CompetitionSetupControllerTest {
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Mock
-    private MessageSource messageSource;
-
-    @Mock
     private Validator validator;
 
-    private MockMvc mockMvc;
+    @Override
+    protected CompetitionSetupController supplyControllerUnderTest() { return new CompetitionSetupController(); }
 
     @Before
-    public void setupMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    public void setUp() {
+        super.setUp();
 
         when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Exec").build()));
 
@@ -309,33 +295,6 @@ public class CompetitionSetupControllerTest {
                         .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
-    }
-
-    @Test
-    public void submitSectionApplicationQuestionWithErrors() throws Exception {
-        Long questionId = 4L;
-        Question question = new Question();
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/" + questionId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"));
-
-        verify(competitionSetupQuestionService, never()).updateQuestion(question);
-    }
-
-    @Test
-    public void submitSectionApplicationQuestionWithoutErrors() throws Exception {
-        Long questionId = 4L;
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application/question/" + questionId)
-                    .param("questionToUpdate.id", questionId.toString())
-                    .param("questionToUpdate.title", "My Title")
-                    .param("questionToUpdate.guidanceTitle", "My Title")
-                    .param("questionToUpdate.guidance", "My guidance"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"));
-
-        verify(competitionSetupQuestionService).updateQuestion(isA(Question.class));
     }
 
     @Test

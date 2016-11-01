@@ -95,6 +95,9 @@ public class Competition implements ProcessActivity {
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
+    private boolean fullApplicationFinance = true;
+    private boolean includeGrowthTable = true;
+
     private Boolean setupComplete;
 
     public Competition() {
@@ -500,6 +503,22 @@ public class Competition implements ProcessActivity {
             return date.format(formatter);
         }
         return "";
+    }
+
+    public boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+        this.includeGrowthTable = includeGrowthTable;
     }
 }
 
