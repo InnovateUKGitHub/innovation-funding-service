@@ -80,9 +80,7 @@
                     <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
                 </td>
                 <td>
-                  <th:block th:unless="${organisationFinanceContact.value == null}">
-                        <th:block th:text="${organisationFinanceContact.value.userName}" />
-                  </th:block>
+                  <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
                   <th:block th:if="${organisationFinanceContact.value == null}">
                         Not yet completed
                   </th:block>
