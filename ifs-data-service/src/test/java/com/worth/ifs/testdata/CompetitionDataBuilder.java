@@ -34,6 +34,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withExistingCompetition(Long competitionId) {
+
+        return asCompAdmin(data -> {
+            CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+            updateCompetitionInCompetitionData(data, existingCompetition.getId());
+        });
+    }
+
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName) {
 
         return asCompAdmin(data -> {
@@ -100,6 +108,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
         return withMilestoneUpdate(date, FUNDERS_PANEL);
+    }
+
+    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, NOTIFICATIONS);
     }
 
     public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {

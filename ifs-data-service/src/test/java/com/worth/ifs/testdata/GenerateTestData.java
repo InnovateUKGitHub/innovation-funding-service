@@ -93,7 +93,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
-        competitionDataBuilder = newCompetitionData(serviceLocator).createCompetition();
+        competitionDataBuilder = newCompetitionData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -132,11 +132,16 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-        createCompetition1();
-        createCompetition2();
+        createOpenCompetition();
+        createInAssessmentCompetition();
+        createFundersPanelCompetition();
+        createInAssessorFeedbackCompetition();
+        createInProjectSetupCompetition();
+        createInPreparationCompetition();
+        createReadyToOpenCompetition();
     }
 
-    private void createCompetition1() {
+    private void createOpenCompetition() {
 
         String name = "Connected digital additive manufacturing";
 
@@ -146,9 +151,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 "services. New or improved systems will be tested in environment laboratories.";
 
         competitionDataBuilder.
+                withExistingCompetition(1L).
                 withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
                 withOpenDate(LocalDateTime.of(2015, 3, 15, 9, 0, 0)).
                 withSubmissionDate(LocalDateTime.of(2066, 9, 9, 9, 23, 59, 59)).
                 withAssessorAcceptsDate(LocalDateTime.of(2066, 10, 29, 0, 0)).
@@ -158,15 +162,118 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private void createCompetition2() {
+    private void createInAssessmentCompetition() {
 
-        String name = "Another Comp";
+        String name = "Juggling Craziness";
 
-        String description = "Another desc.";
+        String description = "Innovate UK is to invest up to £9 million in juggling. The aim of this competition is to make juggling even more fun.";
 
         competitionDataBuilder.
+                createCompetition().
                 withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
                 withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2016, 12, 31, 0, 0)).
+                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2017, 1, 28, 0, 0)).
+                withSetupComplete().
+                build();
+    }
+
+    private void createFundersPanelCompetition() {
+
+        String name = "La Fromage";
+
+        String description = "Innovate UK is to invest up to £9 million in cheese. The aim of this competition is to make cheese tastier.";
+
+        competitionDataBuilder.
+                createCompetition().
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
+                withAssessorAcceptsDate(LocalDateTime.of(2016, 4, 12, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2017, 5, 12, 0, 0)).
+                withSetupComplete().
+                build();
+    }
+
+    private void createInAssessorFeedbackCompetition() {
+
+        String name = "Theremin Theory";
+
+        String description = "Innovate UK is to invest up to £9 million in theremins. The aim of this competition is to make theremin the prominent instrument in music.";
+
+        competitionDataBuilder.
+                createCompetition().
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
+                withFundersPanelEndDate(LocalDateTime.of(2016, 1, 28, 0, 0)).
+                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2019, 1, 28, 0, 0)).
+                withSetupComplete().
+                build();
+    }
+
+    private void createInProjectSetupCompetition() {
+
+        String name = "Killer Riffs";
+
+        String description = "Innovate UK is to invest up to £9 million in heavy rock music. The aim of this competition is to make it so whenever you turn on the radio, you hear killer riffs and sick breakdowns.";
+
+        competitionDataBuilder.
+                createCompetition().
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
+                withFundersPanelEndDate(LocalDateTime.of(2016, 1, 28, 0, 0)).
+                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2016, 1, 29, 0, 0)).
+                withSetupComplete().
+                build();
+    }
+
+    private void createReadyToOpenCompetition() {
+
+        String name = "Sarcasm Stupendousness";
+
+        String description = "Innovate UK is to invest up to £9 million in sarcasm. The aim of this competition is to make sarcasm such a huge deal.";
+
+        competitionDataBuilder.
+                createCompetition().
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2018, 2, 24, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2018, 3, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2018, 12, 31, 0, 0)).
+                withAssessorAcceptsDate(LocalDateTime.of(2018, 1, 12, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2019, 1, 28, 0, 0)).
+                withSetupComplete().
+                build();
+    }
+
+    private void createInPreparationCompetition() {
+
+        String name = null;
+        String description = null;
+
+        competitionDataBuilder.
+                createCompetition().
+                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
+                withApplicationFormFromTemplate().
+                withNewMilestones().
                 build();
     }
 
