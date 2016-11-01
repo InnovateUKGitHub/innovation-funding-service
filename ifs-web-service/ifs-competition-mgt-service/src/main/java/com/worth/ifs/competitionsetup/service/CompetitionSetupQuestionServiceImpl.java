@@ -2,7 +2,7 @@ package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.service.FormInputService;
@@ -35,7 +35,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
         Question question = new Question();
         List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(questionId);
-        List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(questionId);
+        //TODO AssessorScore for application questions
+        //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(questionId);
 
         question.setId(questionResource.getId());
         question.setTitle(questionResource.getName());
@@ -50,7 +51,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         }
 
         question.setAppendix(hasAppendix(formInputResources));
-        question.setScored(hasAssessorScore(formInputAssessmentResources));
+        //TODO AssessorScore for application questions
+        //question.setScored(hasAssessorScore(formInputAssessmentResources));
 
         return question;
     }
@@ -59,7 +61,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 	public void updateQuestion(Question question) {
 		QuestionResource questionResource = questionService.getById(question.getId());
 		List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(question.getId());
-        List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(question.getId());
+        //TODO AssessorScore for application questions
+        //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(question.getId());
 
 		questionResource.setName(question.getTitle());
         questionResource.setDescription(question.getSubTitle());
@@ -81,7 +84,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         formInputService.save(formInputResource);
 
         handleAppendix(question, formInputResources, questionResource, formInputResource);
-        handleAssessorScore(question, formInputAssessmentResources, questionResource, formInputResource);
+        //TODO AssessorScore for application questions
+        //handleAssessorScore(question, formInputAssessmentResources, questionResource, formInputResource);
 	}
 
 	private void handleAppendix(Question question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
@@ -94,7 +98,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 appendix.setGuidanceAnswer("<p>You may include an appendix of additional information to support the question.</p>" +
                         "<p>You may include, for example, a Gantt chart or project management structure.</p>" +
                         "<p>The appendix should:</p>" +
-                        "<ul class=\\\"list-bullet\\\"><li>be in a portable document format (.pdf)</li>" +
+                        "<ul class=\"list-bullet\"><li>be in a portable document format (.pdf)</li>" +
                         "<li>be readable with 100% magnification</li>" +
                         "<li>contain your application number and project title at the top</li>" +
                         "<li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li><" +

@@ -1,5 +1,7 @@
-package com.worth.ifs.competitionsetup.model;
+package com.worth.ifs.competitionsetup.model.application;
 
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.form.resource.FormInputResource;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
@@ -27,7 +29,28 @@ public class Question {
     private Boolean appendix;
     private Boolean scored;
 
+    public Question() {
 
+    }
+
+    public Question(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored) {
+        this.setId(questionResource.getId());
+        this.setNumber(questionResource.getQuestionNumber());
+        this.setShortTitle(questionResource.getShortName());
+        this.setTitle(questionResource.getName());
+        this.setSubTitle(questionResource.getDescription());
+
+        this.setGuidanceTitle(formInputResource.getGuidanceQuestion());
+        this.setGuidance(formInputResource.getGuidanceAnswer());
+        if(formInputResource.getWordCount() > 0) {
+            this.setMaxWords(formInputResource.getWordCount());
+        } else {
+            this.setMaxWords(400);
+        }
+
+        this.setScored(scored);
+        this.setAppendix(appendix);
+    }
 
     public Long getId() {
         return id;
