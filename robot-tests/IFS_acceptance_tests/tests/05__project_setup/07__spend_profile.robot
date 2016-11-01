@@ -12,6 +12,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-3766 As a project manager I want a summary page so I can review of all partners’ spend profiles that are marked as complete
 ...
 ...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
+...
+...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
+
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -223,6 +226,14 @@ Academic partner can see correct project start date and duration
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
     And the user should see the text in the page     3 Months
+
+Academic partner can see the alternative academic view of the spend profile
+    [Documentation]    INFUND-4819
+    [Tags]
+    Then the user should see the text in the page    J-eS category    # this line subject to change as J-eS will be repalce by Je-S
+    And the user should see the text in the page    Investigations
+    And the user should see the text in the page    Estates costs
+
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
