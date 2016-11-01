@@ -185,6 +185,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
 
         model.addAttribute("project", project);
+        model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("organisation", organisationResource);
         model.addAttribute(FORM_ATTR_NAME, form);

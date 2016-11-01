@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Finance contact</h1>
     </div>
 
@@ -59,35 +59,38 @@
         </fieldset>
         <button class="visuallyhidden" type="submit" id="save">Save</button>
     </form>
-    <table class="extra-margin js-hidden" id="finance-contact-table">
+    <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
+    <table aria-hidden="true" id="finance-contact-table">
         <thead>
         <tr>
+            <th></th>
             <th scope="col" id="finance-contact-name">Name</th>
-            <th scope="col" id="finance-contact-email">E-mail</th>
-            <th>&nbsp;</th>
+            <th scope="col" colspan="2" id="finance-contact-email">E-mail</th>
         </tr>
         </thead>
         <tbody>
-        <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
-            <span class="error-message" th:each="err : ${#fields.globalErrors()}" th:text="${err}" />
-            <tr>
+            <tr class="form-group-row">
+                <th scope="row">
+                    <span class="visuallyhidden">invitee</span>
+                </th>
                 <td>
                     <label for="name-finance-contact" class="visuallyhidden">name</label>
-                    <input type="text" class="form-control width-full"  value="" name="name" id="name-finance-contact" required="required"/>
+                    <input type="text" class="form-control width-full"  value="" name="name" id="name-finance-contact" data-required-errormessage="Please enter a valid name" required="required"/>
                 </td>
                 <td>
                     <label for="email-finance-contact" class="visuallyhidden">email</label>
-                    <input type="email" class="form-control width-full" value="" name="email" id="email-finance-contact" required="required"/>
+                    <input type="email" class="form-control width-full" value="" name="email" id="email-finance-contact" data-required-errormessage="Please enter a valid email address " required="required"/>
                 </td>
                 <td class="alignright">
                     <button class="buttonlink no-margin-bottom" id="invite-finance-contact">Invite to project</button>
                 </td>
             </tr>
-        </form>
         </tbody>
     </table>
+    </form>
     <p>If you add a new team member this section will remain in a pending state until they have accepted.</p>
-    <label for="save" tabindex="0" role="button" class="button no-margin-right">Save</label>
+
+    <label for="save" tabindex="0" role="button" class="button extra-margin">Save</label>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
