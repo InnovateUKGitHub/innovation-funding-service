@@ -173,8 +173,14 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(LocalDateTime.of(2066, 12, 31, 0, 0)).
                 withAssessorEndDate(LocalDateTime.of(2067, 1, 10, 0, 0)).
                 withSetupComplete().
-                withApplication(application -> application.
-                    withBasicDetails(applicant1, "A novel solution to an old problem")
+                withApplications(
+                    builder -> builder.withBasicDetails(applicant1, "A novel solution to an old problem"),
+                    builder -> builder.withBasicDetails(applicant1, "Providing sustainable childcare"),
+                    builder -> builder.withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis"),
+                    builder -> builder.withBasicDetails(applicant1, "Using natural gas to heat homes"),
+                    builder -> builder.withBasicDetails(applicant1, "A new innovative solution"),
+                    builder -> builder.withBasicDetails(applicant1, "Security for the Internet of Things"),
+                    builder -> builder.withBasicDetails(applicant1, "Marking it as complete")
                 ).
                 build();
     }

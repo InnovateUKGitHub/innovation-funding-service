@@ -18,6 +18,7 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 
@@ -134,8 +135,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withApplication(Function<ApplicationDataBuilder, ApplicationDataBuilder> applicationDataBuilderFn) {
-        return with(data -> applicationDataBuilderFn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build());
+    public CompetitionDataBuilder withApplications(Function<ApplicationDataBuilder, ApplicationDataBuilder>... applicationDataBuilderFn) {
+        return with(data -> asList(applicationDataBuilderFn).forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
