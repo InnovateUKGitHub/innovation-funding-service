@@ -3,6 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/css/styleguide.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="comp-dashboard">
@@ -23,31 +24,28 @@
 	</h1>
 
   <p>1. A page that isn't associated to any particular competition, e.g. a dashboard:</p>
-  <hr />
-  <h1 class="heading-xlarge">
-	  Page title
-	</h1>
+  <div class="result">
+    <h1 class="heading-xlarge">
+        Page title
+      </h1>
+  </div>
 
-  <p>2. A page associated to a specific competition, e.g. view all applications for a competition:</p>
-  <hr />
-  <h1 class="heading-xlarge">
-    <span class="heading-secondary">Comp ID: Competition name, competition status</span>
-	  Page title
-	</h1>
+  <p class="extra-margin-top">2. A page associated to a specific competition, e.g. view all applications for a competition:</p>
+  <div class="result">
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">Comp ID: Competition name, competition status</span>
+  	  Page title
+  	</h1>
+  </div>
 
-
-
-  <p>3. A page asscociated to a particular application within a competition, e.g. application overview"</p>
-  <hr />
-  <h1 class="heading-xlarge">
-    <span class="heading-secondary">Comp ID: Competition name, competition status</span>
-	  Page title
-	</h1>
-
-  <h2 class="heading-medium">Application ID: Appication name</h2>
-
-
-
+  <p class="extra-margin-top">3. A page asscociated to a particular application within a competition, e.g. application overview"</p>
+  <div class="result">
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">Comp ID: Competition name, competition status</span>
+  	  Page title
+  	</h1>
+    <h2 class="heading-medium">Application ID: Appication name</h2>
+  </div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
