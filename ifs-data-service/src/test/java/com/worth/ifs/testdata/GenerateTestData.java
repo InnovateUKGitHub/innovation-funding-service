@@ -1,33 +1,21 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.commons.BaseIntegrationTest;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competition.transactional.CompetitionService;
-import com.worth.ifs.competition.transactional.CompetitionSetupService;
-import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.token.repository.TokenRepository;
-import com.worth.ifs.token.transactional.TokenService;
-import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.transactional.RegistrationService;
-import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -51,7 +39,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Ignore
 @Configuration
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
@@ -69,46 +56,13 @@ public class GenerateTestData extends BaseIntegrationTest {
     private String locations;
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private CompetitionSetupService competitionSetupService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
+    private GenericApplicationContext applicationContext;
 
     @Autowired
     private RegistrationService registrationService;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CompetitionTypeRepository competitionTypeRepository;
-
-    @Autowired
-    private CompAdminEmailRepository compAdminEmailRepository;
-
-    @Autowired
-    private TokenRepository tokenRepository;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private InviteService inviteService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     private CompetitionDataBuilder competitionDataBuilder;
 
@@ -136,14 +90,13 @@ public class GenerateTestData extends BaseIntegrationTest {
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "notificationService", notificationService);
 
-        competitionDataBuilder = newCompetitionData(userService, competitionService, competitionTypeRepository,
-                categoryRepository, competitionSetupService).createCompetition();
+        ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
-        externalUserBuilder = newExternalUserData(userRepository, userService, registrationService, roleRepository, organisationRepository,
-                tokenRepository, tokenService, inviteService, organisationService);
+        competitionDataBuilder = newCompetitionData(serviceLocator).createCompetition();
 
-        internalUserBuilder = newInternalUserData(userRepository, userService, registrationService, roleRepository, organisationRepository,
-                tokenRepository, tokenService, inviteService, compAdminEmailRepository);
+        externalUserBuilder = newExternalUserData(serviceLocator);
+
+        internalUserBuilder = newInternalUserData(serviceLocator);
     }
 
     @Test

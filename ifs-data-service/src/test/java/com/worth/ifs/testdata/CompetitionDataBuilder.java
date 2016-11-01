@@ -1,13 +1,8 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.category.domain.Category;
-import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.transactional.CompetitionService;
-import com.worth.ifs.competition.transactional.CompetitionSetupService;
-import com.worth.ifs.user.transactional.UserService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -21,39 +16,20 @@ import static java.util.Collections.singleton;
 
 public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, CompetitionDataBuilder> {
 
-    private CompetitionService competitionService;
-    private CompetitionTypeRepository competitionTypeRepository;
-    private CategoryRepository categoryRepository;
-    private CompetitionSetupService competitionSetupService;
+    public static CompetitionDataBuilder newCompetitionData(ServiceLocator serviceLocator) {
 
-    public static CompetitionDataBuilder newCompetitionData(
-            UserService userService,
-            CompetitionService competitionService,
-            CompetitionTypeRepository competitionTypeRepository,
-            CategoryRepository categoryRepository,
-            CompetitionSetupService competitionSetupService) {
-
-        return new CompetitionDataBuilder(emptyList(), userService, competitionService, competitionTypeRepository,
-                categoryRepository, competitionSetupService);
+        return new CompetitionDataBuilder(emptyList(), serviceLocator);
     }
 
     private CompetitionDataBuilder(List<BiConsumer<Integer, CompetitionData>> multiActions,
-                                   UserService userService,
-                                   CompetitionService competitionService,
-                                   CompetitionTypeRepository competitionTypeRepository,
-                                   CategoryRepository categoryRepository,
-                                   CompetitionSetupService competitionSetupService) {
-        super(multiActions, userService);
-        this.competitionService = competitionService;
-        this.competitionTypeRepository = competitionTypeRepository;
-        this.categoryRepository = categoryRepository;
-        this.competitionSetupService = competitionSetupService;
+                                   ServiceLocator serviceLocator) {
+
+        super(multiActions, serviceLocator);
     }
 
     @Override
     protected CompetitionDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionData>> actions) {
-        return new CompetitionDataBuilder(actions, userService, competitionService, competitionTypeRepository,
-                categoryRepository, competitionSetupService);
+        return new CompetitionDataBuilder(actions, serviceLocator);
     }
 
     @Override

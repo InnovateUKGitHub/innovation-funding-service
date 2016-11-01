@@ -1,21 +1,12 @@
 package com.worth.ifs.testdata;
 
-import com.worth.ifs.invite.transactional.InviteService;
-import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
-import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.transactional.RegistrationService;
-import com.worth.ifs.user.transactional.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,56 +22,19 @@ import static java.util.Optional.empty;
 
 public class ExternalUserBuilder extends BaseDataBuilder<ExternalUserData, ExternalUserBuilder> {
 
-    private UserRepository userRepository;
-    private UserService userService;
-    private RegistrationService registrationService;
-    private RoleRepository roleRepository;
-    private OrganisationRepository organisationRepository;
-    private OrganisationService organisationService;
-    private TokenRepository tokenRepository;
-    private TokenService tokenService;
-    private InviteService inviteService;
+    public static ExternalUserBuilder newExternalUserData(ServiceLocator serviceLocator) {
 
-    public static ExternalUserBuilder newExternalUserData(
-            UserRepository userRepository,
-            UserService userService,
-            RegistrationService registrationService,
-            RoleRepository roleRepository,
-            OrganisationRepository organisationRepository,
-            TokenRepository tokenRepository,
-            TokenService tokenService,
-            InviteService inviteService,
-            OrganisationService organisationService) {
-
-        return new ExternalUserBuilder(emptyList(), userRepository, userService, registrationService, roleRepository, organisationRepository, tokenRepository, tokenService, inviteService, organisationService);
+        return new ExternalUserBuilder(emptyList(), serviceLocator);
     }
 
     private ExternalUserBuilder(List<BiConsumer<Integer, ExternalUserData>> multiActions,
-                                UserRepository userRepository,
-                                UserService userService,
-                                RegistrationService registrationService,
-                                RoleRepository roleRepository,
-                                OrganisationRepository organisationRepository,
-                                TokenRepository tokenRepository,
-                                TokenService tokenService,
-                                InviteService inviteService,
-                                OrganisationService organisationService) {
-        super(multiActions, userService);
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.registrationService = registrationService;
-        this.roleRepository = roleRepository;
-        this.organisationRepository = organisationRepository;
-        this.tokenRepository = tokenRepository;
-        this.tokenService = tokenService;
-        this.inviteService = inviteService;
-        this.organisationService = organisationService;
+                                ServiceLocator serviceLocator) {
+        super(multiActions, serviceLocator);
     }
 
     @Override
     protected ExternalUserBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ExternalUserData>> actions) {
-        return new ExternalUserBuilder(actions, userRepository, userService, registrationService, roleRepository,
-                organisationRepository, tokenRepository, tokenService, inviteService, organisationService);
+        return new ExternalUserBuilder(actions, serviceLocator);
     }
 
     @Override
