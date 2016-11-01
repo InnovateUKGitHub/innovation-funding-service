@@ -9,7 +9,7 @@
                     <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() != 'APPLICATION_FORM'}"
                        th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                        th:text="${section.name}">Section Name</a>
-                    <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() == 'APPLICATION_FORM'}"
+                    <a th:if="${isInitialComplete} and ${section.toString() == 'APPLICATION_FORM'}"
                        th:href="@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}"
                        th:text="${section.name}">Section Name</a>
                     <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"

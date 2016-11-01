@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Class for testing public functions of {@link CompetitionSetupApplicationControllerTest}
+ * Class for testing public functions of {@link CompetitionSetupApplicationController}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionSetupApplicationController> {

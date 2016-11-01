@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * populates the model for the initial details competition setup section.
+ * populates the model for the Application Questions landing page of the competition setup section.
  */
 @Service
 public class ApplicationLandingModelPopulator implements CompetitionSetupSectionModelPopulator {

@@ -3,13 +3,12 @@ package com.worth.ifs.competitionsetup.controller;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.form.FinanceForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,6 @@ import static com.worth.ifs.competitionsetup.controller.CompetitionSetupControll
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
@@ -50,6 +47,7 @@ public class CompetitionSetupApplicationController {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
@@ -68,15 +66,13 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
     public String getApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        CompetitionResource resource = competitionService.getById(competitionId);
-        FinanceForm form = new FinanceForm();
-        form.setFullApplicationFinance(resource.isFullApplicationFinance());
-        form.setIncludeGrowthTable(resource.isIncludeGrowthTable());
-        return getFinancePage(model, form, competitionId);
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
+                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
+        return "competition/finances";
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.POST)
-    public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm form,
+    public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
@@ -84,14 +80,16 @@ public class CompetitionSetupApplicationController {
 
         Supplier<String> failureView = () -> getFinancePage(model, form, competitionId);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
         CompetitionResource resource = competitionService.getById(competitionId);
         resource.setFullApplicationFinance(form.isFullApplicationFinance());
         resource.setIncludeGrowthTable(form.isIncludeGrowthTable());
         competitionService.update(resource);
+
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private String getFinancePage(Model model, FinanceForm form, Long competitionId) {
+    private String getFinancePage(Model model, ApplicationFinanceForm form, Long competitionId) {
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
         model.addAttribute(COMPETITION_ID_KEY, competitionId);
         return "competition/finances";
