@@ -1,6 +1,5 @@
 package com.worth.ifs.testdata;
 
-import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.domain.CompetitionType;
@@ -8,6 +7,7 @@ import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
+import com.worth.ifs.user.transactional.UserService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,7 +19,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 
 
-public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, CompetitionDataBuilder> {
+public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, CompetitionDataBuilder> {
 
     private CompetitionService competitionService;
     private CompetitionTypeRepository competitionTypeRepository;
@@ -27,20 +27,23 @@ public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, Competi
     private CompetitionSetupService competitionSetupService;
 
     public static CompetitionDataBuilder newCompetitionData(
+            UserService userService,
             CompetitionService competitionService,
             CompetitionTypeRepository competitionTypeRepository,
             CategoryRepository categoryRepository,
             CompetitionSetupService competitionSetupService) {
 
-        return new CompetitionDataBuilder(emptyList(), competitionService, competitionTypeRepository, categoryRepository, competitionSetupService);
+        return new CompetitionDataBuilder(emptyList(), userService, competitionService, competitionTypeRepository,
+                categoryRepository, competitionSetupService);
     }
 
     private CompetitionDataBuilder(List<BiConsumer<Integer, CompetitionData>> multiActions,
+                                   UserService userService,
                                    CompetitionService competitionService,
                                    CompetitionTypeRepository competitionTypeRepository,
                                    CategoryRepository categoryRepository,
                                    CompetitionSetupService competitionSetupService) {
-        super(multiActions);
+        super(multiActions, userService);
         this.competitionService = competitionService;
         this.competitionTypeRepository = competitionTypeRepository;
         this.categoryRepository = categoryRepository;
@@ -49,7 +52,8 @@ public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, Competi
 
     @Override
     protected CompetitionDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionData>> actions) {
-        return new CompetitionDataBuilder(actions, competitionService, competitionTypeRepository, categoryRepository, competitionSetupService);
+        return new CompetitionDataBuilder(actions, userService, competitionService, competitionTypeRepository,
+                categoryRepository, competitionSetupService);
     }
 
     @Override
@@ -61,11 +65,14 @@ public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, Competi
 
         return with(competitionData -> {
 
-            CompetitionResource newCompetition = competitionSetupService.
-                    create().
-                    getSuccessObjectOrThrowException();
+            doAs(compAdmin(), () -> {
 
-            updateCompetitionInCompetitionData(competitionData, newCompetition.getId());
+                CompetitionResource newCompetition = competitionSetupService.
+                        create().
+                        getSuccessObjectOrThrowException();
+
+                updateCompetitionInCompetitionData(competitionData, newCompetition.getId());
+            });
         });
     }
 
@@ -73,28 +80,31 @@ public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, Competi
 
         return with(competitionData -> {
 
-            CompetitionResource competition = competitionData.getCompetition();
+            doAs(compAdmin(), () -> {
 
-            CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-            Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
-            Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
-            Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
+                CompetitionResource competition = competitionData.getCompetition();
 
-            CompetitionResource newCompetitionDetails = newCompetitionResource().
-                    withId(competition.getId()).
-                    withName(name).
-                    withDescription(description).
-                    withInnovationArea(innovationArea.getId()).
-                    withInnovationSector(innovationSector.getId()).
-                    withResearchCategories(singleton(researchCategory.getId())).
-                    withMaxResearchRatio(30).
-                    withAcademicGrantClaimPercentage(100).
-                    withCompetitionType(competitionType.getId()).
-                    build();
+                CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
+                Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
+                Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
 
-            competitionSetupService.update(competition.getId(), newCompetitionDetails).getSuccessObjectOrThrowException();
+                CompetitionResource newCompetitionDetails = newCompetitionResource().
+                        withId(competition.getId()).
+                        withName(name).
+                        withDescription(description).
+                        withInnovationArea(innovationArea.getId()).
+                        withInnovationSector(innovationSector.getId()).
+                        withResearchCategories(singleton(researchCategory.getId())).
+                        withMaxResearchRatio(30).
+                        withAcademicGrantClaimPercentage(100).
+                        withCompetitionType(competitionType.getId()).
+                        build();
 
-            updateCompetitionInCompetitionData(competitionData, competition.getId());
+                competitionSetupService.update(competition.getId(), newCompetitionDetails).getSuccessObjectOrThrowException();
+
+                updateCompetitionInCompetitionData(competitionData, competition.getId());
+            });
         });
     }
 
@@ -102,12 +112,15 @@ public class CompetitionDataBuilder extends BaseBuilder<CompetitionData, Competi
 
         return with(competitionData -> {
 
-            CompetitionResource competition = competitionData.getCompetition();
+            doAs(compAdmin(), () -> {
 
-            competitionSetupService.initialiseFormForCompetitionType(competition.getId(), competition.getCompetitionType()).
-                    getSuccessObjectOrThrowException();
+                CompetitionResource competition = competitionData.getCompetition();
 
-            updateCompetitionInCompetitionData(competitionData, competition.getId());
+                competitionSetupService.initialiseFormForCompetitionType(competition.getId(), competition.getCompetitionType()).
+                        getSuccessObjectOrThrowException();
+
+                updateCompetitionInCompetitionData(competitionData, competition.getId());
+            });
         });
     }
 

@@ -34,7 +34,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
      *
      * @param user
      */
-    protected static UserResource setLoggedInUser(UserResource user) {
+    public static UserResource setLoggedInUser(UserResource user) {
         UserResource currentUser = getLoggedInUser();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
         return currentUser;
@@ -43,7 +43,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
     /**
      * Get the user on the Spring Security ThreadLocals
      */
-    protected static UserResource getLoggedInUser() {
+    public static UserResource getLoggedInUser() {
         SecurityContext context = SecurityContextHolder.getContext();
 
         if (context == null) {

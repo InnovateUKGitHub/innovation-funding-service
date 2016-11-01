@@ -6,22 +6,22 @@ import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
-import com.worth.ifs.user.domain.CompAdminEmail;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.invite.transactional.InviteService;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationMedium;
+import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.token.repository.TokenRepository;
+import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -36,29 +36,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
+import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
+import static com.worth.ifs.testdata.ExternalUserBuilder.newExternalUserData;
+import static com.worth.ifs.testdata.InternalUserBuilder.newInternalUserData;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Ignore
 @Configuration
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
-
-    public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
-    public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -85,7 +81,13 @@ public class GenerateTestData extends BaseIntegrationTest {
     private UserService userService;
 
     @Autowired
+    private RegistrationService registrationService;
+
+    @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -97,12 +99,22 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompAdminEmailRepository compAdminEmailRepository;
 
     @Autowired
-    private RegistrationService registrationService;
+    private TokenRepository tokenRepository;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private TokenService tokenService;
+
+    @Autowired
+    private InviteService inviteService;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     private CompetitionDataBuilder competitionDataBuilder;
+
+    private ExternalUserBuilder externalUserBuilder;
+
+    private InternalUserBuilder internalUserBuilder;
 
     @Before
     public void setup() throws Exception {
@@ -113,14 +125,25 @@ public class GenerateTestData extends BaseIntegrationTest {
     public void replaceExternalDependencies() {
 
         IdentityProviderService idpService = mock(IdentityProviderService.class);
+        NotificationService notificationService = mock(NotificationService.class);
 
         when(idpService.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
 
-        ReflectionTestUtils.setField(unwrapProxy(registrationService), "idpService", idpService);
+        when(notificationService.sendNotification(isA(Notification.class), isA(NotificationMedium.class))).thenReturn(serviceSuccess());
 
-        competitionDataBuilder = newCompetitionData(competitionService, competitionTypeRepository,
+        RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
+        ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpService);
+        ReflectionTestUtils.setField(registrationServiceUnwrapped, "notificationService", notificationService);
+
+        competitionDataBuilder = newCompetitionData(userService, competitionService, competitionTypeRepository,
                 categoryRepository, competitionSetupService).createCompetition();
+
+        externalUserBuilder = newExternalUserData(userRepository, userService, registrationService, roleRepository, organisationRepository,
+                tokenRepository, tokenService, inviteService, organisationService);
+
+        internalUserBuilder = newInternalUserData(userRepository, userService, registrationService, roleRepository, organisationRepository,
+                tokenRepository, tokenService, inviteService, compAdminEmailRepository);
     }
 
     @Test
@@ -138,20 +161,25 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @SuppressWarnings("unused")
     private void createInternalUsers() {
-        UserResource johnDoe = createInternalUser("John", "Doe", COMP_ADMIN_EMAIL, COMP_ADMIN);
+        internalUserBuilder.
+                withRole(COMP_ADMIN).
+                createPreRegistrationEntry(COMP_ADMIN_EMAIL).
+                registerUser("John", "Doe").
+                verifyEmail().
+                build();
     }
 
     @SuppressWarnings("unused")
     private void createExternalUsers() {
-        User steveSmith = createExternalUserViaRegistration("Steve", "Smith", "steve.smith@empire.com", APPLICANT);
+        externalUserBuilder.
+                registerUser("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                verifyEmail().
+                build();
     }
 
     private void createCompetitions() {
-
-        doAsCompAdmin(() -> {
-            createCompetition1();
-            createCompetition2();
-        });
+        createCompetition1();
+        createCompetition2();
     }
 
     private void createCompetition1() {
@@ -179,94 +207,6 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
                 withApplicationFormFromTemplate().
                 build();
-    }
-
-    private UserResource compAdminUser() {
-        return retrieveUserByEmail(COMP_ADMIN_EMAIL);
-    }
-
-    private UserResource retrieveUserByEmail(String emailAddress) {
-        return doAsSystemRegistrar(() -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
-    }
-
-    private UserResource systemRegistrarUser() {
-        return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
-    }
-
-    private UserResource createInternalUser(String firstName, String lastName, String emailAddress, UserRoleType role) {
-
-        switch (role) {
-            case COMP_ADMIN: {
-                CompAdminEmail preregistrationEntry = new CompAdminEmail();
-                preregistrationEntry.setEmail(emailAddress);
-                compAdminEmailRepository.save(preregistrationEntry);
-            }
-        }
-
-        List<Role> rolesByName = roleRepository.findByNameIn(singletonList(role.getName()));
-        List<RoleResource> roleResources = simpleMap(rolesByName, r -> newRoleResource().withId(r.getId()).build());
-
-        UserResource newUser = newUserResource().
-                withFirstName(firstName).
-                withLastName(lastName).
-                withEmail(emailAddress).
-                withRolesGlobal(roleResources).
-                withUid(UUID.randomUUID().toString()).
-                withPassword("Passw0rd").
-                build();
-
-        return doAsSystemRegistrar(() -> registrationService.createOrganisationUser(organisation(INNOVATE_UK_ORG_NAME).getId(), newUser).getSuccessObjectOrThrowException());
-    }
-
-    private <T> T doAsSystemRegistrar(Supplier<T> action) {
-        return doAsUser(action, systemRegistrarUser());
-    }
-
-    private <T> T doAsCompAdmin(Supplier<T> action) {
-        return doAsUser(action, compAdminUser());
-    }
-
-    private void doAsCompAdmin(Runnable action) {
-        doAsUser(action, compAdminUser());
-    }
-
-    private <T> T doAsUser(Supplier<T> action, UserResource user) {
-        UserResource currentUser = setLoggedInUser(user);
-        try {
-            return action.get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            setLoggedInUser(currentUser);
-        }
-    }
-
-    private void doAsUser(Runnable action, UserResource user) {
-        UserResource currentUser = setLoggedInUser(user);
-        try {
-            action.run();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            setLoggedInUser(currentUser);
-        }
-    }
-
-    private User createExternalUserViaRegistration(String firstName, String lastName, String emailAddress, UserRoleType role) {
-        User newUser = newUser().
-                withFirstName(firstName).
-                withLastName(lastName).
-                withEmailAddress(emailAddress).
-                withRoles(roleRepository.findByNameIn(singletonList(role.getName()))).
-                withUid(UUID.randomUUID().toString()).
-                withStatus(UserStatus.ACTIVE).
-                build();
-
-        return userRepository.save(newUser);
-    }
-
-    private Organisation organisation(String name) {
-        return organisationRepository.findOneByName(name);
     }
 
     private void freshDb() throws Exception {
