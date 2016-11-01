@@ -1,5 +1,6 @@
 package com.worth.ifs.competitionsetup.viewmodel;
 
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Digits;
@@ -19,6 +20,12 @@ public class FunderViewModel {
 
     @NotNull
     private Boolean coFunder;
+
+    public FunderViewModel(CompetitionFunderResource funderResource) {
+        this.setFunder(funderResource.getFunder());
+        this.setFunderBudget(funderResource.getFunderBudget());
+        this.setCoFunder(funderResource.getCoFunder());
+    }
 
     public String getFunder() {
         return funder;

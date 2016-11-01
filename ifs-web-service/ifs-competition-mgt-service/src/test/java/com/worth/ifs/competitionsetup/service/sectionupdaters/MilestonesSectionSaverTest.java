@@ -78,14 +78,7 @@ public class MilestonesSectionSaverTest {
     private LinkedMap<String, MilestoneViewModel> populateMilestoneFormEntry() {
         LinkedMap<String, MilestoneViewModel>  milestoneList = new LinkedMap<>();
 
-        MilestoneViewModel milestone = new MilestoneViewModel();
-
-        milestone.setMilestoneType(MilestoneType.OPEN_DATE);
-        milestone.setDay(1);
-        milestone.setMonth(1);
-        milestone.setYear(2017);
-        milestone.setDayOfWeek("Wed");
-
+        MilestoneViewModel milestone = new MilestoneViewModel(MilestoneType.OPEN_DATE, LocalDateTime.of(2017, 1, 1, 0 ,0));
         milestoneList.put(MilestoneType.OPEN_DATE.name(), milestone);
 
         return milestoneList;

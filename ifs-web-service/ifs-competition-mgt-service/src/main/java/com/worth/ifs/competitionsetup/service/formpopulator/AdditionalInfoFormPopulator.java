@@ -38,30 +38,25 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
 		competitionResource.getFunders().forEach(funderResource ->  {
-			FunderViewModel funder = new FunderViewModel();
-			funder.setFunder(funderResource.getFunder());
-			funder.setFunderBudget(funderResource.getFunderBudget());
-			funder.setCoFunder(funderResource.getCoFunder());
+			FunderViewModel funder = new FunderViewModel(funderResource);
 			competitionSetupForm.getFunders().add(funder);
 		});
 
         if(competitionResource.getFunders().isEmpty()) {
-            FunderViewModel funder = new FunderViewModel();
-            funder.setCoFunder(false);
-            competitionSetupForm.setFunders(asList(funder));
-
-            initFirstFunder(competitionResource);
+			CompetitionFunderResource competitionFunderResource = initFirstFunder();
+			competitionSetupForm.setFunders(asList(new FunderViewModel(competitionFunderResource)));
+			competitionResource.setFunders(asList(competitionFunderResource));
+			competitionService.update(competitionResource);
         }
 
         return competitionSetupForm;
 	}
 
-    public void initFirstFunder(CompetitionResource competitionResource) {
+    public CompetitionFunderResource initFirstFunder() {
         CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
         competitionFunderResource.setCoFunder(false);
-	    competitionResource.setFunders(asList(competitionFunderResource));
 
-        competitionService.update(competitionResource);
+		return competitionFunderResource;
     }
 
 }

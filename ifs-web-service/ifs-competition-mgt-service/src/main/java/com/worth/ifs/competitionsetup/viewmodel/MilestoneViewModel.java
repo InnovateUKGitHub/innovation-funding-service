@@ -23,6 +23,13 @@ public class MilestoneViewModel {
 
     private static final Log LOG = LogFactory.getLog(MilestoneViewModel.class);
 
+    public MilestoneViewModel(MilestoneType milestoneType, LocalDateTime dateTime) {
+        this.setMilestoneType(milestoneType);
+        this.setDay(dateTime.getDayOfMonth());
+        this.setMonth(dateTime.getMonth().getValue());
+        this.setYear(dateTime.getYear());
+    }
+
     public Integer getDay() {
         return day;
     }

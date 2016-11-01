@@ -54,15 +54,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private MilestoneViewModel populateMilestoneFormEntries(MilestoneResource milestone) {
-        MilestoneViewModel newMilestone = new MilestoneViewModel();
-        newMilestone.setMilestoneType(milestone.getType());
-        if (milestone.getDate() != null) {
-            newMilestone.setDay(milestone.getDate().getDayOfMonth());
-            newMilestone.setMonth(milestone.getDate().getMonthValue());
-            newMilestone.setYear(milestone.getDate().getYear());
-            newMilestone.setDayOfWeek(newMilestone.getDayOfWeek());
-        }
-        return newMilestone;
+        return new MilestoneViewModel(milestone.getType(), milestone.getDate());
     }
 }
 

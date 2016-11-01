@@ -14,10 +14,10 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.*;
-import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
@@ -251,7 +252,7 @@ public class CompetitionSetupController {
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
             List<FunderViewModel> funders = competitionSetupForm.getFunders();
-            funders.add(new FunderViewModel());
+            funders.add(new FunderViewModel(newCompetitionFunderResource().build()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {

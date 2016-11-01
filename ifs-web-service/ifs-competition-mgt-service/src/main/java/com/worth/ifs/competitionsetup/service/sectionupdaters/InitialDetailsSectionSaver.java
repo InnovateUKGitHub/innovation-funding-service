@@ -173,11 +173,8 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             return errors;
         }
 
-	    MilestoneViewModel milestoneEntry = new MilestoneViewModel();
-        milestoneEntry.setMilestoneType(MilestoneType.OPEN_DATE);
-		milestoneEntry.setDay(openingDate.getDayOfMonth());
-        milestoneEntry.setMonth(openingDate.getMonth().getValue());
-        milestoneEntry.setYear(openingDate.getYear());
+	    MilestoneViewModel milestoneEntry = new MilestoneViewModel(MilestoneType.OPEN_DATE, openingDate);
+
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
