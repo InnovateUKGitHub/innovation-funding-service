@@ -174,12 +174,22 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withAssessorEndDate(LocalDateTime.of(2067, 1, 10, 0, 0)).
                 withSetupComplete().
                 withApplications(
-                    builder -> builder.withBasicDetails(applicant1, "A novel solution to an old problem"),
-                    builder -> builder.withBasicDetails(applicant1, "Providing sustainable childcare"),
-                    builder -> builder.withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis"),
-                    builder -> builder.withBasicDetails(applicant1, "Using natural gas to heat homes"),
-                    builder -> builder.withBasicDetails(applicant1, "A new innovative solution"),
-                    builder -> builder.withBasicDetails(applicant1, "Security for the Internet of Things"),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "A novel solution to an old problem"),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "Providing sustainable childcare"),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis").
+                            submitApplication(),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "Using natural gas to heat homes").
+                            submitApplication(),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "A new innovative solution").
+                            submitApplication(),
+                    builder -> builder.
+                            withBasicDetails(applicant1, "Security for the Internet of Things").
+                            submitApplication(),
                     builder -> builder.withBasicDetails(applicant1, "Marking it as complete")
                 ).
                 build();

@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -26,7 +27,19 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         applicationName, data.getCompetition().getId(), leadApplicant.getId()).
                         getSuccessObjectOrThrowException();
 
+                data.setLeadApplicant(leadApplicant);
                 data.setApplication(created);
+            });
+        });
+    }
+
+    public ApplicationDataBuilder submitApplication() {
+
+        return with(data -> {
+
+            doAs(data.getLeadApplicant(), () -> {
+
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId());
             });
         });
     }
