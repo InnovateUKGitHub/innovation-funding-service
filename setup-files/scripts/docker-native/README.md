@@ -15,17 +15,20 @@ You could run this setup from within your own custom VM setup (maybe something l
 ## Setting Up
 
 1. Make sure you don't have any processes running on your machine that may have conflicting ports with the 
-application stack. The main ports you may be concerned with are listed in the following table:
+application stack. You should kill the process beforehand e.g. `sudo service stop mysql`.
+
+    The main ports you may be concerned with are listed in the following table (with some possible conflicting
+    processes):
     
-    | Port  | Service       |
-    | ----- | ------------- |
-    | 443   | Shib (HTTPS)  |
-    | 389   | Shib (LDAP)   |
-    | 8080  | Web           |
-    | 8090  | Data          |
-    | 38606 | MySQL         |
-    | 9876  | IMAP          |
-    | 1234  | Webmail       |
+     Port  | Service       | Possible conflicts
+     ----- | ------------- | -------------------------------------
+     443   | Shib (HTTPS)  | Could be another running web app
+     389   | Shib (LDAP)   |
+     8080  | Web           | Most likely another running web app
+     8090  | Data          |
+     3306  | MySQL         | Most likely a running MySQL process 
+     9876  | IMAP          | 
+     1234  | Webmail       |
     
     There are some ports you can change (at your own discretion). These are detailed in `.env-defaults`. To modify them, 
     copy the contents into a `.env` file and then modify the ports. However, the important ports necessary for the
@@ -53,9 +56,16 @@ is advisable not to have them running all the time (eating your RAM).
 - `teardown.sh` removes the existing Docker containers for the project. Don't run this unless you want to purposefully
 want to destroy your environment e.g. in the event of a rebuild.
 
+## Development workflow
+
+You will most likely want to utilise `deploy.sh` to actually perform further development. 
+
+It is pretty much the same as the current `Docker Machine` setup (although this workflow should be improved). 
+The usage of `deploy.sh` is documented below.
+
 ## Additional information
 
-The following scripts 
+The following scripts are rationalized as:
 
 - `setup.sh` builds the entire environment using Docker and Docker Compose. Then creates the required databases in the 
  `mysql` container, runs the Flyway migrations, syncs the `shib` and `mysql` user databases and finally runs the 
@@ -71,6 +81,8 @@ essentially just runs a `./gradlew cleanDeploy` on a sub-project.
     Usage as follows:
 
         ./deploy.sh {all|data|web|asm|comp-mgt|app|ps|psm} {gradleOpts}
+        
+    e.g. `./deploy.sh asm -x test`
         
     Note: `gradleOpts` is not required. If you do specify some options they will be passed to the sub-project's 
     `cleanDeploy` task run.
@@ -89,7 +101,7 @@ located somewhere else).
  - In the event of catastrophic failure of your Docker containers, rebuild the entire environment by running 
  `teardown.sh` and then `setup.sh`.
  
- - There are potential issues during `setup.sh` execution involving the creation of the required MySQL schemas 
+ - There are _potentially_ issues during `setup.sh` execution involving the creation of the required MySQL schemas 
  (specifically `ifs-test`). The following errors will be observable during execution:
  
         ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
@@ -99,3 +111,5 @@ located somewhere else).
         Unable to clean unknown schema: `ifs_test`
  
     Running `teardown.sh` followed by running `setup.sh` is recommended (aka try again).
+    
+ - If the build is failing (e.g. on Flyway migrations), have you run the `hosts-helper.sh` before the `setup.sh`? 

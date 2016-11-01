@@ -29,7 +29,7 @@ wait
 sleep 3
 
 cd ../../../
-./gradlew -Pprofile=docker-native flywayClean flywayMigrate
+./gradlew -Pprofile=docker flywayClean flywayMigrate
 cd ${BASEDIR}
 ./scripts/_delete-shib-users-remote.sh
 ./syncShib.sh

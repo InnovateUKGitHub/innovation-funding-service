@@ -60,7 +60,7 @@ services:
   mysql:
     image: mysql:5.5.49
     ports:
-      - "38606:3306"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs
