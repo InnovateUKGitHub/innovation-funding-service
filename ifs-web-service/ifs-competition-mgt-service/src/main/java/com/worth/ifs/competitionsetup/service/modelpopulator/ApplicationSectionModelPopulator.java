@@ -40,9 +40,6 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
     @Autowired
     private FormInputService formInputService;
 
-    private static final Long appendixTypeId = 4L;
-    private static final Long scoreTypeId = 23L;
-
     @Override
 	public CompetitionSetupSection sectionToPopulateModel() {
 		return CompetitionSetupSection.APPLICATION_FORM;
@@ -77,6 +74,9 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
     }
 
     private void initQuestionForForm(List<Question> questions, QuestionResource questionResource) {
+        final Long appendixTypeId = 4L;
+        final Long scoreTypeId = 23L;
+
         List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
         List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
 
