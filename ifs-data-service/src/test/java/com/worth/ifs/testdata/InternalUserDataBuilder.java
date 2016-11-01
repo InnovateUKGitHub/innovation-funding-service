@@ -8,9 +8,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class InternalUserBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserBuilder> {
+public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
-    public InternalUserBuilder registerUser(String firstName, String lastName) {
+    public InternalUserDataBuilder registerUser(String firstName, String lastName) {
         return with(data -> {
 
             doAs(systemRegistrar(), () -> {
@@ -19,20 +19,20 @@ public class InternalUserBuilder extends BaseUserDataBuilder<InternalUserData, I
         });
     }
 
-    public static InternalUserBuilder newInternalUserData(ServiceLocator serviceLocator) {
+    public static InternalUserDataBuilder newInternalUserData(ServiceLocator serviceLocator) {
 
-        return new InternalUserBuilder(emptyList(), serviceLocator);
+        return new InternalUserDataBuilder(emptyList(), serviceLocator);
     }
 
-    private InternalUserBuilder(List<BiConsumer<Integer, InternalUserData>> multiActions,
-                                ServiceLocator serviceLocator) {
+    private InternalUserDataBuilder(List<BiConsumer<Integer, InternalUserData>> multiActions,
+                                    ServiceLocator serviceLocator) {
 
         super(multiActions, serviceLocator);
     }
 
     @Override
-    protected InternalUserBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InternalUserData>> actions) {
-        return new InternalUserBuilder(actions, serviceLocator);
+    protected InternalUserDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InternalUserData>> actions) {
+        return new InternalUserDataBuilder(actions, serviceLocator);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class InternalUserBuilder extends BaseUserDataBuilder<InternalUserData, I
         return new InternalUserData();
     }
 
-    public InternalUserBuilder withRole(UserRoleType role) {
+    public InternalUserDataBuilder withRole(UserRoleType role) {
         return with(data -> {
            data.setRole(role);
         });
     }
 
-    public InternalUserBuilder createPreRegistrationEntry(String emailAddress) {
+    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
         return with(data -> {
             switch (data.getRole()) {
                 case COMP_ADMIN: {

@@ -1,11 +1,12 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.transactional.RegistrationService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
@@ -29,9 +30,9 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
-import static com.worth.ifs.testdata.ExternalUserBuilder.newExternalUserData;
-import static com.worth.ifs.testdata.InternalUserBuilder.newInternalUserData;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
+import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData;
+import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
@@ -61,14 +62,13 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private RegistrationService registrationService;
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
     private CompetitionDataBuilder competitionDataBuilder;
 
-    private ExternalUserBuilder externalUserBuilder;
+    private ExternalUserDataBuilder externalUserBuilder;
 
-    private InternalUserBuilder internalUserBuilder;
+    private InternalUserDataBuilder internalUserBuilder;
+
+    private OrganisationDataBuilder organisationBuilder;
 
     @Before
     public void setup() throws Exception {
@@ -93,10 +93,9 @@ public class GenerateTestData extends BaseIntegrationTest {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
         competitionDataBuilder = newCompetitionData(serviceLocator).createCompetition();
-
         externalUserBuilder = newExternalUserData(serviceLocator);
-
         internalUserBuilder = newInternalUserData(serviceLocator);
+        organisationBuilder = newOrganisationData(serviceLocator);
     }
 
     @Test
@@ -109,7 +108,10 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createOrganisations() {
-        organisationRepository.save(newOrganisation().withName(INNOVATE_UK_ORG_NAME).build());
+        organisationBuilder.
+                createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).
+                withAddress(OrganisationAddressType.REGISTERED, "North Star House").
+                build();
     }
 
     @SuppressWarnings("unused")
