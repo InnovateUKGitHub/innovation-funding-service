@@ -1,6 +1,7 @@
 package com.worth.ifs.project.status.controller;
 
 import com.worth.ifs.bankdetails.BankDetailsService;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.project.sections.ProjectSetupSectionInternalUser;
 import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -9,6 +10,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,7 +47,26 @@ public class CompetitionProjectsStatusController {
         return "project/competition-status";
     }
 
-    public CompetitionProjectStatusViewModel populateCompetitionProjectStatusViewModel(Long competitionId, UserResource userResource) {
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
+    @RequestMapping(value = "/bank-details/export", method = GET)
+    public void exportBankDetails(
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+            @PathVariable Long competitionId,
+            HttpServletResponse response) throws IOException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+        String filename = String.format("Bank_details_%s_%s.csv", competitionId, LocalDateTime.now().format(formatter));
+        response.setContentType("text/csv");
+        response.setHeader("Content-Transfer-Encoding", "binary");
+        response.setHeader("Content-Disposition", "attachment;filename="+filename);
+        final ByteArrayResource resource = bankDetailsService.downloadByCompetition(competitionId);
+        IOUtils.copy(resource.getInputStream(), response.getOutputStream());
+        response.flushBuffer();
+    }
+
+    private CompetitionProjectStatusViewModel populateCompetitionProjectStatusViewModel(Long competitionId, UserResource userResource) {
         CompetitionProjectsStatusResource competitionProjectsStatusResource = projectStatusService.getCompetitionStatus(competitionId);
 
         Map<Long, ProjectStatusPermission> projectStatusPermissionMap = new HashMap<>();
@@ -75,22 +96,5 @@ public class CompetitionProjectsStatusController {
         return new CompetitionProjectStatusViewModel(
                 competitionProjectsStatusResource, projectStatusPermissionMap
         );
-    }
-
-    @RequestMapping(value = "/bank-details/export", method = GET)
-    public void exportBankDetails(
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-            @PathVariable Long competitionId,
-            HttpServletResponse response) throws IOException {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-        String filename = String.format("Bank_details_%s_%s.csv", competitionId, LocalDateTime.now().format(formatter));
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-        response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
-        final ByteArrayResource resource = bankDetailsService.downloadByCompetition(competitionId);
-        IOUtils.copy(resource.getInputStream(), response.getOutputStream());
-        response.flushBuffer();
     }
 }

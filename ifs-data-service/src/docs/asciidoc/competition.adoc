@@ -58,3 +58,13 @@ include::{snippets}/competition/mark-as-complete/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
 
+=== Get all bank details for a competition
+==== Request
+include::{snippets}/competition/bank-details/export-bank-details/http-request.adoc[]
+include::{snippets}/competition/bank-details/export-bank-details/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/bank-details/export-bank-details/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]

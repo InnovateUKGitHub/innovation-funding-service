@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class CompetitionBankDetailsController {
 
     @RequestMapping("/export")
     public @ResponseBody
-    ResponseEntity<ByteArrayResource> export(@PathVariable("competitionId") final Long competitionId) throws IOException {
+    ResponseEntity<Object> export(@PathVariable("competitionId") final Long competitionId) throws IOException {
         List<BankDetails> bankDetails = bankDetailsRepository.findByProjectApplicationCompetitionId(competitionId);
 
         StringWriter stringWriter = new StringWriter();
@@ -74,9 +75,12 @@ public class CompetitionBankDetailsController {
         baos.write(stringWriter.toString().getBytes());
         HttpHeaders httpHeaders = new HttpHeaders();
         // Prevent caching
-        httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        httpHeaders.add("Pragma", "no-cache");
-        httpHeaders.add("Expires", "0");
+        httpHeaders.setCacheControl("no-cache, no-store, must-revalidate");
+        httpHeaders.setPragma("no-cache");
+        httpHeaders.setExpires(0);
+        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+        httpHeaders.setContentLength(baos.size());
+        httpHeaders.add("Content-Transfer-Encoding", "binary");
         return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
     }
 }
