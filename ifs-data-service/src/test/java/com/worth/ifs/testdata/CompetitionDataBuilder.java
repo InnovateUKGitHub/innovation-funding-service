@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
+import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
@@ -132,6 +134,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withApplication(Function<ApplicationDataBuilder, ApplicationDataBuilder> applicationDataBuilderFn) {
+        return with(data -> applicationDataBuilderFn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build());
+    }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();

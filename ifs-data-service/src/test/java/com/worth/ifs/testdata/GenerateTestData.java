@@ -7,7 +7,9 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,15 +28,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
 import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -63,6 +70,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private RegistrationService registrationService;
 
+    @Autowired
+    private UserService userService;
+
     private CompetitionDataBuilder competitionDataBuilder;
 
     private ExternalUserDataBuilder externalUserBuilder;
@@ -70,6 +80,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     private InternalUserDataBuilder internalUserBuilder;
 
     private OrganisationDataBuilder organisationBuilder;
+
+    private ApplicationDataBuilder applicationBuilder;
 
     @Before
     public void setup() throws Exception {
@@ -97,15 +109,15 @@ public class GenerateTestData extends BaseIntegrationTest {
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
+        applicationBuilder = newApplicationData(serviceLocator);
     }
 
     @Test
     public void test() {
-
         createOrganisations();
         createInternalUsers();
-        createCompetitions();
         createExternalUsers();
+        createCompetitions();
     }
 
     private void createOrganisations() {
@@ -150,6 +162,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 "competition is to meet user needs by connecting people and/or goods to transport products and " +
                 "services. New or improved systems will be tested in environment laboratories.";
 
+        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
+
         competitionDataBuilder.
                 withExistingCompetition(1L).
                 withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
@@ -159,6 +173,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(LocalDateTime.of(2066, 12, 31, 0, 0)).
                 withAssessorEndDate(LocalDateTime.of(2067, 1, 10, 0, 0)).
                 withSetupComplete().
+                withApplication(application -> application.
+                    withBasicDetails(applicant1, "A novel solution to an old problem")
+                ).
                 build();
     }
 
@@ -316,5 +333,39 @@ public class GenerateTestData extends BaseIntegrationTest {
         f.setLocations(patchLocations);
         f.clean();
         f.migrate();
+    }
+
+    protected UserResource compAdmin() {
+        return retrieveUserByEmail(COMP_ADMIN_EMAIL);
+    }
+
+    protected UserResource retrieveUserByEmail(String emailAddress) {
+        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+    }
+
+    protected UserResource systemRegistrar() {
+        return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
+    }
+
+    private <T> T doAs(UserResource user, Supplier<T> action) {
+        UserResource currentUser = setLoggedInUser(user);
+        try {
+            return action.get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            setLoggedInUser(currentUser);
+        }
+    }
+
+    private void doAs(UserResource user, Runnable action) {
+        UserResource currentUser = setLoggedInUser(user);
+        try {
+            action.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            setLoggedInUser(currentUser);
+        }
     }
 }

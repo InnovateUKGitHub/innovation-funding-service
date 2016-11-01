@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.transactional.CompetitionService;
@@ -51,6 +52,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InviteService inviteService;
     protected CompAdminEmailRepository compAdminEmailRepository;
     protected MilestoneService milestoneService;
+    protected ApplicationService applicationService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -70,6 +72,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.inviteService = serviceLocator.getBean(InviteService.class);
         this.compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
         this.milestoneService = serviceLocator.getBean(MilestoneService.class);
+        this.applicationService = serviceLocator.getBean(ApplicationService.class);
     }
 
     protected UserResource compAdmin() {
