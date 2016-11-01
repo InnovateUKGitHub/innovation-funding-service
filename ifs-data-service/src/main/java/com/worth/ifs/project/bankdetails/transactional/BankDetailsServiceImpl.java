@@ -136,7 +136,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
         List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));
         bankDetailsStatusResources.addAll(simpleMap(organisations,org -> getBankDetailsStatusForOrg(project, org)));
-        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), bankDetailsStatusResources);
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(), bankDetailsStatusResources);
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
 

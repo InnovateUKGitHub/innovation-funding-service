@@ -122,7 +122,7 @@ public class ProjectOtherDocumentsController {
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
-        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
+        return new ProjectPartnerDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),

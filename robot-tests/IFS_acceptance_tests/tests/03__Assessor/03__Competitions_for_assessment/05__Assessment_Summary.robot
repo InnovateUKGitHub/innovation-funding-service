@@ -164,18 +164,22 @@ the user adds score and feedback for every question
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
     And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    20    id=assessor-question-score
     the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score

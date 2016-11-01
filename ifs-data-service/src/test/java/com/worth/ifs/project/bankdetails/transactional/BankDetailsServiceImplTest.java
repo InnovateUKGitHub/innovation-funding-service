@@ -205,6 +205,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         ProjectBankDetailsStatusSummary expected = newProjectBankDetailsStatusSummary().build();
         expected.setProjectId(projectId);
+        expected.setApplicationId(application.getId());
         expected.setCompetitionId(competition.getId());
         expected.setCompetitionName(competition.getName());
         expected.setBankDetailsStatusResources(bankDetailsStatusResource);
