@@ -1,14 +1,16 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.lang.Boolean.TRUE;
@@ -51,18 +53,18 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         String feedback = "feedback for decision";
         String comment = "comment for decision";
 
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.RECOMMEND.getType());
-        processOutcome.setOutcome("yes");
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(feedback);
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource()
+                .withFundingConfirmation(TRUE)
+                .withFeedback(feedback)
+                .withComment(comment)
+                .build();
 
-        when(assessmentRestService.recommend(assessmentId, processOutcome)).thenReturn(restSuccess());
+        when(assessmentRestService.recommend(assessmentId, assessmentFundingDecision)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.recommend(assessmentId, TRUE, feedback, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).recommend(assessmentId, processOutcome);
+        verify(assessmentRestService, only()).recommend(assessmentId, assessmentFundingDecision);
     }
 
     @Test
@@ -71,16 +73,16 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         String reason = "reason for rejection";
         String comment = "comment for rejection";
 
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(reason);
+        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource()
+                .withRejectReason(reason)
+                .withRejectComment(comment)
+                .build();
 
-        when(assessmentRestService.rejectInvitation(assessmentId, processOutcome)).thenReturn(restSuccess());
+        when(assessmentRestService.rejectInvitation(assessmentId, applicationRejection)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.rejectInvitation(assessmentId, reason, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).rejectInvitation(assessmentId, processOutcome);
+        verify(assessmentRestService, only()).rejectInvitation(assessmentId, applicationRejection);
     }
 }

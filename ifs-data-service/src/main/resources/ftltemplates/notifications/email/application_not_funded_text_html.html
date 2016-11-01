@@ -5,10 +5,5 @@
   <p style="margin: 0 0 1em 0;">The assessment process is now complete. Unfortunately Innovate UK is unable to fund your application. Feedback will be available by <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["EEEE dd MMMM yyyy"]} and will be accessible from your Innovate UK dashboard. We will send you a further email notification when your feedback is ready for you to view.</p>
   <p style="margin: 0 0 1em 0;">We would like to take this opportunity to remind you of the government's commitment to promote innovation and to encourage you to remain aware of opportunities offered by future competitions. Details of all future competitions are posted on the Innovate UK website <a href="http://www.innovateuk.gov.uk">www.innovateuk.gov.uk</a>.</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
-  <p style="margin: 0 0 1em 0;">
-      Competitions Team<br />
-      Innovate UK<br />
-      Tel: 0300 321 4357<br />
-      Email: competitions@innovateuk.gov.uk<br />
-  </p>
+  <@layout.senderHTML />
 </@layout.default>

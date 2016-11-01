@@ -15,7 +15,7 @@
 		<div class="grid-row">
 			<div class="column-two-thirds">
 				<div class="page-title">
-					<p class="subtitle no-margin" th:text="|${model.projectNumber}: ${model.projectName}|">0102468: Technology inspired</p>
+					<p class="subtitle no-margin" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.projectName}|">0102468: Technology inspired</p>
 					<h1 class="heading-xlarge">Project Details</h1>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 			</div>
 		</th:block>
 		<th:block th:unless="${model.approved}">
-			<p>The following bank account details have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />, awaiting internal review from Innovate UK</p>
+			<p>The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
 		</th:block>
 
 		<h2 class="heading-medium">Finance contact</h2>

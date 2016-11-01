@@ -16,12 +16,7 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Lead applicant can assign a question

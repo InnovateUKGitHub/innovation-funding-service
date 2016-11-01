@@ -15,13 +15,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e
@@ -103,7 +97,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct    2018-12-31
+    And the calculation of the remaining days should be correct    2019-01-28
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716

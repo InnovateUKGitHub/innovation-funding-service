@@ -1,11 +1,10 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
@@ -71,6 +70,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "Comp admins can assign Monitoring Officers on any Project")
     public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "ASSIGN_MONITORING_OFFICER",
+            description = "Project finance users can assign Monitoring Officers on any Project")
+    public boolean projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

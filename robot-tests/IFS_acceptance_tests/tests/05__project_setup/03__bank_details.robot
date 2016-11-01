@@ -7,13 +7,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 Suite Setup       Log in as user    steve.smith@empire.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -23,7 +17,7 @@ Bank details page
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
@@ -107,7 +101,7 @@ Bank details for Academic
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000001: best riffs
+    And the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -148,7 +142,7 @@ Bank details for non-lead partner
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given guest user log-in  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link           link=00000001: best riffs
+    When the user clicks the button/link           link=00000026: best riffs
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account

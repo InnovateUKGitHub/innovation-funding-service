@@ -12,22 +12,22 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
-        <h1 class="heading-xlarge">Project manager</h1>
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project Manager</h1>
     </div>
 
     <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
         <fieldset>
-          <h2 class="heading-medium">Project manager</h2>
+          <h2 class="heading-medium">Project Manager</h2>
           <div class="form-group" th:classappend="${#fields.hasErrors('projectManager') ? 'error' : ''}">
               <legend>
-                <span class="visuallyhidden">Project manager</span>
+                <span class="visuallyhidden">Project Manager</span>
                  <div th:if="${#fields.hasErrors('projectManager')}" th:remove="tag">
                     <span class="error-message" th:each="err : ${#fields.errors('projectManager')}" th:text="${err}" />
                 </div>
               </legend>
-              <p class="form-hint">Who will be the project manager for your project?</p>
-              <p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
+              <p class="form-hint">Who will be the Project Manager for your project?</p>
+              <p>As lead partner you must choose a Project Manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
               <div class="extra-margin">
                 <div th:each="user : ${model.organisationUsers}" th:remove="tag">
                     <label th:for="${#ids.next('projectManager')}" class="block-label">
@@ -50,36 +50,41 @@
         </fieldset>
         <button class="visuallyhidden" type="submit" id="save">Save</button>
     </form>
-    <table class="extra-margin js-hidden" id="project-manager-table">
+
+    <form method="POST" th:action="@{/project/{projectId}/details/invite-project-manager(projectId=${model.projectId})}" th:object="${inviteForm}">
+
+    <table aria-hidden="true" id="project-manager-table">
         <thead>
         <tr>
+            <th></th>
             <th scope="col" id="project-manager-name">Name</th>
-            <th scope="col" id="project-manager-email">E-mail</th>
-            <th>&nbsp;</th>
+            <th scope="col" colspan="2" id="project-manager-email">E-mail</th>
         </tr>
         </thead>
         <tbody>
-        <form method="POST" th:action="@{/project/{projectId}/details/invite-project-manager(projectId=${model.projectId})}" th:object="${inviteForm}">
-            <tr>
+            <tr class="form-group-row">
+                <th scope="row">
+                    <span class="visuallyhidden">invitee</span>
+                </th>
                 <td>
-                    <label for="name-project-manager" class="visuallyhidden">name</label>
-                    <input type="text" class="form-control width-full" value="" name="name" id="name-project-manager" required="required"/>
+                    <label for="name-project-manager">
+                      <span class="visuallyhidden">name</span>
+                    </label>
+                    <input type="text" class="form-control width-full" value="" name="name" id="name-project-manager" data-required-errormessage="Please enter a valid name" required="required"/>
                 </td>
                 <td>
                     <label for="email-project-manager" class="visuallyhidden">email</label>
-                    <input type="email" class="form-control width-full" value="" name="email" id="email-project-manager" required="required"/>
-                </td>
-                <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
-                    <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>
+                    <input type="email" class="form-control width-full" value="" name="email" id="email-project-manager" data-required-errormessage="Please enter a valid email address " required="required"/>
                 </td>
                 <td class="alignright">
                     <button class="buttonlink no-margin-bottom" id="invite-project-manager">Invite to project</button>
                 </td>
             </tr>
-        </form>
         </tbody>
     </table>
-    <label for="save" tabindex="0" role="button" class="button no-margin-right">Save</label>
+    </form>
+
+    <label for="save" tabindex="0" role="button" class="button extra-margin">Save</label>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

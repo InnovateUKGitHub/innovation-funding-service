@@ -1,20 +1,13 @@
 *** Settings ***
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
 ...
-...
 ...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'
-...
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Email    Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -25,7 +18,7 @@ The invited user should not follow the registration flow again
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     Then the user should see the text in the page    We've found an existing user account with the invited email address
 
 The user clicks the login link
@@ -63,7 +56,7 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk
+    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    to participate in their project
 
 *** Keywords ***
 the user enters profile details
@@ -96,10 +89,11 @@ Existing user creates a new application and invites a user from the same organis
     And the user closes the browser
 
 The invited user should get a message to contact the helpdesk
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
     When the user clicks the button/link    link=Click here to sign in
-    And the guest user inserts user email & password    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${recipient}    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
     And the user should see the text in the page    If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357
