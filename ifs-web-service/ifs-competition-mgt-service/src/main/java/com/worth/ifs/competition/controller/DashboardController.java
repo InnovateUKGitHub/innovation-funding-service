@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,11 +41,14 @@ public class DashboardController {
     @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
     public String projectSetup(Model model, HttpServletRequest request) {
 
-        model.addAttribute("competitions", competitionService.getProjectSetupCompetitions());
+        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> psc = competitionService.getProjectSetupCompetitions();
+
+        model.addAttribute("competitions", psc);
         model.addAttribute("counts", competitionService.getCompetitionCounts());
 
         // Get the number of projects that are in setup for each competition => return as map
-        model.addAttribute("projectsCount", competitionService.getProjectSetupCompetitions().get(CompetitionResource.Status.PROJECT_SETUP).stream().collect(
+        model.addAttribute("projectsCount", psc.getOrDefault(
+                CompetitionResource.Status.PROJECT_SETUP, Collections.<CompetitionSearchResultItem>emptyList()).stream().collect(
                 Collectors.toMap(x -> x.getId(), x -> projectStatusService.getCompetitionStatus(x.getId()).getProjectStatusResources().size())));
 
         return TEMPLATE_PATH + "projectSetup";
