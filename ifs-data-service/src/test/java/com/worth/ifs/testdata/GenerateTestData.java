@@ -114,7 +114,6 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    @SuppressWarnings("unused")
     private void createInternalUsers() {
         internalUserBuilder.
                 withRole(COMP_ADMIN).
@@ -124,7 +123,6 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    @SuppressWarnings("unused")
     private void createExternalUsers() {
         externalUserBuilder.
                 registerUser("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
