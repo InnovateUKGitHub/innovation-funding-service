@@ -5,6 +5,7 @@ import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
+import com.worth.ifs.competition.transactional.MilestoneService;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -49,6 +50,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenService tokenService;
     protected InviteService inviteService;
     protected CompAdminEmailRepository compAdminEmailRepository;
+    protected MilestoneService milestoneService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -67,6 +69,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.tokenService = serviceLocator.getBean(TokenService.class);
         this.inviteService = serviceLocator.getBean(InviteService.class);
         this.compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
+        this.milestoneService = serviceLocator.getBean(MilestoneService.class);
     }
 
     protected UserResource compAdmin() {

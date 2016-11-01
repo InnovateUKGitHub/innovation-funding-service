@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -103,8 +104,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         createOrganisations();
         createInternalUsers();
-        createExternalUsers();
         createCompetitions();
+        createExternalUsers();
     }
 
     private void createOrganisations() {
@@ -147,6 +148,13 @@ public class GenerateTestData extends BaseIntegrationTest {
         competitionDataBuilder.
                 withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
                 withApplicationFormFromTemplate().
+                withNewMilestones().
+                withOpenDate(LocalDateTime.of(2015, 3, 15, 9, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2066, 9, 9, 9, 23, 59, 59)).
+                withAssessorAcceptsDate(LocalDateTime.of(2066, 10, 29, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2066, 12, 31, 0, 0)).
+                withAssessorEndDate(LocalDateTime.of(2067, 1, 10, 0, 0)).
+                withSetupComplete().
                 build();
     }
 
