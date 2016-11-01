@@ -110,7 +110,7 @@
 
       <!--/* ========================= Other documents ========================= */-->
 
-      <li th:classappend="${model.partnerDocumentsSubmitted ? 'complete' : 'require-action'}">
+      <li th:classappend="${model.partnerDocumentsSubmitted ? 'complete' : (model.leadPartner ? 'require-action' : 'waiting')}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
