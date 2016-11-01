@@ -34,7 +34,7 @@ import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDash
 public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
-    private final String questionView = "competition/setup/question";
+    private static final String questionView = "competition/setup/question";
 
     @Autowired
     private CompetitionService competitionService;

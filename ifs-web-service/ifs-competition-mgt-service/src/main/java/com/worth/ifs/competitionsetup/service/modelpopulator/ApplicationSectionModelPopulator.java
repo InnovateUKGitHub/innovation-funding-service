@@ -40,8 +40,8 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
     @Autowired
     private FormInputService formInputService;
 
-    private Long appendixTypeId = 4L;
-    private Long scoreTypeId = 23L;
+    private static final Long appendixTypeId = 4L;
+    private static final Long scoreTypeId = 23L;
 
     @Override
 	public CompetitionSetupSection sectionToPopulateModel() {
