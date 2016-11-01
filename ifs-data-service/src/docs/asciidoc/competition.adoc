@@ -21,32 +21,6 @@ include::{snippets}/competition/find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-all/curl-request.adoc[]
 
-
-=== Retrieve all Competition Setup Sections
-==== Request
-include::{snippets}/competition/find-setup-sections/http-request.adoc[]
-
-==== Response
-include::{snippets}/competition/find-setup-sections/http-response.adoc[]
-include::{snippets}/competition/find-setup-sections/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/find-setup-sections/curl-request.adoc[]
-
-=== Retrieve all Competition Setup Sections Statuses
-==== Request
-include::{snippets}/competition/find-setup-sections-statuses/http-request.adoc[]
-include::{snippets}/competition/find-setup-sections-statuses/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/competition/find-setup-sections-statuses/http-response.adoc[]
-include::{snippets}/competition/find-setup-sections-statuses/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/find-setup-sections-statuses/curl-request.adoc[]
-
-
-
 === Mark Competition Setup Section as Complete
 ==== Request
 include::{snippets}/competition/mark-as-complete/http-request.adoc[]
@@ -58,13 +32,14 @@ include::{snippets}/competition/mark-as-complete/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
 
-=== Get all bank details for a competition
+=== Get all bank details for a competition as a csv export
 ==== Request
 include::{snippets}/competition/bank-details/export-bank-details/http-request.adoc[]
 include::{snippets}/competition/bank-details/export-bank-details/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competition/bank-details/export-bank-details/http-response.adoc[]
+include::{snippets}/competition/bank-details/export-bank-details/response-headers.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]
