@@ -7,6 +7,7 @@ import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -71,9 +72,11 @@ public class CompetitionProjectsStatusController {
 
         Map<Long, ProjectStatusPermission> projectStatusPermissionMap = new HashMap<>();
 
+        boolean canExportBankDetails = userResource.hasRole(UserRoleType.PROJECT_FINANCE);
+
         if(null == competitionProjectsStatusResource.getProjectStatusResources()) {
             return new CompetitionProjectStatusViewModel(
-                    competitionProjectsStatusResource, projectStatusPermissionMap
+                    competitionProjectsStatusResource, canExportBankDetails, projectStatusPermissionMap
             );
         }
 
@@ -94,7 +97,7 @@ public class CompetitionProjectsStatusController {
         });
 
         return new CompetitionProjectStatusViewModel(
-                competitionProjectsStatusResource, projectStatusPermissionMap
+                competitionProjectsStatusResource, canExportBankDetails, projectStatusPermissionMap
         );
     }
 }
