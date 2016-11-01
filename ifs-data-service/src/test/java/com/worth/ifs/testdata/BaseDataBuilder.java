@@ -2,11 +2,14 @@ package com.worth.ifs.testdata;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.competition.transactional.MilestoneService;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -53,6 +56,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompAdminEmailRepository compAdminEmailRepository;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
+    protected QuestionService questionService;
+    protected FormInputService formInputService;
+    protected FormInputResponseRepository formInputResponseRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -73,6 +79,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
         this.milestoneService = serviceLocator.getBean(MilestoneService.class);
         this.applicationService = serviceLocator.getBean(ApplicationService.class);
+        this.questionService = serviceLocator.getBean(QuestionService.class);
+        this.formInputService = serviceLocator.getBean(FormInputService.class);
+        this.formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
     }
 
     protected UserResource compAdmin() {

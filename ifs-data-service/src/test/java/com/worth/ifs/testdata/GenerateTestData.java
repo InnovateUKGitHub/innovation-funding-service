@@ -52,6 +52,12 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
 
+    private static final String PROJECT_SUMMARY = "The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.";
+    private static final String PUBLIC_DESCRIPTION = "Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.\n" +
+            "\n" +
+            "The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.";
+
+
     @Value("${flyway.url}")
     private String databaseUrl;
 
@@ -197,6 +203,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withApplications(
                     builder -> builder.
                             withBasicDetails(applicant1, "A novel solution to an old problem").
+                            withProjectSummary(PROJECT_SUMMARY).
+                            withPublicDescription(PUBLIC_DESCRIPTION).
                             withStartDate(LocalDate.of(2016, 3, 1)).
                             withDurationInMonths(51).
                             inviteCollaborator(applicant2).

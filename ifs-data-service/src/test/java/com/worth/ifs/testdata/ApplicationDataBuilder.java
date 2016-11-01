@@ -2,7 +2,11 @@ package com.worth.ifs.testdata;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -40,6 +44,27 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 data.setApplication(created);
             });
         });
+    }
+
+    public ApplicationDataBuilder withProjectSummary(String value) {
+        return asLeadApplicant(data -> doAnswerQuestion("Project summary", value, data));
+    }
+
+    public ApplicationDataBuilder withPublicDescription(String value) {
+        return asLeadApplicant(data -> doAnswerQuestion("Public description", value, data));
+    }
+
+    private void doAnswerQuestion(String questionName, String value, ApplicationData data) {
+
+        List<QuestionResource> questions = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+        QuestionResource question = simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
+        List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+
+        FormInputResponseCommand updateRequest = new FormInputResponseCommand(
+                formInputs.get(0).getId(), data.getApplication().getId(), data.getLeadApplicant().getId(), value);
+
+        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccessObjectOrThrowException();
+        formInputResponseRepository.save(response);
     }
 
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
