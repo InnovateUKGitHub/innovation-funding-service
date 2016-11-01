@@ -1,20 +1,7 @@
-=== Retrieve question by id
-==== Request
-include::{snippets}/question/find-one/http-request.adoc[]
-include::{snippets}/question/find-one/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/find-one/http-response.adoc[]
-include::{snippets}/question/find-one/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/find-one/curl-request.adoc[]
-
 === Retrieve questions by competition
 ==== Request
 include::{snippets}/question/find-by-competition/http-request.adoc[]
 include::{snippets}/question/find-by-competition/path-parameters.adoc[]
-include::{snippets}/question/find-by-competition/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/question/find-by-competition/http-response.adoc[]
@@ -22,18 +9,6 @@ include::{snippets}/question/find-by-competition/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/question/find-by-competition/curl-request.adoc[]
-
-=== Retrieve question by FormInputType
-==== Request
-include::{snippets}/question/get-by-form-input-type/http-request.adoc[]
-include::{snippets}/question/get-by-form-input-type/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-by-form-input-type/http-response.adoc[]
-include::{snippets}/question/get-by-form-input-type/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-by-form-input-type/curl-request.adoc[]
 
 === Retrieve questions that have been marked as complete
 ==== Request
@@ -47,63 +22,13 @@ include::{snippets}/question/get-marked-as-complete/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/question/get-marked-as-complete/curl-request.adoc[]
 
-=== Retrieve next question
-==== Request
-include::{snippets}/question/get-next/http-request.adoc[]
-include::{snippets}/question/get-next/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-next/http-response.adoc[]
-include::{snippets}/question/get-next/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-next/curl-request.adoc[]
-
-=== Retrieve next question by section
-==== Request
-include::{snippets}/question/get-next-by-section/http-request.adoc[]
-include::{snippets}/question/get-next-by-section/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-next-by-section/http-response.adoc[]
-include::{snippets}/question/get-next-by-section/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-next-by-section/curl-request.adoc[]
-
-=== Retrieve previous question
-==== Request
-include::{snippets}/question/get-previous/http-request.adoc[]
-include::{snippets}/question/get-previous/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-previous/http-response.adoc[]
-include::{snippets}/question/get-previous/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-previous/curl-request.adoc[]
-
-=== Retrieve previous question by section
-==== Request
-include::{snippets}/question/get-previous-by-section/http-request.adoc[]
-include::{snippets}/question/get-previous-by-section/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-previous-by-section/http-response.adoc[]
-include::{snippets}/question/get-previous-by-section/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-previous-by-section/curl-request.adoc[]
-
 === Mark question as complete
 ==== Request
 include::{snippets}/question/mark-as-complete/http-request.adoc[]
 include::{snippets}/question/mark-as-complete/path-parameters.adoc[]
-include::{snippets}/question/mark-as-complete/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/question/mark-as-complete/http-response.adoc[]
-include::{snippets}/question/mark-as-complete/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/question/mark-as-complete/curl-request.adoc[]
@@ -112,33 +37,16 @@ include::{snippets}/question/mark-as-complete/curl-request.adoc[]
 ==== Request
 include::{snippets}/question/mark-as-incomplete/http-request.adoc[]
 include::{snippets}/question/mark-as-incomplete/path-parameters.adoc[]
-include::{snippets}/question/mark-as-incomplete/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/question/mark-as-incomplete/http-response.adoc[]
-include::{snippets}/question/mark-as-incomplete/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/question/mark-as-incomplete/curl-request.adoc[]
 
-=== Change notification status
-==== Request
-include::{snippets}/question/notify/http-request.adoc[]
-include::{snippets}/question/notify/path-parameters.adoc[]
-include::{snippets}/question/notify/request-fields.adoc[]
-
-==== Response
-include::{snippets}/question/notify/http-response.adoc[]
-include::{snippets}/question/notify/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/notify/curl-request.adoc[]
-
 === Save question
 ==== Request
 include::{snippets}/question/save/http-request.adoc[]
-include::{snippets}/question/save/path-parameters.adoc[]
-include::{snippets}/question/save/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/question/save/http-response.adoc[]
