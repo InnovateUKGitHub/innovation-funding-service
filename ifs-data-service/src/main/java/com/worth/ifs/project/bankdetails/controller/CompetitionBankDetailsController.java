@@ -64,7 +64,7 @@ public class CompetitionBankDetailsController {
             row.add(bankDetail.getOrganisation().getName());
             row.add(bankDetail.getAccountNumber());
             row.add(bankDetail.getSortCode());
-            allRows.add(new String[row.size()]);
+            allRows.add(row.toArray(new String[row.size()]));
         });
 
         csvWriter.writeAll(allRows);

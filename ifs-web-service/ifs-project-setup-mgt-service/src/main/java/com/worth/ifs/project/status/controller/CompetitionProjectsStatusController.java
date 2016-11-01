@@ -9,7 +9,6 @@ import com.worth.ifs.user.resource.UserResource;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -73,15 +72,12 @@ public class CompetitionProjectsStatusController {
             projectStatusPermissionMap.put(projectStatusResource.getApplicationNumber(), projectStatusPermission);
         });
 
-        CompetitionProjectStatusViewModel competitionProjectStatusViewModel = new CompetitionProjectStatusViewModel(
+        return new CompetitionProjectStatusViewModel(
                 competitionProjectsStatusResource, projectStatusPermissionMap
         );
-
-        return competitionProjectStatusViewModel;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/bankdetails/export", method = GET)
+    @RequestMapping(value = "/bank-details/export", method = GET)
     public void exportBankDetails(
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -89,7 +85,7 @@ public class CompetitionProjectsStatusController {
             HttpServletResponse response) throws IOException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-        String filename = String.format("Bank_details_%s_%s.xlsx", competitionId, LocalDateTime.now().format(formatter));
+        String filename = String.format("Bank_details_%s_%s.csv", competitionId, LocalDateTime.now().format(formatter));
         response.setContentType("application/force-download");
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
@@ -97,5 +93,4 @@ public class CompetitionProjectsStatusController {
         IOUtils.copy(resource.getInputStream(), response.getOutputStream());
         response.flushBuffer();
     }
-
 }
