@@ -38,7 +38,6 @@ include::{snippets}/project/get-grant-offer-letter-file-contents/request-paramet
 
 ==== Response
 include::{snippets}/project/get-grant-offer-letter-file-contents/http-response.adoc[]
-include::{snippets}/project/get-grant-offer-letter-file-contents/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/get-grant-offer-letter-file-contents/curl-request.adoc[]
@@ -52,7 +51,6 @@ include::{snippets}/project/get-additional-contract-file-contents/request-parame
 
 ==== Response
 include::{snippets}/project/get-additional-contract-file-contents/http-response.adoc[]
-include::{snippets}/project/get-additional-contract-file-contents/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/get-additional-contract-file-contents/curl-request.adoc[]
