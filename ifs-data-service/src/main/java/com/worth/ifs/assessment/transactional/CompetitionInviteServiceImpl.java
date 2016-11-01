@@ -56,26 +56,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
-        return getByHash(inviteHash)
-                .andOnSuccess(invite -> {
-                    CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
-
-                    if (participant == null) {
-                        return ServiceResult.serviceSuccess(invite);
-                    }
-
-                    if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
-                        return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
-                    }
-
-                    return ServiceResult.serviceSuccess(invite);
-                })
-                .andOnSuccessReturn(mapper::mapToResource);
+        return getByHashIfOpen(inviteHash).andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> mapper.mapToResource(openInvite(invite)));
+        return getByHashIfOpen(inviteHash).andOnSuccessReturn(invite -> mapper.mapToResource(openInvite(invite)));
     }
 
     @Override
@@ -90,7 +76,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
         return getRejectionReason(rejectionReason)
                 .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
-                        .andOnSuccess(invite -> reject(invite, reason, rejectionComment))).andOnSuccessReturnVoid();
+                        .andOnSuccess(invite -> reject(invite, reason, rejectionComment)))
+                .andOnSuccessReturnVoid();
     }
 
     @Override
@@ -105,6 +92,22 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
         return find(competitionInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
+    }
+
+    private ServiceResult<CompetitionInvite> getByHashIfOpen(String inviteHash) {
+        return getByHash(inviteHash).andOnSuccess(invite -> {
+            CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
+
+            if (participant == null) {
+                return ServiceResult.serviceSuccess(invite);
+            }
+
+            if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
+                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
+            }
+
+            return ServiceResult.serviceSuccess(invite);
+        });
     }
 
     private CompetitionInvite openInvite(CompetitionInvite invite) {
