@@ -22,9 +22,9 @@ ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition
 ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 
 *** Test Cases ***
-Permission check: logged in user should get permission denied while accepting other assessor competiion invite
+Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
-    [Tags]    Pending
+    [Tags]
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user clicks the button/link    jQuery=.button:contains("Accept")
