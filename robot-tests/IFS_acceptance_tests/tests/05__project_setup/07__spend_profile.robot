@@ -471,7 +471,7 @@ the users fill out project details
     And the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 the sum of tds equals the total
