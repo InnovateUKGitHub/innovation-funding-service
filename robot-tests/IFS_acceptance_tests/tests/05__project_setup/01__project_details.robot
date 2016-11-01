@@ -157,8 +157,7 @@ Submit button is disabled if the details are not fully filled out
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
-    [Tags]    Pending    HappyPath
-    #TODO INFUND-5224    Pending due to Month saving failing
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
