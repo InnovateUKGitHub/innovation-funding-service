@@ -6,7 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
 	    if(objectId.isPresent()) {
-            Question question = competitionSetupQuestionService.getQuestion(objectId.get());
+            QuestionViewModel question = competitionSetupQuestionService.getQuestion(objectId.get());
 
             if(question == null) {
                 return makeErrorList();
@@ -73,7 +73,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         return Collections.emptyList();
 	}
 
-	private List<Error> updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
+	private List<Error> updateQuestionWithValueByFieldname(QuestionViewModel question, String fieldName, String value) {
         switch (fieldName) {
             case "question.shortTitle" :
                 question.setShortTitle(value);

@@ -5,7 +5,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,11 +37,11 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId) {
+    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId) {
         List<MilestoneResource> updatedMilestones = new ArrayList();
 
         milestones.forEach(milestoneResource -> {
-            MilestoneEntry milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
+            MilestoneViewModel milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
 
             if(milestoneWithUpdate != null) {
                 LocalDateTime temp = getMilestoneDate(milestoneWithUpdate.getDay(), milestoneWithUpdate.getMonth(), milestoneWithUpdate.getYear());
@@ -64,7 +64,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> validateMilestoneDates(LinkedMap<String, MilestoneEntry> milestonesFormEntries) {
+    public List<Error> validateMilestoneDates(LinkedMap<String, MilestoneViewModel> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
         milestonesFormEntries.values().forEach(milestone -> {
 
@@ -96,16 +96,16 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     public void sortMilestones(MilestonesForm milestoneForm) {
-        LinkedMap<String, MilestoneEntry> milestoneEntries = milestoneForm.getMilestoneEntries();
+        LinkedMap<String, MilestoneViewModel> milestoneEntries = milestoneForm.getMilestoneEntries();
         milestoneForm.setMilestoneEntries(sortMilestoneEntries(milestoneEntries.values()));
     }
 
-    private LinkedMap<String, MilestoneEntry> sortMilestoneEntries(Collection<MilestoneEntry> milestones) {
-        List<MilestoneEntry> sortedMilestones = milestones.stream()
+    private LinkedMap<String, MilestoneViewModel> sortMilestoneEntries(Collection<MilestoneViewModel> milestones) {
+        List<MilestoneViewModel> sortedMilestones = milestones.stream()
                 .sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal())
                 .collect(Collectors.toList());
 
-        LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
+        LinkedMap<String, MilestoneViewModel> milestoneFormEntries = new LinkedMap<>();
         sortedMilestones.stream().forEachOrdered(milestone ->
                 milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone)
         );

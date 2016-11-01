@@ -6,7 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.model.Funder;
+import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
 		competitionResource.getFunders().forEach(funderResource ->  {
-			Funder funder = new Funder();
+			FunderViewModel funder = new FunderViewModel();
 			funder.setFunder(funderResource.getFunder());
 			funder.setFunderBudget(funderResource.getFunderBudget());
 			funder.setCoFunder(funderResource.getCoFunder());
@@ -46,7 +46,7 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		});
 
         if(competitionResource.getFunders().isEmpty()) {
-            Funder funder = new Funder();
+            FunderViewModel funder = new FunderViewModel();
             funder.setCoFunder(false);
             competitionSetupForm.setFunders(asList(funder));
 

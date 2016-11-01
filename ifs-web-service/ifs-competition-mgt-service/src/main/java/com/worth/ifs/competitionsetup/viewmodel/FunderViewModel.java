@@ -1,4 +1,4 @@
-package com.worth.ifs.competitionsetup.model;
+package com.worth.ifs.competitionsetup.viewmodel;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class Funder {
+public class FunderViewModel {
 
     @NotEmpty(message = "{validation.additionalinfoform.fundername.required}")
     private String funder;

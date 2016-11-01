@@ -6,9 +6,8 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.model.Funder;
+import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,7 +35,7 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
-		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "BudgetCode", asList(new Funder()));
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "BudgetCode", asList(new FunderViewModel()));
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();

@@ -1,4 +1,4 @@
-package com.worth.ifs.competitionsetup.model;
+package com.worth.ifs.competitionsetup.viewmodel;
 
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * Milestone Form Entry for the Milestones form.
  */
-public class MilestoneEntry {
+public class MilestoneViewModel {
     @Range(min = 1, max = 31)
     private Integer day;
     @Range(min = 1, max = 12)
@@ -21,7 +21,7 @@ public class MilestoneEntry {
     private MilestoneType milestoneType;
     private String dayOfWeek;
 
-    private static final Log LOG = LogFactory.getLog(MilestoneEntry.class);
+    private static final Log LOG = LogFactory.getLog(MilestoneViewModel.class);
 
     public Integer getDay() {
         return day;

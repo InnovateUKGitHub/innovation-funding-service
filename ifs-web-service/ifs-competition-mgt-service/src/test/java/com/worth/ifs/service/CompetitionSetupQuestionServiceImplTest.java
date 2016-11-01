@@ -3,7 +3,7 @@ package com.worth.ifs.service;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionServiceImpl;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
@@ -35,7 +35,7 @@ public class CompetitionSetupQuestionServiceImplTest {
 
 	@Test
 	public void testUpdateQuestion() {
-		Question question = new Question();
+		QuestionViewModel question = new QuestionViewModel();
 		question.setId(2L);
         question.setAppendix(false);
         question.setScored(false);
@@ -74,7 +74,7 @@ public class CompetitionSetupQuestionServiceImplTest {
 		when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(asList(formInput));
 		when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(asList());
 
-		Question questionResult = service.getQuestion(questionId);
+		QuestionViewModel questionResult = service.getQuestion(questionId);
 
 		assertEquals(questionId, questionResult.getId());
         assertEquals("Title", questionResult.getTitle());

@@ -8,7 +8,7 @@ import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.inputsTypeMatching;
 
 /**
- * populates the model for the application competition setup section.
+ * populates the viewmodel for the application competition setup section.
  */
 @Service
 public class ApplicationSectionModelPopulator implements CompetitionSetupSectionModelPopulator {
@@ -58,8 +58,8 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
         model.addAttribute("questions", getSortedQuestions(questionResources, parentSections));
 	}
 
-	private List<Question> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        List<Question> questions = new ArrayList();
+	private List<QuestionViewModel> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
+        List<QuestionViewModel> questions = new ArrayList();
 
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
 
@@ -73,7 +73,7 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
         return questions.stream().sorted((q1, q2) -> Integer.compare(Integer.parseInt(q1.getNumber()), Integer.parseInt(q2.getNumber()))).collect(Collectors.toList());
     }
 
-    private void initQuestionForForm(List<Question> questions, QuestionResource questionResource) {
+    private void initQuestionForForm(List<QuestionViewModel> questions, QuestionResource questionResource) {
         final Long appendixTypeId = 4L;
         final Long scoreTypeId = 23L;
 
@@ -85,6 +85,6 @@ public class ApplicationSectionModelPopulator implements CompetitionSetupSection
 
         formInputs.stream()
                 .filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId))
-                .forEach(formInputResource -> questions.add(new Question(questionResource, formInputResource, appendix, scored)));
+                .forEach(formInputResource -> questions.add(new QuestionViewModel(questionResource, formInputResource, appendix, scored)));
     }
 }

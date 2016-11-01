@@ -6,7 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
             milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
-        LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
+        LinkedMap<String, MilestoneViewModel> milestoneFormEntries = new LinkedMap<>();
         milestonesByCompetition.stream().forEachOrdered(milestone -> {
             milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone));
         });
@@ -53,8 +53,8 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         return competitionSetupForm;
     }
 
-    private MilestoneEntry populateMilestoneFormEntries(MilestoneResource milestone) {
-        MilestoneEntry newMilestone = new MilestoneEntry();
+    private MilestoneViewModel populateMilestoneFormEntries(MilestoneResource milestone) {
+        MilestoneViewModel newMilestone = new MilestoneViewModel();
         newMilestone.setMilestoneType(milestone.getType());
         if (milestone.getDate() != null) {
             newMilestone.setDay(milestone.getDate().getDayOfMonth());

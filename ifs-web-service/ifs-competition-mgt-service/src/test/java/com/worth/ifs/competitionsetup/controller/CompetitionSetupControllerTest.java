@@ -1,4 +1,4 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
