@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.project.status.ProjectStatusService;
+import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,10 +47,11 @@ public class DashboardController {
         model.addAttribute("competitions", psc);
         model.addAttribute("counts", competitionService.getCompetitionCounts());
 
-        // Get the number of projects that are in setup for each competition => return as map
-        model.addAttribute("projectsCount", psc.getOrDefault(
-                CompetitionResource.Status.PROJECT_SETUP, Collections.<CompetitionSearchResultItem>emptyList()).stream().collect(
-                Collectors.toMap(x -> x.getId(), x -> projectStatusService.getCompetitionStatus(x.getId()).getProjectStatusResources().size())));
+        // Get the number of projects that are in setup for each competition => return as map (compid, numprojects)
+
+        model.addAttribute("projectsCount", CollectionFunctions.simpleToLinkedMap(psc.getOrDefault(
+                CompetitionResource.Status.PROJECT_SETUP, Collections.<CompetitionSearchResultItem>emptyList()),
+                x -> x.getId(), x -> projectStatusService.getCompetitionStatus(x.getId()).getProjectStatusResources().size()));
 
         return TEMPLATE_PATH + "projectSetup";
     }
