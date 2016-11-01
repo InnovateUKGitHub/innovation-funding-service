@@ -31,7 +31,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
@@ -81,8 +80,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationDataBuilder organisationBuilder;
 
-    private ApplicationDataBuilder applicationBuilder;
-
     @Before
     public void setup() throws Exception {
         freshDb();
@@ -109,7 +106,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
-        applicationBuilder = newApplicationData(serviceLocator);
     }
 
     @Test
@@ -152,6 +148,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                 registerUserWithNewOrganisation("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Ludlow").
                 verifyEmail().
                 build();
+
+        externalUserBuilder.
+                registerUserWithNewOrganisation("Pete", "Tom", "pete.tom@egg.com", "EGGS").
+                verifyEmail().
+                build();
+
+        externalUserBuilder.
+                registerUserWithNewOrganisation("Ewan", "Cormack", "ewan+1@hiveit.co.uk", "HIVE IT LIMITED").
+                build();
     }
 
     private void createCompetitions() {
@@ -176,6 +181,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
         UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
         UserResource applicant3 = retrieveUserByEmail("worth.email.test+submit@gmail.com");
+        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
+        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
         competitionDataBuilder.
                 withExistingCompetition(1L).
@@ -188,22 +195,32 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withSetupComplete().
                 withApplications(
                     builder -> builder.
-                            withBasicDetails(applicant1, "A novel solution to an old problem"),
+                            withBasicDetails(applicant1, "A novel solution to an old problem").
+                            inviteCollaborator(applicant2).
+                            inviteCollaborator(applicant4).
+                            inviteCollaborator(applicant5),
                     builder -> builder.
-                            withBasicDetails(applicant1, "Providing sustainable childcare"),
+                            withBasicDetails(applicant1, "Providing sustainable childcare").
+                            inviteCollaborator(applicant2).
+                            inviteCollaborator(applicant4),
                     builder -> builder.
                             withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis").
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant1, "Using natural gas to heat homes").
+                            inviteCollaborator(applicant2).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant1, "A new innovative solution").
+                            inviteCollaborator(applicant2).
+                            inviteCollaborator(applicant4).
                             submitApplication(),
                     builder -> builder.
                             withBasicDetails(applicant2, "Security for the Internet of Things").
                             submitApplication(),
-                    builder -> builder.withBasicDetails(applicant3, "Marking it as complete")
+                    builder -> builder.
+                            withBasicDetails(applicant3, "Marking it as complete").
+                            inviteCollaborator(applicant2)
                 ).
                 build();
     }

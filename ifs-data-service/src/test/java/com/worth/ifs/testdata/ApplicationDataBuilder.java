@@ -3,11 +3,18 @@ package com.worth.ifs.testdata;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.emptyList;
 
 
@@ -29,6 +36,32 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
                 data.setLeadApplicant(leadApplicant);
                 data.setApplication(created);
+            });
+        });
+    }
+
+    public ApplicationDataBuilder inviteCollaborator(UserResource collaborator) {
+
+        return with(data -> {
+
+            doAs(data.getLeadApplicant(), () -> {
+
+                inviteService.createApplicationInvites(newInviteOrganisationResource().
+                        withOrganisation(collaborator.getOrganisations().get(0)).
+                        withInviteResources(newApplicationInviteResource().
+                                withUsers(collaborator.getId()).
+                                withApplication(data.getApplication().getId()).
+                                withName(collaborator.getFirstName()).
+                                withEmail(collaborator.getEmail()).
+                                build(1)).
+                        build()).getSuccessObjectOrThrowException();
+
+                Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
+
+                InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).isPresent()).get();
+                ApplicationInviteResource singleInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).get();
+
+                doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
             });
         });
     }

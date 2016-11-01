@@ -1,15 +1,14 @@
 package com.worth.ifs.invite.security;
 
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -20,7 +19,6 @@ import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 /**
  * Permission rules for {@link InviteOrganisationResource} permissioning
  */
-@Component
 @PermissionRules
 public class InviteOrganisationPermissionRules {
 
