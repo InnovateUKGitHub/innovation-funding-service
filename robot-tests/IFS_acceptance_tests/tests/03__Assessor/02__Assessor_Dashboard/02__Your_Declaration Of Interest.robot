@@ -12,7 +12,7 @@ Back to the dashboard link
     the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
-Server-side empty form validations
+Client-side empty form validations
     [Documentation]    INFUND-3715
     [Tags]
     #TODO: Will need changes once client side validations have been implemented INFUND-5867
@@ -26,7 +26,7 @@ Server-side empty form validations
     And the user should see a field and summary error    Please tell us if any of your close family members have any appointments, directorships or consultancies
     And the user should see a field and summary error    Please tell us if any of your close family members have any other financial interests
 
-Server-side empty yes/no question validations
+Client-side empty yes/no question validations
     [Documentation]    INFUND-3715
     [Tags]
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
@@ -36,12 +36,15 @@ Server-side empty yes/no question validations
     Then the user should see a field and summary error    Please enter a principal employer
     And the user should see a field and summary error    Please enter the role at your principal employer
     And the user should see a field and summary error    In order to register an account you have to agree that this is an accurate account
-    And the user should see a field and summary error    Please enter your appointments, directorships or consultancies
+    And the user should see a field and summary error    Please enter an organisation
+    And the user should see a field and summary error    Please enter a position
     And the user should see a field and summary error    Please enter your financial interests
-    And the user should see a field and summary error    Please enter the appointments, directorships or consultancies of your close family members
+    And the user should see a field and summary error    Please enter a relation
+    And the user should see a field and summary error    Please enter an organisation
+    And the user should see a field and summary error    Please enter a position
     And the user should see a field and summary error    Please enter your family financial interests
 
-Server-side empty close family member validation
+Client-side empty close family member validation
     [Documentation]    INFUND-3715
     [Tags]
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
