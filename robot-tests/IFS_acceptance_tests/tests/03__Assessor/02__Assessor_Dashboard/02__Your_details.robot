@@ -10,14 +10,14 @@ Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your details")
-    When the user clicks the button/link    jQuery=a:contains("Edit your details")
-    Then the user should see the text in the page    Edit your details
-    And The user enters text to a text field    id=firstName    Joy12
+    And the user clicks the button/link    jQuery=a:contains("Edit your details")
+    And the user should see the text in the page    Edit your details
+    When The user enters text to a text field    id=firstName    Joy12
     And The user enters text to a text field    id=lastName    Archer12
     And the user enters text to a text field    id=phoneNumber    18549731414test
-    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    ${Empty}
-    And the user enters text to a text field    id=addressForm.selectedPostcode.town    ${Empty}
-    And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    ${Empty}
+    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    ${EMPTY}
+    And the user enters text to a text field    id=addressForm.selectedPostcode.town    ${EMPTY}
+    And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Save changes")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
@@ -25,7 +25,9 @@ Validations for invalid inputs
     And the user should see an error    The address cannot be blank
     And the user should see an error    The postcode cannot be blank
     And the user should see an error    The town cannot be blank
-
+    And the user should see an error    Please select a disability
+    And the user should see an error    Please select an ethnicity
+    And the user should see an error    Please select a gender
 Update profile
     [Documentation]    INFUND-1480
     [Tags]
