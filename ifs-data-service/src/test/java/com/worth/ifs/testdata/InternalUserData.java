@@ -1,24 +1,14 @@
 package com.worth.ifs.testdata;
 
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 
 /**
  * TODO DW - document this class
  */
-public class InternalUserData {
+public class InternalUserData extends BaseUserData {
 
-    private UserResource user;
     private UserRoleType role;
     private String emailAddress;
-
-    public UserResource getUser() {
-        return user;
-    }
-
-    public void setUser(UserResource user) {
-        this.user = user;
-    }
 
     public UserRoleType getRole() {
         return role;
