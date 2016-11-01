@@ -3,13 +3,7 @@ Documentation     -INFUND-885: As an applicant I want to be able to submit a use
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Invalid email plaintext
@@ -137,8 +131,8 @@ the user cannot login with the invalid email
     Input Text    id=username    ${invalid_email_addy}
     Input Password    id=password    Passw0rd123
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    Please enter a valid e-mail address
+    The user should see the text in the page    Please enter a valid e-mail address
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your username/password combination doesn't seem to work
+    The user should see the text in the page    ${unsuccessful_login_message}
+    The user should see the text in the page    Your username/password combination doesn't seem to work

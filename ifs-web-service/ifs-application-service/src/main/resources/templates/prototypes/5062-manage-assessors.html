@@ -13,17 +13,26 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Opportunity overview'}, ${'#'})" th:remove="tag" />
+
+	<th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.comp != null ? '/prototypes/5721-dashboard?status='+ param.comp[0] :  '/prototypes/5721-dashboard')})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Invite assessors'}, ${null})" th:remove="tag" />
+
 	<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-intro" th:remove="tag" />
 
 	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=overview'}"><strong>Manage</strong></a></li>
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=find'}"><strong>Find</strong></a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'invite' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=invite'}"><strong>Invite</strong></a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=overview'}"><strong>Overview</strong></a>
+		</li>
 	</ul>
 
 	

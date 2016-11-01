@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+
+
+	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
+		<style>
+			#application-list tbody tr{
+				display: none;
+			}
+			.pagination{
+				display: none;
+			}
+			#application-list tbody tr.filtered-result{
+				display: table-row;
+			}
+		</style>
+	</div>
+
+</head>
+
+<body class="comp-assessors full-width show-applications">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications submitted'}, ${null})" th:remove="tag" />
+
+	<h2 class="heading-large" id="current-assessors">Applications submitted</h2>
+
+		<section class="boxed">
+
+			<div class="grid-row">
+				<div class="column-half">
+			 		<p><span class="heading-large">12th April 2016</span> assessment deadline</p>
+			 	</div>
+			 	<div class="column-half">
+				 	<p><span class="heading-large">4</span> applications submitted</p>
+				</div>
+			</div>
+
+			<a href="/prototypes/1969-export-example" class="button-secondary">Export application data (.csv)</a>
+
+			<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
+
+				<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+
+				<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			        <button class="js-close close" aria-label="Close Popup">X</button>
+			        <div>
+
+						<h2 class="heading-medium no-margin">Notify applicants</h2>
+
+						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+
+						<p>This step cannot be undone.</p>
+
+						<hr />
+
+			            <div class="grid-row extra-margin">
+			            	<div class="column-half">
+			            		<a href="#">Cancel</a>
+			            	</div>
+			            	<div class="column-half alignright-button">
+			            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="button">Notify applicants</a>
+			            	</div>
+			            </div>
+
+			        </div>
+			    </div>
+
+			</div>
+
+		</section>
+
+		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+
+
+			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+
+			<div class="table-overflow">
+				<table id="application-list">
+					<thead>
+						<tr>
+							<th scope="col">Application no</th>
+							<th scope="col">Project title</th>
+							<th scope="col">Lead</th>
+							<th scope="col">Area</th>
+							<th scope="col" class="alignright">No. of partners</th>
+							<th scope="col" class="alignright">Grant requested (&#163;)</th>
+							<th scope="col" class="alignright">Total project cost (&#163;)</th>
+							<th scope="col" class="alignright">Duration (months)</th>
+							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" style="width: 120px">Fund project?</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="filtered-result">
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
+							<td>Machine learning in robots</td>
+							<td>PWC</td>
+							<td>HVM</td>
+							<td class="alignright">5</td>
+							<td class="alignright">203,000</td>
+							<td class="alignright">324,000</td>
+							<td class="alignright">12</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="filtered-result">
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
+							<td>Robots that learn</td>
+							<td>Max Digital</td>
+							<td>HVM</td>
+							<td class="alignright">5</td>
+							<td class="alignright">203,000</td>
+							<td class="alignright">300,000</td>
+							<td class="alignright">12</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="filtered-result">
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
+							<td>AI in learning</td>
+							<td>BBC</td>
+							<td>HVM</td>
+							<td class="alignright">3</td>
+							<td class="alignright">67,000</td>
+							<td class="alignright">97,500</td>
+							<td class="alignright">13</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="filtered-result">
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
+							<td>Progressive machines</td>
+							<td>Kingfisher</td>
+							<td>HVM</td>
+							<td class="alignright">7</td>
+							<td class="alignright">100,000</td>
+							<td class="alignright">125,000</td>
+							<td class="alignright">14</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
+						</tr>
+
+
+					</tbody>
+				</table>
+			</div>
+
+			<div th:if="${param.filterStatus == null}" th:remove="tag">
+
+				<!-- <ul class="pagination">
+				    <li class="next">
+				        <a href="#" rel="next" title="Navigate to next part">
+				            <span class="pagination-label">Next</span>
+				            <span class="pagination-part-title">2 of 4</span>
+				        </a>
+				    </li>
+				</ul> -->
+
+			</div>
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

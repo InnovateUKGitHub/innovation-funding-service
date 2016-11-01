@@ -1,6 +1,8 @@
 package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -11,15 +13,22 @@ import java.util.Map;
  **/
 public class ProjectSpendProfileProjectManagerViewModel {
     private Long projectId;
+    private Long applicationId;
     private String projectName;
     private Map<String, Boolean> partnerSpendProfileProgress;
+    private Map<String, Boolean> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
+    private boolean submitted;
 
-    public ProjectSpendProfileProjectManagerViewModel(Long projectId, String projectName, Map<String, Boolean> partnerSpendProfileProgress, List<OrganisationResource> partnerOrganisations) {
+    public ProjectSpendProfileProjectManagerViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
+                                                      List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners) {
         this.projectId = projectId;
+        this.applicationId = applicationId;
         this.projectName = projectName;
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
+        this.submitted = submitted;
+        this.editablePartners = editablePartners;
     }
 
     public Long getProjectId() {
@@ -42,6 +51,10 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return partnerSpendProfileProgress;
     }
 
+    public Map<String, Boolean> getEditablePartners() {
+        return editablePartners;
+    }
+
     public void setPartnerSpendProfileProgress(Map<String, Boolean> partnerSpendProfileProgress) {
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
     }
@@ -58,5 +71,45 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return partnerSpendProfileProgress.values()
                 .stream()
                 .allMatch(markAsComplete -> markAsComplete);
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileProjectManagerViewModel that = (ProjectSpendProfileProjectManagerViewModel) o;
+
+        return new EqualsBuilder()
+                .append(submitted, that.submitted)
+                .append(projectId, that.projectId)
+                .append(applicationId, that.applicationId)
+                .append(projectName, that.projectName)
+                .append(partnerSpendProfileProgress, that.partnerSpendProfileProgress)
+                .append(editablePartners, that.editablePartners)
+                .append(partnerOrganisations, that.partnerOrganisations)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(applicationId)
+                .append(projectName)
+                .append(partnerSpendProfileProgress)
+                .append(editablePartners)
+                .append(partnerOrganisations)
+                .append(submitted)
+                .toHashCode();
     }
 }

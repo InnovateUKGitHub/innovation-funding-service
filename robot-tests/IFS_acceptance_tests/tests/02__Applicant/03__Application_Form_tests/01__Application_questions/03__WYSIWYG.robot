@@ -3,12 +3,7 @@ Documentation     INFUND-187: As an applicant in the application form, I should 
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Bold text format
@@ -51,7 +46,7 @@ the Applicant clicks on the Italic button in the "business opportunity" field
     click element    css=.italic_button
 
 all text entered should be Bold and stay the same after page refresh
-    Input Text    css=#form-input-1 .editor    Entering text to verify BOLD.
+    The user enters text to a text field    css=#form-input-1 .editor    Entering text to verify BOLD.
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor b
     Run Keyword If    '${status}' == 'FAIL'    Element Should Be Visible    css=#form-input-1 .editor strong
     Focus    css=.app-submit-btn
@@ -60,19 +55,19 @@ all text entered should be Bold and stay the same after page refresh
     the user should see the element    css=#form-input-1 .editor strong
 
 the Applicant clicks on the Numbering bullet button in the "business opportunity" field
-    Input Text    css=#form-input-1 .editor    This is testing for numbering bullets.
+    The user enters text to a text field    css=#form-input-1 .editor    This is testing for numbering bullets.
     click element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
 the Applicant clicks on the Bullet format button in the "business opportunity" field
-    Input Text    css=#form-input-1 .editor    testing
+    The user enters text to a text field    css=#form-input-1 .editor    testing
     click element    css=.insertUnorderedList_button
     Focus    css=.app-submit-btn
     Sleep    1s
 
 all text entered should be Italic and stay the same after page refresh
-    Input Text    css=#form-input-1 .editor    Entering text to verify ITALIC.
+    The user enters text to a text field    css=#form-input-1 .editor    Entering text to verify ITALIC.
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor i
     Run Keyword If    '${status}' == 'FAIL'    the user should see the element    css=#form-input-1 .editor em
     Focus    css=.app-submit-btn

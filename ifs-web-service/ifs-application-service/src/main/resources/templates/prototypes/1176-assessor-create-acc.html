@@ -14,9 +14,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
-
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
+    <th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
 		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
 	</th:block>
 
@@ -145,17 +144,18 @@
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="password">
-						<span class="form-label-bold">Password</span>
-						<span class="form-hint">
-						Your password is case-sensitive and needs to:<br />
+						<span class="form-label-bold">Create password</span>
+					</label>
+					<div class="form-hint" id="password-hint">
+						<p>Your password is case-sensitive and needs to:</p>
 						<ul class="list-bullet">
 							<li>be between 10 and 30 characters long</li>
 							<li>contain at least 1 capital letter</li>
 							<li>contain at least 1 number</li>
 						</ul>
-					</span>
-					</label>
-					<input class="form-control" id="password" name="password" type="password" />
+						<p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+					</div>
+					<input class="form-control" id="password" name="password" type="password" aria-describedby="password-hint" />
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="retype-password">
@@ -177,12 +177,14 @@
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
-			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+			<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
 				<input type="hidden" name="version" value="v2" />
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
+			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
+			  <button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
+
 		</div>
 
 		<div th:if="${param.edit != null}" th:remove="tag">

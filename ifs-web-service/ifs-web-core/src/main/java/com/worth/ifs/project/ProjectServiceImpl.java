@@ -13,6 +13,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,6 +223,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectStatusResource getProjectStatus(Long projectId) {
+        return projectRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
         return projectRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
     }
@@ -261,14 +267,20 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
-    private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
+    @Override
+    public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
+        return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
     }
 
     @Override
     public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
-        return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
+        return projectInviteRestService.saveProjectInvite(inviteProjectResource).toServiceResult();
     }
 
     @Override
@@ -276,9 +288,12 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 
+    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
+    }
+
     @Override
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
-
 }

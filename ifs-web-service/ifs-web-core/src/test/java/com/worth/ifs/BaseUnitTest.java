@@ -13,11 +13,12 @@ import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.contract.service.ContractService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.FinanceRowRestService;
@@ -33,8 +34,10 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
+import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
+import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
@@ -84,7 +87,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -119,6 +121,8 @@ public class BaseUnitTest {
     public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
+    @Mock
+    public ContractService contractService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -182,7 +186,11 @@ public class BaseUnitTest {
     @Mock
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
+    public FinanceCheckService financeCheckServiceMock;
+    @Mock
     public ProjectStatusService projectStatusServiceMock;
+    @Mock
+    public PartnerOrganisationService partnerOrganisationServiceMock;
 
     @Spy
     @InjectMocks
@@ -457,7 +465,6 @@ public class BaseUnitTest {
         when(sectionService.getSectionByQuestionId(eq(q21Resource.getId()))).thenReturn(sectionResource3);
         when(sectionService.getSectionByQuestionId(eq(q22Resource.getId()))).thenReturn(sectionResource3);
 
-        competitionResource.setSections(sectionResources.stream().map(s -> s.getId()).collect(toList()));
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
@@ -531,16 +538,10 @@ public class BaseUnitTest {
         organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8), ProcessRoleResource::getId));
         organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
 
-        competitionResource.setApplications(simpleMap(applicationResources, ApplicationResource::getId));
-
         applicationResources.get(0).setCompetition(competitionResource.getId());
-        applicationResources.get(0).setProcessRoles(asList(processRole1.getId(), processRole5.getId()));
         applicationResources.get(1).setCompetition(competitionResource.getId());
-        applicationResources.get(1).setProcessRoles(singletonList(processRole2.getId()));
         applicationResources.get(2).setCompetition(competitionResource.getId());
-        applicationResources.get(2).setProcessRoles(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
         applicationResources.get(3).setCompetition(competitionResource.getId());
-        applicationResources.get(3).setProcessRoles(singletonList(processRole4.getId()));
 
         loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
         users.get(0).setProcessRoles(asList(processRole5.getId()));

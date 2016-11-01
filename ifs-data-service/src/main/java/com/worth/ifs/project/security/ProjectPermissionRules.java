@@ -1,11 +1,10 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
@@ -71,6 +70,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "Comp admins can assign Monitoring Officers on any Project")
     public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "ASSIGN_MONITORING_OFFICER",
+            description = "Project finance users can assign Monitoring Officers on any Project")
+    public boolean projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
@@ -146,6 +152,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
+            description = "Project finance user can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean projectFinanceUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "All partners can view team status")
     public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
@@ -163,6 +176,27 @@ public class ProjectPermissionRules extends BasePermissionRules {
             value = "VIEW_TEAM_STATUS",
             description = "Project finance user can see a team's status")
     public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "All partners can view the project status")
+    public boolean partnersCanViewStatus(ProjectResource project, UserResource user){
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "Comp admins can see the project status")
+    public boolean compAdminsCanViewStatus(ProjectResource project, UserResource user){
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_STATUS",
+            description = "Project finance user can see the project status")
+    public boolean projectFinanceUserCanViewStatus(ProjectResource project, UserResource user){
         return isProjectFinanceUser(user);
     }
 

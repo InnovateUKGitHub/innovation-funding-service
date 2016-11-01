@@ -7,11 +7,7 @@ Documentation     INFUND-1987
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Competition status should be correct
@@ -141,8 +137,8 @@ Download File
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}   ${server}/management/competition/1/download    submitted_applications.xlsx
-    wait until keyword succeeds   300ms    1 seconds    Download should be done
+    Download File    ${ALL_COOKIES}    ${server}/management/competition/1/download    submitted_applications.xlsx
+    wait until keyword succeeds    300ms    1 seconds    Download should be done
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx

@@ -86,6 +86,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testProjectFinanceUserCanAcceptOrRejectOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testProjectFinanceUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();
@@ -221,6 +235,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
                 assertTrue(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
             } else {
                 assertFalse(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUsersCanEditMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, user));
             }
         });
     }

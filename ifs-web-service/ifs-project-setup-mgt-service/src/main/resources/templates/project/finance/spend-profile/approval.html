@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management finance-checks-overview">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-accept-profile" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-reject-profile" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
+            </div>
+        </div>
+        <div class="column-third alignright extra-margin">
+            <h2 class="bold-small blue-block">Spend profile</h2>
+        </div>
+    </div>
+    <hr/>
+
+    <th:block th:if="${model.approved}">
+        <div class="success-alert extra-margin-bottom">
+            <h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
+        </div>
+    </th:block>
+
+    <th:block th:if="${model.empty}">
+        <div class="warning-alert extra-margin-bottom">
+            <h2 class="heading-small no-margin-top">The spend profile is not generated.</h2>
+        </div>
+    </th:block>
+
+    <th:block th:if="${model.rejected}">
+        <div class="warning-alert extra-margin-bottom">
+            <h3 class="heading-small">The spend profile has been rejected.</h3>
+        </div>
+    </th:block>
+
+    <th:block th:unless="${model.empty}">
+        <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+        <h2 class="heading-medium">Innovate Lead</h2>
+        <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
+            Innovate Lead
+        </p>
+        <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
+            Robin Wilson
+        </p>
+        <h2 class="heading-medium">Project spend profile</h2>
+
+        <ul>
+            <li th:each="organisation : ${model.organisations}">
+                <a th:href="'/project-setup/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
+                   th:text="${organisation.name} + '-spend-profile.csv'"
+                   target="_blank">spend-profile.csv</a>
+            </li>
+        </ul>
+
+        <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
+            <h2 class="heading-medium">Approved by Innovate Lead</h2>
+            <p>The spend profile must be sent to the Innovate Lead for their review and approval.</p>
+            <div class="form-group">
+            <label class="block-label" for="approvedByLeadTechnologist" >
+                <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
+                The spend profile has been approved by the Innovate Lead
+            </label>
+            </div>
+            <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
+                Approved
+            </button>
+            <button data-js-modal="modal-reject-profile" class="button button-warning large">
+                Reject spend profile
+            </button>
+        </div>
+    </th:block>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

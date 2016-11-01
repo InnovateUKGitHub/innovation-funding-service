@@ -8,7 +8,7 @@ public class CategoryLink {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="categoryId", referencedColumnName="id")
     private Category category;
     private String className;

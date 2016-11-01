@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
@@ -18,9 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.stream.Collectors.toList;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  *  A project represents an application that has been accepted (and is now in project setup phase).
@@ -51,14 +50,19 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime offerSubmittedDate;
 
+    private LocalDateTime spendProfileSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @ManyToOne
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
     private FileEntry collaborationAgreement;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
@@ -79,11 +83,13 @@ public class Project implements ProcessActivity {
 
     private Boolean otherDocumentsApproved;
 
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpendProfile> spendProfiles;
+
 
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-
                    Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
 
         this.id = id;
@@ -97,6 +103,10 @@ public class Project implements ProcessActivity {
 
     public void addProjectUser(ProjectUser projectUser) {
         projectUsers.add(projectUser);
+    }
+
+    public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {
+        partnerOrganisations.add(partnerOrganisation);
     }
 
     public boolean removeProjectUser(ProjectUser projectUser) {
@@ -170,7 +180,7 @@ public class Project implements ProcessActivity {
     }
 
     public List<ProjectUser> getProjectUsers(Predicate<ProjectUser> filter){
-        return projectUsers.stream().filter(filter).collect(toList());
+        return simpleFilter(projectUsers, filter);
     }
 
     public List<ProjectUser> getProjectUsersWithRole(ProjectParticipantRole... roles){
@@ -178,16 +188,25 @@ public class Project implements ProcessActivity {
     }
 
     public List<Organisation> getOrganisations(){
-        return projectUsers.stream().map(pu -> pu.getOrganisation()).distinct().collect(toList());
+        return simpleMap(partnerOrganisations, PartnerOrganisation::getOrganisation);
     }
 
     public List<Organisation> getOrganisations(Predicate<Organisation> predicate){
-        return getOrganisations().stream().filter(predicate).collect(toList());
+        return simpleFilter(getOrganisations(), predicate);
+    }
+
+    public List<PartnerOrganisation> getPartnerOrganisations() {
+        return partnerOrganisations;
     }
 
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers.clear();
         this.projectUsers.addAll(projectUsers);
+    }
+
+    public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {
+        this.partnerOrganisations.clear();
+        this.partnerOrganisations.addAll(partnerOrganisations);
     }
 
     public LocalDateTime getDocumentsSubmittedDate() {
@@ -260,5 +279,21 @@ public class Project implements ProcessActivity {
 
     public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
+    public LocalDateTime getSpendProfileSubmittedDate() {
+        return spendProfileSubmittedDate;
+    }
+
+    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+        this.spendProfileSubmittedDate = spendProfileSubmittedDate;
+    }
+
+    public List<SpendProfile> getSpendProfiles() {
+        return spendProfiles;
+    }
+
+    public void setSpendProfiles(List<SpendProfile> spendProfiles) {
+        this.spendProfiles = spendProfiles;
     }
 }

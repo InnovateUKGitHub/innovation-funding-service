@@ -159,6 +159,15 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void testCompleteSpendProfilesReview() throws Exception {
+        Long projectId = 1L;
+        when(projectFinanceServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
+                .andExpect(status().isOk());
+    }
+
     @Override
     protected ProjectFinanceController supplyControllerUnderTest() {
         return new ProjectFinanceController();
@@ -168,10 +177,10 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
     private String generateTestCSVData(SpendProfileTableResource spendProfileTableResource) throws IOException {
         // Build the expectedCategoryToActualTotal map based on the input
-        Map<String, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
-        expectedCategoryToActualTotal.put("Labour", new BigDecimal("100"));
-        expectedCategoryToActualTotal.put("Materials", new BigDecimal("180"));
-        expectedCategoryToActualTotal.put("Other costs", new BigDecimal("55"));
+        Map<Long, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
+        expectedCategoryToActualTotal.put(1L, new BigDecimal("100"));
+        expectedCategoryToActualTotal.put(2L, new BigDecimal("180"));
+        expectedCategoryToActualTotal.put(3L, new BigDecimal("55"));
 
         // Expected total for each month based on the input
         List<BigDecimal> expectedTotalForEachMonth = asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100"));
@@ -194,7 +203,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
-            byCategory.add(category);
+            byCategory.add(String.valueOf(category));
             values.forEach(val -> {
                 byCategory.add(val.toString());
             });
@@ -228,14 +237,14 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         ));
 
         expectedTable.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("100"),
-                "Materials", new BigDecimal("150"),
-                "Other costs", new BigDecimal("55")));
+                1L, new BigDecimal("100"),
+                2L, new BigDecimal("150"),
+                3L, new BigDecimal("55")));
 
         expectedTable.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                2L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
 
         List<LocalDate> months = IntStream.range(0, projectResource.getDurationInMonths().intValue()).mapToObj(projectResource.getTargetStartDate()::plusMonths).collect(toList());

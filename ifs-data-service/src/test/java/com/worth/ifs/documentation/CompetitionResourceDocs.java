@@ -12,13 +12,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
             fieldWithPath("id").description("Id of the competitionResource"),
-            fieldWithPath("sections").description("List of section ids belonging to the competition"),
             fieldWithPath("name").description("name of the competition"),
             fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
-            fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
-            fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
+            fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
+            fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback"),
+            fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
@@ -45,18 +45,21 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("funders").description("the funders for this competition")
+            fieldWithPath("funders").description("the funders for this competition"),
+            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applicantions"),
+            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
             .withId(1L)
-            .withSections(asList(1L, 2L, 3L))
             .withName("competition name")
             .withDescription("competition description")
             .withStartDate(LocalDateTime.now())
             .withEndDate(LocalDateTime.now().plusDays(30))
-            .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
-            .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
+            .withAssessorAcceptsDate(LocalDateTime.now().plusDays(35))
+            .withAssessorDeadlineDate(LocalDateTime.now().plusDays(40))
+            .withFundersPanelDate(LocalDateTime.now().plusDays(42))
+            .withFundersPanelEndDate(LocalDateTime.now().plusDays(44))
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)

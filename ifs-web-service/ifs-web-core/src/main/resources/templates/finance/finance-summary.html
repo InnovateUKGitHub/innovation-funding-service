@@ -27,9 +27,8 @@
 
 
     <div th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
-        <div th:each="organisation : ${academicOrganisations}">
+        <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
             <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
-
             <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
                 <div class="upload-section">
                     <h3 class="heading-small no-margin">Download Je-S form:</h3>
@@ -50,7 +49,11 @@
     <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="form-group project-cost-breakdown">
             <div style="overflow: auto;">
-
+                <th:block th:unless="${applicationOrganisations != null}">
+                    <div class="warning-alert">
+                        This competition has already closed, you are no longer able to submit your application.
+                    </div>
+                </th:block>
                 <table>
                     <thead>
                     <tr>
@@ -66,28 +69,30 @@
                     </thead>
                     <tbody>
                     <tr th:each="applicationOrganisation : ${applicationOrganisations}">
-                        <th scope="row">
-                            <div th:text="${applicationOrganisation.name}"></div>
-                            <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
-                            <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
-                        </th>
-                        <td class="numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                            <span th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
-                        </td>
-                        <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
-                            <td class="numeric bold"><span>&pound;0</span></td>
-                        </div>
-                        <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
-                            <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
-                                <td class="numeric"
-                                    th:with="formInputType=${formInput.formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}"
-                                    th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
-                                </td>
-                            </div>
+                        <th:block th:if="${organisationFinances != null}">
+                            <th scope="row">
+                                <div th:text="${applicationOrganisation.name}"></div>
+                                <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
+                                <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
+                            </th>
+                            <td class="numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                                <span th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
+                            </td>
                             <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
-                                <td class="numeric">&pound;0</td>
+                                <td class="numeric bold"><span>&pound;0</span></td>
                             </div>
-                        </div>
+                            <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
+                                <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                                    <td class="numeric"
+                                        th:with="formInputType=${formInput.formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}"
+                                        th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
+                                    </td>
+                                </div>
+                                <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                                    <td class="numeric">&pound;0</td>
+                                </div>
+                            </div>
+                        </th:block>
                     </tr>
                     <tr th:each="pendingOrganisationName : ${pendingOrganisationNames}">
                         <th scope="row">
@@ -104,11 +109,12 @@
                     <tr>
                         <th scope="row">Total</th>
                         <td class="numeric bold">
-                            <span th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
+                            <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                         </td>
                         <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
                              th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}"
+                                th:if="${financeTotal != null}"
                                 th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                         </div>
                     </tr>
@@ -147,9 +153,9 @@
                                 <small>Partner</small>
                             </div>
 
-                            <a th:if="${form.isAdminMode()}"
-                               th:href="@{'/competition/'+${currentCompetition.id}+'/application/'+${currentApplication.id}+'/finances/'+${applicationOrganisation.id}}">
-                                Organisation Finance Details
+                            <a th:if="${!form.isAdminMode() and !currentCompetition.isOpen() and applicationOrganisation.id.equals(userOrganisation.id)}"
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>
+                                Detailed Organisation Finances
                             </a>
 
                             <div th:remove="tag" th:if="${currentApplication.isOpen()}">

@@ -8,8 +8,12 @@ import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
@@ -26,13 +30,16 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -57,6 +64,9 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
     LocalValidatorFactoryBean validator;
 
 
@@ -69,7 +79,10 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
 
-        if (inviteProjectResourceIsValid(inviteProjectResource)) {
+        return validateProjectInviteResource(inviteProjectResource).andOnSuccess(() ->
+               validateUserNotAlreadyInvited(inviteProjectResource).andOnSuccess(() ->
+               validateTargetUserIsValid(inviteProjectResource).andOnSuccess(() -> {
+
             ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
             validator.validate(projectInvite, errors);
@@ -81,9 +94,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
             }
-        }
-        return serviceFailure(badRequestError("The Invite is not valid"));
-
+        })));
     }
 
     @Override
@@ -104,8 +115,12 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                invite = inviteProjectRepository.save(invite.open());
-                return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId());
+                ProjectInvite projectInvite = inviteProjectRepository.save(invite.open());
+                return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
+                    pu.setInvite(projectInvite);
+                    projectUserRepository.save(pu.accept());
+                    return serviceSuccess();
+                });
             }
             LOG.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
             Error e = new Error("Invited email address not the same as the users email address", HttpStatus.NOT_ACCEPTABLE);
@@ -129,13 +144,50 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                         serviceFailure(notFoundError(UserResource.class)));
     }
 
-    private boolean inviteProjectResourceIsValid(InviteProjectResource inviteProjectResource) {
+    private ServiceResult<Void> validateProjectInviteResource(InviteProjectResource inviteProjectResource) {
 
         if (StringUtils.isEmpty(inviteProjectResource.getEmail()) || StringUtils.isEmpty(inviteProjectResource.getName())
                 || inviteProjectResource.getProject() == null ||inviteProjectResource.getOrganisation() == null ){
-            return false;
+            return serviceFailure(badRequestError("The Invite is not valid"));
         }
-        return true;
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserNotAlreadyInvited(InviteProjectResource invite) {
+
+        List<ProjectInvite> existingInvites = inviteProjectRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
+        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
+    }
+
+    private ServiceResult<Void> validateTargetUserIsValid(InviteProjectResource invite) {
+
+        String targetEmail = invite.getEmail();
+
+        Optional<User> existingUser = userRepository.findByEmail(targetEmail);
+
+        return existingUser.map(user ->
+               validateUserIsInSameOrganisation(invite, user).andOnSuccess(() ->
+               validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
+               orElse(serviceSuccess());
+    }
+
+    private ServiceResult<Void> validateUserIsInSameOrganisation(InviteProjectResource invite, User user) {
+
+        List<Organisation> usersOrganisations = user.getOrganisations();
+
+        if (!simpleMap(usersOrganisations, Organisation::getId).contains(invite.getOrganisation())) {
+            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserIsNotAlreadyPartnerInOrganisation(InviteProjectResource invite, User user) {
+
+        ProjectUser existingUserEntryForOrganisation = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(invite.getProject(), invite.getOrganisation(), user.getId(), PROJECT_PARTNER);
+
+        return existingUserEntryForOrganisation == null ? serviceSuccess() :
+                serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
     }
 
     private Supplier<ServiceResult<ProjectInvite>> invite(final String hash) {

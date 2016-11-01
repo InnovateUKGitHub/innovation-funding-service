@@ -14,6 +14,9 @@
 	text-align: left;
 }
 
+.alignright{
+	text-align: right;
+}
 /*--- Text colour ---*/
 
 .standard-text-colour{
@@ -193,30 +196,30 @@ table{
 	#global-header{
 		.header-wrapper{
 			max-width: 95%;
-			min-width: 960px;
+			//min-width: 960px;
 		}
 	}
 
 	.grid-container{
 		max-width: 95%;
-		min-width: 960px;
+		//min-width: 960px;
 	}
 
 	#content{
 
 		max-width: 95%;
-		min-width: 960px;
+		//min-width: 960px;
 
 		@include media-down(tablet){
-			min-width: 90%;
+			//min-width: 90%;
 		}
 
 		//.phase-banner,
 		//.sub-header,
-		.hgroup,
+		//.hgroup,
 		.centralise{
-			@extend %site-width-container;
-  			@extend %contain-floats;
+			//@extend %site-width-container;
+  			//@extend %contain-floats;
   			box-sizing: border-box;
 		}
 
@@ -314,17 +317,47 @@ ul.underline{
 /*--- Inline Nav ---*/
 
 ul.inline-nav{
-	li a{
+
+	@include media-down(mobile) {
+		padding: 0;
+
+		li{
+			
+			a{
+				padding: 10px;
+			}
+
+			&.selected a{
+				border-bottom: 1px solid $border-colour;
+				padding: 9px 10px;
+				margin-left: 2px;
+			}
+		}
+
+		&:after{
+			content: none;
+		}
+	}
+	/*li a{
 		text-decoration: none;
 		color: $black;
-	}
+	}*/
 	li{
 		&.not-selected{
 			background: $grey-3;
-			margin-right: 2px;
+			//margin-right: 2px;
 			margin-left: 2px;
+
+			@include media-down(mobile) {
+				a{
+					padding: 10px;
+				}
+			}
+
 		}
 	}
+
+
 }
 
 

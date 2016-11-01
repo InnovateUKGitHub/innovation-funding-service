@@ -8,6 +8,8 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.finance.mapper.FinanceRowMapper;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -25,4 +27,12 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
         return question.getId();
     }
 
+    public abstract QuestionResource mapToResource(Question domain);
+
+    @Override
+    @Mappings({
+            @Mapping(target = "costs", ignore = true),
+            @Mapping(target = "questionStatuses", ignore = true)
+    })
+    public abstract Question mapToDomain(QuestionResource resource);
 }

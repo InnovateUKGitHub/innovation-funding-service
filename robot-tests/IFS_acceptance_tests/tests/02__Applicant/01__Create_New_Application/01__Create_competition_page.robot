@@ -5,11 +5,7 @@ Documentation     INFUND-921 : As an applicant I want to be able to select a lin
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
@@ -40,5 +36,5 @@ Apply button disable when competion is in assessment
 the new window should have the competition brief
     sleep    500ms
     Select Window    url=https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief
-    Page Should Contain    Dates and deadlines
-    Page Should Contain    How to apply
+    The user should see the text in the page    Dates and deadlines
+    The user should see the text in the page    How to apply

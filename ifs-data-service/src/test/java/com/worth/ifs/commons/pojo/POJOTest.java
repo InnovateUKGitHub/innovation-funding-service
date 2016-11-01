@@ -20,13 +20,15 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -43,14 +45,16 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
+import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -62,7 +66,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 39;
+    private static final int EXPECTED_RESOURCES = 38;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -70,8 +74,12 @@ public class POJOTest {
     private List<PojoClass> classes;
     private Validator validator;
     private List<Class<?>> classesToTest = Arrays.asList(
+            Affiliation.class,
+            AffiliationResource.class,
             Alert.class,
             AlertResource.class,
+            ApplicationRejectionResource.class,
+            AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
             Address.class,
@@ -122,7 +130,17 @@ public class POJOTest {
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
             UserRegistrationResource.class,
-            SpendProfileCSVResource.class
+            FinanceCheckResource.class,
+            FinanceCheckProcessResource.class,
+            PartnerOrganisationResource.class,
+            SpendProfileCSVResource.class,
+            FinanceCheckSummaryResource.class,
+            FinanceCheckPartnerStatusResource.class,
+            SpendProfileCSVResource.class,
+            ContractResource.class,
+            ProfileContractResource.class,
+            ProfileSkillsResource.class,
+            UserProfileResource.class
     );
 
     @Before

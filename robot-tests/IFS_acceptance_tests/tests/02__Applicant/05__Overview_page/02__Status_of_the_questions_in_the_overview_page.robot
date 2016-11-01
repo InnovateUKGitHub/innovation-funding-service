@@ -2,15 +2,10 @@
 Documentation     INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Email    Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Status changes when we assign a question
@@ -37,7 +32,7 @@ Re-assign is possible from the overview page
 *** Keywords ***
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
-    Input Text    css=#form-input-11 .editor    Check last updated date@#$
+    The user enters text to a text field    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     Sleep    1s
 
@@ -51,7 +46,7 @@ the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) .assign-button button
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) button:contains("${assignee_name}")
-    Sleep    500ms   # otherwise it stops while Assigning..
+    Sleep    500ms    # otherwise it stops while Assigning..
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
@@ -59,7 +54,8 @@ the applicant assigns the Project Summary
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
-    Wait Until Element Is Visible    jQuery=#section-1 .section:nth-child(2) .assigned
+    Wait Until Page Does Not Contain    Assigning to Steve Smith...    10s
+    The user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
     the user should not see the element    jQuery=#section-1 .section:nth-child(2) .assigned

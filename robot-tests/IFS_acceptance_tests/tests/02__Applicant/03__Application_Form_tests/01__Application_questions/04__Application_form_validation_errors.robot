@@ -1,17 +1,11 @@
 *** Settings ***
 Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \
-...
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Title field client side
@@ -57,7 +51,6 @@ Month field client side
     Then the user should see an error    Please enter a valid date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
-    Capture Page Screenshot
 
 Year field client side
     [Documentation]    INFUND-43
@@ -66,11 +59,10 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    #    The following steps are Pending due to INFUND-5283
-    #    When the applicant inserts an invalid date
-    #    Then the user should see an error    Please enter a future date
-    #    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    #    Then the user should see an error    Please enter a future date
+    When the applicant inserts an invalid date
+    Then the user should see an error    Please enter a future date
+    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+    Then the user should see an error    Please enter a future date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -81,13 +73,12 @@ Duration field client side
     [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
-    #    The following steps are Pending due to INFUND-5283
-    #    When the user enters text to a text field    id=application_details-duration    0
-    #    Then the user should see an error    Your project should last between 1 and 36 months
-    #    When the user enters text to a text field    id=application_details-duration    -1
-    #    Then the user should see an error    Your project should last between 1 and 36 months
-    #    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    #    Then the user should see an error    Please enter a valid value
+    When the user enters text to a text field    id=application_details-duration    0
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    -1
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -127,34 +118,29 @@ Empty text area
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    #Focus    css=.app-submit-btn
-    #run keyword and ignore error    mouse out    css=input
-    #Run Keyword And Ignore Error    mouse out    css=.editor
-    #Focus    css=.app-submit-btn
     sleep    300ms
-    wait until element is not visible    css=.error-message
+    the user should not see the element    css=.error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    12
+    The user enters text to a text field    id=application_details-startdate_day    12
     Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    11
+    The user enters text to a text field    id=application_details-startdate_month    11
     Clear Element Text    id=application_details-startdate_year
-    Input Text    id=application_details-startdate_year    2020
+    The user enters text to a text field    id=application_details-startdate_year    2020
 
 the applicant inserts an invalid date
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    18
+    The user enters text to a text field    id=application_details-startdate_day    18
     Clear Element Text    id=application_details-startdate_year
-    Input Text    id=application_details-startdate_year    2015
+    The user enters text to a text field    id=application_details-startdate_year    2015
     Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    11
+    The user enters text to a text field    id=application_details-startdate_month    11
 
 the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    #Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application
@@ -168,4 +154,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error    mouse out    css=.editor
     Focus    css=.app-submit-btn
     sleep    300ms
-    Wait Until Page Does Not Contain    Please enter a valid value
+    The user should not see the text in the page    Please enter a valid value

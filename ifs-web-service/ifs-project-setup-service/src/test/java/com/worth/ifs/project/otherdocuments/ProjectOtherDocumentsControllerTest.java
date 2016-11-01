@@ -7,12 +7,14 @@ import com.worth.ifs.project.otherdocuments.controller.ProjectOtherDocumentsCont
 import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +23,9 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -75,7 +79,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
-        assertTrue(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -86,7 +92,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     public void testViewOtherDocumentsPageAsPartner() throws Exception {
 
         long projectId = 123L;
-        Long userId = 1L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
@@ -122,7 +127,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isSubmitAllowed());
         assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -133,7 +140,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     public void testViewOtherDocumentsPageWithExistingDocuments() throws Exception {
 
         long projectId = 123L;
-        long userId = 1L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
@@ -175,12 +181,65 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
-        assertTrue(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
         assertNull(form.getExploitationPlan());
     }
+
+
+    @Test
+    public void testViewOtherDocumentsPageWithSubmittedDocuments() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource().withId(projectId)
+                .withDocumentsSubmittedDate(LocalDateTime.now()).build();
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertNull(model.getCollaborationAgreementFileDetails());
+        assertNull(model.getExploitationPlanFileDetails());
+        assertEquals(emptyList(), model.getRejectionReasons());
+        assertEquals(simpleMap(partnerOrganisations, OrganisationResource::getName),
+                model.getPartnerOrganisationNames());
+
+        // test flags that help to drive the page
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertTrue(model.isLeadPartner());
+        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowApprovedMessage());
+        assertTrue(model.isShowDocumentsBeingReviewedMessage());
+        assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
+
+        // test the form for the file uploads
+        assertNull(form.getCollaborationAgreement());
+        assertNull(form.getExploitationPlan());
+    }
+
 
     @Test
     public void testDownloadCollaborationAgreement() throws Exception {
@@ -240,7 +299,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     public void testUploadCollaborationAgreementButApiErrorsOccur() throws Exception {
 
         long projectId = 123L;
-        long userId = 1L;
+
         ProjectResource project = newProjectResource().withId(projectId).build();
 
         MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
@@ -356,8 +415,13 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
         long projectId = 123L;
-        long userId = 1L;
+
         ProjectResource project = newProjectResource().withId(projectId).build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withRoleName(PROJECT_MANAGER.getName()).
+                build(1);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
@@ -365,6 +429,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(projectUsers);
 
         MvcResult result = mockMvc.perform(
                 get("/project/123/partner/documents")).
@@ -387,6 +452,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowRejectionMessages());
         assertTrue(model.isShowSubmitDocumentsButton());
         assertTrue(model.isSubmitAllowed());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
@@ -405,7 +471,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     public void testViewConfirmDocuemntsPage() throws Exception {
 
         long projectId = 123L;
-        long userId = 1L;
+
         ProjectResource project = newProjectResource().withId(projectId).build();
 
         when(projectService.getById(projectId)).thenReturn(project);

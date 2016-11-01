@@ -52,7 +52,7 @@
                 <tr>
                     <td style="border-bottom: 1px solid #bfc1c3; width: 50%">
                         <#assign sendDate = .now>
-                            ${sendDate?string["MMMM d"]}<#switch sendDate?string["d"]><#case '1'>st<#break><#case '21'>st<#break><#case '31'>st<#break><#case '2'>nd<#break><#case '22'>nd<#break><#case '3'>rd<#break><#case '23'>rd<#break><#default>th</#switch> ${sendDate?string["yyyy"]}
+                        ${sendDate?string["dd MMMM yyyy"]}
                     </td>
                     <td style="padding: 18px 0; text-align: right; border-bottom: 1px solid #bfc1c3; width: 50%">
                         <img src="https://assets.digital.cabinet-office.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" width="124" height="24" />
@@ -91,13 +91,29 @@
 </table>
 </body>
 </#macro>
-<#macro defaultPlainText>
-<#nested/>
+<#macro senderHTML>
+  <p style="margin: 1em 0 1em 0;">
+    Competitions Team<br/>
+    Innovate UK<br/>
+    Tel: 0300 321 4357<br/>
+    Email: competitions@innovateuk.gov.uk
+  </p>
+</#macro>
 
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+<#macro defaultPlainText>
+  <#nested/>
+
+  North Star House
+  North Star Avenue
+  Swindon
+  Wiltshire
+  SN2 1JF
+  © Crown copyright
+</#macro>
+
+<#macro senderPlainText>
+  Competitions Team
+  Innovate UK
+  Tel: 0300 321 4357
+  Email: competitions@innovateuk.gov.uk
 </#macro>

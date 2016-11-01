@@ -1,13 +1,12 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
@@ -22,12 +21,13 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -44,7 +44,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         return new ApplicationPermissionRules();
     }
 
-    private ApplicationStatusResource applicationStatusOpen;
     private ApplicationResource applicationResource1;
     private ApplicationResource applicationResource2;
     private Application application1;
@@ -75,9 +74,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
         assessorProcessRole = newProcessRole().withRole(assessorRole).build();
-        applicationStatusOpen = ApplicationStatusResourceBuilder.newApplicationStatusResource().withName(ApplicationStatusConstants.OPEN).build();
-        applicationResource1 = newApplicationResource().withProcessRoles(asList(processRole1.getId())).withApplicationStatus(ApplicationStatusConstants.OPEN).build();
-        applicationResource2 = newApplicationResource().withProcessRoles(asList(processRole2.getId())).build();
+        applicationResource1 = newApplicationResource().withApplicationStatus(ApplicationStatusConstants.OPEN).build();
+        applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1.setApplication(application1);
@@ -195,16 +193,23 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+    public void projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+        assertTrue(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(applicationResource1, user2));
+    }
 
-        //
+    @Test
+    public void projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+        assertTrue(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, user2));
+    }
+
+    @Test
+    public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
             allGlobalRoleUsers.forEach(user -> {
 
                 ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
@@ -226,17 +231,40 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         });
     }
 
-    @Test
-    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
 
-        //
+    @Test
+    public void projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
+            allGlobalRoleUsers.forEach(user -> {
+
+                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
+
+                // if the user is not a Comp Admin, immediately fail
+                if (!user.equals(projectFinanceUser())) {
+                    assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
+
+                } else {
+
+                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                        assertTrue(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    } else {
+                        assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                    }
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+        // For each possible Competition Status...
+        asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
+
+            // For each possible role
             allGlobalRoleUsers.forEach(user -> {
 
                 ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
@@ -263,15 +291,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void testCompAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
-
-        //
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
-            //
             // For each possible role
-            //
             allGlobalRoleUsers.forEach(user -> {
 
                 Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
@@ -309,9 +332,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ProcessRole collaboratorProcessRole = newProcessRole().withRole(COLLABORATOR).build();
         ProcessRole assessorProcessRole = newProcessRole().withRole(ASSESSOR).build();
 
-        //
         // For each possible Competition Status...
-        //
         asList(CompetitionResource.Status.values()).forEach(competitionStatus -> {
 
             application.setCompetitionStatus(competitionStatus);
@@ -359,5 +380,52 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         });
     }
 
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjects() {
 
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(newProjectUser().build(1));
+
+        assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(null);
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock, never()).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(emptyList());
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
+        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
 }

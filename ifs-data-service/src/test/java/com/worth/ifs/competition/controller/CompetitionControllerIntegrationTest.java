@@ -380,7 +380,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionSearchResult pageOneResult = controller.search(specialChar, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(pageOneResult.getNumber(), equalTo(pageOne));
         assertThat(pageOneResult.getTotalElements(), equalTo(1L));
-        assertThat(pageOneResult.getContent().get(0).getName(), equalTo(specialChar));
+        assertEquals(comp.getId(), pageOneResult.getContent().get(0).getId());
     }
 
 
@@ -412,7 +412,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();;
 
-        List<CompetitionResource> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
 
         Set<Long> liveCompetitionIds = Sets.newHashSet(openCompetition.getId(),
                 closedCompetition.getId(), inAssessmentCompetition.getId(), inPanelCompetition.getId(),
@@ -432,7 +432,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             }
         });
 
-        List<CompetitionResource> projectSetupCompetitions = controller.projectSetup().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> projectSetupCompetitions = controller.projectSetup().getSuccessObjectOrThrowException();
 
         Set<Long> projectSetupCompetitionIds = Sets.newHashSet(projectSetup.getId());
         Set<Long> notProjectSetupCompetitionIds = Sets.newHashSet(notStartedCompetition.getId(), openCompetition.getId(),
@@ -447,7 +447,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             assertFalse(notProjectSetupCompetitionIds.contains(competitionResource.getId()));
         });
 
-        List<CompetitionResource> upcomingCompetitions = controller.upcoming().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> upcomingCompetitions = controller.upcoming().getSuccessObjectOrThrowException();
 
         //One existing comp is upcoming and the new one.
         assertThat(upcomingCompetitions.size(), equalTo(2));
@@ -478,20 +478,19 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.initialiseForm(competitionId, competitionTypeId);
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
-        assertEquals(Boolean.TRUE, competitionsResult.getSuccessObject().getQuestions().size() > 0);
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
     }
 
    private CompetitionResource createWithDates(LocalDateTime startDate,
                                                LocalDateTime endDate,
-                                               LocalDateTime assessmentStartDate,
-                                               LocalDateTime assessmentEndDate,
+                                               LocalDateTime assessorAcceptsDate,
+                                               LocalDateTime fundersPanelDate,
                                                LocalDateTime fundersPanelEndDate,
                                                LocalDateTime assessorFeedbackDate) {
        CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
 
-       List<Milestone> milestone = createNewMilestones(comp, startDate, endDate, assessmentStartDate,
-               assessmentEndDate, fundersPanelEndDate, assessorFeedbackDate);
+       List<Milestone> milestone = createNewMilestones(comp, startDate, endDate, assessorAcceptsDate,
+               fundersPanelDate, fundersPanelEndDate, assessorFeedbackDate);
        List<Long> milestonesIds = new ArrayList<>();
 
        milestone.forEach(m -> {
@@ -511,8 +510,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
    }
 
     private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
-                                      LocalDateTime endDate, LocalDateTime assessmentStartDate,
-                                      LocalDateTime assessmentEndDate, LocalDateTime fundersPanelEndDate,
+                                      LocalDateTime endDate, LocalDateTime assessorAcceptsDate,
+                                      LocalDateTime fundersPanelDate, LocalDateTime fundersPanelEndDate,
                                       LocalDateTime assessorFeedbackDate) {
 
         LocalDateTime milestoneDate = LocalDateTime.now();
@@ -532,11 +531,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             } if (milestone.getType().name().equals("SUBMISSION_DATE")) {
                 milestone.setDate(endDate);
             } if (milestone.getType().name().equals("ASSESSOR_ACCEPTS")) {
-                milestone.setDate(assessmentStartDate);
+                milestone.setDate(assessorAcceptsDate);
             } if (milestone.getType().name().equals("ASSESSOR_DEADLINE")) {
                 milestone.setDate(assessorFeedbackDate);
             } if (milestone.getType().name().equals("FUNDERS_PANEL")) {
-                milestone.setDate(assessmentEndDate);
+                milestone.setDate(fundersPanelDate);
             } if (milestone.getType().name().equals("NOTIFICATIONS")){
                 milestone.setDate(fundersPanelEndDate);
             }

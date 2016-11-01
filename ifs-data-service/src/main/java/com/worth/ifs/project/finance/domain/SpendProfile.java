@@ -1,12 +1,17 @@
 package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Entity representing the Spend Profile of a Partner Organisation on a Project
@@ -16,6 +21,7 @@ public class SpendProfile {
 
     public static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
     public static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -37,19 +43,32 @@ public class SpendProfile {
     @JoinColumn(name = "spend_profile_figures_cost_group_id")
     private CostGroup spendProfileFigures;
 
+    @ManyToOne(optional = false)
+    private User generatedBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar generatedDate;
+
     private boolean markedAsComplete;
+
+    @NotNull
+    @Enumerated(STRING)
+    private ApprovalType approval;
 
     public SpendProfile() {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, boolean markedAsComplete) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, User generatedBy, Calendar generatedDate, boolean markedAsComplete, ApprovalType approval) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
         this.eligibleCosts = new CostGroup(ELIGIBLE_COSTS_DESCRIPTION, eligibleCosts);
         this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
+        this.generatedBy = generatedBy;
+        this.generatedDate = generatedDate;
         this.markedAsComplete = markedAsComplete;
+        this.approval = approval;
     }
 
     public Long getId() {
@@ -82,5 +101,21 @@ public class SpendProfile {
 
     public void setMarkedAsComplete(boolean markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
+    }
+
+    public User getGeneratedBy() {
+        return generatedBy;
+    }
+
+    public Calendar getGeneratedDate() {
+        return generatedDate;
+    }
+
+    public ApprovalType getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ApprovalType approval) {
+        this.approval = approval;
     }
 }

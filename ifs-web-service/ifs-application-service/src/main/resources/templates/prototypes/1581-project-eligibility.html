@@ -27,7 +27,7 @@
 	
 	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
 		<div class="warning-alert">
-			<h2 class="heading-small no-margin-top">The funding sought has exceeded the amount approved due to increased project costs.</h2>
+			<h2 class="heading-small no-margin-top">The funding amount is now greater than the amount allowable. This is due to increased project costs.</h2>
 
 			<p>Agree a reduced project cost amount with the applicant.</p>
 
@@ -268,8 +268,8 @@
 		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
 		    <h3 class="heading-medium">Approve eligible costs</h3>
-		    <p>After any required alterations have been made, eligible costs should be approved.</p>
-		    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+		    <p>After making any necessary changes, eligible costs should be approved.</p>
+		    <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
 
 		    <div class="form-group">
 		    	<label class="block-label" for="costs-reviewed">

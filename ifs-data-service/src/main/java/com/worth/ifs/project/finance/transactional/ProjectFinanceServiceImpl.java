@@ -5,17 +5,27 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
+import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
+import com.worth.ifs.project.finance.repository.CostCategoryRepository;
+import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +36,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -54,6 +65,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private static final String CSV_TOTAL = "TOTAL";
     private static final String CSV_ELIGIBLE_COST_TOTAL = "Eligible Costs Total";
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
+    private static final String CSV_FILE_NAME_DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+    private static final List<String> RESEARCH_CAT_GROUP_ORDER = new LinkedList<>();
 
     @Autowired
     private ProjectService projectService;
@@ -68,43 +81,103 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+    private CostCategoryTypeRepository costCategoryTypeRepository;
+
+    @Autowired
+    private CostCategoryTypeMapper costCategoryTypeMapper;
+
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+
+    @Autowired
+    private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    static {
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS.getLabel());
+        RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
+    }
+
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
+               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-               })
+               }))
         );
+    }
+
+    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
+                financeCheckProcessRepository.findOneByTargetId(po.getId()));
+
+        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
+                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
+
+        if (!existingNonApprovedFinanceCheck.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        updateApprovalOfSpendProfile(projectId, approvalType);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+
+        if(spendProfiles.isEmpty()) {
+            return serviceSuccess(ApprovalType.EMPTY);
+        } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+           return serviceSuccess(ApprovalType.REJECTED);
+        } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
+           return serviceSuccess(ApprovalType.APPROVED);
+        }
+
+        return serviceSuccess(ApprovalType.UNSET);
     }
 
     @Override
     public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
-                project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
+        return find(
+                spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+                project(projectOrganisationCompositeId.getProjectId())).
+                andOnSuccess((spendProfile, project) -> {
 
             List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-
+            Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
             CostGroup eligibleCosts = spendProfile.getEligibleCosts();
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
-            Map<String, BigDecimal> eligibleCostsPerCategory =
+            Map<Long, BigDecimal> eligibleCostsPerCategory =
                     simpleToLinkedMap(
                             costCategories,
-                            CostCategory::getName,
+                            CostCategory::getId,
                             category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<String, List<Cost>> spendProfileCostsPerCategory =
+            Map<Long, List<Cost>> spendProfileCostsPerCategory =
                     simpleToLinkedMap(
                             costCategories,
-                            CostCategory::getName,
+                            CostCategory::getId,
                             category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
             LocalDate startDate = spendProfile.getProject().getTargetStartDate();
@@ -113,17 +186,67 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
             List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
-            Map<String, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
+            Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
                     simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
             SpendProfileTableResource table = new SpendProfileTableResource();
+            table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
             table.setMonths(monthResources);
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             checkTotalForMonthsAndAddToTable(table);
+
+           boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
+            if (isResearch) {
+                table.setCostCategoryGroupMap(groupCategories(table));
+            }
+
             return serviceSuccess(table);
         });
+    }
+
+    private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
+        Map<Long, CostCategoryResource> returnMap = new HashMap<>();
+        costCategories.forEach(costCategory -> {
+            CostCategoryResource cr = new CostCategoryResource();
+            cr.setId(costCategory.getId());
+            cr.setName(costCategory.getName());
+            cr.setLabel(costCategory.getLabel());
+            returnMap.put(costCategory.getId(), cr);
+         });
+        return returnMap;
+    }
+
+
+    private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
+        Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+            CostCategory costCategory = costCategoryRepository.findOne(category);
+            if (costCategory.getLabel() == null) {
+                costCategory.setLabel("DEFAULT");
+            }
+            if (catGroupMap.get(costCategory.getLabel()) != null) {
+                Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                tempRow.put(category, values);
+                catGroupMap.get(costCategory.getLabel()).add(tempRow);
+            } else {
+                List<Map<Long, List<BigDecimal>>> newList = new ArrayList<>();
+                Map<Long, List<BigDecimal>> tempRow = new HashMap<>();
+                tempRow.put(category, values);
+                newList.add(tempRow);
+                catGroupMap.put(costCategory.getLabel(), newList);
+            }
+        });
+        return orderResearchCategoryMap(catGroupMap);
+    }
+
+    private Map<String, List<Map<Long, List<BigDecimal>>>> orderResearchCategoryMap(Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap) {
+        Map<String, List<Map<Long, List<BigDecimal>>>> orderedCatGroupMap = new LinkedHashMap<>();
+        RESEARCH_CAT_GROUP_ORDER.forEach(groupName -> {
+            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName));
+        });
+        return orderedCatGroupMap;
     }
 
     @Override
@@ -140,8 +263,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
+
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
+            resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
+            resource.setGeneratedDate(profile.getGeneratedDate());
+            resource.setMarkedAsComplete(profile.isMarkedAsComplete());
             return resource;
         });
     }
@@ -162,6 +289,27 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    @Override
+    public ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId) {
+        return find(costCategoryTypeRepository.findByCostCategoryGroupId(costCategoryGroupId), notFoundError(CostCategoryType.class, costCategoryGroupId)).
+                andOnSuccessReturn(costCategoryTypeMapper::mapToResource);
+    }
+
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSpendProfileSubmittedDate() != null) {
+                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+            }
+
+            if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
+                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+            }
+
+            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
+    }
+
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
 
         List<Error> incorrectCosts = checkCostsForAllCategories(table);
@@ -175,12 +323,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
         List<Error> incorrectCosts = new ArrayList<>();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            String category = entry.getKey();
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             int index = 0;
@@ -194,7 +342,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return incorrectCosts;
     }
 
-    private void isCostValid(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void isCostValid(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         checkFractionalCost(cost, category, index, incorrectCosts);
 
@@ -203,21 +351,21 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
     }
 
-    private void checkFractionalCost(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (cost.scale() > 0) {
             incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostLessThanZero(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
             incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
             incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
@@ -225,26 +373,31 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
+        return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()).
+                andOnSuccess (
+                        spendProfile -> {
+                            if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                            }
 
-        SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
-                projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+                            spendProfile.setMarkedAsComplete(markAsComplete);
 
-        spendProfile.setMarkedAsComplete(markAsComplete);
+                            updateSpendProfileCosts(spendProfile, table);
 
-        updateSpendProfileCosts(spendProfile, table);
+                            spendProfileRepository.save(spendProfile);
 
-        spendProfileRepository.save(spendProfile);
-
-        return serviceSuccess();
+                            return serviceSuccess();
+                        }
+                );
     }
 
     private void updateSpendProfileCosts(SpendProfile spendProfile, SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
 
-            String category = entry.getKey();
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
             updateSpendProfileCostsForCategory(category, monthlyCosts, spendProfile);
@@ -252,10 +405,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private void updateSpendProfileCostsForCategory(String category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
+    private void updateSpendProfileCostsForCategory(Long category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
 
         List<Cost> filteredAndSortedCostsToUpdate = spendProfile.getSpendProfileFigures().getCosts().stream()
-                .filter(cost -> cost.getCostCategory().getName().equalsIgnoreCase(category))
+                .filter(cost -> cost.getCostCategory().getId() == category)
                 .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
                 .collect(Collectors.toList());
 
@@ -266,22 +419,29 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+
+        spendProfileRepository.save(spendProfiles);
+    }
+
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
-        Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
 
         List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
-        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            String category = entry.getKey();
+        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
-            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
-                categoriesWithIncorrectTotal.add(fieldError(category, actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
+                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
             }
         }
 
@@ -309,9 +469,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                andOnSuccess(summaryPerCategory ->
-                        generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory)));
+        Calendar now = Calendar.getInstance();
+
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId ->
+                getCurrentlyLoggedInUser().andOnSuccess(user ->
+                spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
@@ -319,37 +483,34 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
-            List<SpendProfileCostCategorySummary> summaryPerCategory) {
+            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries,
+            User generatedBy,
+            Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(summaryPerCategory, project, organisation));
+                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
     }
 
-    private ServiceResult<Void> generateSpendProfileForOrganisation(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, Organisation organisation) {
-
-        return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId()).
-                andOnSuccessReturnVoid(costCategoryType -> {
-
-            List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
-            List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
-
-            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
-            spendProfileRepository.save(spendProfile);
-        });
+    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
+        List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        spendProfileRepository.save(spendProfile);
+        return serviceSuccess();
     }
 
-    private List<Cost> generateSpendProfileFigures(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, CostCategoryType costCategoryType) {
+    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
 
-        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory, summary -> {
-
-            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
+        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
+            CostCategory cc = costCategoryRepository.findOne(summary.getCategory().getId());
 
             return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
 
                 BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
 
                 return new Cost(costValueForThisMonth).
-                           withCategory(matchingCategory).
+                           withCategory(cc).
                            withTimePeriod(i, MONTH, 1, MONTH);
 
             }).collect(toList());
@@ -358,17 +519,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return flattenLists(spendProfileCostsPerCategory);
     }
 
-    private List<Cost> generateEligibleCosts(List<SpendProfileCostCategorySummary> summaryPerCategory, CostCategoryType costCategoryType) {
-
-        return simpleMap(summaryPerCategory, summary -> {
-
-            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
-            return new Cost(summary.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(matchingCategory);
+    private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {
+        return simpleMap(spendProfileCostCategorySummaries.getCosts(), cost -> {
+            CostCategory cc = costCategoryRepository.findOne(cost.getCategory().getId());
+            return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
-    }
-
-    private CostCategory findMatchingCostCategory(CostCategoryType costCategoryType, SpendProfileCostCategorySummary summary) {
-        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(summary.getCategory().getName())).get();
     }
 
     private Supplier<ServiceResult<Project>> project(Long id) {
@@ -380,9 +535,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
 
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
+    }
+
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,
                                                                 ProjectOrganisationCompositeId projectOrganisationCompositeId) throws IOException {
-        Map<String, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
+        Map<Long, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
         List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
         BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
         BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
@@ -401,7 +560,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
-            byCategory.add(category);
+            CostCategory cc = costCategoryRepository.findOne(category);
+            byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val -> {
                 byCategory.add(val.toString());
             });
@@ -429,17 +589,17 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private String generateSpendProfileFileName(String organisationName) {
         Date date = new Date() ;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(CSV_FILE_NAME_DATE_FORMAT);
         return String.format(CSV_FILE_NAME_FORMAT, organisationName, dateFormat.format(date));
     }
 
-    private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
+    private Map<Long, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
-                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
         AtomicInteger atomicInteger = new AtomicInteger(0);
         totalForEachMonth.forEach(totalForThisMonth -> {
@@ -456,7 +616,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return totalForEachMonth;
     }
 
-    private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
+    private BigDecimal buildTotalOfTotals(Map<Long, BigDecimal> input) {
         return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
     }
 

@@ -1,7 +1,11 @@
 package com.worth.ifs.application.finance.service;
 
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -34,11 +38,20 @@ public class FinanceServiceImpl implements FinanceService {
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
         ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
 
-        if(processRole.getOrganisation()!=null) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+
+        if(processRole.getOrganisation()!=null && competitionResource.isOpen()) {
             return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation()).getSuccessObjectOrThrowException();
         }
         return null;
@@ -48,6 +61,11 @@ public class FinanceServiceImpl implements FinanceService {
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId) {
+        return applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

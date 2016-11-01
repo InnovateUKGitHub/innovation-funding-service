@@ -8,12 +8,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        HappyPath    Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice
@@ -269,7 +264,7 @@ Totals should be correct
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
     Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
-    Element Should Contain    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+    Wait Until Element Contains    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -286,7 +281,7 @@ Admin costs total should be correct
 the grant value should be correct in the finance summary page
     The user navigates to the next page
     the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
-    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
     the user clears the text from the element    id=cost-financegrantclaim

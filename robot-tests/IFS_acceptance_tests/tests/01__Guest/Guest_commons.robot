@@ -1,9 +1,5 @@
 *** Settings ***
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${correct_email}    steve.smith@empire.com
@@ -22,17 +18,15 @@ Email persists on invalid login
     And the email address should persist    ${email_address}
 
 the user is not logged-in
-    Element Should Not Be Visible    link=My dashboard
-    Element Should Not Be Visible    link=Logout
+    The user should not see the element    link=My dashboard
+    The user should not see the element    link=Logout
 
 the email address should persist
-
-    [Arguments]     ${email_address}
+    [Arguments]    ${email_address}
     # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
     # due to a bug in selenium2library
-    ${stored_data}=     Get Value       id=username
-    Should Be Equal     ${stored_data}      ${email_address}
-
+    ${stored_data}=    Get Value    id=username
+    Should Be Equal    ${stored_data}    ${email_address}
 
 the user tries to log in
     the user clicks the button/link    css=button[name="_eventId_proceed"]

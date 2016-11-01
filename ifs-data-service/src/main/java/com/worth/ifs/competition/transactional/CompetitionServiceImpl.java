@@ -5,18 +5,19 @@ import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
+import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Optional.ofNullable;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -89,24 +92,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findLive(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findProjectSetup(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findUpcoming(), this::searchResultFromCompetition));
     }
 
     @Override
@@ -116,13 +113,24 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
 
         CompetitionSearchResult result = new CompetitionSearchResult();
-        result.setContent((List) competitionMapper.mapToResource(pageResult.getContent()));
+        List<Competition> competitions = pageResult.getContent();
+        result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
         result.setNumber(pageRequest.getPageNumber());
         result.setSize(size);
         result.setTotalElements(pageResult.getTotalElements());
         result.setTotalPages(pageResult.getTotalPages());
 
         return serviceSuccess(result);
+    }
+
+    private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
+        return new CompetitionSearchResultItem(c.getId(),
+                c.getName(),
+                ofNullable(c.getInnovationArea()).map(Category::getName).orElse(null),
+                c.getApplications().size(),
+                c.startDateDisplay(),
+                c.getCompetitionStatus(),
+                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null));
     }
 
     @Override

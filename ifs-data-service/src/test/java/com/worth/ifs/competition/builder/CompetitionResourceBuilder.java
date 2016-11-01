@@ -23,14 +23,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return new CompetitionResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public CompetitionResourceBuilder withApplications(List<Long> applications) {
-        return with(competition -> competition.setApplications(applications));
-    }
-
-    public CompetitionResourceBuilder withSections(List<Long> sections) {
-        return with(competition -> competition.setSections(sections));
-    }
-
     public CompetitionResourceBuilder withName(String name) {
         return with(competition -> setField("name", name, competition));
     }
@@ -71,12 +63,20 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
-    public CompetitionResourceBuilder withAssessmentStartDate(LocalDateTime... assessmentStartDates) {
-        return withArray((assessmentStartDate, object) -> setField("assessmentStartDate", assessmentStartDate, object), assessmentStartDates);
+    public CompetitionResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
+        return withArray((assessorAcceptsDate, object) -> setField("assessorAcceptsDate", assessorAcceptsDate, object), assessorAcceptsDates);
     }
 
-    public CompetitionResourceBuilder withAssessmentEndDate(LocalDateTime... assessmentEndDates) {
-        return withArray((assessmentEndDate, object) -> setField("assessmentEndDate", assessmentEndDate, object), assessmentEndDates);
+    public CompetitionResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
+        return withArray((assessorDeadlineDate, object) -> setField("assessorDeadlineDate", assessorDeadlineDate, object), assessorDeadlineDates);
+    }
+
+    public CompetitionResourceBuilder withFundersPanelDate(LocalDateTime... fundersPanelDates) {
+        return withArray((fundersPanelDate, object) -> setField("fundersPanelDate", fundersPanelDate, object), fundersPanelDates);
+    }
+
+    public CompetitionResourceBuilder withFundersPanelEndDate(LocalDateTime... fundersPanelEndDates) {
+        return withArray((fundersPanelEndDate, object) -> setField("fundersPanelEndDate", fundersPanelEndDate, object), fundersPanelEndDates);
     }
 
     public CompetitionResourceBuilder withAssessorFeedbackDate(LocalDateTime... assessorFeedbackDate) {

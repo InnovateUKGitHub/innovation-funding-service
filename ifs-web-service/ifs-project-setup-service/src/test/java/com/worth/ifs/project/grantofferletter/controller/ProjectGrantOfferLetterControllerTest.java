@@ -5,6 +5,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,14 +17,17 @@ import java.util.Optional;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -47,6 +51,10 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource()
+                .withRoleName(UserRoleType.PROJECT_MANAGER)
+                .withUser(userId)
+                .build(1));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -145,6 +153,25 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 andExpect(view().name("redirect:/project/123/offer"));
     }
 
+    @Test
+    public void testConfirmationView() throws Exception {
+        mockMvc.perform(get("/project/123/offer/confirmation")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-confirmation"));
+    }
+
+    @Test
+    public void testSubmitOfferLetter() throws Exception {
+        long projectId = 123L;
+
+        when(projectService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/offer").
+                param("confirmSubmit", "")).
+                andExpect(status().is3xxRedirection());
+
+        verify(projectService).submitGrantOfferLetter(projectId);
+    }
 
     @Override
     protected ProjectGrantOfferLetterController supplyControllerUnderTest() {

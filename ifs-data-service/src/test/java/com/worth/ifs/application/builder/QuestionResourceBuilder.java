@@ -56,14 +56,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((section, object) -> setField("section", section, object), sections);
     }
 
-    public QuestionResourceBuilder withQuestionStatuses(List<Long>... questionStatuses) {
-        return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
-    }
-
-    public QuestionResourceBuilder withCosts(List<Long>... costs) {
-        return withArray((cost, object) -> setField("costs", cost, object), costs);
-    }
-
     public QuestionResourceBuilder withQuestionNumber(String... questionNumbers) {
         return withArray((questionNumber, object) -> setField("questionNumber", questionNumber, object), questionNumbers);
     }

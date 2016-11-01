@@ -2,7 +2,6 @@ package com.worth.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -18,12 +16,9 @@ public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    private static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private Long id;
-    private List<Long> applications = new ArrayList<>();
-    private List<Long> questions = new ArrayList<>();
-    private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
 
@@ -31,8 +26,9 @@ public class CompetitionResource {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private LocalDateTime assessmentStartDate;
-    private LocalDateTime assessmentEndDate;
+    private LocalDateTime assessorAcceptsDate;
+    private LocalDateTime assessorDeadlineDate;
+    private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
     private Status competitionStatus;
@@ -62,6 +58,10 @@ public class CompetitionResource {
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
 
+    private boolean fullApplicationFinance;
+    private boolean includeGrowthTable;
+
+
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
@@ -73,9 +73,6 @@ public class CompetitionResource {
 
     public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
-        this.applications = applications;
-        this.questions = questions;
-        this.sections = sections;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
@@ -103,27 +100,12 @@ public class CompetitionResource {
         this.competitionStatus = competitionStatus;
     }
 
-    public List<Long> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<Long> sections) {
-        this.sections = sections;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void addApplication(ApplicationResource... apps) {
-        if (applications == null) {
-            applications = new ArrayList<>();
-        }
-        this.applications.addAll(Arrays.asList(apps).stream().map(ApplicationResource::getId).collect(Collectors.toList()));
     }
 
     public Long getId() {
@@ -158,12 +140,8 @@ public class CompetitionResource {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getAssessmentEndDate() {
-        return assessmentEndDate;
-    }
-
     public String assementEndDateDisplay() {
-        return displayDate(getAssessmentEndDate(), ASSESSMENT_DATE_FORMAT);
+        return displayDate(getFundersPanelDate(), ASSESSMENT_DATE_FORMAT);
     }
 
     public String startDateDisplay() {
@@ -177,16 +155,28 @@ public class CompetitionResource {
         return "";
     }
 
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-        this.assessmentEndDate = assessmentEndDate;
+    public LocalDateTime getAssessorAcceptsDate() {
+        return assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessmentStartDate() {
-        return assessmentStartDate;
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+        this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate) {
-        this.assessmentStartDate = assessmentStartDate;
+    public LocalDateTime getAssessorDeadlineDate() {
+        return assessorDeadlineDate;
+    }
+
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+        this.assessorDeadlineDate = assessorDeadlineDate;
+    }
+
+    public LocalDateTime getFundersPanelDate() {
+        return fundersPanelDate;
+    }
+
+    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+        this.fundersPanelDate = fundersPanelDate;
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
@@ -204,7 +194,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.assessmentEndDate);
+        return DAYS.between(LocalDateTime.now(), this.assessorDeadlineDate);
     }
 
     @JsonIgnore
@@ -220,7 +210,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getAssessmentTotalDays() {
-        return DAYS.between(this.assessmentStartDate, this.assessmentEndDate);
+        return DAYS.between(this.assessorAcceptsDate, this.assessorDeadlineDate);
     }
 
     @JsonIgnore
@@ -231,24 +221,6 @@ public class CompetitionResource {
     @JsonIgnore
     public long getAssessmentDaysLeftPercentage() {
         return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
-    }
-
-    @JsonIgnore
-    public List<Long> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(List<Long> applications) {
-        this.applications = applications;
-    }
-
-    @JsonIgnore
-    public List<Long> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Long> questions) {
-        this.questions = questions;
     }
 
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
@@ -460,5 +432,21 @@ public class CompetitionResource {
 
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
+    }
+
+    public boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+        this.includeGrowthTable = includeGrowthTable;
     }
 }

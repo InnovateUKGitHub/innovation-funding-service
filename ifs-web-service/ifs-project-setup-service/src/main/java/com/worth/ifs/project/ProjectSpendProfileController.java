@@ -1,5 +1,6 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -11,12 +12,14 @@ import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
+import com.worth.ifs.project.util.SpendProfileTableCalculator;
 import com.worth.ifs.project.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.stream.Collectors.toList;
@@ -59,7 +63,13 @@ public class ProjectSpendProfileController {
     private ProjectService projectService;
 
     @Autowired
+    private OrganisationService organisationService;
+
+    @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private SpendProfileTableCalculator spendProfileTableCalculator;
 
     @Autowired
     @Qualifier("spendProfileCostValidator")
@@ -73,7 +83,7 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
-            return viewProjectManagerSpendProfile(model, projectId);
+            return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
@@ -85,7 +95,7 @@ public class ProjectSpendProfileController {
                                                  @PathVariable("organisationId") final Long organisationId,
                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
+            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
         return BASE_DIR + "/spend-profile";
     }
 
@@ -103,9 +113,9 @@ public class ProjectSpendProfileController {
         form.setTable(spendProfileTableResource);
 
         if(spendProfileTableResource.getMarkedAsComplete()) {
-            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
         }
-        model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
+        model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
 
         return BASE_DIR + "/spend-profile";
     }
@@ -142,11 +152,11 @@ public class ProjectSpendProfileController {
                                              @PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
     }
 
-    private String viewProjectManagerSpendProfile(Model model, Long projectId) {
-        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
+    private String viewProjectManagerSpendProfile(Model model, Long projectId, UserResource loggedInUser) {
+        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId, loggedInUser));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
 
@@ -162,25 +172,28 @@ public class ProjectSpendProfileController {
     private String markSpendProfileComplete(Model model,
                                             Long projectId,
                                             Long organisationId,
-                                            String successView) {
-        return markSpendProfile(model, projectId, organisationId, true, successView);
+                                            String successView,
+                                            UserResource loggedInUser) {
+        return markSpendProfile(model, projectId, organisationId, true, successView, loggedInUser);
     }
 
     private String markSpendProfileInComplete(Model model,
                                               Long projectId,
                                               Long organisationId,
-                                              String successView) {
-        return markSpendProfile(model, projectId, organisationId, false, successView);
+                                              String successView,
+                                              UserResource loggedInUser) {
+        return markSpendProfile(model, projectId, organisationId, false, successView, loggedInUser);
     }
 
     private String markSpendProfile(Model model,
                                     Long projectId,
                                     Long organisationId,
                                     Boolean complete,
-                                    String successView) {
+                                    String successView,
+                                    UserResource loggedInUser) {
         ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
         if(result.isFailure()){
-            ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
+            ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
             model.addAttribute("model", spendProfileViewModel);
             return BASE_DIR + "/spend-profile";
@@ -189,28 +202,35 @@ public class ProjectSpendProfileController {
         }
     }
 
-    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId,
+                                                                    final SpendProfileTableResource spendProfileTableResource, final UserResource loggedInUser) {
+        SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
+
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
-        SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
-        Map<String, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
-        List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
+        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
+        List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
-        BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
-        BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
+        BigDecimal totalOfAllActualTotals = spendProfileTableCalculator.calculateTotalOfAllActualTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
+        BigDecimal totalOfAllEligibleTotals = spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
 
-        return new ProjectSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, summary,
+        boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectResource.getId(), organisationId, loggedInUser);
+
+        return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
-                totalOfAllActualTotals, totalOfAllEligibleTotals);
+                totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation);
     }
 
-    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId) {
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
+        return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
 
-    private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
+    private Map<Long, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
 
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
                 (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
@@ -218,7 +238,7 @@ public class ProjectSpendProfileController {
 
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
 
-        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
         List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
 
@@ -226,7 +246,7 @@ public class ProjectSpendProfileController {
 
             BigDecimal totalForThisMonth = totalForEachMonth.get(index);
 
-            for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
 
                 BigDecimal costForThisMonthForCategory = entry.getValue().get(index);
                 totalForThisMonth = totalForThisMonth.add(costForThisMonthForCategory);
@@ -238,7 +258,7 @@ public class ProjectSpendProfileController {
         return totalForEachMonth;
     }
 
-    private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
+    private BigDecimal buildTotalOfTotals(Map<Long, BigDecimal> input) {
 
         return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
     }
@@ -249,10 +269,10 @@ public class ProjectSpendProfileController {
         return IntStream.range(startYear, endYear + 1).
                 mapToObj(
                         year -> {
-                            Set<String> keys = table.getMonthlyCostsPerCategoryMap().keySet();
+                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
                             BigDecimal totalForYear = BigDecimal.ZERO;
 
-                            for(String key : keys){
+                            for(Long key : keys){
                                 List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
                                 for(int i = 0; i < values.size(); i++){
                                     LocalDateResource month = table.getMonths().get(i);
@@ -268,17 +288,23 @@ public class ProjectSpendProfileController {
                 ).collect(toList());
     }
 
-    private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(Long projectId) {
+
+    private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
+                                                          final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
         Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, partnerOrganisations);
 
+        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, partnerOrganisations, loggedInUser);
+
         return new ProjectSpendProfileProjectManagerViewModel(projectId,
-                projectResource.getName(),
+                projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
-                partnerOrganisations);
+                partnerOrganisations,
+                projectResource.getSpendProfileSubmittedDate() != null,
+                editablePartners);
     }
 
     private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
@@ -289,5 +315,25 @@ public class ProjectSpendProfileController {
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+    }
+
+    private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
+        Map<String, Boolean> editablePartnersMap = new HashMap<>();
+        partnerOrganisations.stream().forEach(organisation -> {
+            boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
+            editablePartnersMap.put(organisation.getName(),isUserPartOfThisOrganisation);
+        });
+        return editablePartnersMap;
+    }
+
+    private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
+
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
+                                                            && projectUserResource.getOrganisation().equals(organisationId)
+                                                            && PARTNER.getName().equals(projectUserResource.getRoleName())
+                                                            );
+
+        return returnedProjectUser.isPresent();
     }
 }

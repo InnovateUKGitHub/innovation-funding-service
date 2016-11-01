@@ -1,15 +1,21 @@
 package com.worth.ifs.util;
 
+import com.google.common.base.Functions;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
+import static com.worth.ifs.util.CollectionFunctions.containsAll;
+import static com.worth.ifs.util.CollectionFunctions.toSortedMap;
+import static com.worth.ifs.util.CollectionFunctions.unique;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
+import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.junit.Assert.*;
 
 /**
@@ -589,5 +595,89 @@ public class CollectionFunctionsTest {
         assertEquals(emptyList(), partitioned.getLeft());
         assertEquals(emptyList(), partitioned.getRight());
     }
+
+
+    @Test
+    public void testContainsAllEqualsFunction(){
+        List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
+        List<String> containedList = asList("two", "pair");
+        List<String> anotherSmallerContainedList = asList("two");
+        List<String> isNotContainedList = asList("not present");
+        assertTrue(containsAll(containingList, containedList, (s,t) -> s.getRight() == t));
+        assertTrue(containsAll(containedList,containingList, (s,t) ->  s == t.getRight()));
+        assertTrue(containsAll(containingList, anotherSmallerContainedList, (s,t) -> s.getRight() == t));
+        assertFalse(containsAll(anotherSmallerContainedList, containingList, (s,t) ->  s == t.getRight()));
+        assertFalse(containsAll(containingList, isNotContainedList, (s,t) -> s.getRight() == t));
+    }
+
+    @Test
+    public void testContainsAll(){
+        List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
+        List<Pair<String, Integer>> containedList = asList(of("two", 8), of("pair", 57));
+        List<Pair<String, Integer>> isNotContainedList = asList(of("not present", 8));
+        assertTrue(containsAll(containingList, s -> s.getRight(), containedList, s -> s.getLeft()));
+        assertFalse(containsAll(containingList, s -> s.getRight(), isNotContainedList, s -> s.getLeft()));
+    }
+
+    @Test
+    public void testContainsAllNull(){
+        List<String> nullList = null;
+        List<String> notNullList = asList("two", "pair");
+        assertFalse(containsAll(nullList, identity(), notNullList, identity()));
+        assertTrue(containsAll(notNullList, identity(), nullList, identity()));
+        assertTrue(containsAll(nullList, identity(), nullList, identity()));
+        assertTrue(containsAll(notNullList, identity(), notNullList, identity()));
+    }
+
+    @Test
+    public void testContainsAllNullEntry(){
+        List<String> listContainingNull = asList(null, "pair");
+        List<String> listWithJustNull = new ArrayList<>();
+        listWithJustNull.add(null);
+        assertTrue(containsAll(listContainingNull, identity(), listWithJustNull, identity()));
+        assertTrue(containsAll(listWithJustNull, identity(), listWithJustNull, identity()));
+    }
+
+    @Test
+    public void testToSorted(){
+        String firstLabel = "getLabel 1";
+        String secondLabel = "getLabel 2";
+        String firstEntry = "1st entry";
+        String secondEntry = "2nd entry";
+        String thirdEntry = "3rd entry";
+        String fourthEntry = "4th entry";
+
+        List<Pair<String, String>> sortedList = asList(of(firstLabel, firstEntry), of(firstLabel, secondEntry), of(secondLabel, thirdEntry), of(firstLabel, fourthEntry));
+        SortedMap<String, List<String>> sortedMap = toSortedMap(sortedList, Pair::getLeft, Pair::getRight);
+        assertEquals(2, sortedMap.size());
+        assertEquals(firstLabel, sortedMap.firstKey());
+        assertEquals(sortedMap.get(firstLabel), asList(firstEntry, secondEntry, fourthEntry));
+        assertEquals(secondLabel, sortedMap.lastKey());
+        assertEquals(sortedMap.get(secondLabel), asList(thirdEntry));
+    }
+
+
+
+    @Test
+    public void testToSortedNull(){
+        List<String> nullList = null;
+        SortedMap<String, List<String>> sortedMap = toSortedMap(nullList, identity(), identity());
+        assertEquals(new TreeMap<String,List<String>>(), sortedMap);
+    }
+
+    @Test
+    public void testUnique(){
+        List<String> uniqueList = asList("one", "one", "one");
+        assertEquals("one", unique(uniqueList, identity()));
+        List<String> notUniqueList = asList("one", "two", "three");
+        try {
+            unique(notUniqueList, identity());
+            fail("Should have thrown and IllegalArgumentException");
+        } catch (IllegalArgumentException e){
+            // Expected
+        }
+
+    }
 }
+
 

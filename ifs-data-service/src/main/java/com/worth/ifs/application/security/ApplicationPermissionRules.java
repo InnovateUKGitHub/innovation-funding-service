@@ -1,10 +1,12 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -31,6 +33,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -106,6 +111,19 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
+    public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user){
+
+        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
+
+        if (linkedProject == null) {
+            return false;
+        }
+
+        return isPartner(linkedProject.getId(), user.getId());
+    }
+
+
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
         List<Role> allApplicantRoles = roleRepository.findByNameIn(asList(LEADAPPLICANT.getName(), COLLABORATOR.getName()));
@@ -123,6 +141,15 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "UPLOAD_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can upload Assessor Feedback documentation for an Application whilst " +
+                    "the Application's Competition is in Funders' Panel or Assessor Feedback state",
+            particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
+    public boolean projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user) && application.isInEditableAssessorFeedbackCompetitionState();
+    }
+
+    @PermissionRule(
             value = "REMOVE_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
             particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
@@ -131,10 +158,25 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "REMOVE_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
+            particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
+    public boolean projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
+    }
+
+    @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can see and download Assessor Feedback at any time for any Application")
     public boolean compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_ASSESSOR_FEEDBACK",
+            description = "A Project Finance user can see and download Assessor Feedback at any time for any Application")
+    public boolean projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

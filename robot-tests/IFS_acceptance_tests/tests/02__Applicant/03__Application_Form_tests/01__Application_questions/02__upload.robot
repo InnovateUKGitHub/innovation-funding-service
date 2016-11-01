@@ -1,15 +1,13 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
+# Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
+# If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
+# But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
 ${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download
@@ -25,10 +23,10 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    the user can see the option to upload a file on the question    link=5. Technical approach
-    the user can see the option to upload a file on the question    link=6. Innovation
+    the user can see the option to upload a file on the question       link=5. Technical approach
+    the user can see the option to upload a file on the question       link=6. Innovation
     the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question    link=8. Project team
+    the user can see the option to upload a file on the question       link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
     the user cannot see the option to upload a file on the question    link=10. Adding value
 
@@ -72,15 +70,6 @@ Lead applicant can view a file
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
-Lead applicant can download a pdf file
-    [Documentation]    INFUND-2720
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
-
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
@@ -92,15 +81,6 @@ Collaborators can view a file
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
-
-Collaborators can download a pdf file
-    [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -141,14 +121,6 @@ Collaborators can view a file when the question is assigned
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
-Collaborator can download a file when the question is assigned
-    [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]
@@ -173,8 +145,8 @@ Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
     [Tags]    Pending
-    #TODO INFUND-4008, review this failing test case when 4008 is completed
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    #TODO INFUND-4008, review this failing test case when 4008 is completed
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf
     And the user clicks the button/link    link=test_quarantine.pdf

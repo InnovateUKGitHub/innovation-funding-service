@@ -23,28 +23,28 @@
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
 
 		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small no-margin-top">The Grant offer letter has been returned to you as it has not been approved. A member of Innovate UK should be in contact to discuss their requirements.</h3>
+			<h3 class="heading-small no-margin-top">We are unable to approve the grant offer letter. We will return this to you. A member of Innovate UK will be in contact to discuss our requirements with you.</h3>
 		</div>
 
 	</th:block>
 
 	<th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-		<p>The Grant offer letter has been provided by Innovate UK, this has been built from the information provided by your organisation and your partners during the applicant and project setup stages.</p>
+		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information given during project setup.</p>
 		<h2 class="heading-medium">Next steps</h2>
 
 		<ul class="list-bullet">
-			<li>review grant offer letter and appendix 2 if provided</li>
-			<li>project Manager will need to sign the document</li>
-			<li>grant offer letter should then be sent to Innovate UK</li>
+			<li>review grant offer letter and annex if provided</li>
+			<li>the Project Manager will need to sign the document</li>
+			<li>the signed grant offer letter should then be sent to Innovate UK</li>
 		</ul>
 
 		<p>After the signed grant offer letter is received and approved by Innovate UK, project setup will be complete.</p>
 	</th:block>
 
 	<th:block th:if="${param.user != null and param.user[0] == 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLAccepted'}">
-		<p>The Grant offer letter has been provided by Innovate UK, this has been built from the information provided by your organisation and your partners during the applicant and project setup stages. It is now awaiting signature by the lead applicant.</p>
+		<p>The grant offer letter is provided by Innovate UK. It has been created using the information provided by your organisation and partners during the application and project setup stages. We are now waiting for the Project Manager to sign and return this document to us.</p>
 
-		<p>The unsigned grant offer letter is available for your records.</p>
+		<p>You can view the unsigned grant offer letter below.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
@@ -64,26 +64,28 @@
 
 	<h2 class="heading-medium">Grant offer letter</h2>
 	
-	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">This document needs to be agreed on with all project team members, with the document signed and received by Innovate UK to complete project setup</p>
+	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">This document is awaiting signature by the Project Manager.</p>
 
-	<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>
+	<!--<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>-->
 	
 	<p><a href="#">Grant offer letter 2016-07-28a.PDF</a></p>
 
-	<h2 class="heading-medium">Appendix 2</h2>
-	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2</p>
+	<h2 class="heading-medium">Annex</h2>
+	<!--<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">Annex contain any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
 
-	<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">The appendix will contain any additional contracts agreed upon during your application process, in signing the grant offer letter you also agree to any conditions set out in the appendix</p>
+	<!--<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">Annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
+
+	<p>Annex contain any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>
 
 	<p><a href="Appendix 2016-07-28a.PDF">Grant offer letter 2016-07-28a.PDF</a></p>
 
 	<th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-		<h2 class="heading-medium">Sending your signed Grant offer letter to Innovate UK</h2>
-		<p>Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2</p>
+		<h2 class="heading-medium">Sending your signed grant offer letter to Innovate UK</h2>
+		<!--<p>Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2.</p>-->
 
 		<div class="upload-section unstyled-view">
 			<h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
-			The project manager is required to provide a signed copy of the grant offer letter.
+			The Project Manager is required to provide a signed copy of the grant offer letter.
 
 			<details>
 			    <summary><span class="summary">What are the requirements for upload?</span></summary>
@@ -91,11 +93,13 @@
 			        <p>The uploaded signed grant offer letter agreement must:</p>
 
 			        <ul class="list-bullet">
-			        	<li>only pages with signatures are required</li>
-			        	<li>be in a Portable Document Format (.pdf)</li>
+			        	<li>contain signed pages</li>
+			        	<li>be in a portable document format (pdf)</li>
 			        	<li>be legible at 100% magnification</li>
 			        	<li>be less than 1mb in file size</li>
 			        </ul>
+
+					<p>Unable to upload? Contact Customer Support on 0300 321 4357</p>
 			    </div>
 			</details>
 
@@ -112,7 +116,7 @@
 		<div th:if="${param.status == null or param.status[0] == 'GOLRejected'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" data-js-modal="modal-send" class="button large">Submit signed offer letter</a>
+				<a href="#" data-js-modal="modal-send" class="button large">Submit</a>
 			</div>
 			
 			<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">

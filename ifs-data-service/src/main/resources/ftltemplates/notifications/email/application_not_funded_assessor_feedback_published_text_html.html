@@ -1,17 +1,10 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
   <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;">
-      Application number: <b>${applicationNumber}</b>
-      <br />
-      Application name: <b>${applicationName}</b>
-  </p>
-  <p style="margin: 0 0 1em 0;">Following the submission of your application <b>${applicationName}</b> to the competition <b>${competitionName}</b> the feedback provided by the independent assessors is now available to view on your <a href="${dashboardUrl}">Innovation Funding Service dashboard</a>.</p>
-  <p style="margin: 0 0 1em 0;">The feedback is intended to be constructive in nature and to highlight the strong as well as the weak areas of your application. Please bear in mind that because applications are assessed by a number of assessors, you may receive information which appears to be conflicting. This reflects their different interpretations of the application that you submitted. It must also be noted that some applications may appear to have been favourably assessed based on assessors' comments. In such instances it would be that your application simply fell below the funding threshold, with others achieving a higher merit score overall.</p>
-  <p style="margin: 0 0 1em 0;">Please note that Innovate UK is unable to enter into any further discussion with regards to your feedback. We would like to take this opportunity to remind you of the government's commitment to promote innovation and to encourage you to remain aware of opportunities offered by future competitions. Details of all future competitions are posted on the Innovate UK website <a href="http://www.innovateuk.gov.uk">www.innovateuk.gov.uk</a>.</p>
+  <p style="margin: 0 0 1em 0;">The feedback for your application ${applicationName} to the competition ${competitionName} is now available for you to view.</p>
+  <p style="margin: 0 0 1em 0;">Please sign into your <a href="${dashboardUrl}">Innovation Funding Service dashboard</a>.</p>
+  <p style="margin: 0 0 1em 0;">The feedback provided by the independent assessors has been reviewed by Innovate UK.</p>
+  <p style="margin: 0 0 1em 0;">Please note that Innovate UK is unable to enter into any further discussion with regards to your feedback.</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
-  <p style="margin: 1em 0 1em 0;">
-      Competitions Team<br />
-      Innovate UK
-  </p>
+  <@layout.senderHTML />
 </@layout.default>

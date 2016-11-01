@@ -116,6 +116,17 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator() {
+        allGlobalRoleUsers.forEach(user -> {
+                if (user.equals(projectFinanceUser())) {
+                    assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
+                } else {
+                    assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
+                }
+        });
+    }
+
+    @Test
     public void testUpdateCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
@@ -146,6 +157,13 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
         assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanGetFileResourceForPartner(){
+        assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
 
     @Test

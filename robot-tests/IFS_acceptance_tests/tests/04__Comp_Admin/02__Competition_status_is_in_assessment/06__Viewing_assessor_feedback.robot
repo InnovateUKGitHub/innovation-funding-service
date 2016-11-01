@@ -2,13 +2,7 @@
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
@@ -55,15 +49,6 @@ Unsuccessful applicant cannot remove the uploaded feedback
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
 
-Unsuccessful applicant can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
-
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
@@ -80,12 +65,3 @@ Partner cannot remove the uploaded feedback
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
     And the user should not see the element    link=Remove
-
-Partner can download the uploaded feedback
-    [Documentation]    INFUND-2607
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}

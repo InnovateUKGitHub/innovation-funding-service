@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Edit your details'" th:remove="tag"></div>
+    </head>
+
+    <body th:with="context='assessment'">
+        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your details',linkClass='link-back',linkUrl=@{/profile/details}" th:remove="tag"/>
+
+            <div class="hgroup">
+                <h1 class="heading-xlarge">Edit your details</h1>
+            </div>
+
+            <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
+            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                    <h1 class="heading-medium error-summary-heading">
+                        We were unable to update your account
+                    </h1>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+                <h2 class="heading-medium">Your details</h2>
+                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
+                    <label class="form-label" th:for="title">
+                        <span class="form-label-bold">Title</span>
+                        <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                      </span>
+                    </label>
+                    <select class="form-control width-medium" th:errorclass="field-error" th:field="*{title}">
+                        <option value="Mr">Mr</option>
+                        <option value="Miss">Miss</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+                    </select>
+                </div>
+
+                <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+                    <label class="form-label" th:for="firstName">
+                        <span class="form-label-bold">First name</span>
+                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="text"
+                           th:field="*{firstName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your first name should have at least 2 characters"
+                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a first name"
+                    />
+                </div>
+
+                <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="lastName">
+                        <span class="form-label-bold">Last name</span>
+                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                           id="lastName"
+                           type="text"
+                           th:field="*{lastName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your last name should have at least 2 characters"
+                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a last name"/>
+                </div>
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Gender</span>
+                            <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
+                              <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
+                            </span>
+                        </legend>
+                        <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
+                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                            <span th:text="${gen.displayName}" th:remove="tag"/>
+                        </label>
+                    </fieldset>
+                </div>
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Your ethnic group</span>
+                            <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
+                              <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
+                            </span>
+                        </legend>
+                        <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                            <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                            <span th:text="${eth.description}" th:remove="tag"/>
+                        </label>
+                    </fieldset>
+                </div>
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Do you consider yourself disabled?</span>
+                            <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
+                                <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
+                            </span>
+                        </legend>
+                        <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
+                            <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                            <span th:text="${dis.displayName}" th:remove="tag" />
+                        </label>
+                    </fieldset>
+                </div>
+
+                <fieldset class="extra-margin">
+                    <legend class="visuallyhidden">Address details</legend>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group extra-margin error' : 'form-group extra-margin'">
+                        <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
+                            <span class="form-label-bold">Street</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave}"  th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine1')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+                        <label class="form-label visuallyhidden" for="addressForm.selectedPostcode.addressLine2">
+                            <span class="form-label-bold">Street line 2</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine2')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine2}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'field-error' : ''"   type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.selectedPostcode.addressLine3">
+                            <span class="form-label-bold visuallyhidden">Street line 3</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine3')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine3}"  th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.selectedPostcode.town">
+                            <span class="form-label-bold">Town</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.town')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.town}"  th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.selectedPostcode.county">
+                            <span class="form-label-bold">County</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.county')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.county}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'field-error' : ''"  type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.selectedPostcode.postcode" >
+                            <span class="form-label-bold">Postcode</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave}"  th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.postcode')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.selectedPostcode.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
+                    </div>
+                </fieldset>
+
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
+                    <label class="form-label" th:for="phoneNumber">
+                        <span class="form-label-bold">Phone number</span>
+                        <span class="form-hint">We may use this to contact you about the application</span>
+                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="tel"
+                           th:field="*{phoneNumber}"
+                           required="required"
+                           minlength="8"
+                           maxlength="20"
+                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
+                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
+                           data-required-errormessage="Please enter a phone number"/>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="heading-small">Email</h3>
+                    <p class="form-hint">Your email address cannot be changed in the system<br><strong>jsmith@assessor.co.uk</strong></br></p>
+                </div>
+
+                <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
+
+                <button class="button button-large extra-margin" type="submit">Save changes</button>
+            </form>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+    </body>
+</html>

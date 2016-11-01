@@ -53,7 +53,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Before
     public void setUp() {
         super.setUp();
-        UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").build();;
+        UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").build();
         setLoggedInUser(user);
     }
 
@@ -65,8 +65,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessmentStartDate(now().minusDays(2))
-                .withAssessmentEndDate(now().plusDays(4))
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(4))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -99,8 +99,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessmentStartDate(now().minusDays(0))
-                .withAssessmentEndDate(now().plusDays(6))
+                .withAssessorAcceptsDate(now().minusDays(0))
+                .withAssessorDeadlineDate(now().plusDays(6))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -133,8 +133,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessmentStartDate(now().minusDays(2))
-                .withAssessmentEndDate(now().plusDays(0))
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(0))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -146,14 +146,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .andReturn();
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
-
-        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
-                        LocalDateTime.now().plusDays(4).toLocalDate(),
-                        3,
-                        50
-                )
-        );
 
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -168,8 +160,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessmentStartDate(now().plusDays(1))
-                .withAssessmentEndDate(now().plusDays(7))
+                .withAssessorAcceptsDate(now().plusDays(1))
+                .withAssessorDeadlineDate(now().plusDays(7))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -202,8 +194,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessmentStartDate(now().minusDays(1))
-                .withAssessmentEndDate(now().minusDays(0))
+                .withAssessorAcceptsDate(now().minusDays(1))
+                .withAssessorDeadlineDate(now().minusDays(0))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -215,14 +207,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .andReturn();
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
-
-        List<AssessorDashboardUpcomingCompetitionViewModel> expectedUpcomingCompetitions = asList(
-                new AssessorDashboardUpcomingCompetitionViewModel(
-                        2L, "Juggling Craziness",
-                        LocalDateTime.now().plusDays(2).toLocalDate(),
-                        LocalDateTime.now().plusDays(8).toLocalDate()
-                )
-        );
 
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertTrue(model.getUpcomingCompetitions().isEmpty());

@@ -2,9 +2,9 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import com.worth.ifs.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -14,7 +14,9 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectStatusService projectStatusService;
 
     @Autowired
     private BankDetailsService bankDetailsService;
@@ -298,5 +303,10 @@ public class ProjectController {
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
                                                                @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/status", method = GET)
+    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId){
+        return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 }

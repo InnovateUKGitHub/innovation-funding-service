@@ -1,18 +1,23 @@
 package com.worth.ifs.registration.builder;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.user.resource.RoleResource;
 import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.resource.Disability.NO;
 import static com.worth.ifs.user.resource.Disability.YES;
 import static com.worth.ifs.user.resource.Gender.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class UserRegistrationResourceBuilderTest {
@@ -27,6 +32,9 @@ public class UserRegistrationResourceBuilderTest {
         Disability expectedDisability = NO;
         EthnicityResource expectedEthnicity = newEthnicityResource().build();
         String expectedPassword = "Passw0rd123";
+        AddressResource expectedAddress = newAddressResource().build();
+        String expectedEmail = "tom@poly.io";
+        List<RoleResource> expectedRoles = asList(newRoleResource().buildArray(2, RoleResource.class));
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(expectedTitle)
@@ -37,6 +45,9 @@ public class UserRegistrationResourceBuilderTest {
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
                 .withPassword(expectedPassword)
+                .withAddress(expectedAddress)
+                .withEmail(expectedEmail)
+                .withRoles(expectedRoles)
                 .build();
 
         assertEquals(expectedTitle, userRegistrationResource.getTitle());
@@ -47,6 +58,9 @@ public class UserRegistrationResourceBuilderTest {
         assertEquals(expectedDisability, userRegistrationResource.getDisability());
         assertEquals(expectedEthnicity, userRegistrationResource.getEthnicity());
         assertEquals(expectedPassword, userRegistrationResource.getPassword());
+        assertEquals(expectedAddress, userRegistrationResource.getAddress());
+        assertEquals(expectedEmail, userRegistrationResource.getEmail());
+        assertEquals(expectedRoles, userRegistrationResource.getRoles());
     }
 
     @Test
@@ -59,6 +73,12 @@ public class UserRegistrationResourceBuilderTest {
         Disability[] expectedDisabilities = {YES, NO};
         EthnicityResource[] expectedEthnicities = newEthnicityResource().buildArray(2, EthnicityResource.class);
         String[] expectedPasswords = {"Passw0rd123", "Passw0rd456"};
+        AddressResource[] expectedAddresses = newAddressResource().buildArray(2, AddressResource.class);
+        String[] expectedEmails = {"tom@poly.io", "geoff@poly.io"};
+        List<RoleResource>[] expectedRoles = new List[]{
+                asList(newRoleResource().buildArray(2, RoleResource.class)),
+                asList(newRoleResource().buildArray(2, RoleResource.class))
+        };
 
         List<UserRegistrationResource> userRegistrationResources = newUserRegistrationResource()
                 .withTitle(expectedTitles)
@@ -69,6 +89,9 @@ public class UserRegistrationResourceBuilderTest {
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
                 .withPassword(expectedPasswords)
+                .withAddress(expectedAddresses)
+                .withEmail(expectedEmails)
+                .withRoles(expectedRoles)
                 .build(2);
 
         UserRegistrationResource first = userRegistrationResources.get(0);
@@ -80,6 +103,9 @@ public class UserRegistrationResourceBuilderTest {
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedPasswords[0], first.getPassword());
+        assertEquals(expectedAddresses[0], first.getAddress());
+        assertEquals(expectedEmails[0], first.getEmail());
+        assertEquals(expectedRoles[0], first.getRoles());
 
         UserRegistrationResource second = userRegistrationResources.get(1);
         assertEquals(expectedTitles[1], second.getTitle());
@@ -90,6 +116,8 @@ public class UserRegistrationResourceBuilderTest {
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedPasswords[1], second.getPassword());
+        assertEquals(expectedAddresses[1], second.getAddress());
+        assertEquals(expectedEmails[1], second.getEmail());
+        assertEquals(expectedRoles[1], second.getRoles());
     }
-
 }

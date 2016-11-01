@@ -14,23 +14,23 @@
 
 
     <div class="page-title">
-            <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
+            <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
              th:remove="tag"/>
         <h1 class="heading-xlarge">Spend Profile</h1>
     </div>
 
-    <div th:if="${model.isMarkAsComplete()}" th:remove="tag">
+    <div th:if="${model.submitted}" th:remove="tag">
         <div class="success-alert extra-margin-bottom">
-            <p><strong>All project spend profiles have been markAsComplete to Innovate UK</strong></p>
+            <p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
         </div>
     </div>
 
     <p>This overview shows the spend profile status of each partner in your project.</p>
 
-    <div th:if="${model.isMarkAsComplete()}" th:remove="tag">
+    <div th:if="${model.submitted}" th:remove="tag">
         <h2 class="heading-medium">Profile spend</h2>
-        <p>All spend profiles have been markAsComplete to Innovate UK and the Monitoring Officer assigned to this
-            application. You may view the markAsComplete spend profiles.</p>
+        <p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application.
+           You may view the submitted spend profiles.</p>
 
         <a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 
@@ -56,15 +56,15 @@
                 <td>
                     <div th:each="partner : ${model.partnerOrganisations}"
                          th:if="${partner.name.equals(partnerProgress.key) }">
-                        <div th:if="${model.markAsComplete}">
-                            <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
-                               th:text="${partnerProgress.key}"/>
-                        </div>
-                        <div th:if="${!model.markAsComplete}">
+
+                        <div th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
                             <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
                                th:text="${partnerProgress.key}"/>
                         </div>
 
+                        <div th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
+                            <span th:text="${partnerProgress.key}"></span>
+                        </div>
                     </div>
                 </td>
 
@@ -83,12 +83,12 @@
         </table>
     </div>
 
-    <div th:if="${model.markAsComplete}" th:remove="tag">
+    <div th:if="${model.markAsComplete and !model.submitted}" th:remove="tag">
 
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
             make sure they fit the timelines of your project plan.</p>
 
-        <a href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}" class="button">Review and submit total project profile
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and submit total project profile
             spend</a>
 
     </div>

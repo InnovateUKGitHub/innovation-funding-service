@@ -1,6 +1,8 @@
 package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -14,6 +16,10 @@ public interface ProjectFinanceService {
 
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
+    ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
+
+    ApprovalType getSpendProfileStatusByProjectId(Long projectId);
+
     Optional<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
     SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId);
@@ -23,4 +29,6 @@ public interface ProjectFinanceService {
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
     ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
+
+    ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 }

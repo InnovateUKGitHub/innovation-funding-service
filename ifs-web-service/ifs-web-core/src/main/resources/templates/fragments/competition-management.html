@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <!-- id of the competition for in the page title -->
+<!-- TODO: Why ask for competition object when all you need is id here?  Can you please ask for just two value parameters instead?  It simplifies view model: -->
 <div th:fragment="competition-id(competition)" th:remove="tag">
-    <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
+    <div th:include="fragments/competition-management :: competition-id-simple(${competition.competitionId})" th:remove="tag" />
 </div>
+
+<!-- TODO: Following on from previous to do, we can do it like this: -->
+<div th:fragment="competition-id-simple(competitionId)" th:remove="tag">
+    <p class="subtitle"><div th:text="${#numbers.formatInteger(competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
+</div>
+
 <!-- competition status with blue block -->
 <div th:fragment="competition-status(competition)" th:remove="tag">
     <div th:unless="${competition == 'setup'}" th:remove="tag">
@@ -79,8 +86,7 @@
       <div th:case="'OPEN'"  class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
@@ -92,8 +98,7 @@
       <div th:case="'IN_ASSESSMENT'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -104,8 +109,7 @@
       <div th:case="'FUNDERS_PANEL'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Assessment deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -119,8 +123,7 @@
       <div th:case="'ASSESSOR_FEEDBACK'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Assessment deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -138,8 +141,7 @@
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>

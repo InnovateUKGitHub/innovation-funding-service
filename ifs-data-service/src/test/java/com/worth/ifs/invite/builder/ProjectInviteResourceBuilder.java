@@ -1,11 +1,11 @@
 package com.worth.ifs.invite.builder;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-
-import java.util.List;
-import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
@@ -65,7 +65,7 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
     }
 
     public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {
-        return with((inviteResource) -> inviteResource.setInviteOrganisationName(inviteOrganisationName));
+        return with((inviteResource) -> inviteResource.setOrganisationName(inviteOrganisationName));
     }
 
     public ProjectInviteResourceBuilder withIds(Long... ids) {
@@ -98,6 +98,10 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
 
     public  ProjectInviteResourceBuilder withOrganisations(final Long... organisationIds) {
         return withArray((organisationId, inviteResource) -> setField("organisation", organisationId, inviteResource), organisationIds);
+    }
+
+    public ProjectInviteResourceBuilder withApplication(final String... names) {
+        return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
     @Override

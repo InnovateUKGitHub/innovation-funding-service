@@ -24,7 +24,9 @@ public abstract class InviteProjectMapper extends BaseMapper<ProjectInvite, Invi
     @Mappings({
             @Mapping(source = "target.application.competition.name", target = "competitionName"),
             @Mapping(source = "target.application.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "target.application.leadApplicantProcessRole.organisation.name", target = "leadOrganisation"),
             @Mapping(source = "organisation.id", target = "organisation"),
+            @Mapping(source = "organisation.name", target = "organisationName"),
             @Mapping(source = "target.id", target = "project"),
             @Mapping(source = "target.name", target = "projectName"),
             @Mapping(source = "user.name", target = "nameConfirmed"),

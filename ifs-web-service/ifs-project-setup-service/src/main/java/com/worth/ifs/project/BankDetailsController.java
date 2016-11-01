@@ -1,8 +1,8 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -185,6 +185,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
 
         model.addAttribute("project", project);
+        model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("organisation", organisationResource);
         model.addAttribute(FORM_ATTR_NAME, form);

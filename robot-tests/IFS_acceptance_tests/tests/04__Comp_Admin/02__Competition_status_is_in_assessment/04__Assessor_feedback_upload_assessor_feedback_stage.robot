@@ -3,11 +3,7 @@ Documentation     INFUND-2602 As a competition administrator I want a view of th
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${successful_application_overview}    ${server}/management/competition/3/application/16
@@ -71,15 +67,6 @@ Upload a file to an unsuccessful application
     Given the user can see the option to upload a file on the page    ${unsuccessful_application_overview}
     And the user uploads the file    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
-
-Download the file
-    [Documentation]    INFUND-2602
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
 
 *** Keywords ***
 the user uploads the file

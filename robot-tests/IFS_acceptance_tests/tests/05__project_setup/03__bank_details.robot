@@ -7,13 +7,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 Suite Setup       Log in as user    steve.smith@empire.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -23,7 +17,7 @@ Bank details page
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
@@ -102,13 +96,12 @@ Bank details submission
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     [Teardown]    logout as user
 
-Bank details for non-lead partner
+Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621
-    [Tags]    Experian    HappyPath    Pending
-    # Pending due to INFUND-5287
+    [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000001: best riffs
+    And the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -133,15 +126,47 @@ Bank details for non-lead partner
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
     [Teardown]    logout as user
 
-Bank details don't show for partner with no finance details
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049
+    [Tags]    Experian
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+
+Bank details for non-lead partner
     [Documentation]    INFUND-3010
-    [Tags]
+    [Tags]    HappyPath
     Given guest user log-in  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link    link=00000001: best riffs
-    Then the user should not see the element    link=Bank details
-    And the user should see the text in the page    Bank details (not required)
-
-
+    When the user clicks the button/link           link=00000026: best riffs
+    Then the user should see the element           link=Bank details
+    When the user clicks the button/link           link=Bank details
+    Then the user should see the text in the page  Bank account
+    When the user enters text to a text field       name=accountNumber    51406795
+    Then the user enters text to a text field       name=sortCode    404745
+    When the user selects the radio button          addressType    ADD_NEW
+    Then the user enters text to a text field       id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link             id=postcode-lookup
+    And the user clicks the button/link             jQuery=button:contains("Use selected address")
+    And the address fields should be filled
+    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link             jquery=button:contains("Cancel")
+    Then the user should not see an error in the page
+    And the user should not see the text in the page    Bank details below are now being reviewed
+    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link             jQuery=button:contains("Submit")
+    And the user should see the element             jQuery=.success-alert p:contains("Bank account details below are now being reviewed")
+    Then the user navigates to the page             ${project_in_setup_page}
+    And the user should see the element             jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
+    [Teardown]    logout as user
 
 
 *** Keywords ***

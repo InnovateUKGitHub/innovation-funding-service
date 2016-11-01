@@ -17,12 +17,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
@@ -97,7 +92,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -108,7 +103,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
-    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -122,7 +117,6 @@ Partner should be able to log-in and see the new company name
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
     [Tags]    Email
-    #Given guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view team members and add collaborators
@@ -183,7 +177,7 @@ Registered partner should not create new org but should follow the create accoun
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user opens the mailbox and accepts the invitation to collaborate
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user should see the text in the page    Your organisation
@@ -191,17 +185,17 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the element    link=email the application lead
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
-    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
 the applicant enters valid inputs
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    Fannie May
-    Input Text    name=organisations[1].invites[0].personName    Adrian Booth
-    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
+    The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
+    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
     focus    jquery=button:contains("Save Changes")
-    Click Element    jquery=button:contains("Save Changes")
+    The user clicks the button/link    jquery=button:contains("Save Changes")
 
 The lead applicant should have the correct status
     the user should see the element    css=#content h2.heading-medium
@@ -213,8 +207,8 @@ The lead applicant should have the correct status
 
 the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
+    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add another person')
     sleep    300ms
 
@@ -254,9 +248,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-    #This comments should be removed after the review
-    #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
-    #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
 
 pending partners should be visible in the page
     the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small

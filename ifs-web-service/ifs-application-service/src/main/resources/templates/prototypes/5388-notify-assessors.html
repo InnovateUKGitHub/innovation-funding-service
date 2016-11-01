@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Notify assessors'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage applications'}, ${'/prototypes/5470-manage-applications'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle">Technology inspired, (12345A)</p>
+	<h1 class="heading-xlarge no-margin">Notify assessors</h1>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'incomplete'}">
+
+		<p class="extra-margin">
+			<span id="submitted" class="heading-large">23</span> Submitted
+
+			<span id="assessors" class="heading-large extra-margin-left">60</span> Assessors
+		</p>
+
+		<h2 class="heading-small">The following applications require additional assessors</h2>
+
+		<p>Required Assessors for each application: 5</p>
+
+		<div th:include="prototypes/fragments/manage-applications :: prototype-application-notify-table" th:remove="tag" />
+
+		<p class="extra-margin">When you have finished assigning all required assignments to assessors,  upon selecting notify the assessors assigned to an application will be informed that they have been assigned applications to assess.</p>
+
+	</th:block>
+
+	<th:block th:unless="${param.status != null and param.status[0] == 'incomplete'}">
+
+		<p class="extra-margin">
+			<span id="submitted" class="heading-large">23</span> Submitted
+
+			<span id="assessors" class="heading-large extra-margin-left">60</span> Assessors
+
+			<span id="assignments" class="heading-large extra-margin-left">115</span> Assignments
+		</p>
+
+		<h2 class="heading-small">All applications have been allocated the minimum number of assessments</h2>
+
+		<p>Assessors will not be informed of any assignments until they are notified.</p>
+
+		<p>Upon selecting notify all assessors assigned an application to mark will be informed by email that they have been given assignments</p>
+
+		<p>To view these assignments they will have to log in to their account and choose whether to accept or reject the marking the application.</p>
+
+	</th:block>
+
+	<a href="#" class="button" data-js-modal="modal-notify">Notify assessors</a>
+
+	<div class="modal-notify" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		<button class="js-close close" aria-label="Close Popup">X</button>
+		<div>
+
+			<h2 class="heading-medium no-margin">Notify assessors</h2>
+
+			<p>Notifying the assessors will inform them of the applications that have been assigned to them. if you are unsure of any of the allocations please review before notifying the assessors.</p>
+
+			<hr />
+
+			<div class="alignright-button">
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+				<a href="/prototypes/860-comp-applications-dashboard" class="button">Notify</a>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

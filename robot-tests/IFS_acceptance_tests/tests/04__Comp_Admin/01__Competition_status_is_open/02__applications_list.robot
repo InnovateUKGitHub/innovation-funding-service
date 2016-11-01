@@ -5,14 +5,10 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...
 ...               INFUND-3006 As a Competition Management I want the ability to view the name of the lead on the 'all applications' page so I can better support the Customer Support Service.
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
-...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+...               AND    The user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -71,16 +67,12 @@ The applications can be sorted by percentage complete
 Calculations of the open applications
     [Documentation]    INFUND-2259
     [Tags]
-    # extra validation to only check the calculation if there are open applications
-    ${open_count}=    Get matching xpath count    //*[text()="open"]
-    Run keyword if    ${open_count} != 0    open application calculations are correct
+    The calculation of the open applications should be correct
 
 Calculations of the submitted application
     [Documentation]    INFUND-2259
     [Tags]
-    # extra validation to only check the calculation if there are submitted applications
-    ${submitted_count}=    Get matching xpath count    //*[text()="submitted"]
-    Run keyword if    ${submitted_count} != 0    submitted application calculations are correct
+    The calculation for the submited applications should be correct
 
 Calculations for the Number of applications
     [Documentation]    INFUND-2259
@@ -184,12 +176,10 @@ check applications on one page
     ${apps_string}=    Catenate    ${total_application_count}    applications
     the user should see the text in the page    ${apps_string}
 
-the user can see the option to upload a file on the page
-    [Arguments]    ${url}
-    the user navigates to the page    ${url}
-    the user should see the text in the page    Upload
+The calculation for the submited applications should be correct
+    ${submitted_count}=    Get matching xpath count    //*[text()="submitted"]
+    Run keyword if    ${submitted_count} != 0    submitted application calculations are correct
 
-the user uploads the file to the 'project team' question
-    [Arguments]    ${file_name}
-    Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
+The calculation of the open applications should be correct
+    ${open_count}=    Get matching xpath count    //*[text()="open"]
+    Run keyword if    ${open_count} != 0    open application calculations are correct

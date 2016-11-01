@@ -6,18 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.Application;
 import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
+import com.worth.ifs.application.model.*;
+import com.worth.ifs.application.model.ApplicationNavigationPopulator;
 import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
-import com.worth.ifs.application.model.OpenSectionModelPopulator;
-import com.worth.ifs.application.model.QuestionModelPopulator;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.exception.AutosaveElementException;
@@ -25,14 +27,17 @@ import com.worth.ifs.exception.BigDecimalNumberFormatException;
 import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.util.AjaxResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,15 +86,33 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form")
-public class ApplicationFormController extends AbstractApplicationController {
+public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
 
-    @Autowired
-    private FinanceRowService financeRowService;
+    public static final String QUESTION_URL = "/question/";
+    public static final String QUESTION_ID = "questionId";
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
+    public static final String APPLICATION_ID = "applicationId";
+    public static final String APPLICATION_FORM = "application-form";
+    public static final String SECTION_URL = "/section/";
+    public static final String EDIT_QUESTION = "edit_question";
+    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
+    public static final String MARK_AS_COMPLETE = "mark_as_complete";
+    public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String ADD_COST = "add_cost";
+    public static final String REMOVE_COST = "remove_cost";
+    public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
+    public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String UPLOAD_FILE = "upload_file";
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
+    public static final String TERMS_AGREED_KEY = "termsAgreed";
+    public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+    public static final String APPLICATION_BASE_URL = "/application/";
+    public static final String APPLICATION_START_DATE = "application.startDate";
 
     @Autowired
-    private FormInputService formInputService;
+    private FinanceRowService financeRowService;
 
     @Autowired
     private FinanceService financeService;
@@ -108,6 +131,48 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Autowired
+    private OrganisationService organisationService;
+
+    @Autowired
+    private FinanceHandler financeHandler;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -178,9 +243,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    ApplicationForm form, Optional<QuestionResource> question,
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRoleResource> userApplicationRoles){
-        addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
+        applicationModelPopulator.addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        addNavigation(question.orElse(null), application.getId(), model);
+        applicationNavigationPopulator.addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
         if(question.isPresent()) {
@@ -249,8 +314,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
-                addUserDetails(model, application, user.getId());
-                addNavigation(question, applicationId, model);
+                applicationModelPopulator.addUserDetails(model, application, user.getId());
+                applicationNavigationPopulator.addNavigation(question, applicationId, model);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -341,7 +406,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ValidationMessages errors = new ValidationMessages();
         SectionResource selectedSection = null;
         if (sectionId != null) {
-            selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            selectedSection = sectionService.getById(sectionId);
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
@@ -362,7 +427,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         errors.addAll(validationApplicationStartDate(request));
         setApplicationDetails(application, form.getApplication());
 
-        if(userIsLeadApplicant(application, user.getId())) {
+        if(applicationModelPopulator.userIsLeadApplicant(application, user.getId())) {
             applicationService.save(application);
         }
 
@@ -451,7 +516,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (errorsSoFar.hasErrors()) {
             messages.addError(fieldError("formInput[cost]", "", "application.validation.MarkAsCompleteFailed"));
         } else {
-            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            SectionResource selectedSection = sectionService.getById(sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request);
 
             if (collectValidationMessages(financeErrorsMark).hasErrors()) {
@@ -522,18 +587,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private boolean isMarkSectionAsCompleteRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_SECTION_AS_COMPLETE);
-    }
-
-    private boolean isSubmitSectionRequest(@NotNull Map<String, String[]> params){
-        return params.containsKey(SUBMIT_SECTION);
-    }
-
-    private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
-        return sectionIds.stream()
-                .map(sectionService::getById)
-                .filter(x -> x.getId().equals(sectionId))
-                .findFirst()
-                .get();
     }
 
     private List<ValidationMessages> markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, ValidationMessages errorsSoFar) {
@@ -620,11 +673,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
                                                 UserResource user, Model model, ApplicationForm form, Long applicationId) {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
-        addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
-        addNavigation(section, applicationId, model);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
+        applicationNavigationPopulator.addNavigation(section, applicationId, model);
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
-        addCompletedDetails(model, application, userOrganisation);
+        Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
+        applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
     }
 
     private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
@@ -984,12 +1037,16 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {
-        assignQuestion(request, applicationId);
+
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+
+        questionService.assignQuestion(applicationId, request, assignedBy);
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
         organisationDetailsModelPopulator.populateModel(model, application.getId());
-        addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
     }
     
     private static class StoreFieldResult {
