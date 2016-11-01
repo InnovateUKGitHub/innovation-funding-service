@@ -371,7 +371,28 @@
 			</p>	
 		</div>
 	</div>
-	
+
+	<h2 class="heading-medium">Finances</h2>
+
+	<div class="collapsible section-overview">
+
+		<!-- Finances complete -->
+		<div th:unless="${param.warning != null}" th:remove="tag">
+
+			<h2>Finances summary</h2>
+
+			<div class="question">
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+			</div>
+
+		</div>
+
+	</div>
+
+
 	<h2 class="heading-medium" th:with="recommend=${param.unsuccessful} ? No : Yes">
 		Final recommendation: <span th:text="${recommend}">Yes</span>
 	</h2>
