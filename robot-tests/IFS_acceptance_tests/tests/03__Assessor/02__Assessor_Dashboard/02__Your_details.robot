@@ -2,7 +2,7 @@
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
 Suite Setup       guest user log-in    &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Assessor    Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -28,6 +28,7 @@ Validations for invalid inputs
     And the user should see an error    Please select a disability
     And the user should see an error    Please select an ethnicity
     And the user should see an error    Please select a gender
+
 Update profile
     [Documentation]    INFUND-1480
     [Tags]
