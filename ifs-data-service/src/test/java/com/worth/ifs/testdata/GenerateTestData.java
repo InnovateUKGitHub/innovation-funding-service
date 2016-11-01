@@ -114,13 +114,13 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Test
     public void test() {
-        createOrganisations();
+        createBaseOrganisations();
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
     }
 
-    private void createOrganisations() {
+    private void createBaseOrganisations() {
         organisationBuilder.
                 createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).
                 withAddress(OrganisationAddressType.REGISTERED, "North Star House").
@@ -137,8 +137,19 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
+
         externalUserBuilder.
-                registerUser("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                registerUserWithNewOrganisation("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                verifyEmail().
+                build();
+
+        externalUserBuilder.
+                registerUserWithExistingOrganisation("Malik", "Strandberg", "worth.email.test+submit@gmail.com", "Empire Ltd").
+                verifyEmail().
+                build();
+
+        externalUserBuilder.
+                registerUserWithNewOrganisation("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Ludlow").
                 verifyEmail().
                 build();
     }
@@ -163,6 +174,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 "services. New or improved systems will be tested in environment laboratories.";
 
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
+        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
+        UserResource applicant3 = retrieveUserByEmail("worth.email.test+submit@gmail.com");
 
         competitionDataBuilder.
                 withExistingCompetition(1L).
@@ -188,9 +201,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                             withBasicDetails(applicant1, "A new innovative solution").
                             submitApplication(),
                     builder -> builder.
-                            withBasicDetails(applicant1, "Security for the Internet of Things").
+                            withBasicDetails(applicant2, "Security for the Internet of Things").
                             submitApplication(),
-                    builder -> builder.withBasicDetails(applicant1, "Marking it as complete")
+                    builder -> builder.withBasicDetails(applicant3, "Marking it as complete")
                 ).
                 build();
     }

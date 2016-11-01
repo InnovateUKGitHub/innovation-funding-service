@@ -9,9 +9,15 @@ import static java.util.Collections.emptyList;
 public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserData, ExternalUserDataBuilder> {
 
 
-    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName) {
+    public ExternalUserDataBuilder registerUserWithNewOrganisation(String firstName, String lastName, String emailAddress, String organisationName) {
         return with(data -> {
             registerUserWithNewOrganisation(firstName, lastName, emailAddress, organisationName, APPLICANT, data);
+        });
+    }
+
+    public ExternalUserDataBuilder registerUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String organisationName) {
+        return with(data -> {
+            registerUserWithExistingOrganisation(firstName, lastName, emailAddress, organisationName, APPLICANT, data);
         });
     }
 
