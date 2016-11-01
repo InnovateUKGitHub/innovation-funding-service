@@ -47,13 +47,14 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Vitruvius Stonework Limited
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
-    [Teardown]    logout as user
+
 
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666
     [Tags]
-    [Setup]    guest user log-in    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    logout as user
+    Given guest user log-in    project.finance1@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
