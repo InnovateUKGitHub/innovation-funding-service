@@ -34,7 +34,7 @@ Comp admin can open the view mode of the application
     # And the user should see the text in the page    ${quarantine_pdf}
     # nad the user cannot see this file but gets a quarantined message
 
-Comp admin should not able to view but not edit the finances for every partner
+Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443
     ...    INFUND-2483
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
@@ -49,7 +49,6 @@ Comp admin should not able to view but not edit the finances for every partner
     And the user reloads the page
     When Log in as a different user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should see the correct finances change
 
 *** Keywords ***
