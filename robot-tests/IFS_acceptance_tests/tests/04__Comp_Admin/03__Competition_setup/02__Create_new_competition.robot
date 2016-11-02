@@ -38,6 +38,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
 ...
 ...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -449,26 +451,31 @@ Milestones: Green check should show
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
-Application questions: All the sections should be visible
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
+Application: Application process Page
+    [Documentation]    INFUND-3000    INFUND-5639
+    [Tags]    HappyPath
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
-    # Pending INFUND-5629, INFUND-5632
-    When The user clicks the button/link    link=Application Questions
-    Then The user should see the text in the page    Template: Programme 10 questions
-    And the user should see the text in the page    Scope
-    And the user should see the text in the page    2. Potential market
-    And the user should see the text in the page    3. Project exploitation
-    And the user should see the text in the page    4. Economic benefit
-    And the user should see the text in the page    5. Technical approach
-    And the user should see the text in the page    6. Innovation
-    And the user should see the text in the page    7. Risks
-    And the user should see the text in the page    8. Project team
-    And the user should see the text in the page    9. Funding
-    And the user should see the text in the page    10. Adding value
-    [Teardown]    The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
 
-Application questions: server side validations
+    When The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Programme competition questions
+    And the user should see the element    link=Business opportunity
+    And the user should see the element    link=Potential market
+    And the user should see the element    link=Project exploitation
+    And the user should see the element    link=Economic benefit
+    And the user should see the element    link=Technical approach
+    And the user should see the element    link=Risks
+    And the user should see the element    link=Project team
+    And the user should see the element    link=Funding
+    And the user should see the element    link=Adding value
+    And the user should see the element    link=Application details
+    And the user should see the element    link=Project summary
+    And the user should see the element    link=Public description
+    And the user should see the element    link=Scope
+    And the user should see the element    link=Finances
+
+
+
+Application: server side validations
     [Documentation]    INFUND-3000
     [Tags]    HappyPath    Pending
     # Pending INFUND-5629, INFUND-5632
@@ -480,7 +487,7 @@ Application questions: server side validations
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
 
-Application questions: Client side validations
+Application: Client side validations
     [Documentation]    INFUND-3000
     [Tags]    HappyPath    Pending
     # Pending INFUND-5629, INFUND-5632
@@ -491,7 +498,7 @@ Application questions: Client side validations
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
-Application questions: Autosave
+Application: Autosave
     [Documentation]    INFUND-4586
     [Tags]    Pending
     # TODO Pending due to INFUND-5632, 5639
@@ -500,7 +507,7 @@ Application questions: Autosave
     And The user clicks the button/link    link=Application Questions
     Then the user should see the correct inputs in the Applications questions form
 
-Application questions: Mark as done and the Edit again
+Application: Mark as done and the Edit again
     [Documentation]    INFUND-3000
     [Tags]    HappyPath    Pending
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
@@ -515,7 +522,7 @@ Application questions: Mark as done and the Edit again
     And the user should see the text in the page    Yes
     And The user clicks the button/link    jQuery=button:contains(Done)
 
-Application questions: should have a green check
+Application: should have a green check
     [Tags]    HappyPath    Pending
     # Pending INFUND-5629, INFUND-5632
     When The user clicks the button/link    link=Competition setup
