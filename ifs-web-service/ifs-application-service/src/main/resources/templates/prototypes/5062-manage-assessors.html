@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-	<th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.comp != null ? '/prototypes/5721-dashboard?status='+ param.comp[0] :  '/prototypes/5721-dashboard')})" />
+	<th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${(param.comp != null ? '/prototypes/5721-dashboard?status='+ param.comp[0] :  '/prototypes/5721-dashboard')})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
