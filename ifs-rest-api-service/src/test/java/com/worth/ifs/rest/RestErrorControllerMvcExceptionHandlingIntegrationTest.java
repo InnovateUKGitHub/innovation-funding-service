@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.BaseWebIntegrationTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.security.SecuritySetter;
+import com.worth.ifs.commons.security.authentication.token.Authentication;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +17,13 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- * This test tests that the {@link RestErrorController} is able to take low-level errors produced by Spring MVC and Spring Security
+ * This test tests that the {RestErrorController} is able to take low-level errors produced by Spring MVC and Spring Security
  * prior to any Controller code actually being called, and convert them into RestErrorResponses.
  */
 public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseWebIntegrationTest {
@@ -36,7 +37,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-
+            SecuritySetter.swapOutForUser(SecuritySetter.basicSecurityUser);
             String url = dataUrl + "/non/existent/url";
             restTemplate.exchange(url, GET, headersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-handled URL was specified");
@@ -57,10 +58,9 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-
             String url = dataUrl + "/application/2";
             restTemplate.exchange(url, GET, new HttpEntity<>(new HttpHeaders()), String.class);
-            fail("Should have had a Forbidden on the server side, as we are not specifying a user token to this restricted resource");
+            fail("Should have had a Forbidden on the server side, as we are not specifying a user authentication to this restricted resource");
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
@@ -74,7 +74,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
     private <T> HttpEntity<T> headersEntity(){
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(AUTH_TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
+        headers.set(Authentication.TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
 }

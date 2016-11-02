@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.security;
 
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

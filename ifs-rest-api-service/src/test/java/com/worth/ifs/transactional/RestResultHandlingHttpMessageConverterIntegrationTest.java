@@ -1,7 +1,6 @@
 package com.worth.ifs.transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.commons.BaseWebIntegrationTest;
 import com.worth.ifs.commons.error.CommonFailureKeys;
@@ -9,12 +8,10 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.SecuritySetter;
-import com.worth.ifs.commons.security.UidAuthenticationService;
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.token.Authentication;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.UserRestService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +26,21 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
-import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
- * Tests for the {@link com.worth.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
+ * Tests for the {com.worth.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
-    
+
     @Value("${ifs.data.service.rest.baseURL}")
     private String dataUrl;
+
 
     @Autowired
     public ApplicationRestService applicationRestService;
@@ -95,24 +90,22 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
             final RestResult<Double> doubleRestResult = completeQuestionsPercentage.get();
             assertTrue(doubleRestResult.isFailure());
             Assert.assertEquals(FORBIDDEN, doubleRestResult.getStatusCode());
-        }
-        finally {
+        } finally {
             SecuritySetter.swapOutForUser(initial);
         }
     }
 
-
-    private <T> HttpEntity<T> leadApplicantHeadersEntity(){
+    private <T> HttpEntity<T> leadApplicantHeadersEntity() {
         return getUserJSONHeaders(leadApplicantUser());
     }
 
     private <T> HttpEntity<T> getUserJSONHeaders(UserResource user) {
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(UidAuthenticationService.AUTH_TOKEN, user.getUid());
+        headers.set(Authentication.TOKEN, user.getUid());
         return new HttpEntity<>(headers);
     }
 
-    private UserResource leadApplicantUser(){
+    private UserResource leadApplicantUser() {
         return SecuritySetter.basicSecurityUser;
     }
 
