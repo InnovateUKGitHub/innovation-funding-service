@@ -144,4 +144,4 @@ the assessor shouldn't be able to reject the accepted competition
 
 The assessor is unable to see the invitation
     The user should see the text in the page    You are unable to access this page
-    The user should see the text in the page    You have already accepted/rejected the invitation for this competition. Please contact the Competitions Team if you wish to change this.
+    The user should see the text in the page    You have already accepted or rejected this invitation.
