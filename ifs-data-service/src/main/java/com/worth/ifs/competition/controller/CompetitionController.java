@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompetitionController exposes Competition data and operations through a REST API.
@@ -56,6 +57,11 @@ public class CompetitionController {
     @RequestMapping(value="/count", method= RequestMethod.GET)
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
+    }
+
+    @RequestMapping(value="/countProjects", method= RequestMethod.GET)
+    public RestResult<List<CompetitionProjectsCountResource>> countProjects() {
+        return competitionService.countProjectsForCompetitions().toGetResponse();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

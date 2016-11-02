@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -44,16 +41,17 @@ public class DashboardController {
     @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
     public String projectSetup(Model model, HttpServletRequest request) {
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> psc = competitionService.getProjectSetupCompetitions();
-
-        model.addAttribute("competitions", psc);
+        model.addAttribute("competitions", competitionService.getProjectSetupCompetitions());
         model.addAttribute("counts", competitionService.getCompetitionCounts());
-
-        // Get the number of projects that are in setup for each competition => return as map (compid, numprojects)
-
+        model.addAttribute("projectsCount", new HashMap());
+        /*
         model.addAttribute("projectsCount", CollectionFunctions.simpleToLinkedMap(psc.getOrDefault(
-                CompetitionResource.Status.PROJECT_SETUP, Collections.<CompetitionSearchResultItem>emptyList()),
+                CompetitionResource.Status.PROJECT_SETUP, Collections.emptyList()),
                 x -> x.getId(), x -> projectStatusService.getCompetitionStatus(x.getId()).getProjectStatusResources().size()));
+
+        Map<Integer, Movie> mappedMovies = movies.stream().collect(
+                Collectors.toMap(Movie::getRank, (p) -> p));
+                */
 
         return TEMPLATE_PATH + "projectSetup";
     }

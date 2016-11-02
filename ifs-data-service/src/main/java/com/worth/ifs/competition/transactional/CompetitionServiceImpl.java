@@ -8,11 +8,10 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.util.CollectionFunctions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CompetitionMapper competitionMapper;
 
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -138,5 +141,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
                 competitionRepository.countUpcoming(), 0L));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionProjectsCountResource>> countProjectsForCompetitions() {
+
+        return serviceSuccess(competitionRepository.findProjectSetup().stream().map(
+                comp -> new CompetitionProjectsCountResource(comp.getId(),
+                projectRepository.findByApplicationCompetitionId(comp.getId()).size())).collect(Collectors.toList()));
     }
 }

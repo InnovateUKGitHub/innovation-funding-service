@@ -3,16 +3,17 @@ package com.worth.ifs.competition.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -166,6 +167,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<CompetitionCountResource> countCompetitions() {
             return serviceSuccess(new CompetitionCountResource());
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionProjectsCountResource>> countProjectsForCompetitions() {
+            return serviceSuccess(Stream.of(new CompetitionProjectsCountResource()).collect(Collectors.toList()));
         }
 
     }

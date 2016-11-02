@@ -31,3 +31,13 @@ include::{snippets}/competition/mark-as-complete/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
+
+=== Retrieve count of projects in setup for competitions
+==== Request
+include::{snippets}/competition/count-competition-projects/http-request.adoc[]
+
+==== Response
+include::{snippets}/competition/count-competition-projects/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/count-competition-projects/curl-request.adoc[]
