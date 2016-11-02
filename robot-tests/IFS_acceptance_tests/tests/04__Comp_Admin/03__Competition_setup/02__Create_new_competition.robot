@@ -95,7 +95,7 @@ Initial details server-side validations
     And the user should see an error    Please enter an opening year
     And the user should see an error    Please enter an opening day
     And the user should see an error    Please enter an opening month
-    And the user should see an error    Please select an Innovate Lead    
+    And the user should see an error    Please select an Innovate Lead
     And the user should see an error    Please select a competition executive
 
 Initial details correct state aid status
@@ -494,7 +494,7 @@ Application questions: Client side validations
 Application questions: Autosave
     [Documentation]    INFUND-4586
     [Tags]    Pending
-    # TODO Pending due to INFUND-5538
+    # TODO Pending due to INFUND-5632, 5639
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
     And The user clicks the button/link    link=Application Questions
