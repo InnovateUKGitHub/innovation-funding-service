@@ -4,11 +4,9 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-
 public class SecuritySetter {
 
-    public static UserResource basicSecurityUser = newUserResource().withId(1L).withFirstName("steve").withLastName("smith").withEmail("steve.smith@empire.com").build();
+    public static UserResource basicSecurityUser = basicUser();
 
     public static final UserResource swapOutForUser(UserResource user) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -23,6 +21,15 @@ public class SecuritySetter {
 
     public static final UserResource addBasicSecurityUser(){
         return swapOutForUser(basicSecurityUser);
+    }
+
+    private static final UserResource basicUser() {
+        final UserResource basicSecurityUser = new UserResource();
+        basicSecurityUser.setId(1L);
+        basicSecurityUser.setFirstName("steve");
+        basicSecurityUser.setLastName("smith");
+        basicSecurityUser.setEmail("steve.smith@empire.com");
+        return basicSecurityUser;
     }
 
 }
