@@ -315,6 +315,11 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createInProjectSetupCompetition() {
 
+        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
+        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
+        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
+        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
+
         String name = "Killer Riffs";
 
         String description = "Innovate UK is to invest up to £9 million in heavy rock music. The aim of this competition is to make it so whenever you turn on the radio, you hear killer riffs and sick breakdowns.";
@@ -331,6 +336,18 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
                 withAssessorEndDate(LocalDateTime.of(2016, 1, 29, 0, 0)).
                 withSetupComplete().
+                reopenCompetition().
+                withApplications(
+                    builder -> builder.
+                        withBasicDetails(applicant1, "A novel solution to an old problem").
+                        withProjectSummary(PROJECT_SUMMARY).
+                        withPublicDescription(PUBLIC_DESCRIPTION).
+                        withStartDate(LocalDate.of(2016, 3, 1)).
+                        withDurationInMonths(51).
+                        inviteCollaborator(applicant2).
+                        inviteCollaborator(applicant4).
+                        inviteCollaborator(applicant5)).
+                restoreOriginalMilestones().
                 build();
     }
 

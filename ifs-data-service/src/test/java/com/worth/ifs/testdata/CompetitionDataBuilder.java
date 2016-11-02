@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -96,7 +97,42 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> competitionSetupService.markAsSetup(data.getCompetition().getId()));
     }
 
-    public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder reopenCompetition() {
+        return asCompAdmin(data -> {
+
+            List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> MilestoneType.SUBMISSION_DATE.equals(m.getType())).get();
+
+            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+            LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
+            long daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
+
+            milestones.forEach(m -> {
+                if (m.getDate() != null) {
+                    m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
+                    milestoneService.updateMilestone(m).getSuccessObjectOrThrowException();
+                }
+            });
+        });
+    }
+
+    public CompetitionDataBuilder restoreOriginalMilestones() {
+        return asCompAdmin(data -> {
+
+            data.getOriginalMilestones().forEach(original -> {
+
+                MilestoneResource amendedMilestone =
+                        milestoneService.getMilestoneByTypeAndCompetitionId(original.getType(), data.getCompetition().getId()).
+                                getSuccessObjectOrThrowException();
+
+                amendedMilestone.setDate(original.getDate());
+
+                milestoneService.updateMilestone(amendedMilestone).getSuccessObjectOrThrowException();
+            });
+        });
+    }
+
+            public CompetitionDataBuilder withNewMilestones() {
 
         return asCompAdmin(data -> {
 
@@ -137,6 +173,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
             milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
+
+            data.addOriginalMilestone(milestone);
         });
     }
 
