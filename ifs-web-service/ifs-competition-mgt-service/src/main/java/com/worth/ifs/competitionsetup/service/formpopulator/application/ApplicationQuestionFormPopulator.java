@@ -62,7 +62,8 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 
 
 		Optional<FormInputResource> foundInputs = formInputs.stream()
-				.filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
+				.filter(formInputResource -> formInputResource.getFormInputType() != null
+						&& !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
 
 		QuestionViewModel result = null;
 		if(foundInputs.isPresent()) {
