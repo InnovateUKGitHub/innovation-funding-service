@@ -21,15 +21,12 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.QuestionServiceSecurityTest.TestQuestionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in QuestionService interact with Spring Security
@@ -107,18 +104,16 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
     @Test
     public void testQuestionResourceByFormInputType() {
-        final String formInputTypeTitle = "test";
         assertAccessDenied(
-                () -> classUnderTest.getQuestionResourceByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionResourceByByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void testGetQuestionByFormInputType() {
-        final String formInputTypeTitle = "test";
         assertAccessDenied(
-                () -> classUnderTest.getQuestionByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
@@ -211,13 +206,13 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
-            return serviceSuccess(newQuestionResource().build());
+        public ServiceResult<QuestionResource> getQuestionResourceByByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+            return null;
         }
 
         @Override
-        public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
-            return serviceSuccess(newQuestion().build());
+        public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+            return null;
         }
 
         @Override

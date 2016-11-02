@@ -18,6 +18,7 @@ import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.util.EntityLookupCallbacks;
 import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,9 +38,9 @@ import java.util.stream.Stream;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -277,13 +278,16 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
-        return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> inputType.getFormInput().get(0).getQuestion());
+    public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+        return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> {
+            List<Question> questions = questionRepository.findByCompetitionId(competitionId);
+            return simpleFindFirst(questions, q -> inputType.getId().equals(q.getFormInputs().get(0).getFormInputType().getId())).get();
+        });
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
-        return getQuestionByFormInputType(formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
+    public ServiceResult<QuestionResource> getQuestionResourceByByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override
@@ -400,7 +404,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<FormInputType> getOnlyFormInputTypeByTitle(String formInputTypeTitle) {
-        return getFormInputTypesByTitle(formInputTypeTitle).andOnSuccess(types -> getOnlyElementOrFail(types));
+        return getFormInputTypesByTitle(formInputTypeTitle).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {

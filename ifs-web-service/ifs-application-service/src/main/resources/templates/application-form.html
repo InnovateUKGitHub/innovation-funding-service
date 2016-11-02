@@ -56,6 +56,7 @@
             </div>
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
+            <input type="hidden" id="competition_id" th:value="${currentCompetition.getId()}"/>
             <div th:if="${allReadOnly}" th:remove="tag">
                 <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>

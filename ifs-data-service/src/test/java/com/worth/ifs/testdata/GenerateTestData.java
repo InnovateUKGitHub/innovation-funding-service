@@ -357,7 +357,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                                     costs -> costs.
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
-                                        withLabourEntry("Role 3", 300, 365)),
+                                        withLabourEntry("Role 3", 300, 365).
+                                        withAdministrationSupportCostsCustomRate(25)
+                                ),
                             finance -> finance.
                                 withOrganisation("Ludlow").
                                 withUser(applicant2).

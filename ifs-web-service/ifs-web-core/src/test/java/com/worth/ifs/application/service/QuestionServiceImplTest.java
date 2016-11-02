@@ -206,7 +206,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getQuestionByFormInputType(formInputType)).thenReturn(restSuccess(question));
 
-        RestResult<QuestionResource> result =  service.getQuestionByFormInputType(formInputType);
+        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(formInputType);
 
         assertTrue(result.isSuccess());
         assertEquals(question, result.getSuccessObject());

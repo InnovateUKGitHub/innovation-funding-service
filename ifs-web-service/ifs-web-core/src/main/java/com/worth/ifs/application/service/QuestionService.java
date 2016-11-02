@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -28,7 +27,7 @@ public interface QuestionService {
     Optional<QuestionResource> getPreviousQuestion(Long questionId);
     Optional<QuestionResource> getPreviousQuestionBySection(Long sectionId);
     Optional<QuestionResource> getNextQuestionBySection(Long sectionId);
-    RestResult<QuestionResource> getQuestionByFormInputType(String formInputType);
+    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputType);
     Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
     QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
     Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);

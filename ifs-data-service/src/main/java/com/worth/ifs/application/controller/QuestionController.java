@@ -91,9 +91,10 @@ public class QuestionController {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 
-    @RequestMapping("/getQuestionByFormInputType/{formInputType}")
-    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
-        return questionService.getQuestionResourceByFormInputType(formInputType).toGetResponse();
+    @RequestMapping("/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}")
+    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("competitionId") final Long competitionId,
+                                                                   @PathVariable("formInputType") final String formInputType) {
+        return questionService.getQuestionResourceByByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
     }
     
     @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")

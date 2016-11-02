@@ -135,7 +135,7 @@ public class OrganisationFinanceHandlerTest {
         Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByFormInputType(eq(costType.getType()))).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(123L), eq(costType.getType()))).thenReturn(ServiceResult.serviceSuccess(question));
     }
 
     @Test

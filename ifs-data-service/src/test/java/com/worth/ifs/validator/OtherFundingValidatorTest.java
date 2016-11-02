@@ -153,7 +153,7 @@ public class OtherFundingValidatorTest {
         FinanceRow cost = FinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
-        when(questionService.getQuestionByFormInputType(FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(123L, FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<FinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
         when(financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);

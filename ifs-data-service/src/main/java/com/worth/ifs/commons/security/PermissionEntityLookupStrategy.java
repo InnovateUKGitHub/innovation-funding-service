@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+// TODO INFUND-5955
 @Transactional(readOnly = true)
 public @interface PermissionEntityLookupStrategy {
 }

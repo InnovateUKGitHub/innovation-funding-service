@@ -3,9 +3,11 @@ package com.worth.ifs.testdata;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -72,6 +74,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
     protected FinanceRowService financeRowService;
+    protected SectionService sectionService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -99,6 +102,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         this.projectService = serviceLocator.getBean(ProjectService.class);
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
+        this.sectionService = serviceLocator.getBean(SectionService.class);
     }
 
     protected UserResource compAdmin() {
@@ -117,6 +121,16 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return doAs(compAdmin(), () -> {
             List<QuestionResource> questions = questionService.findByCompetition(competition.getId()).getSuccessObjectOrThrowException();
             return simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
+        });
+    }
+
+    protected QuestionResource retrieveQuestionByCompetitionSectionAndName(String questionName, String sectionName, CompetitionResource competition) {
+        return doAs(compAdmin(), () -> {
+            List<SectionResource> sections = sectionService.getByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
+            SectionResource section = simpleFindFirst(sections, s -> sectionName.equals(s.getName())).get();
+
+            List<QuestionResource> questions = questionService.findByCompetition(competition.getId()).getSuccessObjectOrThrowException();
+            return simpleFindFirst(questions, q -> questionName.equals(q.getName()) && section.getId().equals(q.getSection())).get();
         });
     }
 

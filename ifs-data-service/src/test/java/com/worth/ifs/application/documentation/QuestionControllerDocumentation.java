@@ -239,10 +239,11 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     @Test
     public void getQuestionByFormInputType() throws Exception {
         final String formInputType = "type";
+        Long competitionId = 123L;
 
-        when(questionService.getQuestionResourceByFormInputType(formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
+        when(questionService.getQuestionResourceByByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getQuestionByFormInputType/{formInputType}", formInputType))
+        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", competitionId, formInputType))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("formInputType").description("form input type")

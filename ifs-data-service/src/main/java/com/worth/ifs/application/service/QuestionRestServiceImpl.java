@@ -8,9 +8,6 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
-import static java.util.Arrays.asList;
 
 import java.util.HashSet;
 import java.util.List;
@@ -88,8 +85,8 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
-    public RestResult<QuestionResource> getQuestionByFormInputType(String formInputType) {
-        return getWithRestResult(questionRestURL + "/getQuestionByFormInputType/" + formInputType, QuestionResource.class);
+    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputType) {
+        return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndFormInputType/" + competitionId + "/" + formInputType, QuestionResource.class);
     }
 
 	@Override

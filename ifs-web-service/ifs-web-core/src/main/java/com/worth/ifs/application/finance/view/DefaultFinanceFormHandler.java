@@ -52,7 +52,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private UnsavedFieldsManager unsavedFieldsManager;
 
     @Override
-    public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
+    public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
 
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if (applicationFinanceResource == null) {
@@ -101,7 +101,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
 
         if (fieldName == null || value == null) {
             return new ValidationMessages();
