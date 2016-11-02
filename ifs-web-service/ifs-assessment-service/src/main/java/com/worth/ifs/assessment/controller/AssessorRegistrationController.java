@@ -139,8 +139,6 @@ public class AssessorRegistrationController {
     public String selectAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 @PathVariable("inviteHash") String inviteHash) {
-
-
         addAddressOptions(registrationForm);
         addSelectedAddress(registrationForm);
 
@@ -163,7 +161,7 @@ public class AssessorRegistrationController {
     }
 
     private boolean postcodeIndexIsSubmitted(AssessorRegistrationForm assessorRegistrationForm) {
-        return assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex() != null;
+        return StringUtils.hasText(assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex());
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
@@ -184,7 +182,7 @@ public class AssessorRegistrationController {
 
     private void addSelectedAddress(AssessorRegistrationForm registrationForm) {
         AddressForm addressForm = registrationForm.getAddressForm();
-        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex())) {
+        if (postcodeIndexIsSubmitted(registrationForm)) {
             try {
                 AddressResource selectedAddress = addressForm.getPostcodeOptions().get(
                         Integer.parseInt(
