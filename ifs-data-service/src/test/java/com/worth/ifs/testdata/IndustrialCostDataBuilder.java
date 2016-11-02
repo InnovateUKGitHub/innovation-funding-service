@@ -8,6 +8,7 @@ import com.worth.ifs.finance.resource.cost.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -48,21 +49,19 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
+        return updateCostItem(FinanceRowType.OVERHEADS, existingCost -> {
+            Overhead updated = new Overhead(existingCost.getId(), rateType, rate);
+            financeRowService.updateCost(existingCost.getId(), updated);
+        });
+    }
 
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(FinanceRowType financeRowType, Consumer<T> updateFn) {
         return with(data -> {
 
-            Overhead cost = new Overhead();
-            cost.setRateType(rateType);
-            cost.setRate(rate);
-
-            QuestionResource question = retrieveQuestionByCompetitionAndName(cost.getCostType().getName(), data.getCompetition());
+            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowType.getName(), data.getCompetition());
 
             List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccessObjectOrThrowException();
-            existingItems.forEach(item -> {
-                Overhead overhead = (Overhead) item;
-                Overhead updated = new Overhead(overhead.getId(), rateType, rate);
-                financeRowService.updateCost(overhead.getId(), updated);
-            });
+            existingItems.forEach(item -> updateFn.accept((T) item));
         });
     }
 
