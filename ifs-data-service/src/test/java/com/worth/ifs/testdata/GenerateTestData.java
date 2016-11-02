@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.Notification;
@@ -23,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -330,13 +332,13 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
+                withSubmissionDate(LocalDateTime.of(2016, 1, 16, 0, 0)).
+                withFundersPanelDate(LocalDateTime.of(2016, 1, 20, 0, 0)).
                 withFundersPanelEndDate(LocalDateTime.of(2016, 1, 28, 0, 0)).
                 withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
                 withAssessorEndDate(LocalDateTime.of(2016, 1, 29, 0, 0)).
                 withSetupComplete().
-                reopenCompetition().
+                moveCompetitionIntoOpenStatus().
                 withApplications(
                     builder -> builder.
                         withBasicDetails(applicant1, "A novel solution to an old problem").
@@ -346,7 +348,32 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withDurationInMonths(51).
                         inviteCollaborator(applicant2).
                         inviteCollaborator(applicant4).
-                        inviteCollaborator(applicant5)).
+                        inviteCollaborator(applicant5).
+                        withFinances(
+                            finance -> finance.
+                                withOrganisation("Empire Ltd").
+                                withUser(applicant1).
+                                withIndustrialCosts(
+                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                            finance -> finance.
+                                withOrganisation("Ludlow").
+                                withUser(applicant2).
+                                withIndustrialCosts(
+                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                            finance -> finance.
+                                withOrganisation("EGGS").
+                                withUser(applicant4).
+                                withIndustrialCosts(
+                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                            finance -> finance.
+                                withOrganisation("HIVE IT LIMITED").
+                                withUser(applicant5).
+                                withIndustrialCosts(
+                                    costs -> costs.withLabourEntry(bd("10.00")))
+                        )
+                ).
+                moveCompetitionIntoFundersPanelStatus().
+                sendFundingDecisions(FundingDecision.FUNDED).
                 restoreOriginalMilestones().
                 build();
     }
@@ -457,5 +484,9 @@ public class GenerateTestData extends BaseIntegrationTest {
         } finally {
             setLoggedInUser(currentUser);
         }
+    }
+
+    private BigDecimal bd(String value) {
+        return new BigDecimal(value);
     }
 }

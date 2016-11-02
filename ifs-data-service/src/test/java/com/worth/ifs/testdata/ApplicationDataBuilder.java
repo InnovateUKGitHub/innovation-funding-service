@@ -17,10 +17,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static com.worth.ifs.testdata.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 
@@ -52,19 +55,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     public ApplicationDataBuilder withPublicDescription(String value) {
         return asLeadApplicant(data -> doAnswerQuestion("Public description", value, data));
-    }
-
-    private void doAnswerQuestion(String questionName, String value, ApplicationData data) {
-
-        List<QuestionResource> questions = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObjectOrThrowException();
-        QuestionResource question = simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
-        List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
-
-        FormInputResponseCommand updateRequest = new FormInputResponseCommand(
-                formInputs.get(0).getId(), data.getApplication().getId(), data.getLeadApplicant().getId(), value);
-
-        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccessObjectOrThrowException();
-        formInputResponseRepository.save(response);
     }
 
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
@@ -99,10 +89,35 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
+    public ApplicationDataBuilder withFinances(Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>... builderFns) {
+
+        return with(data -> {
+
+            ApplicationFinanceDataBuilder baseFinanceBuilder = newApplicationFinanceData(serviceLocator).
+                    withApplication(data.getApplication());
+
+            asList(builderFns).forEach(fn -> fn.apply(baseFinanceBuilder).build());
+
+        });
+    }
+
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data ->
             applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()));
+    }
+
+    private void doAnswerQuestion(String questionName, String value, ApplicationData data) {
+
+        List<QuestionResource> questions = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+        QuestionResource question = simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
+        List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+
+        FormInputResponseCommand updateRequest = new FormInputResponseCommand(
+                formInputs.get(0).getId(), data.getApplication().getId(), data.getLeadApplicant().getId(), value);
+
+        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccessObjectOrThrowException();
+        formInputResponseRepository.save(response);
     }
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {

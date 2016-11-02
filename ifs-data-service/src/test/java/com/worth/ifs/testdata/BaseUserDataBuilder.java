@@ -32,7 +32,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
     protected void registerUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
 
         doAs(systemRegistrar(), () -> {
-            Organisation organisation = organisationRepository.findOneByName(organisationName);
+            Organisation organisation = retrieveOrganisationByName(organisationName);
             doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, organisation.getId(), role, data);
         });
     }

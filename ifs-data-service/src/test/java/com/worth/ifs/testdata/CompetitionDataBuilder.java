@@ -1,10 +1,13 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +20,8 @@ import java.util.stream.Stream;
 import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
+import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
+import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -97,22 +102,44 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> competitionSetupService.markAsSetup(data.getCompetition().getId()));
     }
 
-    public CompetitionDataBuilder reopenCompetition() {
+    public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
+        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE));
+    }
+
+    public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
+        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
+    }
+
+    public CompetitionDataBuilder sendFundingDecisions(FundingDecision... fundingDecisions) {
         return asCompAdmin(data -> {
 
-            List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
-            MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> MilestoneType.SUBMISSION_DATE.equals(m.getType())).get();
+            List<Application> applications = applicationRepository.findByCompetitionId(data.getCompetition().getId());
 
-            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-            LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
-            long daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
-
-            milestones.forEach(m -> {
-                if (m.getDate() != null) {
-                    m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
-                    milestoneService.updateMilestone(m).getSuccessObjectOrThrowException();
-                }
+            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = mapWithIndex(asList(fundingDecisions), (i, decision) -> {
+                Application application = applications.get(0);
+                return Pair.of(application.getId(), decision);
             });
+
+            applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                        getSuccessObjectOrThrowException();
+
+            projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions));
+        });
+    }
+
+    private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+        MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
+
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
+        long daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
+
+        milestones.forEach(m -> {
+            if (m.getDate() != null) {
+                m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
+                milestoneService.updateMilestone(m).getSuccessObjectOrThrowException();
+            }
         });
     }
 
