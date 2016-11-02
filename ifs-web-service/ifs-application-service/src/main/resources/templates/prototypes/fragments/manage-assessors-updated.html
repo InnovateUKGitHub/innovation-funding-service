@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- =========================== Manage assessor intro=========================== --> 
+<!-- =========================== Manage assessor intro=========================== -->
 <div th:fragment="prototype-assessor-intro">
-    
+
     <p>
         <span class="heading-large">60</span> invited
 
@@ -18,20 +18,20 @@
 
         <dt>Innovation area</dt>
         <dd>Agriculture and food</dd>
-    </dl>       
-    
+    </dl>
+
     <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
 </div>
 
 
-<!-- =========================== Manage assessor find =========================== --> 
+<!-- =========================== Manage assessor find =========================== -->
 <div th:fragment="prototype-assesor-row-find">
-   
+
     <!-- <ul class="tabular-list__row">
         <li class="width-quarter" aria-describedby="assessor-name"><a href="#" th:text="${name}">NAME</a></li>
         <li class="width-quarter" aria-describedby="assessor-type" th:text="${type}">INDUSTRY</li>
-       
+
         <li th:class="${(site == 'rc' ? 'width-quarter' : 'width-half')}" aria-describedby="assessor-area" th:text="${area}">Electronics, sensors &#38; photonics, Materials</li>
 
         <li class="width-quarter" aria-describedby="assessor-org" th:text="${org}" th:unless="${site == null}">ORGANISATION</li>
@@ -46,13 +46,13 @@
 
     <ul class="tabular-list__row">
         <li class="width-30-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
         </li>
 
         <li class="width-10-percent" >
             <strong class="show-mobile">Type:</strong>  <span th:text="${type}" aria-describedby="assessor-type">TYPE</span>
         </li>
-       
+
         <li class="width-40-percent" aria-describedby="assessor-area">
              <strong class="show-mobile">Area:</strong>  <span th:text="${area}" aria-describedby="assessor-area">AREA</span>
         </li>
@@ -67,13 +67,13 @@
 </div>
 
 
-<!-- =========================== Manage assessor invite =========================== --> 
+<!-- =========================== Manage assessor invite =========================== -->
 <div th:fragment="prototype-assesor-row-invite">
-   
+
     <ul class="tabular-list__row">
 
         <li class="width-40-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
         </li>
 
         <li class="width-20-percent">
@@ -96,13 +96,13 @@
             </th:block>
 
         </li>
-        
+
         <li class="width-20-percent alignright">
 
             <th:block th:if="${status == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'}" class="button invite-individual">Invite individual</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="button invite-individual">Invite individual</a>
             </th:block>
-            
+
             <th:block th:if="${status != null}">
                 <p class="extra-margin-right">Status: <strong th:text="${status}"></strong></p>
             </th:block>
@@ -116,7 +116,7 @@
 </div>
 
 
-<!-- =========================== Manage assessor assign by application =========================== --> 
+<!-- =========================== Manage assessor assign by application =========================== -->
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
@@ -131,7 +131,7 @@
         <li class="width-full">
             <ul class="tabular-list__row--internal">
                 <li class="width-half"><h3 class="heading-small no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
-                    
+
                 <th:block th:if="${status != null}">
                     <p>Status: <strong th:text="${status}">STATUS</strong></p>
                 </th:block>
@@ -139,7 +139,7 @@
                 <th:block th:if="${area != null}">
                     <p>Area: <strong th:text="${area}">AREA</strong></p>
                 </th:block>
-                    
+
                 </li>
                 <li class="width-half alignright">
 
@@ -162,11 +162,11 @@
     </ul>
 </div>
 
-<!-- =========================== Manage assessor assign by assessor =========================== --> 
+<!-- =========================== Manage assessor assign by assessor =========================== -->
 <div th:fragment="prototype-assesor-row-assign-assessor">
     <ul class="tabular-list__row">
         <li class="width-20-percent">
-            <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="heading-small">NAME</a>
         </li>
         <li class="width-10-percent">
              <strong class="show-mobile">Type:</strong> <span class="no-margin" th:text="${busType}">TYPE</span>
@@ -177,8 +177,8 @@
 
         <li class="width-15-percent">
 
-            <strong class="show-mobile">Contract and DOI:</strong> 
-            
+            <strong class="show-mobile">Contract and DOI:</strong>
+
             <th:block th:if="${contract == 'yes'}">
                 <span class="yes">Yes</span>
             </th:block>
@@ -202,12 +202,12 @@
 
 
 
-<!-- =========================== Manage assessor main content =========================== --> 
+<!-- =========================== Manage assessor main content =========================== -->
 <div th:fragment="prototype-assessor-main-content">
 
     <form th:action="${#httpServletRequest.requestURI}">
-    
-    <th:block th:if="${param.tab == null or param.tab[0] == 'find'}"> 
+
+    <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
 
         <div class="tabular-list" id="assessors-find">
 
@@ -215,7 +215,7 @@
                    <div class="column-three-quarters">
                         <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Find people on the system that you would like to invite to be an assessor.</h2>
                        <h2 class="heading-small" th:unless="${site == null}">Find people on the system that you would like to invite to the panel.</h2>
-                       
+
                        <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
                        <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
                    </div>
@@ -224,25 +224,25 @@
                        <p>Assessors on invite list</p>
                    </div>
             </div>
-        
+
             <div class="search-filters">
                 <div class="grid-row">
 
                     <div class="column-half">
-                        
+
                         <div class="form-group">
                             <label for="filterInnovationType">Type</label>
-                            
+
                             <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-                            
+
                                 <option th:if="${param.filterInnovationType != null}" th:remove="tag">
                                     <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
                                 </option>
-                            
+
                                 <option th:if="${param.filterInnovationType == null}" th:remove="tag">
                                     <option selected="selected">Any</option>
                                 </option>
-                            
+
                                 <option value="Business">Business</option>
                                 <option value="Academic">Academic</option>
                             </select>
@@ -253,26 +253,26 @@
                     <div class="column-half">
                         <div class="form-group">
                             <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
-                            
+
                             <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-                            
+
                                 <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
                                     <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
                                 </option>
-                            
+
                                 <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
                                     <option selected="selected">---</option>
                                 </option>
-                            
+
                                 <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
                             </select>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="grid-row">
-                    
+
                     <div class="column-half">
                          <div class="form-group">
                              <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
@@ -286,12 +286,12 @@
                              <option value="Show all">Show all</option>
                              <option value="Yes">Yes</option>
                              <option value="No">No</option>
-                             
+
                          </select>
                     </div>
 
                     <div class="column-quarter">
-                        
+
                         <div class="grid-row">
                             <div class="column-half">
                                 <div class="extra-margin-top">
@@ -302,7 +302,7 @@
                                 <button class="button">Filter</button>
                             </div>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -316,7 +316,7 @@
 
                 <div class="column-half alignright">
                     <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">           
+                        <select class="form-control" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
                             <option value="">To be invited</option>
                             <option value="">Invite sent</option>
@@ -331,7 +331,7 @@
             <!-- <ul class="tabular-list__row-header hide-mobile">
                 <li id="assessor-name" class="width-quarter">Name</li>
                 <li id="assessor-type" class="width-quarter">Type</li>
-                <li id="assessor-area" th:class="${(site == 'rc' ? 'width-quarter' : 'width-half')}" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li> 
+                <li id="assessor-area" th:class="${(site == 'rc' ? 'width-quarter' : 'width-half')}" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>
                 <li id="assessor-org" class="width-quarter" th:unless="${site == null}">Organisation</li>
             </ul> -->
 
@@ -342,7 +342,7 @@
                 <li id="assessor-contract" class="width-20-percent">Contract and DOI</li>
                 <!-- <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> -->
             </ul>
-            
+
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}" th:remove="tag" />
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}" th:remove="tag" />
@@ -361,10 +361,10 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-        
+
         <div class="grid-row">
             <div class="column-three-quarters">
-                
+
                 <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                 <h2 class="heading-small no-margin-top" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
@@ -415,7 +415,7 @@
                     <button class="button">Add assessor(s) to list</button>
                 </div>
             </form>
-        </details>  
+        </details>
 
         <div class="tabular-list" id="assessors-invite">
             <ul class="tabular-list__row-header">
@@ -452,14 +452,14 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
-        
+
         <div class="grid-row">
-           
+
             <div class="column-three-quarters">
-                
+
                 <h2 class="heading-small no-margin-top">Overview of invited assessors</h2>
                 <p>From here you can see an overview of assessors that have been invited to mark applications.</p>
-            
+
             </div>
 
         </div>
@@ -468,20 +468,20 @@
             <div class="grid-row">
 
                 <div class="column-third">
-                    
+
                     <div class="form-group">
                         <label for="filterInnovationType">Type</label>
-                        
+
                         <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-                        
+
                             <option th:if="${param.filterInnovationType != null}" th:remove="tag">
                                 <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
                             </option>
-                        
+
                             <option th:if="${param.filterInnovationType == null}" th:remove="tag">
                                 <option selected="selected">Any</option>
                             </option>
-                        
+
                             <option value="Business">Business</option>
                             <option value="Academic">Academic</option>
                         </select>
@@ -492,17 +492,17 @@
                 <div class="column-third">
                     <div class="form-group">
                         <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
-                        
+
                         <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-                        
+
                             <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
                                 <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
                             </option>
-                        
+
                             <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
                                 <option selected="selected">---</option>
                             </option>
-                        
+
                             <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
                         </select>
                     </div>
@@ -519,11 +519,11 @@
                          </select>
                     </div>
                 </div>
-                
+
             </div>
 
             <div class="grid-row">
-                
+
                 <div class="column-third">
                      <div class="form-group">
                          <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
@@ -541,7 +541,7 @@
                 </div>
 
                 <div class="column-third">
-                    
+
                     <div class="grid-row">
                         <div class="column-half">
                             <div class="extra-margin-top">
@@ -552,7 +552,7 @@
                             <button class="button">Filter</button>
                         </div>
                     </div>
-                    
+
                 </div>
 
             </div>
@@ -572,7 +572,7 @@
 
                 <div class="column-half alignright">
                     <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">           
+                        <select class="form-control" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
                             <option value="">To be invited</option>
                             <option value="">Invite sent</option>
@@ -583,9 +583,9 @@
                 </div>
 
             </div>
-                
+
             <ul class="tabular-list__row-header">
-                <li id="overview-assessor-name" class="width-20-percent hide-mobile">     
+                <li id="overview-assessor-name" class="width-20-percent hide-mobile">
                     Assessor name
                 </li>
                 <li id="overview-assessor-type" class="width-10-percent hide-mobile">
@@ -612,14 +612,14 @@
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" th:remove="tag" />
 
-            
+
 
 
 
         </div>
 
     </th:block>
-        
+
     </form>
 </div>
 
@@ -629,11 +629,11 @@
 <div th:fragment="prototype-assessor-assign">
         <div class="grid-row">
         <div class="column-two-thirds">
-            
+
             <h1 class="heading-xlarge no-margin-bottom">Assign assessor</h1>
-            
+
             <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-                
+
                 <h2 class="heading-medium">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
 
                 <h2 class="heading-medium no-margin-top" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
@@ -645,7 +645,7 @@
                 </th:block>
 
                 <th:block th:unless="${site == 'rc'}">
-                    
+
                     <div class="grid-row extra-margin-bottom">
                         <div class="column-half">
                             <h3 class="heading-small">Innovation area</h3>
@@ -672,7 +672,7 @@
                 <h2 class="heading-medium" th:text="${(param.name != null ? param.name[0] : 'TESTER')}">John Smith</h2>
 
                 <p>Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
-            
+
             </th:block>
 
         </div>
@@ -709,7 +709,7 @@
             <ul class="tabular-list__row-header dark-view hide-mobile">
                 <li id="assessor-name" class="width-third">Assigned assessors</li>
                 <li id="assessor-name" class="width-third">Innovation area and skills</li>
-                <li id="assessor-area" class="width-third">Number of assigned applications</li> 
+                <li id="assessor-area" class="width-third">Number of assigned applications</li>
             </ul>
 
             <p class="aligncentre extra-margin" th:unless="${param.action != null and param.action[0] == 'application-assigned'}">There are currently no applications assigned to this assessor</p>
@@ -726,7 +726,7 @@
         <div class="search-filters">
                 <div class="grid-row">
                     <div class="column-half">
-                        
+
                         <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
                         <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
@@ -767,7 +767,7 @@
                     </div>
 
                     <div class="column-half">
-                        
+
                         <div class="grid-row">
                             <div class="column-half">
                                 <div class="extra-margin-top">
@@ -778,7 +778,7 @@
                                 <button class="button">Filter</button>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -815,13 +815,13 @@
             <ul class="tabular-list__row-header dark-viewhide-mobile">
                 <li id="assessor-name" class="width-half">Applications</li>
                 <li id="assessor-type" class="width-quarter">Lead organisation</li>
-                <li id="assessor-area" class="width-quarter">Number of assigned applications</li> 
+                <li id="assessor-area" class="width-quarter">Number of assigned applications</li>
             </ul>
 
             <p class="aligncentre extra-margin" th:unless="${param.action != null and param.action[0] == 'application-assigned'}">There are currently no applications assigned to this assessor</p>
 
             <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
-                
+
                  <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},number=${param.number[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessors[0],0)} + 1,org=${param.org[0]},type=remove" th:remove="tag" />
 
             </th:block>
@@ -837,7 +837,7 @@
                 </div>
 
                 <div class="column-half">
-                    
+
                     <div class="grid-row">
                         <div class="column-half">
                             <div class="extra-margin-top">
@@ -848,7 +848,7 @@
                             <button class="button">Filter</button>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -858,7 +858,7 @@
             <ul class="tabular-list__row-header hide-mobile">
                 <li id="assessor-name" class="width-half">Applications</li>
                 <li id="assessor-type" class="width-quarter">Lead organisation</li>
-                <li id="assessor-area" class="width-quarter">Number of assigned applications</li> 
+                <li id="assessor-area" class="width-quarter">Number of assigned applications</li>
             </ul>
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" th:remove="tag" />
@@ -866,7 +866,7 @@
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}" th:remove="tag" />
 
         </div>
-    
+
     </th:block>
 </div>
 

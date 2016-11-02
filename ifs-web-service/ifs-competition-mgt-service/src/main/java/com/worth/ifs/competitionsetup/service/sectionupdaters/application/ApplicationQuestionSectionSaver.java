@@ -43,7 +43,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
+                                            String value, Optional<Long> objectId) {
 	    if(objectId.isPresent()) {
             Question question = competitionSetupQuestionService.getQuestion(objectId.get());
 
@@ -58,16 +59,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            if ("fullApplicationFinance".equals(fieldName)) {
-                competitionResource.setFullApplicationFinance(Boolean.valueOf(value));
-                competitionService.update(competitionResource);
-            } else if ("includeGrowthTable".equals(fieldName)) {
-                competitionResource.setIncludeGrowthTable(Boolean.valueOf(value));
-                competitionService.update(competitionResource);
-            } else {
-                return makeErrorList();
-            }
-
+            throw new IllegalArgumentException("Question Id is required to save the question field.");
         }
 
         return Collections.emptyList();

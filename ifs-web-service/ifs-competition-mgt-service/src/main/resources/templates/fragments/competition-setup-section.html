@@ -1,8 +1,8 @@
 
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
-<div th:fragment="section-initial">
-    <div class="hgroup extra-margin-bottom">
-        <h1 class="heading-xlarge no-margin">Initial details</h1>
+<th:block th:fragment="section-initial">
+    <div class="page-title">
+        <h1 class="heading-xlarge">Initial details</h1>
     </div>
     <div class="panel-indent">
         This will create a new Competition - you will be able to specify more details as you proceed
@@ -220,12 +220,12 @@
     </ul>
 
 
-</div>
+</th:block>
 
 
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
-<div th:fragment="section-additional">
+<th:block th:fragment="section-additional">
     <div class="page-title">
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
@@ -443,12 +443,12 @@
             </a>
         </li>
     </ul>
-</div>
+</th:block>
 
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
-<div th:fragment="section-eligibility">
-    <div class="hgroup extra-margin-bottom">
-        <h1 class="heading-xlarge no-margin">Eligibility</h1>
+<th:block th:fragment="section-eligibility">
+    <div class="page-title">
+        <h1 class="heading-xlarge">Eligibility</h1>
     </div>
 
     <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
@@ -637,13 +637,13 @@
             </a>
         </li>
     </ul>
-</div>
+</th:block>
 
 
 
 <!-- =================Section: Milestones (4) =========================== -->
 
-<div th:fragment="section-milestones">
+<th:block th:fragment="section-milestones">
 
     <div class="page-title">
         <h1 class="heading-xlarge">Milestones</h1>
@@ -776,44 +776,54 @@
             <a rel="next" title="Navigate to next part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Application questions</span>
+                <span class="pagination-part-title">Application</span>
             </a>
         </li>
     </ul>
-</div>
+</th:block>
 
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
-<div th:fragment="section-application">
-    <div class="hgroup extra-margin-bottom">
-        <h1 class="heading-xlarge no-margin">Application questions</h1>
-    </div>
-    <div class="panel-indent">
-        These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
+<th:block th:fragment="section-application">
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Application process</h1>
     </div>
 
-    <p>Template: <span th:text="${competition.competitionTypeName}"></span> <span th:text="${#lists.size(questions)}"></span> questions</p>
+    <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
 
-    <h2 class="heading-large">Questions</h2>
+    <p>Here you can review and amend the application and assessment questions and guidance for this competition.
+        Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
 
-    <ul class="list-overview application-questions">
+    <p>If you're happy with the default questions for this competition type, mark this section as done and continue.</p>
 
-        <li><h2 class="heading-medium">Application details</h2></li>
-        <li><h2 class="heading-medium">Project summary</h2></li>
-        <li><h2 class="heading-medium">Public description</h2></li>
-        <li><h2 class="heading-medium">Scope</h2></li>
-
-        <th:block th:each="question : ${questions}">
-            <th:block th:include="fragments/competition-setup-section-elements :: application-question(${question}, ${editable})" />
-        </th:block>
-    </ul>
-
-    <div class="extra-margin">
-        <form th:action="@{(${editable} ? '/competition/setup/' + ${competition.id} + '/section/application' : '/competition/setup/' + ${competition.id} + '/section/application/edit')}"
-              method="post" novalidate="novalidate">
-            <button th:if="${editable}" type="submit" class="button">Done</button>
-            <button th:if="${!editable}" type="submit" class="button">Edit</button>
-        </form>
+    <div class="grid-row">
+        <div class="column-half">
+            <div class="grey-box">
+                <h3 class="heading-small no-margin">Assessed questions</h3>
+                <ol class="list-number">
+                    <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="column-half">
+            <div class="grey-box">
+                <h3 class="heading-small no-margin">Application details</h3>
+                <ul>
+                    <li><a href="#">Application details</a></li>
+                    <li><a href="#">Project summary</a></li>
+                    <li><a href="#">Public description</a></li>
+                    <li><a href="#">Scope</a></li>
+                </ul>
+            </div>
+            <div class="grey-box">
+                <h3 class="heading-small no-margin">Finances</h3>
+                <ul>
+                    <li><a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${competition.id})}">Finances</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
+    <a  th:if="${editable}" class="button extra-margin"  th:href="@{/competition/setup/{competitionId}/section/application/mark-as-complete(competitionId=${competition.id})}">Done</a>
 
     <ul class="pagination">
         <li class="prev">
@@ -829,4 +839,5 @@
             </a>
         </li>
     </ul>
-</div>
+</th:block>
+
