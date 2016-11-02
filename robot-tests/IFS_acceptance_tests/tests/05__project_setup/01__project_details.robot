@@ -28,9 +28,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-3554 As a potential Project Manager, I can click on a link to register and to become a Project Manager for the Project, so that I can start collaborating on the Project
 ...
 ...               INFUND-5898 As a partner I want to be able to change my Finance Contact in Project Setup so that I can submit updates to our partner details as appropriate
-
-
-
+...
+...               INFUND-5856 As an internal user I want to see a view of each project's submitted Project Details and the Finance contacts so I can use these for reference throughout Project Setup
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -40,6 +39,30 @@ Resource          ../../resources/defaultResources.robot
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
 
 *** Test Cases ***
+Internal users can see Project Details not yet completed
+    [Documentation]  INFUND-5856
+    [Tags]
+    [Setup]  log in as user                         john.doe@innovateuk.test    Passw0rd
+    Given the user navigates to the page            ${internal_project_summary}
+    Then the user should not see the element        jQuery=#table-project-status tr:nth-child(1) td.status.ok a   #Check here that there is no Green-Check
+    When the user clicks the button/link            jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
+    Then the user should see the text in the page   These project details were supplied by the lead partner on behalf of the project.
+    And the user should see the text in the page    Each of the partners is responsible for submitting their own finance contact.
+    When the user should see the element            jQuery=#project-details
+    Then the user should see the element            jQuery=#project-address:contains("Not yet completed")
+    And the user should see the element             jQuery=#no-project-manager:contains("Not yet completed")
+    When the user should see the element            jQuery=#project-details-finance
+    Then the user should see the element            jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
+    And the user should see the element             jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
+    And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+    And Logout as user
+    When log in as user                     project.finance1@innovateuk.test    Passw0rd
+    Then the user navigates to the page     ${internal_project_summary}
+    And the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
+    Then the user should see the element    jQuery=#no-project-manager:contains("Not yet completed")
+    And the user should see the element     jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+    [Teardown]  logout as user
+
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
@@ -507,13 +530,24 @@ Non-lead partner cannot change any project details
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
+    [Tags]
     [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
-    [Teardown]    logout as user
+
+Internal user can see the Project details as sumbmitted
+    [Documentation]  INFUND-5856
+    [Tags]
+    [Setup]  the user navigates to the page  ${internal_project_summary}
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td.status.ok a
+    Then the user should see the element     jQuery=#project-details
+    And the user can see all project details completed
+    When the user should see the element     jQuery=#project-details-finance
+    And the user can see all finance contacts completed
+    [Teardown]  logout as user
 
 *** Keywords ***
 the user should see a validation error
@@ -586,3 +620,13 @@ the user creates the account
     the user enters text to a text field    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
+
+the user can see all project details completed
+    the user should see the element  jQuery=#start-date:contains("1 Jan 2017")
+    the user should see the element  jQuery=#project-address:contains("1, Bath, BA1 5LR")
+    the user should see the element  jQuery=#project-manager:contains("test twenty")
+
+the user can see all finance contacts completed
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Jessica Doe")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Pete Tom")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Bob Jones")
