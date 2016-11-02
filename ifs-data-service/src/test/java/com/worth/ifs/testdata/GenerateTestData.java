@@ -355,6 +355,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 withUser(applicant1).
                                 withIndustrialCosts(
                                     costs -> costs.
+                                        withWorkingDaysPerYear(123).
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
                                         withLabourEntry("Role 3", 300, 365).

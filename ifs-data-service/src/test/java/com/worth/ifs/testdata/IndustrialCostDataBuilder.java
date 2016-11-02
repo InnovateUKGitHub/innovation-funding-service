@@ -3,15 +3,18 @@ package com.worth.ifs.testdata;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.emptyList;
 
 
@@ -23,6 +26,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     public IndustrialCostDataBuilder withCompetition(CompetitionResource competitionResource) {
         return with(data -> data.setCompetition(competitionResource));
+    }
+
+    public IndustrialCostDataBuilder withWorkingDaysPerYear(Integer workingDays) {
+        return updateCostItem(LabourCost.class, FinanceRowType.LABOUR, item -> LabourCostCategory.WORKING_DAYS_PER_YEAR.equals(item.getRole()), existingCost -> {
+            existingCost.setLabourDays(workingDays);
+            financeRowService.updateCost(existingCost.getId(), existingCost);
+        });
     }
 
     public IndustrialCostDataBuilder withLabourEntry(String role, Integer annualSalary, Integer daysToBeSpent) {
@@ -49,19 +59,23 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
-        return updateCostItem(FinanceRowType.OVERHEADS, existingCost -> {
+        return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate);
             financeRowService.updateCost(existingCost.getId(), updated);
         });
     }
 
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(FinanceRowType financeRowType, Consumer<T> updateFn) {
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
+        return updateCostItem(clazz, financeRowType, c -> true, updateFn);
+    }
+
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
         return with(data -> {
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowType.getName(), data.getCompetition());
 
             List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccessObjectOrThrowException();
-            existingItems.forEach(item -> updateFn.accept((T) item));
+            simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }
 
