@@ -19,9 +19,7 @@ import static java.util.Optional.ofNullable;
 public class FundingDecisionAction extends BaseAssessmentAction {
 
     @Override
-    protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> processOutcome) {
-        super.doExecute(assessment, newState, processOutcome);
-
+    protected void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome) {
         ProcessOutcome processOutcomeValue = processOutcome.get();
         Optional<ProcessOutcome> existingOutcome = ofNullable(assessment.getLastOutcome(FUNDING_DECISION));
 

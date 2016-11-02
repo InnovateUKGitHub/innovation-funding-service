@@ -38,14 +38,15 @@ abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<Ass
         State newState = context.getTransition().getTarget().getId().getBackingState();
 
         ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, newState);
-        doExecute(assessment, newActivityState, Optional.ofNullable(processOutcome));
+
+        doExecute(assessment, Optional.ofNullable(processOutcome));
+
+        assessment.setActivityState(newActivityState);
     }
 
     private Assessment getAssessmentFromContext(StateContext<AssessmentStates, AssessmentOutcomes> context) {
         return (Assessment) context.getMessageHeader("assessment");
     }
 
-    protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> processOutcome) {
-        assessment.setActivityState(newState);
-    }
+    protected abstract void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome);
 }

@@ -20,13 +20,11 @@ import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 public class RejectAction extends BaseAssessmentAction {
 
     @Override
-    protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {
-        super.doExecute(assessment, newState, updatedProcessOutcome);
+    protected void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome) {
+        ProcessOutcome processOutcomeValue = processOutcome.get();
 
-        ProcessOutcome processOutcome = updatedProcessOutcome.get();
-
-        processOutcome.setProcess(assessment);
-        processOutcome.setOutcomeType(REJECT.getType());
-        assessment.getProcessOutcomes().add(processOutcome);
+        processOutcomeValue.setProcess(assessment);
+        processOutcomeValue.setOutcomeType(REJECT.getType());
+        assessment.getProcessOutcomes().add(processOutcomeValue);
     }
 }
