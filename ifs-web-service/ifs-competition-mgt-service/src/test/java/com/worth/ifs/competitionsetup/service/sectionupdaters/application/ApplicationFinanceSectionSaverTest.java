@@ -55,7 +55,7 @@ public class ApplicationFinanceSectionSaverTest {
         CompetitionResource competitionResource = newCompetitionResource().build();
         competitionResource.setFullApplicationFinance(FALSE);
 
-        List<Error> errors = service.autoSaveSectionField(competitionResource, "fullApplicationFinance", "1", Optional.empty());
+        List<Error> errors = service.autoSaveSectionField(competitionResource, "fullApplicationFinance", "true", Optional.empty());
 
         assertTrue(errors.isEmpty());
         assertEquals(TRUE, competitionResource.isFullApplicationFinance());
