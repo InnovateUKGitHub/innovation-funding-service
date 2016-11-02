@@ -23,6 +23,10 @@ public class MilestoneViewModel {
 
     private static final Log LOG = LogFactory.getLog(MilestoneViewModel.class);
 
+    public MilestoneViewModel() {
+        
+    }
+
     public MilestoneViewModel(MilestoneType milestoneType, LocalDateTime dateTime) {
         this.setMilestoneType(milestoneType);
         if(dateTime != null) {
