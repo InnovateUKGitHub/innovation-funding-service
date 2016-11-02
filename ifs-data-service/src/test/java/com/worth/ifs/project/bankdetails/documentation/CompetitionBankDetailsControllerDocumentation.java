@@ -37,27 +37,34 @@ public class CompetitionBankDetailsControllerDocumentation extends BaseControlle
     @Test
     public void exportBankDetails() throws Exception {
 
-        Application application = newApplication().build();
+        List<Application> applications = newApplication().build(2);
 
-        Project project = newProject().withApplication(application).build();
+        List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1)).build(2);
 
-        Organisation organisation = newOrganisation().build();
+        List<Organisation> organisations = newOrganisation().withName("Hive IT", "Worth Systems").build(2);
 
-        Address address = newAddress().build();
+        List<Address> addresses = newAddress().
+                withAddressLine1("The Electric Works Concourse Way", "4-5").
+                withAddressLine2("Sheaf St", "Bonhill Street").
+                withAddressLine3("", "").
+                withTown("Sheffield", "London").
+                withCounty("South Yorkshire", "").
+                withPostcode("S1 2BJ", "EC2A 4BX").
+                build(2);
 
-        OrganisationAddress organisationAddress = newOrganisationAddress().withAddress(address).build();
+        List<OrganisationAddress> organisationAddresses = newOrganisationAddress().withAddress(addresses.get(0), addresses.get(1)).build(2);
 
         Long competitionId = 123L;
 
-        List<BankDetails> bankDetailsList = newBankDetails().withAccountNumber("12345678").withSortCode("123456").withOrganiationAddress(organisationAddress).withOrganisation(organisation).withProject(project).build(2);
+        List<BankDetails> bankDetailsList = newBankDetails().withAccountNumber("12345678", "87654321").withSortCode("123456", "654321").withOrganiationAddress(organisationAddresses.get(0), organisationAddresses.get(1)).withOrganisation(organisations.get(0), organisations.get(1)).withProject(projects.get(0), projects.get(1)).build(2);
 
         when(bankDetailsRepositoryMock.findByProjectApplicationCompetitionId(competitionId)).thenReturn(bankDetailsList);
 
         mockMvc.perform(get("/competition/{competitionId}/bank-details/export", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"Company name\",\"Application Number\",\"Address Line 1\",\"Address Line 2\",\"Address Line 3\",\"Town/City\",\"County\",\"Postcode\",\"Account name\",\"Account number\",\"Sort code\"\n" +
-                        "\"Organisation 3\",\"00000001\",,,,,,,\"Organisation 3\",\"12345678\",\"123456\"\n" +
-                        "\"Organisation 3\",\"00000001\",,,,,,,\"Organisation 3\",\"12345678\",\"123456\"\n"))
+                        "\"Hive IT\",\"00000001\",\"The Electric Works Concourse Way\",\"Sheaf St\",\"\",\"Sheffield\",\"South Yorkshire\",\"S1 2BJ\",\"Hive IT\",\"12345678\",\"123456\"\n" +
+                        "\"Worth Systems\",\"00000002\",\"4-5\",\"Bonhill Street\",\"\",\"London\",\"\",\"EC2A 4BX\",\"Worth Systems\",\"87654321\",\"654321\"\n"))
                 .andDo(document("competition/bank-details/{method-name}",
                         responseHeaders(
                                 headerWithName("Content-Type").description("Type of content in response body (plain text)"))));
