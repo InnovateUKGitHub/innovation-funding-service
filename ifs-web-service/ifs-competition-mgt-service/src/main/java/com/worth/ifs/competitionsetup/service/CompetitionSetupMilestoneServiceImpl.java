@@ -30,7 +30,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.values()).forEach(type -> {
             MilestoneResource newMilestone = milestoneService.create(type, competitionId);
-            newMilestone.setType(type);
             newMilestones.add(newMilestone);
         });
         return newMilestones;
@@ -53,14 +52,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         });
 
         return milestoneService.updateMilestones(updatedMilestones, competitionId);
-    }
-
-    private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
-        if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0);
-        } else {
-            return null;
-        }
     }
 
     @Override
@@ -92,6 +83,14 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         }
         catch(DateTimeException dte){
             return false;
+        }
+    }
+
+    private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
+        if (day != null && month != null && year != null){
+            return LocalDateTime.of(year, month, day, 0, 0);
+        } else {
+            return null;
         }
     }
 

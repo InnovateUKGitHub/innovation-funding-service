@@ -1,4 +1,4 @@
-package com.worth.ifs.service;
+package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
