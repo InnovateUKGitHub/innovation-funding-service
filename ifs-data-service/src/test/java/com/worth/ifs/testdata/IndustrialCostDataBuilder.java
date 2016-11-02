@@ -5,6 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.*;
+import com.worth.ifs.user.resource.OrganisationSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.emptyList;
 
@@ -66,6 +68,51 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                     withLabourDays(daysToBeSpent).
                     withDescription().
                     build());
+    }
+
+    public IndustrialCostDataBuilder withMaterials(String item, BigDecimal cost, Integer quantity) {
+        return addCostItem("Materials", () ->
+                newMaterials().
+                        withId().
+                        withItem(item).
+                        withCost(cost).
+                        withQuantity(quantity).
+                        build());
+    }
+
+    public IndustrialCostDataBuilder withCapitalUsage(Integer depreciation, String description, boolean existing,
+                                                      BigDecimal presentValue, BigDecimal residualValue,
+                                                      Integer utilisation) {
+        return addCostItem("Capital Usage", () ->
+                new CapitalUsage(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation));
+    }
+
+    public IndustrialCostDataBuilder withSubcontractingCost(String name, String country, String role, BigDecimal cost) {
+        return addCostItem("Sub-contracting costs", () ->
+                new SubContractingCost(null, cost, country, name, role));
+    }
+
+    public IndustrialCostDataBuilder withTravelAndSubsistence(String purpose, Integer numberOfTimes, BigDecimal costEach) {
+        return addCostItem("Travel and subsistence", () ->
+                new TravelCost(null, purpose, costEach, numberOfTimes));
+    }
+
+    public IndustrialCostDataBuilder withOtherCosts(String description, BigDecimal estimatedCost) {
+        return addCostItem("Other costs", () ->
+                new OtherCost(null, description, estimatedCost));
+    }
+
+    public IndustrialCostDataBuilder withOrganisationSize(OrganisationSize organsationSize) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeRowService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccessObjectOrThrowException();
+
+            applicationFinance.setOrganisationSize(organsationSize);
+
+            financeRowService.updateCost(applicationFinance.getId(), applicationFinance);
+        });
     }
 
     public IndustrialCostDataBuilder withAdministrationSupportCostsNone() {

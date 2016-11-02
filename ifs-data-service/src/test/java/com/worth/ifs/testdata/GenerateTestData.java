@@ -7,6 +7,7 @@ import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
@@ -361,7 +362,13 @@ public class GenerateTestData extends BaseIntegrationTest {
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
                                         withLabourEntry("Role 3", 300, 365).
-                                        withAdministrationSupportCostsCustomRate(25)
+                                        withAdministrationSupportCostsCustomRate(25).
+                                        withMaterials("Generator", bd("5010"), 10).
+                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
+                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
+                                        withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
+                                        withOtherCosts("Some more costs", bd("550")).
+                                        withOrganisationSize(OrganisationSize.MEDIUM)
                                 ),
                             finance -> finance.
                                 withOrganisation("Ludlow").
