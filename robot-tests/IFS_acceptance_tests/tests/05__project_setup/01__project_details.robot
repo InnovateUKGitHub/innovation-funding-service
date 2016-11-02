@@ -144,7 +144,7 @@ Lead partner can see the overview of the project details
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
-    And the user should see the element    link=Start date
+    And the user should see the element    link=Target start date
     And the user should see the element    link=Project address
     And the user should see the element    link=Project manager
     And the user should see the text in the page    Finance contacts
@@ -158,7 +158,7 @@ Submit button is disabled if the details are not fully filled out
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Start date
+    Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
     Then the user should see a validation error    Please enter a future date
@@ -426,7 +426,7 @@ Non-lead partner cannot change start date, project manager or project address
     [Setup]
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should not see the element    link=Start date
+    Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project manager
     And the user should not see the element    link=Project address
 
@@ -455,7 +455,7 @@ Project details read only after submission
     [Tags]
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then all the fields are completed
-    And The user should not see the element    link=Start date
+    And The user should not see the element    link=Target start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
 
@@ -483,9 +483,9 @@ Non-lead partner cannot change any project details
     [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Start date
+    Then the user should see the text in the page    Target start date
     And the user should see the text in the page    1 Jan 2017
-    And the user should not see the element    link=Start date
+    And the user should not see the element    link=Target start date
     And the user should see the text in the page    Project manager
     And the user should see the text in the page    test twenty
     And the user should not see the element    link=Project manager
@@ -560,7 +560,7 @@ all the fields are completed
     the matching status checkbox is updated    project-details-finance    3    yes
 
 the user changes the start date back again
-    the user clicks the button/link    link=Start date
+    the user clicks the button/link    link=Target start date
     the user enters text to a text field    id=projectStartDate_year    2017
     the user clicks the button/link    jQuery=.button:contains("Save")
 

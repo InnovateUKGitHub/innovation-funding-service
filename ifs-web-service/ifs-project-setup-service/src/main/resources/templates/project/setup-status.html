@@ -55,7 +55,7 @@
             Your Monitoring Officer for this project is  <th:block th:text="${model.monitoringOfficerName}" />.
           </p>
           <p th:unless="${model.monitoringOfficerAssigned}">
-            Innovate UK will assign you a Monitoring Officer
+            Innovate UK will assign the project a Monitoring Officer
           </p>
         </div>
       </li>
@@ -88,7 +88,7 @@
             <th:block th:unless="${model.financeChecksSection.notRequired}">Finance checks</th:block>
             <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
           </h2>
-          <p>We will review all project costs and contact you if we have any queries.</p>
+          <p>We will review all project costs.</p>
         </div>
       </li>
 
@@ -134,7 +134,7 @@
             <a th:if="${model.grantOfferLetterSection.accessible}" th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
             <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
           </h2>
-          <p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+          <p>Once all tasks are complete, a grant offer letter will be sent to the lead partner. When this is signed and returned the project can begin.</p>
         </div>
       </li>
 
