@@ -28,7 +28,8 @@ public class CompetitionUtils {
     }
 
     public static boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
-        return formInputs
+        return formInputs != null &&
+                formInputs
                 .stream()
                 .anyMatch(formInputResource -> formInputResource.getFormInputType() != null
                         && formInputResource.getFormInputType().equals(typeId));
