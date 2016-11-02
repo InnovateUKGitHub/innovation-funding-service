@@ -84,7 +84,9 @@ public class AssessmentAssignmentModelPopulator {
     }
 
     private String getProjectSummary(ApplicationResource application) {
-        List<FormInputResponseResource> projectSummaryResponse = formInputResponseService.getByFormInputIdAndApplication(11L, application.getId()).getSuccessObject();
+        Long projectSummaryFormInputId = 11L;
+
+        List<FormInputResponseResource> projectSummaryResponse = formInputResponseService.getByFormInputIdAndApplication(projectSummaryFormInputId, application.getId()).getSuccessObject();
         return projectSummaryResponse.size() > 0 ? projectSummaryResponse.get(0).getValue() : "";
     }
 }

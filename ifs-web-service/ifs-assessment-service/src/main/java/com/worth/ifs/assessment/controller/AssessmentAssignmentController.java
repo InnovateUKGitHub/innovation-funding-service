@@ -10,7 +10,6 @@ import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
-import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

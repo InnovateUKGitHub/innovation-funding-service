@@ -5,6 +5,9 @@ import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.util.SortedSet;
 
+/**
+ * Holder of model attributes for the acceptance of an application by an Assessor
+ */
 public class AssessmentAssignmentViewModel {
 
     private Long assessmentId;

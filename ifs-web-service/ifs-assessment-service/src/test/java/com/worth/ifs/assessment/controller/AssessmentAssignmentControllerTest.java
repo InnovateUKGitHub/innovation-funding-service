@@ -3,19 +3,12 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.form.AssessmentAssignmentForm;
-import com.worth.ifs.assessment.form.AssessmentOverviewForm;
-import com.worth.ifs.assessment.form.RejectCompetitionForm;
 import com.worth.ifs.assessment.model.AssessmentAssignmentModelPopulator;
-import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import com.worth.ifs.assessment.model.RejectAssessmentModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.RejectAssessmentViewModel;
-import com.worth.ifs.assessment.viewmodel.RejectCompetitionViewModel;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -29,14 +22,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedValues;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_ACCEPT_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -53,7 +43,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
