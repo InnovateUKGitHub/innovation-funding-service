@@ -155,7 +155,8 @@ task client(type: Jar) {
         include "com/worth/ifs/**/constant/**"
         include "com/worth/ifs/**/resource/**"
         include "com/worth/ifs/util/**"
-        include "com/worth/ifs/commons/security/**"
+//        include "com/worth/ifs/commons/security/**"
+        include "com/worth/ifs/commons/security/authentication/**"
         include "com/worth/ifs/commons/rest/**"
         include "com/worth/ifs/commons/error/**"
         include "com/worth/ifs/commons/validation/**"
@@ -165,7 +166,12 @@ task client(type: Jar) {
         exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
-        include "com/worth/ifs/config/**"
+//        exclude "com/worth/ifs/config/**"
+        include "com/worth/ifs/config/http/**"
+        include "com/worth/ifs/config/validator/**"
+        include "com/worth/ifs/config/rest/**"
+//        include "com/worth/ifs/config/audit/**"
+
     }
 }
 task clientCopy(type: Copy){
@@ -185,7 +191,13 @@ task testCommonCode(type: Jar) {
 //        include "com/worth/ifs/**/*Builder.class"
 //        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
         include "**/application-web-integration-test.properties"
-        include "com/worth/ifs/commons/**/*.class"
+        include "com/worth/ifs/commons/pojo/*.class"
+        include "com/worth/ifs/commons/rest/*.class"
+        include "com/worth/ifs/commons/security/*.class"
+        include "com/worth/ifs/commons/service/*.class"
+        include "com/worth/ifs/commons/util/date/*.class"
+        include "com/worth/ifs/commons/*.class"
+        include "com/worth/ifs/commons/test/*.class"
     }
 }
 task testCommonCodeCopy(type: Copy){
