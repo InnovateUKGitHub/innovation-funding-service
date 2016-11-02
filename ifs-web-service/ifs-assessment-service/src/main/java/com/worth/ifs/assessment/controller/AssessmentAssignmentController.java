@@ -59,9 +59,7 @@ public class AssessmentAssignmentController extends BaseController {
     }
 
     @RequestMapping(value = "assignment/accept", method = RequestMethod.POST)
-    public String acceptAssignment(@PathVariable("assessmentId") Long assessmentId,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               Model model) {
+    public String acceptAssignment(@PathVariable("assessmentId") Long assessmentId) {
         assessmentService.acceptInvitation(assessmentId).getSuccessObjectOrThrowException();
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         return redirectToAssessorCompetitionDashboard(assessment.getCompetition());
