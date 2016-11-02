@@ -1,8 +1,8 @@
-package com.worth.ifs.commons;
+package com.worth.ifs.commons.test;
 
 import org.junit.Before;
 
-import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
+import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
 
 /**
  * The absolute base class of all tests

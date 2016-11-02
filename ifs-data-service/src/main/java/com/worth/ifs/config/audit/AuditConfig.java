@@ -1,6 +1,6 @@
-package com.worth.ifs.config;
+package com.worth.ifs.config.audit;
 
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;

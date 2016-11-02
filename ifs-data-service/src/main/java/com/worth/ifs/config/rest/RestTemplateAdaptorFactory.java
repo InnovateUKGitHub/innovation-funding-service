@@ -1,4 +1,4 @@
-package com.worth.ifs.config;
+package com.worth.ifs.config.rest;
 
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.apache.tomcat.util.codec.binary.Base64;
