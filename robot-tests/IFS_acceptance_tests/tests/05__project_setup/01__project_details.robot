@@ -55,13 +55,11 @@ Internal users can see Project Details not yet completed
     Then the user should see the element            jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
-    And Logout as user
-    When log in as user                     project.finance1@innovateuk.test    Passw0rd
-    Then the user navigates to the page     ${internal_project_summary}
-    And the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
-    Then the user should see the element    jQuery=#no-project-manager:contains("Not yet completed")
-    And the user should see the element     jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
-    [Teardown]  logout as user
+    When Log in as a different user                 project.finance1@innovateuk.test    Passw0rd
+    Then the user navigates to the page             ${internal_project_summary}
+    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
+    Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
+    And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
@@ -542,7 +540,6 @@ Internal user can see the Project details as sumbmitted
     And the user can see all project details completed
     When the user should see the element     jQuery=#project-details-finance
     And the user can see all finance contacts completed
-    [Teardown]  logout as user
 
 *** Keywords ***
 the user should see a validation error
