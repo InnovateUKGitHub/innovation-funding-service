@@ -4,10 +4,22 @@ IFS.assessment.repeatableDeclarationRows = (function() {
 
   return {
     init: function() {
-      jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e) {
-        e.preventDefault();
+      //prevent 'enter' key adding new rows by changing button type
+      jQuery('button[data-repeatable-rowcontainer]').attr('type', 'button');
 
-        IFS.assessment.repeatableDeclarationRows.addRow(this, e);
+      jQuery('body').on('click', '[data-repeatable-rowcontainer]', function(e) {
+        if (jQuery(this).is(':radio')) {
+          // Radio button toggle has been clicked, add first row if there isn't one
+          var target = jQuery(this).attr('data-repeatable-rowcontainer');
+
+          if(jQuery(target).children().length === 0) {
+            IFS.assessment.repeatableDeclarationRows.addRow(this, e);
+          }
+        } else {
+          e.preventDefault();
+
+          IFS.assessment.repeatableDeclarationRows.addRow(this, e);
+        }
       });
       jQuery('body').on('click', '.remove-another-row', function(e) {
         e.preventDefault();
@@ -19,7 +31,7 @@ IFS.assessment.repeatableDeclarationRows = (function() {
       var newRow;
       var target = jQuery(el).attr('data-repeatable-rowcontainer');
       var uniqueRowId = jQuery(target).children().length || 0;
-      if(jQuery(el).attr('name') === 'addAppointment'){
+      if(jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment'){
         newRow = '<tr>' +
         '<td class="form-group">' +
         '<input aria-labelledby="aria-position-org" class="form-control width-full" type="text" id="appointments' + uniqueRowId + '.organisation" name="appointments[' + uniqueRowId + '].organisation" value="" />' +

@@ -27,6 +27,8 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, assessors panel'}, ${'Assessors panel'}, ${null})" />
 
+  <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, inform'}, ${'Inform'}, ${null})" />
+
 	<th:block th:if="${param.status == null or param.status[0] == 'Open'}">
 		<div class="grid-row">
 			<div class="column-quarter">

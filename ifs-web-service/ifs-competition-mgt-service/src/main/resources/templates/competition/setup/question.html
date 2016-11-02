@@ -12,7 +12,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div th:if="${currentSection.toString() == 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:remove="tag" />
-    <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${competition.id})}" th:remove="tag" />
+    <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}" th:remove="tag" />
 
 
     <div class="grid-row">

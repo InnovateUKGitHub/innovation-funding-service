@@ -10,7 +10,7 @@
 &{assessor2_credentials}                  email=felix.wilson@gmail.com    password=Passw0rd
 &{existing_assessor1_credentials}         email=worth.email.test+assessor1@gmail.com    password=Passw0rd
 &{nonregistered_assessor2_credentials}    email=worth.email.test+assessor2@gmail.com    password=Passw0rd
-&{nonregistered_assessor3_credentials}    email=worth.email.test+assessor3@gmail.com    password=Passw0rd
+&{nonregistered_assessor3_credentials}    email=worth.email.test+assessor3@gmail.com    password=Passw0rd123
 &{internal_finance_credentials}           email=project.finance1@innovateuk.test    password=Passw0rd
 &{comp_tech_one}                          email=comp_technologist1@innovateuk.test    password=Passw0rd
 &{comp_tect_two}                          email=comp_technologist2@innovateuk.test    password=Passw0rd
