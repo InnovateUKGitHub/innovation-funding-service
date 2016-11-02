@@ -310,11 +310,14 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                return serviceFailure(notFoundError(ApplicationInvite.class));
             }
 
+            ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
+            Long applicationId = applicationInvite.getTarget().getId();
+
             List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
 
-            setAssignedQuestionsToLeadApplicant(applicationInvite.getTarget().getLeadApplicantProcessRole(), processRoles);
-            setMarkedAsCompleteQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
-            setAssignedQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
+            setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
+            setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
+            setAssignedQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
 
             removeProcessRolesOnApplication(processRoles);
             applicationInviteRepository.delete(applicationInvite);
@@ -495,26 +498,26 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     }
 
-    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationInvite.getTarget().getId(), processRole.getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
             if(!questionStatuses.isEmpty()) {
                 questionStatuses.forEach(questionStatus ->
-                        questionStatus.setMarkedAsCompleteBy(applicationInvite.getTarget().getLeadApplicantProcessRole())
+                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole)
                 );
                 questionStatusRepository.save(questionStatuses);
             }
         });
     }
 
-    private void setAssignedQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+    private void setAssignedQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeId(applicationInvite.getTarget().getId(), processRole.getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeIdOrAssignedById(applicationId, processRole.getId(), processRole.getId());
             if (!questionStatuses.isEmpty()) {
                 questionStatuses.forEach(questionStatus ->
                         questionStatus.setAssignee(
-                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
-                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                leadApplicantProcessRole,
+                                leadApplicantProcessRole,
                                 LocalDateTime.now())
                 );
                 questionStatusRepository.save(questionStatuses);
