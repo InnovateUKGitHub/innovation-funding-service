@@ -72,7 +72,7 @@ Successful editing with no at yes/no questions
 
 Successful editing with yes at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    PENDING    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
     Given the user correctly fills out the role, principle employer and accurate fields
@@ -144,17 +144,17 @@ the user adds an additional position
 the user adds close family member affiliations
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations0.relation    Family member relation 0
-    the user enters text to a text field    id=familyAffiliations0.organisation    Familiy member organisation 0
+    the user enters text to a text field    id=familyAffiliations0.organisation    Family member organisation 0
     the user enters text to a text field    id=familyAffiliations0.position    Family member position 0
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations1.relation    Family member relation 1
-    the user enters text to a text field    id=familyAffiliations1.organisation    Familiy member organisation 1
+    the user enters text to a text field    id=familyAffiliations1.organisation    Family member organisation 1
     the user enters text to a text field    id=familyAffiliations1.position    Family member position 1
 
 the user adds an additional member affiliation
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations2.relation    Family member relation 2
-    the user enters text to a text field    id=familyAffiliations2.organisation    Familiy member organisation 2
+    the user enters text to a text field    id=familyAffiliations2.organisation    Family member organisation 2
     the user enters text to a text field    id=familyAffiliations2.position    Family member position 2
 
 the user adds close family member financial interests
@@ -171,10 +171,10 @@ the user should see the correct financial interests
 
 the user should see the correct close family member affiliations
     Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 0
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Familiy member organisation 0
+    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 0
     Textfield Value Should Be    id=familyAffiliations0.position    Family member position 0
     Textfield Value Should Be    id=familyAffiliations1.relation    Family member relation 1
-    Textfield Value Should Be    id=familyAffiliations1.organisation    Familiy member organisation 1
+    Textfield Value Should Be    id=familyAffiliations1.organisation    Family member organisation 1
     Textfield Value Should Be    id=familyAffiliations1.position    Family member position 1
 
 the user should see the correct close family member financial interests
@@ -196,7 +196,7 @@ the user should see only the additional position
 
 the user should see only the additional family member affiliations
     Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 2
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Familiy member organisation 2
+    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 2
     Textfield Value Should Be    id=familyAffiliations0.position    Family member position 2
     the user should not see the element    id=familyAffiliations1.relation
     the user should not see the element    id=familyAffiliations2.relation

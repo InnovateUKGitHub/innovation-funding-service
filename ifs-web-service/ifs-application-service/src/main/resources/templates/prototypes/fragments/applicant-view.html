@@ -182,6 +182,10 @@
                   <p>The potential for glucose based contact lens monitoring in the management of type two diabetes</p>
                 </th:block>
 
+                <th:block th:if="${status == 'open' and user == 'admin'}">
+                  <p>Machine learning in robots</p>
+                </th:block>
+
                 <th:block th:unless="${status == 'closed' and user == 'admin'}">
                   <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
 
