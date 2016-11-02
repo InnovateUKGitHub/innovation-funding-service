@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/css/styleguide.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="comp-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Prototype index'}, ${'/prototypes/index-sprint17'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-xlarge">
+	  Heading examples for internal pages
+	</h1>
+
+  <p>1. A page that isn't associated to any particular competition, e.g. a dashboard:</p>
+  <div class="result">
+    <h1 class="heading-xlarge">
+        Page title
+      </h1>
+  </div>
+
+  <p class="extra-margin-top">2. A page associated to a specific competition, e.g. view all applications for a competition:</p>
+  <div class="result">
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">Comp ID: Competition name, competition status</span>
+  	  Page title
+  	</h1>
+  </div>
+
+  <p class="extra-margin-top">3. A page asscociated to a particular application within a competition, e.g. application overview"</p>
+  <div class="result">
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">Comp ID: Competition name, competition status</span>
+  	  Page title
+  	</h1>
+    <h2 class="heading-medium">Application ID: Appication name</h2>
+  </div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

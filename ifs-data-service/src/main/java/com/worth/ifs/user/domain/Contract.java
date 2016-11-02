@@ -1,6 +1,8 @@
 package com.worth.ifs.user.domain;
 
 import com.worth.ifs.commons.util.AuditableEntity;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -94,5 +96,39 @@ public class Contract extends AuditableEntity {
         if (annexC == null) throw new NullPointerException("annexC cannot be null");
         if (annexC.isEmpty()) throw new IllegalArgumentException("annexC cannot be empty");
         this.annexC = annexC;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Contract contract = (Contract) o;
+
+        return new EqualsBuilder()
+                .append(current, contract.current)
+                .append(id, contract.id)
+                .append(text, contract.text)
+                .append(annexA, contract.annexA)
+                .append(annexB, contract.annexB)
+                .append(annexC, contract.annexC)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(current)
+                .append(text)
+                .append(annexA)
+                .append(annexB)
+                .append(annexC)
+                .toHashCode();
     }
 }

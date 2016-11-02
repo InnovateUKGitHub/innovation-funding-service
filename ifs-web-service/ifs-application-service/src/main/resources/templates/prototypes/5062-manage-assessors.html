@@ -25,17 +25,17 @@
 
 	<ul class="inline-nav">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=find'}"><strong>Find</strong></a>
+			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}"><strong>Find</strong></a>
 		</li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'invite' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=invite'}"><strong>Invite</strong></a>
+			<a th:href="@{'?tab=invite'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}"><strong>Invite</strong></a>
 		</li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=overview'}"><strong>Overview</strong></a>
+			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}"><strong>Overview</strong></a>
 		</li>
 	</ul>
 
-	
+
 	<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-main-content" th:remove="tag" />
 
 
@@ -59,7 +59,7 @@
             this.form.submit();
         });*/
 
-		jQuery('#includeAll').on('click',function(e){ 
+		jQuery('#includeAll').on('click',function(e){
 			//e.preventDefault();
 
 			if ( jQuery(this).is(':checked')) {
@@ -80,13 +80,13 @@
 				jQuery('#invite-group').addClass('button-secondary');
 				jQuery('.include-in-group').Attr('checked', '');
 
-				
+
 			}
-			
+
 		});
 
 
-		jQuery('.add-to-invite').on('click',function(e){ 
+		jQuery('.add-to-invite').on('click',function(e){
 			e.preventDefault();
 
 			if(jQuery(this).hasClass('added')){

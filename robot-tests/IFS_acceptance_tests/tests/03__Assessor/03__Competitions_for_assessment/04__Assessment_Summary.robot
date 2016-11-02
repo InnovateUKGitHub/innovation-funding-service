@@ -1,11 +1,13 @@
 *** Settings ***
-Documentation     INFUND-550: As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
+Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
 ...
-...               INFUND-1485: As an Assessor I want to be able to provide my final feedback for the application so that I can tell Innovate UK whether or not I recommend the application for funding.
+...               INFUND-1485 As an Assessor I want to be able to provide my final feedback for the application so that I can tell Innovate UK whether or not I recommend the application for funding.
 ...
 ...               INFUND-4217 Assessor journey form validation
 ...
 ...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+...
+...               INFUND-5179 Introduce new resource DTO classes for recommending and rejecting assessments
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -122,11 +124,16 @@ Word count check: Your feedback
     ...    INFUND-4217
     ...
     ...    INFUND-5178
+    ...
+    ...    INFUND-5179
     [Tags]    HappyPath
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters multiple strings into a text field    id=feedback    test    5001
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    This field cannot contain more than 5,000 characters
     And the user enters text to a text field    id=feedback    Testing the feedback word count.
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
@@ -137,10 +144,15 @@ Word count check: Comments for InnovateUK
     ...    INFUND-4217
     ...
     ...    INFUND-5178
+    ...
+    ...    INFUND-5179
     When the user enters text to a text field    id=comment    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters multiple strings into a text field    id=feedback    test    5001
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    This field cannot contain more than 5,000 characters
     And the user enters text to a text field    id=comment    Testing the comments word count.
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
@@ -164,18 +176,22 @@ the user adds score and feedback for every question
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
     And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    20    id=assessor-question-score
     the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
+    Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score

@@ -14,7 +14,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application'}, ${'/prototypes/5698-admin-readonly-application'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application'}, ${'/prototypes/1968-admin-readonly-application'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -25,12 +25,12 @@
 		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
 		<p>The following email will be sent to the lead applicant, after which this application will be no longer available for assessment.</p>
-	
+
 		<form action="/prototypes/" id="removeApp">
 			<fieldset>
 				<legend class="heading-medium">Recipient: Dave Smith (Lead applicant)</legend>
 			</fieldset>
-			
+
 			<div class="form-group">
 				<label class="form-label" for="remove-application-subject">Subject</label>
 				<input class="form-control width-full" id="remove-application-subject" name="remove-application-subject" type="text" required="required" />
@@ -46,7 +46,7 @@
 					</span>
 				</div>
 			</div>
-			
+
 			<div class="grid-row">
 				<div class="column-half">
 					<a href="/prototypes/5698-admin-readonly-application">Cancel</a>
@@ -67,8 +67,8 @@
 					<hr />
 
 	            	<div class="alignright-button">
-						
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	            		<a href="#" class="button">Inform and remove</a>
 	            	</div>
@@ -76,7 +76,7 @@
 		        </div>
 		    </div>
 		</form>
-	
+
 	</div>
 
 
