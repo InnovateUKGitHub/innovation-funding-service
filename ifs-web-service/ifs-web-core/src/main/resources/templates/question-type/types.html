@@ -262,7 +262,7 @@
                               <div class="column-half">
                                   <h3 class="heading-small">Project timescales</h3>
                                   <p>Project start date:<br/>
-                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
                                   </p>
                                   <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
                               </div>

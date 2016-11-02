@@ -39,8 +39,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
-                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Start date</span>
+                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Target start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
@@ -88,8 +88,7 @@
     </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
-
-    <p>Each partner must provide a finance contact. They will be responsible for queries from us around partner finances.</p>
+    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
 
     <table id="project-details-finance">
         <thead>

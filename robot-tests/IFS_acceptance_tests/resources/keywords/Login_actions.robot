@@ -21,16 +21,27 @@ Guest user log-in
     Page Should Not Contain    You do not have the necessary permissions for your request
 
 
+Log in as a different user
+    [Arguments]    ${email}    ${password}
+    logout as user
+    the guest user inserts user email & password    ${email}    ${password}
+    the guest user clicks the log-in button
+
+
 Log in as user
     [Arguments]     ${email}    ${password}
     Guest user log-in       ${email}    ${password}
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
+    wait until element is visible    id=username
+    wait until element is visible    id=password
     Input Text    id=username    ${USERNAME}
     Input Password    id=password    ${PSW}
 
+
 The guest user clicks the log-in button
+    wait until element is visible    css=button[name="_eventId_proceed"]
     Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser

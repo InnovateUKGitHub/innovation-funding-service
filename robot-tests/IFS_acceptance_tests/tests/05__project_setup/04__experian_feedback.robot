@@ -131,22 +131,22 @@ The user approves the bank details
     And the user clicks the button/link    jQuery=.button:contains("Approve account")
     Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
-    [Teardown]    logout as user
+
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
-    [Teardown]    logout as user
+
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]    Pending
     #TODO  Pending due to INFUND-4680
-    [Setup]    guest user log-in    steve.smith@empire.com    Passw0rd
+    [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
     the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
-    [Teardown]    logout as user
+
 
 
 
