@@ -59,7 +59,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            throw new IllegalArgumentException("Question Id is required to save the question field.");
+            return makeErrorList("question.maxWords");
         }
 
         return Collections.emptyList();
@@ -83,7 +83,12 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 question.setGuidance(value);
                 break;
             case "question.maxWords" :
-                question.setMaxWords(Integer.parseInt(value));
+                try {
+                    question.setMaxWords(Integer.parseInt(value));
+                } catch(NumberFormatException e) {
+                    return makeErrorList("question.maxWords");
+                }
+                break;
             case "question.appendix" :
                 question.setAppendix(textToBoolean(value));
                 break;
@@ -96,6 +101,10 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
 	private List<Error> makeErrorList() {
         return asList(fieldError("", null, "Unable to save question"));
+    }
+
+    private List<Error> makeErrorList(String fieldName) {
+        return asList(fieldError("", fieldName, "Unable to save question"));
     }
 
 	@Override
