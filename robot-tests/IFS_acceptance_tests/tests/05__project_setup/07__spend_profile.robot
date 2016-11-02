@@ -356,17 +356,18 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element                     jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been rejected")
-    When the user should see the text in the page           Innovate Lead
+    When the user should see the text in the page           Innovation Lead
     Then the user should see the text in the page           Robin Wilson
     When the user should see the text in the page           Project spend profile
     Then the user clicks the button/link                    link=Cheeseco-spend-profile.csv
     And the user clicks the button/link                     link=Ludlow-spend-profile.csv
     And the user clicks the button/link                     link=EGGS-spend-profile.csv
-    When the user should see the text in the page           Approved by Innovate Lead
+    When the user should see the text in the page           Approved by Innovation Lead
     Then the element should be disabled                     jQuery=#accept-profile
     When the user selects the checkbox                      jQuery=#approvedByLeadTechnologist
     Then the user should see the element                    jQuery=#accept-profile
-    And the user should see the element                     jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    And the user should see the element                     jQuery=#content .button.button.button-warning.large:contains("Reject")
+    
 
 
 Comp Admin is able to see Spend Profile approval page
@@ -376,15 +377,15 @@ Comp Admin is able to see Spend Profile approval page
     Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
     Then the user should see the element             jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled               jQuery=#accept-profile
-    And the user should see the element              jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
-    When the user clicks the button/link             jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    And the user should see the element              jQuery=#content .button.button.button-warning.large:contains("Reject")
+    When the user clicks the button/link             jQuery=#content .button.button.button-warning.large:contains("Reject")
     Then the user should see the text in the page    Before taking this action please contact the project manager
     When the user clicks the button/link             jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
     Then the user should see the element             jQuery=#accept-profile
     When the user clicks the button/link             jQuery=button:contains("Approved")
-    Then the user should see the text in the page    Approved by Innovate Lead
+    Then the user should see the text in the page    Approved by Innovation Lead
     When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
@@ -394,13 +395,13 @@ Project Finance is able to Reject Spend Profile
     [Tags]    #HappyPath
     [Setup]  Log in as a different user                        project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
-    And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
-    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
+    And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
+    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
     Then the user should see the text in the page  Before taking this action please contact the project manager
     When the user clicks the button/link           jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    #    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject spend profile")
-    #    And the user clicks the button/link            jQuery=.modal-reject-profile button:contains('Reject spend profile')
+    #    When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
+    #    And the user clicks the button/link            jQuery=.modal-reject-profile button:contains('Reject')
     #    Then the user should see the element           jQuery=h3:contains("The spend profile has been rejected")
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
@@ -411,7 +412,7 @@ Project Finance is able to Approve Spend Profile
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
     Then the user should see the element             jQuery=button:contains("Approved")
     When the user clicks the button/link             jQuery=button:contains("Approved")
-    Then the user should see the text in the page    Approved by Innovate Lead
+    Then the user should see the text in the page    Approved by Innovation Lead
     When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link             jQuery=button:contains("Approved")
