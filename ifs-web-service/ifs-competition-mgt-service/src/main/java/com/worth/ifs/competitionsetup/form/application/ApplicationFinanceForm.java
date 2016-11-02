@@ -1,6 +1,8 @@
-package com.worth.ifs.competitionsetup.form;
+package com.worth.ifs.competitionsetup.form.application;
 
-public class FinanceForm {
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+
+public class ApplicationFinanceForm extends CompetitionSetupForm {
 
     private boolean fullApplicationFinance;
 

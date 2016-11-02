@@ -2,7 +2,6 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.domain.Contract;
@@ -15,7 +14,6 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -101,7 +99,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccess(user ->
                         getCurrentContract().andOnSuccess(currentContract -> {
                             Profile profile = user.getProfile();
-                            boolean hasAgreement = profile.getContract() != null;
+                            boolean hasAgreement = profile != null && profile.getContract() != null;
                             boolean hasCurrentAgreement = hasAgreement && currentContract.getId().equals(profile.getContract().getId());
                             ProfileContractResource profileContract = new ProfileContractResource();
                             profileContract.setUser(user.getId());

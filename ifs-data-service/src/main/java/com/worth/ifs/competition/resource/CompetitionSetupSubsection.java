@@ -24,7 +24,7 @@ public enum CompetitionSetupSubsection {
 		}
 	};
 
-	private CompetitionSetupSubsection(String path, String name) {
+	CompetitionSetupSubsection(String path, String name) {
 		this.path = path;
 		this.name = name;
 	}

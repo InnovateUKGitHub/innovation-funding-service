@@ -12,7 +12,7 @@ Back to the dashboard link
     the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
-Server-side empty form validations
+Client-side empty form validations
     [Documentation]    INFUND-3715
     [Tags]
     #TODO: Will need changes once client side validations have been implemented INFUND-5867
@@ -26,24 +26,46 @@ Server-side empty form validations
     And the user should see a field and summary error    Please tell us if any of your close family members have any appointments, directorships or consultancies
     And the user should see a field and summary error    Please tell us if any of your close family members have any other financial interests
 
-Server-side empty yes/no question validations
+Client-side empty yes/no question validations
     [Documentation]    INFUND-3715
     [Tags]
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Will need changes once client side validations have been implemented INFUND-5867
-    Given the user selects yes at yes/no question radio buttons
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field and summary error    Please enter a principal employer
-    And the user should see a field and summary error    Please enter the role at your principal employer
-    And the user should see a field and summary error    In order to register an account you have to agree that this is an accurate account
-    And the user should see a field and summary error    Please enter your appointments, directorships or consultancies
-    And the user should see a field and summary error    Please enter your financial interests
-    And the user should see a field and summary error    Please enter the appointments, directorships or consultancies of your close family members
-    And the user should see a field and summary error    Please enter your family financial interests
+    Given the user selects the radio button    hasAppointments    yes
+        When the user clicks the button/link    jQuery=button:contains("Save and continue")
+        Then the user should see a field and summary error    Please enter an organisation
+        And the user should see a field and summary error    Please enter a position
+        When the user selects the radio button    hasAppointments    no
+        and the user clicks the button/link    jQuery=button:contains("Save and continue")
+        #TODO uncomment it after INFUND-5868 is fixed
+      # Then The user should not see the text in the page    Please enter an organisation
+      # And The user should not see the text in the page    Please enter a position
+        When the user selects the radio button    hasFinancialInterests    Yes
+        And the user clicks the button/link    jQuery=button:contains("Save and continue")
+        Then the user should see a field and summary error    Please enter your financial interests
+        When the user selects the radio button    hasFinancialInterests    No
+        #TODO uncomment it after INFUND-5868 is fixed
+       #Then The user should not see the text in the page    Please enter your financial interests
+        When the user selects the radio button    hasFamilyAffiliations    Yes
+        And the user clicks the button/link    jQuery=button:contains("Save and continue")
+        Then the user should see a field and summary error    Please enter a relation
+        And the user should see a field and summary error    Please enter an organisation
+        And the user should see a field and summary error    Please enter a position
+        When the user selects the radio button    hasFamilyAffiliations    No
+        #TODO uncomment it after INFUND-5868 is fixed
+       # Then The user should not see the text in the page    Please enter a relation
+       # And The user should not see the text in the page    Please enter an organisation
+       # And The user should not see the text in the page    Please enter a position
+        When the user selects the radio button    hasFamilyFinancialInterests    Yes
+        And the user clicks the button/link    jQuery=button:contains("Save and continue")
+        Then the user should see a field and summary error    Please enter your family financial interests
+        When the user selects the radio button    hasFamilyFinancialInterests    No
+        #TODO uncomment it after INFUND-5868 is fixed
+      #  Then The user should not see the text in the page    Please enter your family financial interests
 
-Server-side empty close family member validation
+Client-side empty close family member validation # (this scenario is covered above, can be removed after review)
     [Documentation]    INFUND-3715
-    [Tags]
+    [Tags]    Pending
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Will need changes once client side validations have been implemented (INFUND-5867)
     Given the user selects yes at yes/no question radio buttons
@@ -56,11 +78,11 @@ Server-side empty close family member validation
 
 Successful editing with no at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    PENDING    HappyPath
+    [Tags]    Pending    HappyPath
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
     Given the user correctly fills out the role, principle employer and accurate fields
-    And the user selects no at yes/no question radio buttons
+   # And the user selects no at yes/no question radio buttons
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
@@ -69,10 +91,10 @@ Successful editing with no at yes/no questions
 
 Successful editing with yes at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    PENDING    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
-    Given the user correctly fills out the role, principle employer and accurate fields
+   # Given the user correctly fills out the role, principle employer and accurate fields
     And the user selects yes at yes/no question radio buttons
     When the user adds positions
     And the user adds an additional position
@@ -141,17 +163,17 @@ the user adds an additional position
 the user adds close family member affiliations
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations0.relation    Family member relation 0
-    the user enters text to a text field    id=familyAffiliations0.organisation    Familiy member organisation 0
+    the user enters text to a text field    id=familyAffiliations0.organisation    Family member organisation 0
     the user enters text to a text field    id=familyAffiliations0.position    Family member position 0
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations1.relation    Family member relation 1
-    the user enters text to a text field    id=familyAffiliations1.organisation    Familiy member organisation 1
+    the user enters text to a text field    id=familyAffiliations1.organisation    Family member organisation 1
     the user enters text to a text field    id=familyAffiliations1.position    Family member position 1
 
 the user adds an additional member affiliation
     the user clicks the button/link    jQuery=button:contains("Add another family member")
     the user enters text to a text field    id=familyAffiliations2.relation    Family member relation 2
-    the user enters text to a text field    id=familyAffiliations2.organisation    Familiy member organisation 2
+    the user enters text to a text field    id=familyAffiliations2.organisation    Family member organisation 2
     the user enters text to a text field    id=familyAffiliations2.position    Family member position 2
 
 the user adds close family member financial interests
@@ -168,10 +190,10 @@ the user should see the correct financial interests
 
 the user should see the correct close family member affiliations
     Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 0
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Familiy member organisation 0
+    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 0
     Textfield Value Should Be    id=familyAffiliations0.position    Family member position 0
     Textfield Value Should Be    id=familyAffiliations1.relation    Family member relation 1
-    Textfield Value Should Be    id=familyAffiliations1.organisation    Familiy member organisation 1
+    Textfield Value Should Be    id=familyAffiliations1.organisation    Family member organisation 1
     Textfield Value Should Be    id=familyAffiliations1.position    Family member position 1
 
 the user should see the correct close family member financial interests
@@ -193,7 +215,7 @@ the user should see only the additional position
 
 the user should see only the additional family member affiliations
     Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 2
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Familiy member organisation 2
+    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 2
     Textfield Value Should Be    id=familyAffiliations0.position    Family member position 2
     the user should not see the element    id=familyAffiliations1.relation
     the user should not see the element    id=familyAffiliations2.relation
