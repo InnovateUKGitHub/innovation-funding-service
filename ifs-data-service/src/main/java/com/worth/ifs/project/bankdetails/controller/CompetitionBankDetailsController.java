@@ -31,26 +31,34 @@ public class CompetitionBankDetailsController {
     public @ResponseBody
     ResponseEntity<Object> export(@PathVariable("competitionId") final Long competitionId) throws IOException {
         List<BankDetails> bankDetails = bankDetailsRepository.findByProjectApplicationCompetitionId(competitionId);
+        List<String[]> allRows = buildBankDetailRecords(bankDetails);
+        return new ResponseEntity<>(writeCSVDataToByteArrayResource(allRows), buildHttpHeaderForCSVExport(), HttpStatus.OK);
+    }
 
+    private HttpHeaders buildHttpHeaderForCSVExport(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        // Prevent caching
+        httpHeaders.setCacheControl("no-cache, no-store, must-revalidate");
+        httpHeaders.setPragma("no-cache");
+        httpHeaders.setExpires(0);
+        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+        httpHeaders.add("Content-Transfer-Encoding", "binary");
+        return httpHeaders;
+    }
+
+    private ByteArrayResource writeCSVDataToByteArrayResource(List<String[]> allRows) throws IOException {
         StringWriter stringWriter = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(stringWriter);
+        csvWriter.writeAll(allRows);
+        csvWriter.close();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write(stringWriter.toString().getBytes());
+        return new ByteArrayResource(baos.toByteArray());
+    }
+
+    private List<String[]> buildBankDetailRecords(final List<BankDetails> bankDetails){
         List<String[]> allRows = new ArrayList<>();
-
-        List<String> title = new ArrayList<>();
-        title.add("Company name");
-        title.add("Application Number");
-        title.add("Address Line 1");
-        title.add("Address Line 2");
-        title.add("Address Line 3");
-        title.add("Town/City");
-        title.add("County");
-        title.add("Postcode");
-        title.add("Account name");
-        title.add("Account number");
-        title.add("Sort code");
-
-        allRows.add(title.toArray(new String[title.size()]));
-
+        allRows.add(getBankDetailCSVHeadingRecord());
         bankDetails.forEach(bankDetail -> {
             Address address = bankDetail.getOrganisationAddress().getAddress();
             List<String> row = new ArrayList<>();
@@ -67,20 +75,22 @@ public class CompetitionBankDetailsController {
             row.add(bankDetail.getSortCode());
             allRows.add(row.toArray(new String[row.size()]));
         });
+        return allRows;
+    }
 
-        csvWriter.writeAll(allRows);
-        csvWriter.close();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.write(stringWriter.toString().getBytes());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        // Prevent caching
-        httpHeaders.setCacheControl("no-cache, no-store, must-revalidate");
-        httpHeaders.setPragma("no-cache");
-        httpHeaders.setExpires(0);
-        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
-        httpHeaders.setContentLength(baos.size());
-        httpHeaders.add("Content-Transfer-Encoding", "binary");
-        return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
+    private String[] getBankDetailCSVHeadingRecord(){
+        List<String> title = new ArrayList<>();
+        title.add("Company name");
+        title.add("Application Number");
+        title.add("Address Line 1");
+        title.add("Address Line 2");
+        title.add("Address Line 3");
+        title.add("Town/City");
+        title.add("County");
+        title.add("Postcode");
+        title.add("Account name");
+        title.add("Account number");
+        title.add("Sort code");
+        return title.toArray(new String[title.size()]);
     }
 }

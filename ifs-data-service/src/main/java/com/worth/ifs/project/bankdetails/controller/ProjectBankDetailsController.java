@@ -40,7 +40,7 @@ public class ProjectBankDetailsController {
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/status-summary", method = GET)
+    @RequestMapping(method = GET, value = "/status-summary")
     public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsProjectSummary(@PathVariable("projectId") final Long projectId) {
         return bankDetailsService.getProjectBankDetailsStatusSummary(projectId).toGetResponse();
     }
