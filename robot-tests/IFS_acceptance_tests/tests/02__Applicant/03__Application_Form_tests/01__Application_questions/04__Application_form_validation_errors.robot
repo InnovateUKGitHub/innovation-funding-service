@@ -34,6 +34,7 @@ Day field client side
     Then the user should see an error    Please enter a valid date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
+    #TODO this test case fails when running the HappyPath.
 
 Month field client side
     [Documentation]    INFUND-43
