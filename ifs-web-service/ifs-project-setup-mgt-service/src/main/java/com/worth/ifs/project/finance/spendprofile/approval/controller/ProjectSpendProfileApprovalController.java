@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.spendprofile.approval.controller;
+package com.worth.ifs.project.finance.spendprofile.approval.controller;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
@@ -8,8 +8,8 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.finance.spendprofile.approval.form.ProjectSpendProfileApprovalForm;
-import com.worth.ifs.finance.spendprofile.approval.viewmodel.ProjectSpendProfileApprovalViewModel;
+import com.worth.ifs.project.finance.spendprofile.approval.form.ProjectSpendProfileApprovalForm;
+import com.worth.ifs.project.finance.spendprofile.approval.viewmodel.ProjectSpendProfileApprovalViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
