@@ -10,7 +10,11 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-2638 As a Competitions team member I want to view a page providing a link to each partners' submitted spend profile so that I can confirm these have been approved by the Technical Lead
 ...
 ...               INFUND-3766 As a project manager I want a summary page so I can review of all partners’ spend profiles that are marked as complete
-Suite Setup       the project finance user generates the spend profile table
+...
+...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
+...
+...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
+
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -21,6 +25,33 @@ ${la_fromage_overview}    ${server}/project-setup/project/4
 ${external_spendprofile_summary}  ${server}/project-setup/project/4/partner-organisation/21/spend-profile
 
 *** Test Cases ***
+Project Finance user generates the Spend Profile
+    [Documentation]  INFUND-5194
+    [Tags]
+    [Setup]  log in as user                 project.finance1@innovateuk.test    Passw0rd
+    Given the project finance user moves La Fromage into project setup if it isn't already
+    When the user navigates to the page     ${server}/project-setup-management/project/4/finance-check
+    Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
+    And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
+    And the user should see the element     jQuery=.table-progress tr:nth-child(3) td:contains("approved")
+    Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
+
+Project Finance cancels the generation of the Spend Profile
+    [Documentation]  INFUND-5194
+    [Tags]
+    When the user clicks the button/link           jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see the text in the page  This will generate a flat profile spend for all project partners.
+    When the user clicks the button/link           jQuery=.button:contains("Cancel")
+    Then the user should not see an error in the page
+
+Project Finance generates the Spend Profile
+    [Documentation]  INFUND-5194
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
+    And the user clicks the button/link     jQuery=.button:contains("Generate spend profile")
+    Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
+    [Teardown]  logout as user
+
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    #HappyPath
@@ -195,6 +226,14 @@ Academic partner can see correct project start date and duration
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
     And the user should see the text in the page     3 Months
+
+Academic partner can see the alternative academic view of the spend profile
+    [Documentation]    INFUND-4819
+    [Tags]
+    Then the user should see the text in the page    J-eS category    # this line subject to change as J-eS will be repalce by Je-S
+    And the user should see the text in the page    Investigations
+    And the user should see the text in the page    Estates costs
+
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
@@ -385,31 +424,6 @@ Project Finance is able to Approve Spend Profile
 
 
 *** Keywords ***
-the project finance user generates the spend profile table
-    the project finance user moves La Fromage into project setup if it isn't already
-     ## due to testing data, the project details are already completed for this project
-     ## Those steps are needed when running the HappyPath
-#    logout as user
-#    the users fill out project details
-#    log in as user    project.finance1@innovateuk.test    Passw0rd
-#    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/4
-#    the user selects the checkbox  id=costs-reviewed
-#    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-#    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
-#    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/6
-#    the user selects the checkbox  id=costs-reviewed
-#    the user clicks the button/link    jQuery=.button:contains("Approve finances")
-#    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
-#    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check/organisation/21
-#    the user selects the checkbox  id=costs-reviewed
-#    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-#    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve")
-    the user navigates to the page    ${server}/project-setup-management/project/4/finance-check
-    the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
-    the user clicks the button/link    name=submit-app-details
-    logout as user
-
-
 the project finance user moves La Fromage into project setup if it isn't already
     log in as user    project.finance1@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
