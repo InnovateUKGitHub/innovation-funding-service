@@ -16,10 +16,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div class="grid-row">
 		<div class="column-half">
-			<h1 class="heading-large">All competitions</h1>
+			<h1 class="heading-xlarge">All competitions</h1>
 		</div>
 
 		<div class="column-half alignright">
@@ -36,7 +36,7 @@
 
 	<div th:include="prototypes/fragments/comp-setup :: ${'prototype-dashboard-'+ (param.section == null ? 'live' : param.section[0])}" th:remove="tag"/>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
