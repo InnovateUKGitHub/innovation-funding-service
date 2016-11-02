@@ -4,10 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Created by tom on 26/10/2016.
+ * DTO representing the Status of a User's Profile.
  */
 public class UserProfileStatusResource {
 
+    private Long user; // added in so we can do a security check when fetching profile status
     private boolean skillsComplete;
     private boolean affiliationsComplete;
     private boolean contractComplete;
@@ -16,10 +17,15 @@ public class UserProfileStatusResource {
         // default constructor
     }
 
-    public UserProfileStatusResource(boolean skillsComplete, boolean affiliationsComplete, boolean contractComplete) {
+    public UserProfileStatusResource(Long user, boolean skillsComplete, boolean affiliationsComplete, boolean contractComplete) {
+        this.user = user;
         this.skillsComplete = skillsComplete;
         this.affiliationsComplete = affiliationsComplete;
         this.contractComplete = contractComplete;
+    }
+
+    public Long getUser() {
+        return user;
     }
 
     public boolean isSkillsComplete() {
@@ -32,6 +38,10 @@ public class UserProfileStatusResource {
 
     public boolean isContractComplete() {
         return contractComplete;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
     }
 
     public void setSkillsComplete(boolean skillsComplete) {
@@ -55,6 +65,7 @@ public class UserProfileStatusResource {
         UserProfileStatusResource that = (UserProfileStatusResource) o;
 
         return new EqualsBuilder()
+                .append(user, that.user)
                 .append(skillsComplete, that.skillsComplete)
                 .append(affiliationsComplete, that.affiliationsComplete)
                 .append(contractComplete, that.contractComplete)
@@ -64,6 +75,7 @@ public class UserProfileStatusResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(user)
                 .append(skillsComplete)
                 .append(affiliationsComplete)
                 .append(contractComplete)

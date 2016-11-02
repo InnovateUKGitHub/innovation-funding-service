@@ -229,9 +229,10 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         Profile profile = user.getProfile();
         return serviceSuccess(
                 new UserProfileStatusResource(
-                    profile != null && profile.getSkillsAreas() != null,
-                    user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
-                    profile != null && profile.getContractSignedDate() != null
+                        user.getId(),
+                        profile != null && profile.getSkillsAreas() != null,
+                        user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
+                        profile != null && profile.getContractSignedDate() != null
                 )
         );
     }

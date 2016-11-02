@@ -662,7 +662,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         assertTrue(result.isSuccess());
 
-        assertEquals(newUserProfileStatusResource().build(), result.getSuccessObject());
+        assertEquals(newUserProfileStatusResource().withUser(user.getId()).build(), result.getSuccessObject());
 
         verify(userRepositoryMock, only()).findOne(user.getId());
     }
@@ -685,6 +685,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         assertEquals(
                 newUserProfileStatusResource()
+                        .withUser(user.getId())
                         .withSkillsComplete(true)
                         .withAffliliationsComplete(true)
                         .withContractComplete(true)
@@ -711,6 +712,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         assertEquals(
                 newUserProfileStatusResource()
+                        .withUser(user.getId())
                         .withSkillsComplete(true)
                         .withAffliliationsComplete(false)
                         .withContractComplete(false)
@@ -735,6 +737,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         assertEquals(
                 newUserProfileStatusResource()
+                        .withUser(user.getId())
                         .withSkillsComplete(false)
                         .withAffliliationsComplete(true)
                         .withContractComplete(false)
@@ -761,6 +764,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         assertEquals(
                 newUserProfileStatusResource()
+                        .withUser(user.getId())
                         .withSkillsComplete(false)
                         .withAffliliationsComplete(false)
                         .withContractComplete(true)
@@ -769,11 +773,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         );
 
         verify(userRepositoryMock, only()).findOne(user.getId());
-    }
-
-    private void setClockToTime(LocalDateTime time) {
-        Clock clock = Clock.fixed(time.atZone(systemDefault()).toInstant(), systemDefault());
-        ReflectionTestUtils.setField(service, "clock", clock, Clock.class);
     }
 
     @Test

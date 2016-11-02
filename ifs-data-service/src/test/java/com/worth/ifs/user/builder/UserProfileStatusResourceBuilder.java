@@ -32,6 +32,10 @@ public class UserProfileStatusResourceBuilder extends BaseBuilder<UserProfileSta
         return createDefault(UserProfileStatusResource.class);
     }
 
+    public UserProfileStatusResourceBuilder withUser(Long... users) {
+        return withArray((user, userProfileStatusResource) -> setField("user", user, userProfileStatusResource), users);
+    }
+
     public UserProfileStatusResourceBuilder withSkillsComplete(Boolean... skillsCompleteList) {
         return withArray((skillsComplete, userProfileStatusResource) -> setField("skillsComplete", skillsComplete, userProfileStatusResource), skillsCompleteList);
     }

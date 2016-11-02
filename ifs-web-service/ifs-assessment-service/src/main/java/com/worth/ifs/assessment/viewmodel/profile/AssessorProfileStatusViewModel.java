@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Created by tom on 26/10/2016.
+ * Model attributes for an Assessor's Profile status.
  */
 public class AssessorProfileStatusViewModel {
     private final boolean skillsComplete;

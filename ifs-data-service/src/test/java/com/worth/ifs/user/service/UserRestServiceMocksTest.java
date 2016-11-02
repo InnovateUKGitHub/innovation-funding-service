@@ -15,6 +15,7 @@ import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliati
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -206,4 +207,14 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(response.isSuccess());
     }
 
+    @Test
+    public void getProfileStatus() {
+        Long userId = 1L;
+        UserProfileStatusResource expected = newUserProfileStatusResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", usersUrl, userId), UserProfileStatusResource.class, expected, OK);
+
+        UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
 }

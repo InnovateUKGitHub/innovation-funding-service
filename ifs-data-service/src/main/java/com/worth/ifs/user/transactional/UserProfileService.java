@@ -43,6 +43,6 @@ public interface UserProfileService {
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
 }

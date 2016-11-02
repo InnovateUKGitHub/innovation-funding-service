@@ -30,6 +30,7 @@ import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityRe
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.lang.Boolean.TRUE;
@@ -382,5 +383,36 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals("87654321", updateResponse.getPhoneNumber());
         assertEquals(Disability.YES, updateResponse.getDisability());
+    }
+    @Test
+    public void testGetUserProfileStatus() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        user.setAffiliations(newAffiliation()
+                .withId(null, null)
+                .withAffiliationType(EMPLOYER, FAMILY)
+                .withUser(user, user)
+                .withExists(true, false)
+                .build(2));
+        user.setProfile(newProfile()
+                .with(id(null))
+                .withSkillsAreas("java developer")
+                .withContractSignedDate(LocalDateTime.now())
+                .build());
+        userRepository.save(user);
+        flushAndClearSession();
+
+        UserProfileStatusResource profileStatus = controller.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+
+        UserProfileStatusResource expectedUserProfileStatus = newUserProfileStatusResource()
+                .withUser(user.getId())
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withContractComplete(true)
+                .build();
+        assertEquals(expectedUserProfileStatus, profileStatus);
     }
 }

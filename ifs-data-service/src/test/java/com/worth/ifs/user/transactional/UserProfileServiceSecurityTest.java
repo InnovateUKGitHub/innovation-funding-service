@@ -15,6 +15,7 @@ import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliati
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -135,6 +136,19 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Test
+    public void getUserProfileStatus() {
+        Long userId = 1L;
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.getUserProfileStatus(userId), () -> {
+            verify(rules).usersCanViewTheirOwnProfileStatus(isA(UserProfileStatusResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
     public void updateUserDetails() {
         Long userId = 1L;
         UserProfileResource profile = newUserProfileResource().build();
@@ -202,7 +216,7 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
 
         @Override
         public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
-            return null;
+            return serviceSuccess(newUserProfileStatusResource().build());
         }
     }
 }
