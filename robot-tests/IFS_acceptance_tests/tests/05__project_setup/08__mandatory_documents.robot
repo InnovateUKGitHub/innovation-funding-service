@@ -316,7 +316,7 @@ CompAdmin rejects other documents
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
-    Then the user should see the text in the page    These documents after review have been rejected and returned to the project team.
+    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
     [Teardown]    logout as user
 
 Partners can see the documents rejected
