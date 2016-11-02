@@ -86,7 +86,6 @@ include::{snippets}/application/application-ready-for-submit/curl-request.adoc[]
 ==== Request
 include::{snippets}/application/save-application-details/http-request.adoc[]
 include::{snippets}/application/save-application-details/path-parameters.adoc[]
-include::{snippets}/application/save-application-details/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/application/save-application-details/http-response.adoc[]

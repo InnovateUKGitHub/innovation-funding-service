@@ -236,6 +236,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         Map<String, Object> model = result.getModelAndView().getModel();
         ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
 
+        assertEquals(project.getId(), viewModel.getProjectId());
+        assertEquals(project.getApplication(), viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getFormattedId(), viewModel.getProjectNumber());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));

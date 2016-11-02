@@ -11,10 +11,47 @@
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="prototype-comp-admin-page-title-subheading(subtitle, heading, subheading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+
+  <h1 class="heading-xlarge">
+
+    <span class="heading-secondary" th:text="${subtitle + (subheading != null ? ', '+subheading : '')}" th:unless="${param.comp != null}" >SUB TITLE</span>
+
+    <th:block th:if="${param.comp != null and param.comp[0] == 'Open'}">
+      <span class="heading-secondary" th:text="${subtitle + ', competition open'}" >SUB TITLE</span>
+    </th:block>
+
+    <th:block th:if="${param.comp != null and param.comp[0] == 'Closed'}">
+      <span class="heading-secondary" th:text="${subtitle + ', competition closed'}" >SUB TITLE</span>
+    </th:block>
+
+    <th:block th:if="${param.comp != null and param.comp[0] == 'assessment'}">
+      <span class="heading-secondary" th:text="${subtitle + ', in assessment'}" >SUB TITLE</span>
+    </th:block>
+
+    <th:block th:if="${param.comp != null and param.comp[0] == 'panel'}">
+      <span class="heading-secondary" th:text="${subtitle + ', at panel'}" >SUB TITLE</span>
+    </th:block>
+
+    <th:block th:if="${param.comp != null and param.comp[0] == 'inform'}">
+      <span class="heading-secondary" th:text="${subtitle + ', inform'}" >SUB TITLE</span>
+    </th:block>
+
+    <th:block th:text="${heading}" />
+    <th:block th:if="${partner == 'lead'}">
+        <small>(Lead partner)</small>
+    </th:block>
+    <th:block th:if="${partner == 'nonLead'}">
+        <small>(Partner)</small>
+    </th:block>
+  </h1>
+
+
+
+
+  <!--  <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <div class="grid-row">
             <div class="column-two-thirds">
-                <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
+                <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
                 <h1 class="heading-xlarge no-margin"><span th:text="${heading}">Title here</span>
                     <th:block th:if="${partner == 'lead'}">
                         <small>(Lead partner)</small>
@@ -22,8 +59,12 @@
                     <th:block th:if="${partner == 'nonLead'}">
                         <small>(Partner)</small>
                     </th:block>
-                </h1> 
-            </div> 
+                </h1>
+            </div>
+
+
+
+
             <div class="column-third" th:unless="${subheading == 'createComp' or subheading == null}">
                 <h2 class="heading-small comp-status-label">
 
@@ -57,14 +98,16 @@
                             <span>Projects in setup</span>
                         </div>
 
-                    </div> 
+                    </div>
 
-                </h2>  
+                </h2>
             </div>
-            
+
         </div>
 
-    </div>
+    </div> -->
+
+
 </div>
 
 <!-- =================Tabbed navigation competion setup=========================== -->
@@ -93,7 +136,7 @@
     </div>
 
     <div th:if="${status == 'closed'}" th:remove="tag">
-        
+
         <div th:if="${param.status[0] != 'assessorFeedback' and param.status[0] != 'setup'}" th:remove="tag">
 
             <ul class="inline-nav cf">
@@ -111,7 +154,7 @@
         </div>
 
         <div th:if="${param.status[0] == 'assessorFeedback' or param.status[0] == 'setup'}" th:remove="tag">
-            
+
             <ul class="inline-nav cf">
                 <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
                     <a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Overview</a>
@@ -1805,4 +1848,3 @@
     </div>
 </div>
 </html>
-

@@ -18,9 +18,8 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Allocate assessors</h1>
+
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate assessors'}, ${'competition closed'})" th:remove="tag" />
 
 	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 

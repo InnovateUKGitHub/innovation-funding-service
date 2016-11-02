@@ -213,10 +213,8 @@ User should have access to all the sections
     Then The user should see the element    link=Funding Information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
-    And The user should see the element    link=Application Questions
-    And The user should see the element    link=Application Finances
+    And The user should see the element    link=Application
     And The user should see the element    link=Assessors
-    And The user should see the element    link=Description and brief
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
@@ -453,8 +451,9 @@ Milestones: Green check should show
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
+    # Pending INFUND-5629, INFUND-5632
     When The user clicks the button/link    link=Application Questions
     Then The user should see the text in the page    Template: Programme 10 questions
     And the user should see the text in the page    Scope
@@ -471,7 +470,8 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    # Pending INFUND-5629, INFUND-5632
     Given The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -482,7 +482,8 @@ Application questions: server side validations
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    # Pending INFUND-5629, INFUND-5632
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -493,7 +494,7 @@ Application questions: Client side validations
 Application questions: Autosave
     [Documentation]    INFUND-4586
     [Tags]    Pending
-    # TODO Pending due to INFUND-5538
+    # TODO Pending due to INFUND-5632, 5639
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
     And The user clicks the button/link    link=Application Questions
@@ -501,8 +502,9 @@ Application questions: Autosave
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
+    # Pending INFUND-5629, INFUND-5632
     Given the user moves focus and waits for autosave
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
@@ -514,7 +516,8 @@ Application questions: Mark as done and the Edit again
     And The user clicks the button/link    jQuery=button:contains(Done)
 
 Application questions: should have a green check
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    # Pending INFUND-5629, INFUND-5632
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
 
@@ -522,12 +525,15 @@ Ready To Open button should be visible
     [Documentation]    INFUND-3002
     ...
     ...    INFUND-4468
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    # Pending INFUND-5629, INFUND-5632
     Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Ready to open button shouldn't be visible when the user re-edits the question
     [Documentation]    INFUND-4468
+    [Tags]    Pending
     [Setup]
+    # Pending INFUND-5629, INFUND-5632
     Given The user clicks the button/link    link=Initial Details
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
@@ -538,7 +544,8 @@ Ready to open button shouldn't be visible when the user re-edits the question
 
 User should be able to Save the competition as open
     [Documentation]    INFUND-4468
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    # Pending INFUND-5629, INFUND-5632
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
