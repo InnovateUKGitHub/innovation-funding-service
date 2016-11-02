@@ -1,6 +1,6 @@
 package com.worth.ifs.project.builder;
 
-import com.worth.ifs.commons.BaseTest;
+import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.junit.Test;
 
