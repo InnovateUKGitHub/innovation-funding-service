@@ -50,7 +50,7 @@ public class CompetitionUtilsTest {
         assertEquals(TRUE, CompetitionUtils.isSendToDashboard(competitionResource));
         competitionResource = newCompetitionResource().withCompetitionStatus(CLOSED).build();
         assertEquals(TRUE, CompetitionUtils.isSendToDashboard(competitionResource));
-        competitionResource = newCompetitionResource().withCompetitionStatus(null).build();
+        competitionResource = newCompetitionResource().with((integer, competitionResource1) -> competitionResource1.setCompetitionStatus(null)).build();
         assertEquals(TRUE, CompetitionUtils.isSendToDashboard(competitionResource));
     }
 
