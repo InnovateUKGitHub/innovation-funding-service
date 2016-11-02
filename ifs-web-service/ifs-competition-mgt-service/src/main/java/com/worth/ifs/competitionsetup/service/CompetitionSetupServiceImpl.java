@@ -90,7 +90,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         checkIfSubsectionIsInSection(section, subsection);
         populateGeneralModelAttributes(model, competitionResource, section);
-        CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(section);
+        CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(subsection);
 
         if(populator != null) {
             populator.populateModel(model, competitionResource, objectId);
