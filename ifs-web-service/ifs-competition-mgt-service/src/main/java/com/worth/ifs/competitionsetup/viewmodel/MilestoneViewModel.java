@@ -25,9 +25,11 @@ public class MilestoneViewModel {
 
     public MilestoneViewModel(MilestoneType milestoneType, LocalDateTime dateTime) {
         this.setMilestoneType(milestoneType);
-        this.setDay(dateTime.getDayOfMonth());
-        this.setMonth(dateTime.getMonth().getValue());
-        this.setYear(dateTime.getYear());
+        if(dateTime != null) {
+            this.setDay(dateTime.getDayOfMonth());
+            this.setMonth(dateTime.getMonth().getValue());
+            this.setYear(dateTime.getYear());
+        }
     }
 
     public Integer getDay() {

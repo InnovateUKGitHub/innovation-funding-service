@@ -10,6 +10,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
@@ -18,7 +19,6 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
-import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,14 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import static com.worth.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
-
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 
 /**
  * Controller for showing and handling the different competition setup sections
@@ -255,7 +252,7 @@ public class CompetitionSetupController {
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
             List<FunderViewModel> funders = competitionSetupForm.getFunders();
-            funders.add(new FunderViewModel(newCompetitionFunderResource().build()));
+            funders.add(new FunderViewModel(new CompetitionFunderResource()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {

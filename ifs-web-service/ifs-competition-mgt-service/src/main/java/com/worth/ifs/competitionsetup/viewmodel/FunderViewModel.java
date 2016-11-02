@@ -21,6 +21,10 @@ public class FunderViewModel {
     @NotNull
     private Boolean coFunder;
 
+    public FunderViewModel() {
+
+    }
+
     public FunderViewModel(CompetitionFunderResource funderResource) {
         this.setFunder(funderResource.getFunder());
         this.setFunderBudget(funderResource.getFunderBudget());
