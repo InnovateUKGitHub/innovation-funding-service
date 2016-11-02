@@ -67,6 +67,7 @@ public class CompetitionBankDetailsController {
             row.add(address.getAddressLine1());
             row.add(address.getAddressLine2());
             row.add(address.getAddressLine3());
+            row.add(""); // Note: we don't use address line 4 in this app but is necessary to add empty for target IFS system where it will be imported.
             row.add(address.getTown());
             row.add(address.getCounty());
             row.add(address.getPostcode());
@@ -79,18 +80,20 @@ public class CompetitionBankDetailsController {
     }
 
     private String[] getBankDetailCSVHeadingRecord(){
+        // Note: I don't like the unnecessarily long column names below but they are as described in INFUND-5852, and possibly required to match exactly for import into target IFS system
         List<String> title = new ArrayList<>();
         title.add("Company name");
         title.add("Application Number");
-        title.add("Address Line 1");
-        title.add("Address Line 2");
-        title.add("Address Line 3");
-        title.add("Town/City");
-        title.add("County");
-        title.add("Postcode");
-        title.add("Account name");
-        title.add("Account number");
-        title.add("Sort code");
+        title.add("Company address");
+        title.add("Company address 2");
+        title.add("Company address 3");
+        title.add("Company address 4"); // Note: we don't use address line 4 in this app but is necessary to add empty for IFS system where it will be imported.
+        title.add("Company town/city");
+        title.add("Company county");
+        title.add("Company postcode");
+        title.add("Bank account name");
+        title.add("Bank account number");
+        title.add("Bank sort code");
         return title.toArray(new String[title.size()]);
     }
 }

@@ -59,9 +59,9 @@ public class CompetitionBankDetailsControllerTest extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/competition/{competitionId}/bank-details/export", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("\"Company name\",\"Application Number\",\"Address Line 1\",\"Address Line 2\",\"Address Line 3\",\"Town/City\",\"County\",\"Postcode\",\"Account name\",\"Account number\",\"Sort code\"\n" +
-                        "\"Hive IT\",\"00000001\",\"The Electric Works Concourse Way\",\"Sheaf St\",\"\",\"Sheffield\",\"South Yorkshire\",\"S1 2BJ\",\"Hive IT\",\"12345678\",\"123456\"\n" +
-                        "\"Worth Systems\",\"00000002\",\"4-5\",\"Bonhill Street\",\"\",\"London\",\"\",\"EC2A 4BX\",\"Worth Systems\",\"87654321\",\"654321\"\n"));
+                .andExpect(content().string("\"Company name\",\"Application Number\",\"Company address\",\"Company address 2\",\"Company address 3\",\"Company address 4\",\"Company town/city\",\"Company county\",\"Company postcode\",\"Bank account name\",\"Bank account number\",\"Bank sort code\"\n"+
+                        "\"Hive IT\",\"00000001\",\"The Electric Works Concourse Way\",\"Sheaf St\",\"\",\"\",\"Sheffield\",\"South Yorkshire\",\"S1 2BJ\",\"Hive IT\",\"12345678\",\"123456\"\n" +
+                        "\"Worth Systems\",\"00000002\",\"4-5\",\"Bonhill Street\",\"\",\"\",\"London\",\"\",\"EC2A 4BX\",\"Worth Systems\",\"87654321\",\"654321\"\n"));
 
         verify(bankDetailsRepositoryMock).findByProjectApplicationCompetitionId(competitionId);
     }
@@ -75,7 +75,7 @@ public class CompetitionBankDetailsControllerTest extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/competition/{competitionId}/bank-details/export", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("\"Company name\",\"Application Number\",\"Address Line 1\",\"Address Line 2\",\"Address Line 3\",\"Town/City\",\"County\",\"Postcode\",\"Account name\",\"Account number\",\"Sort code\"\n"));
+                .andExpect(content().string("\"Company name\",\"Application Number\",\"Company address\",\"Company address 2\",\"Company address 3\",\"Company address 4\",\"Company town/city\",\"Company county\",\"Company postcode\",\"Bank account name\",\"Bank account number\",\"Bank sort code\"\n"));
 
         verify(bankDetailsRepositoryMock).findByProjectApplicationCompetitionId(competitionId);
     }
