@@ -43,7 +43,7 @@ import static org.springframework.http.HttpStatus.OK;
  * and convert them into {@link RestErrorResponse} objects.
  */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
-    UidAuthenticationService
+    
     @Value("${ifs.data.service.rest.baseURL}")
     private String dataUrl;
 
