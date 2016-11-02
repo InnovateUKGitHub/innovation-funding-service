@@ -125,7 +125,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createBaseOrganisations() {
         organisationBuilder.
-                createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).
+                createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS).
                 withAddress(OrganisationAddressType.REGISTERED, "North Star House").
                 build();
     }
@@ -142,7 +142,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createExternalUsers() {
 
         externalUserBuilder.
-                registerUserWithNewOrganisation("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                registerUser("Steve", "Smith", "steve.smith@empire.com").
+                withNewOrganisation(organisationBuilder.createOrganisation("Empire Ltd", OrganisationTypeEnum.BUSINESS)).
                 verifyEmail().
                 build();
 
@@ -152,17 +153,20 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
 
         externalUserBuilder.
-                registerUserWithNewOrganisation("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Ludlow").
+                registerUser("Jessica", "Doe", "jessica.doe@ludlow.co.uk").
+                withNewOrganisation(organisationBuilder.createOrganisation("Ludlow", OrganisationTypeEnum.BUSINESS)).
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                registerUserWithNewOrganisation("Pete", "Tom", "pete.tom@egg.com", "EGGS").
+                registerUser("Pete", "Tom", "pete.tom@egg.com").
+                withNewOrganisation(organisationBuilder.createOrganisation("EGGS", OrganisationTypeEnum.ACADEMIC)).
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                registerUserWithNewOrganisation("Ewan", "Cormack", "ewan+1@hiveit.co.uk", "HIVE IT LIMITED").
+                registerUser("Ewan", "Cormack", "ewan+1@hiveit.co.uk").
+                withNewOrganisation(organisationBuilder.createOrganisation("HIVE IT LIMITED", OrganisationTypeEnum.BUSINESS)).
                 build();
     }
 

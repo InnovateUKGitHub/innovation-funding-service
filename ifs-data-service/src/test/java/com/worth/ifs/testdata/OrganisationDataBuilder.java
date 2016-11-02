@@ -3,6 +3,7 @@ package com.worth.ifs.testdata;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -35,7 +36,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
         return new OrganisationData();
     }
 
-    public OrganisationDataBuilder createOrganisation(String organisationName, Long organisationTypeId) {
+    public OrganisationDataBuilder createOrganisation(String organisationName, OrganisationTypeEnum organisationType) {
 
         return with(data -> {
 
@@ -44,7 +45,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                 OrganisationResource created = organisationService.create(newOrganisationResource().
                         withId().
                         withName(organisationName).
-                        withOrganisationType(organisationTypeId).
+                        withOrganisationType(organisationType.getOrganisationTypeId()).
                         build()).getSuccessObjectOrThrowException();
 
                 data.setOrganisation(created);

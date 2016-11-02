@@ -1,5 +1,7 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.user.resource.OrganisationResource;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -9,9 +11,18 @@ import static java.util.Collections.emptyList;
 public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserData, ExternalUserDataBuilder> {
 
 
-    public ExternalUserDataBuilder registerUserWithNewOrganisation(String firstName, String lastName, String emailAddress, String organisationName) {
+    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress) {
         return with(data -> {
-            registerUserWithNewOrganisation(firstName, lastName, emailAddress, organisationName, APPLICANT, data);
+            data.setFirstName(firstName);
+            data.setLastName(lastName);
+            data.setEmailAddress(emailAddress);
+        });
+    }
+
+    public ExternalUserDataBuilder withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
+        return with(data -> {
+            OrganisationResource newOrganisation = organisationBuilder.build().getOrganisation();
+            registerUserWithExistingOrganisation(data.getFirstName(), data.getLastName(), data.getEmailAddress(), newOrganisation.getName(), APPLICANT, data);
         });
     }
 
