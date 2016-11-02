@@ -92,13 +92,11 @@ Approve Eligibility: Lead partner organisation
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 
-
 #Please note this test needs test data to be created [INFUND-5879]
 
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
-    [Tags]    HappyPath    Pending
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    [Tags]    HappyPath    Blocked
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
