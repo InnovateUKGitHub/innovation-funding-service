@@ -96,7 +96,7 @@ Approve Eligibility: Lead partner organisation
 
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
-    [Tags]    HappyPath    Blocked
+    [Tags]    HappyPath    Pending
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
