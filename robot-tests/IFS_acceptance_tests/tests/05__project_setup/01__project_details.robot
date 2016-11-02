@@ -44,8 +44,9 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(1)
+    When The user clicks the button/link    link=00000026: best riffs
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
@@ -156,8 +157,7 @@ Submit button is disabled if the details are not fully filled out
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
-    [Tags]    Pending    HappyPath
-    #TODO INFUND-5224    Pending due to Month saving failing
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
@@ -299,7 +299,7 @@ Project details can be submitted with PM, project address and start date
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
-    Submit project details button should be enabled
+    Mark as complete button should be enabled
 
 Partners nominate finance contacts
     [Documentation]    INFUND-2620, INFUND-5368
@@ -544,16 +544,16 @@ the user should see the dummy data
     the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
 the submit button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Submit project details")
+    Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
-    the user clicks the button/link    jQuery=.button:contains("Submit project details")
+    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 all the fields are completed
@@ -569,8 +569,8 @@ the user changes the start date back again
     the user enters text to a text field    id=projectStartDate_year    2017
     the user clicks the button/link    jQuery=.button:contains("Save")
 
-Submit project details button should be enabled
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
+Mark as complete button should be enabled
+    Then Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label

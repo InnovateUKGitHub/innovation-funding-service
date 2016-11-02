@@ -177,11 +177,22 @@
         <div class="grid-row">
             <div class="column-half">
                 <h3 class="heading-small">Project title</h3>
-                <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
 
-                <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Machine learning in robots</p>
+                <th:block th:if="${status == 'closed' and user == 'admin'}">
+                  <p>The potential for glucose based contact lens monitoring in the management of type two diabetes</p>
+                </th:block>
 
-                <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
+                <th:block th:if="${status == 'open' and user == 'admin'}">
+                  <p>Machine learning in robots</p>
+                </th:block>
+
+                <th:block th:unless="${status == 'closed' and user == 'admin'}">
+                  <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
+
+                  <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Machine learning in robots</p>
+
+                  <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
+                </th:block>
 
                 <h3 class="heading-small">Lead organisation</h3>
                 <p>Aptrans Ltd</p>
@@ -655,7 +666,6 @@
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
     <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
-
 
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 

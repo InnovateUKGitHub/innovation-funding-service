@@ -1,13 +1,14 @@
-package com.worth.ifs.competitionsetup.service.sectionupdaters;
+package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the application form section.
  */
 @Service
-public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver {
+public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsectionSaver {
 
     @Autowired
     private CompetitionService competitionService;
@@ -31,8 +33,8 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
-	public CompetitionSetupSection sectionToSave() {
-		return CompetitionSetupSection.APPLICATION_FORM;
+	public CompetitionSetupSubsection sectionToSave() {
+		return CompetitionSetupSubsection.QUESTIONS;
 	}
 
 	@Override
@@ -41,7 +43,8 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
+                                            String value, Optional<Long> objectId) {
 	    if(objectId.isPresent()) {
             Question question = competitionSetupQuestionService.getQuestion(objectId.get());
 
@@ -56,16 +59,7 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            if ("fullApplicationFinance".equals(fieldName)) {
-                competitionResource.setFullApplicationFinance(Boolean.valueOf(value));
-                competitionService.update(competitionResource);
-            } else if ("includeGrowthTable".equals(fieldName)) {
-                competitionResource.setIncludeGrowthTable(Boolean.valueOf(value));
-                competitionService.update(competitionResource);
-            } else {
-                return makeErrorList();
-            }
-
+            throw new IllegalArgumentException("Question Id is required to save the question field.");
         }
 
         return Collections.emptyList();
@@ -73,25 +67,25 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	private List<Error> updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
         switch (fieldName) {
-            case "questionToUpdate.title" :
+            case "question.shortTitle" :
+                question.setShortTitle(value);
+                break;
+            case "question.title" :
                 question.setTitle(value);
                 break;
-            case "questionToUpdate.subTitle" :
+            case "question.subTitle" :
                 question.setSubTitle(value);
                 break;
-            case "questionToUpdate.guidanceTitle" :
+            case "question.guidanceTitle" :
                 question.setGuidanceTitle(value);
                 break;
-            case "questionToUpdate.guidance" :
+            case "question.guidance" :
                 question.setGuidance(value);
                 break;
-            case "questionToUpdate.maxWords" :
+            case "question.maxWords" :
                 question.setMaxWords(Integer.parseInt(value));
-            case "questionToUpdate.scored" :
-                question.setScored(stringValueToBoolean(value));
-                break;
-            case "questionToUpdate.appendix" :
-                question.setAppendix(stringValueToBoolean(value));
+            case "question.appendix" :
+                question.setAppendix(textToBoolean(value));
                 break;
             default:
                 return makeErrorList();
@@ -102,10 +96,6 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	private List<Error> makeErrorList() {
         return asList(fieldError("", null, "Unable to save question"));
-    }
-
-	private Boolean stringValueToBoolean(String value) {
-	    return value.equals("1");
     }
 
 	@Override
