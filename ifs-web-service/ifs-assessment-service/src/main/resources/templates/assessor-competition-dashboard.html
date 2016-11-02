@@ -40,7 +40,7 @@
                                         <p th:text="${application.leadOrganisation}" />
                                     </div>
                                 </div>
-                                <label>
+                                <label th:if="${application.readyToSubmit}">
                                     <span class="visuallyhidden">Mark assessment for submission</span>
                                     <input class="assessment-submit-checkbox" type="checkbox" />
                                 </label>

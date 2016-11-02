@@ -15,9 +15,12 @@ import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import static com.worth.ifs.project.finance.resource.FinanceCheckOutcomes.*;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
@@ -93,6 +96,21 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
     @Override
     protected StateMachine<FinanceCheckState, FinanceCheckOutcomes> getStateMachine() {
         return stateMachine;
+    }
+
+    @Override
+    protected FinanceCheckProcess getOrCreateProcess(Message<FinanceCheckOutcomes> message) {
+
+        PartnerOrganisation target = (PartnerOrganisation) message.getHeaders().get("target");
+
+        Optional<FinanceCheckProcess> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
+
+        FinanceCheckProcess processToUpdate = existingProcess.orElseGet(() -> {
+            ProjectUser participant = (ProjectUser) message.getHeaders().get("participant");
+            return createNewProcess(target, participant);
+        });
+
+        return processToUpdate;
     }
 
     private MessageBuilder<FinanceCheckOutcomes> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {

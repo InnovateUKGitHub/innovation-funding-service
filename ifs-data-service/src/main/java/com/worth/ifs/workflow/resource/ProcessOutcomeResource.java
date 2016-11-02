@@ -9,6 +9,7 @@ public class ProcessOutcomeResource {
     private String description;
     private String comment;
     private String outcomeType;
+    private Integer index;
 
     public Long getId() {
         return this.id;
@@ -50,6 +51,14 @@ public class ProcessOutcomeResource {
         this.outcomeType = outcomeType;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -65,9 +74,10 @@ public class ProcessOutcomeResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(outcome, that.outcome)
-                .append(outcomeType, that.outcomeType)
                 .append(description, that.description)
                 .append(comment, that.comment)
+                .append(outcomeType, that.outcomeType)
+                .append(index, that.index)
                 .isEquals();
     }
 
@@ -76,9 +86,10 @@ public class ProcessOutcomeResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(outcome)
-                .append(outcomeType)
                 .append(description)
                 .append(comment)
+                .append(outcomeType)
+                .append(index)
                 .toHashCode();
     }
 }

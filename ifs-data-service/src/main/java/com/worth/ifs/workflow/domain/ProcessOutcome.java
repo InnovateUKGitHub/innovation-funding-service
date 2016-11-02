@@ -1,6 +1,8 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -16,16 +18,9 @@ public class ProcessOutcome {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="processId", referencedColumnName="id")
     private Process process;
-
-    public ProcessOutcome() {
-    	// no-arg constructor
-    }
-
-    public ProcessOutcome(String outcome, String description, String comment) {
-        this.outcome = outcome;
-        this.description = description;
-        this.comment = comment;
-    }
+    private String outcomeType;
+    @Column(name = "process_index", nullable = false)
+    private Integer index;
 
     @JsonIgnore
     public Process getProcess() {
@@ -36,8 +31,13 @@ public class ProcessOutcome {
         this.process = process;
     }
 
-    private String outcomeType;
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getOutcome() {
         return outcome;
@@ -55,10 +55,6 @@ public class ProcessOutcome {
         this.description = description;
     }
 
-    public String getOutcomeType() {
-        return outcomeType;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -67,42 +63,55 @@ public class ProcessOutcome {
         this.comment = comment;
     }
 
+    public String getOutcomeType() {
+        return outcomeType;
+    }
+
     public void setOutcomeType(String outcomeType) {
         this.outcomeType = outcomeType;
     }
 
-    public Long getId() {
-        return id;
+    public Integer getIndex() {
+        return index;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ProcessOutcome that = (ProcessOutcome) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (outcome != null ? !outcome.equals(that.outcome) : that.outcome != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        if (process != null ? !process.equals(that.process) : that.process != null) return false;
-        return outcomeType != null ? outcomeType.equals(that.outcomeType) : that.outcomeType == null;
-
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(outcome, that.outcome)
+                .append(description, that.description)
+                .append(comment, that.comment)
+                .append(process, that.process)
+                .append(outcomeType, that.outcomeType)
+                .append(index, that.index)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (outcome != null ? outcome.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (process != null ? process.hashCode() : 0);
-        result = 31 * result + (outcomeType != null ? outcomeType.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(outcome)
+                .append(description)
+                .append(comment)
+                .append(process)
+                .append(outcomeType)
+                .append(index)
+                .toHashCode();
     }
 }

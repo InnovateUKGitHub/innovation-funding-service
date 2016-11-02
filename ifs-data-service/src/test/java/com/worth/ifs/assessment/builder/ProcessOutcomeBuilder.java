@@ -6,6 +6,7 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -42,6 +43,10 @@ public class ProcessOutcomeBuilder extends BaseBuilder<ProcessOutcome, ProcessOu
 
     public ProcessOutcomeBuilder withComment(String comment) {
         return with(processOutcome -> processOutcome.setComment(comment));
+    }
+
+    public ProcessOutcomeBuilder withIndex(Integer... indexes) {
+        return withArray((index, processOutcome) -> setField("index", index, processOutcome), indexes);
     }
 
 }

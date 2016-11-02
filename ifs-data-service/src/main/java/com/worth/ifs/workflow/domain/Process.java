@@ -3,8 +3,6 @@ package com.worth.ifs.workflow.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.resource.ProcessStates;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -34,9 +32,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @OneToMany(mappedBy="process")
+    @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
     @OrderColumn(name = "process_index")
-    @Cascade(CascadeType.ALL)
     protected List<ProcessOutcome> processOutcomes;
 
     @ManyToOne
