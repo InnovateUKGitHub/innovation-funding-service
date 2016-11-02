@@ -16,7 +16,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.project.id}, projectName=${model.project.name})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.project.name})" th:remove="tag" />
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
@@ -39,8 +39,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
-                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Start date</span>
+                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Target start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
@@ -81,15 +81,14 @@
         </tbody>
     </table>
 
-    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
     <div class="extra-margin"  th:if="${model.anySectionIncomplete}">
         <p>You are not able to submit until all sections above are marked as complete.</p>
-        <button disabled="disabled" class="button">Submit project details</button>
+        <button disabled="disabled" class="button">Mark as complete</button>
     </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
-
-    <p>Each partner must provide a finance contact. They will be responsible for queries from us around partner finances.</p>
+    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
 
     <table id="project-details-finance">
         <thead>
@@ -103,8 +102,8 @@
             <tr th:each="organisation: ${model.partnerOrganisations}">
 
                 <td>
-                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isFinanceContactSubmitted()}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isFinanceContactSubmitted()}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
+                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id)}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
                 </td>
                 <td>
                   <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">

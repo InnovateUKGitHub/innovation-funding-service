@@ -18,12 +18,11 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Bank details'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/4547-review-all-bank-details?status=accepted' : '/prototypes/4547-review-all-bank-details')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Bank account'})" th:remove="tag" />
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Bank account'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
+
+	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<div class="success-alert" th:unless="${param.status == null or param.status[0] != 'accepted'}">
 		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
@@ -92,7 +91,7 @@
 					<span class="yes">Match</span>
 				</td>
 			</tr>
-			
+
 			<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
 				<tr>
 					<td>
@@ -157,8 +156,8 @@
 				<hr />
 
             	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
             		<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=accepted&#38;type=noCompHouse':'/prototypes/2650-review-bank-details?status=accepted'}" class="button">Approve account</a>
             	</div>
@@ -184,7 +183,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -192,7 +191,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }

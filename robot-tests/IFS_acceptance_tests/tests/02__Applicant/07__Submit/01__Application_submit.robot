@@ -53,7 +53,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given guest user log-in    ${submit_test_email}    Passw0rd123
+    Given log in as a different user    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review & submit
@@ -68,7 +68,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath    SmokeTest
-    Then the user should get a confirmation email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    Congratulations, you have successfully submitted an application for funding to Innovate    Successful submission of application
+    Then the user reads his email    ${test_mailbox_one}+submittest@gmail.com    Successful submission of application    you have successfully submitted an application
 
 Submitted application is read only
     [Documentation]    INFUND-1938

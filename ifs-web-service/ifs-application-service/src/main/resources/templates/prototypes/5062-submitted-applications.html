@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -31,16 +31,16 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Competition closed'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications submitted'}, ${null})" th:remove="tag" />
 
 	<h2 class="heading-large" id="current-assessors">Applications submitted</h2>
-			
+
 		<section class="boxed">
-			
+
 			<div class="grid-row">
 				<div class="column-half">
 			 		<p><span class="heading-large">12th April 2016</span> assessment deadline</p>
@@ -59,7 +59,7 @@
 				<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
-						
+
 						<h2 class="heading-medium no-margin">Notify applicants</h2>
 
 						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
@@ -67,7 +67,7 @@
 						<p>This step cannot be undone.</p>
 
 						<hr />
-			            
+
 			            <div class="grid-row extra-margin">
 			            	<div class="column-half">
 			            		<a href="#">Cancel</a>
@@ -85,10 +85,10 @@
 		</section>
 
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-	
-			
+
+
 			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
-			
+
 			<div class="table-overflow">
 				<table id="application-list">
 					<thead>
@@ -178,9 +178,9 @@
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
-			
+
 				<!-- <ul class="pagination">
 				    <li class="next">
 				        <a href="#" rel="next" title="Navigate to next part">
@@ -189,9 +189,9 @@
 				        </a>
 				    </li>
 				</ul> -->
-			
+
 			</div>
-	
+
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

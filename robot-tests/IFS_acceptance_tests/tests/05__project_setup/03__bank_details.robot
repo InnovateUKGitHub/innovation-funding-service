@@ -4,7 +4,6 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
 ...
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
-Suite Setup       Log in as user    steve.smith@empire.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -17,7 +16,7 @@ Bank details page
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=00000001: best riffs
+    When the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
@@ -94,14 +93,14 @@ Bank details submission
     Then the user navigates to the page             ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
-    [Teardown]    logout as user
+
 
 Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    Given guest user log-in    pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000001: best riffs
+    Given log in as a different user    pete.tom@egg.com    Passw0rd
+    And the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Bank details
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -124,12 +123,11 @@ Bank details for Academic
     Then the user navigates to the page     ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
-    [Teardown]    logout as user
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
@@ -141,8 +139,8 @@ Status updates correctly for internal user's table
 Bank details for non-lead partner
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
-    Given guest user log-in  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link           link=00000001: best riffs
+    Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
+    When the user clicks the button/link           link=00000026: best riffs
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
@@ -166,7 +164,7 @@ Bank details for non-lead partner
     Then the user navigates to the page             ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
-    [Teardown]    logout as user
+
 
 
 *** Keywords ***

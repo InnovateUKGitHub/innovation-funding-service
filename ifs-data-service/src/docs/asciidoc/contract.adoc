@@ -1,11 +1,11 @@
 == Retrieve current contract
-==== Success case
-==== Request
+=== Success case
+=== Request
 include::{snippets}/contract/find-current/http-request.adoc[]
 
-==== Response
+=== Response
 include::{snippets}/contract/find-current/http-response.adoc[]
 include::{snippets}/contract/find-current/response-fields.adoc[]
 
-==== Curl Example
+=== Curl Example
 include::{snippets}/contract/find-current/curl-request.adoc[]

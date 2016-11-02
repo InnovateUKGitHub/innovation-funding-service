@@ -14,33 +14,26 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessors'}, ${'/prototypes/5389-manage-assessors'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessors'}, ${'/prototypes/5389-manage-assessors?comp=assessment'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Assessor progress</h1>
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor progress'}, ${'in assessment'})" th:remove="tag" />
 
 	<h2 class="heading-large no-margin">John Smith</h2>
 
 	<h3 class="heading-medium">Innovation area and skills</h3>
 
 	<div class="grid-row">
-		<div class="column-quarter">
-			<h4 class="heading-small no-margin">Innovation area</h4>
-			<ul>
-				<li>Advanced materials</li>
-				<li>Biosciences</li>
-				<li>Materials</li>
-			</ul>
-		</div>
-		<div class="column-quarter">
-			<h4 class="heading-small no-margin">Type</h4>
-			<p>Business</p>
-			<h4 class="heading-small">Principle employer</h4>
-			<p>ASDF Solutions</p>
+		<div class="column-half">
+			<h4 class="heading-small">Innovation area</h4>
+			<p>Advanceed materials, Biosciences, Materials</p>
+
+			<h4 class="heading-small">Skills areas</h4>
+			<p>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</p>
 		</div>
 	</div>
+
 	<p>
 		<a href="#">Review assessor</a>
 	</p>

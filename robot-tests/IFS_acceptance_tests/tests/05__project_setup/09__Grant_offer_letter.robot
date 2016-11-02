@@ -9,17 +9,17 @@ Partners should not be able to submit the Grant Offer
     [Documentation]    INFUND-4851
     [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    Given the user clicks the button/link    link=00000001: best riffs
+    Given the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
     And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
-    [Teardown]    logout as user
+
 
 PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851
     [Tags]
-    [Setup]    log in as user    worth.email.test+projectlead@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000001: best riffs
+    [Setup]    log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=00000026: best riffs
     And the user clicks the button/link    link=Grant offer letter
     When the lead uploads a grant offer letter    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
@@ -29,7 +29,7 @@ PM should be able upload a file and then access the Submit button
     [Documentation]    INFUND-4851
     [Tags]
     [Setup]
-    # TO DO remove the comment from the last check when the infund-5567 is ready
+    # TODO remove the comment from the last check when the infund-5567 is ready
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     #And the Grant offer submit button should be enabled
@@ -55,12 +55,11 @@ PM's dashboard should be updated
     #TODO Pending INFUND-5584
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
-    [Teardown]    logout as user
 
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851
     [Tags]    Pending
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     #TODO Pending INFUND-5584
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok

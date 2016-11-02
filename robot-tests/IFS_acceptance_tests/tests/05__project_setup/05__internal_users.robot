@@ -19,18 +19,18 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
-Other internal users cannot see Bank details
-    [Documentation]    INFUND-4903
-    [Tags]    Experian    HappyPath    Pending
-    #TODO INFUND-5720
+Other internal users cannot see Bank details or Finance checks
+    [Documentation]    INFUND-4903, INFUND-5720
+    [Tags]    Experian    HappyPath
     [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=Killer Riffs
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user should not see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
-
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
     [Tags]    Failing
@@ -43,7 +43,7 @@ Project Finance user can view the Project setup status page
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049
     [Tags]    Failing
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/monitoring-officer')]
@@ -59,7 +59,7 @@ Project Finance user can see the internal project summary page
 Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
     [Tags]    Failing
-    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
@@ -80,7 +80,7 @@ Comp Admin user can see the internal project summary page
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
     [Tags]
-    [Setup]  Log in as user  project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user  project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     Then the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs

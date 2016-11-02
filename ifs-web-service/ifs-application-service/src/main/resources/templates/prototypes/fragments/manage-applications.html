@@ -32,7 +32,7 @@
                     </div>
                     <div class="column-half">
                         <div class="form-group">
-                            <label class="form-label" for="filterSearch">Keywords</label>
+                            <label class="form-label" for="filterSearch">Skills area</label>
                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                         </div>
                         <div class="column-half extra-margin">
@@ -145,11 +145,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a th:href="${(status == 'removed' ? '/prototypes/5698-admin-readonly-application?status=removed' : '#')}">10001000000</a></td>
+                    <td><a th:href="${(status == 'removed' ? '/prototypes/1968-admin-readonly-application?status=removed' : '/prototypes/1968-admin-readonly-application?comp=Closed')}">10001000000</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Information &amp; communications technology (ICT)</td>
                     <td>Wessex University</td>
-                    
+
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
                         <td>
@@ -178,7 +178,7 @@
                     <th:block th:if="${status == 'removed'}">
                         <td>Paul Newbury</td>
                     </th:block>
-                
+
                 </tr>
                 <tr>
                     <td><a href="#">10001000002</a></td>
@@ -251,19 +251,19 @@
             </thead>
             <tbody>
             <tr>
-                <td><a href="#">10001000000</a></td>
-                <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                <td><a href="/prototypes/1968-admin-readonly-application">10001000000</a></td>
+                <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td>Wessex University</td>
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td class="aligncentre">1</td>
                 <td>
-                    <a href="/prototypes/5471-assign-to-application" class="button-secondary">View progress</a>
+                    <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
             <tr>
-                <td><a href="#">10001000001</a></td>
+                <td><a href="/prototypes/1968-admin-readonly-application">10001000001</a></td>
                 <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                 <td>Plymouth University</td>
                 <td class="aligncentre">5</td>
@@ -271,11 +271,11 @@
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td>
-                    <a href="/prototypes/5471-assign-to-application" class="button-secondary">View progress</a>
+                    <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
             <tr>
-                <td><a href="#">10001000002</a></td>
+                <td><a href="/prototypes/1968-admin-readonly-application">10001000002</a></td>
                 <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                 <td>Horizon Ltd</td>
                 <td class="aligncentre">5</td>
@@ -283,11 +283,11 @@
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td>
-                    <a href="/prototypes/5471-assign-to-application" class="button-secondary">View progress</a>
+                    <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
             <tr>
-                <td><a href="#">10001000003</a></td>
+                <td><a href="/prototypes/1968-admin-readonly-application">10001000003</a></td>
                 <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
                 <td>Zodiac Industries Ltd</td>
                 <td class="aligncentre">5</td>
@@ -295,11 +295,11 @@
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td>
-                    <a href="/prototypes/5471-assign-to-application" class="button-secondary">View progress</a>
+                    <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
             <tr>
-                <td><a href="#">10001000004</a></td>
+                <td><a href="/prototypes/1968-admin-readonly-application">10001000004</a></td>
                 <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
                 <td>Durham University</td>
                 <td class="aligncentre">5</td>
@@ -307,7 +307,7 @@
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td>
-                    <a href="/prototypes/5471-assign-to-application" class="button-secondary">View progress</a>
+                    <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
             </tbody>
@@ -365,7 +365,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
+                        <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
                 <tr>
@@ -377,7 +377,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
+                        <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
             </tbody>
@@ -423,6 +423,8 @@
                     <th scope="col">Title</th>
                     <th scope="col">Lead Organisation</th>
                     <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Accepted</th>
+                    <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
@@ -432,6 +434,8 @@
                     <td><a href="#">10001000000</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Wessex University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td>
@@ -444,6 +448,8 @@
                     <td>Plymouth University</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -452,6 +458,8 @@
                     <td><a href="#">10001000002</a></td>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Horizon Ltd</td>
+                    <td class="aligncentre">0</td>
+                    <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td>
@@ -463,6 +471,8 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Zodiac Industries Ltd</td>
                     <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
+                    <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -472,6 +482,8 @@
                     <td><a href="#">10001000004</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Durham University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td>
@@ -770,12 +782,12 @@
             <thead>
                 <tr>
                     <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation Area</th>
+                    <!--<th scope="col">Type</th>-->
+                    <th scope="col">Skills Areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
-                    <th class="aligncentre" scope="col">Accepted</th>
-                    <th class="aligncentre" scope="col">Started</th>
+                    <!--<th class="aligncentre" scope="col">Accepted</th>-->
+                    <!--<th class="aligncentre" scope="col">Started</th>-->
                     <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
@@ -783,12 +795,13 @@
             <tbody>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <!--<td>Business</td>-->
+                    <!--<td>Electronics, sensors &amp; photonics, Materials</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
-                    <td class="aligncentre">2</td>
-                    <td class="aligncentre">1</td>
+                    <!--<td class="aligncentre">2</td>-->
+                    <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -796,12 +809,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Academic</td>
-                    <td>Healthcare, Regenerative medicine</td>
+                    <!--<td>Academic</td>-->
+                    <!--<td>Healthcare, Regenerative medicine</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">2</td>
-                    <td class="aligncentre">2</td>
-                    <td class="aligncentre">1</td>
+                    <!--<td class="aligncentre">2</td>-->
+                    <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -809,12 +823,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>Business</td>
-                    <td>Analytical science</td>
+                    <!--<td>Business</td>-->
+                    <!--<td>Analytical science</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
-                    <td class="aligncentre">2</td>
-                    <td class="aligncentre">0</td>
+                    <!--<td class="aligncentre">2</td>-->
+                    <!--<td class="aligncentre">0</td>-->
                     <td class="aligncentre">0</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -822,12 +837,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>Academic</td>
-                    <td>Architectures and operating system</td>
+                    <!--<td>Academic</td>-->
+                    <!--<td>Architectures and operating system</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
-                    <td class="aligncentre">2</td>
-                    <td class="aligncentre">2</td>
+                    <!--<td class="aligncentre">2</td>-->
+                    <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -835,12 +851,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <!--<td>Business</td>-->
+                    <!--<td>Electronics, sensors &amp; photonics, Materials</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">1</td>
-                    <td class="aligncentre">2</td>
-                    <td class="aligncentre">2</td>
+                    <!--<td class="aligncentre">2</td>-->
+                    <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -848,12 +865,13 @@
                 </tr>
                 <tr>
                     <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Business</td>
-                    <td>Biophysics and soft matter physics</td>
+                    <!--<td>Business</td>-->
+                    <!--<td>Biophysics and soft matter physics</td>-->
+                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
-                    <td class="aligncentre">3</td>
-                    <td class="aligncentre">2</td>
+                    <!--<td class="aligncentre">3</td>-->
+                    <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
@@ -918,7 +936,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
+                        <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
                 <tr>
@@ -931,7 +949,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
+                        <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
             </tbody>
@@ -1071,13 +1089,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td><a th:href="${'/prototypes/5229-assessor-profile'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">Oliver Romero</a></td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">4</td>
                     <td>
-                        <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
+                        <a th:href="${'/prototypes/5473-assign-assessors-progress'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>

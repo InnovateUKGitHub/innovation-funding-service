@@ -496,6 +496,7 @@
                     <option value="Managed services">Managed services</option>
                     <option value="SBRI">SBRI</option>
                     <option value="Special">Special</option>
+                    <option value="Sector competition">Sector competition</option>
                 </select>
             </div>
 
@@ -548,6 +549,37 @@
                     <option value="Urban living and built" class="infrastructure">Urban living and built</option>
                 </select>
             </div>
+            <div class="form-group" id="innovation-area2-form-group">
+                <label class="form-label" for="compInnovationArea2">
+                    <span class="form-label-bold visuallyhidden">Innovation area</span>
+                </label>
+                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                    <option value="">Please select &hellip;</option>
+                    <option value="Health and care" class="health">Health and care</option>
+                    <option value="Agriculture and food" class="health">Agriculture and food</option>
+                    <option value="Biosciences" class="health">Biosciences</option>
+
+                    <option value="High value manufacturing" class="materials">High value manufacturing</option>
+                    <option value="Resource efficiency" class="materials">Resource efficiency</option>
+                    <option value="Advanced materials" class="materials">Advanced materials</option>
+
+                    <option value="Digital" class="emerging">Digital</option>
+                    <option value="Satellite applications" class="emerging">Satellite applications</option>
+                    <option value="ICT" class="emerging">ICT</option>
+                    <option value="Design and creative economy" class="emerging">Design and creative economy</option>
+                    <option value="Emerging tech and industries" class="emerging">Emerging tech and industries</option>
+                    <option value="Robotics and autonomous systems" class="emerging">Robotics and autonomous systems</option>
+                    <option value="Electronics, sensors and photonics" class="emerging">Electronics, sensors and photonics</option>
+
+                    <option value="Transport" class="infrastructure">Transport</option>
+                    <option value="Energy" class="infrastructure">Energy</option>
+                    <option value="Urban living and built" class="infrastructure">Urban living and built</option>
+                </select>
+                <a href="#" id="remove-innovation-area">Remove</a>
+            </div>
+            <p id="add-innovation-area">
+                <a href="#">+ add another innovation area</a>
+            </p>
 
             <fieldset class="form-group">
                 <h3 class="heading-small no-margin">Opening date</h3>
@@ -579,13 +611,13 @@
 
             <div class="form-group">
                 <label class="form-label" for="compLeadTechnologist">
-                    <span class="form-label-bold">Competition Innovate Lead</span>
+                    <span class="form-label-bold">Competition Innovation Lead</span>
                 </label>
                 <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
-                    <option value="">Innovate Lead 1</option>
-                    <option value="">Innovate Lead 2</option>
-                    <option value="">Innovate Lead 3</option>
+                    <option value="">Innovation Lead 1</option>
+                    <option value="">Innovation Lead 2</option>
+                    <option value="">Innovation Lead 3</option>
                 </select>
             </div>
 
@@ -649,7 +681,7 @@
                 <dt>Opening date</dt>
                 <dd>15/07/2017</dd>
 
-                <dt>Competition Innovate Lead</dt>
+                <dt>Competition Innovation Lead</dt>
                 <dd>Natalie Wilson</dd>
 
                 <dt>Competition executive</dt>
