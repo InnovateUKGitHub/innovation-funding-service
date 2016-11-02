@@ -2,11 +2,13 @@ package com.worth.ifs.testdata;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.competition.transactional.MilestoneService;
@@ -36,6 +38,7 @@ import static com.worth.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * TODO DW - document this class
@@ -108,6 +111,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
         return organisationRepository.findOneByName(organisationName);
+    }
+
+    protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, CompetitionResource competition) {
+        return doAs(compAdmin(), () -> {
+            List<QuestionResource> questions = questionService.findByCompetition(competition.getId()).getSuccessObjectOrThrowException();
+            return simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
+        });
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {

@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -11,6 +12,7 @@ public class ApplicationFinanceData {
     private ApplicationResource application;
     private OrganisationResource organisation;
     private UserResource user;
+    private CompetitionResource competition;
 
     public void setApplication(ApplicationResource application) {
         this.application = application;
@@ -34,5 +36,13 @@ public class ApplicationFinanceData {
 
     public UserResource getUser() {
         return user;
+    }
+
+    public void setCompetition(CompetitionResource competition) {
+        this.competition = competition;
+    }
+
+    public CompetitionResource getCompetition() {
+        return competition;
     }
 }

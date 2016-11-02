@@ -94,7 +94,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> {
 
             ApplicationFinanceDataBuilder baseFinanceBuilder = newApplicationFinanceData(serviceLocator).
-                    withApplication(data.getApplication());
+                    withApplication(data.getApplication()).
+                    withCompetition(data.getCompetition());
 
             asList(builderFns).forEach(fn -> fn.apply(baseFinanceBuilder).build());
 
@@ -109,8 +110,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private void doAnswerQuestion(String questionName, String value, ApplicationData data) {
 
-        List<QuestionResource> questions = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObjectOrThrowException();
-        QuestionResource question = simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
+        QuestionResource question = retrieveQuestionByCompetitionAndName(questionName, data.getCompetition());
         List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
 
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(

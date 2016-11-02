@@ -354,22 +354,25 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 withOrganisation("Empire Ltd").
                                 withUser(applicant1).
                                 withIndustrialCosts(
-                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                                    costs -> costs.
+                                        withLabourEntry("Role 1", 100, 200).
+                                        withLabourEntry("Role 2", 200, 300).
+                                        withLabourEntry("Role 3", 300, 365)),
                             finance -> finance.
                                 withOrganisation("Ludlow").
                                 withUser(applicant2).
                                 withIndustrialCosts(
-                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                                    costs -> costs.withLabourEntry("Role 1", 100, 200)),
                             finance -> finance.
                                 withOrganisation("EGGS").
                                 withUser(applicant4).
-                                withIndustrialCosts(
-                                    costs -> costs.withLabourEntry(bd("10.00"))),
+                                withAcademicCosts(
+                                    costs -> costs.withLabourEntry("Role 1", 100, 200)),
                             finance -> finance.
                                 withOrganisation("HIVE IT LIMITED").
                                 withUser(applicant5).
                                 withIndustrialCosts(
-                                    costs -> costs.withLabourEntry(bd("10.00")))
+                                    costs -> costs.withLabourEntry("Role 1", 100, 200))
                         )
                 ).
                 moveCompetitionIntoFundersPanelStatus().
