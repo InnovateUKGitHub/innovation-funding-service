@@ -485,11 +485,7 @@ the users fill out project details
     And the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
     And the user clicks the button/link    jQuery=.button:contains("Save")
-<<<<<<< HEAD
-    the user clicks the button/link    jQuery=.button:contains("Submit all project details")
-=======
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
->>>>>>> d7efd8cefd29f4e74b4341ad2a64c76c1aa8581d
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 the sum of tds equals the total
@@ -521,11 +517,8 @@ other partners spend profiles get submitted
     Connect to Database    @{database}
     execute sql string     UPDATE `${database_name}`.`spend_profile` SET `marked_as_complete`='1' WHERE `id`='2';
     execute sql string     UPDATE `${database_name}`.`spend_profile` SET `marked_as_complete`='1' WHERE `id`='3';
-<<<<<<< HEAD
-=======
 
 the user should see all spend profiles as complete
     the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
     the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
     the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(3) td:nth-child(2):contains("Complete")
->>>>>>> d7efd8cefd29f4e74b4341ad2a64c76c1aa8581d
