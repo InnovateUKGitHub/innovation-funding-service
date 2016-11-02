@@ -356,6 +356,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 withIndustrialCosts(
                                     costs -> costs.
                                         withWorkingDaysPerYear(123).
+                                        withGrantClaim(456).
+                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
                                         withLabourEntry("Role 3", 300, 365).
