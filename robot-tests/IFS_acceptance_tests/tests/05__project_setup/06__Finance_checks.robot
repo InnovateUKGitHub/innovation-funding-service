@@ -14,7 +14,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/4
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476
     [Tags]  HappyPath
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
@@ -87,15 +87,15 @@ Approve Eligibility: Lead partner organisation
     And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
-    [Teardown]  Logout as user
+
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath
-    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
-    [Teardown]  Logout as user
+
 
 *** Keywords ***
 the table row has expected values
@@ -107,11 +107,10 @@ the table row has expected values
 
 Moving La Fromage into project setup
     the project finance user moves La Fromage into project setup if it isn't already
-    logout as user
     the users fill out project details
 
 the project finance user moves La Fromage into project setup if it isn't already
-    log in as user    project.finance1@innovateuk.test    Passw0rd
+    guest user log-in    project.finance1@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
     ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    La Fromage
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
@@ -137,7 +136,7 @@ the user uploads the file
     Sleep    500ms
 
 the users fill out project details
-    When Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -145,8 +144,7 @@ the users fill out project details
     And the user clicks the button/link    link=Ludlow
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then Logout as user
-    When Log in as user    pete.tom@egg.com    Passw0rd
+    When Log in as a different user    pete.tom@egg.com    Passw0rd
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -154,8 +152,7 @@ the users fill out project details
     And the user clicks the button/link    link=EGGS
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    logout as user
-    When Log in as user    steve.smith@empire.com    Passw0rd
+    When Log in as a different user    steve.smith@empire.com    Passw0rd
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
