@@ -46,6 +46,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
 
         List<AssessmentStates> allowedActivityStates = new ArrayList<>();
+        allowedActivityStates.add(AssessmentStates.PENDING);
         allowedActivityStates.add(AssessmentStates.OPEN);
         allowedActivityStates.add(AssessmentStates.ASSESSED);
         allowedActivityStates.add(AssessmentStates.SUBMITTED);

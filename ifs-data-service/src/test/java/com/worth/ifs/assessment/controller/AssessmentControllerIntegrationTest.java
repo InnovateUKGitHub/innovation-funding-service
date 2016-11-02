@@ -77,7 +77,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
-        assertEquals(4, assessmentResources.size());
+        assertEquals(3, assessmentResources.size());
     }
 
     @Test
