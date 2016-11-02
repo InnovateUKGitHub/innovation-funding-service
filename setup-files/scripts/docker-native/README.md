@@ -34,11 +34,7 @@ application stack. You should kill the process beforehand e.g. `sudo service sto
     copy the contents into a `.env` file and then modify the ports. However, the important ports necessary for the
     infrastructure to function properly cannot be changed.
 
-2. Run `hosts-helper.sh` script (or manually setup your `hosts` file for Windows):
-        
-        ./hosts-helper.sh
-
-3. Run the `setup.sh` script:
+2. Run the `setup.sh` script:
 
         ./setup.sh
         
