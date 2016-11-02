@@ -385,7 +385,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 withUser(applicant5).
                                 withIndustrialCosts(
                                     costs -> costs.withLabourEntry("Role 1", 100, 200))
-                        )
+                        ).
+                        submitApplication()
                 ).
                 moveCompetitionIntoFundersPanelStatus().
                 sendFundingDecisions(FundingDecision.FUNDED).
