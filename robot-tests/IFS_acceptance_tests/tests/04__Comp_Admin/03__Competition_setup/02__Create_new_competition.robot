@@ -95,7 +95,7 @@ Initial details server-side validations
     And the user should see an error    Please enter an opening year
     And the user should see an error    Please enter an opening day
     And the user should see an error    Please enter an opening month
-    And the user should see an error    Please select an Innovate Lead
+    And the user should see an error    Please select an Innovation Lead    
     And the user should see an error    Please select a competition executive
 
 Initial details correct state aid status

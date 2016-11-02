@@ -124,7 +124,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Question question = new Question();
         question.setId(questionId);
 
-        mockMvc.perform(post(URL_PREFIX +"/question"))
+        mockMvc.perform(post(URL_PREFIX +"/question")
+                .param("question.id", questionId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
