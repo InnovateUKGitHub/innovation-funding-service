@@ -30,7 +30,7 @@ Other internal users cannot see Bank details or Finance checks
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
-
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
     [Tags]    Failing
