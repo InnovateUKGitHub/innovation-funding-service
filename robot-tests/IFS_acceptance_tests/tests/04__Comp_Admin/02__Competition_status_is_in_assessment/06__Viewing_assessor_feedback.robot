@@ -30,12 +30,11 @@ Comp admin can view unsuccessful uploaded feedback
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should not see an error in the page
     And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    [Teardown]    Logout as user
 
 Unsuccessful applicant can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
-    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
+    [Setup]    Log in as a different user    worth.email.test.two+fundfailure@gmail.com    Passw0rd
     Given the user navigates to the page    ${unsuccessful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
@@ -52,7 +51,7 @@ Unsuccessful applicant cannot remove the uploaded feedback
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
-    Given guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given Log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user navigates to the page    ${successful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)

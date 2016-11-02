@@ -43,7 +43,7 @@ Project Finance user can view the Project setup status page
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049
     [Tags]    Failing
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/monitoring-officer')]
@@ -59,7 +59,7 @@ Project Finance user can see the internal project summary page
 Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
     [Tags]    Failing
-    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
@@ -80,7 +80,7 @@ Comp Admin user can see the internal project summary page
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
     [Tags]
-    [Setup]  Log in as user  project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user  project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     Then the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs

@@ -66,7 +66,7 @@ Internal users can see Project Details not yet completed
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
-    [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=00000026: best riffs
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -92,7 +92,7 @@ Non-lead partner can see the project setup page
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
-    [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
@@ -120,12 +120,12 @@ Non-lead partner can see the application overview
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application questions
     And the user should not see an error in the page
-    [Teardown]    logout as user
+
 
 Lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621
     [Tags]    HappyPath
-    [Setup]    log in as user    &{lead_applicant_credentials}
+    [Setup]    log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
@@ -200,7 +200,7 @@ Lead partner can change the Start Date
 Option to invite a project manager
     [Documentation]    INFUND-3483
     [Tags]    HappyPath
-    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
@@ -327,8 +327,7 @@ Project details can be submitted with PM, project address and start date
 Partners nominate finance contacts
     [Documentation]    INFUND-2620, INFUND-5368
     [Tags]    HappyPath
-    [Setup]    Logout as user
-    When Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -339,8 +338,7 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should see the element    link=Ludlow
-    Then Logout as user
-    When Log in as user    pete.tom@egg.com    Passw0rd
+    When Log in as a different user    pete.tom@egg.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -351,12 +349,12 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
     And the user should see the element    link=EGGS
-    [Teardown]    logout as user
+
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
-    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user should see the text in the page    Finance contacts
@@ -448,18 +446,18 @@ Lead partner selects a finance contact
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
     [Tags]
-    [Setup]    Logout as user
-    Given guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should not see the element    link=Start date
     And the user should not see the element    link=Project manager
     And the user should not see the element    link=Project address
-    [Teardown]    Logout as user
+
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621
     [Tags]    HappyPath
-    [Setup]    guest user log-in    steve.smith@empire.com    Passw0rd
+    [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     When all the fields are completed
     And the applicant clicks the submit button and then clicks cancel in the submit modal
@@ -486,8 +484,7 @@ Project details read only after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
-    [Setup]    the user logs out if they are logged in
-    When guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    When log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Ludlow
     And all the fields are completed
@@ -495,8 +492,7 @@ All partners can view submitted project details
     Then the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    Then the user logs out if they are logged in
-    When guest user log-in    steve.smith@empire.com    Passw0rd
+    When log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Vitruvius Stonework Limited
     And all the fields are completed
@@ -507,8 +503,7 @@ All partners can view submitted project details
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
-    [Setup]    Run Keywords    logout as user
-    ...    AND    guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Start date
@@ -526,12 +521,12 @@ Non-lead partner cannot change any project details
     And the user should be redirected to the correct page    ${project_in_setup_page}
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    Logout as user
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
