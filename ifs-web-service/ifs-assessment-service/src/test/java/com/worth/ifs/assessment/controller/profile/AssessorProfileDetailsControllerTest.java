@@ -200,6 +200,48 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(form.getAddressForm().getAddressLine1(), addressLine1);
         assertEquals(form.getAddressForm().getTown(), town);
         assertEquals(form.getAddressForm().getPostcode(), postcode);
+
+        verify(userService).updateUserProfile(user.getId(), profileDetails);
+    }
+
+    @Test
+    public void submitDetails_partialRequest() throws Exception {
+        UserResource user = buildTestUser();
+        setLoggedInUser(user);
+
+        UserProfileResource profileDetails = buildTestUserProfile();
+
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
+
+        MvcResult result = mockMvc.perform(post("/profile/details/edit")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("title", profileDetails.getTitle())
+                .param("firstName", "")
+                .param("lastName", "")
+                .param("phoneNumber", profileDetails.getPhoneNumber())
+                .param("gender", profileDetails.getGender().name())
+                .param("ethnicity", profileDetails.getEthnicity().getId().toString())
+                .param("disability", profileDetails.getDisability().name())
+                .param("addressForm.addressLine1", profileDetails.getAddress().getAddressLine1())
+                .param("addressForm.town", profileDetails.getAddress().getTown())
+                .param("addressForm.postcode", profileDetails.getAddress().getPostcode()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("form", "lastName"))
+                .andExpect(view().name("profile/details-edit"))
+                .andReturn();
+
+        AssessorProfileEditDetailsForm form = (AssessorProfileEditDetailsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(4, bindingResult.getFieldErrorCount());
+
+        assertEquals(2, bindingResult.getFieldErrorCount("firstName"));
+        assertEquals(2, bindingResult.getFieldErrorCount("lastName"));
     }
 
     @Test
