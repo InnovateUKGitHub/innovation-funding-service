@@ -180,9 +180,10 @@ Project Finance can see the progress of partners bank details
     When the user clicks the button/link            link=Vitruvius Stonework Limited
     Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
     And the user should see the text in the page    Bob Jones
-    And the user should see the element             jQuery=a:contains("worth.email.test+invitedprojectmanager@gmail.com")
+    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
     And the user should see the text in the page    0987654321
     #TODO for Jessica and Pete
+
 
 *** Keywords ***
 the user moves focus away from the element
