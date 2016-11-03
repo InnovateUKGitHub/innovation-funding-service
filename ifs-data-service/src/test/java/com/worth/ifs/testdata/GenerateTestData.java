@@ -211,15 +211,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
         UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
-        competitionDataBuilder.
-                withExistingCompetition(1L).
-                withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
-                withOpenDate(line.openDate).
-                withSubmissionDate(line.submissionDate).
-                withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withFundersPanelDate(line.fundersPanelDate).
-                withAssessorEndDate(line.assessorEndDate).
-                withSetupComplete().
+        competitionBuilderWithBasicInformation(line).
                 withApplications(
                     builder -> builder.
                             withBasicDetails(applicant1, "A novel solution to an old problem").
@@ -266,6 +258,21 @@ public class GenerateTestData extends BaseIntegrationTest {
                             inviteCollaborator(applicant2)
                 ).
                 build();
+    }
+
+    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {
+
+        CompetitionDataBuilder basicInformation = this.competitionDataBuilder.
+                withExistingCompetition(1L).
+                withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
+                withOpenDate(line.openDate).
+                withSubmissionDate(line.submissionDate).
+                withFundersPanelDate(line.fundersPanelDate).
+                withFundersPanelEndDate(line.fundersPanelEndDate).
+                withAssessorAcceptsDate(line.assessorAcceptsDate).
+                withAssessorEndDate(line.assessorEndDate);
+
+        return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
 
     private void createInAssessmentCompetition() {

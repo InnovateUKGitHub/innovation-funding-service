@@ -66,10 +66,9 @@ class CsvUtils {
             fundersPanelEndDate = nullableDate(line.get(i++));
             assessorAcceptsDate = nullableDate(line.get(i++));
             assessorEndDate = nullableDate(line.get(i++));
-            setupComplete = Boolean.parseBoolean(line.get(i++));
+            setupComplete = nullableBoolean(line.get(i++));
         }
     }
-
 
     static abstract class UserLine {
 
@@ -149,6 +148,24 @@ class CsvUtils {
         }
 
         return LocalDateTime.parse(s, DATE_PATTERN);
+    }
+
+    private static boolean nullableBoolean(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return false;
+        }
+
+        if ("0".equals(s)) {
+            return false;
+        }
+
+        if ("1".equals(s)) {
+            return true;
+        }
+
+        return Boolean.parseBoolean(s);
     }
 
 }
