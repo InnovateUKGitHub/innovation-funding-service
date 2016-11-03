@@ -16,7 +16,7 @@ public class FinanceContactForm  extends BaseBindingResultTarget {
 
 	private String name;
 
-	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
+	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message= "{validation.project.invite.email.invalid}")
 	private String email;
 
 	// for spring form binding
