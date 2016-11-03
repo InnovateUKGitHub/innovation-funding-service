@@ -530,7 +530,7 @@ Status updates correctly for internal user's table
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
 
 Internal user can see the Project details as sumbmitted
     [Documentation]  INFUND-5856

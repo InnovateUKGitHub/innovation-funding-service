@@ -27,9 +27,7 @@ Non-lead partner cannot upload either document
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012
@@ -175,10 +173,6 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
-    And the user goes back to the previous page
 
 
 PM can upload both documents
@@ -218,7 +212,6 @@ Mandatory document submission
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -278,7 +271,7 @@ Non-lead partner can still view both documents after submitting
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+
 
 
 CompAdmin can see uploaded files
