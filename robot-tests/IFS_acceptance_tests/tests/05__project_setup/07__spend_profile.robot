@@ -158,7 +158,7 @@ Lead Partners Spend profile summary gets updated when edited
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
     [Tags]
-    [Setup]  Log in as a different user                 worth.email.test+fundsuccess@gmail.com    Passw0rd
+    [Setup]  Log in as a different user     worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page    ${external_spendprofile_summary}
     Then the user should see the element    link=Cheeseco
     And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
@@ -167,7 +167,7 @@ Project Manager can see Spend Profile in Progress
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765
     [Tags]    #HappyPath
-    [Setup]  Log in as a different user                         steve.smith@empire.com    Passw0rd
+    [Setup]  Log in as a different user             steve.smith@empire.com    Passw0rd
     Given the user navigates to the page            ${external_spendprofile_summary}
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   Your spend profile is marked as complete
@@ -266,7 +266,7 @@ Project Manager can view partners' spend profiles
 Partners are not able to see the spend profile summary page
     [Documentation]  INFUND-3766
     [Tags]
-    Given log in as a different user             steve.smith@empire.com    Passw0rd
+    Given log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page  ${external_spendprofile_summary}
     Then the user should see the text in the page  Cheeseco - Spend profile
     And logout as user
@@ -336,7 +336,7 @@ Partners can see the Spend Profile section completed
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian    #HappyPath
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    guest user log-in            john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page     ${server}/project-setup-management/competition/3/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
@@ -349,7 +349,7 @@ Status updates correctly for internal user's table
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]  #HappyPath
-    [Setup]  Log in as a different user                                 project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page                    ${server}/project-setup-management/competition/3/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/4/spend-profile/approval
@@ -367,13 +367,11 @@ Project Finance is able to see Spend Profile approval page
     When the user selects the checkbox                      jQuery=#approvedByLeadTechnologist
     Then the user should see the element                    jQuery=#accept-profile
     And the user should see the element                     jQuery=#content .button.button.button-warning.large:contains("Reject")
-    
-
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
-    [Setup]  Log in as a different user                          john.doe@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user              john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
     Then the user should see the element             jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled               jQuery=#accept-profile
@@ -389,11 +387,10 @@ Comp Admin is able to see Spend Profile approval page
     When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
-
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]    #HappyPath
-    [Setup]  Log in as a different user                        project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
