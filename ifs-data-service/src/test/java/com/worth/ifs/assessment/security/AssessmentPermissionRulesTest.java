@@ -4,8 +4,11 @@ import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.workflow.domain.ActivityState;
+import com.worth.ifs.workflow.resource.ProcessStates;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -44,7 +48,9 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
 
-        Assessment assessment = newAssessment().withParticipant(processRole).build();
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()))
+                .withParticipant(processRole).build();
         assessmentResource = newAssessmentResource()
                 .withId(assessment.getId())
                 .withProcessRole(processRole.getId())
@@ -72,5 +78,45 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     @Test
     public void otherUsersCanNotUpdateAssessments() {
         assertFalse("other users should not able to update assessments", rules.userCanUpdateAssessment(assessmentResource, otherUser));
+    }
+
+    @Test
+    public void ownerCanNotReadRejectedAssessment() {
+        ProcessRole processRole = newProcessRole()
+                .withUser(newUser().with(id(assessorUser.getId())).build())
+                .build();
+
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.REJECTED.getBackingState()))
+                .withParticipant(processRole).build();
+        assessmentResource = newAssessmentResource()
+                .withId(assessment.getId())
+                .withProcessRole(processRole.getId())
+                .build();
+
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
+
+        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessment(assessmentResource, assessorUser));
+    }
+
+    @Test
+    public void ownerCanNotReadSubmittedAssessment() {
+        ProcessRole processRole = newProcessRole()
+                .withUser(newUser().with(id(assessorUser.getId())).build())
+                .build();
+
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.SUBMITTED.getBackingState()))
+                .withParticipant(processRole).build();
+        assessmentResource = newAssessmentResource()
+                .withId(assessment.getId())
+                .withProcessRole(processRole.getId())
+                .build();
+
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
+
+        assertFalse("the owner of a submitted assessment should not be able to read that assessment", rules.userCanReadAssessment(assessmentResource, assessorUser));
     }
 }

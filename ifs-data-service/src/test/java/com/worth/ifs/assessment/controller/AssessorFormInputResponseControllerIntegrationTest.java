@@ -25,14 +25,14 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
 
     @Test
     public void getAllAssessorFormInputResponses() throws Exception {
-        Long assessmentId = 1L;
+        Long assessmentId = 2L;
 
         loginPaulPlum();
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponses(assessmentId);
 
         assertTrue(found.isSuccess());
         List<AssessorFormInputResponseResource> responses = found.getSuccessObjectOrThrowException();
-        assertEquals(23, responses.size());
+        assertEquals(13, responses.size());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
 
     @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
-        Long assessmentId = 1L;
+        Long assessmentId = 2L;
         Long questionId = 1L;
 
         loginPaulPlum();
@@ -57,8 +57,8 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
         assertTrue(found.isSuccess());
         List<AssessorFormInputResponseResource> responses = found.getSuccessObjectOrThrowException();
         assertEquals(2, responses.size());
-        assertEquals(Long.valueOf(1L), responses.get(0).getId());
-        assertEquals(Long.valueOf(2L), responses.get(1).getId());
+        assertEquals(Long.valueOf(24L), responses.get(0).getId());
+        assertEquals(Long.valueOf(25L), responses.get(1).getId());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
 
     @Test
     public void updateFormInputResponse() throws Exception {
-        Long assessmentId = 1L;
+        Long assessmentId = 2L;
         Long questionId = 1L;
         Long formInputId = 169L;
         String oldValue = "This is the feedback from Professor Plum for Business opportunity.";
