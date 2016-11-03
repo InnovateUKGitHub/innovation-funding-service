@@ -93,7 +93,7 @@ Project Finance can see the status of projects in PS
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
