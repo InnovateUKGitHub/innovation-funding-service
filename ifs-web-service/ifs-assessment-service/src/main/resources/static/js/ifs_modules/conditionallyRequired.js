@@ -4,35 +4,34 @@ IFS.assessment.conditionallyRequired = (function() {
 
   return {
     init: function() {
-      jQuery('body').on('click', '[data-conditionally-add-required]', function(e) {
+      jQuery('body').on('click', '[data-conditionally-add-required]', function() {
 
-        IFS.assessment.conditionallyRequired.addRequired(this, e);
+        IFS.assessment.conditionallyRequired.addRequired(this);
       });
-      jQuery('body').on('click', '[data-conditionally-remove-required]', function(e) {
+      jQuery('body').on('click', '[data-conditionally-remove-required]', function() {
 
-        IFS.assessment.conditionallyRequired.removeRequired(this, e);
+        IFS.assessment.conditionallyRequired.removeRequired(this);
       });
     },
     addRequired : function(el) {
-      //allow for multiple targets to be given in comma separated string
-      var targets = jQuery(el).attr('data-conditionally-add-required').split(', ');
+      var targets = jQuery(el).attr('data-conditionally-add-required');
 
-      $(targets).each(function() {
+      jQuery(targets).each(function() {
         jQuery(this).attr('required', 'required');
       });
     },
     removeRequired : function(el) {
-      //allow for multiple targets to be given in comma separated string
-      var targets = jQuery(el).attr('data-conditionally-remove-required').split(', ');
+      var targets = jQuery(el).attr('data-conditionally-remove-required');
 
-      $(targets).each(function() {
-        var parentGroup = jQuery(this).closest('.form-group');
+      jQuery(targets).each(function() {
+        var inst = jQuery(this);
+        var parentGroup = inst.closest('.form-group');
 
-        jQuery(this).removeAttr('required').removeClass('field-error');
+        inst.removeProp('required').removeClass('field-error');
 
         //remove any existing error messages and classes
-        jQuery(parentGroup).find('.error-message').remove();
-        jQuery(parentGroup).removeClass('error');
+        parentGroup.removeClass('error');
+        parentGroup.find('.error-message').remove();
       });
     }
   };
