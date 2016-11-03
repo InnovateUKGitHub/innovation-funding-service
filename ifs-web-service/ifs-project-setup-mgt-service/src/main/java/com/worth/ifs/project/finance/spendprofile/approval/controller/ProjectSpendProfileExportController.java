@@ -1,4 +1,4 @@
-package com.worth.ifs.project;
+package com.worth.ifs.project.finance.spendprofile.approval.controller;
 
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;

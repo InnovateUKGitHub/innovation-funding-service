@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.spendprofile.approval.form;
+package com.worth.ifs.project.finance.spendprofile.approval.form;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
 

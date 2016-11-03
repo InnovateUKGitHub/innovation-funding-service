@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.spendprofile.approval.viewmodel;
+package com.worth.ifs.project.finance.spendprofile.approval.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.project.resource.ApprovalType;
