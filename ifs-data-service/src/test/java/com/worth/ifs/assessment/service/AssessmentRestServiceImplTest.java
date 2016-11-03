@@ -77,4 +77,13 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         RestResult<Void> response = service.rejectInvitation(assessmentId, applicationRejection);
         assertTrue(response.isSuccess());
     }
+
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 1L;
+
+        setupPutWithRestResultExpectations(format("%s/%s/acceptInvitation", assessmentRestURL, assessmentId), null, OK);
+        RestResult<Void> response = service.acceptInvitation(assessmentId);
+        assertTrue(response.isSuccess());
+    }
 }

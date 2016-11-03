@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle='Assessment summary'" th:remove="tag" />
     </head>
 
-    <body class="assessment assessment-form">
+    <body th:with="context='assessment'" class="assessment assessment-form">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -67,9 +67,25 @@
                                     <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}" />
                                 </span>
                             </legend>
-                            <label class="block-label" th:each="option : ${ { true, false } }">
-                                <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" required="required" data-required-errormessage="Please indicate your decision" />
-                                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
+                            <label class="block-label">
+                                <input
+                                value="true"
+                                type="radio"
+                                th:field="*{fundingConfirmation}"
+                                required="required"
+                                data-required-errormessage="Please indicate your decision"
+                                data-conditionally-remove-required="#feedback" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input
+                                value="false"
+                                type="radio"
+                                th:field="*{fundingConfirmation}"
+                                required="required"
+                                data-required-errormessage="Please indicate your decision"
+                                data-conditionally-add-required="#feedback, .form-group input" />
+                                No
                             </label>
                         </fieldset>
                     </div>

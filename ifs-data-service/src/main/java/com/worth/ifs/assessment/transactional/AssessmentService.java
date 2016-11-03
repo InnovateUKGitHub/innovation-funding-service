@@ -26,4 +26,7 @@ public interface AssessmentService {
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(Long assessmentId, ApplicationRejectionResource applicationRejection);
+
+    @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
+    ServiceResult<Void> acceptInvitation(Long assessmentId);
 }
