@@ -58,7 +58,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
 
         when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).
-                thenReturn(serviceFailure(badRequestError("The Invite is not valid")));
+                thenReturn(serviceFailure(badRequestError("PROJECT_INVITE_INVALID")));
 
 
         mockMvc.perform(post("/projectinvite/saveInvite")

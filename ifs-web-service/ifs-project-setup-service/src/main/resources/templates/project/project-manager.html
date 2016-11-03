@@ -19,11 +19,11 @@
     <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}">
         <fieldset>
           <h2 class="heading-medium">Project Manager</h2>
-          <div class="form-group" th:classappend="${#fields.hasErrors('projectManager') ? 'error' : ''}">
+          <div class="form-group" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
               <legend>
                 <span class="visuallyhidden">Project Manager</span>
-                 <div th:if="${#fields.hasErrors('projectManager')}" th:remove="tag">
-                    <span class="error-message" th:each="err : ${#fields.errors('projectManager')}" th:text="${err}" />
+                 <div th:if="${#fields.hasErrors('*')}" th:remove="tag">
+                    <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
                 </div>
               </legend>
               <p class="form-hint">Who will be the Project Manager for your project?</p>
@@ -48,10 +48,8 @@
               </div>
             </div>
         </fieldset>
-        <button class="visuallyhidden" type="submit" id="save">Save</button>
-    </form>
-
-    <form method="POST" th:action="@{/project/{projectId}/details/invite-project-manager(projectId=${model.projectId})}" th:object="${inviteForm}">
+        <label for="save" tabindex="0" role="button" class="button extra-margin" name="save_pm">Save</label>
+        <button class="visuallyhidden" type="submit" id="save" name="save_pm">Save</button>
 
     <table aria-hidden="true" id="project-manager-table">
         <thead>
@@ -70,21 +68,19 @@
                     <label for="name-project-manager">
                       <span class="visuallyhidden">name</span>
                     </label>
-                    <input type="text" class="form-control width-full" value="" name="name" id="name-project-manager" data-required-errormessage="Please enter a valid name" required="required"/>
+                    <input type="text" class="form-control width-full" value="" name="name" id="name-project-manager" data-required-errormessage="Please enter a valid name"/>
                 </td>
                 <td>
                     <label for="email-project-manager" class="visuallyhidden">email</label>
-                    <input type="email" class="form-control width-full" value="" name="email" id="email-project-manager" data-required-errormessage="Please enter a valid email address " required="required"/>
+                    <input type="email" class="form-control width-full" value="" name="email" id="email-project-manager" data-required-errormessage="Please enter a valid email address "/>
                 </td>
                 <td class="alignright">
-                    <button class="buttonlink no-margin-bottom" id="invite-project-manager">Invite to project</button>
+                    <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>
                 </td>
             </tr>
         </tbody>
     </table>
     </form>
-
-    <label for="save" tabindex="0" role="button" class="button extra-margin">Save</label>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

@@ -205,7 +205,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            return serviceFailure(badRequestError("The Invite is not valid"));
+            return serviceFailure(badRequestError("PROJECT_INVITE_INVALID"));
         }
 
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {

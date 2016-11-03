@@ -42,6 +42,9 @@ import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
+import static com.worth.ifs.project.ProjectDetailsController.INVITE_FC;
+import static com.worth.ifs.project.ProjectDetailsController.SAVE_FC;
+import static com.worth.ifs.project.ProjectDetailsController.SAVE_PM;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -199,6 +202,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
+                .param(SAVE_PM, INVITE_FC)
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
@@ -314,6 +318,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                    param(SAVE_FC, INVITE_FC).
                     param("organisation", "1").
                     param("financeContact", "2")).
                 andExpect(status().is3xxRedirection()).
@@ -378,8 +383,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         InviteStatus testStatus = CREATED;
 
-        mockMvc.perform(post("/project/{id}/details/invite-finance-contact", projectId).
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_FC, INVITE_FC).
                 param("userId", invitedUserId + "").
                 param("name", invitedUserName).
                 param("email", invitedUserEmail).
