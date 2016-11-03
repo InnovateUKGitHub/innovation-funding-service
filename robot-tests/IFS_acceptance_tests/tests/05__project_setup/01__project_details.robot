@@ -43,7 +43,7 @@ ${project_details_submitted_message}    The project details have been submitted 
 *** Test Cases ***
 Internal users can see Project Details not yet completed
     [Documentation]  INFUND-5856
-    [Tags]
+    [Tags]    HappyPath
     [Setup]  log in as user                         john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
     Then the user should not see the element        jQuery=#table-project-status tr:nth-child(1) td.status.ok a   #Check here that there is no Green-Check
@@ -508,6 +508,7 @@ Project details read only after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
+    [Tags]    HappyPath
     When log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Ludlow
