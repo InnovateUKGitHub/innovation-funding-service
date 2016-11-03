@@ -8,13 +8,12 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,7 +50,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        LinkedMap<String, MilestoneEntry> milestoneEntries = milestonesForm.getMilestoneEntries();
+        LinkedMap<String, MilestoneViewModel> milestoneEntries = milestonesForm.getMilestoneEntries();
 
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition.getId());
         if(!errors.isEmpty()) {
@@ -67,7 +66,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
     }
 
-    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
+    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId){
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);

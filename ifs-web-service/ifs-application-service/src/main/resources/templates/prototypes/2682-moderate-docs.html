@@ -15,17 +15,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})"  th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Projects in setup'}, ${'/prototypes/4151-admin-competition-dash'})"  th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Other documents'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Other documents'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="success-alert">
@@ -39,7 +37,7 @@
 		</div>
 	</th:block>
 
-	<h2 class="heading-medium">10294856: Machine learning in robots</h2>
+  <h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<ul class="list-bullet">
 		<li>Aptrans Ltd</li>
@@ -59,7 +57,7 @@
 	<h2 class="heading-medium">Exploitation plan</h2>
 	<a href="#">Exploitation Plan 2016-04-28a.PDF</a>
 
-	
+
 	<div th:if="${param.status == null}" th:remove="tag">
 
 		<h2 class="heading-medium">Review documents</h2>
@@ -83,8 +81,8 @@
 			<hr />
 
         	<div class="alignright-button">
-				
-				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
         		<a href="/prototypes/2682-moderate-docs?status=accepted" class="button">Accept documents</a>
         	</div>
@@ -104,8 +102,8 @@
 			<hr />
 
         	<div class="alignright-button">
-				
-				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
         		<a href="/prototypes/2682-moderate-docs?status=reject" class="button button-warning">Reject documents</a>
         	</div>
@@ -114,7 +112,7 @@
     </div>
 
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

@@ -7,7 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
@@ -50,7 +50,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 		return competitionSetupForm;
 	}
 
-	private Question initQuestionForForm(QuestionResource questionResource) {
+	private QuestionViewModel initQuestionForForm(QuestionResource questionResource) {
         Long appendixTypeId = 4L;
         Long scoreTypeId = 23L;
 
@@ -62,11 +62,12 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 
 
 		Optional<FormInputResource> foundInputs = formInputs.stream()
-				.filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
+				.filter(formInputResource -> formInputResource.getFormInputType() != null
+						&& !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
 
-		Question result = null;
+		QuestionViewModel result = null;
 		if(foundInputs.isPresent()) {
-			result = new Question(questionResource, foundInputs.get(), appendix, scored);
+			result = new QuestionViewModel(questionResource, foundInputs.get(), appendix, scored);
 		}
 
 		return result;

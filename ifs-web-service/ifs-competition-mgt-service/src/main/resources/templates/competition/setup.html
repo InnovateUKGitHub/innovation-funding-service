@@ -14,14 +14,9 @@
     <div th:if="${currentSection.toString() == 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:remove="tag" />
     <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${competition.id})}" th:remove="tag" />
 
-
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <div class="page-title">
-                  <h1 th:if="${currentSection.toString() == 'HOME'}" class="heading-xlarge">Competition Setup</h1>
-                </div>
-            </div>
-        </div>
+    <div class="page-title" th:if="${currentSection.toString() == 'HOME'}">
+        <h1 class="heading-xlarge">Competition Setup</h1>
+    </div>
 
     <div th:if="${currentSection.toString() == 'HOME'}" th:include="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${allCompletedSections}, ${currentSection}, ${competition}, ${readyToOpen})" th:remove="tag" />
 

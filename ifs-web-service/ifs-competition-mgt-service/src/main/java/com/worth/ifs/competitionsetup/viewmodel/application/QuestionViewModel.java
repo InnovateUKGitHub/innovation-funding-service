@@ -1,4 +1,4 @@
-package com.worth.ifs.competitionsetup.model.application;
+package com.worth.ifs.competitionsetup.viewmodel.application;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -7,9 +7,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Min;
 
 /**
- * View model where all information is for editing questions
+ * View viewmodel where all information is for editing questions
  */
-public class Question {
+public class QuestionViewModel {
     private Long id;
     private String number;
     private String shortTitle;
@@ -29,11 +29,11 @@ public class Question {
     private Boolean appendix;
     private Boolean scored;
 
-    public Question() {
+    public QuestionViewModel() {
 
     }
 
-    public Question(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored) {
+    public QuestionViewModel(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored) {
         this.setId(questionResource.getId());
         this.setNumber(questionResource.getQuestionNumber());
         this.setShortTitle(questionResource.getShortName());

@@ -34,11 +34,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationSectionModelPopulatorTest {
+public class ApplicationLandingModelPopulatorTest {
 
 	@InjectMocks
-	private ApplicationSectionModelPopulator populator;
-	
+	private ApplicationLandingModelPopulator populator;
+
 	@Mock
 	private CategoryService categoryService;
 	
@@ -87,9 +87,7 @@ public class ApplicationSectionModelPopulatorTest {
 
 		populator.populateModel(model, competition);
 		
-		assertEquals(3, model.asMap().size());
-		assertEquals(generalSections, model.asMap().get("generalSections"));
-		assertEquals(parentSections, model.asMap().get("generalParentSections"));
+		assertEquals(1, model.asMap().size());
 		assertEquals(new ArrayList(), model.asMap().get("questions"));
 	}
 }
