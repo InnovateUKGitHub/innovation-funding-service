@@ -16,8 +16,6 @@ import java.util.Optional;
 @Service
 public class UidAuthenticationService implements UserAuthenticationService {
 
-    public static final String AUTH_TOKEN = "IFS_AUTH_TOKEN";
-
     @Autowired
     private CredentialsValidator validator;
 

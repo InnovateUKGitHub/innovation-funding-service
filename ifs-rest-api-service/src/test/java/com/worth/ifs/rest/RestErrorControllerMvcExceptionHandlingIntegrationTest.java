@@ -37,7 +37,6 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            SecuritySetter.swapOutForUser(SecuritySetter.basicSecurityUser);
             String url = dataUrl + "/non/existent/url";
             restTemplate.exchange(url, GET, headersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-handled URL was specified");
@@ -63,7 +62,6 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
             fail("Should have had a Forbidden on the server side, as we are not specifying a user authentication to this restricted resource");
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), null);
@@ -74,7 +72,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
     private <T> HttpEntity<T> headersEntity(){
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(Authentication.TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
+        headers.set(Authentication.TOKEN, "6b50cb4f-7222-33a5-99c5-8c068cd0b03c");//"847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
 }

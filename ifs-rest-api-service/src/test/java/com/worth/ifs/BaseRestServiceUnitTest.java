@@ -1,6 +1,6 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.security.UidAuthenticationService;
+import com.worth.ifs.commons.security.authentication.token.Authentication;
 import com.worth.ifs.commons.service.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -79,13 +79,13 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected <T> HttpEntity<T> httpEntityForRestCall(T body) {
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(UidAuthenticationService.AUTH_TOKEN, VALID_AUTH_TOKEN);
+        headers.set(Authentication.TOKEN, VALID_AUTH_TOKEN);
         return new HttpEntity<>(body, headers);
     }
 
     protected <T> HttpEntity<T> httpEntityForRestCallAnonymous(T body) {
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(UidAuthenticationService.AUTH_TOKEN, ANONYMOUS_AUTH_TOKEN);
+        headers.set(Authentication.TOKEN, ANONYMOUS_AUTH_TOKEN);
         return new HttpEntity<>(body, headers);
     }
 
@@ -98,7 +98,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
         headers.setContentLength(filesizeBytes);
-        headers.set(UidAuthenticationService.AUTH_TOKEN, VALID_AUTH_TOKEN);
+        headers.set(Authentication.TOKEN, VALID_AUTH_TOKEN);
         return new HttpEntity<>(requestBody.getBytes(), headers);
     }
 

@@ -1,9 +1,9 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.commons.security.authentication.token.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 
 /**
  * A Rest Template Adaptor that is able to make restricted calls on behalf of anonymous users e.g. during registration
@@ -16,6 +16,6 @@ public class AnonymousUserRestTemplateAdaptor extends AbstractInternalRestTempla
 
     @Override
     protected void setAuthenticationToken(HttpHeaders headers) {
-        headers.set(AUTH_TOKEN, ifsWebSystemUserUid);
+        headers.set(Authentication.TOKEN, ifsWebSystemUserUid);
     }
 }

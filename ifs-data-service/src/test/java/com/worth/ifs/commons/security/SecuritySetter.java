@@ -30,7 +30,7 @@ public class SecuritySetter {
         basicSecurityUser.setFirstName("steve");
         basicSecurityUser.setLastName("smith");
         basicSecurityUser.setEmail("steve.smith@empire.com");
+        basicSecurityUser.setUid("6b50cb4f-7222-33a5-99c5-8c068cd0b03c");
         return basicSecurityUser;
     }
-
 }
