@@ -5,4 +5,4 @@ cp ../ifs-data-service/src/main/resources/db/webtest/SETUP_THAT_WILL_BE_RUN_FOR_
 echo "Deleting the old scripts and directories"
 rm -rf ../ifs-data-service/src/main/resources/db
 echo "Moving the generated files into the code base"
-rsync -r --exclude=.gitignore generated/db ../ifs-data-service/src/main/resources/db 
+rsync -r --exclude=.gitignore generated/db ../ifs-data-service/src/main/resources/ 
