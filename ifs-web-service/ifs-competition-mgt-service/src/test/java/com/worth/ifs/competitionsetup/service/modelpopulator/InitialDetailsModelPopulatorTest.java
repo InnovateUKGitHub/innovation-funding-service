@@ -28,7 +28,7 @@ import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.util.CollectionFunctions;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InitialDetailsPopulatorTest {
+public class InitialDetailsModelPopulatorTest {
 
 	@InjectMocks
 	private InitialDetailsModelPopulator populator;
