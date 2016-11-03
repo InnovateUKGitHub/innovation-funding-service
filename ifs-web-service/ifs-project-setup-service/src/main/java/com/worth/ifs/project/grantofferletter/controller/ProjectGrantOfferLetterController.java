@@ -204,7 +204,10 @@ public class ProjectGrantOfferLetterController {
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(), project.isOfferRejected(), false, isProjectManager);
+                project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
+
+                // TODO - Not sure why 'accepted' was always false earlier - If you agree this was a mistake, I'll delete this comment. Else I'll set it back to false.
+                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
