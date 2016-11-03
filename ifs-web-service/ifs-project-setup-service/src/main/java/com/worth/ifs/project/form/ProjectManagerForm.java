@@ -1,7 +1,9 @@
 package com.worth.ifs.project.form;
 
+import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
 import com.worth.ifs.controller.BaseBindingResultTarget;
+import org.hibernate.validator.constraints.Email;
 
 @FieldRequiredIfOptionIs(required = "name", argument = "projectManager", predicate = -1L, message = "{validation.project.invite.name.required}")
 @FieldRequiredIfOptionIs(required = "email", argument = "projectManager", predicate = -1L, message = "{validation.project.invite.email.required}")
@@ -11,7 +13,7 @@ public class ProjectManagerForm  extends BaseBindingResultTarget {
 
 	private String name;
 
-	//@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
+	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
 	private String email;
 
 	public Long getProjectManager() {

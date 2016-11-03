@@ -41,7 +41,7 @@
                   </label>
                 </div>
                 <label for="new" class="block-label" data-target="project-manager-table">
-                    <input id="new" th:field="*{projectManager}" type="radio" value="-1" data-required-errormessage="You need to select a Project Manager before you can continue" required="required" />
+                    <input id="new" th:field="*{projectManager}" th:checked="${model.inviteAction}" type="radio" value="-1" data-required-errormessage="You need to select a Project Manager before you can continue" required="required" />
                     Add new team member
                     <span class="form-hint">A new team member will be invited to join the project</span>
                 </label>
