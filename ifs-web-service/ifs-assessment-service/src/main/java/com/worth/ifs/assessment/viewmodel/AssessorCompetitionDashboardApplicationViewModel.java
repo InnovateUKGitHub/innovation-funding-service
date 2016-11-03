@@ -4,7 +4,7 @@ import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition Dashboard.
@@ -65,8 +65,28 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         this.state = state;
     }
 
+    public boolean isPending() {
+        return isState(PENDING);
+    }
+
+    public boolean isAccepted() {
+        return isState(ACCEPTED);
+    }
+
+    public boolean isOpen() {
+        return isState(OPEN);
+    }
+
     public boolean isReadyToSubmit() {
-        return READY_TO_SUBMIT == this.state;
+        return isState(READY_TO_SUBMIT);
+    }
+
+    public boolean isSubmitted() {
+        return isState(SUBMITTED);
+    }
+
+    private boolean isState(AssessmentStates state) {
+        return state == this.state;
     }
 
     @Override
