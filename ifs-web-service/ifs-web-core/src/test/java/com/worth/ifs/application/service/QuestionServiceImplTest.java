@@ -153,6 +153,20 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     }
 
     @Test
+    public void testGetByIdAndAssessmentId() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+        QuestionResource question = new QuestionResource();
+        when(questionRestService.getByIdAndAssessmentId(questionId, assessmentId)).thenReturn(restSuccess(question));
+
+        QuestionResource returnedQuestion = service.getByIdAndAssessmentId(questionId, assessmentId);
+
+        assertEquals(question, returnedQuestion);
+
+        verify(questionRestService, only()).getByIdAndAssessmentId(questionId, assessmentId);
+    }
+
+    @Test
     public void testGetNextQuestion() throws Exception {
         Long questionId = 1L;
         QuestionResource question = new QuestionResource();
