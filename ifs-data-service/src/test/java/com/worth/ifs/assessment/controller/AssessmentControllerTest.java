@@ -332,4 +332,16 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, applicationRejection);
     }
+
+    @Test
+    public void acceptInvitation() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
+                .andExpect(status().isOk());
+
+        verify(assessmentServiceMock, only()).acceptInvitation(assessmentId);
+    }
 }

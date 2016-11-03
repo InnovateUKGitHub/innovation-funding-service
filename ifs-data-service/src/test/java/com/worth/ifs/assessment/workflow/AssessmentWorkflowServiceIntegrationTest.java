@@ -72,6 +72,15 @@ public class AssessmentWorkflowServiceIntegrationTest extends BaseIntegrationTes
         assertEquals(DESCRIPTION, update.getLastOutcome(AssessmentOutcomes.REJECT).getDescription());
     }
 
+    @Test
+    public void testStateChangePendingToOpen() throws Exception {
+        Assessment assessment = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
+        assertEquals(AssessmentStates.PENDING, assessment.getActivityState());
+        assessmentWorkflowService.acceptInvitation(PENDING_PROCESS_ROLE, assessment);
+        Assessment update = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
+        assertEquals(AssessmentStates.OPEN, update.getActivityState());
+    }
+
     private ApplicationRejectionResource createRejection() {
         ApplicationRejectionResource applicationRejection = new ApplicationRejectionResource();
         applicationRejection.setRejectReason(DESCRIPTION);
