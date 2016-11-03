@@ -41,6 +41,8 @@ import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -162,59 +164,33 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createOpenCompetition(CsvUtils.CompetitionLine line) {
 
-        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
-        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
-        UserResource applicant3 = retrieveUserByEmail("worth.email.test+submit@gmail.com");
-        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
-        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
+        List<ApplicationLine> applicationLines = readApplications();
+        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
 
-        competitionBuilderWithBasicInformation(line, Optional.of(1L)).
-                withApplications(
-                    builder -> builder.
-                            withBasicDetails(applicant1, "A novel solution to an old problem").
-                            withProjectSummary(PROJECT_SUMMARY).
-                            withPublicDescription(PUBLIC_DESCRIPTION).
-                            withStartDate(LocalDate.of(2016, 3, 1)).
-                            withDurationInMonths(51).
-                            inviteCollaborator(applicant2).
-                            inviteCollaborator(applicant4).
-                            inviteCollaborator(applicant5),
-                    builder -> builder.
-                            withBasicDetails(applicant1, "Providing sustainable childcare").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(20).
-                            inviteCollaborator(applicant2).
-                            inviteCollaborator(applicant4),
-                    builder -> builder.
-                            withBasicDetails(applicant1, "Mobile Phone Data for Logistics Analysis").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(10).
-                            submitApplication(),
-                    builder -> builder.
-                            withBasicDetails(applicant1, "Using natural gas to heat homes").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(43).
-                            inviteCollaborator(applicant2).
-                            submitApplication(),
-                    builder -> builder.
-                            withBasicDetails(applicant1, "A new innovative solution").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(20).
-                            inviteCollaborator(applicant2).
-                            inviteCollaborator(applicant4).
-                            submitApplication(),
-                    builder -> builder.
-                            withBasicDetails(applicant2, "Security for the Internet of Things").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(23).
-                            submitApplication(),
-                    builder -> builder.
-                            withBasicDetails(applicant3, "Marking it as complete").
-                            withStartDate(LocalDate.of(2015, 11, 1)).
-                            withDurationInMonths(23).
-                            inviteCollaborator(applicant2)
-                ).
-                build();
+        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(line, Optional.of(1L));
+
+        List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
+                application -> builder -> createApplicationFromCsv(builder, application));
+
+        basicCompetitionInformation.withApplications(applicationBuilders.toArray(new Function[] {})).build();
+    }
+
+    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
+
+        UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
+
+        ApplicationDataBuilder baseBuilder = builder.
+                withBasicDetails(leadApplicant, line.title).
+                withProjectSummary(PROJECT_SUMMARY).
+                withPublicDescription(PUBLIC_DESCRIPTION).
+                withStartDate(line.startDate).
+                withDurationInMonths(line.durationInMonths);
+
+        for (String collaborator : line.collaborators) {
+            baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
+        }
+
+        return line.submittedDate != null ? baseBuilder.submitApplication() : baseBuilder;
     }
 
     private void createInAssessmentCompetition(CsvUtils.CompetitionLine line) {

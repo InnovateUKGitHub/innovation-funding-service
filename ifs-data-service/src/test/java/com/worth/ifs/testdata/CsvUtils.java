@@ -8,12 +8,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -21,7 +24,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 class CsvUtils {
 
-    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
@@ -33,6 +37,33 @@ class CsvUtils {
 
     static List<CompetitionLine> readCompetitions() {
         return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+    }
+
+    static List<ApplicationLine> readApplications() {
+        return simpleMap(readCsvLines("applications"), ApplicationLine::new);
+    }
+
+    static class ApplicationLine {
+
+        String title;
+        String competitionName;
+        LocalDate startDate;
+        Integer durationInMonths;
+        String leadApplicant;
+        List<String> collaborators;
+        LocalDateTime submittedDate;
+
+        private ApplicationLine(List<String> line) {
+            int i = 0;
+            title = line.get(i++);
+            competitionName = line.get(i++);
+            startDate = nullableDate(line.get(i++));
+            durationInMonths = nullableInteger(line.get(i++));
+            leadApplicant = line.get(i++);
+            String collaboratorString = nullable(line.get(i++));
+            collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
+            submittedDate = nullableDateTime(line.get(i++));
+        }
     }
 
     static class CompetitionLine {
@@ -60,12 +91,12 @@ class CsvUtils {
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
-            openDate = nullableDate(line.get(i++));
-            submissionDate = nullableDate(line.get(i++));
-            fundersPanelDate = nullableDate(line.get(i++));
-            fundersPanelEndDate = nullableDate(line.get(i++));
-            assessorAcceptsDate = nullableDate(line.get(i++));
-            assessorEndDate = nullableDate(line.get(i++));
+            openDate = nullableDateTime(line.get(i++));
+            submissionDate = nullableDateTime(line.get(i++));
+            fundersPanelDate = nullableDateTime(line.get(i++));
+            fundersPanelEndDate = nullableDateTime(line.get(i++));
+            assessorAcceptsDate = nullableDateTime(line.get(i++));
+            assessorEndDate = nullableDateTime(line.get(i++));
             setupComplete = nullableBoolean(line.get(i++));
         }
     }
@@ -140,14 +171,34 @@ class CsvUtils {
         return isBlank(s) || "N".equals(s) ? null : s;
     }
 
-    private static LocalDateTime nullableDate(String s) {
+    private static LocalDate nullableDate(String s) {
         String value = nullable(s);
 
         if (value == null) {
             return null;
         }
 
-        return LocalDateTime.parse(s, DATE_PATTERN);
+        return LocalDate.parse(s, DATE_PATTERN);
+    }
+
+    private static LocalDateTime nullableDateTime(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return LocalDateTime.parse(s, DATE_TIME_PATTERN);
+    }
+
+    private static Integer nullableInteger(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return Integer.valueOf(s);
     }
 
     private static boolean nullableBoolean(String s) {
