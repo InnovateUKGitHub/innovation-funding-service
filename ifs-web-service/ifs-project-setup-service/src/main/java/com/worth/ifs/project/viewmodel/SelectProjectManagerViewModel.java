@@ -3,9 +3,6 @@ package com.worth.ifs.project.viewmodel;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -63,53 +60,5 @@ public class SelectProjectManagerViewModel {
 
     public boolean isInviteAction() {
         return inviteAction;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SelectProjectManagerViewModel that = (SelectProjectManagerViewModel) o;
-
-        return new EqualsBuilder()
-                .append(inviteAction, that.inviteAction)
-                .append(organisationUsers, that.organisationUsers)
-                .append(invitedUsers, that.invitedUsers)
-                .append(projectId, that.projectId)
-                .append(currentUser, that.currentUser)
-                .append(app, that.app)
-                .append(competition, that.competition)
-                .append(projectName, that.projectName)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(organisationUsers)
-                .append(invitedUsers)
-                .append(projectId)
-                .append(currentUser)
-                .append(app)
-                .append(competition)
-                .append(projectName)
-                .append(inviteAction)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("organisationUsers", organisationUsers)
-                .append("invitedUsers", invitedUsers)
-                .append("projectId", projectId)
-                .append("currentUser", currentUser)
-                .append("app", app)
-                .append("competition", competition)
-                .append("projectName", projectName)
-                .append("inviteAction", inviteAction)
-                .toString();
     }
 }

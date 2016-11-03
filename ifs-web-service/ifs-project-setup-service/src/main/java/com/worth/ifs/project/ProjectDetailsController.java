@@ -124,7 +124,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                      Model model,
                                      @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true);
+        return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -134,7 +134,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, financeContactForm.getOrganisation(), financeContactForm.getFinanceContact());
@@ -153,7 +153,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser
                                        ) {
 
-        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
         Supplier<String> successView = () -> redirectToProjectDetails(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -390,7 +390,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         projectManagerForm.setProjectManager(existingProjectManager.map(ProjectUserResource::getUser).orElse(null));
     }
 
-    private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact) {
+    private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact, boolean inviteAction) {
 
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
@@ -404,7 +404,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return redirectToProjectDetails(projectId);
         }
 
-        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact);
+        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact, inviteAction);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
@@ -454,7 +454,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return !projectUsersForUserAndOrganisation.isEmpty();
     }
 
-    private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm financeContactForm, boolean setDefaultFinanceContact) {
+    private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm financeContactForm, boolean setDefaultFinanceContact, boolean inviteAction) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
@@ -465,10 +465,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             financeContactForm.setFinanceContact(getOnlyElement(financeContacts).getUser());
         }
 
-        return modelForFinanceContact(model, projectId, financeContactForm, loggedInUser);  //, organisation
+        return modelForFinanceContact(model, projectId, financeContactForm, loggedInUser, inviteAction);  //, organisation
     }
 
-    private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm financeContactForm, UserResource loggedInUser) {
+    private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm financeContactForm, UserResource loggedInUser, boolean inviteAction) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -497,7 +497,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-        SelectFinanceContactViewModel viewModel = new SelectFinanceContactViewModel(thisOrganisationUsers, invitedUsers, financeContactForm.getOrganisation(), projectResource, loggedInUser.getId(), applicationResource, competitionResource);
+        SelectFinanceContactViewModel viewModel = new SelectFinanceContactViewModel(thisOrganisationUsers, invitedUsers, financeContactForm.getOrganisation(), projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 
         model.addAttribute(FORM_ATTR_NAME, financeContactForm);
         model.addAttribute("model", viewModel);
