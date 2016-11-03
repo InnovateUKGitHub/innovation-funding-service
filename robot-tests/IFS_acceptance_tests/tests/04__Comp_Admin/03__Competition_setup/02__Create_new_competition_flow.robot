@@ -28,6 +28,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
+...
+...               INFUND-5640 As a Competitions team member I want to be able to edit the Finances questions in Competition Setup so that I can include the appropriate sections required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -62,7 +64,7 @@ User can create a new competition
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Description and brief
 
-New competition shows in Preparation section with the default name
+New competition shows in Preparation section
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
@@ -112,7 +114,7 @@ Initial details: User enters valid values and marks as done
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Initial details can be edited again except from Comp Type and Date
+Initial details: Comp Type and Date should not be editable
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
@@ -132,7 +134,7 @@ Initial details can be edited again except from Comp Type and Date
     And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
 
-Initial details should have a green check
+Initial details: should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
@@ -317,6 +319,16 @@ Application: Application process Page
     And the user should see the element    link=Scope
     And the user should see the element    link=Finances
 
+Application: Finances Form
+    [Documentation]    INFUND-5640
+    Given the user clicks the button/link    link=Finances
+    When The user clicks the button/link     jQuery=label:contains("Light finances")
+    And The user clicks the button/link     jQuery=label:contains("No")
+    And The user clicks the button/link     jQuery=button:contains("Done")
+    And the user clicks the button/link    link=Finances
+    Then the Radio Button selections should be correct
+    [Teardown]    The user clicks the button/link    link=Application
+
 Application: Mark as done and the Edit again
     [Documentation]    INFUND-3000
     [Tags]    HappyPath    Pending
@@ -338,27 +350,23 @@ Application: should have a green check
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
 
-Ready To Open button should be visible
-    [Documentation]    INFUND-3002
-    ...
-    ...    INFUND-4468
-    [Tags]    HappyPath
-    Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
-
-Ready to open button shouldn't be visible when the user re-edits the question
+Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]    Pending
+    [Tags]
     [Setup]
-    Given The user clicks the button/link    link=Initial Details
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When The user clicks the button/link    link=Initial Details
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial Details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
 
-User should be able to Save the competition as open
+User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
+    ...
+    ...    INFUND-3002
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
@@ -462,3 +470,7 @@ The user enters valid data in the initial details
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
+
+The Radio Button selections should be correct
+    Radio Button Should Be Set To    fullApplicationFinance    false
+    Radio Button Should Be Set To    includeGrowthTable    false

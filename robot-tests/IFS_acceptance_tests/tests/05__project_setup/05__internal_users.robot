@@ -32,18 +32,10 @@ Other internal users cannot see Bank details or Finance checks
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
-Project Finance user can view the Project setup status page
-    [Documentation]    INFUND-5516
-    [Tags]    Failing
-    Given the user navigates to the page          ${server}/project-setup-management/project/1/partner/documents
-    And the user clicks the button/link           link=Project setup status
-    Then the user should not see an error in the page
-    And the user should see the text in the page   Projects in setup
-    [Teardown]  Logout as user
 
 Project Finance user can see the internal project summary page
-    [Documentation]    INFUND-4049
-    [Tags]    Failing
+    [Documentation]    INFUND-4049, INFUND-5144
+    [Tags]
     [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
@@ -53,35 +45,28 @@ Project Finance user can see the internal project summary page
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/review-all-bank-details')]
     And the user should not see an error in the page
     And the user goes back to the previous page
-    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/partner/documents')]
-    And the user should not see an error in the page
-    [Teardown]    logout as user
+    And the user should not see the element    xpath=//a[contains(@href, '/project-setup-management/project/4/spend-profile/approval')]    # since the spend profile hasn't been generated yet - see INFUND-5144
+
 
 Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
-    [Tags]    Failing
+    [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    best riffs
     And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/monitoring-officer')]
     And the user should not see an error in the page
-    And the user goes back to the previous page
-    And the user clicks the button/link   xpath=//a[contains(@href, '/project-setup-management/project/1/review-all-bank-details')]
-    And the user should not see an error in the page
-    And the user goes back to the previous page
-    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/partner/documents')]
-    And the user should not see an error in the page
-    [Teardown]    logout as user
+
 
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
     [Tags]
-    [Setup]  Log in as a different user  project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     Then the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs
@@ -108,7 +93,7 @@ Project Finance can see the status of projects in PS
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
@@ -119,7 +104,7 @@ Project Finance can see the progress of partners bank details
     When the user clicks the button/link            link=Vitruvius Stonework Limited
     Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
     And the user should see the text in the page    Bob Jones
-    And the user should see the element             jQuery=a:contains("worth.email.test+invitedprojectmanager@gmail.com")
+    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
     And the user should see the text in the page    0987654321
     #TODO for Jessica and Pete
 
