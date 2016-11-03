@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
 import java.util.List;
@@ -29,20 +30,24 @@ public class ProcessOutcomeBuilder extends BaseBuilder<ProcessOutcome, ProcessOu
         return new ProcessOutcome();
     }
 
-    public ProcessOutcomeBuilder withOutcome(String outcome) {
-        return with(processOutcome -> processOutcome.setOutcome(outcome));
+    public ProcessOutcomeBuilder withId(Long... ids) {
+        return withArray(BuilderAmendFunctions::setId, ids);
     }
 
-    public ProcessOutcomeBuilder withOutcomeType(String outcomeType) {
-        return with(processOutcome -> processOutcome.setOutcomeType(outcomeType));
+    public ProcessOutcomeBuilder withOutcome(String... outcomes) {
+        return withArray((outcome, processOutcome) -> setField("outcome", outcome, processOutcome), outcomes);
     }
 
-    public ProcessOutcomeBuilder withDescription(String description) {
-        return with(processOutcome -> processOutcome.setDescription(description));
+    public ProcessOutcomeBuilder withOutcomeType(String... outcomeTypes) {
+        return withArray((outcomeType, processOutcome) -> setField("outcomeType", outcomeType, processOutcome), outcomeTypes);
     }
 
-    public ProcessOutcomeBuilder withComment(String comment) {
-        return with(processOutcome -> processOutcome.setComment(comment));
+    public ProcessOutcomeBuilder withDescription(String... descriptions) {
+        return withArray((description, processOutcome) -> setField("description", description, processOutcome), descriptions);
+    }
+
+    public ProcessOutcomeBuilder withComment(String... comments) {
+        return withArray((comment, processOutcome) -> setField("comment", comment, processOutcome), comments);
     }
 
     public ProcessOutcomeBuilder withIndex(Integer... indexes) {
