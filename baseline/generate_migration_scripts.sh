@@ -6,7 +6,7 @@ echo "**Building a fresh database running the scripts that have been or will be 
 ./gradlew flywayMigrate -Dflyway.schemas=ifs_baseline -Dflyway.locations="db/migration,db/setup"
 cd ../baseline
 echo "**Dump the schema and only the schema. This is the first new flyway script in the migration folder"
-mysqldump -uroot -ppassword ifs_baseline -d --ignore-table=ifs.schema_version > "generated/db/migration/V0_1_1__Base_schema.sql"
+mysqldump -uroot -ppassword ifs_baseline -d --ignore-table=ifs_baseline.schema_version > "generated/db/migration/V0_1_1__Base_schema.sql"
 echo "**Dump the core reference data, which is referenced directly in the code. This is the second new flyway script in the migration folder"
 mysqldump -uroot -ppassword ifs_baseline \
                             address_type \

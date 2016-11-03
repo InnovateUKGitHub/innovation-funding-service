@@ -1,5 +1,9 @@
 ./generate_migration_scripts.sh
 ./generate_setup_scripts.sh
-## TODO copy across scripts
+./replace_old_scripts_with_new.sh
 ./generate_schema_version_statement_for_uat_and_live.sh
-## TODO git revert everything
+./dry_run_live.sh
+./git_revert_flyway_scripts.sh
+
+
+
