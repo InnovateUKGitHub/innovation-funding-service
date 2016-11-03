@@ -5,8 +5,6 @@ import com.worth.ifs.competition.resource.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-
 
 /**
  * Interface for CRUD operations on {@link com.worth.ifs.competition.domain.Competition} related data.
