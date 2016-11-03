@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.getId;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.getId;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 

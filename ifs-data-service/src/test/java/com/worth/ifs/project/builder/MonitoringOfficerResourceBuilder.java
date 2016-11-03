@@ -6,7 +6,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class MonitoringOfficerResourceBuilder extends BaseBuilder<MonitoringOfficerResource, MonitoringOfficerResourceBuilder> {

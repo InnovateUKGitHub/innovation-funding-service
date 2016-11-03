@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.BaseBuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
@@ -18,13 +18,11 @@ import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.FinanceRowService;
-import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.security.ProjectLookupStrategy;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.security.access.method.P;
 
 import java.io.InputStream;

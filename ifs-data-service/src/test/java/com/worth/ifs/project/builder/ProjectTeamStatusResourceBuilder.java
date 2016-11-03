@@ -8,8 +8,8 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.addListToList;
-import static com.worth.ifs.BaseBuilderAmendFunctions.addToList;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.addListToList;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.addToList;
 import static java.util.Collections.emptyList;
 
 public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamStatusResource, ProjectTeamStatusResourceBuilder> {

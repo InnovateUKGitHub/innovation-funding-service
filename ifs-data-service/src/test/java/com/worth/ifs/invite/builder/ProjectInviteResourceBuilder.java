@@ -7,8 +7,8 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 

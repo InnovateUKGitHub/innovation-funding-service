@@ -6,14 +6,12 @@ import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.GrantClaimCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.project.builder.CostBuilder;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static java.util.Collections.emptyList;

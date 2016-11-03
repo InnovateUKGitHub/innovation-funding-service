@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;

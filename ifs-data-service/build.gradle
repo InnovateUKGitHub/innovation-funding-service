@@ -198,6 +198,7 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/commons/util/date/*.class"
         include "com/worth/ifs/commons/*.class"
         include "com/worth/ifs/commons/test/*.class"
+        include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
     }
 }
 task testCommonCodeCopy(type: Copy){

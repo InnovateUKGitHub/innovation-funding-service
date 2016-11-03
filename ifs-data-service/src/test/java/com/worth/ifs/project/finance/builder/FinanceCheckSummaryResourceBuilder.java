@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
 public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheckSummaryResource, FinanceCheckSummaryResourceBuilder> {

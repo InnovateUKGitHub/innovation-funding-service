@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.base.amend;
 
 import org.springframework.test.util.ReflectionTestUtils;
 

@@ -1,15 +1,12 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
