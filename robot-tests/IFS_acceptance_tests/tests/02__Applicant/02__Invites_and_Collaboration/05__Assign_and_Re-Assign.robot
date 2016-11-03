@@ -215,15 +215,13 @@ The question is disabled on the summary page for other collaborators
 
 Lead applicant should be able to remove the registered partner
     [Documentation]    INFUND-4806
-    [Tags]    Pending
+    [Tags]
     [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
-    #TODO INFUND-5461
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
-    Capture Page Screenshot
     #The following steps check if the collaborator should not see the application in the dashboard page
     And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     And the user should not see the element    link= Assign test

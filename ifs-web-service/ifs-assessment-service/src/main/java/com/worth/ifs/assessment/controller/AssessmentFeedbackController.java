@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.model.AssessmentFeedbackApplicationDetailsModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
@@ -48,6 +50,9 @@ public class AssessmentFeedbackController {
     private FormInputService formInputService;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Autowired
@@ -71,12 +76,14 @@ public class AssessmentFeedbackController {
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 
+        QuestionResource question = getQuestionForAssessment(questionId, assessmentId);
+
         if (isApplicationDetailsQuestion(questionId)) {
-            return getApplicationDetails(model, assessmentId, questionId);
+            return getApplicationDetails(model, assessmentId, question);
         }
 
         populateQuestionForm(form, assessmentId, questionId);
-        return doViewQuestion(model, assessmentId, questionId);
+        return doViewQuestion(model, assessmentId, question);
     }
 
     @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
@@ -101,7 +108,7 @@ public class AssessmentFeedbackController {
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("questionId") Long questionId) {
 
-        Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, questionId);
+        Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, getQuestionForAssessment(questionId, assessmentId));
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
@@ -118,6 +125,10 @@ public class AssessmentFeedbackController {
         });
     }
 
+    private QuestionResource getQuestionForAssessment(Long questionId, Long assessmentId) {
+        return questionService.getByIdAndAssessmentId(questionId, assessmentId);
+    }
+
     private List<AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
     }
@@ -129,10 +140,10 @@ public class AssessmentFeedbackController {
         return form;
     }
 
-    private String doViewQuestion(Model model, Long assessmentId, Long questionId) {
-        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
+    private String doViewQuestion(Model model, Long assessmentId, QuestionResource question) {
+        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
-        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId()));
         return "assessment/application-question";
     }
 
@@ -145,9 +156,9 @@ public class AssessmentFeedbackController {
         return applicationFormInputs.stream().anyMatch(formInputResource -> "application_details".equals(formInputResource.getFormInputTypeTitle()));
     }
 
-    private String getApplicationDetails(Model model, Long assessmentId, Long questionId) {
-        AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, questionId);
-        AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId);
+    private String getApplicationDetails(Model model, Long assessmentId, QuestionResource question) {
+        AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, question);
+        AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId());
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
         organisationDetailsModelPopulator.populateModel(model, viewModel.getApplication().getId());
