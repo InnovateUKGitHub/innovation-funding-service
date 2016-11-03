@@ -16,7 +16,7 @@
                 <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
 
-            <div th:class="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group error' : 'form-group'" id="select-address-block" th:if="${not #lists.isEmpty(form.addressForm.postcodeOptions)}">
+            <div th:class="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group error' : 'form-group'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
                 <label class="form-label" for="addressForm.selectedPostcodeIndex">
                     <span class="form-label-bold">Select your address</span>
                 </label>
