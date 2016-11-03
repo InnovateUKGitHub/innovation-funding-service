@@ -19,7 +19,6 @@ public class AcceptAction  extends BaseAssessmentAction {
 
     @Override
     protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {
-
         ProcessOutcome processOutcome = updatedProcessOutcome.get();
 
         processOutcome.setProcess(assessment);

@@ -110,17 +110,7 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
 
     @Override
     protected ProjectDetailsProcess getOrCreateProcess(Message<ProjectDetailsOutcomes> message) {
-
-        Project target = (Project) message.getHeaders().get("target");
-
-        Optional<ProjectDetailsProcess> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
-
-        ProjectDetailsProcess processToUpdate = existingProcess.orElseGet(() -> {
-            ProjectUser participant = (ProjectUser) message.getHeaders().get("participant");
-            return createNewProcess(target, participant);
-        });
-
-        return processToUpdate;
+        return getOrCreateProcessCommonStrategy(message);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {

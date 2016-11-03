@@ -100,17 +100,7 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
 
     @Override
     protected FinanceCheckProcess getOrCreateProcess(Message<FinanceCheckOutcomes> message) {
-
-        PartnerOrganisation target = (PartnerOrganisation) message.getHeaders().get("target");
-
-        Optional<FinanceCheckProcess> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
-
-        FinanceCheckProcess processToUpdate = existingProcess.orElseGet(() -> {
-            ProjectUser participant = (ProjectUser) message.getHeaders().get("participant");
-            return createNewProcess(target, participant);
-        });
-
-        return processToUpdate;
+        return getOrCreateProcessCommonStrategy(message);
     }
 
     private MessageBuilder<FinanceCheckOutcomes> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {
