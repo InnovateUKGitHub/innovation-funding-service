@@ -490,7 +490,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void submitDeclaration_withYesAnswerToAppointmentsButNotAppointments() throws Exception {
+    public void submitDeclaration_withYesAnswerToAppointmentsButNoAppointments() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -553,6 +553,83 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals("Please enter your appointments, directorships or consultancies", bindingResult.getFieldError("appointments").getDefaultMessage());
 
         verifyZeroInteractions(userService);
+    }
+
+    @Test
+    public void submitDeclaration_withNoAnswerToAppointmentsButHasAppointments() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        String principalEmployer = "Big Name Corporation";
+        String role = "Financial Accountant";
+        String hasAppointments = "false";
+        String hasFinancialInterests = "false";
+        String hasFamilyAffiliations = "false";
+        String hasFamilyFinancialInterests = "false";
+
+        AffiliationResource expectedPrincipalEmployer = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(EMPLOYER)
+                .withExists(TRUE)
+                .withOrganisation(principalEmployer)
+                .withPosition(role)
+                .build();
+
+        AffiliationResource expectedProfessionalAffiliations = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PROFESSIONAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedAppointments = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PERSONAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFinancialInterests = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PERSONAL_FINANCIAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFamilyAffiliations = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(FAMILY)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFamilyFinancialInterests = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(FAMILY_FINANCIAL)
+                .withExists(FALSE)
+                .build();
+
+        when(userService.updateUserAffiliations(user.getId(), combineLists(
+                expectedAppointments,
+                expectedFamilyAffiliations,
+                expectedPrincipalEmployer,
+                expectedProfessionalAffiliations,
+                expectedFinancialInterests,
+                expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/profile/declaration")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("principalEmployer", principalEmployer)
+                .param("role", role)
+                .param("hasAppointments", hasAppointments)
+               /*
+                  Test the scenario where a user selects "Yes" to the radio button in the UI, partially enters appointment row(s), and then changes their decision to "No".
+                  The row(s) are hidden by the UI rather than destroyed in case the user makes the change by accident.
+                  The rows are still submitted but should not be persisted or cause any validation warning.
+                */
+                .param("appointments[0].organisation", "Org 1")
+                .param("hasFinancialInterests", hasFinancialInterests)
+                .param("hasFamilyAffiliations", hasFamilyAffiliations)
+                .param("hasFamilyFinancialInterests", hasFamilyFinancialInterests)
+                .param("accurateAccount", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard"));
     }
 
     @Test
@@ -620,7 +697,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void submitDeclaration_withYesAnswerToFamilyAffiliationsButNoFamilyAffilations() throws Exception {
+    public void submitDeclaration_withYesAnswerToFamilyAffiliationsButNoFamilyAffiliations() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -683,6 +760,83 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals("Please enter the appointments, directorships or consultancies of your close family members", bindingResult.getFieldError("familyAffiliations").getDefaultMessage());
 
         verifyZeroInteractions(userService);
+    }
+
+    @Test
+    public void submitDeclaration_withNoAnswerToFamilyAffiliationsButHasFamilyAffiliations() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        String principalEmployer = "Big Name Corporation";
+        String role = "Financial Accountant";
+        String hasAppointments = "false";
+        String hasFinancialInterests = "false";
+        String hasFamilyAffiliations = "false";
+        String hasFamilyFinancialInterests = "false";
+
+        AffiliationResource expectedPrincipalEmployer = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(EMPLOYER)
+                .withExists(TRUE)
+                .withOrganisation(principalEmployer)
+                .withPosition(role)
+                .build();
+
+        AffiliationResource expectedProfessionalAffiliations = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PROFESSIONAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedAppointments = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PERSONAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFinancialInterests = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(PERSONAL_FINANCIAL)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFamilyAffiliations = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(FAMILY)
+                .withExists(FALSE)
+                .build();
+
+        AffiliationResource expectedFamilyFinancialInterests = newAffiliationResource()
+                .with(id(null))
+                .withAffiliationType(FAMILY_FINANCIAL)
+                .withExists(FALSE)
+                .build();
+
+        when(userService.updateUserAffiliations(user.getId(), combineLists(
+                expectedAppointments,
+                expectedFamilyAffiliations,
+                expectedPrincipalEmployer,
+                expectedProfessionalAffiliations,
+                expectedFinancialInterests,
+                expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/profile/declaration")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("principalEmployer", principalEmployer)
+                .param("role", role)
+                .param("hasAppointments", hasAppointments)
+                .param("hasFinancialInterests", hasFinancialInterests)
+                .param("hasFamilyAffiliations", hasFamilyAffiliations)
+               /*
+                  Test the scenario where a user selects "Yes" to the radio button in the UI, partially enters appointment row(s), and then changes their decision to "No".
+                  The row(s) are hidden by the UI rather than destroyed in case the user makes the change by accident.
+                  The rows are still submitted but should not be persisted or cause any validation warning.
+                */
+                .param("familyAffiliations[0].relation", "Relation")
+                .param("hasFamilyFinancialInterests", hasFamilyFinancialInterests)
+                .param("accurateAccount", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard"));
     }
 
     @Test
