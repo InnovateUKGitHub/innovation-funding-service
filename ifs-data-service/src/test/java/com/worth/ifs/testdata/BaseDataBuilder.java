@@ -23,10 +23,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.CompAdminEmailRepository;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
@@ -75,6 +72,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectService projectService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
+    protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -103,6 +101,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.projectService = serviceLocator.getBean(ProjectService.class);
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
         this.sectionService = serviceLocator.getBean(SectionService.class);
+        this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
     }
 
     protected UserResource compAdmin() {

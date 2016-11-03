@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata;
 
 import com.worth.ifs.user.domain.CompAdminEmail;
+import com.worth.ifs.user.domain.ProjectFinanceEmail;
 import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
@@ -52,6 +53,11 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
                     CompAdminEmail preregistrationEntry = new CompAdminEmail();
                     preregistrationEntry.setEmail(emailAddress);
                     compAdminEmailRepository.save(preregistrationEntry);
+                }
+                case PROJECT_FINANCE: {
+                    ProjectFinanceEmail preregistrationEntry = new ProjectFinanceEmail();
+                    preregistrationEntry.setEmail(emailAddress);
+                    projectFinanceEmailRepository.save(preregistrationEntry);
                 }
             }
 

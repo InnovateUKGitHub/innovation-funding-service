@@ -1,7 +1,5 @@
 package com.worth.ifs.testdata;
 
-import au.com.bytecode.opencsv.CSVReader;
-import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
@@ -9,7 +7,10 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.*;
+import com.worth.ifs.user.resource.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
@@ -24,30 +25,28 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
-import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
+import static com.worth.ifs.testdata.CsvUtils.readExternalUsers;
+import static com.worth.ifs.testdata.CsvUtils.readInternalUsers;
 import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -124,24 +123,16 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Test
     public void test() {
-        createBaseOrganisations();
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
-    }
-
-    private void createBaseOrganisations() {
-        organisationBuilder.
-                createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS).
-                withAddress(OrganisationAddressType.REGISTERED, "North Star House", "", "", "", "", "").
-                build();
     }
 
     /**
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createExternalUsers() {
-        List<ExternalUserLine> userDetails = readExternalUsers();
+        List<CsvUtils.ExternalUserLine> userDetails = readExternalUsers();
         userDetails.forEach(line -> createUser(externalUserBuilder, line));
     }
 
@@ -149,7 +140,7 @@ public class GenerateTestData extends BaseIntegrationTest {
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      **/
     private void createInternalUsers() {
-        List<InternalUserLine> userDetails = readInternalUsers();
+        List<CsvUtils.InternalUserLine> userDetails = readInternalUsers();
         userDetails.forEach(line -> {
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.
@@ -160,7 +151,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
 
         Function<S, S> creatOrgIfNecessary = builder -> {
 
@@ -190,34 +181,10 @@ public class GenerateTestData extends BaseIntegrationTest {
         creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }
 
-    private String nullable(String s) {
-        return isBlank(s) || "N".equals(s) ? null : s;
-    }
-
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
             case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
             default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
-        }
-    }
-
-    private List<ExternalUserLine> readExternalUsers() {
-        return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
-    }
-
-    private List<InternalUserLine> readInternalUsers() {
-        return simpleMap(readCsvLines("internal-users"), InternalUserLine::new);
-    }
-
-    private List<List<String>> readCsvLines(String csvName) {
-        try {
-            File file = new File(getClass().getResource("/testdata/" + csvName + ".csv").toURI());
-            CSVReader reader = new CSVReader(new FileReader(file), ',', '"');
-            List<String[]> data = reader.readAll();
-            List<List<String>> lists = simpleMap(data, Arrays::asList);
-            return lists.subList(1, lists.size());
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -552,58 +519,5 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
-    }
-
-    private abstract class UserLine {
-
-        String emailAddress;
-        String firstName;
-        String lastName;
-        boolean emailVerified;
-        String organisationName;
-        String organisationType;
-        String addressLine1;
-        String addressLine2;
-        String addressLine3;
-        String town;
-        String postcode;
-        String county;
-        OrganisationAddressType addressType;
-
-        private UserLine(List<String> line) {
-
-            int i = 0;
-            emailAddress = line.get(i++);
-            firstName = line.get(i++);
-            lastName = line.get(i++);
-            emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
-            organisationName = line.get(i++);
-            organisationType = line.get(i++);
-            addressLine1 = nullable(line.get(i++));
-            addressLine2 = nullable(line.get(i++));
-            addressLine3 = nullable(line.get(i++));
-            town = nullable(line.get(i++));
-            postcode = nullable(line.get(i++));
-            county = nullable(line.get(i++));
-            String addressTypeLine = nullable(line.get(i++));
-            addressType = addressTypeLine != null ?
-                    OrganisationAddressType.valueOf(addressTypeLine) : null;
-        }
-    }
-
-    private class ExternalUserLine extends UserLine {
-        private ExternalUserLine(List<String> line) {
-            super(line);
-        }
-    }
-
-    private class InternalUserLine extends UserLine {
-
-        String role;
-
-        private InternalUserLine(List<String> line) {
-            super(line);
-            this.role = line.get(line.size() - 1);
-        }
     }
 }
