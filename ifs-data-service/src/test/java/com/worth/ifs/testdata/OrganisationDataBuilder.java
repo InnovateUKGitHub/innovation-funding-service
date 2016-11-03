@@ -53,7 +53,9 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
         });
     }
 
-    public OrganisationDataBuilder withAddress(OrganisationAddressType addressType, String addressLine1) {
+    public OrganisationDataBuilder withAddress(OrganisationAddressType addressType, String addressLine1,
+                                               String addressLine2, String addressLine3, String town,
+                                               String postcode, String county) {
 
         return with(data -> {
 
@@ -62,6 +64,11 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                 AddressResource address = newAddressResource().
                         withId().
                         withAddressLine1(addressLine1).
+                        withAddressLine2(addressLine2).
+                        withAddressLine3(addressLine3).
+                        withTown(town).
+                        withPostcode(postcode).
+                        withCounty(county).
                         build();
 
                 organisationService.addAddress(data.getOrganisation().getId(), addressType, address);

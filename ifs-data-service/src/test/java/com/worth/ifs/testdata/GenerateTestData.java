@@ -12,6 +12,7 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
@@ -50,6 +51,7 @@ import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -135,7 +137,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createBaseOrganisations() {
         organisationBuilder.
                 createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS).
-                withAddress(OrganisationAddressType.REGISTERED, "North Star House").
+                withAddress(OrganisationAddressType.REGISTERED, "North Star House", "", "", "", "", "").
                 build();
     }
 
@@ -152,27 +154,45 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         /**
          *
-         * select u.email, u.first_name, u.last_name, o.name, ot.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 INTO OUTFILE '/var/lib/mysql-files/external-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+         * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
          *
          */
         List<List<String>> userDetails = readCsvLines();
 
         userDetails.forEach(line -> {
-            String emailAddress = line.get(0);
-            String firstName = line.get(1);
-            String lastName = line.get(2);
-            String organisationName = line.get(3);
-            String organisationType = line.get(4);
-            boolean emailVerified = Boolean.parseBoolean(line.get(5));
+            int i = 0;
+            String emailAddress = line.get(i++);
+            String firstName = line.get(i++);
+            String lastName = line.get(i++);
+            boolean emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
+            String organisationName = line.get(i++);
+            String organisationType = line.get(i++);
+            String addressLine1 = nullable(line.get(i++));
+            String addressLine2 = nullable(line.get(i++));
+            String addressLine3 = nullable(line.get(i++));
+            String town = nullable(line.get(i++));
+            String postcode = nullable(line.get(i++));
+            String county = nullable(line.get(i++));
+            String addressTypeLine = nullable(line.get(i++));
+            OrganisationAddressType addressType = addressTypeLine != null ?
+                    OrganisationAddressType.valueOf(addressTypeLine) : null;
 
             Function<ExternalUserDataBuilder, ExternalUserDataBuilder> creatOrgIfNecessary = builder -> {
+
                 boolean newOrganisation = organisationRepository.findOneByName(organisationName) == null;
-                if (newOrganisation) {
-                    return builder.withNewOrganisation(organisationBuilder.
-                            createOrganisation(organisationName, lookupOrganisationType(organisationType)));
-                } else {
+
+                if (!newOrganisation) {
                     return builder;
                 }
+
+                OrganisationDataBuilder organisation = organisationBuilder.
+                        createOrganisation(organisationName, lookupOrganisationType(organisationType));
+
+                if (addressType != null) {
+                    organisation = organisation.withAddress(addressType, addressLine1, addressLine2, addressLine3, town, postcode, county);
+                }
+
+                return builder.withNewOrganisation(organisation);
             };
 
             Function<ExternalUserDataBuilder, ExternalUserDataBuilder> registerUser = builder ->
@@ -183,6 +203,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
             creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(externalUserBuilder).build();
         });
+    }
+
+    private String nullable(String s) {
+        return isBlank(s) || "N".equals(s) ? null : s;
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {

@@ -129,7 +129,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
     private void createBaseOrganisations() {
         organisationBuilder.
                 createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS).
-                withAddress(OrganisationAddressType.REGISTERED, "North Star House").
+                withAddress(OrganisationAddressType.REGISTERED, "North Star House", "", "", "", "", "").
                 build();
     }
 
