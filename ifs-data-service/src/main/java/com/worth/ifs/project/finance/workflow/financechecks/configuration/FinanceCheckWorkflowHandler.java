@@ -20,8 +20,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import static com.worth.ifs.project.finance.resource.FinanceCheckOutcomes.*;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_FINANCE_CHECKS;
