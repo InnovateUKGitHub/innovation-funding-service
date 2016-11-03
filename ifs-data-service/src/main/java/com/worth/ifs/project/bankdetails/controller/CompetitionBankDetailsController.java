@@ -6,9 +6,7 @@ import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +19,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.HttpHeadersUtils.getCSVHeaders;
+
 @RestController
 @RequestMapping(value = "/competition/{competitionId}/bank-details")
 public class CompetitionBankDetailsController {
@@ -32,18 +32,7 @@ public class CompetitionBankDetailsController {
     ResponseEntity<Object> export(@PathVariable("competitionId") final Long competitionId) throws IOException {
         List<BankDetails> bankDetails = bankDetailsRepository.findByProjectApplicationCompetitionId(competitionId);
         List<String[]> allRows = buildBankDetailRecords(bankDetails);
-        return new ResponseEntity<>(writeCSVDataToByteArrayResource(allRows), buildHttpHeaderForCSVExport(), HttpStatus.OK);
-    }
-
-    private HttpHeaders buildHttpHeaderForCSVExport(){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        // Prevent caching
-        httpHeaders.setCacheControl("no-cache, no-store, must-revalidate");
-        httpHeaders.setPragma("no-cache");
-        httpHeaders.setExpires(0);
-        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
-        httpHeaders.add("Content-Transfer-Encoding", "binary");
-        return httpHeaders;
+        return new ResponseEntity<>(writeCSVDataToByteArrayResource(allRows), getCSVHeaders(), HttpStatus.OK);
     }
 
     private ByteArrayResource writeCSVDataToByteArrayResource(List<String[]> allRows) throws IOException {
