@@ -171,7 +171,7 @@
               </thead>
               <tbody>
               <tr th:each="item : ${model.summary.years}">
-                  <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                  <td th:text="${item.year + ' to ' + (item.year + 1)}"></td>
                   <td th:text="${'£ '+#numbers.formatInteger(item.amount,1,'COMMA')}"
                       data-calculation-operations="+"
                       th:attr="data-calculation-fields=${'.apr-'+item.year+',
