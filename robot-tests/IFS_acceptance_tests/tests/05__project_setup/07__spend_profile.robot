@@ -394,13 +394,8 @@ Comp Admin is able to see Spend Profile approval page
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
-<<<<<<< HEAD
     [Tags]
-    [Setup]  Log in as a different user                        project.finance1@innovateuk.test    Passw0rd
-=======
-    [Tags]    #HappyPath
-    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
->>>>>>> b4dd76443d3519b34370f8fa7674e03e8f90e0af
+    [Setup]  Log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
