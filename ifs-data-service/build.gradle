@@ -186,10 +186,6 @@ task testCommonCode(type: Jar) {
     baseName += '-tests'
     from(sourceSets.test.output) {
         // filter to only include certain class files (Ant glob pattern)
-//        include "com/worth/ifs/Builder.class"
-//        include "com/worth/ifs/BaseBuilder.class"
-//        include "com/worth/ifs/**/*Builder.class"
-//        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
         include "**/application-web-integration-test.properties"
         include "com/worth/ifs/commons/pojo/*.class"
         include "com/worth/ifs/commons/rest/*.class"
