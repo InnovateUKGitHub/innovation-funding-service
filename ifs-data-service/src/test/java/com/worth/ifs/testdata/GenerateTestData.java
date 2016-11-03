@@ -27,20 +27,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
-import static com.worth.ifs.testdata.CsvUtils.readCompetitions;
-import static com.worth.ifs.testdata.CsvUtils.readExternalUsers;
-import static com.worth.ifs.testdata.CsvUtils.readInternalUsers;
+import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
@@ -152,55 +146,18 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
-
-        Function<S, S> creatOrgIfNecessary = builder -> {
-
-            boolean newOrganisation = organisationRepository.findOneByName(line.organisationName) == null;
-
-            if (!newOrganisation) {
-                return builder;
-            }
-
-            OrganisationDataBuilder organisation = organisationBuilder.
-                    createOrganisation(line.organisationName, lookupOrganisationType(line.organisationType));
-
-            if (line.addressType != null) {
-                organisation = organisation.withAddress(line.addressType, line.addressLine1, line.addressLine2,
-                        line.addressLine3, line.town, line.postcode, line.county);
-            }
-
-            return builder.withNewOrganisation(organisation);
-        };
-
-        Function<S, S> registerUser = builder ->
-                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName);
-
-        Function<S, S> verifyEmailIfNecessary = builder ->
-                line.emailVerified ? builder.verifyEmail() : builder;
-
-        creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
-    }
-
-    private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
-        switch (organisationType) {
-            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
-            default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
-        }
-    }
-
     /**
      * select "Competition name", "Description", "Type", "Innovation Area", "Innovation Sector", "Research Category", "Open date", "Submission Date", "Funders Panel Date", "Funders Panel End Date", "Assessor Accepts Date", "Assessor End Date","Setup Complete" UNION ALL select c.name, c.description, "Programme", IFNULL(innArea.NAME,"Earth Observation"), IFNULL(innSec.NAME,"Materials and manufacturing"), IFNULL(resCat.NAME,"Technical feasibility"), open.DATE, submit.DATE, funders.DATE, funderEnd.DATE, assessorAccept.DATE, assessorEnd.DATE, c.setup_complete from competition c left join category_link cl on cl.class_pk = c.id and cl.class_name = 'com.worth.ifs.competition.domain.Competition' left join category innArea on innArea.id = cl.category_id and innArea.type = 'INNOVATION_AREA' left join category innSec on innSec.id = cl.category_id and innSec.type = 'INNOVATION_SECTOR' left join category resCat on resCat.id = cl.category_id and resCat.type = 'RESEARCH_CATEGORY' left join milestone open on open.type = 'OPEN_DATE' and open.competition_id = c.id  left join milestone submit on submit.type = 'SUBMISSION_DATE' and submit.competition_id = c.id left join milestone funders on funders.type = 'FUNDERS_PANEL' and funders.competition_id = c.id  left join milestone funderEnd on funderEnd.type = 'NOTIFICATIONS' and funderEnd.competition_id = c.id  left join milestone assessorAccept on assessorAccept.type = 'ASSESSOR_ACCEPTS' and assessorAccept.competition_id = c.id  left join milestone assessorEnd on assessorEnd.type = 'ASSESSOR_DEADLINE' and assessorEnd.competition_id = c.id  INTO OUTFILE '/var/lib/mysql-files/competitions4.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createCompetitions() {
         List<CsvUtils.CompetitionLine> competitionLines = readCompetitions();
         createOpenCompetition(competitionLines.get(2));
-        createInAssessmentCompetition();
-        createFundersPanelCompetition();
-        createInAssessorFeedbackCompetition();
-        createInProjectSetupCompetition();
-        createInPreparationCompetition();
-        createReadyToOpenCompetition();
+        createInAssessmentCompetition(competitionLines.get(3));
+        createFundersPanelCompetition(competitionLines.get(4));
+        createInAssessorFeedbackCompetition(competitionLines.get(6));
+        createInProjectSetupCompetition(competitionLines.get(7));
+        createInPreparationCompetition(competitionLines.get(8));
+        createReadyToOpenCompetition(competitionLines.get(5));
     }
 
     private void createOpenCompetition(CsvUtils.CompetitionLine line) {
@@ -211,7 +168,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
         UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
-        competitionBuilderWithBasicInformation(line).
+        competitionBuilderWithBasicInformation(line, Optional.of(1L)).
                 withApplications(
                     builder -> builder.
                             withBasicDetails(applicant1, "A novel solution to an old problem").
@@ -260,105 +217,26 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {
-
-        CompetitionDataBuilder basicInformation = this.competitionDataBuilder.
-                withExistingCompetition(1L).
-                withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
-                withOpenDate(line.openDate).
-                withSubmissionDate(line.submissionDate).
-                withFundersPanelDate(line.fundersPanelDate).
-                withFundersPanelEndDate(line.fundersPanelEndDate).
-                withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorEndDate(line.assessorEndDate);
-
-        return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
+    private void createInAssessmentCompetition(CsvUtils.CompetitionLine line) {
+        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
     }
 
-    private void createInAssessmentCompetition() {
-
-        String name = "Juggling Craziness";
-
-        String description = "Innovate UK is to invest up to £9 million in juggling. The aim of this competition is to make juggling even more fun.";
-
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2016, 12, 31, 0, 0)).
-                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2017, 1, 28, 0, 0)).
-                withSetupComplete().
-                build();
+    private void createFundersPanelCompetition(CsvUtils.CompetitionLine line) {
+        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
     }
 
-    private void createFundersPanelCompetition() {
-
-        String name = "La Fromage";
-
-        String description = "Innovate UK is to invest up to £9 million in cheese. The aim of this competition is to make cheese tastier.";
-
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
-                withAssessorAcceptsDate(LocalDateTime.of(2016, 4, 12, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2017, 5, 12, 0, 0)).
-                withSetupComplete().
-                build();
+    private void createInAssessorFeedbackCompetition(CsvUtils.CompetitionLine line) {
+        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
     }
 
-    private void createInAssessorFeedbackCompetition() {
-
-        String name = "Theremin Theory";
-
-        String description = "Innovate UK is to invest up to £9 million in theremins. The aim of this competition is to make theremin the prominent instrument in music.";
-
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2016, 3, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2016, 4, 14, 0, 0)).
-                withFundersPanelEndDate(LocalDateTime.of(2016, 1, 28, 0, 0)).
-                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2019, 1, 28, 0, 0)).
-                withSetupComplete().
-                build();
-    }
-
-    private void createInProjectSetupCompetition() {
+    private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
 
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
         UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
         UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
         UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
-        String name = "Killer Riffs";
-
-        String description = "Innovate UK is to invest up to £9 million in heavy rock music. The aim of this competition is to make it so whenever you turn on the radio, you hear killer riffs and sick breakdowns.";
-
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(LocalDateTime.of(2015, 6, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2016, 1, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2016, 1, 20, 0, 0)).
-                withFundersPanelEndDate(LocalDateTime.of(2016, 1, 28, 0, 0)).
-                withAssessorAcceptsDate(LocalDateTime.of(2016, 1, 12, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2016, 1, 29, 0, 0)).
-                withSetupComplete().
+        competitionBuilderWithBasicInformation(line, Optional.empty()).
                 moveCompetitionIntoOpenStatus().
                 withApplications(
                     builder -> builder.
@@ -414,37 +292,33 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private void createReadyToOpenCompetition() {
-
-        String name = "Sarcasm Stupendousness";
-
-        String description = "Innovate UK is to invest up to £9 million in sarcasm. The aim of this competition is to make sarcasm such a huge deal.";
-
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(LocalDateTime.of(2018, 2, 24, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2018, 3, 16, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2018, 12, 31, 0, 0)).
-                withAssessorAcceptsDate(LocalDateTime.of(2018, 1, 12, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2019, 1, 28, 0, 0)).
-                withSetupComplete().
-                build();
+    private void createReadyToOpenCompetition(CsvUtils.CompetitionLine line) {
+        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
     }
 
-    private void createInPreparationCompetition() {
+    private void createInPreparationCompetition(CsvUtils.CompetitionLine line) {
+        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+    }
 
-        String name = null;
-        String description = null;
+    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
 
-        competitionDataBuilder.
-                createCompetition().
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                build();
+        CompetitionDataBuilder basicInformation =
+                existingCompetitionId.map(id -> competitionDataBuilder.
+                        withExistingCompetition(1L).
+                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory)
+                ).orElse(competitionDataBuilder.
+                        createCompetition().
+                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
+                        withApplicationFormFromTemplate().
+                        withNewMilestones()).
+                withOpenDate(line.openDate).
+                withSubmissionDate(line.submissionDate).
+                withFundersPanelDate(line.fundersPanelDate).
+                withFundersPanelEndDate(line.fundersPanelEndDate).
+                withAssessorAcceptsDate(line.assessorAcceptsDate).
+                withAssessorEndDate(line.assessorEndDate);
+
+        return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
 
     private void freshDb() throws Exception {
@@ -521,6 +395,44 @@ public class GenerateTestData extends BaseIntegrationTest {
             setLoggedInUser(currentUser);
         }
     }
+
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
+
+        Function<S, S> creatOrgIfNecessary = builder -> {
+
+            boolean newOrganisation = organisationRepository.findOneByName(line.organisationName) == null;
+
+            if (!newOrganisation) {
+                return builder;
+            }
+
+            OrganisationDataBuilder organisation = organisationBuilder.
+                    createOrganisation(line.organisationName, lookupOrganisationType(line.organisationType));
+
+            if (line.addressType != null) {
+                organisation = organisation.withAddress(line.addressType, line.addressLine1, line.addressLine2,
+                        line.addressLine3, line.town, line.postcode, line.county);
+            }
+
+            return builder.withNewOrganisation(organisation);
+        };
+
+        Function<S, S> registerUser = builder ->
+                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName);
+
+        Function<S, S> verifyEmailIfNecessary = builder ->
+                line.emailVerified ? builder.verifyEmail() : builder;
+
+        creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
+    }
+
+    private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
+        switch (organisationType) {
+            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
+            default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
+        }
+    }
+
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
