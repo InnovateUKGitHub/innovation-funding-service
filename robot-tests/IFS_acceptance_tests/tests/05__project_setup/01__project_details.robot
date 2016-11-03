@@ -60,11 +60,12 @@ Internal users can see Project Details not yet completed
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+    [Teardown]    the user closes the browser
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=00000026: best riffs
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
