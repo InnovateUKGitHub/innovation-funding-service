@@ -14,7 +14,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return with(data -> {
 
             doAs(systemRegistrar(), () -> {
-                registerUserWithExistingOrganisation(firstName, lastName, data.getEmailAddress(), INNOVATE_UK_ORG_NAME, data.getRole(), data);
+                registerUser(firstName, lastName, data.getEmailAddress(), INNOVATE_UK_ORG_NAME, data.getRole(), data);
             });
         });
     }

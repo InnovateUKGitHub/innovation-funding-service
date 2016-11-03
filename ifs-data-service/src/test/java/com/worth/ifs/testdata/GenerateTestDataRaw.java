@@ -1,6 +1,5 @@
 package com.worth.ifs.testdata;
 
-import au.com.bytecode.opencsv.CSVReader;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -8,7 +7,6 @@ import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
@@ -16,6 +14,7 @@ import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -26,15 +25,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -48,15 +45,15 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Ignore
 @ActiveProfiles({"integration-test,seeding-db"})
-public class GenerateTestData extends BaseIntegrationTest {
+public class GenerateTestDataRaw extends BaseIntegrationTest {
 
     private static final String PROJECT_SUMMARY = "The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.";
     private static final String PUBLIC_DESCRIPTION = "Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.\n" +
@@ -84,9 +81,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
 
     private CompetitionDataBuilder competitionDataBuilder;
 
@@ -150,58 +144,33 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createExternalUsers() {
 
-        /**
-         *
-         * select u.email, u.first_name, u.last_name, o.name, ot.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 INTO OUTFILE '/var/lib/mysql-files/external-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-         *
-         */
-        List<List<String>> userDetails = readCsvLines();
+        externalUserBuilder.
+                withNewOrganisation(organisationBuilder.createOrganisation("Empire Ltd", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                verifyEmail().
+                build();
 
-        userDetails.forEach(line -> {
-            String emailAddress = line.get(0);
-            String firstName = line.get(1);
-            String lastName = line.get(2);
-            String organisationName = line.get(3);
-            String organisationType = line.get(4);
-            boolean emailVerified = Boolean.parseBoolean(line.get(5));
+        externalUserBuilder.
+                registerUser("Malik", "Strandberg", "worth.email.test+submit@gmail.com", "Empire Ltd").
+                verifyEmail().
+                build();
 
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> creatOrgIfNecessary = builder -> {
-                boolean newOrganisation = organisationRepository.findOneByName(organisationName) == null;
-                if (newOrganisation) {
-                    return builder.withNewOrganisation(organisationBuilder.
-                            createOrganisation(organisationName, lookupOrganisationType(organisationType)));
-                } else {
-                    return builder;
-                }
-            };
+        externalUserBuilder.
+                withNewOrganisation(organisationBuilder.createOrganisation("Ludlow", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Ludlow").
+                verifyEmail().
+                build();
 
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> registerUser = builder ->
-                    builder.registerUser(firstName, lastName, emailAddress, organisationName);
+        externalUserBuilder.
+                withNewOrganisation(organisationBuilder.createOrganisation("EGGS", OrganisationTypeEnum.ACADEMIC)).
+                registerUser("Pete", "Tom", "pete.tom@egg.com", "EGGS").
+                verifyEmail().
+                build();
 
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> verifyEmailIfNecessary = builder ->
-                    emailVerified ? builder.verifyEmail() : builder;
-
-            creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(externalUserBuilder).build();
-        });
-    }
-
-    private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
-        switch (organisationType) {
-            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
-            default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
-        }
-    }
-
-    private List<List<String>> readCsvLines() {
-        try {
-            File file = new File(getClass().getResource("/testdata/external-users.csv").toURI());
-            CSVReader reader = new CSVReader(new FileReader(file), ',', '"');
-            List<String[]> data = reader.readAll();
-            List<List<String>> lists = simpleMap(data, Arrays::asList);
-            return lists.subList(1, lists.size());
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        externalUserBuilder.
+                withNewOrganisation(organisationBuilder.createOrganisation("HIVE IT LIMITED", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Ewan", "Cormack", "ewan+1@hiveit.co.uk", "HIVE IT LIMITED").
+                build();
     }
 
     private void createCompetitions() {

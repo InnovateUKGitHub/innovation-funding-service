@@ -29,7 +29,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         super(newActions, serviceLocator);
     }
 
-    protected void registerUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
+    protected void registerUser(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
 
         doAs(systemRegistrar(), () -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);

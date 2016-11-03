@@ -1,35 +1,20 @@
 package com.worth.ifs.testdata;
 
-import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static java.util.Collections.emptyList;
 
 public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserData, ExternalUserDataBuilder> {
 
-
-    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress) {
-        return with(data -> {
-            data.setFirstName(firstName);
-            data.setLastName(lastName);
-            data.setEmailAddress(emailAddress);
-        });
-    }
-
     public ExternalUserDataBuilder withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
-        return with(data -> {
-            OrganisationResource newOrganisation = organisationBuilder.build().getOrganisation();
-            registerUserWithExistingOrganisation(data.getFirstName(), data.getLastName(), data.getEmailAddress(), newOrganisation.getName(), APPLICANT, data);
-        });
+        return with(data -> organisationBuilder.build().getOrganisation());
     }
 
-    public ExternalUserDataBuilder registerUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String organisationName) {
-        return with(data -> {
-            registerUserWithExistingOrganisation(firstName, lastName, emailAddress, organisationName, APPLICANT, data);
-        });
+    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName) {
+        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, UserRoleType.APPLICANT, data));
     }
 
     public static ExternalUserDataBuilder newExternalUserData(ServiceLocator serviceLocator) {
