@@ -7,7 +7,6 @@ import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -21,9 +20,8 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -162,6 +160,49 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
         inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, applicationRejectionResource);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptInvitation() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.acceptInvitation(assessment)).thenReturn(true);
+
+        ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler).acceptInvitation(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptInvitation_eventNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.acceptInvitation(assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(ASSESSMENT_ACCEPT_FAILED));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler, calls(1)).acceptInvitation(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 }

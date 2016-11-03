@@ -108,6 +108,20 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         return getProcessByTargetId(target.getId());
     }
 
+    protected ProcessType getOrCreateProcessCommonStrategy(Message<EventType> message) {
+
+        TargetType target = (TargetType) message.getHeaders().get("target");
+
+        Optional<ProcessType> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
+
+        ProcessType processToUpdate = existingProcess.orElseGet(() -> {
+            ParticipantType participant = (ParticipantType) message.getHeaders().get("participant");
+            return createNewProcess(target, participant);
+        });
+
+        return processToUpdate;
+    }
+
     protected <T> Optional<T> getOptionalParameterFromMessage(String parameterName, Message<EventType> message) {
         return Optional.ofNullable((T) message.getHeaders().get(parameterName));
     }
@@ -125,5 +139,4 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
     protected abstract StateMachine<StateType, EventType> getStateMachine();
 
     protected abstract ProcessType getOrCreateProcess(Message<EventType> message);
-
 }

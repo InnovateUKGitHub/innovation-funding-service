@@ -19,8 +19,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.*;
 import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
@@ -110,17 +108,7 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
 
     @Override
     protected ProjectDetailsProcess getOrCreateProcess(Message<ProjectDetailsOutcomes> message) {
-
-        Project target = (Project) message.getHeaders().get("target");
-
-        Optional<ProjectDetailsProcess> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
-
-        ProjectDetailsProcess processToUpdate = existingProcess.orElseGet(() -> {
-            ProjectUser participant = (ProjectUser) message.getHeaders().get("participant");
-            return createNewProcess(target, participant);
-        });
-
-        return processToUpdate;
+        return getOrCreateProcessCommonStrategy(message);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
