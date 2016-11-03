@@ -137,7 +137,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
         internalUserBuilder.
                 withRole(COMP_ADMIN).
                 createPreRegistrationEntry(COMP_ADMIN_EMAIL).
-                registerUser("John", "Doe").
+                registerUser("John", "Doe", "john.doe@innovateuk.test", INNOVATE_UK_ORG_NAME).
                 verifyEmail().
                 build();
     }

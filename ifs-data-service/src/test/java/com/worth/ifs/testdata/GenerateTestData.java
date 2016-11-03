@@ -9,10 +9,7 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserStatus;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.flywaydb.core.Flyway;
@@ -47,7 +44,6 @@ import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData
 import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
@@ -141,68 +137,57 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private void createInternalUsers() {
-        internalUserBuilder.
-                withRole(COMP_ADMIN).
-                createPreRegistrationEntry(COMP_ADMIN_EMAIL).
-                registerUser("John", "Doe").
-                verifyEmail().
-                build();
+    /**
+     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     */
+    private void createExternalUsers() {
+        List<ExternalUserLine> userDetails = readExternalUsers();
+        userDetails.forEach(line -> createUser(externalUserBuilder, line));
     }
 
-    private void createExternalUsers() {
-
-        /**
-         *
-         * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-         *
-         */
-        List<List<String>> userDetails = readCsvLines();
-
+    /**
+     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     **/
+    private void createInternalUsers() {
+        List<InternalUserLine> userDetails = readInternalUsers();
         userDetails.forEach(line -> {
-            int i = 0;
-            String emailAddress = line.get(i++);
-            String firstName = line.get(i++);
-            String lastName = line.get(i++);
-            boolean emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
-            String organisationName = line.get(i++);
-            String organisationType = line.get(i++);
-            String addressLine1 = nullable(line.get(i++));
-            String addressLine2 = nullable(line.get(i++));
-            String addressLine3 = nullable(line.get(i++));
-            String town = nullable(line.get(i++));
-            String postcode = nullable(line.get(i++));
-            String county = nullable(line.get(i++));
-            String addressTypeLine = nullable(line.get(i++));
-            OrganisationAddressType addressType = addressTypeLine != null ?
-                    OrganisationAddressType.valueOf(addressTypeLine) : null;
 
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> creatOrgIfNecessary = builder -> {
+            InternalUserDataBuilder baseBuilder = internalUserBuilder.
+                    withRole(UserRoleType.fromName(line.role)).
+                    createPreRegistrationEntry(line.emailAddress);
 
-                boolean newOrganisation = organisationRepository.findOneByName(organisationName) == null;
-
-                if (!newOrganisation) {
-                    return builder;
-                }
-
-                OrganisationDataBuilder organisation = organisationBuilder.
-                        createOrganisation(organisationName, lookupOrganisationType(organisationType));
-
-                if (addressType != null) {
-                    organisation = organisation.withAddress(addressType, addressLine1, addressLine2, addressLine3, town, postcode, county);
-                }
-
-                return builder.withNewOrganisation(organisation);
-            };
-
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> registerUser = builder ->
-                    builder.registerUser(firstName, lastName, emailAddress, organisationName);
-
-            Function<ExternalUserDataBuilder, ExternalUserDataBuilder> verifyEmailIfNecessary = builder ->
-                    emailVerified ? builder.verifyEmail() : builder;
-
-            creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(externalUserBuilder).build();
+            createUser(baseBuilder, line);
         });
+    }
+
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
+
+        Function<S, S> creatOrgIfNecessary = builder -> {
+
+            boolean newOrganisation = organisationRepository.findOneByName(line.organisationName) == null;
+
+            if (!newOrganisation) {
+                return builder;
+            }
+
+            OrganisationDataBuilder organisation = organisationBuilder.
+                    createOrganisation(line.organisationName, lookupOrganisationType(line.organisationType));
+
+            if (line.addressType != null) {
+                organisation = organisation.withAddress(line.addressType, line.addressLine1, line.addressLine2,
+                        line.addressLine3, line.town, line.postcode, line.county);
+            }
+
+            return builder.withNewOrganisation(organisation);
+        };
+
+        Function<S, S> registerUser = builder ->
+                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName);
+
+        Function<S, S> verifyEmailIfNecessary = builder ->
+                line.emailVerified ? builder.verifyEmail() : builder;
+
+        creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }
 
     private String nullable(String s) {
@@ -216,9 +201,17 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private List<List<String>> readCsvLines() {
+    private List<ExternalUserLine> readExternalUsers() {
+        return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
+    }
+
+    private List<InternalUserLine> readInternalUsers() {
+        return simpleMap(readCsvLines("internal-users"), InternalUserLine::new);
+    }
+
+    private List<List<String>> readCsvLines(String csvName) {
         try {
-            File file = new File(getClass().getResource("/testdata/external-users.csv").toURI());
+            File file = new File(getClass().getResource("/testdata/" + csvName + ".csv").toURI());
             CSVReader reader = new CSVReader(new FileReader(file), ',', '"');
             List<String[]> data = reader.readAll();
             List<List<String>> lists = simpleMap(data, Arrays::asList);
@@ -559,5 +552,58 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
+    }
+
+    private abstract class UserLine {
+
+        String emailAddress;
+        String firstName;
+        String lastName;
+        boolean emailVerified;
+        String organisationName;
+        String organisationType;
+        String addressLine1;
+        String addressLine2;
+        String addressLine3;
+        String town;
+        String postcode;
+        String county;
+        OrganisationAddressType addressType;
+
+        private UserLine(List<String> line) {
+
+            int i = 0;
+            emailAddress = line.get(i++);
+            firstName = line.get(i++);
+            lastName = line.get(i++);
+            emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
+            organisationName = line.get(i++);
+            organisationType = line.get(i++);
+            addressLine1 = nullable(line.get(i++));
+            addressLine2 = nullable(line.get(i++));
+            addressLine3 = nullable(line.get(i++));
+            town = nullable(line.get(i++));
+            postcode = nullable(line.get(i++));
+            county = nullable(line.get(i++));
+            String addressTypeLine = nullable(line.get(i++));
+            addressType = addressTypeLine != null ?
+                    OrganisationAddressType.valueOf(addressTypeLine) : null;
+        }
+    }
+
+    private class ExternalUserLine extends UserLine {
+        private ExternalUserLine(List<String> line) {
+            super(line);
+        }
+    }
+
+    private class InternalUserLine extends UserLine {
+
+        String role;
+
+        private InternalUserLine(List<String> line) {
+            super(line);
+            this.role = line.get(line.size() - 1);
+        }
     }
 }

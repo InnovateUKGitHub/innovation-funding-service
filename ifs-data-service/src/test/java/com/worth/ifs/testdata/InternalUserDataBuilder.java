@@ -10,12 +10,11 @@ import static java.util.Collections.emptyList;
 
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
-    public InternalUserDataBuilder registerUser(String firstName, String lastName) {
+    public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName) {
         return with(data -> {
 
-            doAs(systemRegistrar(), () -> {
-                registerUser(firstName, lastName, data.getEmailAddress(), INNOVATE_UK_ORG_NAME, data.getRole(), data);
-            });
+            doAs(systemRegistrar(), () ->
+                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, data.getRole(), data));
         });
     }
 

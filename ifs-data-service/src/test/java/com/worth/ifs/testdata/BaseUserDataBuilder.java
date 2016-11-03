@@ -25,8 +25,10 @@ import static java.util.Optional.empty;
  */
 public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends BaseDataBuilder<T, S> {
 
-    public BaseUserDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
-        super(newActions, serviceLocator);
+    public abstract S registerUser(String firstName, String lastName, String emailAddress, String organisationName);
+
+    public S withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
+        return with(data -> organisationBuilder.build().getOrganisation());
     }
 
     protected void registerUser(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
@@ -93,5 +95,9 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
     private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, Long organisationId, UserRoleType role, T data) {
         UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, role, organisationId);
         updateUserInUserData(data, registeredUser.getId());
+    }
+
+    public BaseUserDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
+        super(newActions, serviceLocator);
     }
 }

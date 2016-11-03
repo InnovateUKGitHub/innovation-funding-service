@@ -1,0 +1,8 @@
+"Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1","Line 2","Line3","Town or city","Postcode","County","Address Type","Role"
+"worth.email.test+assessor1@gmail.com","Assessor","One","ACTIVE","British Juggling Ltd","Business","369","Juggle Grove","","Northampton","NN1 4EU","","REGISTERED","assessor"
+"paul.plum@gmail.com","Professor","Plum","ACTIVE","Worth Internet Systems","Business",\N,\N,\N,\N,\N,\N,\N,"assessor"
+"felix.wilson@gmail.com","Felix","Wilson","ACTIVE","Worth Internet Systems","Business",\N,\N,\N,\N,\N,\N,\N,"assessor"
+"john.doe@innovateuk.test","Firstname15","Lastname15","ACTIVE","Innovate UK","Business",\N,\N,\N,\N,\N,\N,\N,"comp_admin"
+"robert.johnson@innovateuk.test","Firstname16","Lastname16","ACTIVE","Innovate UK","Business",\N,\N,\N,\N,\N,\N,\N,"comp_admin"
+"project.finance1@innovateuk.test","Firstname33","Lastname33","ACTIVE","Innovate UK","Business",\N,\N,\N,\N,\N,\N,\N,"project_finance"
+"project.finance2@innovateuk.test","Firstname34","Lastname34","ACTIVE","Innovate UK","Business",\N,\N,\N,\N,\N,\N,\N,"project_finance"
