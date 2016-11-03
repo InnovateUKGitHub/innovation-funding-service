@@ -166,13 +166,8 @@ Project Manager can see Spend Profile in Progress
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765
-<<<<<<< HEAD
     [Tags]    HappyPath
     [Setup]  Log in as a different user                         steve.smith@empire.com    Passw0rd
-=======
-    [Tags]    #HappyPath
-    [Setup]  Log in as a different user             steve.smith@empire.com    Passw0rd
->>>>>>> b4dd76443d3519b34370f8fa7674e03e8f90e0af
     Given the user navigates to the page            ${external_spendprofile_summary}
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   Your spend profile is marked as complete
