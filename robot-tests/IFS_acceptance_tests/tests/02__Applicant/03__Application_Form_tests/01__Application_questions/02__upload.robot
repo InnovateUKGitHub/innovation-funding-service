@@ -49,12 +49,12 @@ Non pdf uploads not allowed
     And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file to the 'technical approach' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
-    [Teardown]    Logout as user
+
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -73,7 +73,7 @@ Lead applicant can view a file
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -98,7 +98,7 @@ Questions can be assigned with appendices
     [Documentation]    INFUND-832
     ...    INFUND-409
     [Tags]    SmokeTest
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -112,7 +112,7 @@ Questions can be assigned with appendices
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]    SmokeTest
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -145,7 +145,7 @@ Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
     [Tags]    Pending
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     #TODO INFUND-4008, review this failing test case when 4008 is completed
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf

@@ -2,6 +2,7 @@ package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
@@ -18,6 +19,8 @@ import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -106,8 +109,22 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(questionResource)))
                 .andExpect(status().isOk());
     }
-    
-    
+
+    @Test
+    public void getQuestionByIdAndAssessmentId() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        QuestionResource questionResource = newQuestionResource().build();
+
+        when(questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId)).thenReturn(serviceSuccess(questionResource));
+
+        mockMvc.perform(get("/question/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}", questionId, assessmentId))
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(questionResource)))
+                .andExpect(status().isOk());
+
+        verify(questionService, only()).getQuestionByIdAndAssessmentId(questionId, assessmentId);
+    }
 
     @Test
     public void getQuestionsByAssessmentId() throws Exception {

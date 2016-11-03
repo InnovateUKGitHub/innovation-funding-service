@@ -66,9 +66,7 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
     public String getApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
-                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
-        return "competition/finances";
+       return getFinancePage(model, competitionId);
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.POST)
@@ -78,7 +76,7 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        Supplier<String> failureView = () -> getFinancePage(model, form, competitionId);
+        Supplier<String> failureView = () -> getFinancePage(model, competitionId);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         CompetitionResource resource = competitionService.getById(competitionId);
@@ -89,9 +87,9 @@ public class CompetitionSetupApplicationController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private String getFinancePage(Model model, ApplicationFinanceForm form, Long competitionId) {
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
-        model.addAttribute(COMPETITION_ID_KEY, competitionId);
+    private String getFinancePage(Model model, Long competitionId) {
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
+                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
         return "competition/finances";
     }
 
@@ -142,7 +140,9 @@ public class CompetitionSetupApplicationController {
         if(!bindingResult.hasErrors()) {
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM);
+            competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
+                    competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
+                    Optional.of(competitionSetupForm.getQuestion().getId()));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }
@@ -150,14 +150,14 @@ public class CompetitionSetupApplicationController {
 
     private void setupQuestionToModel(final CompetitionResource competition, final Long questionId, Model model) {
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
-        CompetitionSetupSubsection subsection = CompetitionSetupSubsection.QUESTIONS;
 
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
+                CompetitionSetupSubsection.QUESTIONS, Optional.of(questionId));
         ApplicationQuestionForm competitionSetupForm =
                 (ApplicationQuestionForm) competitionSetupService.getSubsectionFormData(
                         competition,
                         section,
-                        subsection,
+                        CompetitionSetupSubsection.QUESTIONS,
                         Optional.of(questionId));
 
         model.addAttribute("competitionName", competition.getName());
