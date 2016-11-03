@@ -9,8 +9,8 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
+	<th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/review-all-bank-details(projectId=${model.projectId})}" />
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-
 	<form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
 		<div class="grid-row">
 			<div class="column-two-thirds">
