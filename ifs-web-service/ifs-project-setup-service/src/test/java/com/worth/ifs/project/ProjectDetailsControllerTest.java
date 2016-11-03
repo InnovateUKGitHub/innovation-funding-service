@@ -162,7 +162,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
             .collect(toList());
 
-        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null);
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null, false);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
