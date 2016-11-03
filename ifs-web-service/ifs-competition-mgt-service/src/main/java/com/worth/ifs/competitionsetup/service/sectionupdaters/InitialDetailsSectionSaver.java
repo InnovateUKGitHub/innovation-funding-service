@@ -11,7 +11,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
@@ -173,11 +173,8 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             return errors;
         }
 
-	    MilestoneEntry milestoneEntry = new MilestoneEntry();
-        milestoneEntry.setMilestoneType(MilestoneType.OPEN_DATE);
-		milestoneEntry.setDay(openingDate.getDayOfMonth());
-        milestoneEntry.setMonth(openingDate.getMonth().getValue());
-        milestoneEntry.setYear(openingDate.getYear());
+	    MilestoneViewModel milestoneEntry = new MilestoneViewModel(MilestoneType.OPEN_DATE, openingDate);
+
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
@@ -185,7 +182,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-		LinkedMap<String, MilestoneEntry> milestoneEntryMap = new LinkedMap<>();
+		LinkedMap<String, MilestoneViewModel> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
 		return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);

@@ -1,4 +1,4 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
@@ -6,7 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.junit.Before;
@@ -121,7 +121,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationQuestionWithErrors() throws Exception {
         Long questionId = 4L;
-        Question question = new Question();
+        QuestionViewModel question = new QuestionViewModel();
         question.setId(questionId);
 
         mockMvc.perform(post(URL_PREFIX +"/question")
@@ -145,7 +145,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX));
 
-        verify(competitionSetupQuestionService).updateQuestion(isA(Question.class));
+        verify(competitionSetupQuestionService).updateQuestion(isA(QuestionViewModel.class));
     }
 
 }

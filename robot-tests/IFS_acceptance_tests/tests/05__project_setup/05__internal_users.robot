@@ -33,7 +33,6 @@ Other internal users cannot see Bank details or Finance checks
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
 
 
-
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5144
     [Tags]
@@ -90,7 +89,23 @@ Project Finance can see the status of projects in PS
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    # And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
+Project Finance can see the progress of partners bank details
+    [Documentation]  INFUND-4903
+    [Tags]    HappyPath
+    Given the user navigates to the page            ${internal_project_summary}
+    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
+    Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
+    And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
+    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Complete")
+    # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
+    # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
+    When the user clicks the button/link            link=Vitruvius Stonework Limited
+    Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
+    And the user should see the text in the page    Bob Jones
+    And the user should see the element             jQuery=a:contains("worth.email.test+invitedprojectmanager@gmail.com")
+    And the user should see the text in the page    0987654321
+    #TODO for Jessica and Pete
 
 

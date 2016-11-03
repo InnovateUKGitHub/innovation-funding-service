@@ -6,7 +6,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.model.application.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
