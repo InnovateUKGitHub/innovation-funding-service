@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -86,5 +87,20 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         assertEquals(bankDetailsResource, returnedBankDetailsResource);
 
         verify(bankDetailsRestService).getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId());
+    }
+
+    @Test
+    public void downloadByCompetition(){
+        Long competitionId = 123L;
+
+        ByteArrayResource result = new ByteArrayResource("My content!".getBytes());
+
+        when(bankDetailsRestService.downloadByCompetition(123L)).thenReturn(restSuccess(result));
+
+        ByteArrayResource byteArrayResource = service.downloadByCompetition(competitionId);
+
+        assertEquals(byteArrayResource, result);
+
+        verify(bankDetailsRestService).downloadByCompetition(123L);
     }
 }

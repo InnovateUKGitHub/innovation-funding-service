@@ -19,4 +19,7 @@ public interface AssessmentRestService {
     RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision);
 
     RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection);
+
+    RestResult<Void> acceptInvitation(Long id);
+
 }

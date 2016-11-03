@@ -162,4 +162,21 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         // Now reject the assessment again
         assertTrue(controller.rejectInvitation(assessmentId, applicationRejection).isFailure());
     }
+
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 4L;
+        Long processRole = 17L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.PENDING, assessmentResource.getAssessmentState());
+        assertEquals(processRole, assessmentResource.getProcessRole());
+
+        RestResult<Void> result = controller.acceptInvitation(assessmentResource.getId());
+        assertTrue(result.isSuccess());
+
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.OPEN, assessmentResult.getAssessmentState());
+    }
 }
