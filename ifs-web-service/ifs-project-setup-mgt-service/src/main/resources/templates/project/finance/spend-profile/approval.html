@@ -59,7 +59,7 @@
 
         <ul>
             <li th:each="organisation : ${model.organisations}">
-                <a th:href="'/project-setup/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
+                <a th:href="'/project-setup-management/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
                    th:text="${organisation.name} + '-spend-profile.csv'"
                    target="_blank">spend-profile.csv</a>
             </li>

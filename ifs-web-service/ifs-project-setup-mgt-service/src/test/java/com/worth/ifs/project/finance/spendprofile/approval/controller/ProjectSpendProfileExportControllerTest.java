@@ -1,4 +1,4 @@
-package com.worth.ifs.project;
+package com.worth.ifs.project.finance.spendprofile.approval.controller;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.BaseControllerMockMVCTest;
