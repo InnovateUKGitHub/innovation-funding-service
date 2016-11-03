@@ -12,6 +12,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-4620: As a competitions team member I want to be able to reject partner documents uploaded to the Other Documents section so that they can be informed they are unsuitable
 ...
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
+...
+...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -21,9 +23,10 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -103,13 +106,12 @@ Lead partner does not have the option to submit the mandatory documents
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
-    [Documentation]    INFUND-3011, INFUND-2621
-    ...
-    ...
-    ...    INFUND-3013
+    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806
     [Tags]
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
+    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
+    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
