@@ -28,6 +28,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
+...
+...               INFUND-5640 As a Competitions team member I want to be able to edit the Finances questions in Competition Setup so that I can include the appropriate sections required for the competition
+...
+...               INFUND-5632 As a Competitions team member I want to be able to view application questions separately in Competition Setup so that I can more easily manage all sections required for each question in one place
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -317,6 +321,22 @@ Application: Application process Page
     And the user should see the element    link=Scope
     And the user should see the element    link=Finances
 
+Application: Business opportunity
+    [Documentation]   INFUND-5632
+    When the user clicks the button/link    link=Business opportunity
+    Then the user should see the text in the page  Make changes to the question 'Business opportunity'.
+    And the user should see the element      jQuery=a:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link=Application
+Application: Finances Form
+    [Documentation]    INFUND-5640
+    Given the user clicks the button/link    link=Finances
+    When The user clicks the button/link     jQuery=label:contains("Light finances")
+    And The user clicks the button/link     jQuery=label:contains("No")
+    And The user clicks the button/link     jQuery=button:contains("Done")
+    And the user clicks the button/link    link=Finances
+    Then the Radio Button selections should be correct
+    [Teardown]    The user clicks the button/link    link=Application
+
 Application: Mark as done and the Edit again
     [Documentation]    INFUND-3000
     [Tags]    HappyPath    Pending
@@ -458,3 +478,7 @@ The user enters valid data in the initial details
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
+
+The Radio Button selections should be correct
+    Radio Button Should Be Set To    fullApplicationFinance    false
+    Radio Button Should Be Set To    includeGrowthTable    false

@@ -60,11 +60,12 @@ Internal users can see Project Details not yet completed
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+    [Teardown]    the user closes the browser
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=00000026: best riffs
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -211,23 +212,25 @@ Option to invite a project manager
 
 Inviting project manager server side validations
     [Documentation]    INFUND-3483
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
+    [Tags]
     When the user clicks the button/link    id=invite-project-manager
-    Then the user should see the text in the page    Please enter a contact name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name
+    And the user should see the text in the page    Please enter a valid email address
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
-    When the user enters text to a text field    id=name-project-manager1    John Smith
-    Then the user should not see the text in the page    Please enter a contact name
-    When the user enters text to a text field    id=email-project-manager1    test
-    Then the user should not see the text in the page    Please enter an email address
+    [Tags]
+    When the user enters text to a text field    id=name-project-manager    John Smith
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
+    When the user enters text to a text field    id=email-project-manager    test
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
     And the user should see the text in the page    Please enter a valid email address
-    When the user enters text to a text field    id=email-project-manager1    test@example.com
+    When the user enters text to a text field    id=email-project-manager    test@example.com
+    And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter a valid name
     And the user should not see an error in the page
 
 Partner invites a project manager
@@ -365,24 +368,26 @@ Option to invite a finance contact
     [Teardown]    the user selects the radio button    financeContact    new
 
 Inviting finance contact server side validations
-    [Documentation]    INFUND-3579
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
+    [Documentation]    INFUND-3483
+    [Tags]
     When the user clicks the button/link    id=invite-finance-contact
-    Then the user should see the text in the page    Please enter a contact name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name
+    And the user should see the text in the page    Please enter a valid email address
 
 Inviting finance contact client side validations
-    [Documentation]    INFUND-3579
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
-    When the user enters text to a text field    id=name-finance-contact1    John Smith
-    Then the user should not see the text in the page    Please enter a contact name
-    When the user enters text to a text field    id=email-finance-contact1    test
-    Then the user should not see the text in the page    Please enter an email address
+    [Documentation]    INFUND-3483
+    [Tags]
+    When the user enters text to a text field    id=name-finance-contact    John Smith
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
+    When the user enters text to a text field    id=email-finance-contact    test
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
     And the user should see the text in the page    Please enter a valid email address
-    When the user enters text to a text field    id=email-finance-contact1    test@example.com
+    When the user enters text to a text field    id=email-finance-contact    test@example.com
+    And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter a valid name
     And the user should not see an error in the page
 
 Partner invites a finance contact
