@@ -31,6 +31,7 @@ Details of the competition are visible
 Accept an application for assessment
     [Documentation]    INFUND-1180
     [Tags]    Pending
+    #TODO INFUND-1180 is ready to test
     Given the user should see the element
     When The user clicks the button/link
     Then the user should see the text in the page    Accept application
@@ -41,10 +42,12 @@ Accept an application for assessment
 Assessor can only make selection once
     [Documentation]    INFUND-1180
     [Tags]    Pending
+    #TODO INFUND-1180 is ready to test
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
     [Tags]    Pending
+    #TODO INFUND-1180 is ready to test
     Given the user should see the element
     When The user clicks the button/link
     Then the user should see the text in the page    Accept application
@@ -59,4 +62,4 @@ Reject an application for assessment
     And the status is updated
 
 *** Keywords ***
-the status is updated
+
