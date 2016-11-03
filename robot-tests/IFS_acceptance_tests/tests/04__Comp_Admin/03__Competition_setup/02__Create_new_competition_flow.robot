@@ -62,7 +62,7 @@ User can create a new competition
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Description and brief
 
-New competition shows in Preparation section with the default name
+New competition shows in Preparation section
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
@@ -112,7 +112,7 @@ Initial details: User enters valid values and marks as done
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Initial details can be edited again except from Comp Type and Date
+Initial details: Comp Type and Date should not be editable
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
@@ -132,7 +132,7 @@ Initial details can be edited again except from Comp Type and Date
     And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
 
-Initial details should have a green check
+Initial details: should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
@@ -338,27 +338,23 @@ Application: should have a green check
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
 
-Ready To Open button should be visible
-    [Documentation]    INFUND-3002
-    ...
-    ...    INFUND-4468
-    [Tags]    HappyPath
-    Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
-
-Ready to open button shouldn't be visible when the user re-edits the question
+Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]    Pending
+    [Tags]
     [Setup]
-    Given The user clicks the button/link    link=Initial Details
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When The user clicks the button/link    link=Initial Details
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial Details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
 
-User should be able to Save the competition as open
+User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
+    ...
+    ...    INFUND-3002
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
