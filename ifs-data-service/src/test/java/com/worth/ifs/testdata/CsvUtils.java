@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +21,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 class CsvUtils {
 
+    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
     }
@@ -26,6 +30,46 @@ class CsvUtils {
     static List<InternalUserLine> readInternalUsers() {
         return simpleMap(readCsvLines("internal-users"), InternalUserLine::new);
     }
+
+    static List<CompetitionLine> readCompetitions() {
+        return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+    }
+
+    static class CompetitionLine {
+
+        String name;
+        String description;
+        String type;
+        String innovationArea;
+        String innovationSector;
+        String researchCategory;
+        LocalDateTime openDate;
+        LocalDateTime submissionDate;
+        LocalDateTime fundersPanelDate;
+        LocalDateTime fundersPanelEndDate;
+        LocalDateTime assessorAcceptsDate;
+        LocalDateTime assessorEndDate;
+        boolean setupComplete;
+
+        private CompetitionLine(List<String> line) {
+
+            int i = 0;
+            name = nullable(line.get(i++));
+            description = nullable(line.get(i++));;
+            type = line.get(i++);
+            innovationArea = nullable(line.get(i++));
+            innovationSector = nullable(line.get(i++));
+            researchCategory = nullable(line.get(i++));
+            openDate = nullableDate(line.get(i++));
+            submissionDate = nullableDate(line.get(i++));
+            fundersPanelDate = nullableDate(line.get(i++));
+            fundersPanelEndDate = nullableDate(line.get(i++));
+            assessorAcceptsDate = nullableDate(line.get(i++));
+            assessorEndDate = nullableDate(line.get(i++));
+            setupComplete = Boolean.parseBoolean(line.get(i++));
+        }
+    }
+
 
     static abstract class UserLine {
 
@@ -95,6 +139,16 @@ class CsvUtils {
 
     private static String nullable(String s) {
         return isBlank(s) || "N".equals(s) ? null : s;
+    }
+
+    private static LocalDateTime nullableDate(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return LocalDateTime.parse(s, DATE_PATTERN);
     }
 
 }

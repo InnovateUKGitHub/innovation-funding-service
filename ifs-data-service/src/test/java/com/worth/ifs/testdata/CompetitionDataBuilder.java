@@ -2,7 +2,7 @@ package com.worth.ifs.testdata;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.category.domain.Category;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
@@ -20,12 +20,11 @@ import java.util.stream.Stream;
 import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
-import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, CompetitionDataBuilder> {
@@ -57,20 +56,24 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-                Category innovationArea = simpleFindFirst(categoryRepository.findByType(INNOVATION_AREA), c -> innovationAreaName.equals(c.getName())).get();
-                Category innovationSector = simpleFindFirst(categoryRepository.findByType(INNOVATION_SECTOR), c -> innovationSectorName.equals(c.getName())).get();
-                Category researchCategory = simpleFindFirst(categoryRepository.findByType(RESEARCH_CATEGORY), c -> researchCategoryName.equals(c.getName())).get();
+                Long innovationArea = getCategoryIdOrNull(INNOVATION_AREA, innovationAreaName);
+                Long innovationSector = getCategoryIdOrNull(INNOVATION_SECTOR, innovationSectorName);
+                Long researchCategory = getCategoryIdOrNull(RESEARCH_CATEGORY, researchCategoryName);
 
                 competition.setName(name);
                 competition.setDescription(description);
-                competition.setInnovationArea(innovationArea.getId());
-                competition.setInnovationSector(innovationSector.getId());
-                competition.setResearchCategories(singleton(researchCategory.getId()));
+                competition.setInnovationArea(innovationArea);
+                competition.setInnovationSector(innovationSector);
+                competition.setResearchCategories(singleton(researchCategory));
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setCompetitionType(competitionType.getId());
             });
         });
+    }
+
+    private Long getCategoryIdOrNull(CategoryType type, String name) {
+        return !isBlank(name) ? simpleFindFirst(categoryRepository.findByType(type), c -> name.equals(c.getName())).get().getId() : null;
     }
 
     private void doCompetitionDetailsUpdate(CompetitionData data, Consumer<CompetitionResource> updateFn) {
