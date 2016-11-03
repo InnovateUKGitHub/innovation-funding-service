@@ -216,6 +216,16 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
+    public void testGetQuestionByIdAndAssessmentId() throws Exception {
+        loginFelixWilson();
+        Long questionId = 1L;
+        Long assessmentId = 7L;
+
+        QuestionResource question = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).getSuccessObject();
+        assertEquals(questionId, question.getId());
+    }
+
+    @Test
     public void testGetQuestionsByAssessmentId() throws Exception {
         loginFelixWilson();
         Long assessmentId = 7L;
