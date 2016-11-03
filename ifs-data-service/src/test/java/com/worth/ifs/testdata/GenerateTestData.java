@@ -38,6 +38,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
+import static com.worth.ifs.testdata.CsvUtils.readCompetitions;
 import static com.worth.ifs.testdata.CsvUtils.readExternalUsers;
 import static com.worth.ifs.testdata.CsvUtils.readInternalUsers;
 import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
@@ -188,8 +189,12 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
+    /**
+     * select "Competition name", "Description", "Type", "Innovation Area", "Innovation Sector", "Research Category", "Open date", "Submission Date", "Funders Panel Date", "Funders Panel End Date", "Assessor Accepts Date", "Assessor End Date","Setup Complete" UNION ALL select c.name, c.description, "Programme", IFNULL(innArea.NAME,"Earth Observation"), IFNULL(innSec.NAME,"Materials and manufacturing"), IFNULL(resCat.NAME,"Technical feasibility"), open.DATE, submit.DATE, funders.DATE, funderEnd.DATE, assessorAccept.DATE, assessorEnd.DATE, c.setup_complete from competition c left join category_link cl on cl.class_pk = c.id and cl.class_name = 'com.worth.ifs.competition.domain.Competition' left join category innArea on innArea.id = cl.category_id and innArea.type = 'INNOVATION_AREA' left join category innSec on innSec.id = cl.category_id and innSec.type = 'INNOVATION_SECTOR' left join category resCat on resCat.id = cl.category_id and resCat.type = 'RESEARCH_CATEGORY' left join milestone open on open.type = 'OPEN_DATE' and open.competition_id = c.id  left join milestone submit on submit.type = 'SUBMISSION_DATE' and submit.competition_id = c.id left join milestone funders on funders.type = 'FUNDERS_PANEL' and funders.competition_id = c.id  left join milestone funderEnd on funderEnd.type = 'NOTIFICATIONS' and funderEnd.competition_id = c.id  left join milestone assessorAccept on assessorAccept.type = 'ASSESSOR_ACCEPTS' and assessorAccept.competition_id = c.id  left join milestone assessorEnd on assessorEnd.type = 'ASSESSOR_DEADLINE' and assessorEnd.competition_id = c.id  INTO OUTFILE '/var/lib/mysql-files/competitions4.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     */
     private void createCompetitions() {
-        createOpenCompetition();
+        List<CsvUtils.CompetitionLine> competitionLines = readCompetitions();
+        createOpenCompetition(competitionLines.get(2));
         createInAssessmentCompetition();
         createFundersPanelCompetition();
         createInAssessorFeedbackCompetition();
@@ -198,7 +203,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         createReadyToOpenCompetition();
     }
 
-    private void createOpenCompetition() {
+    private void createOpenCompetition(CsvUtils.CompetitionLine line) {
 
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
         UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
@@ -206,21 +211,14 @@ public class GenerateTestData extends BaseIntegrationTest {
         UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
         UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
 
-        String name = "Connected digital additive manufacturing";
-
-        String description = "Innovate UK is to invest up to £9 million in collaborative research and development to " +
-                "stimulate innovation in integrated transport solutions for local authorities. The aim of this " +
-                "competition is to meet user needs by connecting people and/or goods to transport products and " +
-                "services. New or improved systems will be tested in environment laboratories.";
-
         competitionDataBuilder.
                 withExistingCompetition(1L).
-                withBasicData(name, description, "Programme", "Earth Observation", "Materials and manufacturing", "Technical feasibility").
-                withOpenDate(LocalDateTime.of(2015, 3, 15, 9, 0, 0)).
-                withSubmissionDate(LocalDateTime.of(2066, 9, 9, 9, 23, 59, 59)).
-                withAssessorAcceptsDate(LocalDateTime.of(2066, 10, 29, 0, 0)).
-                withFundersPanelDate(LocalDateTime.of(2066, 12, 31, 0, 0)).
-                withAssessorEndDate(LocalDateTime.of(2067, 1, 10, 0, 0)).
+                withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
+                withOpenDate(line.openDate).
+                withSubmissionDate(line.submissionDate).
+                withAssessorAcceptsDate(line.assessorAcceptsDate).
+                withFundersPanelDate(line.fundersPanelDate).
+                withAssessorEndDate(line.assessorEndDate).
                 withSetupComplete().
                 withApplications(
                     builder -> builder.
