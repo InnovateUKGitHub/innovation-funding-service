@@ -46,10 +46,10 @@
                                                 <a href="@{/{assessmentId}(assessmentId=${application.assessmentId})}">accept / reject assessment</a>
                                             </p>
                                         </div>
-                                        <div th:if="${application.open}" class="application-status open empty">
+                                        <div th:if="${application.accepted or application.open}" class="application-status open empty">
                                             <p>Open</p>
                                         </div>
-                                        <div th:if="${application.assessed}" class="application-status assessed">
+                                        <div th:if="${application.readyToSubmit}" class="application-status assessed">
                                             <p>Assessed</p>
                                         </div>
                                     </div>
