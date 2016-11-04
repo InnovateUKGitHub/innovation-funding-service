@@ -381,7 +381,7 @@ Inviting finance contact client side validations
     When the user enters text to a text field    id=email-finance-contact    test
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter an email address
+    And the user should see the text in the page    Please enter a valid email address
     When the user enters text to a text field    id=email-finance-contact    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address
