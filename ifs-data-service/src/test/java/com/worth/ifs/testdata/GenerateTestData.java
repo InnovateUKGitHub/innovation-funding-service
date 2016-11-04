@@ -3,9 +3,10 @@ package com.worth.ifs.testdata;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationMedium;
-import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.email.resource.EmailAddress;
+import com.worth.ifs.email.service.EmailService;
+import com.worth.ifs.notifications.service.senders.NotificationSender;
+import com.worth.ifs.notifications.service.senders.email.EmailNotificationSender;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -13,6 +14,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +46,7 @@ import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -82,6 +85,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    @Autowired
+    private NotificationSender emailNotificationSender;
+
     private CompetitionDataBuilder competitionDataBuilder;
 
     private ExternalUserDataBuilder externalUserBuilder;
@@ -98,17 +104,20 @@ public class GenerateTestData extends BaseIntegrationTest {
     @PostConstruct
     public void replaceExternalDependencies() {
 
-        IdentityProviderService idpService = mock(IdentityProviderService.class);
-        NotificationService notificationService = mock(NotificationService.class);
+        IdentityProviderService idpServiceMock = mock(IdentityProviderService.class);
+        EmailService emailServiceMock = mock(EmailService.class);
 
-        when(idpService.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
+        when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
 
-        when(notificationService.sendNotification(isA(Notification.class), isA(NotificationMedium.class))).thenReturn(serviceSuccess());
+        when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
+                thenReturn(serviceSuccess(emptyList()));
 
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
-        ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpService);
-        ReflectionTestUtils.setField(registrationServiceUnwrapped, "notificationService", notificationService);
+        ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
+
+        EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
+        ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
@@ -149,7 +158,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     /**
-     * select "Application title", "Competition name", "Start Date", "Duration in months", "Lead Applicant", "Collaborators", "Submitted Date" UNION ALL select a.name, c.name, a.start_date, a.duration_in_months, la.email, GROUP_CONCAT(col.email), a.submitted_date from application a join competition c on c.id = a.competition join process_role lar on lar.application_id = a.id and lar.role_id = 1 join user la on la.id = lar.user_id left join process_role colr on colr.application_id = a.id and colr.role_id = 2 left join user col on col.id = colr.user_id group by a.name, c.name, a.start_date, a.duration_in_months, la.email, a.submitted_date INTO OUTFILE '/var/lib/mysql-files/applications3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createCompetitions() {
         List<CsvUtils.CompetitionLine> competitionLines = readCompetitions();
@@ -178,6 +187,13 @@ public class GenerateTestData extends BaseIntegrationTest {
         createCompetitionWithApplications(line, Optional.empty());
     }
 
+    /**
+     * select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_response fir on fir.form_input_id = fi.id join process_role updaterrole on updaterrole.id = fir.updated_by_id join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id join process_role assigneerole on assigneerole.id = qs.assignee_id join user assignee on assignee.id = assigneerole.user_id;
+     */
+    private void asdf() {
+
+    }
+
     private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
 
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
@@ -190,8 +206,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withApplications(
                     builder -> builder.
                         withBasicDetails(applicant1, "A novel solution to an old problem").
-                        withProjectSummary(PROJECT_SUMMARY).
-                        withPublicDescription(PUBLIC_DESCRIPTION).
+                        withQuestionResponse("Project summary", PROJECT_SUMMARY).
+                        withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
                         withStartDate(LocalDate.of(2016, 3, 1)).
                         withDurationInMonths(51).
                         inviteCollaborator(applicant2).
@@ -249,13 +265,16 @@ public class GenerateTestData extends BaseIntegrationTest {
         createCompetitionWithApplications(line, Optional.empty());
     }
 
-    private void createCompetitionWithApplications(CompetitionLine line, Optional<Long> competitionId) {
-        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(line, competitionId);
+    private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
+        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(competitionLine, competitionId);
 
         List<ApplicationLine> applicationLines = readApplications();
-        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
+
+        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
+
         List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
-                application -> builder -> createApplicationFromCsv(builder, application));
+                applicationLine -> builder -> createApplicationFromCsv(builder, applicationLine).
+                        withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title)));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
@@ -268,14 +287,24 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
+    private List<Pair<String, String>> questionResponsesFromCsv(String competitionName, String applicationName) {
+
+        List<CsvUtils.ApplicationQuestionResponseLine> responses = readApplicationQuestionResponses();
+
+        List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
+                simpleFilter(responses, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
+
+        return simpleMap(responsesForApplication, line -> Pair.of(line.questionName, line.value));
+    }
+
+    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine  line) {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
         ApplicationDataBuilder baseBuilder = builder.
                 withBasicDetails(leadApplicant, line.title).
-                withProjectSummary(PROJECT_SUMMARY).
-                withPublicDescription(PUBLIC_DESCRIPTION).
+                withQuestionResponse("Project summary", PROJECT_SUMMARY).
+                withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 

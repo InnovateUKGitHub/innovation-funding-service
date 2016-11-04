@@ -10,6 +10,7 @@ import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,12 +50,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder withProjectSummary(String value) {
-        return asLeadApplicant(data -> doAnswerQuestion("Project summary", value, data));
-    }
-
-    public ApplicationDataBuilder withPublicDescription(String value) {
-        return asLeadApplicant(data -> doAnswerQuestion("Public description", value, data));
+    public ApplicationDataBuilder withQuestionResponse(String questionName, String value) {
+        return asLeadApplicant(data -> doAnswerQuestion(questionName, value, data));
     }
 
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
@@ -156,5 +153,13 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     @Override
     protected ApplicationData createInitial() {
         return new ApplicationData();
+    }
+
+    public ApplicationDataBuilder withQuestionResponses(List<Pair<String, String>> responses) {
+        return asLeadApplicant(data -> responses.forEach(r -> {
+            if (r.getRight() != null) {
+                doAnswerQuestion(r.getLeft(), r.getRight(), data);
+            }
+        }));
     }
 }

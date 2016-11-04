@@ -43,6 +43,35 @@ class CsvUtils {
         return simpleMap(readCsvLines("applications"), ApplicationLine::new);
     }
 
+    static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
+        return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
+    }
+
+    static class ApplicationQuestionResponseLine {
+
+        String competitionName;
+        String applicationName;
+        String questionName;
+        String value;
+        String fileUpload;
+        String answeredBy;
+        String assignedTo;
+        boolean markedAsComplete;
+
+        private ApplicationQuestionResponseLine(List<String> line) {
+
+            int i = 0;
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            questionName = line.get(i++);
+            value = nullable(line.get(i++));
+            fileUpload = nullable(line.get(i++));
+            answeredBy = nullable(line.get(i++));
+            assignedTo = nullable(line.get(i++));
+            markedAsComplete = nullableBoolean(line.get(i++));
+        }
+    }
+
     static class ApplicationLine {
 
         String title;
