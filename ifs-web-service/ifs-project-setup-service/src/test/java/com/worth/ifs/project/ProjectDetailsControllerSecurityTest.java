@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import java.util.function.Consumer;
 
+import com.worth.ifs.commons.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.resource.UserResource;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     public void testViewProjectDetails() {
         assertSecured(() -> classUnderTest.viewProjectDetails(123L, null, null));
     }
-
+    CustomPermissionEvaluator a;
     @Test
     public void testProjectDetailConfirmSubmit() {
         assertSecured(() -> classUnderTest.projectDetailConfirmSubmit(123L, null, null));

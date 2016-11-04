@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.google.common.collect.Lists.reverse;
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT;
 import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;

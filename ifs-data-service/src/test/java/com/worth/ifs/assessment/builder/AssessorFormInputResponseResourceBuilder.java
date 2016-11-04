@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public AssessorFormInputResponseResourceBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public AssessorFormInputResponseResourceBuilder withAssessment(Long... assessments) {
@@ -52,7 +52,7 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public AssessorFormInputResponseResourceBuilder withValue(String... values) {
-        return withArray(BuilderAmendFunctions::setValue, values);
+        return withArray(BaseBuilderAmendFunctions::setValue, values);
     }
 
     public AssessorFormInputResponseResourceBuilder withFormInputMaxWordCount(Integer... formInputMaxWordCounts) {

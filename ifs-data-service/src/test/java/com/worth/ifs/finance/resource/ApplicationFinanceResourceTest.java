@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;

@@ -6,7 +6,7 @@ import com.worth.ifs.email.resource.EmailAddress;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
 public class EmailAddressResourceBuilder extends BaseBuilder<EmailAddress, EmailAddressResourceBuilder> {

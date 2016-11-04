@@ -2,7 +2,7 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
     }
 
     public CompetitionInviteResourceBuilder withIds(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public CompetitionInviteResourceBuilder withCompetitionName(String... competitionNames) {

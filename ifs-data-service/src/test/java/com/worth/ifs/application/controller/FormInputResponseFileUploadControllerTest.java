@@ -24,8 +24,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.BuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static java.util.Collections.emptyList;
 

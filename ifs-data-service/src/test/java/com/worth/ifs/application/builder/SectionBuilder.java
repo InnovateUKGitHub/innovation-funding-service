@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.getCompetition;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 

@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class RejectionReasonResourceBuilder extends BaseBuilder<RejectionReasonR
     }
 
     public RejectionReasonResourceBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public RejectionReasonResourceBuilder withReason(String... reasons) {

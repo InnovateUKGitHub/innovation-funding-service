@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -51,7 +52,7 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
     }
 
     public CompetitionInviteBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public CompetitionInviteBuilder withName(String... names) {

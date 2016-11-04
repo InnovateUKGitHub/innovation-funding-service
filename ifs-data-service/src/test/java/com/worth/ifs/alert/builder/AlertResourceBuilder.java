@@ -1,7 +1,7 @@
 package com.worth.ifs.alert.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
 
@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
@@ -42,7 +42,7 @@ public class AlertResourceBuilder extends BaseBuilder<AlertResource, AlertResour
     }
 
     public AlertResourceBuilder withId(final Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public AlertResourceBuilder withMessage(final String... messages) {

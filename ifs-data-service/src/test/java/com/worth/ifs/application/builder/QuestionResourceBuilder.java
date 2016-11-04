@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, QuestionResourceBuilder> {

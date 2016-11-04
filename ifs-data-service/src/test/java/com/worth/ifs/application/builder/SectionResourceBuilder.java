@@ -1,14 +1,13 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class SectionResourceBuilder extends BaseBuilder<SectionResource, SectionResourceBuilder> {
@@ -97,9 +96,7 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
     }
 
     public SectionResourceBuilder withType(SectionType... types) {
-        return (SectionResourceBuilder)this.withArray((type, object) -> {
-            SectionResource var10000 = (SectionResource) BuilderAmendFunctions.setField("type", type, object);
-        }, types);
+        return this.withArray((type, object) -> setField("type", type, object), types);
     }
 
     @Override

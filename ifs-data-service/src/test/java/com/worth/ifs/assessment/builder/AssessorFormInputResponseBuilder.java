@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.form.domain.FormInput;
@@ -38,7 +38,7 @@ public class AssessorFormInputResponseBuilder extends BaseBuilder<AssessorFormIn
     }
 
     public AssessorFormInputResponseBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public AssessorFormInputResponseBuilder withAssessment(Assessment... assessments) {
@@ -50,7 +50,7 @@ public class AssessorFormInputResponseBuilder extends BaseBuilder<AssessorFormIn
     }
 
     public AssessorFormInputResponseBuilder withValue(String... values) {
-        return withArray(BuilderAmendFunctions::setValue, values);
+        return withArray(BaseBuilderAmendFunctions::setValue, values);
     }
 
     public AssessorFormInputResponseBuilder withUpdatedDate(LocalDateTime... updatedDates) {

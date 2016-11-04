@@ -1,7 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.user.resource.EthnicityResource;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class EthnicityResourceBuilder extends BaseBuilder<EthnicityResource, Eth
     }
 
     public EthnicityResourceBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public EthnicityResourceBuilder withName(String... names) {
