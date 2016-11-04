@@ -269,12 +269,10 @@ Partners are not able to see the spend profile summary page
     Given log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page  ${external_spendprofile_summary}
     Then the user should see the text in the page  Cheeseco - Spend profile
-    And logout as user
-    Given guest user log-in             jessica.doe@ludlow.co.uk    Passw0rd
+    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
     Then The user should see permissions error message
-    And logout as user
-    Given guest user log-in             pete.tom@egg.com    Passw0rd
+    Given log in as a different user    pete.tom@egg.com    Passw0rd
     And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
     Then The user should see permissions error message
 
@@ -311,40 +309,33 @@ PM's Spend profile Summary page gets updated after submit
     Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been submitted to Innovate UK")
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
-    [Teardown]  Logout as user
 
 Partners can see the Spend Profile section completed
     [Documentation]  INFUND-3767,INFUND-3766
     [Tags]
-    Given guest user log-in                worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given Log in as a different user       worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                steve.smith@empire.com    Passw0rd
+    Given Log in as a different user       steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                jessica.doe@ludlow.co.uk    Passw0rd
+    Given Log in as a different user       jessica.doe@ludlow.co.uk    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                pete.tom@egg.com    Passw0rd
+    Given Log in as a different user       pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian    #HappyPath
-    [Setup]    guest user log-in            john.doe@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page     ${server}/project-setup-management/competition/3/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
-
-
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
@@ -390,7 +381,7 @@ Comp Admin is able to see Spend Profile approval page
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
-    [Setup]  Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
