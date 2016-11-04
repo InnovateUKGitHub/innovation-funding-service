@@ -36,6 +36,7 @@ import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -213,10 +214,20 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
         assertTrue(result.isSuccess());
-        assertEquals(project.getName(), result.getSuccessObject().getProjectTitle());
-        assertEquals(project.getId(), result.getSuccessObject().getProjectNumber());
-        assertEquals(Integer.valueOf(1), result.getSuccessObject().getNumberOfPartners());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
