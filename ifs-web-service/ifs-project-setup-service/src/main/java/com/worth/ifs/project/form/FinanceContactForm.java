@@ -5,11 +5,13 @@ import com.worth.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import org.hibernate.validator.constraints.Email;
 
+import javax.validation.constraints.NotNull;
+
 @FieldRequiredIfOptionIs(required = "name", argument = "financeContact", predicate = -1L, message = "{validation.project.invite.name.required}")
 @FieldRequiredIfOptionIs(required = "email", argument = "financeContact", predicate = -1L, message = "{validation.project.invite.email.required}")
 public class FinanceContactForm  extends BaseBindingResultTarget {
 
-	//@NotNull(message = "{validation.financecontactform.financecontact.required}")
+	@NotNull(message = "{validation.financecontactform.financecontact.required}")
 	private Long financeContact;
 
 	private Long organisation;
