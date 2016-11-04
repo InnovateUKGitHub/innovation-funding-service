@@ -20,6 +20,7 @@ import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfile
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
@@ -383,6 +384,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanChangeTheirOwnPassword(user, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileStatus() {
+        UserResource user = newUserResource().build();
+        UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
+        assertTrue(rules.usersCanViewTheirOwnProfileStatus(userProfileStatus, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
+        UserResource user = newUserResource().withId(1L).build();
+        UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
+        assertFalse(rules.usersCanViewTheirOwnProfileStatus(anotherUsersProfileStatus, user));
     }
 
     @Override
