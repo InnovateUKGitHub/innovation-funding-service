@@ -55,6 +55,6 @@ public class UserProfileStatusResourceBuilderTest {
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedSkillsComplete[1], second.isSkillsComplete());
         assertEquals(expectedAffiliationsComplete[1], second.isAffiliationsComplete());
-        assertEquals(expectedContractsComplete[1], second.isContractComplete());    }
-
+        assertEquals(expectedContractsComplete[1], second.isContractComplete());
+    }
 }

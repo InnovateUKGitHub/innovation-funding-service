@@ -384,6 +384,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals("87654321", updateResponse.getPhoneNumber());
         assertEquals(Disability.YES, updateResponse.getDisability());
     }
+
     @Test
     public void testGetUserProfileStatus() {
         loginPaulPlum();

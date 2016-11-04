@@ -33,8 +33,6 @@ public class AssessorDashboardModelPopulator {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject();
 
-
-
         UserProfileStatusResource profileStatusResource = userRestService.getUserProfileStatus(userId).getSuccessObject();
 
         return new AssessorDashboardViewModel(getProfileStatus(profileStatusResource), getActiveCompetitions(participantResourceList), getUpcomingCompetitions(participantResourceList));
