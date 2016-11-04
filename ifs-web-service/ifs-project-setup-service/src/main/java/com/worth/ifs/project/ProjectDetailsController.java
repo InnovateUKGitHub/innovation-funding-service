@@ -154,7 +154,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        ) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
-        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
+        Supplier<String> successView = () -> redirectToFinanceContact(projectId, organisation);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -215,7 +215,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
-        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
+        Supplier<String> successView = () -> redirectToProjectManager(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -525,10 +525,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-address";
     }
 
-    private String redirectToProjectDetails(long projectId) {
-        return "redirect:/project/" + projectId + "/details";
-    }
-
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
@@ -589,5 +585,17 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         inviteResource.setLeadOrganisation(leadOrganisation.getName());
 
         return inviteResource;
+    }
+
+    private String redirectToProjectDetails(long projectId) {
+        return "redirect:/project/" + projectId + "/details";
+    }
+
+    private String redirectToFinanceContact(long projectId, long organisationId){
+        return "redirect:/project/" + projectId + "/details/finance-contact?organisation=" + organisationId;
+    }
+
+    private String redirectToProjectManager(long projectId){
+        return "redirect:/project/" + projectId + "/details/project-manager";
     }
 }
