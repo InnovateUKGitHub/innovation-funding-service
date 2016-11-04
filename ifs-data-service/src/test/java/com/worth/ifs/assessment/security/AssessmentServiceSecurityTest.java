@@ -83,6 +83,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         );
     }
 
+    @Test
+    public void accept() {
+        Long assessmentId = 1L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvitation(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
@@ -101,6 +111,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ApplicationRejectionResource applicationRejection) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
             return null;
         }
     }

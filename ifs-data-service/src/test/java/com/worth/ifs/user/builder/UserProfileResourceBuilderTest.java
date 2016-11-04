@@ -34,7 +34,7 @@ public class UserProfileResourceBuilderTest {
         String expectedEmail = "tom@poly.io";
 
         UserProfileResource userRegistrationResource = newUserProfileResource()
-                .withUser(1L)
+                .withUser(expectedUser)
                 .withTitle(expectedTitle)
                 .withFirstName(expectedFirstName)
                 .withLastName(expectedLastName)
@@ -71,7 +71,7 @@ public class UserProfileResourceBuilderTest {
         AddressResource[] expectedAddresses = newAddressResource().buildArray(2, AddressResource.class);
         String[] expectedEmails = {"tom@poly.io", "geoff@poly.io"};
 
-        List<UserProfileResource> userRegistrationResources = newUserProfileResource()
+        List<UserProfileResource> userProfileResources = newUserProfileResource()
                 .withUser(1L, 2L)
                 .withTitle(expectedTitles)
                 .withFirstName(expectedFirstNames)
@@ -84,7 +84,7 @@ public class UserProfileResourceBuilderTest {
                 .withEmail(expectedEmails)
                 .build(2);
 
-        UserProfileResource first = userRegistrationResources.get(0);
+        UserProfileResource first = userProfileResources.get(0);
         assertEquals(expectedUsers[0], first.getUser());
         assertEquals(expectedTitles[0], first.getTitle());
         assertEquals(expectedFirstNames[0], first.getFirstName());
@@ -96,7 +96,7 @@ public class UserProfileResourceBuilderTest {
         assertEquals(expectedAddresses[0], first.getAddress());
         assertEquals(expectedEmails[0], first.getEmail());
 
-        UserProfileResource second = userRegistrationResources.get(1);
+        UserProfileResource second = userProfileResources.get(1);
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedTitles[1], second.getTitle());
         assertEquals(expectedFirstNames[1], second.getFirstName());

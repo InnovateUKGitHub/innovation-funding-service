@@ -4,9 +4,12 @@ import com.worth.ifs.assessment.service.CompetitionParticipantRestService;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
+import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
+import com.worth.ifs.user.resource.UserProfileStatusResource;
+import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +26,21 @@ public class AssessorDashboardModelPopulator {
     @Autowired
     private CompetitionParticipantRestService competitionParticipantRestService;
 
+    @Autowired
+    private UserRestService userRestService;
+
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject();
 
-        return new AssessorDashboardViewModel(getActiveCompetitions(participantResourceList), getUpcomingCompetitions(participantResourceList));
+        UserProfileStatusResource profileStatusResource = userRestService.getUserProfileStatus(userId).getSuccessObject();
+
+        return new AssessorDashboardViewModel(getProfileStatus(profileStatusResource), getActiveCompetitions(participantResourceList), getUpcomingCompetitions(participantResourceList));
     }
 
+    private AssessorProfileStatusViewModel getProfileStatus(UserProfileStatusResource assessorProfileStatusResource) {
+        return new AssessorProfileStatusViewModel(assessorProfileStatusResource);
+    }
 
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
         return participantResourceList.stream()

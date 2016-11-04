@@ -1,242 +1,224 @@
 /*----- Search ----*/
 .form-search{
-	position: relative;
-	margin-top: 2.5em;
-	margin-bottom: 1em;
-	
-	input.search-query{
-		margin-right: 35px;
-		height: 35px;
-		box-sizing: border-box;
-		width: 100%;
-		padding-left: 0.25em;
-	}
+  position: relative;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
 
-	input[type='submit']{
-		position: absolute;
-	    z-index: 4;
-	    right: 0;
-	    top: 0;
-	    width: 35px;
-	    height: 35px;
-	    border: 1px solid $link-colour;
-	    border-width: 0 0 0 1px;
-	    border-left-color: $border-colour;
-	    -webkit-border-radius: 0;
-	    -moz-border-radius: 0;
-	    border-radius: 0;
-	    overflow: hidden;
-	    text-indent: -5000px;
-	    color: #fff;
-	    background-color: $link-colour;
-	    background-image: url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png);
-	    background-repeat: no-repeat;
-	    background-position: 0 50%;
-	    cursor: pointer;
-	}
+	 input.search-query{
+    margin-right: 35px;
+    height: 35px;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 0.25em;
+	 }
 
+  input[type='submit']{
+    position: absolute;
+    z-index: 4;
+    right: 0;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    border: 1px solid $link-colour;
+    border-width: 0 0 0 1px;
+    border-left-color: $border-colour;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    overflow: hidden;
+    text-indent: -5000px;
+    color: #fff;
+    background-color: $link-colour;
+    background-image: url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png);
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    cursor: pointer;
+	 }
 }
 
-
 .textarea-wrapped {
-    position: relative;
+  position: relative;
 
+  .textarea-header {
+    //padding: 20px 0 5px 10px;
+    text-align:left;
+  }
+
+  &.assigned-to-me{
+    border: 2px solid $link-colour;
     .textarea-header {
-       //padding: 20px 0 5px 10px;
-        text-align:left;
+      padding-left: 60px;
     }
+  }
 
-    &.assigned-to-me{
-		border: 2px solid $link-colour;
-		 .textarea-header {
-			padding-left: 60px;
-		}
-	}
-
-	&.marked-as-complete{
-		 .textarea-header {
-			padding-left: 60px;
-		}
-	}
+  &.marked-as-complete{
+    .textarea-header {
+      padding-left: 60px;
+    }
+  }
 }
 
 .textarea-footer{
-	button{
-		vertical-align: top;
-		
-		&[name='mark_as_complete']{
-			float: right;
-			margin: 0;
+  button{
+    vertical-align: top;
 
-			@include media-down(mobile) {
-				margin-top: 1.5em;
-			}
-		}
+    &[name='mark_as_complete']{
+      float: right;
+      margin: 0;
 
-	}
-	.assign-button{
-		padding-top: 6px;
-	}
+      @include media-down(mobile) {
+        margin-top: 1.5em;
+      }
+    }
+  }
 
-	//border-bottom: 1px solid $border-colour;
-	padding-bottom: 3em;
-	margin-bottom: 1.2em;
+  .assign-button{
+    padding-top: 6px;
+  }
+
+  //border-bottom: 1px solid $border-colour;
+  padding-bottom: 3em;
+  margin-bottom: 1.2em;
 }
 
 /*----- Setting widths of inputs ----*/
 
-
-
 input{
-	&.width-x-large{
-		width: 60%;
-	}
+  &.width-x-large{
+    width: 60%;
+  }
 }
 
 select.form-control{
-	&.width-x-large{
-		width: 60%; 
-	}
+  &.width-x-large{
+    width: 60%;
+  }
 }
-
 
 /*----- Inline form elements for academic finances ----*/
 
 .form-inline{
 
-	.form-group{
-		margin-bottom: 20px;
+  .form-group{
+    margin-bottom: 20px;
 
-		&.underline{
-			border-bottom: 1px solid $black;
-			margin-top: 10px
-		}
+    &.underline{
+      border-bottom: 1px solid $black;
+      margin-top: 10px
+   	}
 
-		&.border-top{
-			border-top: 1px solid $black;
-			margin-top: 10px;
-			margin-bottom: 20px;
-			padding: 20px 0;
-		}
+    &.border-top{
+      border-top: 1px solid $black;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      padding: 20px 0;
+    }
 
-		&.totals{
-			border: 1px solid $border-colour;
-			background: $panel-colour; 
-			padding: 10px 5px;
+    &.totals{
+      border: 1px solid $border-colour;
+      background: $panel-colour;
+      padding: 10px 5px;
 
-			.form-control{
-				border: none;
-				background: none;
-				font-weight: bold;
-			}
-		}
-
+      .form-control{
+        border: none;
+        background: none;
+        font-weight: bold;
+      }
+    }
 	}
 
-	.form-label{
-		float: left;
-		width: 30%;
-		margin-right: 20px;
-		padding-top: 5px;
-	}
+  .form-label{
+    float: left;
+    width: 30%;
+    margin-right: 20px;
+    padding-top: 5px;
+  }
 
-	.form-control{
-		float: left;
-	}
+  .form-control{
+    float: left;
+  }
 }
 
 /*----- File upload / download styling ----*/
 
 .upload-section{
-	border: 1px solid $border-colour;
-	background: $grey-4;
-	padding: 16px 16px 8px 16px;
-	margin-top: 16px;
+  border: 1px solid $border-colour;
+  background: $grey-4;
+  padding: 16px 16px 8px 16px;
+  margin-top: 16px;
 
-	&.error{
-		@extend .warning-alert;
-		background: none;
-		padding-left: 16px;
+  &.error{
+    @extend .warning-alert;
+    background: none;
+    padding-left: 16px;
+  }
+
+  .inputfile{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+
+    & + label{
+      margin-top: 20px;
+    }
 	}
 
-	.inputfile{
-		width: 0.1px;
-		height: 0.1px;
-		opacity: 0;
-		overflow: hidden;
-		position: absolute;
-		z-index: -1;
+  .button-secondary{
+    margin-top: 20px;
+  }
 
-		& + label{
-			margin-top: 20px;
-		}
+  .uploaded-file{
+    display: block;
+    background: $panel-colour;
+    padding: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
 
-	}
+  &.unstyled-view{
+    border: none;
+    background: none;
+    padding: 0;
 
-	.button-secondary{
-		margin-top: 20px; 
-	}
+    .inputfile{
+      & + label{
+        margin-top: 5px;
+      }
+    }
 
-	.uploaded-file{
-		display: block;
-		background: $panel-colour;
-		padding: 20px;
-		font-weight: bold;
-		margin: 10px 0;
-	}
+    .button-secondary{
+      margin-top: 5px;
+    }
 
-	&.unstyled-view{
-		border: none;
-		background: none;
-		padding: 0;
-		
-		.inputfile{
-			& + label{
-				margin-top: 5px;
-			}
-		}
-
-		.button-secondary{
-			margin-top: 5px; 
-		}
-
-		.uploaded-file{
-			background: none;
-			padding: 0;
-		}
-
-
-	}
-
-	
-
+    .uploaded-file{
+      background: none;
+      padding: 0;
+    }
+  }
 }
-
 
 .form-group{
-	&.download{
-		padding: 5px 0 0 50px;
-		background: url(../images/icons/icon-download.png) no-repeat;
-	}
+  &.download{
+    padding: 5px 0 0 50px;
+    background: url(../images/icons/icon-download.png) no-repeat;
+  }
 }
-
 
 /*----- Search / filtering ----*/
 
 .search-filters{
-	padding: 20px; 
-	background: $panel-colour; 
-	margin-bottom: 40px;
+  padding: 20px;
+  background: $panel-colour;
+  margin-bottom: 40px;
 
-	.form-control{
-		width: 100%;
-	}
+  .form-control{
+    width: 100%;
+  }
 
-	button{
-		margin: 20px 0 0 0;
-	}
+  button{
+    margin: 20px 0 0 0;
+  }
 }
-
-
-
-

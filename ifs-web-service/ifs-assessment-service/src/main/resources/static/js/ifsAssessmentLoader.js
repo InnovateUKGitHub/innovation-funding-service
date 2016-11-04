@@ -20,7 +20,9 @@ if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
 IFS.assessment = {};
 IFS.assessment.loadOrder = {
   common : {
-    init : function() {},
+    init : function() {
+      IFS.assessment.conditionallyRequired.init();
+    },
     finalize : function() {}
   },
   'declaration-form' : {

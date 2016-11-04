@@ -8,12 +8,14 @@ import org.hibernate.validator.constraints.NotEmpty;
  * Form field model for the Assessor Profile Declaration of Interest Family affiliations/Appointments, directorships or consultancies
  */
 public class AssessorProfileFamilyAffiliationForm {
+    public interface FamilyAffiliations {
+    }
 
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}")
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}", groups=FamilyAffiliations.class)
     private String relation;
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}")
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}", groups=FamilyAffiliations.class)
     private String organisation;
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.position.required}")
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.position.required}", groups=FamilyAffiliations.class)
     private String position;
 
     public AssessorProfileFamilyAffiliationForm() {
