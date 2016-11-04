@@ -9,6 +9,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -26,6 +27,7 @@ import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuest
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -35,6 +37,8 @@ import static java.util.stream.Stream.concat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class QuestionServiceTest extends BaseUnitTestMocksTest {
@@ -191,7 +195,127 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getQuestionsByAssessmentIdTest() {
+    public void getQuestionByIdAndAssessmentId() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        Competition competition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        Assessment assessment = newAssessment()
+                .withApplication(application)
+                .build();
+
+        Question question = newQuestion()
+                .withCompetition(competition)
+                .build();
+
+        QuestionResource questionResource = newQuestionResource().build();
+
+        when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(questionMapperMock.mapToResource(question)).thenReturn(questionResource);
+
+        ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(questionResource, result.getSuccessObject());
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock, questionMapperMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verify(questionMapperMock).mapToResource(question);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getQuestionByIdAndAssessmentId_assessmentNotFound() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, assessmentId)));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+
+        verifyZeroInteractions(questionRepositoryMock);
+        verifyZeroInteractions(questionMapperMock);
+    }
+
+    @Test
+    public void getQuestionByIdAndAssessmentId_questionNotFound() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        Competition competition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        Assessment assessment = newAssessment()
+                .withApplication(application)
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+
+        ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
+        assertTrue(result.getFailure().is(notFoundError(Question.class, questionId)));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verifyNoMoreInteractions();
+
+        verifyZeroInteractions(questionMapperMock);
+    }
+
+    @Test
+    public void getQuestionByIdAndAssessmentId_questionNotInTargetOfAssessment() throws Exception {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        Competition competition = newCompetition()
+                .build();
+
+        Competition otherCompetition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        Assessment assessment = newAssessment()
+                .withApplication(application)
+                .build();
+
+        Question question = newQuestion()
+                .withCompetition(otherCompetition)
+                .build();
+
+        when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+
+        ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
+        assertTrue(result.getFailure().is(notFoundError(Question.class, questionId, assessmentId)));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verifyNoMoreInteractions();
+
+        verifyZeroInteractions(questionMapperMock);
+    }
+
+    @Test
+    public void getQuestionsByAssessmentId() {
         Long assessmentId = 1L;
         Long competitionId = 2L;
 

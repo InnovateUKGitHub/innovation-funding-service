@@ -220,6 +220,23 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
 
+    @Override
+    public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
+        return getUser(userId).andOnSuccess(this::getProfileStatusForUser);
+    }
+
+    private ServiceResult<UserProfileStatusResource> getProfileStatusForUser(User user) {
+        Profile profile = user.getProfile();
+        return serviceSuccess(
+                new UserProfileStatusResource(
+                        user.getId(),
+                        profile != null && profile.getSkillsAreas() != null,
+                        user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
+                        profile != null && profile.getContractSignedDate() != null
+                )
+        );
+    }
+
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());

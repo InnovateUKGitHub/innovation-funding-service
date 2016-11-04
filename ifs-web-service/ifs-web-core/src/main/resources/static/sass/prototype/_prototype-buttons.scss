@@ -1,29 +1,30 @@
 
 .button-secondary{
-	@include button($panel-colour);
-	@include box-sizing (border-box);
-	margin: 0 $gutter-half $gutter-half 0;
-	padding: em(10) em(15) em(5) em(15);
-	vertical-align: top;
-	@include media (mobile) {
-		width: 100%;
-		text-align: center;
-	}
+  @include button($panel-colour);
+  @include box-sizing (border-box);
+  margin: 0 $gutter-half $gutter-half 0;
+  padding: em(10) em(15) em(5) em(15);
+  vertical-align: top;
+
+  @include media (mobile) {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .button-dashboard{
-	background: $grey-4;
-	padding: 20px 20px 15px 20px;
-	display: block;
-	min-height: 110px;
-	text-decoration: none;
+  background: white;
+  padding: 20px 20px 15px 20px;
+  display: block;
+  min-height: 110px;
+  text-decoration: none;
 
-	&:hover{
-		background: $highlight-colour;
-	}
+  &:hover{
+    background: $highlight-colour;
+  }
 
-	&.highlight{
-		background: $button-colour;
-		color: white;
-	}
+  &.highlight{
+    background: $button-colour;
+    color: white;
+  }
 }

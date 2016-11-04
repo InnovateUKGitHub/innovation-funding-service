@@ -72,16 +72,14 @@
                             </span>
                         </legend>
 
-                        <div class="form-group form-group-compound">
-                            <label class="block-label" data-target="toggle-appointments">
-                                <input value="yes" type="radio" th:field="*{hasAppointments}" />
-                                Yes
-                            </label>
-                            <label class="block-label">
-                                <input value="no" type="radio" th:field="*{hasAppointments}" />
-                                No
-                            </label>
-                        </div>
+                          <label class="block-label" data-target="toggle-appointments">
+                              <input value="yes" type="radio" th:field="*{hasAppointments}" data-repeatable-rowcontainer="#position-table tbody" required="required" data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies" />
+                              Yes
+                          </label>
+                          <label class="block-label">
+                              <input value="no" type="radio" th:field="*{hasAppointments}"  required="required" data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies" />
+                              No
+                          </label>
                     </fieldset>
 
                     <div class="panel-indent js-hidden" id="toggle-appointments">
@@ -133,16 +131,14 @@
                         </legend>
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-                        <div class="form-group form-group-compound">
-                            <label class="block-label" data-target="toggle-interest">
-                                <input value="Yes" type="radio" th:field="*{hasFinancialInterests}" />
-                                Yes
-                            </label>
-                            <label class="block-label">
-                                <input value="No" type="radio" th:field="*{hasFinancialInterests}" />
-                                No
-                            </label>
-                        </div>
+                        <label class="block-label" data-target="toggle-interest">
+                            <input value="Yes" type="radio" th:field="*{hasFinancialInterests}" required="required" data-required-errormessage="Please tell us if you have any other financial interests" />
+                            Yes
+                        </label>
+                        <label class="block-label">
+                            <input value="No" type="radio" th:field="*{hasFinancialInterests}" required="required" data-required-errormessage="Please tell us if you have any other financial interests" />
+                            No
+                        </label>
 
                         <div class="panel-indent js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')}? error">
                             <label class="form-label-bold">
@@ -167,21 +163,19 @@
                             </span>
                         </legend>
 
-                        <div class="form-group form-group-compound">
-                            <label class="block-label" data-target="toggle-familyAffiliations">
-                                <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" />
-                                Yes
-                            </label>
-                            <label class="block-label">
-                                <input value="No" type="radio" th:field="*{hasFamilyAffiliations}" />
-                                No
-                            </label>
-                        </div>
+                        <label class="block-label" data-target="toggle-familyAffiliations">
+                            <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" data-repeatable-rowcontainer="#family-table tbody" required="required" data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies" />
+                            Yes
+                        </label>
+                        <label class="block-label">
+                            <input value="No" type="radio" th:field="*{hasFamilyAffiliations}" required="required" data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies" />
+                            No
+                        </label>
                     </fieldset>
 
                     <div class="panel-indent js-hidden" id="toggle-familyAffiliations">
                         <span th:if="${#fields.hasErrors('familyAffiliations')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}" />
+                            <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}" />
                         </span>
                         <table id="family-table">
                             <thead>
@@ -233,16 +227,14 @@
                         </legend>
                         <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
-                        <div class="form-group form-group-compound">
-                            <label class="block-label" data-target="toggle-family-interest">
-                                <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}" />
-                                Yes
-                            </label>
-                            <label class="block-label">
-                                <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}" />
-                                No
-                            </label>
-                        </div>
+                        <label class="block-label" data-target="toggle-family-interest">
+                            <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}" required="required" data-required-errormessage="Please tell us if any of your close family members have any other financial interests" />
+                            Yes
+                        </label>
+                        <label class="block-label">
+                            <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}" required="required" data-required-errormessage="Please tell us if any of your close family members have any other financial interests" />
+                            No
+                        </label>
                     </fieldset>
 
                     <div class="panel-indent js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')}? error">
@@ -268,10 +260,6 @@
                           <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
-
-
-
-
                 </div>
 
                 <button class="button button-large extra-margin" type="submit">Save and continue</button>

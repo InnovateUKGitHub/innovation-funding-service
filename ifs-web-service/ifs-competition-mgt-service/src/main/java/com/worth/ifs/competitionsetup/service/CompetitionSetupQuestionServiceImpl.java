@@ -2,7 +2,7 @@ package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.competitionsetup.model.application.Question;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.service.FormInputService;
@@ -30,10 +30,10 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
 
     @Override
-    public Question getQuestion(final Long questionId) {
+    public QuestionViewModel getQuestion(final Long questionId) {
         QuestionResource questionResource = questionService.getById(questionId);
 
-        Question question = new Question();
+        QuestionViewModel question = new QuestionViewModel();
         List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(questionId);
         //TODO AssessorScore for application questions
         //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(questionId);
@@ -58,7 +58,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
     @Override
-	public void updateQuestion(Question question) {
+	public void updateQuestion(QuestionViewModel question) {
 		QuestionResource questionResource = questionService.getById(question.getId());
 		List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(question.getId());
         //TODO AssessorScore for application questions
@@ -88,7 +88,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         //handleAssessorScore(question, formInputAssessmentResources, questionResource, formInputResource);
 	}
 
-	private void handleAppendix(Question question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
+	private void handleAppendix(QuestionViewModel question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
 	    if(question.getAppendix()) {
             //check if it's there otherwise add
             if(!hasAppendix(formInputResources)) {
@@ -135,14 +135,14 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         return checkFormInputsForType(formInputResources, fileUploadId);
     }
 
-    private void handleAssessorScore(Question question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
+    private void handleAssessorScore(QuestionViewModel question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
         if(question.getScored()) {
             if(!hasAssessorScore(formInputResources)) {
                 FormInputResource assessorScore = new FormInputResource();
                 assessorScore.setFormInputType(assessorScoreId);
                 assessorScore.setGuidanceQuestion(null);
                 assessorScore.setGuidanceAnswer(null);
-                assessorScore.setDescription("Question score");
+                assessorScore.setDescription("QuestionViewModel score");
                 assessorScore.setIncludedInApplicationSummary(false);
                 assessorScore.setQuestion(questionResource.getId());
                 assessorScore.setCompetition(formInputResource.getCompetition());

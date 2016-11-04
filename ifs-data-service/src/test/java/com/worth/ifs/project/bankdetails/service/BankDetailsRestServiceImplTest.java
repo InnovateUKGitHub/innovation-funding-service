@@ -5,6 +5,7 @@ import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -16,7 +17,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<BankDetailsRestServiceImpl> {
+    private String competitionsRestURL = "/competition";
     private final String projectRestURL = "/project";
+
     @Override
     protected BankDetailsRestServiceImpl registerRestServiceUnderTest() {
         BankDetailsRestServiceImpl bankDetailsRestService = new BankDetailsRestServiceImpl();
@@ -80,5 +83,15 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         RestResult<ProjectBankDetailsStatusSummary> response = service.getBankDetailsStatusSummaryByProject(projectId);
         assertTrue(response.isSuccess());
         assertEquals(projectBankDetailsStatusSummary, response.getSuccessObject());
+    }
+
+    @Test
+    public void testDownloadByCompetition() {
+        Long competitionId = 123L;
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+        String url = competitionsRestURL + "/" + competitionId + "/bank-details/export";
+        setupGetWithRestResultExpectations(url, ByteArrayResource.class, returnedFileContents, OK);
+        ByteArrayResource retrievedFileEntry = service.downloadByCompetition(123L).getSuccessObject();
+        assertEquals(returnedFileContents, retrievedFileEntry);
     }
 }

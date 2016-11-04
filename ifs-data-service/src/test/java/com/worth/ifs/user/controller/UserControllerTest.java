@@ -3,10 +3,12 @@ package com.worth.ifs.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.*;
 import org.junit.Test;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliati
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
@@ -78,7 +81,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}",organisationId)
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userResource)))
                 .andExpect(status().isCreated())
@@ -98,7 +101,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}",organisationId, competitionId)
+        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userResource)))
                 .andExpect(status().isCreated())
@@ -381,5 +384,20 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk());
 
         verify(userProfileServiceMock, only()).updateUserProfile(userId, profileDetails);
+    }
+
+    @Test
+    public void getUserProfileStatus() throws Exception {
+        UserProfileStatusResource profileStatus = newUserProfileStatusResource().build();
+        Long userId = 1L;
+
+        when(userProfileServiceMock.getUserProfileStatus(userId)).thenReturn(serviceSuccess(profileStatus));
+
+        mockMvc.perform(get("/user/id/{userId}/profileStatus", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileStatus)))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, only()).getUserProfileStatus(userId);
     }
 }

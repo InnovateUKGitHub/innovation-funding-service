@@ -16,6 +16,9 @@ import java.util.List;
 
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
@@ -83,12 +86,10 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void recommend() throws Exception {
         Long assessmentId = 2L;
-        Long processRole = 8L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
-        assertEquals(processRole, assessmentResource.getProcessRole());
+        assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
 
@@ -96,41 +97,16 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.ASSESSED, assessmentResult.getAssessmentState());
-    }
-
-    @Ignore("TODO - should this be open -> open")
-    @Test
-    public void recommend_eventNotAccepted() throws Exception {
-        Long assessmentId = 2L;
-        Long processRole = 8L;
-
-        loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
-        assertEquals(processRole, assessmentResource.getProcessRole());
-
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
-
-        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecision);
-        assertTrue(result.isSuccess());
-
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.ASSESSED, assessmentResult.getAssessmentState());
-
-        // Now recommend the assessment again
-        assertTrue(controller.recommend(assessmentResource.getId(), assessmentFundingDecision).isFailure());
+        assertEquals(OPEN, assessmentResult.getAssessmentState());
     }
 
     @Test
     public void rejectInvitation() {
         Long assessmentId = 2L;
-        Long processRole = 8L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
-        assertEquals(processRole, assessmentResource.getProcessRole());
+        assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
 
@@ -144,12 +120,10 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void rejectInvitation_eventNotAccepted() {
         Long assessmentId = 2L;
-        Long processRole = 8L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
-        assertEquals(processRole, assessmentResource.getProcessRole());
+        assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
 
@@ -161,5 +135,22 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         // Now reject the assessment again
         assertTrue(controller.rejectInvitation(assessmentId, applicationRejection).isFailure());
+    }
+
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 4L;
+        Long processRole = 17L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.PENDING, assessmentResource.getAssessmentState());
+        assertEquals(processRole, assessmentResource.getProcessRole());
+
+        RestResult<Void> result = controller.acceptInvitation(assessmentResource.getId());
+        assertTrue(result.isSuccess());
+
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(ACCEPTED, assessmentResult.getAssessmentState());
     }
 }
