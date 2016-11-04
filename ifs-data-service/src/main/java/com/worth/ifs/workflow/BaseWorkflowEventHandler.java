@@ -22,7 +22,7 @@ import org.springframework.statemachine.transition.Transition;
 import javax.annotation.PostConstruct;
 import java.util.Optional;
 
-import static com.worth.ifs.workflow.TestableTransitionWorkflowAction.TESTING_GUARD_KEY;
+import static com.worth.ifs.workflow.TestableTransitionWorkflowAction.testingStateTransition;
 
 /**
  * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
@@ -57,7 +57,7 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         public void onPersist(State<StateType, EventType> state, Message<EventType> message,
                               Transition<StateType, EventType> transition, StateMachine<StateType, EventType> stateMachine) {
 
-            if (message.getHeaders().get(TESTING_GUARD_KEY) != null) {
+            if (testingStateTransition(message)) {
                 LOG.debug("TESTING STATE CHANGE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
                 return;
             }
