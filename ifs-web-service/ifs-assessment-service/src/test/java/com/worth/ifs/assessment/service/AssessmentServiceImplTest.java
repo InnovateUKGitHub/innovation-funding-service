@@ -85,4 +85,16 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).rejectInvitation(assessmentId, applicationRejection);
     }
+
+    @Test
+    public void acceptInvitation() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentRestService.acceptInvitation(assessmentId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.acceptInvitation(assessmentId);
+
+        assertTrue(response.isSuccess());
+        verify(assessmentRestService, only()).acceptInvitation(assessmentId);
+    }
 }

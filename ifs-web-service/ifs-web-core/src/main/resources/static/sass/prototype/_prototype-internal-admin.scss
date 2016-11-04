@@ -1,25 +1,20 @@
 //internal header
 .header-global   {
-    &.header-admin {
+  &.header-admin {
 
-
-        .innovate-title {
-            margin: 5px 0 0 15px;
-        }
-
-        .admin-user-name {
-            float: right;
-            margin-right: 20px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .navigation-list {
-            clear: right;
-        }
+    .innovate-title {
+      margin: 5px 0 0 15px;
     }
+
+    .admin-user-name {
+      float: right;
+      margin-right: 20px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .navigation-list {
+      clear: right;
+    }
+  }
 }
-
-
-
-

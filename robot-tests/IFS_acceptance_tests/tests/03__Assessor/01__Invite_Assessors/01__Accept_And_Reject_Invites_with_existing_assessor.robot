@@ -119,12 +119,6 @@ the assessor fills all fields with valid inputs
     The user should not see the text in the page    This field cannot be left blank
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
 
-the assessor shouldn't be able to accept the rejected competition
-    When the user navigates to the page    ${Invitation_existing_assessor1}
-    And the user clicks the button/link    jQuery=button:contains("Accept")
-    The user should see the text in the page    You are unable to access this page
-    The user should see the text in the page    You have already rejected the invitation
-
 the assessor should see the date for submission of assessment
     the user should see the element    css=.my-applications div:nth-child(2) .competition-deadline .day
     the user should see the element    css=.my-applications div:nth-child(2) .competition-deadline .month
@@ -132,24 +126,22 @@ the assessor should see the date for submission of assessment
 the assessor should see the number of days remaining
     the user should see the element    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
 
+the assessor shouldn't be able to accept the rejected competition
+    When the user navigates to the page    ${Invitation_existing_assessor1}
+    the assessor is unable to see the invitation
+
 the assessor shouldn't be able to reject the rejected competition
-    the user navigates to the page    ${Invitation_existing_assessor1}
-    the user clicks the button/link    css=form a
-    the assessor fills all fields with valid inputs
-    the user clicks the button/link    jQuery=button:contains("Reject")
-    The user should see the text in the page    We were unable to reject the competition:
-    The user should see the text in the page    You have already rejected the invitation for this competition.
+    When the user navigates to the page    ${Invitation_existing_assessor1}
+    the assessor is unable to see the invitation
 
 the assessor shouldn't be able to accept the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user clicks the button/link    jQuery=button:contains("Accept")
-    The user should see the text in the page    You are unable to access this page
-    The user should see the text in the page    This invite has already been accepted.
+    the assessor is unable to see the invitation
 
 the assessor shouldn't be able to reject the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user clicks the button/link    css=form a
-    the assessor fills all fields with valid inputs
-    the user clicks the button/link    jQuery=button:contains("Reject")
-    The user should see the text in the page    We were unable to reject the competition:
-    The user should see the text in the page    You have already accepted the invitation to assess this competition.
+    the assessor is unable to see the invitation
+
+The assessor is unable to see the invitation
+    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    You have already accepted or rejected this invitation.

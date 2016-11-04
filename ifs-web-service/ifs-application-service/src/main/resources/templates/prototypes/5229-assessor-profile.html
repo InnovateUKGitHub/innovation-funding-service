@@ -23,26 +23,108 @@
 	<h1 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h1>
 
 	<h2 class="heading-medium">Innovation area and skills</h2>
-	
-	<div class="grid-row no-margin-top">
-		<div class="column-half">
-			<h2 class="heading-medium no-margin">Innovation areas</h2>
-			<ul class="list-bullet">
-				<li>Digital sciences</li>
-				<li>Information &#38; communications technology (ICT)</li>
-			</ul>
-		</div>
 
-		<div class="column-half">
-			<h2 class="heading-medium no-margin">Type</h2>
-			<ul class="list-bullet">
-				<li>Business</li>
-			</ul>
-		</div>
+	<div id="prototype-innovation-areas">
+		<h3 class="heading-small">Innovation areas <small th:if="${param.user != null and param.user[0] == 'compExec'}"><a href="#" id="prototype-edit-innovation-areas">Edit innovation areas</a></small></h3>
+		<ul class="list-bullet">
+			<li id="prototype-innovation-one">
+				<strong>Materials and manufacturing</strong>
+				<ul class="list-bullet">
+					<li>Digital sciences</li>
+				</ul>
+			</li>
+			<li>
+				<strong>Health and life sciences</strong>
+				<ul class="list-bullet">
+					<li>Information &amp; communications technology (ICT)</li>
+				</ul>
+			</li>
+			<li id="prototype-innovation-three">
+				<strong>Materials and manufacturing</strong>
+				<ul class="list-bullet">
+					<li>Earth observation</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div id="prototype-innovation-areas-edit" class="search-filters extra-margin">
+		<h3 class="heading-small no-margin">Edit innovation area(s)</h3>
+		<form action="#" method="GET">
+			<fieldset>
+				<div class="grid-row extra-margin">
+					<div class="column-third">
+						<div class="form-group">
+							<label class="form-label" for="innovationSector">Innovation sector</label>
+							<select class="form-control" id="innovationSector" name="innovationSector">
+								<option selected="selected">Please select an innovation sector</option>
+								<option value="Emerging and Enabling Technologies">Emerging and Enabling Technologies</option>
+								<option value="Health and Life Sciences">Health and Life Sciences</option>
+								<option value="Infrastructure Systems">Infrastructure Systems</option>
+								<option value="Manufacturing and Materials">Manufacturing and Materials</option>
+							</select>
+						</div>
+					</div>
+					<div class="column-third">
+						<div class="form-group">
+							<label class="form-label" for="innovationArea">Innovation area</label>
+							<select class="form-control" id="innovationArea" name="innovationArea">
+								<option selected="selected">Please select an innovation area</option>
+								<option value="Advanced Therapies">Advanced Therapies</option>
+								<option value="Precision Medicine">Precision Medicine</option>
+								<option value="Medicines Technology">Medicines Technology</option>
+								<option value="Bioscience">Bioscience</option>
+								<option value="Agri Productivity">Agri Productivity</option>
+								<option value="Enhanced Food Quality">Enhanced Food Quality</option>
+							</select>
+						</div>
+					</div>
+					<div class="column-third alignright">
+						<button class="button no-margin" id="prototype-add-row">Add</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Innovation sector</th>
+					<th scope="col">Innovation area</th>
+					<th scope="col"><span class="visuallyhidden">Remove</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Materials and manufacturing</td>
+					<td>Digital sciences</td>
+					<td class="alignright"><a href="#" class="prototype-remove-row">Remove</a></td>
+				</tr>
+				<tr>
+					<td>Health and life sciences</td>
+					<td>Information &amp; communications technology (ICT)</td>
+					<td class="alignright"><a href="#" class="prototype-remove-row">Remove</a></td>
+				</tr>
+				<tr id="prototype-extra-row">
+					<td>Materials and manufacturing</td>
+					<td>Earth observation</td>
+					<td class="alignright"><a href="#" class="prototype-remove-row">Remove</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="alignright-button extra-margin">
 
+			<a href="#" id="prototype-cancel" class="button-link">Cancel</a>
+
+			<a href="#" id="prototype-save" class="button">Save</a>
+
+		</div>
 	</div>
 
-	<h2 class="heading-medium no-margin-bottom">Skills</h2>
+	<h3 class="heading-small no-margin">Type</h3>
+	<ul class="list-bullet">
+		<li>Business</li>
+	</ul>
+
+	<h3 class="heading-small no-margin-bottom">Skills</h3>
 	<p>Human computer interaction, Wearables, IoT</p>
 	
 	<h2 class="heading-medium">Assessor details</h2>
@@ -195,5 +277,35 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+		$('#prototype-innovation-areas-edit, #prototype-extra-row, #prototype-innovation-three').hide();
+		$('#prototype-edit-innovation-areas').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-innovation-areas').hide();
+			$('#prototype-innovation-areas-edit').show();
+		});
+		$('#prototype-add-row').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-extra-row').show();
+		});
+		$('.prototype-remove-row').on('click', function(event) {
+			event.preventDefault();
+			$(this).parent().parent().hide();
+		});
+		$('#prototype-save').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-innovation-areas-edit, #prototype-innovation-one').hide();
+			$('#prototype-innovation-areas, #prototype-innovation-three').show();
+		});
+		$('#prototype-cancel').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-innovation-areas-edit').hide();
+			$('#prototype-innovation-areas').show();
+		});
+	});
+	// ]]>
+</script>
 </body>
 </html>
