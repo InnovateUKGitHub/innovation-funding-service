@@ -1237,7 +1237,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(ACTION_REQUIRED).
-                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withOtherDocumentsStatus(PENDING).
                 withGrantOfferStatus(NOT_STARTED).
                 build();
 

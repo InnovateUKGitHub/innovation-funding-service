@@ -37,7 +37,7 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isOtherDocumentsSubmitted() {
-        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
+        return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
     }
 
     public boolean isOrganisationRequiringFunding() {
