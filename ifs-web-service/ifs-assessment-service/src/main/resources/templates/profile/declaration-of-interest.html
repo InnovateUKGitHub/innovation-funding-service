@@ -257,7 +257,7 @@
                       </legend>
                       <label class="block-label">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required" data-required-errormessage="In order to register an account you have to agree that this is an accurate account" />
-                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
                 </div>
