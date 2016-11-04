@@ -689,10 +689,26 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
                 simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
+        setLeadPartnerProjectDetailsTeamStatus(projectPartnerStatusResources);
+
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
 
         return serviceSuccess(projectTeamStatusResource);
+    }
+
+    private void setLeadPartnerProjectDetailsTeamStatus(List<ProjectPartnerStatusResource> projectPartnerStatusResources) {
+
+        boolean allFinanceContactSubmitted = projectPartnerStatusResources.stream().allMatch(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getFinanceContactStatus()));
+
+        List<ProjectPartnerStatusResource> projectPartnerStatusResourcesFiltered =
+                projectPartnerStatusResources.stream().filter(projectPartnerStatusResource -> projectPartnerStatusResource instanceof ProjectLeadStatusResource).collect(toList());
+        
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = getOnlyElement(projectPartnerStatusResourcesFiltered);
+
+        if (!(COMPLETE.equals(leadProjectPartnerStatusResource.getProjectDetailsStatus()) && allFinanceContactSubmitted)) {
+            leadProjectPartnerStatusResource.setProjectDetailsStatus(ACTION_REQUIRED);
+        }
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
