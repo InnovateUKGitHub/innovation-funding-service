@@ -242,6 +242,12 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         assertEquals(2, bindingResult.getFieldErrorCount("firstName"));
         assertEquals(2, bindingResult.getFieldErrorCount("lastName"));
+
+        assertEquals("Your first name should have at least {2} characters", bindingResult.getFieldErrors("firstName").get(0).getDefaultMessage());
+        assertEquals("Please enter a first name", bindingResult.getFieldErrors("firstName").get(1).getDefaultMessage());
+
+        assertEquals("Your last name should have at least {2} characters", bindingResult.getFieldErrors("lastName").get(0).getDefaultMessage());
+        assertEquals("Please enter a last name", bindingResult.getFieldErrors("lastName").get(1).getDefaultMessage());
     }
 
     @Test
