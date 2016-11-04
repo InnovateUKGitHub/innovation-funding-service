@@ -344,7 +344,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
         UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
@@ -380,6 +380,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
         when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisation);
         when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
 
         InviteStatus testStatus = CREATED;
 
@@ -391,8 +393,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 param("email", invitedUserEmail).
                 param("inviteStatus", testStatus.toString()).
                 param("organisation", organisationId + "")).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/finance-contact")).
                 andReturn();
     }
 
