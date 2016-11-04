@@ -81,12 +81,12 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
-        applications.stream().forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
+        applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
-        organisations.stream().forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
+        organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
-        assessments.stream().forEach(assessment -> {
+        assessments.forEach(assessment -> {
             InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
@@ -154,12 +154,12 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
-        applications.stream().forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
+        applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
-        organisations.stream().forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
+        organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
@@ -173,7 +173,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
-        assessments.stream().forEach(assessment -> {
+        assessments.forEach(assessment -> {
             InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
