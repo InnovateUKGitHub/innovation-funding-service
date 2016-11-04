@@ -1,87 +1,52 @@
 package com.worth.ifs.project.documentation;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
-import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
-import static com.worth.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
-import static com.worth.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
-import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
-import static com.worth.ifs.commons.error.Error.fieldError;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
-import static com.worth.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
-import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
-import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
-import static com.worth.ifs.documentation.ProjectDocs.projectStatusResourceFields;
+import static com.worth.ifs.documentation.ProjectDocs.*;
 import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -449,67 +414,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void submitBankDetails() throws Exception {
-        Long projectId = 1L;
-        Long organisationId = 1L;
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
-        BankDetailsResource bankDetailsResource = newBankDetailsResource()
-                .withProject(projectId).withSortCode("123456")
-                .withAccountNumber("12345678")
-                .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
-                .build();
-
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(
-                put("/project/{projectId}/bank-details", projectId).
-                        contentType(APPLICATION_JSON).
-                        content(toJson(bankDetailsResource)))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                ))
-                .andReturn();
-    }
-
-    @Test
-    public void submitInvalidBankDetails() throws Exception {
-        Long projectId = 1L;
-        Long organisationId = 1L;
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
-        BankDetailsResource bankDetailsResource = newBankDetailsResource()
-                .withProject(projectId).withSortCode("123")
-                .withAccountNumber("1234567")
-                .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
-                .build();
-
-        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
-
-        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
-
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
-        mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
-                        contentType(APPLICATION_JSON).
-                        content(toJson(bankDetailsResource)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(expectedErrors)))
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                ))
-                .andReturn();
-    }
-
-    @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
         UserResource userResource = newUserResource()
                 .withId(1L)
@@ -571,23 +475,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
                         responseFields(projectTeamStatusResourceFields)));
-    }
-
-    @Test
-    public void getBankDetailsProjectSummary() throws  Exception {
-        Long projectId = 123L;
-        List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withCompetitionName("Galaxy Note 7 disaster case study").withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
-        when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
-        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(bankDetailsStatusSummary))).
-                andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                        ),
-                        responseFields(projectBankDetailsStatusSummaryFields)
-                ));
     }
 
     @Test

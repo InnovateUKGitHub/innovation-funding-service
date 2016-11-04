@@ -1,11 +1,10 @@
 package com.worth.ifs.assessment.form.profile;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.controller.BaseBindingResultTarget;
-import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,7 +17,6 @@ import javax.validation.constraints.Size;
 /**
  * Form field model to edit Assessor Profile Details
  */
-
 public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.title.selectionrequired}")
@@ -52,7 +50,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     private Disability disability;
 
     @Valid
-    private AddressForm addressForm = new AddressForm();
+    private AddressResource addressForm = new AddressResource();
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List({
@@ -110,11 +108,11 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
         this.disability = disability;
     }
 
-    public AddressForm getAddressForm() {
+    public AddressResource getAddressForm() {
         return addressForm;
     }
 
-    public void setAddressForm(AddressForm addressForm) {
+    public void setAddressForm(AddressResource addressForm) {
         this.addressForm = addressForm;
     }
 

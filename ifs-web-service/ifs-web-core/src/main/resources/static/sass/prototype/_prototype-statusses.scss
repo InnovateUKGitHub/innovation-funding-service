@@ -1,31 +1,31 @@
 
 .collapsible {
 
-	h2{
-		&.section-complete:before{
-			top: 13px;
-			@include media-down(mobile) {
-				content: "";
-				right: 40px;
-				min-height: 20px;
-				min-width: 20px;
-			}
-		}
+  h2{
+      &.section-complete:before{
+      top: 13px;
+      @include media-down(mobile) {
+        content: "";
+        right: 40px;
+        min-height: 20px;
+        min-width: 20px;
+        }
+      }
 		&.section-incomplete:before{
-			top: 13px;
-			@include media-down(mobile) {
-				content: "";
-				right: 40px;
-				min-height: 20px;
-				min-width: 20px;
-			}
+      top: 13px;
+      @include media-down(mobile) {
+        content: "";
+        right: 40px;
+        min-height: 20px;
+        min-width: 20px;
+      }
 		}
-		span{
-			&.section-status{
-				&.place-in-header{
-					top: 9px;
-				}
-			}
+    span{
+      &.section-status{
+        &.place-in-header{
+          top: 9px;
+        }
+      }
 		}
 	}
 
@@ -33,24 +33,25 @@
 
 
 table{
-	.section-complete{
-		th{
-			@extend %icon-tick;
-			background-position: right 50%;
-		}
-		td{
-			background: $page-colour;
-		}
+  .section-complete{
+    th{
+      @extend %icon-tick;
+      background-position: right 50%;
+    }
+
+    td{
+      background: $page-colour;
+ 		}
 	}
 
-	.section-incomplete{
-		th{
-			@extend %icon-incomplete;
-			background-position: right 50%;
-		}
-		td{
-			background: $page-colour;
-		}
+  .section-incomplete{
+    th{
+      @extend %icon-incomplete;
+      background-position: right 50%;
+    }
+		  td{
+      background: $page-colour;
+		 }
 	}
 }
 
@@ -75,49 +76,47 @@ table{
 /*----- Competition admin status' ----*/
 
 .comp-status{
-	background: $button-colour;
-	text-align: center;
-	padding: 20px;
-	color: $white;
+  background: $button-colour;
+  text-align: center;
+  padding: 20px;
+  color: $white;
 
-	&.closed{
-		background: $red;
-	}
+  &.closed{
+    background: $red;
+  }
 
-	&.funders-panel{
-		background: $light-blue;
-	}
+  &.funders-panel{
+    background: $light-blue;
+  }
 
-	&.in-assessment{
-		background: $orange;
-	}
+  &.in-assessment{
+    background: $orange;
+  }
 
-	&.prep{
-		background: $grey-1;
-	}
+  &.prep{
+    background: $grey-1;
+  }
 
-	h2{
-		margin: 0 0 0.5em 0;
-	}
+  h2{
+    margin: 0 0 0.5em 0;
+  }
 
-	sup{
-		font-size: 0.5em;
-	}
+  sup{
+    font-size: 0.5em;
+  }
 }
 
 /*----- Application dashboard - aligning titles ----*/
 
 .app-dashboard{
 
-	.application-status{
+  .application-status{
 
-		.results-status{
+    .results-status{
+      padding: 35px 0;
+    }
 
-			padding: 35px 0;
-
-		}
-
-	}
+  }
 
 }
 
@@ -125,39 +124,37 @@ table{
 /*----- Marking yes /no with tick / cross used in assessor invite tables ----*/
 
 span.yes{
-	@extend %icon-tick;
-	padding-left: 28px;
+  @extend %icon-tick;
+  padding-left: 28px;
 }
 
 span.no{
-	@extend %icon-cross;
-	padding-left: 28px;
+  @extend %icon-cross;
+  padding-left: 28px;
 }
 
 span.action{
-	@extend  %icon-assigned-to-me;
-	padding-left: 28px;
+  @extend  %icon-assigned-to-me;
+  padding-left: 28px;
 }
 
 
 /*----- Assessor status ----*/
 
 .assessor-status{
-	@extend .cf;
+  @extend .cf;
 }
 
 @include media-down(mobile) {
-	
-	.assessor-status{
 
-		margin-bottom: 20px;
+  .assessor-status{
 
-		li{
-			width: 33%;
-			display: block;
-			float: left;
-		}
+    margin-bottom: 20px;
 
-	}
-
+    li{
+      width: 33%;
+      display: block;
+      float: left;
+    }
+	 }
 }

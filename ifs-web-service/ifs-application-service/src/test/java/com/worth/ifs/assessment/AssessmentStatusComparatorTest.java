@@ -14,7 +14,7 @@ public class AssessmentStatusComparatorTest {
     @Test
     public void testCompareByStatus() throws Exception {
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
-                .withActivityState(ASSESSED, PENDING, SUBMITTED, OPEN, REJECTED)
+                .withActivityState(READY_TO_SUBMIT, PENDING, SUBMITTED, OPEN, REJECTED)
                 .build(5);
 
         AssessmentStatusComparator comparator = new AssessmentStatusComparator();
@@ -24,7 +24,7 @@ public class AssessmentStatusComparatorTest {
         Assert.assertEquals(PENDING, assessmentsCompare.get(0).getAssessmentState());
         Assert.assertEquals(REJECTED, assessmentsCompare.get(1).getAssessmentState());
         Assert.assertEquals(OPEN, assessmentsCompare.get(2).getAssessmentState());
-        Assert.assertEquals(ASSESSED, assessmentsCompare.get(3).getAssessmentState());
+        Assert.assertEquals(READY_TO_SUBMIT, assessmentsCompare.get(3).getAssessmentState());
         Assert.assertEquals(SUBMITTED, assessmentsCompare.get(4).getAssessmentState());
 
     }
@@ -64,7 +64,7 @@ public class AssessmentStatusComparatorTest {
 
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
                 .withId(5L, 10L, 1L)
-                .withActivityState(ASSESSED, ASSESSED, ASSESSED)
+                .withActivityState(READY_TO_SUBMIT, READY_TO_SUBMIT, READY_TO_SUBMIT)
                 .build(3);
 
         AssessmentStatusComparator comparator = new AssessmentStatusComparator();

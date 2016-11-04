@@ -1,29 +1,29 @@
 .prototype-nav{
-	background: $mellow-red;
-	position: fixed;
-	font-weight: bold;
-	text-align: center;
-	z-index: 1;
-	a{
-		color: white;
-		font-size: 0.7em;
-		text-decoration: none;
-		padding: 0 5px;
+  background: $mellow-red;
+  position: fixed;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1;
+  a{
+    color: white;
+    font-size: 0.7em;
+    text-decoration: none;
+    padding: 0 5px;
 	}
 }
 
 .sub-header{
-	a{
-		font-weight: normal;
-	}
-}
+  a{
+    font-weight: normal;
+  }
+  }
 
 
 .prototype-sprint-nav{
-	margin-top: 20px;
-	
-	li{
-		display: inline-block;
-		padding-right: 20px;
-	}
-}
+  margin-top: 20px;
+
+  li{
+    display: inline-block;
+    padding-right: 20px;
+    }
+ }

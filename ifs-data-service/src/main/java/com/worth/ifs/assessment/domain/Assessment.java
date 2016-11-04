@@ -12,9 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.ASSESSED;
-import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
-
 @Entity
 public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
 
@@ -30,41 +27,21 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         super();
     }
 
-    public Assessment(ProcessRole processRole) {
-        this.participant = processRole;
-    }
-
     public Assessment(Application application, ProcessRole processRole) {
-        this(processRole);
+        this.participant = processRole;
         this.target = application;
-    }
-
-    public Boolean isStarted() {
-        if(getActivityState()!=null) {
-            return isInState(ASSESSED);
-        } else {
-            return Boolean.FALSE;
-        }
-    }
-
-    public Boolean isSubmitted() {
-        if(getActivityState()!=null) {
-            return isInState(SUBMITTED);
-        } else {
-            return Boolean.FALSE;
-        }
     }
 
     public ProcessOutcome getLastOutcome() {
         if(this.processOutcomes != null) {
-            return this.processOutcomes.stream().findFirst().orElse(null);
+            return this.processOutcomes.stream().reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
         }
         return null;
     }
 
     public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
         if(this.processOutcomes != null) {
-            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).findFirst().orElse(null);
+            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
         }
         return null;
     }

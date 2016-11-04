@@ -65,9 +65,9 @@ public class ProcessOutcomeResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(outcome, that.outcome)
-                .append(outcomeType, that.outcomeType)
                 .append(description, that.description)
                 .append(comment, that.comment)
+                .append(outcomeType, that.outcomeType)
                 .isEquals();
     }
 
@@ -76,9 +76,9 @@ public class ProcessOutcomeResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(outcome)
-                .append(outcomeType)
                 .append(description)
                 .append(comment)
+                .append(outcomeType)
                 .toHashCode();
     }
 }
