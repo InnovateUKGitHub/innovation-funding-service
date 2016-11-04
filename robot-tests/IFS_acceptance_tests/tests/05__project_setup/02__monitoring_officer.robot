@@ -52,7 +52,7 @@ Comp admin can view the Supporting information details on MO page
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666
-    [Tags]
+    [Tags]    HappyPath
     Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
@@ -121,7 +121,7 @@ MO details(email step)
     ...    INFUND-2632
     ...
     ...    INFUND-2633
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
