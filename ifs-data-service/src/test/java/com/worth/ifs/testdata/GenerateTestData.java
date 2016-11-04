@@ -187,13 +187,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         createCompetitionWithApplications(line, Optional.empty());
     }
 
-    /**
-     * select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_response fir on fir.form_input_id = fi.id join process_role updaterrole on updaterrole.id = fir.updated_by_id join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id join process_role assigneerole on assigneerole.id = qs.assignee_id join user assignee on assignee.id = assigneerole.user_id;
-     */
-    private void asdf() {
-
-    }
-
     private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
 
         UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
@@ -287,6 +280,27 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
+    /**
+     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id left join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') order by 1,2,3 INTO OUTFILE '/var/lib/mysql-files/application-questions5.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     *
+     * And applied search-and-replace for:
+     *
+     * How many balls can you juggle?
+     What is the size of the potential market for your project?
+
+     What do you wear when juggling?
+     How will you exploit and market your project?
+
+     What is your preferred juggling pattern?
+     What economic, social and environmental benefits do you expect your project to deliver and when?
+
+     What mediums can you juggle with?
+     What technical approach will you use and how will you manage your project?
+
+     Fifth Question
+     What is innovative about your project?
+     
+     */
     private List<Pair<String, String>> questionResponsesFromCsv(String competitionName, String applicationName) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responses = readApplicationQuestionResponses();
