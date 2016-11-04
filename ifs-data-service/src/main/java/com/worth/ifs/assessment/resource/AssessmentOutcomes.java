@@ -5,7 +5,8 @@ import com.worth.ifs.workflow.resource.OutcomeType;
 public enum AssessmentOutcomes implements OutcomeType {
     ACCEPT("accept"),
     REJECT("reject"),
-    RECOMMEND("recommend"),
+    FEEDBACK("feedback"),
+    FUNDING_DECISION("funding-decision"),
     SUBMIT("submit");
 
     String event;

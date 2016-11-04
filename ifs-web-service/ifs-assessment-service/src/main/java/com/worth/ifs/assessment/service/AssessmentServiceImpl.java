@@ -46,4 +46,9 @@ public class AssessmentServiceImpl implements AssessmentService {
 
         return assessmentRestService.rejectInvitation(assessmentId, applicationRejection).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> acceptInvitation(Long assessmentId) {
+        return assessmentRestService.acceptInvitation(assessmentId).toServiceResult();
+    }
 }

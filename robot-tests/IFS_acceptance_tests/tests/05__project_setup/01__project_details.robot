@@ -30,6 +30,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5898 As a partner I want to be able to change my Finance Contact in Project Setup so that I can submit updates to our partner details as appropriate
 ...
 ...               INFUND-5856 As an internal user I want to see a view of each project's submitted Project Details and the Finance contacts so I can use these for reference throughout Project Setup
+...
+...               INFUND-5827 As a lead partner I want my Project Setup dashboard to inform me when all the Project Details and Finance Contacts are provided so that I know if any tasks are outstanding
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -41,7 +43,7 @@ ${project_details_submitted_message}    The project details have been submitted 
 *** Test Cases ***
 Internal users can see Project Details not yet completed
     [Documentation]  INFUND-5856
-    [Tags]
+    [Tags]    HappyPath
     [Setup]  log in as user                         john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
     Then the user should not see the element        jQuery=#table-project-status tr:nth-child(1) td.status.ok a   #Check here that there is no Green-Check
@@ -63,7 +65,7 @@ Internal users can see Project Details not yet completed
     [Teardown]    the user closes the browser
 
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827
     [Tags]    HappyPath
     [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=00000026: best riffs
@@ -79,6 +81,7 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Finance checks
     And the user should see the text in the page    Spend profile
     And the user should see the text in the page    Other documents
+    And the user should see the element             jQuery=li.require-action:nth-of-type(2)  #Action required, seen by non-lead
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    What's the status of each of my partners?
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -122,7 +125,7 @@ Non-lead partner can see the application overview
 
 
 Lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
@@ -135,6 +138,7 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
+    And the user should see the element             jQuery=li.require-action:nth-of-type(2)  #Action required, seen by lead
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    What's the status of each of my partners?
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -212,23 +216,25 @@ Option to invite a project manager
 
 Inviting project manager server side validations
     [Documentation]    INFUND-3483
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
+    [Tags]
     When the user clicks the button/link    id=invite-project-manager
-    Then the user should see the text in the page    Please enter a contact name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name
+    And the user should see the text in the page    Please enter a valid email address
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
-    When the user enters text to a text field    id=name-project-manager1    John Smith
-    Then the user should not see the text in the page    Please enter a contact name
-    When the user enters text to a text field    id=email-project-manager1    test
-    Then the user should not see the text in the page    Please enter an email address
+    [Tags]
+    When the user enters text to a text field    id=name-project-manager    John Smith
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
+    When the user enters text to a text field    id=email-project-manager    test
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
     And the user should see the text in the page    Please enter a valid email address
-    When the user enters text to a text field    id=email-project-manager1    test@example.com
+    When the user enters text to a text field    id=email-project-manager    test@example.com
+    And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter a valid name
     And the user should not see an error in the page
 
 Partner invites a project manager
@@ -324,7 +330,7 @@ Project details can be submitted with PM, project address and start date
     Mark as complete button should be enabled
 
 Partners nominate finance contacts
-    [Documentation]    INFUND-2620, INFUND-5368
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827
     [Tags]    HappyPath
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
@@ -337,18 +343,11 @@ Partners nominate finance contacts
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
     And the user should see the element    link=Ludlow
-    When Log in as a different user    pete.tom@egg.com    Passw0rd
-    Then the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Finance contacts
-    And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=EGGS
-    And the user selects the radio button    financeContact    financeContact1
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    2    yes
-    And the user should see the element    link=EGGS
-
+    When the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element   jQuery=li.complete:nth-of-type(2)
+    #TODO user should see the green check in consortium table INFUND-5979
+    ##Have splitted this test case into two, in order to test that the Lead partner can see the Hour-glass
+    ##when action required by other partners story:INFUND-5827
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
@@ -366,24 +365,26 @@ Option to invite a finance contact
     [Teardown]    the user selects the radio button    financeContact    new
 
 Inviting finance contact server side validations
-    [Documentation]    INFUND-3579
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
+    [Documentation]    INFUND-3483
+    [Tags]
     When the user clicks the button/link    id=invite-finance-contact
-    Then the user should see the text in the page    Please enter a contact name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name
+    And the user should see the text in the page    Please enter a valid email address
 
 Inviting finance contact client side validations
-    [Documentation]    INFUND-3579
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5704
-    When the user enters text to a text field    id=name-finance-contact1    John Smith
-    Then the user should not see the text in the page    Please enter a contact name
-    When the user enters text to a text field    id=email-finance-contact1    test
-    Then the user should not see the text in the page    Please enter an email address
+    [Documentation]    INFUND-3483
+    [Tags]
+    When the user enters text to a text field    id=name-finance-contact    John Smith
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
+    When the user enters text to a text field    id=email-finance-contact    test
+    And the user moves focus to the element    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page    Please enter a valid name
     And the user should see the text in the page    Please enter a valid email address
-    When the user enters text to a text field    id=email-finance-contact1    test@example.com
+    When the user enters text to a text field    id=email-finance-contact    test@example.com
+    And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see the text in the page    Please enter a valid name
     And the user should not see an error in the page
 
 Partner invites a finance contact
@@ -452,9 +453,26 @@ Non-lead partner cannot change start date, project manager or project address
     And the user should not see the element    link=Project manager
     And the user should not see the element    link=Project address
 
+Academic Partner nominates Finance contact
+    [Documentation]  INFUND-2620, INFUND-5368, INFUND-5827
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user              pete.tom@egg.com    Passw0rd
+    Then the user navigates to the page              ${project_in_setup_page}
+    And the user clicks the button/link              link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page     Partner
+    And the user clicks the button/link              link=EGGS
+    And the user selects the radio button            financeContact    financeContact1
+    And the user clicks the button/link              jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+    And the matching status checkbox is updated      project-details-finance    2    yes
+    And the user should see the element              link=EGGS
+    When the user navigates to the page              ${project_in_setup_page}
+    Then the user should see the element             jQuery=li.complete:nth-of-type(2)
+    #TODO user should see the green check in consortium table INFUND-5979
 
 Project details submission flow
-    [Documentation]    INFUND-3381, INFUND-2621
+    [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]    HappyPath
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
@@ -464,13 +482,20 @@ Project details submission flow
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    And the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    And the user should see the element    jQuery=ul li.require-action:nth-child(7)
+    And the user should see the element    jQuery=li.complete:nth-of-type(2)
+
+Lead partner can see the status update when all Project details are submitted
+    [Documentation]  INFUND-5827
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user     steve.smith@empire.com    Passw0rd
+    When the user navigates to the page     ${project_in_setup_page}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(2)
+    And the user should see the element     jQuery=ul li.require-action:nth-child(4)
+    And the user should see the element     jQuery=ul li.require-action:nth-child(7)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    id=table-project-status
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details read only after submission
     [Documentation]    INFUND-3381
@@ -483,6 +508,7 @@ Project details read only after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
+    [Tags]    HappyPath
     When log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Ludlow
@@ -530,7 +556,7 @@ Status updates correctly for internal user's table
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
 
 Internal user can see the Project details as sumbmitted
     [Documentation]  INFUND-5856

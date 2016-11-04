@@ -30,6 +30,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 ...
 ...               INFUND-5640 As a Competitions team member I want to be able to edit the Finances questions in Competition Setup so that I can include the appropriate sections required for the competition
+...
+...               INFUND-5632 As a Competitions team member I want to be able to view application questions separately in Competition Setup so that I can more easily manage all sections required for each question in one place
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -319,6 +321,12 @@ Application: Application process Page
     And the user should see the element    link=Scope
     And the user should see the element    link=Finances
 
+Application: Business opportunity
+    [Documentation]   INFUND-5632
+    When the user clicks the button/link    link=Business opportunity
+    Then the user should see the text in the page  Make changes to the question 'Business opportunity'.
+    And the user should see the element      jQuery=a:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link=Application
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances

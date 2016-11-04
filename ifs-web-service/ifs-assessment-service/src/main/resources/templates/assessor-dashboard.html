@@ -15,6 +15,23 @@
                 <h1 class="heading-xlarge">Assessor Dashboard</h1>
             </div>
 
+            <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
+                <h2 class="heading-small no-margin">Complete your assessor account</h2>
+
+                <p>To allow you to be assigned applications to mark you must complete your profile</p>
+                <ul class="list-bullet extra-margin-top">
+                    <li th:unless="${model.profileStatus.skillsComplete}">
+                        <a th:href="@{/profile/skills}">Your skills</a>
+                    </li>
+                    <li th:unless="${model.profileStatus.affiliationsComplete}">
+                        <a th:href="@{/profile/declaration}">Your declaration of interest</a>
+                    </li>
+                    <li th:unless="${model.profileStatus.contractComplete}">
+                        <a th:href="@{/profile/terms}">Your contract</a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="my-applications">
                 <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
                     <h2 class="heading-large">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
