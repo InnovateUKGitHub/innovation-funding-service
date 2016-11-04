@@ -19,8 +19,15 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * Build the model for the Assessor Competition Dashboard view.
@@ -51,24 +58,32 @@ public class AssessorCompetitionDashboardModelPopulator {
         String leadTechnologist = getLeadTechnologist(competition);
         LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
-        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline,
-                getApplications(userId, competitionId));
+
+        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId);
+        List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
+        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
+        boolean submitVisible = outstanding.stream().filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit).findAny().isPresent();
+
+        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline, submitted, outstanding, submitVisible);
     }
 
-    private List<AssessorCompetitionDashboardApplicationViewModel> getApplications(Long userId, Long competitionId) {
-        List<AssessmentResource> assessmentList = assessmentService.getByUserAndCompetition(userId, competitionId);
+    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
+        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+    }
 
-        return assessmentList.stream()
-                .map(assessment -> {
-                    ApplicationResource application = applicationService.getById(assessment.getApplication());
-                    List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-                    Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-                    return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
-                            assessment.getId(),
-                            application.getApplicationDisplayName(),
-                            leadOrganisation.get().getName(),
-                            assessment.getAssessmentState());
-                }).collect(Collectors.toList());
+    private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {
+        return SUBMITTED == assessmentResource.getAssessmentState();
+    }
+
+    private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(AssessmentResource assessment) {
+        ApplicationResource application = applicationService.getById(assessment.getApplication());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
+                assessment.getId(),
+                application.getApplicationDisplayName(),
+                leadOrganisation.get().getName(),
+                assessment.getAssessmentState());
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
