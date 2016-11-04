@@ -94,6 +94,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public QuestionResource getByIdAndAssessmentId(Long questionId, Long assessmentId) {
+        return questionRestService.getByIdAndAssessmentId(questionId, assessmentId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public Optional<QuestionResource> getNextQuestion(Long questionId) {
         return questionRestService.getNextQuestion(questionId).getOptionalSuccessObject();
     }

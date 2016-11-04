@@ -21,8 +21,8 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
@@ -174,6 +174,55 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(assessmentWorkflowService, calls(1)).rejectInvitation(processRoleId, assessment, applicationRejectionResource);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptInvitation() throws Exception {
+        Long assessmentId = 1L;
+        Long processRoleId = 2L;
+
+        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowService.acceptInvitation(processRoleId, assessment)).thenReturn(true);
+
+        ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowService);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowService, calls(1)).acceptInvitation(processRoleId, assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptInvitation_eventNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+        Long processRoleId = 2L;
+
+        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowService.acceptInvitation(processRoleId, assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(ASSESSMENT_ACCEPT_FAILED));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowService);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowService, calls(1)).acceptInvitation(processRoleId, assessment);
         inOrder.verifyNoMoreInteractions();
     }
 }

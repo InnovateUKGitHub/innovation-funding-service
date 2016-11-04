@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Innovation areas'" th:remove="tag"></div>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Your skills'" th:remove="tag"></div>
     </head>
 
     <body th:with="context='assessment'">
@@ -13,13 +13,9 @@
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
             <div class="hgroup">
-                <h1 class="heading-xlarge">Your skills and innovation area</h1>
+                <h1 class="heading-xlarge">Your skills</h1>
                 <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
             </div>
-
-            <h2 class="heading-large">Innovation areas</h2>
-            <p>The Innovate Lead for this competition has identified you as an expert in the following sector:</p>
-            <p class="heading-small">High Value Manufacturing</p>
 
             <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">

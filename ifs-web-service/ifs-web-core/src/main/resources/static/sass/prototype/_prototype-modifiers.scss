@@ -7,48 +7,48 @@
 /*--- Text alignment ---*/
 
 .aligncentre{
-	text-align: center;
+  text-align: center;
 }
 
 .alignleft{
-	text-align: left;
+  text-align: left;
 }
 
 .alignright{
-	text-align: right;
+  text-align: right;
 }
 /*--- Text colour ---*/
 
 .standard-text-colour{
-	color: $text-colour;
+  color: $text-colour;
 }
 
 /*--- Extra margins ---*/
 
 .extra-margin-top{
-	margin-top: 30px;
-	
-	&.medium{
-		margin-top: 10px;
-	}
+  margin-top: 30px;
+
+  &.medium{
+    margin-top: 10px;
+  }
 }
 
 .extra-margin-right{
-	margin-right: 30px;
+  margin-right: 30px;
 }
 
 .extra-margin-bottom{
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .extra-margin-left{
-	margin-left: 30px;
+  margin-left: 30px;
 }
 
 .collapsible{
-	.question.extra-margin{
-		margin-top: 30px;
-	}
+  .question.extra-margin{
+    margin-top: 30px;
+  }
 }
 
 /*-- Setting percentage widths --*/
@@ -56,261 +56,255 @@
 $columns: 20;
 
 @for $i from 1 through $columns{
-	.width-#{$i * 5}-percent{
-		width: ($i * 5) * 1%;
-		box-sizing: border-box;
-		padding-right: 1em;
-	}
-	
-	@include media-down(mobile) {
-		.width-#{$i * 5}-percent{
-			width: 100%;
-		}
+  .width-#{$i * 5}-percent{
+    width: ($i * 5) * 1%;
+    box-sizing: border-box;
+    padding-right: 1em;
 	}
 
+  @include media-down(mobile) {
+    .width-#{$i * 5}-percent{
+      width: 100%;
+    }
+  }
 }
-
-
 
 /*--- Dark headers ---*/
 
 .dark-view{
-	background: $secondary-text-colour;
-	color: white;
+  background: $secondary-text-colour;
+  color: white;
 }
 
 h2.dark-view{
-	padding: 0.5em;
+  padding: 0.5em;
 }
 
 /*--- Inline lists ---*/
 
 .list-inline{
-	li{
-		display: inline;
-	}
+  li{
+    display: inline;
+  }
 }
 
 /*--- Responsive shoe and hide ---*/
 .show-mobile{
-	display: none !important;
+  display: none !important;
 }
 
 .hide-mobile{
-	display: block !important;
+  display: block !important;
 }
 
 @include media-down(mobile) {
-	.show-mobile{
-		display: initial !important;
-	}
+  .show-mobile{
+    display: initial !important;
+  }
 
-	.hide-mobile{
-		display: none !important;
-	}
+  .hide-mobile{
+    display: none !important;
+  }
 }
 
 /*--- Assign team dropdown js issue ---*/
 
 .assign-team{
-	display: none;
+  display: none;
 }
 
 /*---  ---*/
 .total-cost{
-	.heading-medium{
-		margin-left: 20px; 
-	}
+  .heading-medium{
+    margin-left: 20px;
+  	}
 }
 
 .sub-header{
-	.link-back{
-		margin-top: 5px;
-	}
+  .link-back{
+    margin-top: 5px;
+   }
 }
 
 /*--- Table modifications ---*/
 
 .cell-border-right{
-	border-right: 1px solid $grey-2;
+  border-right: 1px solid $grey-2;
 }
 
 tr.cell-border-right{
-	td,th{
-		border-right: 1px solid $grey-2;
-	}
+  td,
+  th{
+    border-right: 1px solid $grey-2;
+ 	}
 }
 
 .cell-border-top-divide{
-	th,td{
-		border-top: 1px solid $black;
-	}
+  th,
+  td{
+    border-top: 1px solid $black;
+  }
 }
 
 .cell-border-bottom-divide{
-	th,td{
-		border-bottom: 1px solid $black;
-	}
+  th,
+  td{
+    border-bottom: 1px solid $black;
+  }
 }
-
-
 
 /*--- Table overflows for small screens ---*/
 
 .table-overflow{
-	overflow: auto;
-	width: 100%;
-	table{
-		max-width: 100%;
-	}
+  overflow: auto;
+  width: 100%;
+  table{
+    max-width: 100%;
+  }
 }
 
 table{
-	tfoot{
-		border-top: 3px solid $black;
-	}
+  tfoot{
+    border-top: 3px solid $black;
+  }
 }
 
 /*--- Table overflows for wide tables with fixed columns ---*/
 
 .table-overflow-fixed-cols{
-	border: 1px solid red;
-	overflow-x:scroll;
-    overflow-y:visible;
-    width:100%;
-    margin-left: 240px;
+  border: 1px solid red;
+  overflow-x:scroll;
+  overflow-y:visible;
+  width:100%;
+  margin-left: 240px;
 
-	.fixed{
-		position: fixed;
-	    left: 5px;
-	    background: red;
-	}
-
+  .fixed{
+    position: fixed;
+    left: 5px;
+    background: red;
+  }
 }
-
 
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
 
-	#global-header{
-		.header-wrapper{
-			max-width: 95%;
-			//min-width: 960px;
-		}
-	}
+  #global-header{
+    .header-wrapper{
+      max-width: 95%;
+      //min-width: 960px;
+    }
+  }
 
-	.grid-container{
-		max-width: 95%;
-		//min-width: 960px;
-	}
+  .grid-container{
+    max-width: 95%;
+    //min-width: 960px;
+  }
 
-	#content{
+  #content{
 
-		max-width: 95%;
-		//min-width: 960px;
+    max-width: 95%;
+    //min-width: 960px;
 
-		@include media-down(tablet){
-			//min-width: 90%;
-		}
+    @include media-down(tablet){
+      //min-width: 90%;
+    }
 
-		//.phase-banner,
-		//.sub-header,
-		//.hgroup,
-		.centralise{
-			//@extend %site-width-container;
-  			//@extend %contain-floats;
-  			box-sizing: border-box;
-		}
+    //.phase-banner,
+    //.sub-header,
+    //.hgroup,
+    .centralise{
+      //@extend %site-width-container;
+      //@extend %contain-floats;
+      box-sizing: border-box;
+    }
 
-		.inline-nav{
-			margin-bottom: 30px;
-		}
+    .inline-nav{
+      margin-bottom: 30px;
+    }
 
-		.user-feedback{
-			margin-top: 30px;
-		}
-
-
-	}
+    .user-feedback{
+      margin-top: 30px;
+    }
+	 }
 }
 
 /*--- Contrain areas within full width layout ---*/
 
 .full-width{
-	.constrain-width{
-		max-width: 1400px;
-		margin: 0 auto;
+  .constrain-width{
+    max-width: 1400px;
+    margin: 0 auto;
 
-		&.extra-margin{
-			margin-top: 30px;
-		}
-	}
+    &.extra-margin{
+      margin-top: 30px;
+    }
+	 }
 }
 
 
 /*--- Boxed content ---*/
 
 .boxed{
-	border: 1px solid $border-colour;
-	padding: 20px;
-	clear: both;
-	overflow: auto;
+  border: 1px solid $border-colour;
+  padding: 20px;
+  clear: both;
+  overflow: auto;
 }
 
 /*--- highlight content ---*/
 
 .highlight-panel{
-	background: $highlight-colour;
-	padding: 20px 0;
+  background: $highlight-colour;
+  padding: 20px 0;
 
-	.button{
-		margin-right: 20px !important;
-	} 
+  .button{
+    margin-right: 20px !important;
+  }
 }
 
 .grid-row{
-	&.highlight-panel{
-		margin: 0;
+  &.highlight-panel{
+    margin: 0;
 
-		 &.extra-margin{
-		 	@extend .extra-margin;
-		 }
+    &.extra-margin{
+      @extend .extra-margin;
+    }
 
-		 .button{
-		 	margin-right: 10px;
-		 }
-	}
+    .button{
+      margin-right: 10px;
+    }
+	 }
 }
 
 /*--- Underlining ---*/
 
 .grid-row{
-	&.sorting{
-		border-bottom: 1px solid $secondary-text-colour;
-	}
+  &.sorting{
+    border-bottom: 1px solid $secondary-text-colour;
+  }
 }
 
 .heading-large{
-	&.underline{
-		border-bottom: 4px solid $black;
-	}
+  &.underline{
+    border-bottom: 4px solid $black;
+  }
 }
 
 .heading-medium{
-	&.underline{
-		border-bottom: 1px solid $black;
-	}
+  &.underline{
+    border-bottom: 1px solid $black;
+  }
 }
 
 ul.underline{
-	li{
-		border-top: 1px solid $black;
+  li{
+    border-top: 1px solid $black;
 
-		&:first-child{
-			border-top: none;
-		}
-	}
+    &:first-child{
+      border-top: none;
+    }
+  }
 }
 
 
@@ -318,105 +312,107 @@ ul.underline{
 
 ul.inline-nav{
 
-	@include media-down(mobile) {
-		padding: 0;
+  @include media-down(mobile) {
+    padding: 0;
 
-		li{
-			
-			a{
-				padding: 10px;
-			}
+    li{
 
-			&.selected a{
-				border-bottom: 1px solid $border-colour;
-				padding: 9px 10px;
-				margin-left: 2px;
-			}
-		}
+      a{
+        padding: 10px;
+      }
 
-		&:after{
-			content: none;
-		}
+      &.selected a{
+        border-bottom: 1px solid $border-colour;
+        padding: 9px 10px;
+        margin-left: 2px;
+        }
+      }
+
+    &:after{
+      content: none;
+    }
 	}
-	/*li a{
-		text-decoration: none;
-		color: $black;
-	}*/
-	li{
-		&.not-selected{
-			background: $grey-3;
-			//margin-right: 2px;
-			margin-left: 2px;
 
-			@include media-down(mobile) {
-				a{
-					padding: 10px;
-				}
-			}
+  /*li a{
+  text-decoration: none;
+  color: $black;
+  }*/
 
-		}
-	}
+  li{
+    &.not-selected{
+      background: $grey-3;
+      //margin-right: 2px;
+      margin-left: 2px;
+
+      @include media-down(mobile) {
+        a{
+          padding: 10px;
+        }
+      }
+
+    }
+  }
 
 
 }
 
 
-		
+
 /*--- Controlling visibility of hidden panels for js and non-js ---*/
 
 %hidden-blocks-js{
-	display: none;
+  display: none;
 
-	.no-js &{
-		display: block;
-	}
+  .no-js &{
+    display: block;
+  }
 }
 
 #org-results{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #manual-company-input{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #address-details{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #selected-academic-organisation{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #finance-other-funding{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #finance-other-funding{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #org-role-size{
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 #admin-support-1,
 #admin-support-3,
 #admin-support-4
 {
-	@extend %hidden-blocks-js;
+  @extend %hidden-blocks-js;
 }
 
 /*--- Clearfix ---*/
 
 .cf:before,
 .cf:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
-}
+  content: " "; /* 1 */
+  display: table; /* 2 */
+  }
 
 .cf:after {
-    clear: both;
+  clear: both;
 }
 
 /**
@@ -424,5 +420,28 @@ ul.inline-nav{
  * Include this rule to trigger hasLayout and contain floats.
  */
 .cf {
-    *zoom: 1;
+  *zoom: 1;
+}
+
+/*---EXample code areas = taken from style guide---*/
+.result{
+  border: 1px solid $border-colour;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  padding: 45px 30px 30px;
+  position: relative;
+
+  &:before{
+    background: $border-colour;
+    color: white;
+    content: "EXAMPLE";
+    font-size: 15px;
+    font-weight: 400;
+    left: 0;
+    line-height: 1.6;
+    padding: 0.210526em 0.789474em;
+    position: absolute;
+    text-transform: none;
+    top: 0;
+  }
 }

@@ -3,23 +3,6 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
-
-
-	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
-		<style>
-			#application-list tbody tr{
-				display: none;
-			}
-			.pagination{
-				display: none;
-			}
-			#application-list tbody tr.filtered-result{
-				display: table-row;
-			}
-		</style>
-	</div>
-
 </head>
 
 <body class="comp-dashboard full-width">
@@ -31,22 +14,76 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="status=${(param.closed != null ? 'closed' : 'open')}" th:remove="tag" />
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" /> -->
 
-	
-	<div class="grid-row constrain-width">
-		
-		<p class="subtitle">194731: A novel solution to an old problem</p>
-		<h2 class="heading-large no-margin-top">Application overview</h2>
-		
-		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:remove="tag" />
-		
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Application overview'}, ${null})" th:remove="tag" />
+
+	<div>
+
+    <!-- <th:block th:if="${param.status == null or param.status != null and param.comp[0] != 'closed'}">
+      <h2 class="heading-medium no-margin-top" th:unless="${param.status != null and param.comp[0] == 'closed'}" >94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
+    </th:block>
+
+    <th:block th:if="${param.status != null and param.comp[0] == 'closed'}">
+      <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+    </th:block> -->
+
+    <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
+
+
+			<h3 class="heading-small">
+				Removed by
+			</h3>
+			<p>Peter Kault, 20 December 2016</p>
+
+
+			<h3 class="heading-small">
+				Reason for removal
+			</h3>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. In vel officia quibusdam quod repudiandae odit quia pariatur quasi obcaecati, dolorum sunt iusto libero, dignissimos nemo architecto blanditiis deserunt autem odio!
+			</p>
+
+			<div class="extra-margin">
+
+				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
+
+			</div>
+
+
+			<div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+
+					<h2 class="heading-medium no-margin">Reinstate application</h2>
+
+					<p>Are you sure that you wish to reinstate this application?</p>
+
+					<p>It will be added to applications requiring asessment, and will require assessors to be assigned to it.</p>
+
+					<hr />
+
+	            	<div class="alignright-button">
+
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
+
+		</th:block>
+
+		<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:with="user=admin,status=closed" th:remove="tag" />
+
 		<hr />
 
 		<div class="extra-margin">
@@ -70,7 +107,63 @@
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
 
+		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
+		    	<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="button button-secondary">Remove application from assessment</a>
+		    </div>
+
+			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+				<!-- <form action="/prototypes/5698-draft-email" id="removeApp"> -->
+        <form th:action="${#httpServletRequest.requestURI}" id="removeApp">
+          <fieldset>
+						<legend class="heading-medium">Remove application from assessment</legend>
+					</fieldset>
+					<div class="form-group no-margin-bottom">
+						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
+						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
+						<div class="textarea-footer">
+							<span class="count-label">
+								<span class="count-down">Words remaing: 400</span>
+							</span>
+						</div>
+					</div>
+
+					<div class="grid-row">
+						<div class="column-half">
+							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
+						</div>
+						<div class="column-half alignright">
+              <a href="#" class="button" data-js-modal="modal-inform-remove">Remove application from assessment</a>
+							<!-- <button class="button no-margin-right">Continue and draft email</button> -->
+						</div>
+					</div>
+
+          <div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+  	        <button class="js-close close" aria-label="Close Popup">X</button>
+  	        <div>
+
+    					<h2 class="heading-medium no-margin">Remove application</h2>
+
+    					<p>The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed of this decision</p>
+
+    					<hr />
+
+              <div class="alignright-button">
+    						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+    	          <a th:href="${#httpServletRequest.requestURI}" class="button">Remove application from assessment</a>
+              </div>
+
+  	        </div>
+  		    </div>
+
+
+				</form>
+			</th:block>
+
 		</div>
+
+
+
+
 
 
 

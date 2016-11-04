@@ -18,17 +18,17 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard?section=setup'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Projects in setup'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'01024469: Solving problems with data'}, ${'Projects in setup'}, ${'project setup'})" th:remove="tag" />
 
 	<!--<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" />
 
 	 <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
-	<div class="constrain-width">
-		
+	<div class="constrain-width-off">
+
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		
+
 		<!-- <div class="info-area">
 			<section class="boxed">
 				<h3 class="heading-medium no-margin-top">Project setup stages</h3>
@@ -77,7 +77,7 @@
 						</tr>
 						<tr class="cell-border-right">
 							<th scope="row">
-								<h2 class="heading-small no-margin">Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+								<h2 class="heading-small no-margin">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></p>
 								<small>3 partners <br />
 								Lead: Acidophil Ltd </small>
@@ -210,12 +210,12 @@
 							<td class="status">&nbsp;</td>
 							<td class="status">&nbsp;</td>
 						</tr>
-						
+
 					</tbody>
 				</table>
 			</div>
 
-			
+
 
 		</div>
 
@@ -237,7 +237,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -245,7 +245,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }

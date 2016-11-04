@@ -137,7 +137,12 @@ IFS.core.autoSave = (function() {
         case 'compSetup':
           competitionId = form.attr('data-competition');
           var section = form.attr('data-section');
-          url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
+          var subsection = form.attr('data-subsection');
+          if(subsection != null && subsection != '') {
+            url = '/management/competition/setup/' + competitionId + '/section/' + section + '/sub/' + subsection + '/saveFormElement';
+          } else {
+            url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
+          }
           break;
         case 'assessorFeedback':
           var formInputId = field.closest('.question').prop('id').replace('form-input-', '');
