@@ -15,9 +15,9 @@ Validations for invalid inputs
     When The user enters text to a text field    id=firstName    Joy12
     And The user enters text to a text field    id=lastName    Archer12
     And the user enters text to a text field    id=phoneNumber    18549731414test
-    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    ${EMPTY}
-    And the user enters text to a text field    id=addressForm.selectedPostcode.town    ${EMPTY}
-    And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    ${EMPTY}
+    And the user enters text to a text field    id=addressForm.addressLine1    ${EMPTY}
+    And the user enters text to a text field    id=addressForm.town    ${EMPTY}
+    And the user enters text to a text field    id=addressForm.postcode    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Save changes")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
@@ -45,9 +45,9 @@ the assessor updates profile details
     the user selects the radio button    gender    gender2
     the user selects the radio button    ethnicity    ethnicity1
     the user selects the radio button    disability    disability3
-    the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    7, Phoenix house
-    the user enters text to a text field    id=addressForm.selectedPostcode.town    Reading
-    the user enters text to a text field    id=addressForm.selectedPostcode.postcode    RG1 7UH
+    the user enters text to a text field    id=addressForm.addressLine1    7, Phoenix house
+    the user enters text to a text field    id=addressForm.town    Reading
+    the user enters text to a text field    id=addressForm.postcode    RG1 7UH
     the user enters text to a text field    id=phoneNumber    18549731414
     the user clicks the button/link    jQuery=button:contains("Save changes")
 
