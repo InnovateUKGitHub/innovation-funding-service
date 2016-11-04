@@ -19,36 +19,32 @@ public class FinanceContactForm  extends BaseBindingResultTarget {
 	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message= "{validation.project.invite.email.invalid}")
 	private String email;
 
-	// for spring form binding
-	public FinanceContactForm() {
-	}
-
 	public Long getFinanceContact() {
 		return financeContact;
 	}
 	
-	public void setFinanceContact(Long financeContact) {
-		this.financeContact = financeContact;
-	}
-	
 	public Long getOrganisation() {
 		return organisation;
-	}
-	
-	public void setOrganisation(Long organisation) {
-		this.organisation = organisation;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getEmail() {
 		return email;
+	}
+
+	public void setFinanceContact(Long financeContact) {
+		this.financeContact = financeContact;
+	}
+
+	public void setOrganisation(Long organisation) {
+		this.organisation = organisation;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setEmail(String email) {

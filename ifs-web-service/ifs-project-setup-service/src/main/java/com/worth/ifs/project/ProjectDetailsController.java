@@ -56,10 +56,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController extends AddressLookupBaseController {
-    public static final String SAVE_FC = "save_fc";
-    public static final String INVITE_FC = "invite_fc";
-    public static final String SAVE_PM = "save_pm";
-    public static final String INVITE_PM = "invite_pm";
+    static final String SAVE_FC = "save_fc";
+    static final String INVITE_FC = "invite_fc";
+    static final String SAVE_PM = "save_pm";
+    static final String INVITE_PM = "invite_pm";
 
 	@Autowired
     private ProjectService projectService;
@@ -147,8 +147,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC, method = POST)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @RequestParam(value="organisation") Long organisation,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser
                                        ) {
@@ -184,7 +184,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
-        return doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, false);
+        return doViewProjectManager(model, projectId, loggedInUser, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -193,7 +193,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, false);
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, false);
         
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -214,7 +214,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     ) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, true);
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
         Supplier<String> successView = () -> redirectToProjectDetails(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -412,7 +412,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
-    private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
+    private void populateProjectManagerModel(Model model, final Long projectId,
                                              ApplicationResource applicationResource, UserResource loggedInUser,
                                              boolean inviteAction) {
 
@@ -433,7 +433,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(thisOrganisationUsers, invitedUsers, projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 
         model.addAttribute("model", viewModel);
-        model.addAttribute(FORM_ATTR_NAME, form);
     }
 
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
@@ -504,7 +503,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/finance-contact";
     }
 
-    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, ProjectManagerForm form, boolean inviteAction) {
+    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, boolean inviteAction) {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -513,7 +512,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
 
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        populateProjectManagerModel(model, projectId, form, applicationResource, loggedInUser, inviteAction);
+        populateProjectManagerModel(model, projectId, applicationResource, loggedInUser, inviteAction);
 
         return "project/project-manager";
     }
