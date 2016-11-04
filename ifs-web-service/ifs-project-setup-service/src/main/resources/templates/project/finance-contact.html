@@ -20,7 +20,7 @@
     <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
         <fieldset>
             <h2 class="heading-medium">Finance contact</h2>
-            <div class="form-group" th:classappend="${#fields.hasErrors('financeContact') ? 'error' : ''}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
                 <legend>
                     <span class="visuallyhidden">Finance contact</span>
                     <div th:if="${#fields.hasErrors('*')}" th:remove="tag">
@@ -35,22 +35,25 @@
                     <li>review the spend profile of your project costs</li>
                 </ul>
                 <div class="extra-margin">
-                    <div th:each="user : ${model.organisationUsers}" th:remove="tag">
+
+                    <th:block th:each="user : ${model.organisationUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
                             <input type="radio" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
-                    </div>
-                    <div th:each="user : ${model.invitedUsers}" th:remove="tag">
+                    </th:block>
+
+                    <th:block th:each="user : ${model.invitedUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
                             <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
-                    </div>
+                    </th:block>
+
                     <label for="new" class="block-label" data-target="finance-contact-table">
-                        <input id="new" th:field="*{financeContact}" type="radio" value="-1" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
+                        <input id="new" name="financeContact" th:checked="${model.inviteAction} or *{financeContact == -1}" type="radio" value="-1" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                         Add new team member
                         <span class="form-hint">A new team member will be invited to join the project</span>
                     </label>
@@ -64,7 +67,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr class="form-group-row">
+                        <tr>
                             <th scope="row">
                                 <span class="visuallyhidden">invitee</span>
                             </th>
