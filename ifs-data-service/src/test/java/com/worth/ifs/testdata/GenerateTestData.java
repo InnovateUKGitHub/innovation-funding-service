@@ -149,7 +149,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     /**
-     * select "Competition name", "Description", "Type", "Innovation Area", "Innovation Sector", "Research Category", "Open date", "Submission Date", "Funders Panel Date", "Funders Panel End Date", "Assessor Accepts Date", "Assessor End Date","Setup Complete" UNION ALL select c.name, c.description, "Programme", IFNULL(innArea.NAME,"Earth Observation"), IFNULL(innSec.NAME,"Materials and manufacturing"), IFNULL(resCat.NAME,"Technical feasibility"), open.DATE, submit.DATE, funders.DATE, funderEnd.DATE, assessorAccept.DATE, assessorEnd.DATE, c.setup_complete from competition c left join category_link cl on cl.class_pk = c.id and cl.class_name = 'com.worth.ifs.competition.domain.Competition' left join category innArea on innArea.id = cl.category_id and innArea.type = 'INNOVATION_AREA' left join category innSec on innSec.id = cl.category_id and innSec.type = 'INNOVATION_SECTOR' left join category resCat on resCat.id = cl.category_id and resCat.type = 'RESEARCH_CATEGORY' left join milestone open on open.type = 'OPEN_DATE' and open.competition_id = c.id  left join milestone submit on submit.type = 'SUBMISSION_DATE' and submit.competition_id = c.id left join milestone funders on funders.type = 'FUNDERS_PANEL' and funders.competition_id = c.id  left join milestone funderEnd on funderEnd.type = 'NOTIFICATIONS' and funderEnd.competition_id = c.id  left join milestone assessorAccept on assessorAccept.type = 'ASSESSOR_ACCEPTS' and assessorAccept.competition_id = c.id  left join milestone assessorEnd on assessorEnd.type = 'ASSESSOR_DEADLINE' and assessorEnd.competition_id = c.id  INTO OUTFILE '/var/lib/mysql-files/competitions4.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     * select "Application title", "Competition name", "Start Date", "Duration in months", "Lead Applicant", "Collaborators", "Submitted Date" UNION ALL select a.name, c.name, a.start_date, a.duration_in_months, la.email, GROUP_CONCAT(col.email), a.submitted_date from application a join competition c on c.id = a.competition join process_role lar on lar.application_id = a.id and lar.role_id = 1 join user la on la.id = lar.user_id left join process_role colr on colr.application_id = a.id and colr.role_id = 2 left join user col on col.id = colr.user_id group by a.name, c.name, a.start_date, a.duration_in_months, la.email, a.submitted_date INTO OUTFILE '/var/lib/mysql-files/applications3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createCompetitions() {
         List<CsvUtils.CompetitionLine> competitionLines = readCompetitions();
@@ -163,46 +163,19 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createOpenCompetition(CsvUtils.CompetitionLine line) {
-
-        List<ApplicationLine> applicationLines = readApplications();
-        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
-
-        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(line, Optional.of(1L));
-
-        List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
-                application -> builder -> createApplicationFromCsv(builder, application));
-
-        basicCompetitionInformation.withApplications(applicationBuilders.toArray(new Function[] {})).build();
-    }
-
-    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
-
-        UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
-
-        ApplicationDataBuilder baseBuilder = builder.
-                withBasicDetails(leadApplicant, line.title).
-                withProjectSummary(PROJECT_SUMMARY).
-                withPublicDescription(PUBLIC_DESCRIPTION).
-                withStartDate(line.startDate).
-                withDurationInMonths(line.durationInMonths);
-
-        for (String collaborator : line.collaborators) {
-            baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
-        }
-
-        return line.submittedDate != null ? baseBuilder.submitApplication() : baseBuilder;
+        createCompetitionWithApplications(line, Optional.of(1L));
     }
 
     private void createInAssessmentCompetition(CsvUtils.CompetitionLine line) {
-        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+        createCompetitionWithApplications(line, Optional.empty());
     }
 
     private void createFundersPanelCompetition(CsvUtils.CompetitionLine line) {
-        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+        createCompetitionWithApplications(line, Optional.empty());
     }
 
     private void createInAssessorFeedbackCompetition(CsvUtils.CompetitionLine line) {
-        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+        createCompetitionWithApplications(line, Optional.empty());
     }
 
     private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
@@ -269,11 +242,48 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createReadyToOpenCompetition(CsvUtils.CompetitionLine line) {
-        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+        createCompetitionWithApplications(line, Optional.empty());
     }
 
     private void createInPreparationCompetition(CsvUtils.CompetitionLine line) {
-        competitionBuilderWithBasicInformation(line, Optional.empty()).build();
+        createCompetitionWithApplications(line, Optional.empty());
+    }
+
+    private void createCompetitionWithApplications(CompetitionLine line, Optional<Long> competitionId) {
+        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(line, competitionId);
+
+        List<ApplicationLine> applicationLines = readApplications();
+        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
+        List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
+                application -> builder -> createApplicationFromCsv(builder, application));
+
+        if (applicationBuilders.isEmpty()) {
+            basicCompetitionInformation.build();
+        } else {
+            basicCompetitionInformation.
+                    moveCompetitionIntoOpenStatus().
+                    withApplications(applicationBuilders.toArray(new Function[]{})).
+                    restoreOriginalMilestones().
+                    build();
+        }
+    }
+
+    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
+
+        UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
+
+        ApplicationDataBuilder baseBuilder = builder.
+                withBasicDetails(leadApplicant, line.title).
+                withProjectSummary(PROJECT_SUMMARY).
+                withPublicDescription(PUBLIC_DESCRIPTION).
+                withStartDate(line.startDate).
+                withDurationInMonths(line.durationInMonths);
+
+        for (String collaborator : line.collaborators) {
+            baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
+        }
+
+        return line.submittedDate != null ? baseBuilder.submitApplication() : baseBuilder;
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
