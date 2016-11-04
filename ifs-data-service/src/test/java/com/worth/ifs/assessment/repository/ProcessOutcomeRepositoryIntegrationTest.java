@@ -5,7 +5,6 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,9 +27,7 @@ public class ProcessOutcomeRepositoryIntegrationTest extends BaseRepositoryInteg
     public void testFindAll() throws Exception {
         repository.deleteAll();
 
-        List<ProcessOutcome> processOutcomeList = newProcessOutcome()
-                .withIndex(0,1,2)
-                .build(3);
+        List<ProcessOutcome> processOutcomeList = newProcessOutcome().build(3);
         final List<ProcessOutcome> saved = processOutcomeList.stream().map(processOutcome -> repository.save(processOutcome)).collect(Collectors.toList());
         final List<ProcessOutcome> found = (List<ProcessOutcome>) repository.findAll();
 
@@ -42,9 +39,7 @@ public class ProcessOutcomeRepositoryIntegrationTest extends BaseRepositoryInteg
     public void testFindOne() throws Exception {
         repository.deleteAll();
 
-        ProcessOutcome processOutcome = newProcessOutcome()
-                .withIndex(0)
-                .build();
+        ProcessOutcome processOutcome = newProcessOutcome().build();
         processOutcome.setOutcome(AssessmentOutcomes.ACCEPT.getType());
         final ProcessOutcome saved = repository.save(processOutcome);
         final ProcessOutcome found = repository.findOne(saved.getId());

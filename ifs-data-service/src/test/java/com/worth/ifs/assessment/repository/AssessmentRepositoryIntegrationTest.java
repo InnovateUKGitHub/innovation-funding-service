@@ -59,13 +59,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
-                .withIndex(0)
-                .build());
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
 
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
-                .withIndex(0)
-                .build());
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
 
         ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());
@@ -93,13 +89,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findOneByParticipantId() throws Exception {
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
-                .withIndex(0)
-                .build());
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
 
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
-                .withIndex(0)
-                .build());
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
 
         ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());

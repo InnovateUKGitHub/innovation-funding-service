@@ -33,7 +33,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private LocalDate endDate;
 
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
-    @OrderColumn(name = "process_index")
+    @OrderBy("id ASC")
     protected List<ProcessOutcome> processOutcomes;
 
     @ManyToOne

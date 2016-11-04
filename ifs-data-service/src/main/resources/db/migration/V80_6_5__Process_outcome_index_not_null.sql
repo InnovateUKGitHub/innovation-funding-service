@@ -1,1 +1,0 @@
-ALTER TABLE process_outcome MODIFY process_index BIGINT(20) NOT NULL;

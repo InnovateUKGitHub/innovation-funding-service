@@ -18,7 +18,6 @@ public class ProcessOutcomeBuilderTest {
         String expectedDescription = "description";
         String expectedComment = "comment";
         String expectedOutcomeType = "outcomeType";
-        Integer expectedIndex = 0;
 
         ProcessOutcome processOutcome = newProcessOutcome()
                 .with(id(expectedId))
@@ -26,7 +25,6 @@ public class ProcessOutcomeBuilderTest {
                 .withDescription(expectedDescription)
                 .withComment(expectedComment)
                 .withOutcomeType(expectedOutcomeType)
-                .withIndex(expectedIndex)
                 .build();
 
         assertEquals(expectedId, processOutcome.getId());
@@ -34,7 +32,6 @@ public class ProcessOutcomeBuilderTest {
         assertEquals(expectedDescription, processOutcome.getDescription());
         assertEquals(expectedComment, processOutcome.getComment());
         assertEquals(expectedOutcomeType, processOutcome.getOutcomeType());
-        assertEquals(expectedIndex, processOutcome.getIndex());
     }
 
     @Test
@@ -44,7 +41,6 @@ public class ProcessOutcomeBuilderTest {
         String[] expectedDescriptions = {"description 1", "description 2"};
         String[] expectedComments = {"comment 1", "comment 2"};
         String[] expectedOutcomeTypes = {"outcomeType 1", "outcomeType 2"};
-        Integer[] expectedIndexes = {0, 1};
 
         List<ProcessOutcome> processOutcomes = newProcessOutcome()
                 .withId(expectedIds)
@@ -52,7 +48,6 @@ public class ProcessOutcomeBuilderTest {
                 .withDescription(expectedDescriptions)
                 .withComment(expectedComments)
                 .withOutcomeType(expectedOutcomeTypes)
-                .withIndex(expectedIndexes)
                 .build(2);
 
         ProcessOutcome first = processOutcomes.get(0);
@@ -62,7 +57,6 @@ public class ProcessOutcomeBuilderTest {
         assertEquals(expectedDescriptions[0], first.getDescription());
         assertEquals(expectedComments[0], first.getComment());
         assertEquals(expectedOutcomeTypes[0], first.getOutcomeType());
-        assertEquals(expectedIndexes[0], first.getIndex());
 
         ProcessOutcome second = processOutcomes.get(1);
 
@@ -71,7 +65,6 @@ public class ProcessOutcomeBuilderTest {
         assertEquals(expectedDescriptions[1], second.getDescription());
         assertEquals(expectedComments[1], second.getComment());
         assertEquals(expectedOutcomeTypes[1], second.getOutcomeType());
-        assertEquals(expectedIndexes[1], second.getIndex());
     }
 
 }

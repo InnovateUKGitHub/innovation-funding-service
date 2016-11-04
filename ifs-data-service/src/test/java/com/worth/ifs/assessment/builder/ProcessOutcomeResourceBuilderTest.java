@@ -18,7 +18,6 @@ public class ProcessOutcomeResourceBuilderTest {
         String expectedDescription = "description";
         String expectedComment = "comment";
         String expectedOutcomeType = "outcomeType";
-        Integer expectedIndex = 0;
 
         ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
                 .with(id(expectedId))
@@ -26,7 +25,6 @@ public class ProcessOutcomeResourceBuilderTest {
                 .withDescription(expectedDescription)
                 .withComment(expectedComment)
                 .withOutcomeType(expectedOutcomeType)
-                .withIndex(expectedIndex)
                 .build();
 
         assertEquals(expectedId, processOutcomeResource.getId());
@@ -34,7 +32,6 @@ public class ProcessOutcomeResourceBuilderTest {
         assertEquals(expectedDescription, processOutcomeResource.getDescription());
         assertEquals(expectedComment, processOutcomeResource.getComment());
         assertEquals(expectedOutcomeType, processOutcomeResource.getOutcomeType());
-        assertEquals(expectedIndex, processOutcomeResource.getIndex());
     }
 
     @Test
@@ -52,7 +49,6 @@ public class ProcessOutcomeResourceBuilderTest {
                 .withDescription(expectedDescriptions)
                 .withComment(expectedComments)
                 .withOutcomeType(expectedOutcomeTypes)
-                .withIndex(expectedIndexes)
                 .build(2);
 
         ProcessOutcomeResource first = processOutcomeResources.get(0);
@@ -62,7 +58,6 @@ public class ProcessOutcomeResourceBuilderTest {
         assertEquals(expectedDescriptions[0], first.getDescription());
         assertEquals(expectedComments[0], first.getComment());
         assertEquals(expectedOutcomeTypes[0], first.getOutcomeType());
-        assertEquals(expectedIndexes[0], first.getIndex());
 
         ProcessOutcomeResource second = processOutcomeResources.get(1);
 
@@ -71,7 +66,6 @@ public class ProcessOutcomeResourceBuilderTest {
         assertEquals(expectedDescriptions[1], second.getDescription());
         assertEquals(expectedComments[1], second.getComment());
         assertEquals(expectedOutcomeTypes[1], second.getOutcomeType());
-        assertEquals(expectedIndexes[1], second.getIndex());
     }
 
 }

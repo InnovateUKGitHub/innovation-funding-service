@@ -19,8 +19,6 @@ public class ProcessOutcome {
     @JoinColumn(name="processId", referencedColumnName="id")
     private Process process;
     private String outcomeType;
-    @Column(name = "process_index", nullable = false)
-    private Integer index;
 
     @JsonIgnore
     public Process getProcess() {
@@ -71,14 +69,6 @@ public class ProcessOutcome {
         this.outcomeType = outcomeType;
     }
 
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -98,7 +88,6 @@ public class ProcessOutcome {
                 .append(comment, that.comment)
                 .append(process, that.process)
                 .append(outcomeType, that.outcomeType)
-                .append(index, that.index)
                 .isEquals();
     }
 
@@ -111,7 +100,6 @@ public class ProcessOutcome {
                 .append(comment)
                 .append(process)
                 .append(outcomeType)
-                .append(index)
                 .toHashCode();
     }
 }

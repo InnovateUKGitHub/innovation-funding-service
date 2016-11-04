@@ -50,8 +50,4 @@ public class ProcessOutcomeBuilder extends BaseBuilder<ProcessOutcome, ProcessOu
         return withArray((comment, processOutcome) -> setField("comment", comment, processOutcome), comments);
     }
 
-    public ProcessOutcomeBuilder withIndex(Integer... indexes) {
-        return withArray((index, processOutcome) -> setField("index", index, processOutcome), indexes);
-    }
-
 }

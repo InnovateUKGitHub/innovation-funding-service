@@ -49,8 +49,4 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
     public ProcessOutcomeResourceBuilder withOutcomeType(String... outcomeTypes) {
         return withArray((outcomeType, processOutcomeResource) -> setField("outcomeType", outcomeType, processOutcomeResource), outcomeTypes);
     }
-
-    public ProcessOutcomeResourceBuilder withIndex(Integer... indexes) {
-        return withArray((outcomeType, processOutcomeResource) -> setField("index", outcomeType, processOutcomeResource), indexes);
-    }
 }

@@ -34,14 +34,14 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
 
     public ProcessOutcome getLastOutcome() {
         if(this.processOutcomes != null) {
-            return this.processOutcomes.stream().findFirst().orElse(null);
+            return this.processOutcomes.stream().reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
         }
         return null;
     }
 
     public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
         if(this.processOutcomes != null) {
-            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).findFirst().orElse(null);
+            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
         }
         return null;
     }
