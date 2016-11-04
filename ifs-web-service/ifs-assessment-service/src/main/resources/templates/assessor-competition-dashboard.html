@@ -43,7 +43,7 @@
                                         <div th:if="${application.pending}" class="application-status pending empty">
                                             <p>Pending</p>
                                             <p class="application-listing_pending">
-                                                <a href="@{/{assessmentId}(assessmentId=${application.assessmentId})}">accept / reject assessment</a>
+                                                <a th:href="@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">accept / reject assessment</a>
                                             </p>
                                         </div>
                                         <div th:if="${application.accepted or application.open}" class="application-status open empty">
