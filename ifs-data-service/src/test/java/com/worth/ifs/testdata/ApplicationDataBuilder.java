@@ -2,15 +2,10 @@ package com.worth.ifs.testdata;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +18,7 @@ import java.util.function.Function;
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.testdata.ApplicationFinanceDataBuilder.newApplicationFinanceData;
+import static com.worth.ifs.testdata.ApplicationQuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -50,8 +46,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder withQuestionResponse(String questionName, String value) {
-        return asLeadApplicant(data -> doAnswerQuestion(questionName, value, data));
+    public ApplicationDataBuilder withQuestionResponse(String questionName, String value, String answeredBy) {
+        return withQuestionResponses(builder -> builder.forQuestion(questionName).withAnswer(value, answeredBy));
     }
 
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
@@ -105,18 +101,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()));
     }
 
-    private void doAnswerQuestion(String questionName, String value, ApplicationData data) {
-
-        QuestionResource question = retrieveQuestionByCompetitionAndName(questionName, data.getCompetition());
-        List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
-
-        FormInputResponseCommand updateRequest = new FormInputResponseCommand(
-                formInputs.get(0).getId(), data.getApplication().getId(), data.getLeadApplicant().getId(), value);
-
-        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccessObjectOrThrowException();
-        formInputResponseRepository.save(response);
-    }
-
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {
         return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
     }
@@ -155,11 +139,20 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return new ApplicationData();
     }
 
-    public ApplicationDataBuilder withQuestionResponses(List<Pair<String, String>> responses) {
-        return asLeadApplicant(data -> responses.forEach(r -> {
-            if (r.getRight() != null) {
-                doAnswerQuestion(r.getLeft(), r.getRight(), data);
-            }
-        }));
+    public ApplicationDataBuilder withQuestionResponses(
+            Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>... responseBuilders) {
+
+        return withQuestionResponses(asList(responseBuilders));
+    }
+
+    public ApplicationDataBuilder withQuestionResponses(
+            List<Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>> responseBuilders) {
+
+        return with(data -> {
+            ApplicationQuestionResponseDataBuilder baseBuilder =
+                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+
+            responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
+        });
     }
 }

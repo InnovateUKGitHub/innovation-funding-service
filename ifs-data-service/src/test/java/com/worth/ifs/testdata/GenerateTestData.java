@@ -14,7 +14,6 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +46,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -197,52 +197,51 @@ public class GenerateTestData extends BaseIntegrationTest {
         competitionBuilderWithBasicInformation(line, Optional.empty()).
                 moveCompetitionIntoOpenStatus().
                 withApplications(
-                    builder -> builder.
-                        withBasicDetails(applicant1, "A novel solution to an old problem").
-                        withQuestionResponse("Project summary", PROJECT_SUMMARY).
-                        withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
-                        withStartDate(LocalDate.of(2016, 3, 1)).
-                        withDurationInMonths(51).
-                        inviteCollaborator(applicant2).
-                        inviteCollaborator(applicant4).
-                        inviteCollaborator(applicant5).
-                        withFinances(
-                            finance -> finance.
-                                withOrganisation("Empire Ltd").
-                                withUser(applicant1).
-                                withIndustrialCosts(
-                                    costs -> costs.
-                                        withWorkingDaysPerYear(123).
-                                        withGrantClaim(456).
-                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-                                        withLabourEntry("Role 1", 100, 200).
-                                        withLabourEntry("Role 2", 200, 300).
-                                        withLabourEntry("Role 3", 300, 365).
-                                        withAdministrationSupportCostsCustomRate(25).
-                                        withMaterials("Generator", bd("5010"), 10).
-                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-                                        withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-                                        withOtherCosts("Some more costs", bd("550")).
-                                        withOrganisationSize(OrganisationSize.MEDIUM)
-                                ),
-                            finance -> finance.
-                                withOrganisation("Ludlow").
-                                withUser(applicant2).
-                                withIndustrialCosts(
-                                    costs -> costs.withLabourEntry("Role 1", 100, 200)),
-                            finance -> finance.
-                                withOrganisation("EGGS").
-                                withUser(applicant4).
-                                withAcademicCosts(
-                                    costs -> costs.withLabourEntry("Role 1", 100, 200)),
-                            finance -> finance.
-                                withOrganisation("HIVE IT LIMITED").
-                                withUser(applicant5).
-                                withIndustrialCosts(
-                                    costs -> costs.withLabourEntry("Role 1", 100, 200))
-                        ).
-                        submitApplication()
+                        builder -> builder.
+                                withBasicDetails(applicant1, "A novel solution to an old problem").
+                                withQuestionResponses(questionResponsesFromCsv(line.name, "A novel solution to an old problem")).
+                                withStartDate(LocalDate.of(2016, 3, 1)).
+                                withDurationInMonths(51).
+                                inviteCollaborator(applicant2).
+                                inviteCollaborator(applicant4).
+                                inviteCollaborator(applicant5).
+                                withFinances(
+                                        finance -> finance.
+                                                withOrganisation("Empire Ltd").
+                                                withUser(applicant1).
+                                                withIndustrialCosts(
+                                                        costs -> costs.
+                                                                withWorkingDaysPerYear(123).
+                                                                withGrantClaim(456).
+                                                                withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
+                                                                withLabourEntry("Role 1", 100, 200).
+                                                                withLabourEntry("Role 2", 200, 300).
+                                                                withLabourEntry("Role 3", 300, 365).
+                                                                withAdministrationSupportCostsCustomRate(25).
+                                                                withMaterials("Generator", bd("5010"), 10).
+                                                                withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
+                                                                withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
+                                                                withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
+                                                                withOtherCosts("Some more costs", bd("550")).
+                                                                withOrganisationSize(OrganisationSize.MEDIUM)
+                                                ),
+                                        finance -> finance.
+                                                withOrganisation("Ludlow").
+                                                withUser(applicant2).
+                                                withIndustrialCosts(
+                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
+                                        finance -> finance.
+                                                withOrganisation("EGGS").
+                                                withUser(applicant4).
+                                                withAcademicCosts(
+                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
+                                        finance -> finance.
+                                                withOrganisation("HIVE IT LIMITED").
+                                                withUser(applicant5).
+                                                withIndustrialCosts(
+                                                        costs -> costs.withLabourEntry("Role 1", 100, 200))
+                                ).
+                                submitApplication()
                 ).
                 moveCompetitionIntoFundersPanelStatus().
                 sendFundingDecisions(FundingDecision.FUNDED).
@@ -259,6 +258,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
+
         CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(competitionLine, competitionId);
 
         List<ApplicationLine> applicationLines = readApplications();
@@ -266,8 +266,9 @@ public class GenerateTestData extends BaseIntegrationTest {
         List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
 
         List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
-                applicationLine -> builder -> createApplicationFromCsv(builder, applicationLine).
-                        withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title)));
+                applicationLine -> builder ->
+                        createApplicationFromCsv(builder, applicationLine).
+                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title).toArray(new Function[] {})));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
@@ -282,33 +283,39 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     /**
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id left join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') order by 1,2,3 INTO OUTFILE '/var/lib/mysql-files/application-questions5.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-     *
+     * <p>
      * And applied search-and-replace for:
-     *
+     * <p>
      * How many balls can you juggle?
-     What is the size of the potential market for your project?
-
-     What do you wear when juggling?
-     How will you exploit and market your project?
-
-     What is your preferred juggling pattern?
-     What economic, social and environmental benefits do you expect your project to deliver and when?
-
-     What mediums can you juggle with?
-     What technical approach will you use and how will you manage your project?
-
-     Fifth Question
-     What is innovative about your project?
-     
+     * What is the size of the potential market for your project?
+     * <p>
+     * What do you wear when juggling?
+     * How will you exploit and market your project?
+     * <p>
+     * What is your preferred juggling pattern?
+     * What economic, social and environmental benefits do you expect your project to deliver and when?
+     * <p>
+     * What mediums can you juggle with?
+     * What technical approach will you use and how will you manage your project?
+     * <p>
+     * Fifth Question
+     * What is innovative about your project?
      */
-    private List<Pair<String, String>> questionResponsesFromCsv(String competitionName, String applicationName) {
+    private List<Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>>
+                                                        questionResponsesFromCsv(String competitionName, String applicationName) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responses = readApplicationQuestionResponses();
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(responses, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
 
-        return simpleMap(responsesForApplication, line -> Pair.of(line.questionName, line.value));
+        List<CsvUtils.ApplicationQuestionResponseLine> nonNullResponses =
+                simpleFilter(responsesForApplication, r -> !isBlank(r.value));
+
+        return simpleMap(nonNullResponses, line -> baseBuilder ->
+                baseBuilder.
+                    forQuestion(line.questionName).
+                    withAnswer(line.value, line.answeredBy));
     }
 
     private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine  line) {
@@ -317,8 +324,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ApplicationDataBuilder baseBuilder = builder.
                 withBasicDetails(leadApplicant, line.title).
-                withQuestionResponse("Project summary", PROJECT_SUMMARY).
-                withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 

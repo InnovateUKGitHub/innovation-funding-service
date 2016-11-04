@@ -116,9 +116,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return organisationRepository.findOneByName(organisationName);
     }
 
-    protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, CompetitionResource competition) {
+    protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
         return doAs(compAdmin(), () -> {
-            List<QuestionResource> questions = questionService.findByCompetition(competition.getId()).getSuccessObjectOrThrowException();
+            List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
             return simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
         });
     }

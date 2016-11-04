@@ -141,7 +141,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, String financeRowName, Predicate<T> filterFn, Consumer<T> updateFn) {
         return with(data -> {
 
-            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition());
+            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
             List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccessObjectOrThrowException();
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
@@ -153,7 +153,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             FinanceRowItem newCostItem = cost.get();
 
-            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition());
+            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
             financeRowService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
                     getSuccessObjectOrThrowException();

@@ -210,8 +210,8 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
                 withApplications(
                     builder -> builder.
                             withBasicDetails(applicant1, "A novel solution to an old problem").
-                            withQuestionResponse("Project summary", PROJECT_SUMMARY).
-                            withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
+                            withQuestionResponse("Project summary", PROJECT_SUMMARY, "steve.smith@empire.com").
+                            withQuestionResponse("Public description", PUBLIC_DESCRIPTION, "steve.smith@empire.com").
                             withStartDate(LocalDate.of(2016, 3, 1)).
                             withDurationInMonths(51).
                             inviteCollaborator(applicant2).
@@ -343,8 +343,8 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
                 withApplications(
                     builder -> builder.
                         withBasicDetails(applicant1, "A novel solution to an old problem").
-                        withQuestionResponse("Project summary", PROJECT_SUMMARY).
-                        withQuestionResponse("Public description", PUBLIC_DESCRIPTION).
+                        withQuestionResponse("Project summary", PROJECT_SUMMARY, "steve.smith@empire.com").
+                        withQuestionResponse("Public description", PUBLIC_DESCRIPTION, "steve.smith@empire.com").
                         withStartDate(LocalDate.of(2016, 3, 1)).
                         withDurationInMonths(51).
                         inviteCollaborator(applicant2).
