@@ -219,7 +219,7 @@ Inviting project manager server side validations
     [Tags]
     When the user clicks the button/link    id=invite-project-manager
     Then the user should see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter a valid email address
+    And the user should see the text in the page    Please enter an email address
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483
@@ -233,8 +233,9 @@ Inviting project manager client side validations
     And the user should see the text in the page    Please enter a valid email address
     When the user enters text to a text field    id=email-project-manager    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid email address
+    Then the user should not see the text in the page    Please enter an email address
     And the user should not see the text in the page    Please enter a valid name
+    And the user should not see the text in the page    Please enter a valid email address
     And the user should not see an error in the page
 
 Partner invites a project manager
@@ -369,7 +370,7 @@ Inviting finance contact server side validations
     [Tags]
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter a valid email address
+    And the user should see the text in the page    Please enter an email address
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3483
@@ -380,10 +381,10 @@ Inviting finance contact client side validations
     When the user enters text to a text field    id=email-finance-contact    test
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter a valid email address
+    And the user should see the text in the page    Please enter an email address
     When the user enters text to a text field    id=email-finance-contact    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid email address
+    Then the user should not see the text in the page    Please enter an email address
     And the user should not see the text in the page    Please enter a valid name
     And the user should not see an error in the page
 
