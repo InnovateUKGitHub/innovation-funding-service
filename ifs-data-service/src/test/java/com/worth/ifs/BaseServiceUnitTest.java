@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;

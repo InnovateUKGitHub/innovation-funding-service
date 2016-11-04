@@ -21,7 +21,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;

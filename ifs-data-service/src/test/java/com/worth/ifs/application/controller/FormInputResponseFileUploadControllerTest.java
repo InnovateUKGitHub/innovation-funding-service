@@ -33,7 +33,7 @@ import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;

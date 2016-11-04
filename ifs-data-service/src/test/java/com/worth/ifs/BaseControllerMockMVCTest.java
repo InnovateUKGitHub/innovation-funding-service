@@ -48,7 +48,7 @@ import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;

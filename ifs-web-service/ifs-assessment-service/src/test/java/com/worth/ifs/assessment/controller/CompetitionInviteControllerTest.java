@@ -24,7 +24,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;

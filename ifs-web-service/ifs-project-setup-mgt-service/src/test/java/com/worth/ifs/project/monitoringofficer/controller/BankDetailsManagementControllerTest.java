@@ -22,6 +22,7 @@ import java.util.Map;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+
 import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
@@ -57,6 +58,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Before
     public void setUp(){
         super.setUp();
+        ProjectBankDetailsStatusSummary a;
         organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
         updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();

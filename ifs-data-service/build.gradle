@@ -155,6 +155,15 @@ task client(type: Jar) {
         include "com/worth/ifs/**/constant/**"
         include "com/worth/ifs/**/resource/**"
         include "com/worth/ifs/util/**"
+
+//        include "com/worth/ifs/commons/security/CustomPermissionEvaluator.class"
+//        include "com/worth/ifs/commons/security/NotSecured.class"
+//        include "com/worth/ifs/commons/security/PermissionEntityLookupStrategies.class"
+//        include "com/worth/ifs/commons/security/PermissionEntityLookupStrategy.class"
+        include "com/worth/ifs/commons/security/PermissionRule.class"
+        include "com/worth/ifs/commons/security/PermissionRules.class"
+//        include "com/worth/ifs/commons/security/SecuredBySpring.class"
+
         include "com/worth/ifs/commons/security/CredentialsValidator.class"
         include "com/worth/ifs/commons/security/UidSupplier.class"
         include "com/worth/ifs/commons/security/UserAuthenticationService.class"
@@ -199,6 +208,7 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/Builder.class"
         include "com/worth/ifs/commons/test/*.class"
         include "com/worth/ifs/**/builder/*ResourceBuilder.class"
+        include "com/worth/ifs/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
         include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
 
     }

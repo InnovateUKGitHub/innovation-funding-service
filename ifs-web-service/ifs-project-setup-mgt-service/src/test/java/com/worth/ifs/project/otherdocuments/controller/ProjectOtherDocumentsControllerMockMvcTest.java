@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;

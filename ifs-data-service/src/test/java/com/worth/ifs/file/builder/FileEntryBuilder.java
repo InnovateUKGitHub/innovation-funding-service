@@ -1,4 +1,4 @@
-package com.worth.ifs.file.domain.builders;
+package com.worth.ifs.file.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.file.domain.FileEntry;

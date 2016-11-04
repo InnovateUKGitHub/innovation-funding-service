@@ -39,7 +39,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;

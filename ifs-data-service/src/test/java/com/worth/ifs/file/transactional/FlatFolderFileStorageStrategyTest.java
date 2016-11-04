@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 

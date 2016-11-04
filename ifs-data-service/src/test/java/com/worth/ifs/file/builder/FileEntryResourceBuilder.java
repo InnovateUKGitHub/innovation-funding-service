@@ -1,4 +1,4 @@
-package com.worth.ifs.file.resource.builders;
+package com.worth.ifs.file.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.file.resource.FileEntryResource;

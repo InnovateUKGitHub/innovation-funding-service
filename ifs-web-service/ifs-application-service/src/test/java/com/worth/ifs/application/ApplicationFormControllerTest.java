@@ -27,9 +27,7 @@ import org.springframework.ui.Model;
 
 import java.util.HashSet;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setType;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.error.Error.fieldError;
