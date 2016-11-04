@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
     @Override
     protected ProcessOutcomeResource createInitial() {
         return new ProcessOutcomeResource();
+    }
+
+    public ProcessOutcomeResourceBuilder withId(Long... ids) {
+        return withArray(BuilderAmendFunctions::setId, ids);
     }
 
     public ProcessOutcomeResourceBuilder withOutcome(String... outcomes) {

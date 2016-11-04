@@ -18,4 +18,6 @@ public interface AssessmentService {
 
     ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment);
 
+    ServiceResult<Void> acceptInvitation(Long assessmentId);
+
 }
