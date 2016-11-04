@@ -58,20 +58,20 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((date, application) -> application.setStartDate(date), dates);
     }
 
-    public ApplicationResourceBuilder withName(String name) {
-        return with(application -> application.setName(name));
+    public ApplicationResourceBuilder withName(String... names) {
+        return withArray((name, application) -> setField("name", name, application), names);
     }
 
     public ApplicationResourceBuilder withSubmittedDate(LocalDateTime... submittedDates) {
-        return withArray((submittedDate, address) -> setField("submittedDate", submittedDate, address), submittedDates);
+        return withArray((submittedDate, application) -> setField("submittedDate", submittedDate, application), submittedDates);
     }
 
     public ApplicationResourceBuilder withDuration(Long... durations) {
-        return withArray((duration, address) -> setField("durationInMonths", duration, address), durations);
+        return withArray((duration, application) -> setField("durationInMonths", duration, application), durations);
     }
 
     public ApplicationResourceBuilder withCompetitionName(String... competitionNames) {
-        return withArray((competitionName, address) -> setField("competitionName", competitionName, address), competitionNames);
+        return withArray((competitionName, application) -> setField("competitionName", competitionName, application), competitionNames);
     }
 
     public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {

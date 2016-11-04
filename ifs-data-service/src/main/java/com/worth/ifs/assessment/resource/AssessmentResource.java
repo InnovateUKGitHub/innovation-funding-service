@@ -17,8 +17,6 @@ public class AssessmentResource {
     private List<Long> processOutcomes;
     private Long processRole;
     private Long internalParticipant;
-    private Boolean submitted;
-    private Boolean started;
     private Long application;
     private Long competition;
 
@@ -86,22 +84,6 @@ public class AssessmentResource {
         this.processRole = processRole;
     }
 
-    public Boolean getSubmitted() {
-        return submitted;
-    }
-
-    public void setSubmitted(Boolean submitted) {
-        this.submitted = submitted;
-    }
-
-    public Boolean getStarted() {
-        return started;
-    }
-
-    public void setStarted(Boolean started) {
-        this.started = started;
-    }
-
     public Long getApplication() {
         return application;
     }
@@ -147,8 +129,6 @@ public class AssessmentResource {
                 .append(endDate, that.endDate)
                 .append(processOutcomes, that.processOutcomes)
                 .append(processRole, that.processRole)
-                .append(submitted, that.submitted)
-                .append(started, that.started)
                 .append(application, that.application)
                 .append(competition, that.competition)
                 .isEquals();
@@ -165,8 +145,6 @@ public class AssessmentResource {
                 .append(endDate)
                 .append(processOutcomes)
                 .append(processRole)
-                .append(submitted)
-                .append(started)
                 .append(application)
                 .append(competition)
                 .toHashCode();
