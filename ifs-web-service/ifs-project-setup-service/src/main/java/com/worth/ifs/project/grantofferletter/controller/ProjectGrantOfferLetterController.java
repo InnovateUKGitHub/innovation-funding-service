@@ -205,8 +205,6 @@ public class ProjectGrantOfferLetterController {
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
-
-                // TODO - Not sure why 'accepted' was always false earlier - If you agree this was a mistake, I'll delete this comment. Else I'll set it back to false.
                 project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }
 
