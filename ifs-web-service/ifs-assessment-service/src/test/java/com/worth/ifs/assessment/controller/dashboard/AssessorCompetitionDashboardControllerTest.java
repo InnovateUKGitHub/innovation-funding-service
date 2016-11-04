@@ -24,6 +24,7 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -75,30 +76,38 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build();
 
         List<AssessmentResource> assessments = newAssessmentResource()
-                .withId(9L, 10L)
-                .withApplication(8L, 14L)
+                .withId(1L, 2L, 3L, 4L)
+                .withApplication(11L, 12L, 13L, 14L)
                 .withCompetition(competitionId)
-                .build(2);
-        ApplicationResource application1 = newApplicationResource().withId(8L).withName("Juggling is fun").build();
-        ApplicationResource application2 = newApplicationResource().withId(14L).withName("Juggling is word that sounds funny to say").build();
-        List<ApplicationResource> applications = asList(application1, application2);
+                .withActivityState(PENDING, ACCEPTED, READY_TO_SUBMIT, SUBMITTED)
+                .build(4);
+        List<ApplicationResource> applications = newApplicationResource()
+                .withId(11L, 12L, 13L, 14L)
+                .withName("Juggling is fun", "Juggling is very fun", "Juggling is not fun", "Juggling is word that sounds funny to say")
+                .build(4);
 
         RoleResource role = newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
-        List<ProcessRoleResource> users = newProcessRoleResource().withRole(role).withOrganisation(1L, 2L).build(2);
+        List<ProcessRoleResource> participants = newProcessRoleResource().withRole(role).withOrganisation(1L, 2L, 3L, 4L).build(4);
         List<OrganisationResource> organisations = newOrganisationResource()
-                .withId(1L, 2L)
-                .withName("The Best Juggling Company", "Mo Juggling Mo Problems Ltd")
-                .build(2);
+                .withId(1L, 2L, 3L, 4L)
+                .withName("The Best Juggling Company", "Juggle Ltd", "Jugglez Ltd", "Mo Juggling Mo Problems Ltd")
+                .build(4);
 
         when(competitionService.getById(competitionId)).thenReturn(competition);
         when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competitionId)).thenReturn(assessments);
-        when(applicationService.getById(8L)).thenReturn(applications.get(0));
-        when(applicationService.getById(14L)).thenReturn(applications.get(1));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(users.get(0)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(users.get(1)));
+        when(applicationService.getById(11L)).thenReturn(applications.get(0));
+        when(applicationService.getById(12L)).thenReturn(applications.get(1));
+        when(applicationService.getById(13L)).thenReturn(applications.get(2));
+        when(applicationService.getById(14L)).thenReturn(applications.get(3));
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
         when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(organisations.get(0)));
         when(organisationRestService.getOrganisationById(2L)).thenReturn(restSuccess(organisations.get(1)));
+        when(organisationRestService.getOrganisationById(3L)).thenReturn(restSuccess(organisations.get(2)));
+        when(organisationRestService.getOrganisationById(4L)).thenReturn(restSuccess(organisations.get(3)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -120,8 +129,10 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         });
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedApplications = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(8L, 9L, "Juggling is fun", "The Best Juggling Company"),
-                new AssessorCompetitionDashboardApplicationViewModel(14L, 10L, "Juggling is word that sounds funny to say", "Mo Juggling Mo Problems Ltd")
+                new AssessorCompetitionDashboardApplicationViewModel(11L, 1L, "Juggling is fun", "The Best Juggling Company", PENDING),
+                new AssessorCompetitionDashboardApplicationViewModel(12L, 2L, "Juggling is very fun", "Juggle Ltd", ACCEPTED),
+                new AssessorCompetitionDashboardApplicationViewModel(13L, 3L, "Juggling is not fun", "Jugglez Ltd", READY_TO_SUBMIT),
+                new AssessorCompetitionDashboardApplicationViewModel(14L, 4L, "Juggling is word that sounds funny to say", "Mo Juggling Mo Problems Ltd", SUBMITTED)
         );
 
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
