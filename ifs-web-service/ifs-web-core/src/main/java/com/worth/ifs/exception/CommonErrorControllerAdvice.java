@@ -178,4 +178,11 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         LOG.debug("ErrorController unableToAcceptInviteException", e);
         return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST, "error.title.invite.accept.failure", e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    @ExceptionHandler(value = InviteClosedException.class)
+    public ModelAndView inviteClosedException(HttpServletRequest req, InviteClosedException e) {
+        LOG.debug("ErrorController inviteClosedException", e);
+        return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST, "error.title.invite.closed", e.getMessage());
+    }
 }

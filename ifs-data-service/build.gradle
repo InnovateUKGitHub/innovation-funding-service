@@ -175,6 +175,12 @@ task clientCopy(type: Copy){
     include "ifs-data-service-api*"
 }
 
+task clientLib {
+    clientCopy.mustRunAfter client
+    dependsOn client
+    dependsOn clientCopy
+}
+
 task testCommonCode(type: Jar) {
     baseName += '-tests'
     from(sourceSets.test.output) {
