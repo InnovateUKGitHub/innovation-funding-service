@@ -57,7 +57,7 @@
 
 				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
-				<a class="button" href="#">Remove</a>
+				<a class="button js-close" href="#" id="prototype-remove-started">Remove</a>
 
 			</div>
 
@@ -111,5 +111,42 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+		$('#prototype-previous-row-one, #prototype-previous-row-two, #prototype-previous-row-three').hide();
+		$('#prototype-remove-started').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-started-removable, #prototype-previous-row-zero').hide();
+			$('#prototype-previous-row-one').show();
+		});
+		$('#prototype-remove-row-three').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-assigned-row-three, #prototype-previous-row-zero').hide();
+			$('#prototype-previous-row-two').show();
+		});
+		$('#prototype-remove-row-four').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-assigned-row-four, #prototype-previous-row-zero').hide();
+			$('#prototype-previous-row-three').show();
+		});
+		$('#prototype-row-one-reassign').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-previous-row-one').hide();
+			$('#prototype-started-removable').show();
+		});
+		$('#prototype-row-two-reassign').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-previous-row-two').hide();
+			$('#prototype-assigned-row-three').show();
+		});
+		$('#prototype-row-three-reassign').on('click', function(event) {
+			event.preventDefault();
+			$('#prototype-previous-row-three').hide();
+			$('#prototype-assigned-row-four,  #prototype-previous-row-zero').show();
+		});
+	});
+	// ]]>
+</script>
 </body>
 </html>
