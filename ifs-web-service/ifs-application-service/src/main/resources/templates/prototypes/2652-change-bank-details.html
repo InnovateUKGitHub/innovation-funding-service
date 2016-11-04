@@ -15,15 +15,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Bank details'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/4547-review-all-bank-details?status=accepted' : '/prototypes/4547-review-all-bank-details')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Bank account'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Bank account'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
+
+	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse'}">
 		<div class="panel-indent">
@@ -37,7 +37,7 @@
 	</th:block>
 
 
-	<p>Bank account details have been submitted to Innovate UK for use during the project <strong>Machine Learning In Robots (10294856)</strong></p>
+	<p>Bank account details have been submitted to Innovate UK for use during the project <strong>10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals (10294856)</strong></p>
 
 	<h2 class="heading-medium">Finance contact</h2>
 
@@ -47,11 +47,11 @@
 		0114 26645697
 	</p>
 
-	
+
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 	<form action="#">
 		<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:with="user='internal'" th:remove="tag" />
-		
+
 		<div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:with="user='internal'" th:remove="tag" />
 
 	</form>
@@ -79,11 +79,11 @@
 				<hr />
 
             	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 					<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=noCompHouse':'/prototypes/2650-review-bank-details'}" class="button">Update bank account details</a>
-					
+
             	</div>
 
 	        </div>

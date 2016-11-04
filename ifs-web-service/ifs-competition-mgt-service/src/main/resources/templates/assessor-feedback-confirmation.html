@@ -12,14 +12,14 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <h2 class="heading-medium">Publish assessor feedback</h2>
-    <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+    <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
     <p>This step cannot be undone.</p>
- 
+
     <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionId})}">
       <a th:href="@{/competition/{competitionId}(competitionId=${competitionId})}">Cancel</a>
-      <button id="no-js-inform-applicants" type="submit" class="button no-margin">Inform Applicants</button>
+      <button id="no-js-inform-applicants" type="submit" class="button no-margin">Publish assessor feedback</button>
     </form>
-    
+
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 

@@ -11,4 +11,3 @@ Resource          variables/EMAIL_VARIABLES.robot
 Resource          variables/GLOBAL_VARIABLES.robot
 Resource          variables/PASSWORD_VARIABLES.robot
 Resource          variables/User_credentials.robot
-

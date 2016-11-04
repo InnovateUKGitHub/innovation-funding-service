@@ -24,6 +24,7 @@ public interface QuestionService {
     void removeNotifications(List<QuestionStatusResource> questionStatuses);
     Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
     QuestionResource getById(Long questionId);
+    QuestionResource getByIdAndAssessmentId(Long questionId, Long assessmentId);
     Optional<QuestionResource> getNextQuestion(Long questionId);
     Optional<QuestionResource> getPreviousQuestion(Long questionId);
     Optional<QuestionResource> getPreviousQuestionBySection(Long sectionId);

@@ -14,6 +14,7 @@ import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
@@ -103,6 +104,11 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
     @Override
     protected StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> getStateMachine() {
         return stateMachine;
+    }
+
+    @Override
+    protected ProjectDetailsProcess getOrCreateProcess(Message<ProjectDetailsOutcomes> message) {
+        return getOrCreateProcessCommonStrategy(message);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {

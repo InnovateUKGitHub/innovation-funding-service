@@ -7,7 +7,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/3
-${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.
+${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?
 ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 
@@ -87,7 +87,7 @@ Unsuccessful applicants are notified of the funding decision
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{successful_applicant_credentials}
+    [Setup]    Log in as a different user    &{successful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should see the text in the page    Projects in setup
     And the successful application shows in the project setup section
@@ -99,12 +99,11 @@ Successful applicants can see the assessment outcome on the overview page
     When the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the text in the page    Project setup status
     And the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
-    [Teardown]    Logout as user
 
 Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2605
     [Tags]
-    [Setup]    Guest user log-in    &{unsuccessful_applicant_credentials}
+    [Setup]    Log in as a different user   &{unsuccessful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should not see the text in the page    Projects in setup
     And the unsuccessful application shows in the previous applications section

@@ -104,6 +104,11 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
+    public RestResult<QuestionResource> getByIdAndAssessmentId(Long questionId, Long assessmentId) {
+        return getWithRestResult(questionRestURL + "/getQuestionByIdAndAssessmentId/" + questionId + "/" + assessmentId, QuestionResource.class);
+    }
+
+    @Override
     public RestResult<List<QuestionResource>> getQuestionsByAssessment(Long assessmentId) {
         return getWithRestResult(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, questionResourceListType());
     }

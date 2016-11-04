@@ -45,4 +45,9 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     public RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection) {
         return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), applicationRejection, Void.class);
     }
+
+    @Override
+    public RestResult<Void> acceptInvitation(Long id) {
+        return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
+    }
 }

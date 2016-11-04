@@ -14,20 +14,25 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'#'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" /> -->
 
-  <h1 class="heading-xlarge">
-    <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
-    Application overview
-  </h1>
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Application overview'}, ${null})" th:remove="tag" />
 
 	<div>
 
-		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+    <!-- <th:block th:if="${param.status == null or param.status != null and param.comp[0] != 'closed'}">
+      <h2 class="heading-medium no-margin-top" th:unless="${param.status != null and param.comp[0] == 'closed'}" >94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
+    </th:block>
+
+    <th:block th:if="${param.status != null and param.comp[0] == 'closed'}">
+      <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+    </th:block> -->
+
+    <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
 
@@ -103,12 +108,13 @@
 		    </div>
 
 		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
-		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
+		    	<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="button button-secondary">Remove application from assessment</a>
 		    </div>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
-				<form action="/prototypes/5698-draft-email" id="removeApp">
-					<fieldset>
+				<!-- <form action="/prototypes/5698-draft-email" id="removeApp"> -->
+        <form th:action="${#httpServletRequest.requestURI}" id="removeApp">
+          <fieldset>
 						<legend class="heading-medium">Remove application from assessment</legend>
 					</fieldset>
 					<div class="form-group no-margin-bottom">
@@ -126,9 +132,30 @@
 							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
 						</div>
 						<div class="column-half alignright">
-							<button class="button no-margin-right">Continue and draft email</button>
+              <a href="#" class="button" data-js-modal="modal-inform-remove">Remove application from assessment</a>
+							<!-- <button class="button no-margin-right">Continue and draft email</button> -->
 						</div>
 					</div>
+
+          <div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+  	        <button class="js-close close" aria-label="Close Popup">X</button>
+  	        <div>
+
+    					<h2 class="heading-medium no-margin">Remove application</h2>
+
+    					<p>The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed of this decision</p>
+
+    					<hr />
+
+              <div class="alignright-button">
+    						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+    	          <a th:href="${#httpServletRequest.requestURI}" class="button">Remove application from assessment</a>
+              </div>
+
+  	        </div>
+  		    </div>
+
+
 				</form>
 			</th:block>
 
