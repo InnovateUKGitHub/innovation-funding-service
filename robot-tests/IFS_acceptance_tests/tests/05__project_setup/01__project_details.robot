@@ -235,7 +235,6 @@ Inviting project manager client side validations
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address
     And the user should not see the text in the page    Please enter a valid name
-    And the user should not see the text in the page    Please enter a valid email address
     And the user should not see an error in the page
 
 Partner invites a project manager

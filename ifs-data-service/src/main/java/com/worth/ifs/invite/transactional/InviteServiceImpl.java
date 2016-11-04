@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -205,7 +206,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            return serviceFailure(badRequestError("PROJECT_INVITE_INVALID"));
+            return serviceFailure(PROJECT_INVITE_INVALID);
         }
 
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
