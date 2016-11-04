@@ -13,18 +13,16 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,7 +56,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
 
         when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).
-                thenReturn(serviceFailure(badRequestError("PROJECT_INVITE_INVALID")));
+                thenReturn(serviceFailure(PROJECT_INVITE_INVALID));
 
 
         mockMvc.perform(post("/projectinvite/saveInvite")
