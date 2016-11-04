@@ -1,7 +1,10 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition Dashboard.
@@ -12,12 +15,14 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private Long assessmentId;
     private String displayLabel;
     private String leadOrganisation;
+    private AssessmentStates state;
 
-    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation) {
+    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.displayLabel = displayLabel;
         this.leadOrganisation = leadOrganisation;
+        this.state = state;
     }
 
     public Long getApplicationId() {
@@ -52,6 +57,38 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         this.leadOrganisation = leadOrganisation;
     }
 
+    public AssessmentStates getState() {
+        return state;
+    }
+
+    public void setState(AssessmentStates state) {
+        this.state = state;
+    }
+
+    public boolean isPending() {
+        return isState(PENDING);
+    }
+
+    public boolean isAccepted() {
+        return isState(ACCEPTED);
+    }
+
+    public boolean isOpen() {
+        return isState(OPEN);
+    }
+
+    public boolean isReadyToSubmit() {
+        return isState(READY_TO_SUBMIT);
+    }
+
+    public boolean isSubmitted() {
+        return isState(SUBMITTED);
+    }
+
+    private boolean isState(AssessmentStates state) {
+        return state == this.state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -69,6 +106,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(displayLabel, that.displayLabel)
                 .append(leadOrganisation, that.leadOrganisation)
+                .append(state, that.state)
                 .isEquals();
     }
 
@@ -79,6 +117,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                 .append(assessmentId)
                 .append(displayLabel)
                 .append(leadOrganisation)
+                .append(state)
                 .toHashCode();
     }
 }

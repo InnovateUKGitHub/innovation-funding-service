@@ -122,4 +122,18 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 ));
     }
 
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the assessment for which to accept")
+                        )
+                ));
+    }
 }
