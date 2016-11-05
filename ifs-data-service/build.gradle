@@ -1,8 +1,6 @@
-if (project.hasProperty("profile")) {
-    apply from: "${project.profile}-build.gradle"
-} else {
-    apply from: "dev-build.gradle"
-}
+def targetBuild = hasProperty('profile') ? profile : 'dev';
+apply from: targetBuild+"-build.gradle";
+
 
 apply plugin: 'war'
 apply plugin: 'org.flywaydb.flyway'
@@ -38,12 +36,13 @@ sourceSets {
         main {
             ext.originalJavaSrcDirs = java.srcDirs
             java.srcDir "${generatedMapperSourcesDir}"
+            output.resourcesDir = "build/resources"
         }
     }
 }
 
 bootRun {
-    addResources = true
+    addResources = false
 }
 
 ext {
@@ -165,7 +164,7 @@ task client(type: Jar) {
 ////        include "com/worth/ifs/commons/security/SecuredBySpring.class"
 
         include "com/worth/ifs/commons/security/**"
-        exclude "com/worth/ifs/commons/security/UidAuthenticationService.class"
+//        exclude "com/worth/ifs/commons/security/UidAuthenticationService.class"
 
 //        include "com/worth/ifs/commons/security/CredentialsValidator.class"
 //        include "com/worth/ifs/commons/security/UidSupplier.class"
@@ -186,15 +185,15 @@ task client(type: Jar) {
         include "com/worth/ifs/config/validator/**"
         include "com/worth/ifs/config/rest/**"
 //        include "com/worth/ifs/config/audit/**"
+        include "**/**.properties"
+
 
     }
 }
-task clientCopy(type: Copy){
-    ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
-        into it
-        from "build/libs/"
-        include "ifs-data-service-public*"
-    }
+task clientCopy(type: Copy) {
+    into "../ifs-libs"
+    from "build/libs/"
+    include "ifs-data-service-public*.jar"
 }
 
 task testCommonCode(type: Jar) {
@@ -214,15 +213,12 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/**/builder/*ResourceBuilder.class"
         include "com/worth/ifs/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
         include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
-
     }
 }
 task testCommonCodeCopy(type: Copy){
-    ["../ifs-web-service/libs", "../ifs-rest-api-service/libs"].each {
-        into it
-        from "build/libs/"
-        include("ifs-data-service-tests*")
-    }
+    into "../ifs-libs"
+    from "build/libs/"
+    include("ifs-data-service-tests*.jar")
 }
 
 artifacts {

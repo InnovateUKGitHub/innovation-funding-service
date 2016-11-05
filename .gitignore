@@ -109,3 +109,4 @@ ifs-web-service.iws
 # python bytecode nonsense
 *.pyc
 */libs/
+ifs-libs/*
