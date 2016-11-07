@@ -7,8 +7,6 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFUND-3888 Rearrangement of Competitions setup
 ...
-...               INFUND-3000 As a competitions team member I want to be able to configure application form questions during Competition Setup so that correct details are provided for each competition
-...
 ...               INFUND-4682 Initial details can be saved with an opening date in the past
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
@@ -207,60 +205,6 @@ Milestones: Autosave
     When the user clicks the button/link    link=Competition setup
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
-
-Application: server side validations
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    [Setup]    The user navigates to the Validation competition
-    # Pending INFUND-5629, INFUND-5632
-    Given The user should see the element    jQuery=.button[value="Save and close"]
-    When the user leaves all the question field empty
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-
-Application: Client side validations
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    # Pending INFUND-5629, INFUND-5632
-    Given the user fills the empty question fields
-    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-
-Application: Autosave
-    [Documentation]    INFUND-4586
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5632, 5639
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link=Competition setup
-    And The user clicks the button/link    link=Application Questions
-    Then the user should see the correct inputs in the Applications questions form
-
-Application: Mark as done and the Edit again
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
-    # Pending INFUND-5629, INFUND-5632
-    Given the user moves focus and waits for autosave
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then The user should see the text in the page    Test title
-    And the user should see the text in the page    Subtitle test
-    And the user should see the text in the page    Test guidance title
-    And the user should see the text in the page    Guidance text test
-    And the user should see the text in the page    150
-    And the user should see the text in the page    Yes
-    And The user clicks the button/link    jQuery=button:contains(Done)
-
-Application: should have a green check
-    [Tags]    HappyPath    Pending
-    # Pending INFUND-5629, INFUND-5632
-    When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=ul > li:nth-child(5) > img
 
 *** Keywords ***
 the user moves focus and waits for autosave
