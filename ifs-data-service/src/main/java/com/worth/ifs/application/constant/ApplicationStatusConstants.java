@@ -4,6 +4,9 @@ package com.worth.ifs.application.constant;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
+
 /**
  * Java enumeration of the current available Application workflow statuses.
  * The value of these entries are used when saving to the database.
@@ -25,8 +28,13 @@ public enum ApplicationStatusConstants {
             lookup.put(d.getId(), d);
         }
     }
+
     public static ApplicationStatusConstants getFromId(Long applicationStatusId){
         return lookup.get(applicationStatusId);
+    }
+
+    public static ApplicationStatusConstants getFromName(String name){
+        return simpleFindFirst(asList(values()), a -> a.getName().equals(name)).get();
     }
 
     ApplicationStatusConstants(Long id, String name){

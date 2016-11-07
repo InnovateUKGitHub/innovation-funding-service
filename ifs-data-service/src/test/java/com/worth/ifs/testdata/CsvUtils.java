@@ -2,7 +2,10 @@ package com.worth.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.user.resource.UserStatus;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,10 +14,11 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -44,7 +48,11 @@ class CsvUtils {
     }
 
     static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
-        return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
+        // TODO DW - workaround for dodgy csv export - refine query to remove file uploads and assessor answers
+        List<ApplicationQuestionResponseLine> uniqueLines = removeDuplicates(simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new));
+        List<ApplicationQuestionResponseLine> withoutFileUploads = simpleFilterNot(new ArrayList<>(uniqueLines), line -> !isBlank(line.fileUpload));
+        List<ApplicationQuestionResponseLine> withoutAssessorAnswers = simpleFilterNot(withoutFileUploads, line -> "score".equals(line.value));
+        return withoutAssessorAnswers;
     }
 
     static class ApplicationQuestionResponseLine {
@@ -70,6 +78,30 @@ class CsvUtils {
             assignedTo = nullable(line.get(i++));
             markedAsComplete = nullableBoolean(line.get(i++));
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ApplicationQuestionResponseLine that = (ApplicationQuestionResponseLine) o;
+
+            return new EqualsBuilder()
+                    .append(competitionName, that.competitionName)
+                    .append(applicationName, that.applicationName)
+                    .append(questionName, that.questionName)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(competitionName)
+                    .append(applicationName)
+                    .append(questionName)
+                    .toHashCode();
+        }
     }
 
     static class ApplicationLine {
@@ -81,6 +113,7 @@ class CsvUtils {
         String leadApplicant;
         List<String> collaborators;
         LocalDateTime submittedDate;
+        ApplicationStatusConstants status;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -92,6 +125,7 @@ class CsvUtils {
             String collaboratorString = nullable(line.get(i++));
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
+            status = ApplicationStatusConstants.getFromName(line.get(i++));
         }
     }
 

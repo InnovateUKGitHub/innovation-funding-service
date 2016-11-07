@@ -14,11 +14,12 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.testdata.ApplicationFinanceDataBuilder.newApplicationFinanceData;
-import static com.worth.ifs.testdata.ApplicationQuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static com.worth.ifs.testdata.ResponseDataBuilder.newApplicationQuestionResponseData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -95,6 +96,12 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
+    public ApplicationDataBuilder openApplication() {
+
+        return asLeadApplicant(data ->
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()));
+    }
+
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data ->
@@ -140,16 +147,16 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>... responseBuilders) {
+            UnaryOperator<ResponseDataBuilder>... responseBuilders) {
 
         return withQuestionResponses(asList(responseBuilders));
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            List<Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>> responseBuilders) {
+            List<UnaryOperator<ResponseDataBuilder>> responseBuilders) {
 
         return with(data -> {
-            ApplicationQuestionResponseDataBuilder baseBuilder =
+            ResponseDataBuilder baseBuilder =
                     newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
             responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());

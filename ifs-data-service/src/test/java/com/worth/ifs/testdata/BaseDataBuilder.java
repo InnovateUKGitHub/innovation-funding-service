@@ -25,9 +25,11 @@ import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import com.worth.ifs.user.transactional.UsersRolesService;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -36,6 +38,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -73,6 +76,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
+    private UsersRolesService usersRolesService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -102,6 +106,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
         this.sectionService = serviceLocator.getBean(SectionService.class);
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
+        this.usersRolesService = serviceLocator.getBean(UsersRolesService.class);
     }
 
     protected UserResource compAdmin() {
@@ -110,6 +115,24 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
         return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+    }
+
+    protected UserResource retrieveUserById(Long id) {
+        return doAs(systemRegistrar(), () -> userService.getUserById(id).getSuccessObjectOrThrowException());
+    }
+
+    protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {
+        return doAs(systemRegistrar(), () -> {
+            UserResource user = retrieveUserByEmail(emailAddress);
+            return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
+                    getSuccessObjectOrThrowException();
+        });
+    }
+
+    protected ProcessRoleResource retrieveLeadApplicant(Long applicationId) {
+        return doAs(systemRegistrar(), () ->
+                simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
+                    getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get());
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {

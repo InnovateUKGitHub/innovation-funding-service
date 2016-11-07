@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
@@ -54,12 +56,6 @@ import static org.mockito.Mockito.when;
 
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
-
-    private static final String PROJECT_SUMMARY = "The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.";
-    private static final String PUBLIC_DESCRIPTION = "Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.\n" +
-            "\n" +
-            "The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.";
-
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -265,17 +261,17 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
 
-        List<Function<ApplicationDataBuilder, ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
+        List<UnaryOperator<ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
                 applicationLine -> builder ->
                         createApplicationFromCsv(builder, applicationLine).
-                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title).toArray(new Function[] {})));
+                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title)));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
         } else {
             basicCompetitionInformation.
                     moveCompetitionIntoOpenStatus().
-                    withApplications(applicationBuilders.toArray(new Function[]{})).
+                    withApplications(applicationBuilders).
                     restoreOriginalMilestones().
                     build();
         }
@@ -301,21 +297,30 @@ public class GenerateTestData extends BaseIntegrationTest {
      * Fifth Question
      * What is innovative about your project?
      */
-    private List<Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>>
-                                                        questionResponsesFromCsv(String competitionName, String applicationName) {
+    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responses = readApplicationQuestionResponses();
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(responses, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
 
-        List<CsvUtils.ApplicationQuestionResponseLine> nonNullResponses =
-                simpleFilter(responsesForApplication, r -> !isBlank(r.value));
+        return simpleMap(responsesForApplication, line -> baseBuilder -> {
 
-        return simpleMap(nonNullResponses, line -> baseBuilder ->
-                baseBuilder.
-                    forQuestion(line.questionName).
-                    withAnswer(line.value, line.answeredBy));
+            UnaryOperator<ResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
+
+            UnaryOperator<ResponseDataBuilder> answerIfNecessary = builder ->
+                    !isBlank(line.value) ? builder.withAssignee(line.answeredBy).withAnswer(line.value, line.answeredBy)
+                            : builder;
+
+            UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
+                    !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
+
+            UnaryOperator<ResponseDataBuilder> markAsCompleteIfNecessary = builder ->
+                    line.markedAsComplete ? builder.markAsComplete() : builder;
+
+            return withQuestion.andThen(answerIfNecessary).andThen(assignIfNecessary).andThen(markAsCompleteIfNecessary).
+                    apply(baseBuilder);
+        });
     }
 
     private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine  line) {
@@ -331,7 +336,15 @@ public class GenerateTestData extends BaseIntegrationTest {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
         }
 
-        return line.submittedDate != null ? baseBuilder.submitApplication() : baseBuilder;
+        if (line.status != ApplicationStatusConstants.CREATED) {
+            baseBuilder = baseBuilder.openApplication();
+        }
+
+        if (line.submittedDate != null) {
+            baseBuilder = baseBuilder.submitApplication();
+        }
+
+        return baseBuilder;
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {

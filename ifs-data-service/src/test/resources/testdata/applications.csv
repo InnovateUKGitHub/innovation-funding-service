@@ -1,29 +1,29 @@
-"Application title","Competition name","Start Date","Duration in months","Lead Applicant","Collaborators","Submitted Date"
-"A new innovative solution","Connected digital additive manufacturing","2015-11-01","20","steve.smith@empire.com","jessica.doe@ludlow.co.uk,pete.tom@egg.com",\N
-"A novel solution to an old problem","Connected digital additive manufacturing","2016-03-01","51","steve.smith@empire.com","jessica.doe@ludlow.co.uk,pete.tom@egg.com,ewan+1@hiveit.co.uk",\N
-"awesome riffs","Killer Riffs",\N,"3","test23@test.test","test24@test.test,test25@test.test,test26@test.test,test27@test.test,test28@test.test","2016-05-26 13:07:42"
-"best riffs","Killer Riffs",\N,"3","steve.smith@empire.com","worth.email.test+projectlead@gmail.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com","2016-05-26 11:15:55"
-"Better living through juggling","Juggling Craziness","2016-04-25","3","test6@test.test",\N,\N
-"better riffs","Killer Riffs",\N,"3","test21@test.test","test22@test.test","2016-05-26 11:20:33"
-"Cheese is alright","La Fromage","2020-10-01","3","test12@test.test",\N,\N
-"Cheese is good","La Fromage","2020-10-01","3","worth.email.test+fundsuccess@gmail.com","steve.smith@empire.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com","2016-05-03 17:24:37"
-"Cheese is great","La Fromage","2020-10-01","3","worth.email.test.two+fundfailure@gmail.com",\N,"2016-05-03 17:27:20"
-"Everything I know about life I learned from juggling","Juggling Craziness","2016-04-25","3","test5@test.test",\N,\N
-"guitars and stuff","Killer Riffs",\N,"3","test19@test.test",\N,"2016-05-26 11:12:25"
-"i am not a good guitarrist","Killer Riffs",\N,"3","test18@test.test",\N,\N
-"I have no feelings about cheese","La Fromage","2020-10-01","3","test13@test.test",\N,\N
-"Juggling is cool","Juggling Craziness","2016-04-25","3","test4@test.test",\N,\N
-"Juggling is fun","Juggling Craziness","2016-04-25","3","test1@test.test",\N,"2016-04-25 13:03:08"
-"Juggling is not fun","Juggling Craziness","2016-04-25","3","test3@test.test",\N,"2016-04-25 13:08:51"
-"Juggling is very fun","Juggling Craziness","2016-04-25","3","test2@test.test",\N,"2016-04-25 13:05:57"
-"Juggling is word that sounds funny to say","Juggling Craziness","2016-04-25","3","test7@test.test","test8@test.test,test9@test.test","2016-04-25 15:08:24"
-"Marking it as complete","Connected digital additive manufacturing","2015-11-01","23","worth.email.test+submit@gmail.com","jessica.doe@ludlow.co.uk",\N
-"Mobile Phone Data for Logistics Analytics","Connected digital additive manufacturing","2015-11-01","10","steve.smith@empire.com",\N,\N
-"Playing the theremin behind your head","Theremin Theory","2020-10-01","3","test15@test.test",\N,"2016-05-24 10:17:55"
-"Providing sustainable childcare","Connected digital additive manufacturing","2015-11-01","20","steve.smith@empire.com","pete.tom@egg.com,jessica.doe@ludlow.co.uk",\N
-"Security for the Internet of Things","Connected digital additive manufacturing","2015-11-01","23","jessica.doe@ludlow.co.uk",\N,\N
-"Smash your theremin into pieces onstage","Theremin Theory","2020-10-01","3","test16@test.test",\N,"2016-05-24 10:20:54"
-"Spherical interactions in hyperdimensional space","Juggling Craziness","2016-04-25","3","steve.smith@empire.com",\N,\N
-"Theremins are weird and nobody knows what they are","Theremin Theory","2020-10-01","3","test17@test.test",\N,"2016-05-24 10:23:43"
-"Using natural gas to heat homes","Connected digital additive manufacturing","2015-11-01","43","steve.smith@empire.com","jessica.doe@ludlow.co.uk",\N
-"What is cheese?","La Fromage","2020-10-01","3","test14@test.test",\N,\N
+"Application title","Competition name","Start Date","Duration in months","Lead Applicant","Collaborators","Submitted Date","Status"
+"A new innovative solution","Connected digital additive manufacturing","2015-11-01","20","steve.smith@empire.com","jessica.doe@ludlow.co.uk,pete.tom@egg.com",\N,"submitted"
+"A novel solution to an old problem","Connected digital additive manufacturing","2016-03-01","51","steve.smith@empire.com","jessica.doe@ludlow.co.uk,pete.tom@egg.com,ewan+1@hiveit.co.uk",\N,"open"
+"awesome riffs","Killer Riffs",\N,"3","test23@test.test","test24@test.test,test25@test.test,test26@test.test,test27@test.test,test28@test.test","2016-05-26 13:07:42","approved"
+"best riffs","Killer Riffs",\N,"3","steve.smith@empire.com","worth.email.test+projectlead@gmail.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com","2016-05-26 11:15:55","approved"
+"Better living through juggling","Juggling Craziness","2016-04-25","3","test6@test.test",\N,\N,"open"
+"better riffs","Killer Riffs",\N,"3","test21@test.test","test22@test.test","2016-05-26 11:20:33","approved"
+"Cheese is alright","La Fromage","2020-10-01","3","test12@test.test",\N,\N,"created"
+"Cheese is good","La Fromage","2020-10-01","3","worth.email.test+fundsuccess@gmail.com","steve.smith@empire.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com","2016-05-03 17:24:37","submitted"
+"Cheese is great","La Fromage","2020-10-01","3","worth.email.test.two+fundfailure@gmail.com",\N,"2016-05-03 17:27:20","submitted"
+"Everything I know about life I learned from juggling","Juggling Craziness","2016-04-25","3","test5@test.test",\N,\N,"open"
+"guitars and stuff","Killer Riffs",\N,"3","test19@test.test",\N,"2016-05-26 11:12:25","rejected"
+"i am not a good guitarrist","Killer Riffs",\N,"3","test18@test.test",\N,\N,"open"
+"I have no feelings about cheese","La Fromage","2020-10-01","3","test13@test.test",\N,\N,"open"
+"Juggling is cool","Juggling Craziness","2016-04-25","3","test4@test.test",\N,\N,"created"
+"Juggling is fun","Juggling Craziness","2016-04-25","3","test1@test.test",\N,"2016-04-25 13:03:08","submitted"
+"Juggling is not fun","Juggling Craziness","2016-04-25","3","test3@test.test",\N,"2016-04-25 13:08:51","rejected"
+"Juggling is very fun","Juggling Craziness","2016-04-25","3","test2@test.test",\N,"2016-04-25 13:05:57","approved"
+"Juggling is word that sounds funny to say","Juggling Craziness","2016-04-25","3","test7@test.test","test8@test.test,test9@test.test","2016-04-25 15:08:24","submitted"
+"Marking it as complete","Connected digital additive manufacturing","2015-11-01","23","worth.email.test+submit@gmail.com","jessica.doe@ludlow.co.uk",\N,"open"
+"Mobile Phone Data for Logistics Analytics","Connected digital additive manufacturing","2015-11-01","10","steve.smith@empire.com",\N,\N,"approved"
+"Playing the theremin behind your head","Theremin Theory","2020-10-01","3","test15@test.test",\N,"2016-05-24 10:17:55","approved"
+"Providing sustainable childcare","Connected digital additive manufacturing","2015-11-01","20","steve.smith@empire.com","pete.tom@egg.com,jessica.doe@ludlow.co.uk",\N,"open"
+"Security for the Internet of Things","Connected digital additive manufacturing","2015-11-01","23","jessica.doe@ludlow.co.uk",\N,\N,"submitted"
+"Smash your theremin into pieces onstage","Theremin Theory","2020-10-01","3","test16@test.test",\N,"2016-05-24 10:20:54","approved"
+"Spherical interactions in hyperdimensional space","Juggling Craziness","2016-04-25","3","steve.smith@empire.com",\N,\N,"open"
+"Theremins are weird and nobody knows what they are","Theremin Theory","2020-10-01","3","test17@test.test",\N,"2016-05-24 10:23:43","rejected"
+"Using natural gas to heat homes","Connected digital additive manufacturing","2015-11-01","43","steve.smith@empire.com","jessica.doe@ludlow.co.uk",\N,"rejected"
+"What is cheese?","La Fromage","2020-10-01","3","test14@test.test",\N,\N,"rejected"
