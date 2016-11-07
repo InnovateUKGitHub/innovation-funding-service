@@ -29,11 +29,11 @@
             </div>
 
             <div class="my-applications">
-                <div class="in-progress"  th:unless="${#lists.isEmpty(model.applications)}">
-                    <h2 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.applications)}" />)</h2>
+                <div class="in-progress"  th:unless="${#lists.isEmpty(model.outstanding)}">
+                    <h2 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
                     <form class="bulk-select" action="" method="post">
                         <ul class="boxed-list">
-                            <li th:each="application : ${model.applications}">
+                            <li th:each="application : ${model.outstanding}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
                                         <h3 class="heading-medium"><a th:href="@{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
@@ -63,12 +63,31 @@
 
                         <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
 
-                        <div class="alignright">
+                        <div class="alignright" th:if="${model.submitVisible}">
                             <button class="button large button-pull-right no-margin extra-margin" data-js-modal="modal-submit-assessments" type="submit">Submit assessments</button>
                         </div>
 
                         <div th:include="fragments/assessment :: modal-submit-assessments" th:remove="tag"/>
                     </form>
+                </div>
+
+                <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
+                    <h3 class="heading-medium">Submitted Assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                    <ul class="boxed-list">
+                        <li th:each="application : ${model.submitted}">
+                            <div class="grid-row">
+                                <div class="column-assessment-details">
+                                    <h4 class="heading-medium" th:text="${application.displayLabel}" />
+                                    <p th:text="${application.leadOrganisation}" />
+                                </div>
+                                <div class="column-assessment-status navigation-right">
+                                    <div class="application-status submitted">
+                                        <p>Submitted</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
 

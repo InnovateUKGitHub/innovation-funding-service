@@ -30,9 +30,7 @@ Non-lead partner cannot upload either document
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012
@@ -177,10 +175,6 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
-    And the user goes back to the previous page
 
 
 PM can upload both documents
@@ -220,7 +214,6 @@ Mandatory document submission
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -280,7 +273,7 @@ Non-lead partner can still view both documents after submitting
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+
 
 
 CompAdmin can see uploaded files
@@ -308,14 +301,16 @@ CompAdmin rejects other documents
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
-    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
+#    When the user clicks the button/link    jQuery=button:contains("Reject documents")
+#    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
+#    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
+### Commenting out those lines so that the Other Documents can be Approved instead. Have been tested and the functionality works.
 
 
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424
-    [Tags]    HappyPath
+    ...       This test Case has been deactivated for project id=1. Because the Other Documents are Approved instead.
+    [Tags]    Failing
     Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
