@@ -113,18 +113,21 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
     }
 
-    public CompetitionDataBuilder sendFundingDecisions(FundingDecision... fundingDecisions) {
+    public CompetitionDataBuilder sendFundingDecisions(Pair<String, FundingDecision>... fundingDecisions) {
+        return sendFundingDecisions(asList(fundingDecisions));
+    }
+
+    public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
         return asCompAdmin(data -> {
 
-            List<Application> applications = applicationRepository.findByCompetitionId(data.getCompetition().getId());
-
-            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = mapWithIndex(asList(fundingDecisions), (i, decision) -> {
-                Application application = applications.get(0);
+            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
+                FundingDecision decision = decisionInfo.getRight();
+                Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
                 return Pair.of(application.getId(), decision);
             });
 
             applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
-                        getSuccessObjectOrThrowException();
+                    getSuccessObjectOrThrowException();
 
             projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions));
         });

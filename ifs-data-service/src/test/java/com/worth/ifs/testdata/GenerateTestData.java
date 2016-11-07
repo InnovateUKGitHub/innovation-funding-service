@@ -8,13 +8,13 @@ import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.notifications.service.senders.NotificationSender;
 import com.worth.ifs.notifications.service.senders.email.EmailNotificationSender;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -44,8 +45,7 @@ import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -80,6 +80,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     @Autowired
     private NotificationSender emailNotificationSender;
@@ -184,65 +187,72 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
+        createCompetitionWithApplications(line, Optional.empty());
+//        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
+//        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
+//        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
+//        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
+//
+//        competitionBuilderWithBasicInformation(line, Optional.empty()).
+//                moveCompetitionIntoOpenStatus().
+//                withApplications(
+//                        builder -> builder.
+//                                withBasicDetails(applicant1, "awesome riffs").
+//                                withQuestionResponses(questionResponsesFromCsv(line.name, "A novel solution to an old problem")).
+//                                withStartDate(LocalDate.of(2016, 3, 1)).
+//                                withDurationInMonths(51).
+//                                inviteCollaborator(applicant2).
+//                                inviteCollaborator(applicant4).
+//                                inviteCollaborator(applicant5).
+//                                withFinances(
+//                                        finance -> finance.
+//                                                withOrganisation("Empire Ltd").
+//                                                withUser(applicant1).
+//                                                withIndustrialCosts(
+//                                                        costs -> costs.
+//                                                                withWorkingDaysPerYear(123).
+//                                                                withGrantClaim(456).
+//                                                                withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
+//                                                                withLabourEntry("Role 1", 100, 200).
+//                                                                withLabourEntry("Role 2", 200, 300).
+//                                                                withLabourEntry("Role 3", 300, 365).
+//                                                                withAdministrationSupportCostsCustomRate(25).
+//                                                                withMaterials("Generator", bd("5010"), 10).
+//                                                                withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
+//                                                                withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
+//                                                                withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
+//                                                                withOtherCosts("Some more costs", bd("550")).
+//                                                                withOrganisationSize(OrganisationSize.MEDIUM)
+//                                                ),
+//                                        finance -> finance.
+//                                                withOrganisation("Ludlow").
+//                                                withUser(applicant2).
+//                                                withIndustrialCosts(
+//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
+//                                        finance -> finance.
+//                                                withOrganisation("EGGS").
+//                                                withUser(applicant4).
+//                                                withAcademicCosts(
+//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
+//                                        finance -> finance.
+//                                                withOrganisation("HIVE IT LIMITED").
+//                                                withUser(applicant5).
+//                                                withIndustrialCosts(
+//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200))
+//                                ).
+//                                submitApplication()
+//                ).
+//                moveCompetitionIntoFundersPanelStatus().
+//                sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
+//                restoreOriginalMilestones().
+//                build();
+    }
 
-        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
-        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
-        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
-        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
-
-        competitionBuilderWithBasicInformation(line, Optional.empty()).
-                moveCompetitionIntoOpenStatus().
-                withApplications(
-                        builder -> builder.
-                                withBasicDetails(applicant1, "A novel solution to an old problem").
-                                withQuestionResponses(questionResponsesFromCsv(line.name, "A novel solution to an old problem")).
-                                withStartDate(LocalDate.of(2016, 3, 1)).
-                                withDurationInMonths(51).
-                                inviteCollaborator(applicant2).
-                                inviteCollaborator(applicant4).
-                                inviteCollaborator(applicant5).
-                                withFinances(
-                                        finance -> finance.
-                                                withOrganisation("Empire Ltd").
-                                                withUser(applicant1).
-                                                withIndustrialCosts(
-                                                        costs -> costs.
-                                                                withWorkingDaysPerYear(123).
-                                                                withGrantClaim(456).
-                                                                withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-                                                                withLabourEntry("Role 1", 100, 200).
-                                                                withLabourEntry("Role 2", 200, 300).
-                                                                withLabourEntry("Role 3", 300, 365).
-                                                                withAdministrationSupportCostsCustomRate(25).
-                                                                withMaterials("Generator", bd("5010"), 10).
-                                                                withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-                                                                withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-                                                                withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-                                                                withOtherCosts("Some more costs", bd("550")).
-                                                                withOrganisationSize(OrganisationSize.MEDIUM)
-                                                ),
-                                        finance -> finance.
-                                                withOrganisation("Ludlow").
-                                                withUser(applicant2).
-                                                withIndustrialCosts(
-                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
-                                        finance -> finance.
-                                                withOrganisation("EGGS").
-                                                withUser(applicant4).
-                                                withAcademicCosts(
-                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
-                                        finance -> finance.
-                                                withOrganisation("HIVE IT LIMITED").
-                                                withUser(applicant5).
-                                                withIndustrialCosts(
-                                                        costs -> costs.withLabourEntry("Role 1", 100, 200))
-                                ).
-                                submitApplication()
-                ).
-                moveCompetitionIntoFundersPanelStatus().
-                sendFundingDecisions(FundingDecision.FUNDED).
-                restoreOriginalMilestones().
-                build();
+    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
+        List<ApplicationLine> applications = readApplications();
+        List<ApplicationLine> matchingApplications = simpleFilter(applications, a -> a.competitionName.equals(competitionName));
+        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatusConstants.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void createReadyToOpenCompetition(CsvUtils.CompetitionLine line) {
@@ -269,11 +279,21 @@ public class GenerateTestData extends BaseIntegrationTest {
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
         } else {
-            basicCompetitionInformation.
+
+            CompetitionDataBuilder withApplications = basicCompetitionInformation.
                     moveCompetitionIntoOpenStatus().
                     withApplications(applicationBuilders).
-                    restoreOriginalMilestones().
-                    build();
+                    restoreOriginalMilestones();
+
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(LocalDateTime.now())) {
+
+                withApplications = withApplications.
+                        moveCompetitionIntoFundersPanelStatus().
+                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
+                        restoreOriginalMilestones();
+            }
+
+            withApplications.build();
         }
     }
 
@@ -323,7 +343,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine  line) {
+    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
@@ -342,6 +362,53 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         if (line.submittedDate != null) {
             baseBuilder = baseBuilder.submitApplication();
+        }
+
+        if (line.status == ApplicationStatusConstants.APPROVED) {
+
+            List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
+
+            List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+                UserResource user = retrieveUserByEmail(email);
+                OrganisationResource organisation = retrieveOrganisationById(user.getOrganisations().get(0));
+                return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+            });
+
+            List<Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(organisations, orgDetails -> {
+
+                String user = orgDetails.getLeft();
+                String organisationName = orgDetails.getMiddle();
+                OrganisationTypeEnum organisationType = orgDetails.getRight();
+
+                if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
+                    return  finance -> finance.
+                            withOrganisation(organisationName).
+                            withUser(user).
+                            withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
+                } else {
+                    return finance ->
+                            finance.
+                                    withOrganisation(organisationName).
+                                    withUser(user).
+                                    withIndustrialCosts(
+                                            costs -> costs.
+                                                    withWorkingDaysPerYear(123).
+                                                    withGrantClaim(456).
+                                                    withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
+                                                    withLabourEntry("Role 1", 100, 200).
+                                                    withLabourEntry("Role 2", 200, 300).
+                                                    withLabourEntry("Role 3", 300, 365).
+                                                    withAdministrationSupportCostsCustomRate(25).
+                                                    withMaterials("Generator", bd("5010"), 10).
+                                                    withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
+                                                    withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
+                                                    withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
+                                                    withOtherCosts("Some more costs", bd("550")).
+                                                    withOrganisationSize(OrganisationSize.MEDIUM));
+                }
+            });
+
+            baseBuilder = baseBuilder.withFinances(financeBuilders);
         }
 
         return baseBuilder;
@@ -415,6 +482,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
         return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+    }
+
+    protected OrganisationResource retrieveOrganisationById(Long id) {
+        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
     }
 
     protected UserResource systemRegistrar() {

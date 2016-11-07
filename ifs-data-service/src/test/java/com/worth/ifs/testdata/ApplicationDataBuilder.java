@@ -84,6 +84,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withFinances(Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>... builderFns) {
+        return withFinances(asList(builderFns));
+    }
+
+    public ApplicationDataBuilder withFinances(List<Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>> builderFns) {
 
         return with(data -> {
 
@@ -91,7 +95,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     withApplication(data.getApplication()).
                     withCompetition(data.getCompetition());
 
-            asList(builderFns).forEach(fn -> fn.apply(baseFinanceBuilder).build());
+            builderFns.forEach(fn -> fn.apply(baseFinanceBuilder).build());
 
         });
     }

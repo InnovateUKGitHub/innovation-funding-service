@@ -34,6 +34,10 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return with(data -> data.setOrganisation(organisation));
     }
 
+    public ApplicationFinanceDataBuilder withUser(String email) {
+        return withUser(retrieveUserByEmail(email));
+    }
+
     public ApplicationFinanceDataBuilder withUser(UserResource user) {
         return with(data -> data.setUser(user));
     }

@@ -12,6 +12,7 @@ import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -389,7 +390,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
                         submitApplication()
                 ).
                 moveCompetitionIntoFundersPanelStatus().
-                sendFundingDecisions(FundingDecision.FUNDED).
+                sendFundingDecisions(Pair.of("A novel solution to an old problem", FundingDecision.FUNDED)).
                 restoreOriginalMilestones().
                 build();
     }
