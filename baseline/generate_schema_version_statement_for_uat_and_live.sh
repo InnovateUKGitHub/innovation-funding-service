@@ -1,7 +1,8 @@
+#!/bin/bash
 echo "**This script requires / does the following:"
 echo "**A local database with username: root and password: password"
 echo "Creating the database if it does not exist"
-echo "CREATE SCHEMA IF NOT EXISTS Clearing the ifs_database_to_generate_schema_version" | mysql -uroot -ppassword 
+mysql -uroot -ppassword -e "CREATE SCHEMA IF NOT EXISTS ifs_database_to_generate_schema_version"
 echo "**Clearing the ifs_database_to_generate_schema_version database"
 cd ../ifs-data-service
 ./gradlew flywayClean -Dflyway.schemas=ifs_database_to_generate_schema_version

@@ -1,8 +1,9 @@
+#!/bin/bash
 echo "**This script requires / does the following:"
 echo "**A local database with username: root and password: password"
 echo "**An export from the live database called ifs_current_live.sql"
 echo "Creating the database if it does not exist"
-echo "CREATE SCHEMA IF NOT EXISTS ifs_current_live_migrated" | mysql -uroot -ppassword 
+mysql -uroot -ppassword -e "CREATE SCHEMA IF NOT EXISTS ifs_current_live_migrated"
 echo "**Clearing the ifs_current_live_migrated database"
 cd ../ifs-data-service
 ./gradlew flywayClean -Dflyway.schemas=ifs_current_live_migrated

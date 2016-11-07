@@ -1,8 +1,9 @@
+#!/bin/bash
 echo "**This script requires / does the following:"
 echo "**A local database with username: root and password: password"
 echo "**An export from the live database called ifs_current_live.sql"
 echo "Creating the database if it does not exist"
-echo "CREATE SCHEMA IF NOT EXISTS ifs_dry_run_live" | mysql -uroot -ppassword
+mysql -uroot -ppassword -e "CREATE SCHEMA IF NOT EXISTS ifs_dry_run_live"
 cd ../ifs-data-service
 ./gradlew flywayClean -Dflyway.schemas=ifs_dry_run_live
 echo "**Importing the live database into the ifs_dry_run_live"

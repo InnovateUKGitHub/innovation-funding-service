@@ -1,3 +1,4 @@
+#!/bin/bash
 ./generate_migration_scripts.sh
 ./generate_setup_scripts.sh
 ./replace_old_scripts_with_new.sh
