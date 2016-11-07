@@ -68,7 +68,7 @@ Lead partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Calculations in the spend profile table
     [Documentation]    INFUND-3764
@@ -170,7 +170,7 @@ Lead partner marks spend profile as complete
     [Setup]  Log in as a different user                         steve.smith@empire.com    Passw0rd
     Given the user navigates to the page            ${external_spendprofile_summary}
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
@@ -191,13 +191,13 @@ Non-lead partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
@@ -225,12 +225,12 @@ Academic partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Academic partner can see the alternative academic view of the spend profile
     [Documentation]    INFUND-4819
     [Tags]
-    Then the user should see the text in the page    J-eS category    # this line subject to change as J-eS will be repalce by Je-S
+    Then the user should see the text in the page    Je-S category
     And the user should see the text in the page    Investigations
     And the user should see the text in the page    Estates costs
 
@@ -239,7 +239,7 @@ Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
@@ -251,13 +251,13 @@ Project Manager can view partners' spend profiles
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user goes back to the previous page
     And the user clicks the button/link    link=Ludlow
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user goes back to the previous page
     And the user clicks the button/link    link=EGGS
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
     Then the user should see the element    jQuery=a:contains("Review and submit total project")
