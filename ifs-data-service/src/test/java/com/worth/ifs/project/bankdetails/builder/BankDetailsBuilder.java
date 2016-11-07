@@ -40,19 +40,19 @@ public class BankDetailsBuilder extends BaseBuilder<BankDetails, BankDetailsBuil
         return withArray((organisation, bankDetails) -> setField("organisation", organisation, bankDetails), organisations);
     }
 
-    public BankDetailsBuilder withOrganiationAddress(OrganisationAddress organisationAddress) {
-        return with(bankDetails -> bankDetails.setOrganisationAddress(organisationAddress));
+    public BankDetailsBuilder withOrganiationAddress(OrganisationAddress... organisationAddresses) {
+        return withArray((organisationAddress, bankDetails) -> setField("organisationAddress", organisationAddress, bankDetails), organisationAddresses);
     }
 
-    public BankDetailsBuilder withProject(Project project) {
-        return with(bankDetails -> bankDetails.setProject(project));
+    public BankDetailsBuilder withSortCode(String... sortCodes) {
+        return withArray((sortCode, bankDetails) -> setField("sortCode", sortCode, bankDetails), sortCodes);
     }
 
-    public BankDetailsBuilder withSortCode(String sortCode) {
-        return with(bankDetails -> bankDetails.setSortCode(sortCode));
+    public BankDetailsBuilder withAccountNumber(String... accountNumbers) {
+        return withArray((accountNumber, bankDetails) -> setField("accountNumber", accountNumber, bankDetails), accountNumbers);
     }
 
-    public BankDetailsBuilder withAccountNumber(String accountNumber) {
-        return with(bankDetails -> bankDetails.setAccountNumber(accountNumber));
+    public BankDetailsBuilder withProject(Project... projects) {
+        return withArray((project, bankDetails) -> setField("project", project, bankDetails), projects);
     }
 }

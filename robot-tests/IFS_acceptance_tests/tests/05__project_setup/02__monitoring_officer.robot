@@ -22,7 +22,7 @@ Before Monitoring Officer is assigned
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user should see the text in the page    Innovate UK will assign you a Monitoring Officer
+    And the user should see the text in the page    Innovate UK will assign the project a Monitoring Officer
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
@@ -33,7 +33,7 @@ Before Monitoring Officer is assigned
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
-    [Setup]    Log in as user    &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
@@ -52,9 +52,8 @@ Comp admin can view the Supporting information details on MO page
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666
-    [Tags]
-    [Setup]    logout as user
-    Given guest user log-in    project.finance1@innovateuk.test    Passw0rd
+    [Tags]    HappyPath
+    Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
@@ -111,8 +110,7 @@ MO details can be added
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then The user should see the element    css=.success-alert
     And the user should see the text in the page    A Monitoring Officer has been assigned.
-    And Logout as user
-    Then Log in as user    steve.smith@empire.com    Passw0rd
+    Then Log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
@@ -123,7 +121,7 @@ MO details(email step)
     ...    INFUND-2632
     ...
     ...    INFUND-2633
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
@@ -133,13 +131,12 @@ MO details can be edited and viewed in the Project setup status page
     ...
     ...    INFUND-2634
     [Tags]    HappyPath
-    [Setup]    Log in as user    &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    link=Change Monitoring Officer
     And the user edits the MO details
     And the user can see the changed MO details
-    And Logout as user
-    When Log in as user    steve.smith@empire.com    Passw0rd
+    When Log in as a different user    steve.smith@empire.com    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
@@ -164,7 +161,7 @@ MO details edit(email step)
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
-    Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    Given Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
@@ -176,8 +173,7 @@ MO details accessible/seen by all partners
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
-    Then Logout as user
-    When Log in as user    steve.smith@empire.com    Passw0rd
+    When Log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
@@ -192,13 +188,13 @@ MO details accessible/seen by all partners
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
+
 
 *** Keywords ***
 standard verification for email address follows

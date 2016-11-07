@@ -78,15 +78,20 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            if (project.getDocumentsSubmittedDate() != null) {
-                return COMPLETE;
-            } else {
-                return PENDING;
-            }
-        } else {
+
+        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+            return COMPLETE;
+        }
+
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
+            return PENDING;
+        }
+
+        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
             return ACTION_REQUIRED;
         }
+
+        return PENDING;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {

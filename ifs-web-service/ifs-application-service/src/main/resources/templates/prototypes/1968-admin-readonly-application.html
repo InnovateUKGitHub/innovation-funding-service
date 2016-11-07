@@ -24,11 +24,15 @@
 
 	<div>
 
-    <h2 class="heading-medium no-margin-top" th:unless="${param.status != null and param.status[0] == 'closed'}" >94565678: Machine learning in robots</h2>
-
-    <th:block th:if="${param.status != null and param.status[0] == 'closed'}">
-      <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+    <!-- <th:block th:if="${param.status == null or param.status != null and param.comp[0] != 'closed'}">
+      <h2 class="heading-medium no-margin-top" th:unless="${param.status != null and param.comp[0] == 'closed'}" >94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
     </th:block>
+
+    <th:block th:if="${param.status != null and param.comp[0] == 'closed'}">
+      <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+    </th:block> -->
+
+    <h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
 

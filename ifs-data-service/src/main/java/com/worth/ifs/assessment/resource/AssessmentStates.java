@@ -11,8 +11,9 @@ public enum AssessmentStates implements ProcessStates {
     // All types of status
     PENDING(State.PENDING),
     REJECTED(State.REJECTED),
+    ACCEPTED(State.ACCEPTED),
     OPEN(State.OPEN),
-    ASSESSED(State.READY_TO_SUBMIT),
+    READY_TO_SUBMIT(State.READY_TO_SUBMIT),
     SUBMITTED(State.SUBMITTED);
 
     private State backingState;

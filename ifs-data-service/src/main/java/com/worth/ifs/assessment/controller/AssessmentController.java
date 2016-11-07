@@ -47,4 +47,8 @@ public class AssessmentController {
         return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();
     }
 
+    @RequestMapping(value= "/{id}/acceptInvitation", method = PUT)
+    public RestResult<Void> acceptInvitation(@PathVariable("id") Long id) {
+        return assessmentService.acceptInvitation(id).toPutResponse();
+    }
 }
