@@ -6,7 +6,7 @@
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/assessment :: assessment-reject-assesment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag"/>
         <div th:include="fragments/layout :: global-header" th:remove="tag"/>
 
