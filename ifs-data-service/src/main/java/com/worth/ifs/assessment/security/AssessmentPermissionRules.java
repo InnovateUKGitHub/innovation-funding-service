@@ -48,7 +48,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         List<AssessmentStates> allowedActivityStates = new ArrayList<>();
         allowedActivityStates.add(AssessmentStates.PENDING);
         allowedActivityStates.add(AssessmentStates.OPEN);
-        allowedActivityStates.add(AssessmentStates.ASSESSED);
+        allowedActivityStates.add(AssessmentStates.READY_TO_SUBMIT);
         allowedActivityStates.add(AssessmentStates.SUBMITTED);
 
         if (allowedActivityStates.contains(assessment.getActivityState())) {
