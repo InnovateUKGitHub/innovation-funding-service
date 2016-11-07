@@ -30,7 +30,7 @@
 
             <div class="my-applications">
                 <div class="in-progress"  th:unless="${#lists.isEmpty(model.outstanding)}">
-                    <h2 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
+                    <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
                     <form class="bulk-select" action="" method="post">
                         <ul class="boxed-list">
                             <li th:each="application : ${model.outstanding}">
@@ -72,8 +72,8 @@
                 </div>
 
                 <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
-                    <h3 class="heading-medium">Submitted Assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
-                    <ul class="boxed-list">
+                    <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                    <ul class="boxed-list bulk-select">
                         <li th:each="application : ${model.submitted}">
                             <div class="grid-row">
                                 <div class="column-assessment-details">
