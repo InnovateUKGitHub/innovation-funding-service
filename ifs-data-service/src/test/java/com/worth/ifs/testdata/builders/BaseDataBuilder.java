@@ -1,4 +1,4 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.repository.ApplicationRepository;

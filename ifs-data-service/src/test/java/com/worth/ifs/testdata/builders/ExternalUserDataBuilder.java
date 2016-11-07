@@ -1,5 +1,6 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
+import com.worth.ifs.testdata.builders.data.ExternalUserData;
 import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;

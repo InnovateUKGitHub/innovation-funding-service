@@ -1,7 +1,8 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.testdata.builders.data.OrganisationData;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 

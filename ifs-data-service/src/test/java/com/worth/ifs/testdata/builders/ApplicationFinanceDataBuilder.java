@@ -1,9 +1,10 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.testdata.builders.data.ApplicationFinanceData;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -12,7 +13,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.worth.ifs.testdata.IndustrialCostDataBuilder.newIndustrialCostData;
 import static java.util.Collections.emptyList;
 
 
@@ -50,7 +50,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccessObjectOrThrowException();
 
-            IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
+            IndustrialCostDataBuilder baseFinanceBuilder = IndustrialCostDataBuilder.newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
                     withCompetition(data.getCompetition());
 
@@ -66,7 +66,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccessObjectOrThrowException();
 
-            IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
+            IndustrialCostDataBuilder baseFinanceBuilder = IndustrialCostDataBuilder.newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
                     withCompetition(data.getCompetition());
 

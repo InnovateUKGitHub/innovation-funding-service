@@ -1,10 +1,11 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.testdata.builders.data.ApplicationData;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
@@ -18,8 +19,6 @@ import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static com.worth.ifs.testdata.ApplicationFinanceDataBuilder.newApplicationFinanceData;
-import static com.worth.ifs.testdata.ResponseDataBuilder.newApplicationQuestionResponseData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -91,7 +90,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return with(data -> {
 
-            ApplicationFinanceDataBuilder baseFinanceBuilder = newApplicationFinanceData(serviceLocator).
+            ApplicationFinanceDataBuilder baseFinanceBuilder = ApplicationFinanceDataBuilder.newApplicationFinanceData(serviceLocator).
                     withApplication(data.getApplication()).
                     withCompetition(data.getCompetition());
 
@@ -161,7 +160,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return with(data -> {
             ResponseDataBuilder baseBuilder =
-                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+                    ResponseDataBuilder.newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
             responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
         });

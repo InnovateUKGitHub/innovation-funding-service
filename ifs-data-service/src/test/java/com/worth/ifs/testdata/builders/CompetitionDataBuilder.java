@@ -1,4 +1,4 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -7,6 +7,7 @@ import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.testdata.builders.data.CompetitionData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 
 import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
-import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
+import static com.worth.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

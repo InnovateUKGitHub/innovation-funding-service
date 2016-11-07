@@ -1,10 +1,11 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.*;
+import com.worth.ifs.testdata.builders.data.IndustrialCostData;
 import com.worth.ifs.user.resource.OrganisationSize;
 
 import java.math.BigDecimal;
