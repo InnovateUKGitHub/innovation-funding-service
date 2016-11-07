@@ -1,6 +1,7 @@
-echo "**This script require the following:"
-echo "**A local database called ifs_database_to_generate_schema_version with username: root and password: password"
-echo "**And that the new migration scripts are in place in the code"
+echo "**This script requires / does the following:"
+echo "**A local database with username: root and password: password"
+echo "Creating the database if it does not exist"
+echo "CREATE SCHEMA IF NOT EXISTS Clearing the ifs_database_to_generate_schema_version" | mysql -uroot -ppassword 
 echo "**Clearing the ifs_database_to_generate_schema_version database"
 cd ../ifs-data-service
 ./gradlew flywayClean -Dflyway.schemas=ifs_database_to_generate_schema_version
