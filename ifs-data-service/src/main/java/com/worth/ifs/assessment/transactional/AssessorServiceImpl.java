@@ -1,13 +1,9 @@
 package com.worth.ifs.assessment.transactional;
 
-import com.worth.ifs.address.domain.Address;
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
-import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

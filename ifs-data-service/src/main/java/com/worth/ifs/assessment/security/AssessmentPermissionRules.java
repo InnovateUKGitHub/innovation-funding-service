@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.security;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.commons.security.PermissionRule;
@@ -13,6 +12,9 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ActivityState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.assessment.domain.Assessment} resources.
@@ -38,15 +40,20 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
         Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
-        return user.getId().equals(assessmentUser) && !assessorHasRejectedOrSubmittedAssessment(assessment);
+        return user.getId().equals(assessmentUser) && assessmentIsViewableState(assessment);
     }
 
-    private boolean assessorHasRejectedOrSubmittedAssessment(final AssessmentResource assessmentResource) {
+    private boolean assessmentIsViewableState(final AssessmentResource assessmentResource) {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
 
-        if (assessment.getActivityState() != null) {
-            AssessmentStates assessmentState = assessment.getActivityState();
-            return (assessmentState.equals(AssessmentStates.REJECTED) || assessmentState.equals(AssessmentStates.SUBMITTED));
+        List<AssessmentStates> allowedActivityStates = new ArrayList<>();
+        allowedActivityStates.add(AssessmentStates.PENDING);
+        allowedActivityStates.add(AssessmentStates.OPEN);
+        allowedActivityStates.add(AssessmentStates.READY_TO_SUBMIT);
+        allowedActivityStates.add(AssessmentStates.SUBMITTED);
+
+        if (allowedActivityStates.contains(assessment.getActivityState())) {
+            return true;
         } else {
             return false;
         }

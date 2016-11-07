@@ -13,7 +13,6 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Set;
@@ -56,16 +55,13 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    @Rollback
-    public void testFindAll() throws Exception {
+    public void findAll() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
 
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
 
         ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());
@@ -92,13 +88,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    @Rollback
-    public void testFindOneByProcessRoleId() throws Exception {
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
+    public void findOneByParticipantId() throws Exception {
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
 
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
 
         ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());
@@ -124,8 +117,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    @Rollback
-    public void testFindByUserIdAndCompetitionId() throws Exception {
+    public void findByParticipantUserIdAndParticipantApplicationCompetitionId() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 

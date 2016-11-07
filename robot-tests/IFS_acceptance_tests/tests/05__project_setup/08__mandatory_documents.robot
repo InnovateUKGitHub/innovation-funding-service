@@ -12,6 +12,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-4620: As a competitions team member I want to be able to reject partner documents uploaded to the Other Documents section so that they can be informed they are unsuitable
 ...
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
+...
+...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -21,15 +23,14 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012
@@ -103,13 +104,12 @@ Lead partner does not have the option to submit the mandatory documents
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
-    [Documentation]    INFUND-3011, INFUND-2621
-    ...
-    ...
-    ...    INFUND-3013
+    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806
     [Tags]
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
+    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
+    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -175,10 +175,6 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
-    And the user goes back to the previous page
 
 
 PM can upload both documents
@@ -194,7 +190,7 @@ PM can upload both documents
 
 Status in the dashboard remains pending after uploads
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -218,7 +214,6 @@ Mandatory document submission
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -278,7 +273,7 @@ Non-lead partner can still view both documents after submitting
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+
 
 
 CompAdmin can see uploaded files
@@ -306,14 +301,16 @@ CompAdmin rejects other documents
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
-    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
+#    When the user clicks the button/link    jQuery=button:contains("Reject documents")
+#    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
+#    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
+### Commenting out those lines so that the Other Documents can be Approved instead. Have been tested and the functionality works.
 
 
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424
-    [Tags]    HappyPath
+    ...       This test Case has been deactivated for project id=1. Because the Other Documents are Approved instead.
+    [Tags]    Failing
     Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
@@ -342,6 +339,15 @@ Project Finance is able to Approve and Reject
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
+
+
+Project Finance user can clik the link and go back to the Project setup status page
+    [Documentation]    INFUND-5516
+    [Tags]
+    When the user clicks the button/link           link=Project setup status
+    Then the user should not see an error in the page
+    And the user should see the text in the page   Projects in setup
+    [Teardown]    the user goes back to the previous page
 
 
 CompAdmin approves other documents
@@ -383,9 +389,8 @@ Partners can see the documents approved
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    #TO DO:INFUND-5887
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=Killer Riffs
     Then the user should see the element    jQuery=tr:nth-child(1):contains("best riffs")
@@ -394,9 +399,8 @@ CompAdmin can see Project status updated
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Tags]    Experian    Pending
+    [Tags]    Experian
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    #TO DO:INFUND-5887
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok

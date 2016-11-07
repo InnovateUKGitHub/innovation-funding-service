@@ -913,7 +913,7 @@
                         <a href="#">Review</a>
                     </td>
                 </tr>
-                <tr>
+                <tr id="prototype-started-removable">
                     <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
@@ -926,8 +926,8 @@
                         <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                <tr id="prototype-assigned-row-three">
+                    <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
@@ -936,11 +936,11 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#" class="button-secondary" id="prototype-remove-row-three">Remove</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                <tr id="prototype-assigned-row-four">
+                    <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
@@ -949,7 +949,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td>
-                        <a href="#" class="button-secondary">Remove</a>
+                        <a href="#" class="button-secondary" id="prototype-remove-row-four">Remove</a>
                     </td>
                 </tr>
             </tbody>
@@ -1149,19 +1149,46 @@
     <div class="table-overflow">
         <table id="application-list">
             <thead>
-            <tr>
-                <th scope="col">Assessor</th>
-                <th scope="col">Type</th>
-                <th scope="col">Innovation Area</th>
-                <th class="aligncentre" scope="col">Total applications</th>
-                <th class="aligncentre" scope="col">Assigned</th>
-                <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
-            </tr>
+                <tr>
+                    <th scope="col">Assessor</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation Area</th>
+                    <th class="aligncentre" scope="col">Total applications</th>
+                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td colspan="6">There are no assessors previously assigned to this application.</td>
-            </tr>
+                <tr id="prototype-previous-row-zero">
+                    <td colspan="6">There are no assessors previously assigned to this application.</td>
+                </tr>
+                <tr id="prototype-previous-row-one">
+                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">6</td>
+                    <td>
+                        <a href="#" class="button-secondary" id="prototype-row-one-reassign">Re-assign</a>
+                    </td>
+                </tr>
+                <tr id="prototype-previous-row-two">
+                    <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">6</td>
+                    <td>
+                        <a href="#" class="button-secondary" id="prototype-row-two-reassign">Re-assign</a>
+                    </td>
+                </tr>
+                <tr id="prototype-previous-row-three">
+                    <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncentre">6</td>
+                    <td>
+                        <a href="#" class="button-secondary" id="prototype-row-three-reassign">Re-assign</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
