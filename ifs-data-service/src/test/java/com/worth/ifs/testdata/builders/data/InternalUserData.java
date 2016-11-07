@@ -1,4 +1,4 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders.data;
 
 import com.worth.ifs.user.resource.UserRoleType;
 

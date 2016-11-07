@@ -1,4 +1,4 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -7,6 +7,7 @@ import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.testdata.builders.data.CompetitionData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
@@ -14,12 +15,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.category.resource.CategoryType.*;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
-import static com.worth.ifs.testdata.ApplicationDataBuilder.newApplicationData;
+import static com.worth.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -113,18 +114,21 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
     }
 
-    public CompetitionDataBuilder sendFundingDecisions(FundingDecision... fundingDecisions) {
+    public CompetitionDataBuilder sendFundingDecisions(Pair<String, FundingDecision>... fundingDecisions) {
+        return sendFundingDecisions(asList(fundingDecisions));
+    }
+
+    public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
         return asCompAdmin(data -> {
 
-            List<Application> applications = applicationRepository.findByCompetitionId(data.getCompetition().getId());
-
-            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = mapWithIndex(asList(fundingDecisions), (i, decision) -> {
-                Application application = applications.get(0);
+            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
+                FundingDecision decision = decisionInfo.getRight();
+                Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
                 return Pair.of(application.getId(), decision);
             });
 
             applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
-                        getSuccessObjectOrThrowException();
+                    getSuccessObjectOrThrowException();
 
             projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions));
         });
@@ -208,9 +212,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withApplications(Function<ApplicationDataBuilder, ApplicationDataBuilder>... applicationDataBuilderFn) {
-        return with(data -> asList(applicationDataBuilderFn).forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
+    public CompetitionDataBuilder withApplications(UnaryOperator<ApplicationDataBuilder>... applicationDataBuilders) {
+        return withApplications(asList(applicationDataBuilders));
     }
+
+    public CompetitionDataBuilder withApplications(List<UnaryOperator<ApplicationDataBuilder>> applicationDataBuilders) {
+        return with(data -> applicationDataBuilders.forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
+    }
+
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();

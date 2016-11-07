@@ -1,5 +1,6 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
+import com.worth.ifs.testdata.builders.data.BaseUserData;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.Organisation;

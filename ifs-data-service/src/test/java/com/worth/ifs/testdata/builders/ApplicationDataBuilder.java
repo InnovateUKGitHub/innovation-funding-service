@@ -1,10 +1,11 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.testdata.builders.data.ApplicationData;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
@@ -14,11 +15,10 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static com.worth.ifs.testdata.ApplicationFinanceDataBuilder.newApplicationFinanceData;
-import static com.worth.ifs.testdata.ApplicationQuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -83,16 +83,26 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withFinances(Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>... builderFns) {
+        return withFinances(asList(builderFns));
+    }
+
+    public ApplicationDataBuilder withFinances(List<Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>> builderFns) {
 
         return with(data -> {
 
-            ApplicationFinanceDataBuilder baseFinanceBuilder = newApplicationFinanceData(serviceLocator).
+            ApplicationFinanceDataBuilder baseFinanceBuilder = ApplicationFinanceDataBuilder.newApplicationFinanceData(serviceLocator).
                     withApplication(data.getApplication()).
                     withCompetition(data.getCompetition());
 
-            asList(builderFns).forEach(fn -> fn.apply(baseFinanceBuilder).build());
+            builderFns.forEach(fn -> fn.apply(baseFinanceBuilder).build());
 
         });
+    }
+
+    public ApplicationDataBuilder openApplication() {
+
+        return asLeadApplicant(data ->
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()));
     }
 
     public ApplicationDataBuilder submitApplication() {
@@ -140,17 +150,17 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>... responseBuilders) {
+            UnaryOperator<ResponseDataBuilder>... responseBuilders) {
 
         return withQuestionResponses(asList(responseBuilders));
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            List<Function<ApplicationQuestionResponseDataBuilder, ApplicationQuestionResponseDataBuilder>> responseBuilders) {
+            List<UnaryOperator<ResponseDataBuilder>> responseBuilders) {
 
         return with(data -> {
-            ApplicationQuestionResponseDataBuilder baseBuilder =
-                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+            ResponseDataBuilder baseBuilder =
+                    ResponseDataBuilder.newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
             responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
         });

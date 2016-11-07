@@ -1,4 +1,4 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders.data;
 
 /**
  * TODO DW - document this class

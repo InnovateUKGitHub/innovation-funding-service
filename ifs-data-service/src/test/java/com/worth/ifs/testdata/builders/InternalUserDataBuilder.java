@@ -1,5 +1,6 @@
-package com.worth.ifs.testdata;
+package com.worth.ifs.testdata.builders;
 
+import com.worth.ifs.testdata.builders.data.InternalUserData;
 import com.worth.ifs.user.domain.CompAdminEmail;
 import com.worth.ifs.user.domain.ProjectFinanceEmail;
 import com.worth.ifs.user.resource.UserRoleType;

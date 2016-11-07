@@ -7,11 +7,13 @@ import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.testdata.builders.*;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -35,12 +37,12 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.testdata.BaseDataBuilder.COMP_ADMIN_EMAIL;
-import static com.worth.ifs.testdata.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
-import static com.worth.ifs.testdata.CompetitionDataBuilder.newCompetitionData;
-import static com.worth.ifs.testdata.ExternalUserDataBuilder.newExternalUserData;
-import static com.worth.ifs.testdata.InternalUserDataBuilder.newInternalUserData;
-import static com.worth.ifs.testdata.OrganisationDataBuilder.newOrganisationData;
+import static com.worth.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
+import static com.worth.ifs.testdata.builders.BaseDataBuilder.INNOVATE_UK_ORG_NAME;
+import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
+import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
+import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -389,7 +391,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
                         submitApplication()
                 ).
                 moveCompetitionIntoFundersPanelStatus().
-                sendFundingDecisions(FundingDecision.FUNDED).
+                sendFundingDecisions(Pair.of("A novel solution to an old problem", FundingDecision.FUNDED)).
                 restoreOriginalMilestones().
                 build();
     }
