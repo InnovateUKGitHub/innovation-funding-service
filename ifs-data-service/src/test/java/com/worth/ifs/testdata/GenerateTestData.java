@@ -15,8 +15,11 @@ import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -57,6 +60,8 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
 
+    private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
+
     @Value("${flyway.url}")
     private String databaseUrl;
 
@@ -95,9 +100,28 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationDataBuilder organisationBuilder;
 
+    private static List<CompetitionLine> competitionLines;
+
+    private static List<ApplicationLine> applicationLines;
+
+    private static List<ExternalUserLine> externalUserLines;
+
+    private static List<InternalUserLine> internalUserLines;
+
+    private static List<ApplicationQuestionResponseLine> questionResponseLines;
+
     @Before
     public void setup() throws Exception {
         freshDb();
+    }
+
+    @BeforeClass
+    public static void readCsvs() throws Exception {
+        competitionLines = readCompetitions();
+        applicationLines = readApplications();
+        externalUserLines = readExternalUsers();
+        internalUserLines = readInternalUsers();
+        questionResponseLines = readApplicationQuestionResponses();
     }
 
     @PostConstruct
@@ -117,6 +141,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
         ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
+    }
+
+    @PostConstruct
+    public void setupBaseBuilders() {
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
@@ -127,26 +155,32 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     @Test
-    public void test() {
+    public void generateTestData() {
+
+        long before = System.currentTimeMillis();
+
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
+
+        long after = System.currentTimeMillis();
+
+        LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
+        System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
     }
 
     /**
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createExternalUsers() {
-        List<CsvUtils.ExternalUserLine> userDetails = readExternalUsers();
-        userDetails.forEach(line -> createUser(externalUserBuilder, line));
+        externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
     /**
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      **/
     private void createInternalUsers() {
-        List<CsvUtils.InternalUserLine> userDetails = readInternalUsers();
-        userDetails.forEach(line -> {
+        internalUserLines.forEach(line -> {
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.
                     withRole(UserRoleType.fromName(line.role)).
@@ -160,114 +194,25 @@ public class GenerateTestData extends BaseIntegrationTest {
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private void createCompetitions() {
-        List<CsvUtils.CompetitionLine> competitionLines = readCompetitions();
-        createOpenCompetition(competitionLines.get(2));
-        createInAssessmentCompetition(competitionLines.get(3));
-        createFundersPanelCompetition(competitionLines.get(4));
-        createInAssessorFeedbackCompetition(competitionLines.get(6));
-        createInProjectSetupCompetition(competitionLines.get(7));
-        createInPreparationCompetition(competitionLines.get(8));
-        createReadyToOpenCompetition(competitionLines.get(5));
-    }
 
-    private void createOpenCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.of(1L));
-    }
-
-    private void createInAssessmentCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
-    }
-
-    private void createFundersPanelCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
-    }
-
-    private void createInAssessorFeedbackCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
-    }
-
-    private void createInProjectSetupCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
-//        UserResource applicant1 = retrieveUserByEmail("steve.smith@empire.com");
-//        UserResource applicant2 = retrieveUserByEmail("jessica.doe@ludlow.co.uk");
-//        UserResource applicant4 = retrieveUserByEmail("pete.tom@egg.com");
-//        UserResource applicant5 = retrieveUserByEmail("ewan+1@hiveit.co.uk");
-//
-//        competitionBuilderWithBasicInformation(line, Optional.empty()).
-//                moveCompetitionIntoOpenStatus().
-//                withApplications(
-//                        builder -> builder.
-//                                withBasicDetails(applicant1, "awesome riffs").
-//                                withQuestionResponses(questionResponsesFromCsv(line.name, "A novel solution to an old problem")).
-//                                withStartDate(LocalDate.of(2016, 3, 1)).
-//                                withDurationInMonths(51).
-//                                inviteCollaborator(applicant2).
-//                                inviteCollaborator(applicant4).
-//                                inviteCollaborator(applicant5).
-//                                withFinances(
-//                                        finance -> finance.
-//                                                withOrganisation("Empire Ltd").
-//                                                withUser(applicant1).
-//                                                withIndustrialCosts(
-//                                                        costs -> costs.
-//                                                                withWorkingDaysPerYear(123).
-//                                                                withGrantClaim(456).
-//                                                                withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-//                                                                withLabourEntry("Role 1", 100, 200).
-//                                                                withLabourEntry("Role 2", 200, 300).
-//                                                                withLabourEntry("Role 3", 300, 365).
-//                                                                withAdministrationSupportCostsCustomRate(25).
-//                                                                withMaterials("Generator", bd("5010"), 10).
-//                                                                withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-//                                                                withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-//                                                                withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-//                                                                withOtherCosts("Some more costs", bd("550")).
-//                                                                withOrganisationSize(OrganisationSize.MEDIUM)
-//                                                ),
-//                                        finance -> finance.
-//                                                withOrganisation("Ludlow").
-//                                                withUser(applicant2).
-//                                                withIndustrialCosts(
-//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
-//                                        finance -> finance.
-//                                                withOrganisation("EGGS").
-//                                                withUser(applicant4).
-//                                                withAcademicCosts(
-//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200)),
-//                                        finance -> finance.
-//                                                withOrganisation("HIVE IT LIMITED").
-//                                                withUser(applicant5).
-//                                                withIndustrialCosts(
-//                                                        costs -> costs.withLabourEntry("Role 1", 100, 200))
-//                                ).
-//                                submitApplication()
-//                ).
-//                moveCompetitionIntoFundersPanelStatus().
-//                sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
-//                restoreOriginalMilestones().
-//                build();
+        competitionLines.forEach(line -> {
+            if ("Connected digital additive manufacturing".equals(line.name)) {
+                createCompetitionWithApplications(line, Optional.of(1L));
+            } else {
+                createCompetitionWithApplications(line, Optional.empty());
+            }
+        });
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
-        List<ApplicationLine> applications = readApplications();
-        List<ApplicationLine> matchingApplications = simpleFilter(applications, a -> a.competitionName.equals(competitionName));
+        List<ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
         List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED).contains(a.status));
         return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatusConstants.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
-    }
-
-    private void createReadyToOpenCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
-    }
-
-    private void createInPreparationCompetition(CsvUtils.CompetitionLine line) {
-        createCompetitionWithApplications(line, Optional.empty());
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(competitionLine, competitionId);
-
-        List<ApplicationLine> applicationLines = readApplications();
 
         List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
 
@@ -319,10 +264,8 @@ public class GenerateTestData extends BaseIntegrationTest {
      */
     private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName) {
 
-        List<CsvUtils.ApplicationQuestionResponseLine> responses = readApplicationQuestionResponses();
-
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
-                simpleFilter(responses, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
+                simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
 
         return simpleMap(responsesForApplication, line -> baseBuilder -> {
 
