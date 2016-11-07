@@ -38,6 +38,21 @@ application stack. You should kill the process beforehand e.g. `sudo service sto
 
         ./setup.sh
         
+## Optional Configuration
+
+You can perform some additional configuration in the `.env` file that is used during the running of `setup.sh`. The default values are retrieved from `.env-defaults`. If you wish to configure the setup, copy the `.env-defaults` into a `.env` file and make your changes before running `setup.sh`. 
+
+Some options that may be of interest:
+
+Option          | Default   | Description
+--------------- | --------- | -----------
+DATA_XMX        | 512       | Sets the JVM `-Xmx` option value (in MB) for `data`
+DATA_XMS        | 256       | Sets the JVM `-Xms` option value (in MB) for `data`
+DATA_PORT_8081  | 8091      | Debugger port (on your localhost) for `data`
+WEB_XMX         | 512       | Sets the JVM `-Xmx` option value (in MB) for `web`
+WEB_XMS         | 256       | Sets the JVM `-Xms` option value (in MB) for `web`
+WEB_PORT_8081   | 8081      | Debugger port (on your localhost) for `web`
+        
 ## Usage
 
 Standard Docker + Compose usage applies from this point onwards. If in doubt, some utility scripts have been provided 
@@ -108,4 +123,4 @@ located somewhere else).
  
     Running `teardown.sh` followed by running `setup.sh` is recommended (aka try again).
     
- - If the build is failing (e.g. on Flyway migrations), have you run the `hosts-helper.sh` before the `setup.sh`? 
+ - If the build is failing (e.g. on Flyway migrations), have you run the `hosts-helper.sh` before the `setup.sh`? Are you using the old `Docker Machine` setup and your commands are still being evaluated in the VM?
