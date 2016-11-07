@@ -48,7 +48,6 @@ dependencies {
     compile "net.sf.opencsv:opencsv:2.3"
 
     compile files('../ifs-libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
-    //compile project(':ifs-data-service')
     testCompile files('../ifs-libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
