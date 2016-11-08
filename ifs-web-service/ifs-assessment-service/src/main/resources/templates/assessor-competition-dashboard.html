@@ -11,7 +11,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
@@ -22,15 +22,15 @@
                     <ul class="no-bullet">
                         <li><strong>Competition:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
                         <li><strong>Lead Technologist:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
-                        <li><strong>Accept applications deadline:</strong> <span th:text="${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
-                        <li><strong>Submit applications deadline:</strong> <span th:text="${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
+                        <li><strong>Accept applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
+                        <li><strong>Submit applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
                     </ul>
                 </div>
             </div>
 
             <div class="my-applications">
                 <div class="in-progress"  th:unless="${#lists.isEmpty(model.outstanding)}">
-                    <h2 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
+                    <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
                     <form class="bulk-select" action="" method="post">
                         <ul class="boxed-list">
                             <li th:each="application : ${model.outstanding}">
@@ -72,8 +72,8 @@
                 </div>
 
                 <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
-                    <h3 class="heading-medium">Submitted Assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
-                    <ul class="boxed-list">
+                    <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                    <ul class="boxed-list bulk-select">
                         <li th:each="application : ${model.submitted}">
                             <div class="grid-row">
                                 <div class="column-assessment-details">
