@@ -174,7 +174,7 @@ Project Finance can see the progress of partners bank details
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
-    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review Required")
+    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
     # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
     # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
     When the user clicks the button/link            link=Vitruvius Stonework Limited
