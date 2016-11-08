@@ -21,6 +21,7 @@ import java.util.List;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -53,6 +54,101 @@ class CsvUtils {
         List<ApplicationQuestionResponseLine> withoutFileUploads = simpleFilterNot(new ArrayList<>(uniqueLines), line -> !isBlank(line.fileUpload));
         List<ApplicationQuestionResponseLine> withoutAssessorAnswers = simpleFilterNot(withoutFileUploads, line -> "score".equals(line.value));
         return withoutAssessorAnswers;
+    }
+
+    static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
+
+        List<List<String>> lines = simpleFilterNot(readCsvLines("application-finances"), line -> isBlank(line.get(0)));
+        List<List<List<String>>> financeLinesPerOrganisation = new ArrayList<>();
+
+        // read the entirety of a single organisation's finances into a single List<List<String>>
+        for (int i = 0; i < lines.size(); i++) {
+
+            List<List<String>> organisationFinanceLines = new ArrayList<>();
+
+            for (i = i; i < lines.size(); i++) {
+
+                organisationFinanceLines.add(lines.get(i));
+
+                if (i == lines.size() - 1 || "Finances".equals(lines.get(i + 1).get(0))) {
+                    break;
+                }
+            }
+
+            financeLinesPerOrganisation.add(organisationFinanceLines);
+        }
+
+        List<List<List<String>>> nonEmptyFinances = simpleFilter(financeLinesPerOrganisation, organisationLines -> organisationLines.size() > 1);
+
+        // now process each organisation's finances one by one
+        List<ApplicationOrganisationFinanceBlock> organisationFinances = simpleMap(nonEmptyFinances, organisationFinanceLines -> {
+
+            ApplicationOrganisationFinanceBlock organisationCosts = new ApplicationOrganisationFinanceBlock(
+                    organisationFinanceLines.get(0));
+
+            for (int i = 1; i < organisationFinanceLines.size(); i++) {
+
+                List<String> currentLine = organisationFinanceLines.get(i);
+
+                if (!"Category".equals(currentLine.get(0))) {
+                    throw new RuntimeException("Was expecting a Category row but got " + currentLine.get(0));
+                }
+
+                String categoryCell = currentLine.get(1);
+
+                if (asList("Working days per year", "Grant claim", "Organisation size").contains(categoryCell)) {
+                    organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, singletonList(currentLine.get(2))));
+                } else {
+
+                    // skip over category-specific column headers and read the category's lines
+                    for (i = i + 2; i < organisationFinanceLines.size(); i++) {
+
+                        if ("Category".equals(organisationFinanceLines.get(i).get(0))) {
+                            i--;
+                            break;
+                        }
+
+                        List<String> costDetailsLine = organisationFinanceLines.get(i);
+                        organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, costDetailsLine.subList(1, costDetailsLine.size())));
+                    }
+                }
+            }
+
+            return organisationCosts;
+        });
+
+        return organisationFinances;
+    }
+
+    static class ApplicationOrganisationFinanceBlock {
+
+        String competitionName;
+        String applicationName;
+        String organisationName;
+        List<ApplicationFinanceRow> rows = new ArrayList<>();
+
+        private ApplicationOrganisationFinanceBlock(List<String> line) {
+
+            int i = 0;
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            organisationName = line.get(i++);
+        }
+
+        void addRow(ApplicationFinanceRow row) {
+            rows.add(row);
+        }
+    }
+
+    static class ApplicationFinanceRow {
+
+        String category;
+        List<String> metadata;
+
+        private ApplicationFinanceRow(String category, List<String> costDetails) {
+            this.category = category;
+            this.metadata = costDetails;
+        }
     }
 
     static class ApplicationQuestionResponseLine {

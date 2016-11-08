@@ -102,15 +102,49 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationDataBuilder organisationBuilder;
 
+    /**
+     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     */
     private static List<CompetitionLine> competitionLines;
 
     private static List<ApplicationLine> applicationLines;
 
+    /**
+     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     */
     private static List<ExternalUserLine> externalUserLines;
 
+    /**
+     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     **/
     private static List<InternalUserLine> internalUserLines;
 
+    /**
+     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id left join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') order by 1,2,3 INTO OUTFILE '/var/lib/mysql-files/application-questions5.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     * <p>
+     * And applied search-and-replace for:
+     * <p>
+     * How many balls can you juggle?
+     * What is the size of the potential market for your project?
+     * <p>
+     * What do you wear when juggling?
+     * How will you exploit and market your project?
+     * <p>
+     * What is your preferred juggling pattern?
+     * What economic, social and environmental benefits do you expect your project to deliver and when?
+     * <p>
+     * What mediums can you juggle with?
+     * What technical approach will you use and how will you manage your project?
+     * <p>
+     * Fifth Question
+     * What is innovative about your project?
+     */
     private static List<ApplicationQuestionResponseLine> questionResponseLines;
+
+    /**
+     * select "Competition name", "Application name", "Organisation name", "Category" union all select row.compname, row.appname, row.orgname, '' from (select distinct o.name as orgname, a.name as appname, c.name as compname, '' from competition c join application a on a.competition = c.id join process_role pr on pr.role_id in (1,2) and pr.application_id = a.id join organisation o on o.id = pr.organisation_id group by c.name, a.name, o.name) as row  INTO OUTFILE '/var/lib/mysql-files/application-finances.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+     */
+    private static List<ApplicationOrganisationFinanceBlock> applicationFinanceLines;
 
     @Before
     public void setup() throws Exception {
@@ -124,6 +158,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
         questionResponseLines = readApplicationQuestionResponses();
+        applicationFinanceLines = readApplicationFinances();
     }
 
     @PostConstruct
@@ -171,16 +206,10 @@ public class GenerateTestData extends BaseIntegrationTest {
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
     }
 
-    /**
-     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-     */
     private void createExternalUsers() {
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
-    /**
-     * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-     **/
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
@@ -192,9 +221,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    /**
-     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-     */
     private void createCompetitions() {
 
         competitionLines.forEach(line -> {
@@ -244,26 +270,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    /**
-     * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id left join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') order by 1,2,3 INTO OUTFILE '/var/lib/mysql-files/application-questions5.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
-     * <p>
-     * And applied search-and-replace for:
-     * <p>
-     * How many balls can you juggle?
-     * What is the size of the potential market for your project?
-     * <p>
-     * What do you wear when juggling?
-     * How will you exploit and market your project?
-     * <p>
-     * What is your preferred juggling pattern?
-     * What economic, social and environmental benefits do you expect your project to deliver and when?
-     * <p>
-     * What mediums can you juggle with?
-     * What technical approach will you use and how will you manage your project?
-     * <p>
-     * Fifth Question
-     * What is innovative about your project?
-     */
     private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
@@ -325,8 +331,14 @@ public class GenerateTestData extends BaseIntegrationTest {
                 String organisationName = orgDetails.getMiddle();
                 OrganisationTypeEnum organisationType = orgDetails.getRight();
 
+                simpleFindFirst(applicationFinanceLines, finances ->
+                        finances.competitionName.equals(line.competitionName) &&
+                        finances.applicationName.equals(line.title) &&
+                        finances.organisationName.equals(organisationName));
+
                 if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
-                    return  finance -> finance.
+
+                    return finance -> finance.
                             withOrganisation(organisationName).
                             withUser(user).
                             withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
