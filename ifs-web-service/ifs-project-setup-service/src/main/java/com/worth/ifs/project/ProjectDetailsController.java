@@ -56,10 +56,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController extends AddressLookupBaseController {
-    static final String SAVE_FC = "save_fc";
-    static final String INVITE_FC = "invite_fc";
-    static final String SAVE_PM = "save_pm";
-    static final String INVITE_PM = "invite_pm";
+    private static final String SAVE_FC = "save_fc";
+    private static final String INVITE_FC = "invite_fc";
+    private static final String SAVE_PM = "save_pm";
+    private static final String INVITE_PM = "invite_pm";
 
 	@Autowired
     private ProjectService projectService;

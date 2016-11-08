@@ -22,7 +22,7 @@ public class SelectProjectManagerViewModel {
     private String projectName;
     private boolean inviteAction;
 
-    public SelectProjectManagerViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition, boolean inviteAction) {
+    public SelectProjectManagerViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition, final boolean inviteAction) {
         this.organisationUsers = organisationUsers;
         this.invitedUsers = invitedUsers;
         this.projectId = project.getId();

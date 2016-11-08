@@ -42,9 +42,6 @@ import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
-import static com.worth.ifs.project.ProjectDetailsController.INVITE_FC;
-import static com.worth.ifs.project.ProjectDetailsController.SAVE_FC;
-import static com.worth.ifs.project.ProjectDetailsController.SAVE_PM;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -66,6 +63,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
+    private static final String SAVE_FC = "save_fc";
+    private static final String INVITE_FC = "invite_fc";
+    private static final String SAVE_PM = "save_pm";
 
 	@Before
 	public void setUp() {
