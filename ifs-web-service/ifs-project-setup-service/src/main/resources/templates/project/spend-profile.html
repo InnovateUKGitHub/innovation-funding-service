@@ -14,7 +14,7 @@
 
         <div class="page-title">
             <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
-            <h1 class="heading-xlarge">Spend Profile</h1>
+            <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
 
@@ -41,9 +41,9 @@
 
         <th:block th:if ="${model.markedAsComplete and form == null and !model.submitted}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is marked as complete. You can edit at this stage or wait until your partners
-                    have submitted their spend profiles to us. Once all spend profiles are complete, you can submit
-                    them to us.
+                <p>We have reviewed and confirmed your project costs.
+                   You should now develop a spend profile together with your project partners.
+                   This is so we can plan the allocation of the grant funding to your project.
                 </p>
             </div>
         </th:block>
@@ -54,15 +54,14 @@
         <dl class="standard-definition-list">
           <dt>Project start date</dt>
           <dd>
-            <th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-            <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMMM yyyy')}" />
+            <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
           </dd>
           <dt>Duration</dt>
-          <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
+          <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
         </dl>
 
         <h2 class="heading-medium"> <th:block th:text="${model.organisationName}"/> - Spend profile</h2>
-        <p>Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
+        <p>Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
     </div>
 
     <th:block th:with="readonly=${form == null ? true : false}">
@@ -80,7 +79,7 @@
                 </colgroup>
                 <thead>
                   <tr>
-                      <th scope="row" th:if="${model.research}" id="month" colspan="2">J-eS category</th>
+                      <th scope="row" th:if="${model.research}" id="month" colspan="2">Je-S category</th>
                       <th scope="row" th:unless="${model.research}"  id="month">Month</th>
                       <th:block th:each="month,stats : ${model.table.getMonths()}">
                         <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
