@@ -148,7 +148,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
         if (StringUtils.isEmpty(inviteProjectResource.getEmail()) || StringUtils.isEmpty(inviteProjectResource.getName())
                 || inviteProjectResource.getProject() == null ||inviteProjectResource.getOrganisation() == null ){
-            return serviceFailure(badRequestError("The Invite is not valid"));
+            return serviceFailure(PROJECT_INVITE_INVALID);
         }
         return serviceSuccess();
     }
