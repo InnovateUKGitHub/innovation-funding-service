@@ -738,14 +738,14 @@
 <div th:fragment="prototype-assessor-application">
     <div class="my-applications">
         <div class="in-progress">
-            <h3 class="heading-large">Applications for Assessment (<span>3</span>)</h3>
+            <h2 class="heading-medium">Applications for assessment (<span>3</span>)</h2>
             <ul class="boxed-list bulk-select">
                 <form id="bulk_assessments_submission" method="GET">
 
                     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
 
                         <button class="js-close close" aria-label="Close Popup">X</button>
-                        <h2 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h2>
+                        <h3 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h3>
                         <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
                         <div>
                             <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes, I want to submit the applications</button>
@@ -755,10 +755,9 @@
                     <li th:unless="${param.status != null and param.status[0] == 'reject' or param.status != null and param.status[0] == 'accept'}">
                         <div class="grid-row">
                             <div class="column-assessment-details">
-                                <h4 class="heading-medium">
-                                <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
-                                <!--">-->
-                                </h4>
+                                <h3 class="heading-medium">
+                                    <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
+                                </h3>
                                 <div><p>Empire Ltd</p></div>
                             </div>
                             <div class="column-assessment-status navigation-right">
@@ -786,10 +785,9 @@
                     <li>
                         <div class="grid-row">
                             <div class="column-assessment-details">
-                                <h4 class="heading-medium">
-                                <a href="#">Security for the Internet of Things</a>
-                                <!--">-->
-                                </h4>
+                                <h3 class="heading-medium">
+                                    <a href="#">Security for the Internet of Things</a>
+                                </h3>
                                 <div><p>Ludlow</p></div>
                             </div>
                             <div class="column-assessment-status navigation-right">
@@ -812,10 +810,9 @@
                     <li th:if="${param.status != null and param.status[0] == 'accept'}">
                         <div class="grid-row">
                             <div class="column-assessment-details">
-                                <h4 class="heading-medium">
-                                <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
-                                <!--">-->
-                                </h4>
+                                <h3 class="heading-medium">
+                                    <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
+                                </h3>
                                 <div><p>Empire Ltd</p></div>
                             </div>
                             <div class="column-assessment-status navigation-right">
@@ -835,10 +832,9 @@
                     <li>
                         <div class="grid-row">
                             <div class="column-assessment-details">
-                                <h4 class="heading-medium">
-                                <a href="/prototypes/984-assessor-application-overview">A new innovative solution</a>
-                                <!--">-->
-                                </h4>
+                                <h3 class="heading-medium">
+                                    <a href="/prototypes/984-assessor-application-overview">A new innovative solution</a>
+                                </h3>
                                 <div><p>Empire Ltd</p></div>
                             </div>
                             <div class="column-assessment-status navigation-right">
@@ -872,7 +868,7 @@
         </div>
         <!--all the submitted assessments-->
         <div class="submitted">
-            <h4 class="heading-medium">Submitted Assessment (<span>1</span>)</h4>
+            <h2 class="heading-medium">Submitted assessment (<span>1</span>)</h2>
             <ul class="boxed-list bulk-select">
                 <li>
                     <div class="grid-row">

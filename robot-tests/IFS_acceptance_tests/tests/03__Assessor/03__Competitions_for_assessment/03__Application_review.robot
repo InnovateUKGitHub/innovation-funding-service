@@ -49,7 +49,7 @@ Navigation using previous button
 Project details sections should not be scorable
     [Documentation]    INFUND-3400
     [Tags]
-    When the user clicks the button/link    link=Back to assessment overview
+    When the user clicks the button/link    link=Back to your assessment overview
     And the user clicks the button/link    link=Application details
     And the user should see the text in the page    Project title
     Then the user should not see the text in the page    Question score
@@ -86,7 +86,7 @@ Choosing 'not in scope' should update on the overview page
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
-    And the user clicks the button/link    link=Back to assessment overview
+    And the user clicks the button/link    link=Back to your assessment overview
     And the user should see the text in the page    In scope? No
     Then The user should not see the element    css=.column-third > img    #green flag
 
@@ -100,7 +100,7 @@ Scope: Autosave
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And The user enters text to a text field    css=#form-input-193 .editor    Testing feedback field when "No" is selected.
-    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     Then the user should see the text in the page    In scope? No
     And the user clicks the button/link    link=Scope
     And the user should see the text in the page    Technical feasibility studies
@@ -149,7 +149,7 @@ Question 1: Autosave
     And the user clicks the button/link    link=1. How many
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry.
-    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    link=1. How many
     Then the user should see the text in the page    This is to test the feedback entry.
     And the user should see the text in the page    9
@@ -170,7 +170,7 @@ Finance overview
     And the user should not see the element    css=input
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
-    And the user clicks the button/link    link=Back to assessment overview
+    And the user clicks the button/link    link=Back to your assessment overview
     And the user should be redirected to the correct page    ${Assessment_overview_9}
     [Teardown]
 
