@@ -428,14 +428,24 @@ public class GenerateTestData extends BaseIntegrationTest {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
+                withAcademicCosts(costs -> costs.
+                        withTsbReference("My REF").
+                        withDirectlyIncurredStaff(bd("11")).
+                        withDirectlyIncurredTravelAndSubsistence(bd("22")).
+                        withDirectlyIncurredOtherCosts(bd("33")).
+                        withDirectlyAllocatedInvestigators(bd("44")).
+                        withDirectlyAllocatedEstateCosts(bd("55")).
+                        withDirectlyAllocatedOtherCosts(bd("66")).
+                        withIndirectCosts(bd("77")).
+                        withExceptionsStaff(bd("88")).
+                        withExceptionsOtherCosts(bd("99")));
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances) {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
+                withAcademicCosts(costs -> costs.withTsbReference("My REF"));
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {

@@ -381,7 +381,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
                                 withOrganisation("EGGS").
                                 withUser(applicant4).
                                 withAcademicCosts(
-                                    costs -> costs.withLabourEntry("Role 1", 100, 200)),
+                                        costs -> costs.withTsbReference("My REF")),
                             finance -> finance.
                                 withOrganisation("HIVE IT LIMITED").
                                 withUser(applicant5).

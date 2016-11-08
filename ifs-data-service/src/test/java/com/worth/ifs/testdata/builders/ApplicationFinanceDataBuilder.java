@@ -13,6 +13,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+import static com.worth.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
+import static com.worth.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
 import static java.util.Collections.emptyList;
 
 
@@ -50,7 +52,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccessObjectOrThrowException();
 
-            IndustrialCostDataBuilder baseFinanceBuilder = IndustrialCostDataBuilder.newIndustrialCostData(serviceLocator).
+            IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
                     withCompetition(data.getCompetition());
 
@@ -58,7 +60,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         });
     }
 
-    public ApplicationFinanceDataBuilder withAcademicCosts(UnaryOperator<IndustrialCostDataBuilder> costBuilderFn) {
+    public ApplicationFinanceDataBuilder withAcademicCosts(UnaryOperator<AcademicCostDataBuilder> costBuilderFn) {
 
         return doAsUser(data -> {
 
@@ -66,11 +68,11 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccessObjectOrThrowException();
 
-            IndustrialCostDataBuilder baseFinanceBuilder = IndustrialCostDataBuilder.newIndustrialCostData(serviceLocator).
+            AcademicCostDataBuilder baseFinanceBuilder = newAcademicCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
                     withCompetition(data.getCompetition());
 
-//            costBuilderFn.apply(baseFinanceBuilder).build();
+            costBuilderFn.apply(baseFinanceBuilder).build();
         });
     }
 
