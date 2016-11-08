@@ -1,5 +1,8 @@
-echo "**This script require the following:"
-echo "**A local database called ifs_baseline with username: root and password: password"
+#!/bin/bash
+echo "**This script requires / does the following:"
+echo "**A local database with username: root and password: password"
+echo "Creating the database if it does not exist"
+mysql -uroot -ppassword -e "CREATE SCHEMA IF NOT EXISTS ifs_baseline"
 cd ../ifs-data-service
 echo "**Building a fresh database running the scripts that have been or will be run on LIVE"
 ./gradlew flywayClean -Dflyway.schemas=ifs_baseline
