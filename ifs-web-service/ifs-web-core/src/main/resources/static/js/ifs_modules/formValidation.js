@@ -66,6 +66,10 @@ IFS.core.formValidation = (function() {
           future : "Please enter a future date"
         }
       },
+      pattern : {
+        fields : '[pattern]',
+        messageInvalid : "Please correct this field"
+      },
       tel : {
         fields : '[type="tel"]',
         messageInvalid : "Please enter a valid phone number"
@@ -102,6 +106,7 @@ IFS.core.formValidation = (function() {
       jQuery('body').on('change', s.maxwordslength.fields, function() { IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true); });
       jQuery('body').on('change', s.tel.fields, function() { IFS.core.formValidation.checkTel(jQuery(this), true); });
       jQuery('body').on('change', s.date.fields, function() {  IFS.core.formValidation.checkDate(jQuery(this), true); });
+      jQuery('body').on('change', s.pattern.fields, function() {  IFS.core.formValidation.checkPattern(jQuery(this), true); });
 
       //set data attribute on date fields
       //which has the combined value of the dates
@@ -496,6 +501,32 @@ IFS.core.formValidation = (function() {
       else {
         if(showMessage){ IFS.core.formValidation.setInvalid(allFields, futureErrorMessage); }
         return false;
+      }
+    },
+    checkPattern : function(field, showMessage) {
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'pattern');
+      if(s.html5validationMode){
+        var domField = field[0];
+        if(domField.validity.patternMismatch){
+          if(showMessage){ IFS.core.formValidation.setInvalid(field, errorMessage); }
+          return false;
+        }
+        else {
+          if(showMessage){ IFS.core.formValidation.setValid(field, errorMessage); }
+          return true;
+        }
+      }
+      else {
+        var regex = field.attr('pattern');
+        var regexObj = new RegExp(regex);
+        if(!regexObj.test(field.val())){
+          if(showMessage){ IFS.core.formValidation.setInvalid(field, errorMessage); }
+          return false;
+        }
+        else {
+          if(showMessage){ IFS.core.formValidation.setValid(field, errorMessage); }
+          return true;
+        }
       }
     },
     getErrorMessage : function(field, type) {

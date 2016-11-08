@@ -3,7 +3,7 @@ IFS.core.autoSave = (function() {
   var s; // private alias to settings
   var promiseList = {};
   var autoSaveTimer;
-  var serverSideValidationErrors = [];
+
   // we store the last validation message as deleting of messages is done by content as unique identifier.
   // So if we have multiple messages it will only delete the one which contains the message that has been resolved.
 
@@ -54,7 +54,6 @@ IFS.core.autoSave = (function() {
       if(typeof(promiseList[promiseListName]) == 'undefined'){
         promiseList[promiseListName] = jQuery.when({}); //fire first promise :)
       }
-
       promiseList[promiseListName] = promiseList[promiseListName].then(IFS.core.autoSave.processAjax(field));
     },
     getPostObject : function(field, form) {
@@ -137,7 +136,7 @@ IFS.core.autoSave = (function() {
           competitionId = form.attr('data-competition');
           var section = form.attr('data-section');
           var subsection = form.attr('data-subsection');
-          if(subsection != null && subsection != '') {
+          if(typeof(subsection) !== 'undefined') {
             url = '/management/competition/setup/' + competitionId + '/section/' + section + '/sub/' + subsection + '/saveFormElement';
           } else {
             url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
@@ -191,7 +190,6 @@ IFS.core.autoSave = (function() {
           var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
           //transform name of costrow for persisting to database
-
           //disable camelcase as validation_errors is coming from the server
           //would be nice to fix this on the server
           // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
@@ -205,20 +203,7 @@ IFS.core.autoSave = (function() {
 
           //save message
           setTimeout(function() {
-            IFS.core.autoSave.populateValidationErrorsOnPageLoad(field);
-            IFS.core.autoSave.clearServerSideValidationErrors(field);
             autoSaveInfo.html('Saved!');
-
-            //disable camelcase as validation_errors is coming from the server
-            //would be nice to fix this on the server
-            // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-            if(typeof(data.validation_errors) !== 'undefined'){
-              jQuery.each(data.validation_errors, function(index, value) {
-                IFS.core.formValidation.setInvalid(field, value);
-                serverSideValidationErrors.push(value);
-              });
-              // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
-            }
           }, remainingWaitingTime);
         }).fail(function(jqXHR, data) {
           if(autoSaveInfo.length){
@@ -251,19 +236,6 @@ IFS.core.autoSave = (function() {
         errorMessage = "Something went wrong when saving your data";
       }
       return errorMessage;
-    },
-    clearServerSideValidationErrors : function(field) {
-      for (var i = 0; i < serverSideValidationErrors.length; i++){
-        IFS.core.formValidation.setValid(field, serverSideValidationErrors[i]);
-      }
-    },
-    populateValidationErrorsOnPageLoad : function(field) {
-      var formGroup = field.closest('.form-group.error');
-      if(formGroup.find('.error-message').text().length > 0 && serverSideValidationErrors.length === 0){
-        var errormsgonLoad = formGroup.find('.error-message').text();
-        serverSideValidationErrors.push(errormsgonLoad);
-      }
     }
-
   };
 })();
