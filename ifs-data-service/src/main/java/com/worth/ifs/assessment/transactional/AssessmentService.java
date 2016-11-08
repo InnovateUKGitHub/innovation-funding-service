@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface AssessmentService {
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ_NON_DASHBOARD')")
     ServiceResult<AssessmentResource> findById(Long id);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

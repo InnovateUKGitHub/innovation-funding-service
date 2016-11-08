@@ -29,6 +29,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     private UserResource otherUser;
     private AssessmentResource openAssessmentResource;
     private AssessmentResource rejectedAssessmentResource;
+    private AssessmentResource submittedAssessmentResource;
 
     @Autowired
     public AssessmentMapper assessmentMapper;
@@ -56,6 +57,10 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withParticipant(processRole)
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.REJECTED.getBackingState()))
                 .build();
+        Assessment submittedAssessment = newAssessment()
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.SUBMITTED.getBackingState()))
+                .build();
 
         openAssessmentResource = newAssessmentResource()
                 .withId(openAssessment.getId())
@@ -67,9 +72,15 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withProcessRole(processRole.getId())
                 .build();
 
+        submittedAssessmentResource = newAssessmentResource()
+                .withId(submittedAssessment.getId())
+                .withProcessRole(processRole.getId())
+                .build();
+
         when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
         when(assessmentRepositoryMock.findOne(openAssessment.getId())).thenReturn(openAssessment);
         when(assessmentRepositoryMock.findOne(rejectedAssessment.getId())).thenReturn(rejectedAssessment);
+        when(assessmentRepositoryMock.findOne(submittedAssessment.getId())).thenReturn(submittedAssessment);
     }
 
     @Test
@@ -78,8 +89,28 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
+    public void ownerCanReadSubmittedAssessmentOnDashboard() {
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessment(submittedAssessmentResource, assessorUser));
+    }
+
+    @Test
+    public void ownerCanReadOpenAssessmentNonDashboard() {
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessmentNonDashboard(openAssessmentResource, assessorUser));
+    }
+
+    @Test
+    public void ownerCanNotReadSubmittedAssessmentNonDashboard() {
+        assertFalse("the owner of an assessment should not be able to read that assessment", rules.userCanReadAssessmentNonDashboard(submittedAssessmentResource, assessorUser));
+    }
+
+    @Test
     public void otherUsersCanNotReadOpenAssessment() {
         assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(openAssessmentResource, otherUser));
+    }
+
+    @Test
+    public void otherUsersCanNotReadOpenAssessmentNonDashboard() {
+        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessmentNonDashboard(openAssessmentResource, otherUser));
     }
 
     @Test
@@ -95,6 +126,11 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     @Test
     public void ownersCanNotReadRejectedAssessments() {
         assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessment(rejectedAssessmentResource, assessorUser));
+    }
+
+    @Test
+    public void ownersCanNotReadRejectedAssessmentsNonDashboard() {
+        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessmentNonDashboard(rejectedAssessmentResource, assessorUser));
     }
 
     @Test

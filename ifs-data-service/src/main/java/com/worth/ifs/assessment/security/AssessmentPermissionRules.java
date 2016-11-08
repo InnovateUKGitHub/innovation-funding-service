@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.assessment.domain.Assessment} resources.
@@ -28,34 +32,31 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     @Autowired
     AssessmentRepository assessmentRepository;
 
-    @PermissionRule(value = "READ", description = "Assessors can read Assessments")
-    public boolean userCanReadAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isAssessorForAssessment(assessment, user);
+    @PermissionRule(value = "READ", description = "Assessors can read all Assessments, except those rejected")
+    public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
+        Stream<AssessmentStates> allowedStates = Stream.of(PENDING, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ_NON_DASHBOARD", description = "Rule for reading assessments not on the competition dashboard")
+    public boolean userCanReadAssessmentNonDashboard(AssessmentResource assessment, final UserResource user) {
+        Stream<AssessmentStates> allowedStates = Stream.of(PENDING, OPEN, READY_TO_SUBMIT);
+        return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")
-    public boolean userCanUpdateAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isAssessorForAssessment(assessment, user);
+    public boolean userCanUpdateAssessment(AssessmentResource assessment, UserResource user) {
+        Stream<AssessmentStates> allowedStates = Stream.of(PENDING, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
-    private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
+    private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user, Stream<AssessmentStates> allowedStates) {
         Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
-        return user.getId().equals(assessmentUser) && assessmentIsViewableState(assessment);
+        return user.getId().equals(assessmentUser) && assessmentHasViewableState(assessment, allowedStates);
     }
 
-    private boolean assessmentIsViewableState(final AssessmentResource assessmentResource) {
+    private boolean assessmentHasViewableState(AssessmentResource assessmentResource, Stream<AssessmentStates> allowedStates) {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-
-        List<AssessmentStates> allowedActivityStates = new ArrayList<>();
-        allowedActivityStates.add(AssessmentStates.PENDING);
-        allowedActivityStates.add(AssessmentStates.OPEN);
-        allowedActivityStates.add(AssessmentStates.READY_TO_SUBMIT);
-        allowedActivityStates.add(AssessmentStates.SUBMITTED);
-
-        if (allowedActivityStates.contains(assessment.getActivityState())) {
-            return true;
-        } else {
-            return false;
-        }
+        return allowedStates.anyMatch(state -> state.equals(assessment.getActivityState()));
     }
 }
