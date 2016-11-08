@@ -66,7 +66,7 @@ class CsvUtils {
 
             List<List<String>> organisationFinanceLines = new ArrayList<>();
 
-            for (i = i; i < lines.size(); i++) {
+            for (; i < lines.size(); i++) {
 
                 organisationFinanceLines.add(lines.get(i));
 
@@ -109,7 +109,7 @@ class CsvUtils {
                         }
 
                         List<String> costDetailsLine = organisationFinanceLines.get(i);
-                        organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, costDetailsLine.subList(1, costDetailsLine.size())));
+                        organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, costDetailsLine));
                     }
                 }
             }

@@ -370,7 +370,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     costsWithData = addFinanceRow(costsWithData, financeRow);
                 }
 
-                return costs;
+                return costsWithData;
             };
 
 
@@ -392,9 +392,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 default: throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
             }
             case "Materials": return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
-            case "Capital usage": return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(0)),
-                    financeRow.metadata.get(1), Boolean.parseBoolean(financeRow.metadata.get(2)),
-                    bd(financeRow.metadata.get(3)), bd(financeRow.metadata.get(4)), Integer.valueOf(financeRow.metadata.get(5)));
+            case "Capital usage": return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
+                    financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
+                    bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
             case "Subcontracting": return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
             case "Travel and subsistence": return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
             case "Other costs": return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
