@@ -324,7 +324,8 @@ Application: Application process Page
 Application: Business opportunity
     [Documentation]   INFUND-5632
     When the user clicks the button/link    link=Business opportunity
-    Then the user should see the text in the page  Make changes to the question 'Business opportunity'.
+    Then the user should see the element    jQuery=h1:contains("Business opportunity")
+    And the user should see the text in the page  You can edit this question and the guidance text for assessors.
     And the user should see the element      jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 Application: Finances Form

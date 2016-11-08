@@ -7,7 +7,6 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
-import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -18,7 +17,6 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.FinanceContactForm;
-import com.worth.ifs.project.form.InviteeForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -27,7 +25,6 @@ import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -52,7 +49,6 @@ import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.stream.Collectors.toList;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
  * This controller will handle all requests that are related to project details.
@@ -60,13 +56,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController extends AddressLookupBaseController {
+    private static final String SAVE_FC = "save_fc";
+    private static final String INVITE_FC = "invite_fc";
+    private static final String SAVE_PM = "save_pm";
+    private static final String INVITE_PM = "invite_pm";
 
-    private static final String INVITE_FORM_ATTR_NAME = "inviteForm";
 	@Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -79,9 +75,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
-
-    @Autowired
-    private BankDetailsRestService bankDetailsService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
@@ -129,28 +122,22 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      Model model,
+                                     @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        FinanceContactForm form = new FinanceContactForm();
-        InviteeForm inviteeForm = new InviteeForm();
-
-        return doViewFinanceContact(model, projectId, organisation, loggedInUser, form, inviteeForm, true);
+        return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @RequestMapping(value = "/{projectId}/details/finance-contact", method = POST)
+    @RequestMapping(value = "/{projectId}/details/finance-contact", params = SAVE_FC, method = POST)
     public String updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                        Model model,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        InviteeForm inviteForm = new InviteeForm();
-
-        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, inviteForm, false);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
+            ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, financeContactForm.getOrganisation(), financeContactForm.getFinanceContact());
 
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
@@ -158,63 +145,55 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @RequestMapping(value = "/{projectId}/details/invite-finance-contact", method = POST)
+    @RequestMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC, method = POST)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
                                        @RequestParam(value="organisation") Long organisation,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser
                                        ) {
 
-        FinanceContactForm financeForm = new FinanceContactForm();
-
-        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, form, false);
-        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
+        Supplier<String> successView = () -> redirectToFinanceContact(projectId, organisation);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
+            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, financeContactForm.getName(), financeContactForm.getEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
             return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-                InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
 
-                ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite);
-
-                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+                if(savedInvite.isPresent()) {
+                    ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite.get());
+                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+                } else {
+                    return validationHandler.failNowOrSucceedWith(failureView, successView);
+                }
             });
         });
     }
 
-    private boolean validateEmailIsUnique(String email) {
-        RestResult<UserResource> existingUserSearch = userService.findUserByEmail(email);
-        return NOT_FOUND.equals(existingUserSearch.getStatusCode());
-    }
-
-
-
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
+                                     @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectManagerForm projectManagerForm = populateOriginalProjectManagerForm(projectId);
-        InviteeForm form = new InviteeForm();
-        return doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
+        populateOriginalProjectManagerForm(projectId, projectManagerForm);
+        return doViewProjectManager(model, projectId, loggedInUser, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @RequestMapping(value = "/{projectId}/details/project-manager", method = POST)
+    @RequestMapping(value = "/{projectId}/details/project-manager", params = SAVE_PM, method = POST)
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        InviteeForm form = new InviteeForm();
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, false);
         
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -226,33 +205,36 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @RequestMapping(value = "/{projectId}/details/invite-project-manager", method = POST)
-    public String inviteProjectManager(Model model, @PathVariable("projectId") final Long projectId,
-        @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
-        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+    @RequestMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM, method = POST)
+    public String inviteProjectManager(Model model,
+                                       @PathVariable("projectId") final Long projectId,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
+                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
         @ModelAttribute("loggedInUser") UserResource loggedInUser
     ) {
+        populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
-        ProjectManagerForm projectManagerForm = populateOriginalProjectManagerForm(projectId);
-
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
-        Supplier<String> successView = () -> redirectToProjectDetails(projectId);
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
+        Supplier<String> successView = () -> redirectToProjectManager(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             Long organisation = projectService.getLeadOrganisation(projectId).getId();
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
+            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, projectManagerForm.getName(), projectManagerForm.getEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
             return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-                InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
 
-                ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite);
-
-                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+                if(savedInvite.isPresent()) {
+                    ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite.get());
+                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+                } else {
+                    return validationHandler.failNowOrSucceedWith(failureView, successView);
+                }
             });
         });
     }
@@ -403,16 +385,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-start-date";
     }
 
-    private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
-
+    private void populateOriginalProjectManagerForm(final Long projectId, ProjectManagerForm projectManagerForm) {
         Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
-
-        ProjectManagerForm form = new ProjectManagerForm();
-        form.setProjectManager(existingProjectManager.map(ProjectUserResource::getUser).orElse(null));
-        return form;
+        projectManagerForm.setProjectManager(existingProjectManager.map(ProjectUserResource::getUser).orElse(null));
     }
 
-    private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, final InviteeForm inviteeForm, boolean setDefaultFinanceContact) {
+    private String doViewFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, boolean setDefaultFinanceContact, boolean inviteAction) {
 
         if(organisation == null) {
             return redirectToProjectDetails(projectId);
@@ -426,7 +404,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return redirectToProjectDetails(projectId);
         }
 
-        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, inviteeForm, setDefaultFinanceContact);
+        return modelForFinanceContact(model, projectId, organisation, loggedInUser, form, setDefaultFinanceContact, inviteAction);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
@@ -434,8 +412,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
-    private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
-                                             ApplicationResource applicationResource, UserResource loggedInUser) {
+    private void populateProjectManagerModel(Model model, final Long projectId,
+                                             ApplicationResource applicationResource, UserResource loggedInUser,
+                                             boolean inviteAction) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -451,10 +430,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(thisOrganisationUsers, invitedUsers, projectResource, loggedInUser.getId(), applicationResource, competitionResource);
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(thisOrganisationUsers, invitedUsers, projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 
         model.addAttribute("model", viewModel);
-        model.addAttribute(FORM_ATTR_NAME, form);
     }
 
     private boolean anyUsersInGivenOrganisationForProject(Long projectId, Long organisationId) {
@@ -475,21 +453,21 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return !projectUsersForUserAndOrganisation.isEmpty();
     }
 
-    private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm form, InviteeForm inviteeForm, boolean setDefaultFinanceContact) {
+    private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm financeContactForm, boolean setDefaultFinanceContact, boolean inviteAction) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> financeContacts = simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.equals(pr.getOrganisation()));
 
-        form.setOrganisation(organisation);
+        financeContactForm.setOrganisation(organisation);
 
         if (setDefaultFinanceContact && !financeContacts.isEmpty()) {
-            form.setFinanceContact(getOnlyElement(financeContacts).getUser());
+            financeContactForm.setFinanceContact(getOnlyElement(financeContacts).getUser());
         }
 
-        return modelForFinanceContact(model, projectId, form, loggedInUser, inviteeForm);  //, organisation
+        return modelForFinanceContact(model, projectId, financeContactForm, loggedInUser, inviteAction);  //, organisation
     }
 
-    private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm form, UserResource loggedInUser, InviteeForm inviteeForm) {
+    private String modelForFinanceContact(Model model, Long projectId, FinanceContactForm financeContactForm, UserResource loggedInUser, boolean inviteAction) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -497,7 +475,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<ProjectUserResource> partnerUsers = projectService.getProjectUsersWithPartnerRole(projectId);
 
         List<ProjectUserResource> organisationProjectUsers = simpleFilter(partnerUsers, pu ->
-                pu.getOrganisation().equals(form.getOrganisation()));
+                pu.getOrganisation().equals(financeContactForm.getOrganisation()));
 
         List<InviteProjectResource> inviteProjectResourceList =
                 projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
@@ -509,7 +487,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId());
 
         Predicate<InviteProjectResource> inviteProjectResourceFilterFn = invite ->
-                form.getOrganisation().equals(invite.getOrganisation()) &&
+                financeContactForm.getOrganisation().equals(invite.getOrganisation()) &&
                 invite.getStatus() != InviteStatus.OPENED;
 
         List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(organisationProjectUsers, financeContactModelMappingFn);
@@ -518,15 +496,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-        SelectFinanceContactViewModel viewModel = new SelectFinanceContactViewModel(thisOrganisationUsers, invitedUsers, form.getOrganisation(), projectResource, loggedInUser.getId(), applicationResource, competitionResource);
+        SelectFinanceContactViewModel viewModel = new SelectFinanceContactViewModel(thisOrganisationUsers, invitedUsers, financeContactForm.getOrganisation(), projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 
-        model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute(INVITE_FORM_ATTR_NAME, inviteeForm);
+        model.addAttribute(FORM_ATTR_NAME, financeContactForm);
         model.addAttribute("model", viewModel);
         return "project/finance-contact";
     }
 
-    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, ProjectManagerForm form, final InviteeForm inviteeForm) {
+    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, boolean inviteAction) {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -535,8 +512,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
 
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        model.addAttribute("inviteForm", inviteeForm);
-        populateProjectManagerModel(model, projectId, form, applicationResource, loggedInUser);
+        populateProjectManagerModel(model, projectId, applicationResource, loggedInUser, inviteAction);
 
         return "project/project-manager";
     }
@@ -547,10 +523,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         processAddressLookupFields(form);
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
-    }
-
-    private String redirectToProjectDetails(long projectId) {
-        return "redirect:/project/" + projectId + "/details";
     }
 
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project){
@@ -613,5 +585,17 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         inviteResource.setLeadOrganisation(leadOrganisation.getName());
 
         return inviteResource;
+    }
+
+    private String redirectToProjectDetails(long projectId) {
+        return "redirect:/project/" + projectId + "/details";
+    }
+
+    private String redirectToFinanceContact(long projectId, long organisationId){
+        return "redirect:/project/" + projectId + "/details/finance-contact?organisation=" + organisationId;
+    }
+
+    private String redirectToProjectManager(long projectId){
+        return "redirect:/project/" + projectId + "/details/project-manager";
     }
 }

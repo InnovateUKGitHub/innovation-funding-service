@@ -710,6 +710,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -731,7 +732,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
-                    leadProjectDetailsSubmitted,
+                    partnerProjectDetailsSubmittedStatus,
                     NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,

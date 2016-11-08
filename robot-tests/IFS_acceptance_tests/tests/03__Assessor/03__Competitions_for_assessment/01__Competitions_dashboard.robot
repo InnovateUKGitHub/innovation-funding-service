@@ -15,10 +15,10 @@ Competition link should navigate to the applications
     [Tags]    HappyPath
     [Setup]
     When The user clicks the button/link    link=Juggling Craziness
-    Then The user should see the text in the page    Applications for Assessment
+    Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
-    Then the total calculation in dashboard should be correct    Applications for Assessment    //div/form/ul/li
+    Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/ul/li
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
@@ -62,4 +62,3 @@ Reject an application for assessment
     And the status is updated
 
 *** Keywords ***
-
