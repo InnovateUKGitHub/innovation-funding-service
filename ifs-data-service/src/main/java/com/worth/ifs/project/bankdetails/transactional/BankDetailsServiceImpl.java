@@ -141,15 +141,10 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
-        Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), org.getId()).getSuccessObject();
-
-        if(!isSeekingFunding){
-            return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
-        }
 
         return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
                 failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
-                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : PENDING));
+                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : ACTION_REQUIRED));
     }
 
     @Override
