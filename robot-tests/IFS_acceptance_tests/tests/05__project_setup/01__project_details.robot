@@ -49,7 +49,7 @@ Internal users can see Project Details not yet completed
     Then the user should not see the element        jQuery=#table-project-status tr:nth-child(1) td.status.ok a   #Check here that there is no Green-Check
     When the user clicks the button/link            jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the text in the page   These project details were supplied by the lead partner on behalf of the project.
-    And the user should see the text in the page    Each of the partners is responsible for submitting their own finance contact.
+    And the user should see the text in the page    Each partner must provide a finance contact. We will contact them with any queries around partner finances.
     When the user should see the element            jQuery=#project-details
     Then the user should see the element            jQuery=#project-address:contains("Not yet completed")
     And the user should see the element             jQuery=#no-project-manager:contains("Not yet completed")
