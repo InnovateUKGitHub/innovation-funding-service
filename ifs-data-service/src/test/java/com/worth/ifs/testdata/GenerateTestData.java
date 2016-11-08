@@ -41,9 +41,9 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
@@ -315,60 +315,127 @@ public class GenerateTestData extends BaseIntegrationTest {
             baseBuilder = baseBuilder.submitApplication();
         }
 
-        if (line.status == ApplicationStatusConstants.APPROVED) {
+        List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
 
-            List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
+        List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+            UserResource user = retrieveUserByEmail(email);
+            OrganisationResource organisation = retrieveOrganisationById(user.getOrganisations().get(0));
+            return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+        });
 
-            List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
-                UserResource user = retrieveUserByEmail(email);
-                OrganisationResource organisation = retrieveOrganisationById(user.getOrganisations().get(0));
-                return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
-            });
+        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(organisations, orgDetails -> {
 
-            List<Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(organisations, orgDetails -> {
+            String user = orgDetails.getLeft();
+            String organisationName = orgDetails.getMiddle();
+            OrganisationTypeEnum organisationType = orgDetails.getRight();
 
-                String user = orgDetails.getLeft();
-                String organisationName = orgDetails.getMiddle();
-                OrganisationTypeEnum organisationType = orgDetails.getRight();
+            Optional<ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
+                    finances.competitionName.equals(line.competitionName) &&
+                            finances.applicationName.equals(line.title) &&
+                            finances.organisationName.equals(organisationName));
 
-                simpleFindFirst(applicationFinanceLines, finances ->
-                        finances.competitionName.equals(line.competitionName) &&
-                        finances.applicationName.equals(line.title) &&
-                        finances.organisationName.equals(organisationName));
+            if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
 
-                if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
-
-                    return finance -> finance.
-                            withOrganisation(organisationName).
-                            withUser(user).
-                            withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
+                if (organisationFinances.isPresent()) {
+                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get());
                 } else {
-                    return finance ->
-                            finance.
-                                    withOrganisation(organisationName).
-                                    withUser(user).
-                                    withIndustrialCosts(
-                                            costs -> costs.
-                                                    withWorkingDaysPerYear(123).
-                                                    withGrantClaim(456).
-                                                    withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-                                                    withLabourEntry("Role 1", 100, 200).
-                                                    withLabourEntry("Role 2", 200, 300).
-                                                    withLabourEntry("Role 3", 300, 365).
-                                                    withAdministrationSupportCostsCustomRate(25).
-                                                    withMaterials("Generator", bd("5010"), 10).
-                                                    withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-                                                    withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-                                                    withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-                                                    withOtherCosts("Some more costs", bd("550")).
-                                                    withOrganisationSize(OrganisationSize.MEDIUM));
+                    return generateAcademicFinances(user, organisationName);
                 }
-            });
+            } else {
+                if (organisationFinances.isPresent()) {
+                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get());
+                } else {
+                    return generateIndustrialCosts(user, organisationName);
+                }
+            }
+        });
 
-            baseBuilder = baseBuilder.withFinances(financeBuilders);
+        return baseBuilder.withFinances(financeBuilders);
+    }
+
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances) {
+        return finance -> {
+
+            List<ApplicationFinanceRow> financeRows = organisationFinances.rows;
+
+            ApplicationFinanceDataBuilder baseBuilder = finance.
+                    withOrganisation(organisationName).
+                    withUser(user);
+
+            UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
+
+                IndustrialCostDataBuilder costsWithData = costs;
+
+                for (ApplicationFinanceRow financeRow : financeRows) {
+                    costsWithData = addFinanceRow(costsWithData, financeRow);
+                }
+
+                return costs;
+            };
+
+
+            return baseBuilder.withIndustrialCosts(costBuilder);
+        };
+    }
+
+    private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, ApplicationFinanceRow financeRow) {
+
+        switch (financeRow.category) {
+            case "Working days per year": return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Grant claim": return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Organisation size": return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
+            case "Labour": return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Overheads": switch (financeRow.metadata.get(0).toLowerCase()) {
+                case "custom": return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
+                case "default": return builder.withAdministrationSupportCostsDefaultRate();
+                case "none": return builder.withAdministrationSupportCostsNone();
+                default: throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
+            }
+            case "Materials": return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Capital usage": return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(0)),
+                    financeRow.metadata.get(1), Boolean.parseBoolean(financeRow.metadata.get(2)),
+                    bd(financeRow.metadata.get(3)), bd(financeRow.metadata.get(4)), Integer.valueOf(financeRow.metadata.get(5)));
+            case "Subcontracting": return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
+            case "Travel and subsistence": return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
+            case "Other costs": return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
+            case "Other funding": return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
+            default: throw new RuntimeException("Unknown category " + financeRow.category);
         }
+    }
 
-        return baseBuilder;
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCosts(String user, String organisationName) {
+        return finance ->
+                finance.withOrganisation(organisationName).
+                        withUser(user).
+                        withIndustrialCosts(
+                                costs -> costs.
+                                        withWorkingDaysPerYear(123).
+                                        withGrantClaim(456).
+                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
+                                        withLabourEntry("Role 1", 100, 200).
+                                        withLabourEntry("Role 2", 200, 300).
+                                        withLabourEntry("Role 3", 300, 365).
+                                        withAdministrationSupportCostsCustomRate(25).
+                                        withMaterials("Generator", bd("5010"), 10).
+                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
+                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
+                                        withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
+                                        withOtherCosts("Some more costs", bd("550")).
+                                        withOrganisationSize(OrganisationSize.MEDIUM));
+    }
+
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinances(String user, String organisationName) {
+        return finance -> finance.
+                withOrganisation(organisationName).
+                withUser(user).
+                withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
+    }
+
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances) {
+        return finance -> finance.
+                withOrganisation(organisationName).
+                withUser(user).
+                withAcademicCosts(costs -> costs.withLabourEntry("Role 1", 100, 200));
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {

@@ -11,7 +11,7 @@ import com.worth.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static java.util.Collections.emptyList;
 
@@ -42,7 +42,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return with(data -> data.setUser(user));
     }
 
-    public ApplicationFinanceDataBuilder withIndustrialCosts(Function<IndustrialCostDataBuilder, IndustrialCostDataBuilder> costBuilderFn) {
+    public ApplicationFinanceDataBuilder withIndustrialCosts(UnaryOperator<IndustrialCostDataBuilder> costBuilderFn) {
 
         return doAsUser(data -> {
 
@@ -58,7 +58,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         });
     }
 
-    public ApplicationFinanceDataBuilder withAcademicCosts(Function<IndustrialCostDataBuilder, IndustrialCostDataBuilder> costBuilderFn) {
+    public ApplicationFinanceDataBuilder withAcademicCosts(UnaryOperator<IndustrialCostDataBuilder> costBuilderFn) {
 
         return doAsUser(data -> {
 

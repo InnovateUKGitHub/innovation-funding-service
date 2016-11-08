@@ -29,8 +29,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 class CsvUtils {
 
-    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
@@ -84,7 +84,7 @@ class CsvUtils {
         List<ApplicationOrganisationFinanceBlock> organisationFinances = simpleMap(nonEmptyFinances, organisationFinanceLines -> {
 
             ApplicationOrganisationFinanceBlock organisationCosts = new ApplicationOrganisationFinanceBlock(
-                    organisationFinanceLines.get(0));
+                    organisationFinanceLines.get(0).subList(1, 4));
 
             for (int i = 1; i < organisationFinanceLines.size(); i++) {
 

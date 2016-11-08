@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -82,11 +81,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder withFinances(Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>... builderFns) {
+    public ApplicationDataBuilder withFinances(UnaryOperator<ApplicationFinanceDataBuilder>... builderFns) {
         return withFinances(asList(builderFns));
     }
 
-    public ApplicationDataBuilder withFinances(List<Function<ApplicationFinanceDataBuilder, ApplicationFinanceDataBuilder>> builderFns) {
+    public ApplicationDataBuilder withFinances(List<UnaryOperator<ApplicationFinanceDataBuilder>> builderFns) {
 
         return with(data -> {
 
