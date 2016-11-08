@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,12 +58,8 @@ public class AssessorRegistrationController {
     @Autowired
     private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
-    private Validator validator;
-
     @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
+    private Validator validator;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -147,7 +144,7 @@ public class AssessorRegistrationController {
 
     private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
         if (postcodeIsSelected(assessorRegistrationForm)) {
-            validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
+            ValidationUtils.invokeValidator(validator, assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
         } else {
             if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
                 bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
