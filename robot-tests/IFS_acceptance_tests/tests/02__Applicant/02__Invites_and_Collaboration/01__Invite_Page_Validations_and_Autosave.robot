@@ -87,7 +87,7 @@ Link to add multiple partner organisation
     And The user should see the element    css=li:nth-child(3)
     And The user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
     Then The user should not see the element    jQuery=li:nth-child(3) button:contains("Remove")
-    [Teardown]    And The user clicks the button/link    jQuery=li:nth-child(2) button:contains("Remove")
+    [Teardown]  The user clicks the button/link    jQuery=li:nth-child(2) button:contains("Remove")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
