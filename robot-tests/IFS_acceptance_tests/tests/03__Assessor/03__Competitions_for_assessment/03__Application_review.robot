@@ -19,7 +19,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     When the user clicks the button/link    link=Application details
     Then the user should see the text in the page    Application details
     And the user clicks next and goes to the page    Project summary
@@ -34,7 +34,7 @@ Navigation using next button
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     When the user clicks the button/link    link=4. Attire
     Then the user should see the text in the page    Attire
     And the user clicks previous and goes to the page    Preferences
@@ -54,13 +54,13 @@ Project details sections should not be scorable
     And the user should see the text in the page    Project title
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
+    And the user should see the text in the page    This is the applicant response from Test Seven for Project Summary.
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
+    And the user should see the text in the page    This is the applicant response from Test Seven for Public Description.
     Then the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Scope.
+    And the user should see the text in the page    This is the applicant response from Test Seven for Scope.
     Then the user should not see the text in the page    Question score
 
 Application questions should be scorable
@@ -82,20 +82,19 @@ Application questions should be scorable
 Choosing 'not in scope' should update on the overview page
     [Documentation]    INFUND-1483
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And the user clicks the button/link    link=Back to your assessment overview
     And the user should see the text in the page    In scope? No
-    Then The user should not see the element    css=.column-third > img    #green flag
 
 Scope: Autosave
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3780
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
@@ -135,7 +134,7 @@ Feedback: word count
     [Tags]
     Given I am on the assessor assessment overview page
     and I open one of the application questions    link=4. Attire
-    And I should see word count underneath feedback form    Words remaining: 100
+    And I should see word count underneath feedback form    Words remaining: 91
     When I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words    Test words count to enter only 10 words test test
@@ -145,7 +144,7 @@ Feedback: word count
 Question 1: Autosave
     [Documentation]    INFUND-3780
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=1. How many
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry.
@@ -164,15 +163,14 @@ Question 1: Word count
 Finance overview
     [Documentation]    INFUND-3394
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user navigates to the page    ${Assessment_overview_10}
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
     And the user should not see the element    css=input
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     And the user clicks the button/link    link=Back to your assessment overview
-    And the user should be redirected to the correct page    ${Assessment_overview_9}
-    [Teardown]
+    And the user should be redirected to the correct page    ${Assessment_overview_10}
 
 *** Keywords ***
 the user clicks next and goes to the page
@@ -193,7 +191,7 @@ I should see validation message above the feedback form text field
     the user should see the text in the page    ${error_message}
 
 I am on the assessor assessment overview page
-    the user navigates to the page    ${Assessment_overview_9}
+    the user navigates to the page    ${Assessment_overview_10}
 
 I open one of the application questions
     [Arguments]    ${application_question}
@@ -205,18 +203,18 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(2)    £7,680
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(1) td:nth-child(3)    60%
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(4)    £4,608
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(2)    £150
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(1) td:nth-child(3)    12%
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(4)    £0
     Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(5)    £0
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(6)    £3,072
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(6)    £150
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(2)    £7,680
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(3)    £6,400
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(4)    £1,280
+    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(2)    £150
+    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(3)    £100
+    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(4)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(5)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(6)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
+    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £50
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
