@@ -1,10 +1,10 @@
 package com.worth.ifs.project.viewmodel;
 
-import java.util.List;
-
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
+
+import java.util.List;
 
 /**
  * view model for the "select finance contact" page
@@ -18,8 +18,9 @@ public class SelectFinanceContactViewModel {
     private ApplicationResource app;
     private CompetitionResource competition;
     private String projectName;
+    private boolean inviteAction;
 
-    public SelectFinanceContactViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final Long organisationId, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition) {
+    public SelectFinanceContactViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final Long organisationId, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition, final boolean inviteAction) {
         this.organisationUsers = organisationUsers;
         this.invitedUsers = invitedUsers;
         this.organisationId = organisationId;
@@ -28,6 +29,7 @@ public class SelectFinanceContactViewModel {
         this.currentUser = currentUser;
         this.app = app;
         this.competition = competition;
+        this.inviteAction = inviteAction;
     }
 
     public List<ProjectUserInviteModel> getOrganisationUsers() {
@@ -60,5 +62,9 @@ public class SelectFinanceContactViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public boolean isInviteAction() {
+        return inviteAction;
     }
 }

@@ -84,11 +84,10 @@ Bank details submission
     And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Bank account details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Bank account details below are now being reviewed
-    And the user should see the element    css=.success-alert
+    And the user should see the text in the page    The bank account details below are being reviewed
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.waiting:nth-child(4)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -114,11 +113,10 @@ Bank details for Academic
     And the address fields should be filled
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Bank details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Bank account details below are now being reviewed
-    And the user should see the element    css=.success-alert
+    And the user should see the text in the page    The bank account details below are being reviewed
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -155,10 +153,10 @@ Bank details for non-lead partner
     When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link             jquery=button:contains("Cancel")
     Then the user should not see an error in the page
-    And the user should not see the text in the page    Bank details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link             jQuery=button:contains("Submit")
-    And the user should see the element             jQuery=.success-alert p:contains("Bank account details below are now being reviewed")
+    And the user should see the element             jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page             ${project_in_setup_page}
     And the user should see the element             jQuery=ul li.complete:nth-child(2)
     When the user clicks the button/link            link=What's the status of each of my partners?
@@ -174,7 +172,7 @@ Project Finance can see the progress of partners bank details
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
-    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Pending")
+    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
     # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
     # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
     When the user clicks the button/link            link=Vitruvius Stonework Limited

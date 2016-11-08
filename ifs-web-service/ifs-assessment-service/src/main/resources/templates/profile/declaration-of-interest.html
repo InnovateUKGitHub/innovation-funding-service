@@ -10,13 +10,13 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Declaration of interest</h1>
             </div>
 
-            <p>If you, or a member of your close family, is connected to a body who conducts material financial transactions, this has to be formally reported by Innovate UK.</p>
+            <p>We will need to report if you, or a close family member, is connected to a body which conducts material financial transactions.</p>
 
             <p>Please complete the sections below, declaring all interests held during the financial year ending 31 March 2017.</p>
 
@@ -257,7 +257,7 @@
                       </legend>
                       <label class="block-label">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required" data-required-errormessage="In order to register an account you have to agree that this is an accurate account" />
-                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} that the above represents an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
                 </div>
