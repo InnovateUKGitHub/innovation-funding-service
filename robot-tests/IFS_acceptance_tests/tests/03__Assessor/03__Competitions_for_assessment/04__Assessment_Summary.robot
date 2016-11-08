@@ -92,7 +92,7 @@ Assessor should be able to re-edit before submit
     and The user should see the text in the page    This is the applicant response from Test Seven for How Many
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
-    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review assessment)
     When The user clicks the button/link    jQuery=button:contains(1. How many)
     Then the user should see the text in the page    This is a new feedback entry.
@@ -171,7 +171,7 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
-    Given the user clicks the button/link    link=Back to assessment overview
+    Given the user clicks the button/link    link=Back to your assessment overview
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
