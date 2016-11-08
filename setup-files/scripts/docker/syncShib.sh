@@ -5,8 +5,6 @@ function executeMySQLCommand {
 
 export -f executeMySQLCommand
 
-eval $(docker-machine env default)
-
 function addUserToShibboleth {
 
     emailAddress=$1
