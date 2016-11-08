@@ -144,7 +144,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
         return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
                 failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
-                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : PENDING));
+                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : ACTION_REQUIRED));
     }
 
     @Override
