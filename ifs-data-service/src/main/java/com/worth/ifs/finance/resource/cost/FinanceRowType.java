@@ -9,7 +9,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     MATERIALS("materials", true, "Materials"),
     CAPITAL_USAGE("capital_usage", true, "Capital usage"),
     SUBCONTRACTING_COSTS("subcontracting", true, "Subcontracting"),
-    TRAVEL("travel", true, "Travel & subsistence"),
+    TRAVEL("travel", true, "Travel and subsistence"),
     OTHER_COSTS("other_costs", true, "Other costs"),
     YOUR_FINANCE("your_finance"),
     FINANCE("finance"),
