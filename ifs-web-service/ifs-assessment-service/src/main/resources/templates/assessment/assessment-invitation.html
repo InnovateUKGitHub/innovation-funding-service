@@ -6,13 +6,13 @@
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/assessment :: assessment-reject-assesment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag"/>
         <div th:include="fragments/layout :: global-header" th:remove="tag"/>
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge">Accept application</h1>

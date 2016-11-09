@@ -1332,7 +1332,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
     }
 
     private LocalDate getFinancialYearEndDate(int year) {
-        return LocalDate.of(year, MARCH, 30);
+        return LocalDate.of(year, MARCH, 31);
     }
 
     private void setClockToStartOfDay(LocalDate date) {

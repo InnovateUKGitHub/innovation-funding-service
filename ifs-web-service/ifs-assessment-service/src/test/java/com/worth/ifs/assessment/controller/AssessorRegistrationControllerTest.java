@@ -16,6 +16,7 @@ import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,9 +25,10 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 
@@ -68,8 +70,15 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     @Mock
     private AddressRestService addressRestService;
 
-    @Mock
-    private Validator validator;
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.afterPropertiesSet();
+        ReflectionTestUtils.setField(controller, "validator", validator);
+    }
 
     @Override
     protected AssessorRegistrationController supplyControllerUnderTest() {
