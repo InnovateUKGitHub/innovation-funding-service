@@ -119,6 +119,11 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
+    public void ownersCanNotUpdateSubmittedAssessments() {
+        assertFalse("the owner of an assessment should not be able to update that assessment", rules.userCanUpdateAssessment(submittedAssessmentResource, assessorUser));
+    }
+
+    @Test
     public void otherUsersCanNotUpdateAssessments() {
         assertFalse("other users should not able to update assessments", rules.userCanUpdateAssessment(openAssessmentResource, otherUser));
     }
