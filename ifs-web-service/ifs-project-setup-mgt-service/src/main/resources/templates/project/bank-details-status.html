@@ -15,7 +15,7 @@
     <div class="column-two-thirds">
       <div class="page-title">
         <p class="subtitle no-margin" th:text="${#numbers.formatInteger(model.competitionId,8)+' :'+model.competitionName}" />
-				<h1 class="heading-xlarge">Project Details</h1>
+				<h1 class="heading-xlarge">Bank Details</h1>
       </div>
     </div>
     <div class="column-third alignright extra-margin">
@@ -33,8 +33,8 @@
     <tbody>
       <tr th:each="partner : ${model.bankDetailsStatusResources}">
           <td th:unless="${isCompAdminUser}">
-            <a th:unless="${partner.bankDetailsStatus.name() == 'NOT_STARTED' || partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}" th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
-            <span th:if="${partner.bankDetailsStatus.name() == 'NOT_STARTED' || partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}" th:text="${partner.organisationName}" />
+            <a th:unless="${partner.bankDetailsStatus.name() == 'NOT_STARTED'}" th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
+            <span th:if="${partner.bankDetailsStatus.name() == 'NOT_STARTED'}" th:text="${partner.organisationName}" />
           </td>
           <td th:if="${isCompAdminUser}">
             <div th:text="${partner.organisationName}" />
