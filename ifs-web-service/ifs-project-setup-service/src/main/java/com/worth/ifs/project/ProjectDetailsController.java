@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -293,7 +294,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
-                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+                                @SuppressWarnings("unused") BindingResult bindingResult,
+                                ValidationHandler validationHandler) {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -317,10 +319,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 break;
             case ADD_NEW:
                 form.getAddressForm().setTriedToSave(true);
+                newAddressResource = form.getAddressForm().getSelectedPostcode();
+                if(newAddressResource == null){
+                    addAddressNotProvidedValidationError(bindingResult, validationHandler);
+                }
+
                 if (validationHandler.hasErrors()) {
                     return viewCurrentAddressForm(model, form, projectResource);
                 }
-                newAddressResource = form.getAddressForm().getSelectedPostcode();
                 addressType = PROJECT;
                 break;
             default:
@@ -343,8 +349,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = POST)
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
-
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
+                                BindingResult bindingResult) {
+        if(StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())){
+            bindingResult.addError(createPostcodeSearchFieldError());
+        }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));

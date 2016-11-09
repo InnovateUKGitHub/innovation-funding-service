@@ -5,7 +5,10 @@ import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -19,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
+import static com.worth.ifs.commons.error.Error.fieldError;
 
 public class AddressLookupBaseController {
     public static final String FORM_ATTR_NAME = "form";
@@ -94,5 +99,11 @@ public class AddressLookupBaseController {
 
     FieldError createPostcodeSearchFieldError() {
         return new FieldError("form", "addressForm.postcodeInput", "", true, new String[] {"EMPTY_POSTCODE_SEARCH"}, new Object[] {}, null);
+    }
+
+    void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler){
+        ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+        validationMessages.addError(fieldError("addressType", new Error(PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY)));
+        validationHandler.addAnyErrors(validationMessages);
     }
 }

@@ -505,6 +505,31 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void testSearchAddressFailsWithFieldErrorOnEmpty() throws Exception {
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
+        addressResource.setId(null);
+        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
+        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+
+        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addressType", ADD_NEW.name())
+                .param("search-address", "")
+                .param("addressForm.postcodeInput", "")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput")).
+                andReturn();
+    }
+
+    @Test
     public void testSubmitProjectDetails() throws Exception {
         when(projectService.setApplicationDetailsSubmitted(1L)).thenReturn(serviceSuccess());
 

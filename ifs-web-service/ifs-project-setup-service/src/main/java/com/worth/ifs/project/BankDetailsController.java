@@ -73,6 +73,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (isNewAddressNotValid(form)) {
+            addAddressNotProvidedValidationError(bindingResult, validationHandler);
             return bankDetails(model, projectId, loggedInUser, form);
         }
 
