@@ -108,7 +108,7 @@ Lead partner can edit his spend profile with invalid values
     Then the field has value                           css=#row-total-1    £ 8,233
     And the user should see the element                jQuery=.cell-error #row-total-1
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page      Your spend profile has total costs higher than eligible project costs,
+    Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field          css=#row-1-0    2666
     And the user should not see the element            jQuery=.cell-error #row-total-1
@@ -144,7 +144,7 @@ Lead partner can edit his spend profile with valid values
     Then the field has value                             css=#row-total-6    £ 6,667
     And the user should not see the text in the page     Unable to save spend profile
     Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
+    Then the user should not see the text in the page    You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
 
 Lead Partners Spend profile summary gets updated when edited
     [Documentation]    INFUND-3971
