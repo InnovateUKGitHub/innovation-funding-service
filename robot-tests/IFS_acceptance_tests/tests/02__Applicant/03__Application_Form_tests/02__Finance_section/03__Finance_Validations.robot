@@ -81,9 +81,11 @@ Labour server side
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     And the user marks the finances as complete
-    Then the user should see an error    This field should be 365 or lower
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field should be 1 or higher
+    Then the user should see an error       This field should be 1 or higher
+    And the user should see an error        This field cannot be left blank
+    Then the user should see the element    jQuery=.error-summary-list li:contains("This field should be 365 or lower")
+    And the user should see the element     jQuery=.error-summary-list li:contains("This field should be 1 or higher")
+    And the user should see the element     jQuery=.error-summary-list li:contains("This field cannot be left blank")
     And the user should see the element    css=.error-summary-list
     [Teardown]    Run keywords    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    21
     ...    AND    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
