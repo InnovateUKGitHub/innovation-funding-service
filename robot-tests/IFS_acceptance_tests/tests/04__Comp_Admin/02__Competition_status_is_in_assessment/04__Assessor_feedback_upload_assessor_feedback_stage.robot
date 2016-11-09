@@ -6,8 +6,8 @@ Force Tags        Upload    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${successful_application_overview}    ${server}/management/competition/3/application/16
-${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
+${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
+${unsuccessful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
 
 *** Test Cases ***
 Invalid Large pdf

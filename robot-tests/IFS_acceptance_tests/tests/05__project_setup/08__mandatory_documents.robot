@@ -398,7 +398,7 @@ CompAdmin can see Project status updated
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=Killer Riffs
-    Then the user should see the element    jQuery=tr:nth-child(1):contains("best riffs")
+    Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 
 

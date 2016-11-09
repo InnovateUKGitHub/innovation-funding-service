@@ -5,10 +5,10 @@ Force Tags        Upload    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${successful_application_overview}    ${server}/application/16
-${unsuccessful_application_overview}    ${server}/application/17
-${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
-${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
+${successful_application_overview}    ${server}/application/${FUNDERS_PANEL_APPLICATION_1}
+${unsuccessful_application_overview}    ${server}/application/${FUNDERS_PANEL_APPLICATION_2}
+${successful_application_comp_admin_view}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
+${unsuccessful_application_comp_admin_view}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
 
 *** Test Cases ***
 Comp admin can view uploaded feedback

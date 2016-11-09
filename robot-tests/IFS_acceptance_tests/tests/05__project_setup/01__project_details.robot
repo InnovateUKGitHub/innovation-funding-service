@@ -68,11 +68,11 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827
     [Tags]    HappyPath
     [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When The user clicks the button/link    link=00000026: best riffs
+    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -131,7 +131,7 @@ Lead partner can see the project setup page
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -266,12 +266,12 @@ Invited project manager registration flow
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]    Email
-    When the user clicks the button/link    link=00000026: best riffs
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
     Then the user should see the text in the page    Bob Jones
@@ -415,12 +415,12 @@ Invited finance contact registration flow
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]    Email
-    When the user clicks the button/link    link=00000026: best riffs
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Vitruvius Stonework Limited
     Then the user should see the text in the page    John Smith

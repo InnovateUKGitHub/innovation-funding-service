@@ -8,7 +8,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/2/details
+${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/${READY_TO_OPEN_COMPETITION}/details
 
 *** Test Cases ***
 Competition brief link

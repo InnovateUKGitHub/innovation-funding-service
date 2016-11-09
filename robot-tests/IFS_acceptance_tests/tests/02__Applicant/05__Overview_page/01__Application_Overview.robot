@@ -54,7 +54,7 @@ The Progress bar is visible
 User can print the application
     [Documentation]    INFUND-1162
     [Tags]    HappyPath
-    When the user navigates to the page without the usual headers    ${SERVER}/application/1/print?noprint    #This URL its only for testing purposes
+    When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application
     And the user clicks the button/link    link= Print your application

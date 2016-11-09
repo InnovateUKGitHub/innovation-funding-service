@@ -37,7 +37,7 @@ Comp admin can view the Supporting information details on MO page
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
     And the user should see the text in the page    Riff Street
     And the user should see the text in the page    Bath
@@ -57,7 +57,7 @@ Project finance user can view MO page, and go on to assign MO
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
     And the user should see the text in the page    Riff Street
     And the user should see the text in the page    Bath

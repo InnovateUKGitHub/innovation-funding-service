@@ -6,9 +6,9 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${ELIGIBILITY}    ${SERVER}/competition/1/info/eligibility
-${Before you apply}    ${SERVER}/competition/1/info/before-you-apply
-${What we ask you}    ${SERVER}/competition/1/info/what-we-ask-you
+${ELIGIBILITY}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
+${Before you apply}    ${SERVER}/competition/${OPEN_COMPETITION}/info/before-you-apply
+${What we ask you}    ${SERVER}/competition/${OPEN_COMPETITION}/info/what-we-ask-you
 
 *** Test Cases ***
 User goes to the Eligibility page

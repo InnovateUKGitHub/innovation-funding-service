@@ -38,7 +38,7 @@ Project Finance user can see the internal project summary page
     [Tags]
     [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/monitoring-officer')]
     And the user should not see an error in the page
     And the user goes back to the previous page
@@ -58,7 +58,7 @@ Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/monitoring-officer')]
     And the user should not see an error in the page
 
@@ -71,14 +71,14 @@ Project Finance has a dashboard and can see projects in PS
     Then the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs
     Then the user should see the element    jQuery=.column-third.alignright.extra-margin h2:contains("Projects in setup")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("best riffs")
-    And the user should see the element     jQuery=tr:nth-child(1) th a:contains("00000026")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element     jQuery=tr:nth-child(1) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("3 partners")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("better riffs")
     And the user should see the element     jQuery=tr:nth-child(3) th:contains("awesome riffs")
-    When the user clicks the button/link    link=00000026
-    Then the user navigates to the page     ${server}/management/competition/6/application/26
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}
+    Then the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
     And the user should not see an error in the page
 
 Project Finance can see the status of projects in PS

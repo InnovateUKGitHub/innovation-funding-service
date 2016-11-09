@@ -54,7 +54,7 @@ PS projects title and lead
     And the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("best riffs")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("better riffs")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
@@ -65,7 +65,7 @@ PS projects status
     [Documentation]    INFUND-2610
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=Killer Riffs
-    Then the user should see the element    jQuery=tr:nth-child(1):contains("best riffs")
+    Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)

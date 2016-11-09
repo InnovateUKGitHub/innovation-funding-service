@@ -129,17 +129,17 @@ the project finance user moves La Fromage into project setup if it isn't already
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
 
 the project finance user moves La Fromage into project setup
-    the user navigates to the page    ${server}/management/competition/3
-    the user selects the option from the drop-down menu    Yes    id=fund16
-    the user selects the option from the drop-down menu    No    id=fund17
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    the user selects the option from the drop-down menu    Yes    id=fund24
+    the user selects the option from the drop-down menu    No    id=fund25
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user should see the text in the page    Assessor Feedback
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/16
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
     the user uploads the file    ${valid_pdf}
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/17
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
     the user uploads the file    ${valid_pdf}
-    the user navigates to the page    ${server}/management/competition/3
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
     the user clicks the button/link    name=publish
 

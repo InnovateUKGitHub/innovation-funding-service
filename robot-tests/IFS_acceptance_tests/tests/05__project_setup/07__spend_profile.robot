@@ -56,7 +56,7 @@ Lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    HappyPath
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
-    Given the user clicks the button/link    link=00000016: Cheese is good
+    Given the user clicks the button/link    link=00000024: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -180,7 +180,7 @@ Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    Given the user clicks the button/link    link=00000016: Cheese is good
+    Given the user clicks the button/link    link=00000024: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -205,7 +205,7 @@ Project Manager doesn't have the option to submit spend profiles until all partn
     [Documentation]    INFUND-3767
     [Tags]
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000016: Cheese is good
+    Given the user clicks the button/link    link=00000024: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.button:contains("Review and submit total project profile spend")
 
@@ -214,7 +214,7 @@ Academic partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]    HappyPath
     [Setup]    Log in as a different user    pete.tom@egg.com    Passw0rd
-    Given the user clicks the button/link    link=00000016: Cheese is good
+    Given the user clicks the button/link    link=00000024: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
@@ -247,7 +247,7 @@ Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766
     [Tags]    HappyPath
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000016: Cheese is good
+    Given the user clicks the button/link    link=00000024: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
@@ -317,19 +317,19 @@ Partners can see the Spend Profile section completed
     [Documentation]  INFUND-3767,INFUND-3766
     [Tags]
     Given guest user log-in                worth.email.test+fundsuccess@gmail.com    Passw0rd
-    And the user clicks the button/link    link=00000016: Cheese is good
+    And the user clicks the button/link    link=00000024: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                steve.smith@empire.com    Passw0rd
-    And the user clicks the button/link    link=00000016: Cheese is good
+    And the user clicks the button/link    link=00000024: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                jessica.doe@ludlow.co.uk    Passw0rd
-    And the user clicks the button/link    link=00000016: Cheese is good
+    And the user clicks the button/link    link=00000024: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
     Given guest user log-in                pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000016: Cheese is good
+    And the user clicks the button/link    link=00000024: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     And Logout as user
 
@@ -337,7 +337,7 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian    #HappyPath
     [Setup]    guest user log-in            john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page     ${server}/project-setup-management/competition/3/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
@@ -350,7 +350,7 @@ Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]    HappyPath
     [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page                    ${server}/project-setup-management/competition/3/status
+    Given the user navigates to the page                    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/4/spend-profile/approval
     And the user should see the element                     jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
@@ -415,7 +415,7 @@ Project Finance is able to Approve Spend Profile
     When the user clicks the button/link             jQuery=button:contains("Approved")
     And the user clicks the button/link              jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element         jQuery=h3:contains("The spend profile has been approved")
-    When the user navigates to the page              ${server}/project-setup-management/competition/3/status
+    When the user navigates to the page              ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
 
 
@@ -428,17 +428,17 @@ the project finance user moves La Fromage into project setup if it isn't already
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
 
 the project finance user moves La Fromage into project setup
-    the user navigates to the page    ${server}/management/competition/3
-    the user selects the option from the drop-down menu    Yes    id=fund16
-    the user selects the option from the drop-down menu    No    id=fund17
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    the user selects the option from the drop-down menu    Yes    id=fund24
+    the user selects the option from the drop-down menu    No    id=fund25
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user should see the text in the page    Assessor Feedback
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/16
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
     the user uploads the file    ${valid_pdf}
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/17
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
     the user uploads the file    ${valid_pdf}
-    the user navigates to the page    ${server}/management/competition/3
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
     the user clicks the button/link    name=publish
 

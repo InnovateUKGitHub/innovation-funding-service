@@ -18,7 +18,7 @@ Bank details page
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=00000026: best riffs
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
@@ -102,7 +102,7 @@ Bank details for Academic
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user    pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=00000026: best riffs
+    And the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Bank details
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -141,7 +141,7 @@ Bank details for non-lead partner
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link           link=00000026: best riffs
+    When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account

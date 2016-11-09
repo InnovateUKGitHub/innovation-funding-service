@@ -25,7 +25,7 @@ Comp admin can open the view mode of the application
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     Then the user should see the element    id=sort-by
     And the user selects the option from the drop-down menu    id    id=sort-by
-    When the user clicks the button/link    link=00000001
+    When the user clicks the button/link    link=${IN_ASSESSMENT_APPLICATION_3_NUMBER}
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
     And the user should see the text in the page    A novel solution to an old problem

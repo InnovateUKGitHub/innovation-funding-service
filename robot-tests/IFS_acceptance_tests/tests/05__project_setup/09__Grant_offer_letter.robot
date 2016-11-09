@@ -9,7 +9,7 @@ Partners should not be able to submit the Grant Offer
     [Documentation]    INFUND-4851
     [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    Given the user clicks the button/link    link=00000026: best riffs
+    Given the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
     And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
@@ -19,7 +19,7 @@ PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851
     [Tags]
     [Setup]    log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=00000026: best riffs
+    Given the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     When the lead uploads a grant offer letter    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}

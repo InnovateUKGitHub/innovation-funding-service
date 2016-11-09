@@ -9,10 +9,10 @@ Force Tags        Upload    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${assessor_feedback_competition_url}    ${server}/management/competition/3
-${successful_application_overview}    ${server}/management/competition/3/application/16
-${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
-${project_setup_status_view}    ${server}/project-setup-management/competition/3/status
+${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
+${unsuccessful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
+${project_setup_status_view}    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?    
 
 *** Test Cases ***

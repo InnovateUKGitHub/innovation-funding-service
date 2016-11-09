@@ -369,10 +369,10 @@ done
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
-    resetDB
+    ## resetDB
     resetLDAP
-    clearDownFileRepository
-    addTestFiles
+    ##clearDownFileRepository
+    ##addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
