@@ -21,7 +21,7 @@
                 <div class="column-two-thirds competition details">
                     <ul class="no-bullet">
                         <li><strong>Competition:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
-                        <li><strong>Lead Technologist:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
+                        <li><strong>Innovation Lead:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
                         <li><strong>Accept applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
                         <li><strong>Submit applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
                     </ul>
