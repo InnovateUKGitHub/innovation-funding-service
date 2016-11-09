@@ -254,8 +254,6 @@ Project Manager can view partners' spend profiles
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
     And the user should see the text in the page   We have reviewed and confirmed your project costs
-    And the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     And the user clicks the button/link    link=Ludlow
     And the user should see the text in the page   We have reviewed and confirmed your project costs
