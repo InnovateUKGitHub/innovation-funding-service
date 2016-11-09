@@ -206,7 +206,7 @@ Travel and subsistence client side
     Then the user gets the expected validation errors    This field cannot be left blank    You must enter a value less than 10 digits
     And the user should see an error    This field should be 1 or higher
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
+    And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    13123232134234234234234234423
     Then the user gets the expected validation errors    This field cannot be left blank    You must enter a value less than 20 digits
     And the user should see an error    This field should be 1 or higher
@@ -308,7 +308,7 @@ Remove row
 
 The user gets the expected validation errors
     [Arguments]    ${ERROR1}    ${ERROR2}
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Save and return to application overview")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
     And the user should see an error    ${ERROR2}
