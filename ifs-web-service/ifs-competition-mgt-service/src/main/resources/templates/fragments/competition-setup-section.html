@@ -458,10 +458,11 @@
 
             <legend class="visuallyhidden">Eligibility</legend>
 
-            <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group error':'form-group'">
+            <!-- INFUND-5682 : Competition streams options have been hidden, but there is a possibility they will be re-instated -->
+            <!-- <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-                    <legend>
-		                <!--<span class="form-label-bold">Stream</span>-->
+                    <legend>-->
+		                <!--<span class="form-label-bold">Stream</span>--><!--
 		                <span class="form-label-bold">Does the competition have multiple streams?</span>
 		                <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
@@ -497,7 +498,7 @@
                            data-required-errormessage="A stream name is required"
                            data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
                 </fieldset>
-            </div>
+            </div>-->
 
             <div th:class="${#fields.hasErrors('singleOrCollaborative')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
