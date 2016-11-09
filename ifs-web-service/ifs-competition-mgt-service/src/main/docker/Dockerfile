@@ -8,5 +8,5 @@ VOLUME /tmp
 ADD competition-management-service-0.0.1-SNAPSHOT.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx150m", "-jar", "/app.jar"]
-HEALTHCHECK --interval=5m --timeout=3s \
+HEALTHCHECK --interval=10s --timeout=5s \
   CMD curl -f http://localhost:8080/health || exit 1

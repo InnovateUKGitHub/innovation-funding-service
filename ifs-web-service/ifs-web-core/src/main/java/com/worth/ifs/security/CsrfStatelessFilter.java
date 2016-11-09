@@ -102,7 +102,7 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
                 uri.contains("/favicon.ico") ||
                 uri.contains("/prototypes") ||
                 uri.contains("/error")  ||
-                uri.contains("/jolokia-endpoint");
+                uri.contains("/jolokia/");
     }
 
     private void setTokenAsCookie(final HttpServletResponse response, final CsrfToken token) {
