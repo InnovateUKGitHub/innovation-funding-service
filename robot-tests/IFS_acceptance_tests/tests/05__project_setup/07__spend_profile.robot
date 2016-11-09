@@ -16,6 +16,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
 ...
 ...               INFUND-5609 PM can see partners' spend profiles before they are marked as complete, and can see buttons to edit and mark as complete
+...
+...               INFUND-5911 Internal users should not have access to external users' pages
 
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -413,6 +415,9 @@ Project Finance is able to Approve Spend Profile
     When the user navigates to the page              ${server}/project-setup-management/competition/3/status
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
 
+Project finance user cannot access internal users' spend profile page
+    [Documentation]    INFUND-5911
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/4/partner-organisation/21/spend-profile    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
