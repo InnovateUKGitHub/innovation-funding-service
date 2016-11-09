@@ -290,7 +290,7 @@ stopGrid=0
 noDeploy=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :e :r :d :c :n:" opt ; do
+while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
     case ${opt} in
         p)
             parallel=1
