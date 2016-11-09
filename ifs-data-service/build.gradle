@@ -182,11 +182,10 @@ task client(type: Jar) {
         exclude "com/worth/ifs/email/**"
 //        exclude "com/worth/ifs/config/**"
 //        include "com/worth/ifs/config/http/**"
-        include "com/worth/ifs/config/validator/**"
+//        include "com/worth/ifs/config/validator/**"
         include "com/worth/ifs/config/rest/**"
 //        include "com/worth/ifs/config/audit/**"
         include "**/**.properties"
-
 
     }
 }

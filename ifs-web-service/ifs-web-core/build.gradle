@@ -1,10 +1,7 @@
-
-
 jar {
     baseName = 'ifs-web-core'
     version = '0.0.1-SNAPSHOT'
 }
-
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
@@ -24,6 +21,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
 
     // Use this for including the api lib from the data-service.
+
     compile files('../../ifs-libs/ifs-rest-api-service-1.0-SNAPSHOT.jar')
     compile files('../../ifs-libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
 
@@ -49,6 +47,8 @@ processTestResources {
 task cleanDeploy() {
     dependsOn ':ifs-data-service:client'
     dependsOn ':ifs-data-service:clientCopy'
+    dependsOn ':ifs-rest-api-service:client'
+    dependsOn ':ifs-rest-api-service:clientCopy'
     build.mustRunAfter clean
     dependsOn clean
     dependsOn build

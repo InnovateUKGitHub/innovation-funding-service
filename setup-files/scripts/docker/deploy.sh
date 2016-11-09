@@ -70,6 +70,7 @@ shift
 case "$target" in
     all)
         data "$@"
+        api "$@"
         core "$@"
         app "$@"
         cmgt "$@"
