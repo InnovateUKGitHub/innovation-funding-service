@@ -14,6 +14,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
 ...
 ...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
+...
+...               INFUND-5609 PM can see partners' spend profiles before they are marked as complete, and can see buttons to edit and mark as complete
 
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -244,7 +246,7 @@ Academic partner marks Spend Profile as complete
 
 
 Project Manager can view partners' spend profiles
-    [Documentation]    INFUND-3767, INFUND-3766
+    [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
     [Tags]    HappyPath
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
@@ -252,12 +254,18 @@ Project Manager can view partners' spend profiles
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
     And the user should see the text in the page   We have reviewed and confirmed your project costs
+    And the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     And the user clicks the button/link    link=Ludlow
     And the user should see the text in the page   We have reviewed and confirmed your project costs
+    And the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     And the user clicks the button/link    link=EGGS
     And the user should see the text in the page   We have reviewed and confirmed your project costs
+    And the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
     Then the user should see the element    jQuery=a:contains("Review and submit total project")
@@ -270,11 +278,9 @@ Partners are not able to see the spend profile summary page
     And the user navigates to the page  ${external_spendprofile_summary}
     Then the user should see the text in the page  Cheeseco - Spend profile
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
-    Then The user should see permissions error message
+    And the user navigates to the page and gets a custom error message    ${external_spendprofile_summary}    You do not have the necessary permissions for your request
     Given log in as a different user    pete.tom@egg.com    Passw0rd
-    And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
-    Then The user should see permissions error message
+    And the user navigates to the page and gets a custom error message    ${external_spendprofile_summary}    You do not have the necessary permissions for your request
 
 
 Project Manager can view combined spend profile
