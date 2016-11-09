@@ -31,7 +31,7 @@ Assessor dashboard should be empty
     ...    INFUND-4950
     [Tags]    HappyPath
     [Setup]
-    Given the user should see the text in the page    Assessor Dashboard
+    Given the user should see the text in the page    Assessor dashboard
     Then The user should not see the element    css=.my-applications h2
     And The user should not see the text in the page    Competitions for assessment
     And The user should not see the text in the page    Upcoming competitions to assess
@@ -70,7 +70,7 @@ Existing assessor: Accept invitation
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Sarcasm Stupendousness'.
     And the user should see the text in the page    Invitation to assess 'Sarcasm Stupendousness'
     And the user clicks the button/link    jQuery=.button:contains("Accept")
-    Then The user should see the text in the page    Assessor Dashboard
+    Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=Sarcasm Stupendousness
     And the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
@@ -143,5 +143,5 @@ the assessor shouldn't be able to reject the accepted competition
     the assessor is unable to see the invitation
 
 The assessor is unable to see the invitation
-    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    This invitation is now closed
     The user should see the text in the page    You have already accepted or rejected this invitation.

@@ -201,7 +201,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
         when(financeRowServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
 
-        List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.PENDING).build(1);
+        List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).build(1);
 
         ProjectBankDetailsStatusSummary expected = newProjectBankDetailsStatusSummary().build();
         expected.setProjectId(projectId);

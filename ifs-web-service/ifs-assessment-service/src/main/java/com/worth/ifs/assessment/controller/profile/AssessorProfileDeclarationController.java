@@ -16,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,7 +56,7 @@ public class AssessorProfileDeclarationController {
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Autowired
-    private SmartValidator validator;
+    private Validator validator;
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -124,12 +125,12 @@ public class AssessorProfileDeclarationController {
     }
 
     private void validateLists(AssessorProfileDeclarationForm form, BindingResult bindingResult) {
-        if(Boolean.TRUE.equals(form.getHasFamilyAffiliations())) {
-            validator.validate(form, bindingResult, AssessorProfileFamilyAffiliationForm.FamilyAffiliations.class);
+        if (Boolean.TRUE.equals(form.getHasFamilyAffiliations())) {
+            ValidationUtils.invokeValidator(validator, form, bindingResult, AssessorProfileFamilyAffiliationForm.FamilyAffiliations.class);
         }
 
-        if(Boolean.TRUE.equals(form.getHasAppointments())) {
-            validator.validate(form, bindingResult, AssessorProfileAppointmentForm.Appointments.class);
+        if (Boolean.TRUE.equals(form.getHasAppointments())) {
+            ValidationUtils.invokeValidator(validator, form, bindingResult, AssessorProfileAppointmentForm.Appointments.class);
         }
     }
 

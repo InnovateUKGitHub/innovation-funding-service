@@ -28,13 +28,13 @@ Review Annexes
     [Documentation]    INFUND-5645
     When the user clicks the button/link    link=Annex A
     Then the user should see the text in the page    Technology programme: Assessor services
-    And the user clicks the button/link    link=Back to terms of contract
+    And the user clicks the button/link    link=Back to your terms of contract
     When the user clicks the button/link    link=Annex B
     Then the user should see the text in the page    Travel and subsistence rates for non-civil service contracted personnel
-    And the user clicks the button/link    link=Back to terms of contract
+    And the user clicks the button/link    link=Back to your terms of contract
     When the user clicks the button/link    link=Annex C
     Then the user should see the text in the page    Information management
-    And the user clicks the button/link    link=Back to terms of contract
+    And the user clicks the button/link    link=Back to your terms of contract
 
 Client-side validations and redirect to dashboard
     [Documentation]    INFUND-1481
