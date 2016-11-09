@@ -335,7 +335,7 @@ Project details can be submitted with PM, project address and start date
     And the user should see the element    css=#project-manager-status.yes
     Mark as complete button should be enabled
 
-Partners nominate finance contacts
+Non lead partner nominates finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979
     [Tags]    HappyPath
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
