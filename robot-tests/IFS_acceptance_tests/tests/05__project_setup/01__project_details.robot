@@ -257,7 +257,7 @@ Invited project manager receives an email
 Invited project manager registration flow
     [Documentation]    INFUND-3554
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a collaborative project
+    Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
@@ -406,7 +406,7 @@ Invited finance contact receives an email
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a collaborative project
+    Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
