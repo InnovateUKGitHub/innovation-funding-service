@@ -23,7 +23,7 @@ public class AssessorProfileDeclarationModelPopulator {
 
     private LocalDate calculateDeclarationDate() {
         LocalDate now = LocalDate.now(clock);
-        LocalDate financialYearEndDayInCurrentYear = LocalDate.of(now.getYear(), MARCH, 30);
+        LocalDate financialYearEndDayInCurrentYear = LocalDate.of(now.getYear(), MARCH, 31);
 
         // Has the financial year end day already been reached during this year?
         boolean yearEndPassed = now.compareTo(financialYearEndDayInCurrentYear) >= 0;

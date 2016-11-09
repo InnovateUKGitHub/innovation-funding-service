@@ -9,7 +9,7 @@ Resource          ../../../resources/defaultResources.robot
 Back to the dashboard link
     [Documentation]    INFUND-3715
     And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
+    the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Client-side empty form validations

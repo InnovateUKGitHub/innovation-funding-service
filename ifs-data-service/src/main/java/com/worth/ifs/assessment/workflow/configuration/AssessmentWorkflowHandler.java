@@ -23,8 +23,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Optional.ofNullable;
@@ -36,7 +34,6 @@ import static java.util.Optional.ofNullable;
  */
 @Component
 public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentStates, AssessmentOutcomes, Application, ProcessRole> {
-
 
     @Autowired
     @Qualifier("assessmentStateMachine")
@@ -56,36 +53,24 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return new Assessment(target, participant);
     }
 
-    public boolean rejectInvitation(Long processRoleId, Assessment assessment, ApplicationRejectionResource applicationRejection) {
-        return stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(REJECT)
-                .setHeader("target", assessment.getTarget())
-                .setHeader("participant", assessment.getParticipant())
-                .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", new ProcessOutcome(null, applicationRejection.getRejectReason(), applicationRejection.getRejectComment()))
-                .build(), assessment.getActivityState());
+    public boolean rejectInvitation(Assessment assessment, ApplicationRejectionResource applicationRejection) {
+        return fireEvent(assessmentEventWithOutcome(assessment, rejectInvitationOutcome(applicationRejection), REJECT), assessment);
     }
 
-    public boolean recommend(Long processRoleId, Assessment assessment, AssessmentFundingDecisionResource assessmentFundingDecision) {
-        return stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(RECOMMEND)
-                .setHeader("assessment", assessment)
-                .setHeader("target", assessment.getTarget())
-                .setHeader("participant", assessment.getParticipant())
-                .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", new ProcessOutcome(ofNullable(assessmentFundingDecision.getFundingConfirmation()).map(BooleanUtils::toStringYesNo).orElse(null), assessmentFundingDecision.getFeedback(), assessmentFundingDecision.getComment()))
-                .build(), assessment.getActivityState());
+    public boolean acceptInvitation(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, ACCEPT), assessment);
     }
 
-    public boolean acceptInvitation(Long processRoleId, Assessment assessment) {
-        return stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(ACCEPT)
-                .setHeader("target", assessment.getTarget())
-                .setHeader("participant", assessment.getParticipant())
-                .setHeader("assessment", assessment)
-                .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", new ProcessOutcome())
-                .build(), assessment.getActivityState());
+    public boolean feedback(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, FEEDBACK), assessment);
+    }
+
+    public boolean fundingDecision(Assessment assessment, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        return fireEvent(assessmentEventWithOutcome(assessment, fundingDecisionOutcome(assessmentFundingDecision), FUNDING_DECISION), assessment);
+    }
+
+    public boolean submit(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, SUBMIT), assessment);
     }
 
     @Override
@@ -115,13 +100,34 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
 
     @Override
     protected Assessment getOrCreateProcess(Message<AssessmentOutcomes> message) {
+        return (Assessment) message.getHeaders().get("assessment");
+    }
 
-        Application target = (Application) message.getHeaders().get("target");
-        ProcessRole participant = (ProcessRole) message.getHeaders().get("participant");
+    private MessageBuilder<AssessmentOutcomes> assessmentEventWithOutcome(Assessment assessment, ProcessOutcome processOutcome, AssessmentOutcomes event) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("assessment", assessment)
+                .setHeader("processOutcome", processOutcome);
+    }
 
-        Optional<Assessment> existingProcess = Optional.ofNullable(getProcessByParticipantId(participant.getId()));
-        Assessment processToUpdate = existingProcess.orElseGet(() -> createNewProcess(target, participant));
+    private MessageBuilder<AssessmentOutcomes> assessmentEvent(Assessment assessment, AssessmentOutcomes event) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("assessment", assessment);
+    }
 
-        return processToUpdate;
+    private ProcessOutcome rejectInvitationOutcome(ApplicationRejectionResource applicationRejection) {
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setDescription(applicationRejection.getRejectReason());
+        processOutcome.setComment(applicationRejection.getRejectComment());
+        return processOutcome;
+    }
+
+    private ProcessOutcome fundingDecisionOutcome(AssessmentFundingDecisionResource assessmentFundingDecision) {
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setOutcome(ofNullable(assessmentFundingDecision.getFundingConfirmation()).map(BooleanUtils::toStringYesNo).orElse(null));
+        processOutcome.setDescription(assessmentFundingDecision.getFeedback());
+        processOutcome.setComment(assessmentFundingDecision.getComment());
+        return processOutcome;
     }
 }

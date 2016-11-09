@@ -11,7 +11,6 @@ import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,8 +77,7 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    @NotNull
-    private boolean offerRejected;
+    private Boolean offerRejected;
 
     private Boolean otherDocumentsApproved;
 
@@ -257,11 +255,11 @@ public class Project implements ProcessActivity {
         this.additionalContractFile = additionalContractFile;
     }
 
-    public boolean isOfferRejected() {
+    public Boolean isOfferRejected() {
         return offerRejected;
     }
 
-    public void setOfferRejected(boolean offerRejected) {
+    public void setOfferRejected(Boolean offerRejected) {
         this.offerRejected = offerRejected;
     }
 

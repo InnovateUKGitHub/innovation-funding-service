@@ -1,5 +1,6 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.*;
 import org.springframework.security.access.method.P;
@@ -41,4 +42,7 @@ public interface UserProfileService {
 
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
 }

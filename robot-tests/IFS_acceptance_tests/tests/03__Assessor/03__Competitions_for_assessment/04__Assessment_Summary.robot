@@ -92,7 +92,7 @@ Assessor should be able to re-edit before submit
     and The user should see the text in the page    This is the applicant response from Test Seven for How Many
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
-    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review assessment)
     When The user clicks the button/link    jQuery=button:contains(1. How many)
     Then the user should see the text in the page    This is a new feedback entry.
@@ -127,6 +127,7 @@ Word count check: Your feedback
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
+    Given The user navigates to the assessor page    ${Assessment_summary_Pending_12}
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
@@ -171,7 +172,7 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
-    Given the user clicks the button/link    link=Back to assessment overview
+    Given the user clicks the button/link    link=Back to your assessment overview
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)

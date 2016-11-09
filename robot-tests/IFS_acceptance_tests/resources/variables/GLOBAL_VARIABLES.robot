@@ -142,6 +142,7 @@ ${Assessment_overview_11}    ${server}/assessment/11
 ${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
 ${Assessment_summary_open_11}    ${server}/assessment/11/summary
 ${assessment_skills}    ${server}/assessment/profile/declaration
+${Assessment_overview_10}    ${server}/assessment/10
 
 # Database variables
 ${database_name}    ifs

@@ -18,8 +18,8 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -143,7 +143,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoNameResource)).thenReturn(projectInviteNoName);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoNameResource);
             assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+            assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
 
         {
@@ -152,7 +152,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoEmailResource)).thenReturn(projectInviteNoEmail);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoEmailResource);
             assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+            assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
 
         {
@@ -161,7 +161,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoOrganisationResource)).thenReturn(projectInviteNoOrganisation);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoOrganisationResource);
             assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+            assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
 
         {
@@ -170,7 +170,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoProjectResource)).thenReturn(projectInviteNoProject);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoProjectResource);
             assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+            assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
     }
 

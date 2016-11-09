@@ -322,18 +322,20 @@ Application: Application process Page
     And the user should see the element    link=Finances
 
 Application: Business opportunity
-    [Documentation]   INFUND-5632
+    [Documentation]    INFUND-5632
     When the user clicks the button/link    link=Business opportunity
-    Then the user should see the text in the page  Make changes to the question 'Business opportunity'.
+    Then the user should see the element    jQuery=h1:contains("Business opportunity")
+    And the user should see the text in the page  You can edit this question and the guidance text for assessors.
     And the user should see the element      jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
+
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
     When The user clicks the button/link     jQuery=label:contains("Light finances")
-    And The user clicks the button/link     jQuery=label:contains("No")
-    And The user clicks the button/link     jQuery=button:contains("Done")
-    And the user clicks the button/link    link=Finances
+    And The user clicks the button/link      jQuery=label:contains("No")
+    And The user clicks the button/link      jQuery=button:contains("Done")
+    And the user clicks the button/link      link=Finances
     Then the Radio Button selections should be correct
     [Teardown]    The user clicks the button/link    link=Application
 
