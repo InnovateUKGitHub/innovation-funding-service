@@ -21,7 +21,7 @@
                 <div class="column-two-thirds competition details">
                     <ul class="no-bullet">
                         <li><strong>Competition:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
-                        <li><strong>Lead Technologist:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
+                        <li><strong>Innovation Lead:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
                         <li><strong>Accept applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
                         <li><strong>Submit applications deadline:</strong> midday (12.00pm) <span th:text="${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}" th:remove="tag"/></li>
                     </ul>
@@ -33,17 +33,17 @@
                     <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
                     <form class="bulk-select" action="" method="post">
                         <ul class="boxed-list">
-                            <li th:each="application : ${model.outstanding}">
+                            <li th:each="application : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
-                                        <h3 class="heading-medium"><a th:href="@{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
+                                        <h3 class="heading-medium"><a th:href="${application.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
                                         <p th:text="${application.leadOrganisation}" />
                                     </div>
                                     <div class="column-assessment-status navigation-right">
                                         <div th:if="${application.pending}" class="application-status pending empty">
                                             <p>Pending</p>
                                             <p class="application-listing_pending">
-                                                <a th:href="@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">accept / reject assessment</a>
+                                                <a th:href="${assignmentUrl}">accept / reject assessment</a>
                                             </p>
                                         </div>
                                         <div th:if="${application.accepted or application.open}" class="application-status open empty">

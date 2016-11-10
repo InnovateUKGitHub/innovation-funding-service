@@ -184,5 +184,5 @@ the assessor shouldn't be able to accept the rejected competition
     the assessor is unable to see the invitation
 
 The assessor is unable to see the invitation
-    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    This invitation is now closed
     The user should see the text in the page    You have already accepted or rejected this invitation.
