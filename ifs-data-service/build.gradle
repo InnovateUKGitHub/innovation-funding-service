@@ -225,6 +225,21 @@ processTestResources {
     }
 }
 
+task startMySql(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', 'up', '-d', 'mysql'
+
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}
+
+
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
@@ -233,6 +248,7 @@ task cleanDeploy() {
     buildDocker.mustRunAfter clean
     clientCopy.mustRunAfter client
     flywayClean.mustRunAfter buildDocker
+    flywayClean.mustRunAfter startMySql
     flywayMigrate.mustRunAfter flywayClean
     testCommonCode.mustRunAfter flywayMigrate
     testCommonCodeCopy.mustRunAfter testCommonCode
@@ -242,6 +258,10 @@ task cleanDeploy() {
     dependsOn clientCopy
     dependsOn testCommonCode
     dependsOn testCommonCodeCopy
+    dependsOn startMySql
     dependsOn flywayClean
     dependsOn flywayMigrate
 }
+
+
+
