@@ -32,6 +32,12 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5856 As an internal user I want to see a view of each project's submitted Project Details and the Finance contacts so I can use these for reference throughout Project Setup
 ...
 ...               INFUND-5827 As a lead partner I want my Project Setup dashboard to inform me when all the Project Details and Finance Contacts are provided so that I know if any tasks are outstanding
+...
+...               INFUND-5979 Consortium table - Project details - should update when partners submit their Finance Contacts
+...
+...               INFUND-5805 As a successful applicant I want to be able to view the grant terms and conditions from my dashboard so that I can confirm what I agreed to in the application
+
+
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -65,11 +71,12 @@ Internal users can see Project Details not yet completed
     [Teardown]    the user closes the browser
 
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805
     [Tags]    HappyPath
     [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=00000026: best riffs
     Then the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
@@ -88,8 +95,7 @@ Non-lead partner can see the project setup page
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-    # This test case can be part of above one. (If included then ensure a successful HappyPath run)
-    # This test case covers non lead partner.
+
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -125,10 +131,11 @@ Non-lead partner can see the application overview
 
 
 Lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827, INFUND-5805
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
@@ -194,7 +201,6 @@ Lead partner can change the Start Date
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    #Run Keyword And Ignore Error    When the user clicks the button/link    jQuery=.button:contains("Save")    # Click the button for second time because the focus is still in the date field
     Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
     And the user should see the text in the page    1 Jan 2018
     Then the matching status checkbox is updated    project-details    1    yes
@@ -257,7 +263,7 @@ Invited project manager receives an email
 Invited project manager registration flow
     [Documentation]    INFUND-3554
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a collaborative project
+    Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
@@ -329,11 +335,14 @@ Project details can be submitted with PM, project address and start date
     And the user should see the element    css=#project-manager-status.yes
     Mark as complete button should be enabled
 
-Partners nominate finance contacts
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827
+Non lead partner nominates finance contact
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979
     [Tags]    HappyPath
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+    And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
@@ -345,9 +354,9 @@ Partners nominate finance contacts
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
-    #TODO user should see the green check in consortium table INFUND-5979
-    ##Have splitted this test case into two, in order to test that the Lead partner can see the Hour-glass
-    ##when action required by other partners story:INFUND-5827
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
@@ -406,7 +415,7 @@ Invited finance contact receives an email
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
     [Tags]    HappyPath    Email
-    Given the user should see the text in the page    You have been invited to join a collaborative project
+    Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Vitruvius Stonework Limited
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
@@ -454,10 +463,13 @@ Non-lead partner cannot change start date, project manager or project address
     And the user should not see the element    link=Project address
 
 Academic Partner nominates Finance contact
-    [Documentation]  INFUND-2620, INFUND-5368, INFUND-5827
+    [Documentation]  INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979
     [Tags]    HappyPath
     [Setup]  Log in as a different user              pete.tom@egg.com    Passw0rd
     Then the user navigates to the page              ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link              link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page     Partner
@@ -469,7 +481,9 @@ Academic Partner nominates Finance contact
     And the user should see the element              link=EGGS
     When the user navigates to the page              ${project_in_setup_page}
     Then the user should see the element             jQuery=li.complete:nth-of-type(2)
-    #TODO user should see the green check in consortium table INFUND-5979
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827

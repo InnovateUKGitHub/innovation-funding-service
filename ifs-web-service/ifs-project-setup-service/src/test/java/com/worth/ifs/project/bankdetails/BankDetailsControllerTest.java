@@ -4,12 +4,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.bankdetails.form.BankDetailsForm;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.BankDetailsController;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
@@ -22,13 +22,13 @@ import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddres
 import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
@@ -38,6 +38,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDetailsController> {
+
+    private final static String SEARCH_ADDRESS = "search-address";
 
     @Override
     protected BankDetailsController supplyControllerUnderTest() {
@@ -117,6 +119,25 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("accountNumber", "12345678").
                 param("addressType", ADD_NEW.name())).
                 andExpect(view().name("project/bank-details"));
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+
+    }
+
+    @Test
+    public void testSearchAddressWithoutPostCode() throws Exception {
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(SEARCH_ADDRESS, "").
+                param("sortCode", "123456").
+                param("accountNumber", "12345678").
+                param("addressType", ADD_NEW.name()).
+                param("addressForm.postcodeInput", "")).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput"));
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
