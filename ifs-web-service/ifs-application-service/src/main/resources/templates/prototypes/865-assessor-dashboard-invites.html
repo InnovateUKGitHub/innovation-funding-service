@@ -16,34 +16,34 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup">
-        <h1 class="heading-large">Assessor Dashboard</h1>
+        <h1 class="heading-large">Assessor dashboard</h1>
     </div>
 
     <th:block th:if="${param.user != null and param.user[0] == 'assessor'}">
         <div class="message-alert extra-margin-bottom">
             <h2 class="heading-small no-margin">Complete your assessor account</h2>
-            <p>To allow you to be assigned applications to mark you must complete your profile</p>
-            <ul class="list-bullet extra-margin-top">   
+            <p>You must complete your profile before we can assign you applications.</p>
+            <ul class="list-bullet extra-margin-top">
                 <li>
-                    <a href="/prototypes/1177-assessor-skills?version=v2">Your skills and innovation area</a>
+                    <a href="/prototypes/1177-assessor-skills?version=v2">your skills</a>
                 </li>
                 <li>
-                    <a href="/prototypes/1247-assessor-doi?&#38;version=v2">Declaration of interest</a>
+                    <a href="/prototypes/1247-assessor-doi?&#38;version=v2">your declaration of interest</a>
                 </li>
                 <li>
-                    <a href="/prototypes/1176-assessor-contracts?version=v2">Contract</a>
+                    <a href="/prototypes/1176-assessor-contracts?version=v2">your contract</a>
                 </li>
-        
+
             </ul>
         </div>
     </th:block>
-    
+
     <div class="my-applications">
 
         <div th:if="${param.noInvites != null}" th:remove="tag">
             <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites-empty" th:remove="tag" />
         </div>
-        
+
         <div th:if="${param.noInvites == null}" th:remove="tag">
             <!-- Standard view invite sent -->
             <div th:if="${param.accepted == null}" th:remove="tag">

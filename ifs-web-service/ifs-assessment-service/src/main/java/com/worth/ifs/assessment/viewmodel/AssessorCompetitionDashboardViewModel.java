@@ -13,15 +13,19 @@ public class AssessorCompetitionDashboardViewModel {
     private String leadTechnologist;
     private LocalDateTime acceptDeadline;
     private LocalDateTime submitDeadline;
-    private List<AssessorCompetitionDashboardApplicationViewModel> applications;
+    private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
+    private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
+    private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> applications) {
+    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionTitle = competitionTitle;
         this.competition = competition;
         this.leadTechnologist = leadTechnologist;
         this.acceptDeadline = acceptDeadline;
         this.submitDeadline = submitDeadline;
-        this.applications = applications;
+        this.submitted = submitted;
+        this.outstanding = outstanding;
+        this.submitVisible = submitVisible;
     }
 
     public String getCompetitionTitle() {
@@ -64,11 +68,27 @@ public class AssessorCompetitionDashboardViewModel {
         this.submitDeadline = submitDeadline;
     }
 
-    public List<AssessorCompetitionDashboardApplicationViewModel> getApplications() {
-        return applications;
+    public List<AssessorCompetitionDashboardApplicationViewModel> getSubmitted() {
+        return submitted;
     }
 
-    public void setApplications(List<AssessorCompetitionDashboardApplicationViewModel> applications) {
-        this.applications = applications;
+    public void setSubmitted(List<AssessorCompetitionDashboardApplicationViewModel> submitted) {
+        this.submitted = submitted;
+    }
+
+    public List<AssessorCompetitionDashboardApplicationViewModel> getOutstanding() {
+        return outstanding;
+    }
+
+    public void setOutstanding(List<AssessorCompetitionDashboardApplicationViewModel> outstanding) {
+        this.outstanding = outstanding;
+    }
+
+    public boolean isSubmitVisible() {
+        return submitVisible;
+    }
+
+    public void setSubmitVisible(boolean submitVisible) {
+        this.submitVisible = submitVisible;
     }
 }

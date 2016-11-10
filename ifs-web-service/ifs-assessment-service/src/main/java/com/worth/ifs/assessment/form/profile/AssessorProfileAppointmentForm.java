@@ -8,10 +8,13 @@ import org.hibernate.validator.constraints.NotEmpty;
  * Form field model for the Assessor Profile Declaration of Interest Appointments, directorships or consultancies
  */
 public class AssessorProfileAppointmentForm {
+    public interface Appointments {
+    }
 
-    @NotEmpty(message = "{validation.assessorprofileappointmentform.organisation.required}")
+    @NotEmpty(message = "{validation.assessorprofileappointmentform.organisation.required}", groups=Appointments.class
+    )
     private String organisation;
-    @NotEmpty(message = "{validation.assessorprofileappointmentform.position.required}")
+    @NotEmpty(message = "{validation.assessorprofileappointmentform.position.required}", groups=Appointments.class)
     private String position;
 
     public AssessorProfileAppointmentForm() {

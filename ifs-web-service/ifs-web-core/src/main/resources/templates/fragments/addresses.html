@@ -13,14 +13,16 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.postcodeInput}" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'field-error' : ''" type="text" />
                 <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
-                <div th:if='${form.addressForm.postcodeInput != ""} and ${form.addressForm.postcodeOptions.size()}==0'>No results were found</div>
-
+                <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
 
-            <div class="form-group" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
+            <div th:class="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group error' : 'form-group'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
                 <label class="form-label" for="addressForm.selectedPostcodeIndex">
                     <span class="form-label-bold">Select your address</span>
                 </label>
+                <span th:if="${#fields.hasErrors('*{addressForm.postcodeOptions}')}"  th:remove="tag">
+                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeOptions')}" th:text="${err}" />
+                </span>
                 <select class="form-control" th:field="*{addressForm.selectedPostcodeIndex}">
                     <option th:value="${status.index}" th:each="address,status : ${form.addressForm.postcodeOptions}" th:text="${address.combinedString}"></option>
                 </select>

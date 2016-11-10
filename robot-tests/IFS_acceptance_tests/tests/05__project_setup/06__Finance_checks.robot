@@ -4,7 +4,8 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
 ...
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
-
+...
+...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
 Suite Setup       Moving La Fromage into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -34,7 +35,7 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
@@ -58,7 +59,7 @@ Finance checks client-side validations
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
-    [Tags]
+    [Tags]    HappyPath
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
@@ -69,7 +70,7 @@ Approve Eligibility: Collaborator partner organisation
 
 Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
@@ -80,7 +81,7 @@ Approve Eligibility: Academic partner organisation
 
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
     Then the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
@@ -91,14 +92,19 @@ Approve Eligibility: Lead partner organisation
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
-
+Project Finance user can export bank details 
+    [Documentation]    INFUND-5852 
+    [Tags]              Pending
+   Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
+   Then The user should see the text in the page    Export all bank details
+   And The user clicks the button/link          css =#table-project-status > tfoot > tr > td.aligncentre > a
+# TODO : Need to include verifying the contents of the downloaded excel
 
 #Please note this test needs test data to be created [INFUND-5879]
 
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
-    [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3

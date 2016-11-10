@@ -14,6 +14,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
 ...
 ...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
+...
+...               INFUND-5609 PM can see partners' spend profiles before they are marked as complete, and can see buttons to edit and mark as complete
+...
+...               INFUND-5911 Internal users should not have access to external users' pages
 
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -27,7 +31,7 @@ ${external_spendprofile_summary}  ${server}/project-setup/project/4/partner-orga
 *** Test Cases ***
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
-    [Tags]
+    [Tags]    HappyPath
     [Setup]  log in as user                 project.finance1@innovateuk.test    Passw0rd
     Given the project finance user moves La Fromage into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/4/finance-check
@@ -46,7 +50,7 @@ Project Finance cancels the generation of the Spend Profile
 
 Project Finance generates the Spend Profile
     [Documentation]  INFUND-5194
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
     And the user clicks the button/link     jQuery=.button:contains("Generate spend profile")
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
@@ -54,7 +58,7 @@ Project Finance generates the Spend Profile
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
@@ -68,11 +72,11 @@ Lead partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Calculations in the spend profile table
     [Documentation]    INFUND-3764
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
     Then element should contain    css=div.spend-profile-table tr:nth-child(1) td:nth-child(5)    £ 8,000      #Labour
     Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(5)    £ 2,000      #Overheads
@@ -90,7 +94,7 @@ Calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971
-    [Tags]     #HappyPath
+    [Tags]     HappyPath
     Given the user navigates to the page            ${external_spendprofile_summary}
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=div.grid-container table
@@ -130,7 +134,7 @@ Lead partner can edit his spend profile with invalid values
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
-    [Tags]     #HappyPath
+    [Tags]     HappyPath
     Given the user navigates to the page                 ${external_spendprofile_summary}
     When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
     And the user should not see the element              css=table a[type="number"]    # checking here that the table is not read-only
@@ -148,7 +152,7 @@ Lead partner can edit his spend profile with valid values
 
 Lead Partners Spend profile summary gets updated when edited
     [Documentation]    INFUND-3971
-    [Tags]     #HappyPath
+    [Tags]     HappyPath
     Given the user navigates to the page             ${external_spendprofile_summary}
     Then the user should see the text in the page    Project costs for financial year
     And the user sees the text in the element        jQuery=div.grid-container table tr:nth-child(1) td:nth-child(2)    £ 56,001
@@ -158,7 +162,7 @@ Lead Partners Spend profile summary gets updated when edited
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
     [Tags]
-    [Setup]  Log in as a different user                 worth.email.test+fundsuccess@gmail.com    Passw0rd
+    [Setup]  Log in as a different user     worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page    ${external_spendprofile_summary}
     Then the user should see the element    link=Cheeseco
     And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
@@ -166,11 +170,11 @@ Project Manager can see Spend Profile in Progress
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     [Setup]  Log in as a different user                         steve.smith@empire.com    Passw0rd
     Given the user navigates to the page            ${external_spendprofile_summary}
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
@@ -178,7 +182,7 @@ Lead partner marks spend profile as complete
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
@@ -191,13 +195,13 @@ Non-lead partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
@@ -212,7 +216,7 @@ Project Manager doesn't have the option to submit spend profiles until all partn
 
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Log in as a different user    pete.tom@egg.com    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
@@ -225,39 +229,43 @@ Academic partner can see correct project start date and duration
     [Tags]
     Then the user should see the text in the page    1
     And the user should see the text in the page     October 2020
-    And the user should see the text in the page     3 Months
+    And the user should see the text in the page     3 months
 
 Academic partner can see the alternative academic view of the spend profile
     [Documentation]    INFUND-4819
     [Tags]
-    Then the user should see the text in the page    J-eS category    # this line subject to change as J-eS will be repalce by Je-S
+    Then the user should see the text in the page    Je-S category
     And the user should see the text in the page    Investigations
     And the user should see the text in the page    Estates costs
 
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
-    Then the user should see the text in the page   Your spend profile is marked as complete
+    Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
 
 Project Manager can view partners' spend profiles
-    [Documentation]    INFUND-3767, INFUND-3766
-    [Tags]    #HappyPath
+    [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
+    [Tags]    HappyPath
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link    link=Cheeseco
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user goes back to the previous page
     And the user clicks the button/link    link=Ludlow
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
+    And the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     And the user clicks the button/link    link=EGGS
-    And the user should see the text in the page   Your spend profile is marked as complete
+    And the user should see the text in the page   We have reviewed and confirmed your project costs
+    And the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
     Then the user should see the element    jQuery=a:contains("Review and submit total project")
@@ -266,22 +274,18 @@ Project Manager can view partners' spend profiles
 Partners are not able to see the spend profile summary page
     [Documentation]  INFUND-3766
     [Tags]
-    Given log in as a different user             steve.smith@empire.com    Passw0rd
+    Given log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page  ${external_spendprofile_summary}
     Then the user should see the text in the page  Cheeseco - Spend profile
-    And logout as user
-    Given guest user log-in             jessica.doe@ludlow.co.uk    Passw0rd
-    And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
-    Then The user should see permissions error message
-    And logout as user
-    Given guest user log-in             pete.tom@egg.com    Passw0rd
-    And run keyword and ignore error    the user navigates to the page  ${external_spendprofile_summary}
-    Then The user should see permissions error message
+    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    And the user navigates to the page and gets a custom error message    ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    Given log in as a different user    pete.tom@egg.com    Passw0rd
+    And the user navigates to the page and gets a custom error message    ${external_spendprofile_summary}    You do not have the necessary permissions for your request
 
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page    ${external_spendprofile_summary}
     When the user clicks the button/link    jQuery=.button:contains("Review and submit total project profile")
@@ -297,7 +301,7 @@ Project Manager can choose cancel on the dialogue
 
 Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page    ${server}/project-setup/project/4/spend-profile/total
     When the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
@@ -311,45 +315,38 @@ PM's Spend profile Summary page gets updated after submit
     Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been submitted to Innovate UK")
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
-    [Teardown]  Logout as user
 
 Partners can see the Spend Profile section completed
     [Documentation]  INFUND-3767,INFUND-3766
     [Tags]
-    Given guest user log-in                worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given Log in as a different user       worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                steve.smith@empire.com    Passw0rd
+    Given Log in as a different user       steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                jessica.doe@ludlow.co.uk    Passw0rd
+    Given Log in as a different user       jessica.doe@ludlow.co.uk    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
-    Given guest user log-in                pete.tom@egg.com    Passw0rd
+    Given Log in as a different user       pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
-    And Logout as user
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian    #HappyPath
-    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page     ${server}/project-setup-management/competition/3/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
-
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
-    [Tags]  #HappyPath
-    [Setup]  Log in as a different user                                 project.finance1@innovateuk.test    Passw0rd
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page                    ${server}/project-setup-management/competition/3/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/4/spend-profile/approval
@@ -367,13 +364,11 @@ Project Finance is able to see Spend Profile approval page
     When the user selects the checkbox                      jQuery=#approvedByLeadTechnologist
     Then the user should see the element                    jQuery=#accept-profile
     And the user should see the element                     jQuery=#content .button.button.button-warning.large:contains("Reject")
-    
-
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
-    [Setup]  Log in as a different user                          john.doe@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user              john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
     Then the user should see the element             jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled               jQuery=#accept-profile
@@ -389,11 +384,10 @@ Comp Admin is able to see Spend Profile approval page
     When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
-
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
-    [Tags]    #HappyPath
-    [Setup]  Log in as a different user                        project.finance1@innovateuk.test    Passw0rd
+    [Tags]
+    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
@@ -407,7 +401,7 @@ Project Finance is able to Reject Spend Profile
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
-    [Tags]    #HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
     Then the user should see the element             jQuery=button:contains("Approved")
@@ -421,6 +415,9 @@ Project Finance is able to Approve Spend Profile
     When the user navigates to the page              ${server}/project-setup-management/competition/3/status
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
 
+Project finance user cannot access internal users' spend profile page
+    [Documentation]    INFUND-5911
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/4/partner-organisation/21/spend-profile    You do not have the necessary permissions for your request
 
 
 *** Keywords ***

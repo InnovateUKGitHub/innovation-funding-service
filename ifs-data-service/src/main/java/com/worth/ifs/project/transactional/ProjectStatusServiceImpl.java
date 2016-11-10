@@ -159,9 +159,25 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
+
+        ApprovalType spendProfileApprovalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+
+        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType)){
+            return PENDING;
+        }
+
+        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
+            return PENDING;
+        }
+
+        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
+            return COMPLETE;
+        }
+
         if(project.getOfferSubmittedDate() != null) {
             return ACTION_REQUIRED;
         }
+
         return NOT_STARTED;
     }
 }

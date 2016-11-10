@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +55,9 @@ public class AssessorProfileDeclarationController {
     @Autowired
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
+    @Autowired
+    private Validator validator;
+
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
@@ -74,6 +79,8 @@ public class AssessorProfileDeclarationController {
                                     ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> getDeclaration(model, loggedInUser, form, bindingResult);
+
+        validateLists(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliatonsFromForm(form));
@@ -115,6 +122,16 @@ public class AssessorProfileDeclarationController {
     private String doViewDeclaration(Model model) {
         model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel());
         return "profile/declaration-of-interest";
+    }
+
+    private void validateLists(AssessorProfileDeclarationForm form, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(form.getHasFamilyAffiliations())) {
+            ValidationUtils.invokeValidator(validator, form, bindingResult, AssessorProfileFamilyAffiliationForm.FamilyAffiliations.class);
+        }
+
+        if (Boolean.TRUE.equals(form.getHasAppointments())) {
+            ValidationUtils.invokeValidator(validator, form, bindingResult, AssessorProfileAppointmentForm.Appointments.class);
+        }
     }
 
     private void populateFormWithExistingValues(AssessorProfileDeclarationForm form, UserResource user) {

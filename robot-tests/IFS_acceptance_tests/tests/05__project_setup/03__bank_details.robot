@@ -4,6 +4,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
 ...
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
+...
+...               INFUND-4903 As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -82,11 +84,10 @@ Bank details submission
     And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Bank account details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Bank account details below are now being reviewed
-    And the user should see the element    css=.success-alert
+    And the user should see the text in the page    The bank account details below are being reviewed
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.waiting:nth-child(4)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -112,11 +113,10 @@ Bank details for Academic
     And the address fields should be filled
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Bank details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Bank account details below are now being reviewed
-    And the user should see the element    css=.success-alert
+    And the user should see the text in the page    The bank account details below are being reviewed
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -133,7 +133,6 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.action
 
 
 Bank details for non-lead partner
@@ -154,10 +153,10 @@ Bank details for non-lead partner
     When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link             jquery=button:contains("Cancel")
     Then the user should not see an error in the page
-    And the user should not see the text in the page    Bank details below are now being reviewed
+    And the user should not see the text in the page    The bank account details below are being reviewed
     When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link             jQuery=button:contains("Submit")
-    And the user should see the element             jQuery=.success-alert p:contains("Bank account details below are now being reviewed")
+    And the user should see the element             jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page             ${project_in_setup_page}
     And the user should see the element             jQuery=ul li.complete:nth-child(2)
     When the user clicks the button/link            link=What's the status of each of my partners?
@@ -165,6 +164,23 @@ Bank details for non-lead partner
     And the user should see the text in the page    Project team status
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
+Project Finance can see the progress of partners bank details
+    [Documentation]  INFUND-4903
+    [Tags]    HappyPath
+    [Setup]  log in as a different user             project.finance1@innovateuk.test    Passw0rd
+    Given the user navigates to the page            ${internal_project_summary}
+    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
+    Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
+    And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
+    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
+    # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
+    # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
+    When the user clicks the button/link            link=Vitruvius Stonework Limited
+    Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
+    And the user should see the text in the page    Bob Jones
+    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
+    And the user should see the text in the page    0987654321
+    #TODO for Jessica and Pete
 
 
 *** Keywords ***

@@ -78,7 +78,6 @@ SVG based pie charts, won't show without javascript or svg
 .pie {
 	width: 100px;
 	height: 100px;
-	transform: rotate(-90deg);
 	@include inline-block;
 	color:transparent;
 
@@ -95,6 +94,8 @@ SVG based pie charts, won't show without javascript or svg
 		fill:$red;
 		stroke: $grey-3;
 		stroke-width: 32;
+		transform: rotate(-90deg);
+		transform-origin: 50%;
 	}
 }
 .pie-container {
