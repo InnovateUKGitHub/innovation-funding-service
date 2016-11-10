@@ -8,7 +8,7 @@ Suite Setup       Login new application invite academic    ${test_mailbox_one}+a
 Suite Teardown    the user closes the browser
 Force Tags        Email    Applicant    Pending
 Resource          ../../../../resources/defaultResources.robot
-#TODO it seems not possible to mark the finances as complete as Academic. Have created ticket INFUND-4747
+#TODO Pending due to INFUND-4747. It seems not possible to mark the finances as complete as Academic. Have created ticket INFUND-4747
 
 *** Variables ***
 
