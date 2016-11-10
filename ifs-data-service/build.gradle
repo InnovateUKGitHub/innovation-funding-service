@@ -36,7 +36,7 @@ sourceSets {
         main {
             ext.originalJavaSrcDirs = java.srcDirs
             java.srcDir "${generatedMapperSourcesDir}"
-            output.resourcesDir = "build/resources"
+//            output.resourcesDir = "build/resources"
         }
     }
 }
@@ -154,39 +154,17 @@ task client(type: Jar) {
         include "com/worth/ifs/**/constant/**"
         include "com/worth/ifs/**/resource/**"
         include "com/worth/ifs/util/**"
-
-//        include "com/worth/ifs/commons/security/CustomPermissionEvaluator.class"
-////        include "com/worth/ifs/commons/security/NotSecured.class"
-////        include "com/worth/ifs/commons/security/PermissionEntityLookupStrategies.class"
-////        include "com/worth/ifs/commons/security/PermissionEntityLookupStrategy.class"
-//        include "com/worth/ifs/commons/security/PermissionRule.class"
-//        include "com/worth/ifs/commons/security/PermissionRules.class"
-////        include "com/worth/ifs/commons/security/SecuredBySpring.class"
-
         include "com/worth/ifs/commons/security/**"
-//        exclude "com/worth/ifs/commons/security/UidAuthenticationService.class"
-
-//        include "com/worth/ifs/commons/security/CredentialsValidator.class"
-//        include "com/worth/ifs/commons/security/UidSupplier.class"
-//        include "com/worth/ifs/commons/security/UserAuthenticationService.class"
-//        include "com/worth/ifs/commons/security/authentication/**"
-
         include "com/worth/ifs/commons/rest/**"
         include "com/worth/ifs/commons/error/**"
         include "com/worth/ifs/commons/validation/**"
-//        include "com/worth/ifs/mappers/**"
         exclude "com/worth/ifs/**/transactional/**"
         exclude "com/worth/ifs/notifications/**"
         exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
-//        exclude "com/worth/ifs/config/**"
-//        include "com/worth/ifs/config/http/**"
-//        include "com/worth/ifs/config/validator/**"
         include "com/worth/ifs/config/rest/**"
-//        include "com/worth/ifs/config/audit/**"
         include "**/**.properties"
-
     }
 }
 task clientCopy(type: Copy) {
