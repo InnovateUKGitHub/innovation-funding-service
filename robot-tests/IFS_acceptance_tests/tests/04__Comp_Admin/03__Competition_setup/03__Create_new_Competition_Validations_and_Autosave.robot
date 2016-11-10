@@ -174,6 +174,7 @@ Eligibility client-side validations
     And the user moves focus and waits for autosave
     And the user should not see the text in the page    A stream name is required
     And the user selects the radio button    resubmission    no
+    And the user moves focus and waits for autosave
     And the user should not see the text in the page    Please select a resubmission option
 
 Eligibility Autosave
