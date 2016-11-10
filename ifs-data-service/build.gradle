@@ -239,6 +239,11 @@ task startMySql(type:Exec) {
     }
 }
 
+task syncShib(type:Exec) {
+    workingDir '../setup-files/scripts/docker'
+    commandLine './syncShib.sh'
+}
+
 
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
