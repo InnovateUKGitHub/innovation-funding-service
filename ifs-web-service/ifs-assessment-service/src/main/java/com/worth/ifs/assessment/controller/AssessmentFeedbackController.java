@@ -184,11 +184,7 @@ public class AssessmentFeedbackController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
+
         return node;
     }
 }

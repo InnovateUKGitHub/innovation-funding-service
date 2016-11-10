@@ -962,14 +962,9 @@ public class ApplicationFormController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
-        
+
         if(fieldId != null) {
-        	node.set("field_id", new LongNode(fieldId));
+        	node.set("fieldId", new LongNode(fieldId));
         }
         return node;
     }

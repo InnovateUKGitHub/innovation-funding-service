@@ -207,8 +207,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("value", value)
                 .param("objectId", String.valueOf(objectId)))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("false")))
-                .andExpect(jsonPath("validation_errors[0]", is("Please enter a future date")));
+                .andExpect(jsonPath("success", is("false")));
 
         verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value), eq(Optional.of(objectId)));
     }

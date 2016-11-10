@@ -380,12 +380,6 @@ public class CompetitionSetupController {
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
 
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
-
         return node;
     }
 

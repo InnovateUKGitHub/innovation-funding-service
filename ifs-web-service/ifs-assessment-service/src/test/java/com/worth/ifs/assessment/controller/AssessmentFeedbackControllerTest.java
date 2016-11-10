@@ -267,7 +267,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"This field cannot contain more than 5000 characters\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);
     }
 
@@ -289,7 +289,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Maximum word count exceeded. Please reduce your word count to 100.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);
     }
 

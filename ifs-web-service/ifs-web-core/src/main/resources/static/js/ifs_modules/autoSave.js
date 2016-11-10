@@ -190,13 +190,9 @@ IFS.core.autoSave = (function() {
           var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime-(doneAjaxTime-startAjaxTime));
 
           //transform name of costrow for persisting to database
-          //disable camelcase as validation_errors is coming from the server
-          //would be nice to fix this on the server
-          // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-          if(typeof(data.field_id) !== 'undefined') {
-            jQuery('body').trigger('persistUnsavedRow', [name, data.field_id]);
+          if(typeof(data.fieldId) !== 'undefined') {
+            jQuery('body').trigger('persistUnsavedRow', [name, data.fieldId]);
           }
-          // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 
           // set the form-saved-state
           jQuery('body').trigger('updateSerializedFormState');
