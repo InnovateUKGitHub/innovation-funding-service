@@ -16,7 +16,7 @@
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
     <p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
-    <strong><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
+    <strong th:if="${model.leadPartner}"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
 
     <ul class="ifs-progress-list extra-margin">
 
@@ -117,8 +117,8 @@
             <a th:if="${model.otherDocumentsSection.accessible}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
           </h2>
-          <p th:if="${model.leadPartner}">As lead partner in the consortium you will need to upload the following documents:</p>
-          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload the following documents:</p>
+          <p th:if="${model.leadPartner}">As lead partner in the consortium you will need to upload the following:</p>
+          <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload the following:</p>
           <ul class="list-bullet">
             <li>a collaboration agreement</li>
             <li>exploitation plan</li>
