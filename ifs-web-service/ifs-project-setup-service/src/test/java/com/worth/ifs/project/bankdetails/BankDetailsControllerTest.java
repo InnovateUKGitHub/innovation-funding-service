@@ -39,6 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDetailsController> {
 
+    private final static String SEARCH_ADDRESS = "search-address";
+
     @Override
     protected BankDetailsController supplyControllerUnderTest() {
         return new BankDetailsController();
@@ -117,6 +119,25 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("accountNumber", "12345678").
                 param("addressType", ADD_NEW.name())).
                 andExpect(view().name("project/bank-details"));
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+
+    }
+
+    @Test
+    public void testSearchAddressWithoutPostCode() throws Exception {
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(SEARCH_ADDRESS, "").
+                param("sortCode", "123456").
+                param("accountNumber", "12345678").
+                param("addressType", ADD_NEW.name()).
+                param("addressForm.postcodeInput", "")).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput"));
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
