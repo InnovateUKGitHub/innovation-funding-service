@@ -5,7 +5,6 @@ import com.worth.ifs.form.resource.FormInputResource;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * View viewmodel where all information is for editing questions
@@ -15,7 +14,7 @@ public class QuestionViewModel {
     private String number;
     private String shortTitle;
 
-    @NotBlank( message = "{validation.field.must.not.be.blank}")
+    @NotBlank
     private String title;
     private String subTitle;
 
@@ -26,7 +25,6 @@ public class QuestionViewModel {
     private String guidance;
 
     @Min(1)
-    @NotNull( message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
     private Boolean appendix;
     private Boolean scored;
