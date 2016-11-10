@@ -23,7 +23,7 @@
             <h2 class="heading-large">Your affiliations</h2>
 
             <form th:action="@{/profile/declaration}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <div class="error-summary" th:if="${#fields.hasErrors('*')}" data-ignore-errors="true">
                     <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                     <p>Please correct the errors in the form below.</p>
                 </div>
@@ -66,18 +66,25 @@
                         <legend class="heading-small">
                             Do you have any appointments, directorships or consultancies?
                             <span th:if="${#fields.hasErrors('hasAppointments')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
+                                <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
                             </span>
                         </legend>
 
-                          <label class="block-label" data-target="toggle-appointments">
-                              <input value="yes" type="radio" th:field="*{hasAppointments}" data-repeatable-rowcontainer="#position-table tbody" required="required" data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies" />
-                              Yes
-                          </label>
-                          <label class="block-label">
-                              <input value="no" type="radio" th:field="*{hasAppointments}"  required="required" data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies" />
-                              No
-                          </label>
+                        <label class="block-label" data-target="toggle-appointments">
+                            <input value="yes" type="radio" th:field="*{hasAppointments}"
+                                   data-repeatable-rowcontainer="#position-table tbody"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies"
+                                   data-conditionally-add-required="input.appointment-field" />
+                            Yes
+                        </label>
+                        <label class="block-label">
+                            <input value="no" type="radio" th:field="*{hasAppointments}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies"
+                                   data-conditionally-remove-required="input.appointment-field" />
+                            No
+                        </label>
                     </fieldset>
 
                     <div class="panel-indent js-hidden" id="toggle-appointments">
@@ -95,16 +102,34 @@
                             <tbody>
                                 <tr th:each="appointment,appointmentStat: *{appointments}">
                                     <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
-                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}" th:text="${err}" />
-                                        </span>
-                                        <input aria-labelledby="aria-position-org" class="form-control width-full" type="text" th:errorclass="field-error" th:field="*{appointments[__${appointmentStat.index}__].organisation}" />
+                                        <label>
+                                            <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}" th:remove="tag">
+                                                <span class="error-message"
+                                                      th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}"
+                                                      th:attr="data-errorfield='appointments[__${appointmentStat.index}__].organisation'"
+                                                      th:text="${err}" />
+                                            </span>
+                                        </label>
+                                        <input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text"
+                                               th:errorclass="field-error"
+                                               th:field="*{appointments[__${appointmentStat.index}__].organisation}"
+                                               required="required"
+                                               data-required-errormessage="Please enter an organisation" />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
-                                        <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}" th:text="${err}" />
-                                        </span>
-                                        <input aria-labelledby="aria-position-pos" class="form-control width-full" type="text" th:errorclass="field-error" th:field="*{appointments[__${appointmentStat.index}__].position}" />
+                                        <label>
+                                            <span th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}" th:remove="tag">
+                                                <span class="error-message"
+                                                      th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}"
+                                                      th:attr="data-errorfield='appointments[__${appointmentStat.index}__].position'"
+                                                      th:text="${err}" />
+                                            </span>
+                                        </label>
+                                        <input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text"
+                                               th:errorclass="field-error"
+                                               th:field="*{appointments[__${appointmentStat.index}__].position}"
+                                               required="required"
+                                               data-required-errormessage="Please enter a position" />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
@@ -124,28 +149,38 @@
                         <legend class="heading-small">
                             Do you have any other financial interests?
                             <span th:if="${#fields.hasErrors('hasFinancialInterests')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('hasFinancialInterests')}" th:text="${err}" />
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFinancialInterests')}"
+                                      th:text="${err}" />
                             </span>
                         </legend>
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
                         <label class="block-label" data-target="toggle-interest">
-                            <input value="Yes" type="radio" th:field="*{hasFinancialInterests}" required="required" data-required-errormessage="Please tell us if you have any other financial interests" />
+                            <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if you have any other financial interests"
+                                   data-conditionally-add-required="#financialInterests" />
                             Yes
                         </label>
                         <label class="block-label">
-                            <input value="No" type="radio" th:field="*{hasFinancialInterests}" required="required" data-required-errormessage="Please tell us if you have any other financial interests" />
+                            <input value="No" type="radio" th:field="*{hasFinancialInterests}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if you have any other financial interests"
+                                   data-conditionally-remove-required="#financialInterests" />
                             No
                         </label>
 
                         <div class="panel-indent js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')}? error">
                             <label class="form-label-bold">
-                                Please describe these interests?
+                                Please describe these interests
                                 <span th:if="${#fields.hasErrors('financialInterests')}" th:remove="tag">
                                     <span class="error-message"  th:each="err : ${#fields.errors('financialInterests')}" th:text="${err}" />
                                 </span>
                             </label>
-                            <textarea class="form-control width-full" cols="30" rows="3" th:field="*{financialInterests}" th:errorclass="field-error"></textarea>
+                            <textarea class="form-control width-full" cols="30" rows="3"
+                                      th:field="*{financialInterests}" th:errorclass="field-error"
+                                      data-required-errormessage="Please enter your financial interests"></textarea>
                         </div>
                     </fieldset>
                 </div>
@@ -157,16 +192,25 @@
                         <legend class="heading-small">
                             Do any of your close family members have any appointments, directorships or consultancies?
                             <span th:if="${#fields.hasErrors('hasFamilyAffiliations')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('hasFamilyAffiliations')}" th:text="${err}" />
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
+                                      th:text="${err}" />
                             </span>
                         </legend>
 
                         <label class="block-label" data-target="toggle-familyAffiliations">
-                            <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" data-repeatable-rowcontainer="#family-table tbody" required="required" data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies" />
+                            <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
+                                   data-repeatable-rowcontainer="#family-table tbody"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies"
+                                   data-conditionally-add-required="input.family-affiliation-field" />
                             Yes
                         </label>
                         <label class="block-label">
-                            <input value="No" type="radio" th:field="*{hasFamilyAffiliations}" required="required" data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies" />
+                            <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies"
+                                   data-conditionally-remove-required="input.family-affiliation-field" />
                             No
                         </label>
                     </fieldset>
@@ -187,22 +231,44 @@
                             <tbody>
                                 <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
-                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
-                                        </span>
-                                        <input aria-labelledby="aria-family-rel" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}" />
+                                        <label>
+                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:remove="tag">
+                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}" th:text="${err}" />
+                                            </span>
+                                        </label>
+                                        <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
+                                               th:errorclass="field-error" type="text"
+                                               th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
+                                               th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].relation'"
+                                               required="required"
+                                               data-required-errormessage="Please enter a relation" />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
-                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
-                                        </span>
-                                        <input aria-labelledby="aria-family-org" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}" />
+                                        <label>
+                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:remove="tag">
+                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}" th:text="${err}" />
+                                            </span>
+                                        </label>
+                                        <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
+                                               th:errorclass="field-error" type="text"
+                                               th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
+                                               th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].organisation'"
+                                               required="required"
+                                               data-required-errormessage="Please enter an organisation" />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
-                                        <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
-                                        </span>
-                                        <input aria-labelledby="aria-family-pos" class="form-control width-full" th:errorclass="field-error" type="text" th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}" />
+                                        <label>
+                                            <span th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:remove="tag">
+                                                <span class="error-message"  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}" th:text="${err}" />
+                                            </span>
+                                        </label>
+
+                                        <input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field"
+                                               th:errorclass="field-error" type="text"
+                                               th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
+                                               th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].position'"
+                                               required="required"
+                                               data-required-errormessage="Please enter a position" />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
@@ -220,17 +286,25 @@
                         <legend class="heading-small">
                             Do any of your close family members have any other financial interests?
                             <span th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}" th:text="${err}" />
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
+                                      th:text="${err}" />
                             </span>
                         </legend>
                         <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
                         <label class="block-label" data-target="toggle-family-interest">
-                            <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}" required="required" data-required-errormessage="Please tell us if any of your close family members have any other financial interests" />
+                            <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests"
+                                   data-conditionally-add-required="#familyFinancialInterests" />
                             Yes
                         </label>
                         <label class="block-label">
-                            <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}" required="required" data-required-errormessage="Please tell us if any of your close family members have any other financial interests" />
+                            <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
+                                   required="required"
+                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests"
+                                   data-conditionally-remove-required="#familyFinancialInterests" />
                             No
                         </label>
                     </fieldset>
@@ -241,7 +315,9 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}" />
                             </span>
                         </label>
-                        <textarea class="form-control width-full" cols="30" rows="3" th:field="*{familyFinancialInterests}" th:errorclass="field-error"></textarea>
+                        <textarea class="form-control width-full" cols="30" rows="3"
+                                  th:field="*{familyFinancialInterests}" th:errorclass="field-error"
+                                  data-required-errormessage="Please enter your family financial interests"></textarea>
                     </div>
                 </div>
 

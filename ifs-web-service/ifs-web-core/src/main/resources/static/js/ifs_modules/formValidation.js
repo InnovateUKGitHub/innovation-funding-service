@@ -550,7 +550,7 @@ IFS.core.formValidation = (function() {
         jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
       }
 
-      jQuery('.error-summary').attr('aria-hidden', false);
+      jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false);
       jQuery(window).trigger('updateWysiwygPosition');
     },
     setValid : function(field, message) {
@@ -586,7 +586,7 @@ IFS.core.formValidation = (function() {
         errorSummary.find('li:not([data-errorfield]):contains("'+message+'")').first().remove();
       }
       if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
-        jQuery('.error-summary').attr('aria-hidden', 'true');
+        jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true');
       }
       jQuery(window).trigger('updateWysiwygPosition');
     },
