@@ -36,7 +36,6 @@ sourceSets {
         main {
             ext.originalJavaSrcDirs = java.srcDirs
             java.srcDir "${generatedMapperSourcesDir}"
-//            output.resourcesDir = "build/resources"
         }
     }
 }
