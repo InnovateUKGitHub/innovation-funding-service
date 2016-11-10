@@ -16,6 +16,7 @@ import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -53,21 +54,20 @@ public class ApplicantController {
     private ProjectService projectService;
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
-    public String dashboard(Model model, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    public String dashboard(Model model,  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
+        model.addAttribute("applicationProgress", applicationService.getProgress(loggedInUser.getId()));
 
-        List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
-        List<ApplicationResource> finished = applicationService.getFinished(user.getId());
+        List<ApplicationResource> inProgress = applicationService.getInProgress(loggedInUser.getId());
+        List<ApplicationResource> finished = applicationService.getFinished(loggedInUser.getId());
 
-        List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObject();
+        List<ProjectResource> projectsInSetup = projectService.findByUser(loggedInUser.getId()).getSuccessObject();
         
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProcess", inProgress);
-        model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
+        model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, loggedInUser));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("projectsInSetup", projectsInSetup);
         model.addAttribute("competitions", competitions);
