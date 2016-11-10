@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -54,11 +56,6 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionCountResource> countCompetitions() {
         return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
-    }
-
-    @Override
-    public RestResult<List<CompetitionProjectsCountResource>> countProjectsForCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/countProjects", competitionProjectsCountResourceListType());
     }
 
     @Override

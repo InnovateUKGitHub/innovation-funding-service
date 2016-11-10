@@ -3,24 +3,19 @@ package com.worth.ifs.competition.documentation;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.controller.CompetitionController;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionProjectsCountResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.documentation.CompetitionCountResourceDocs;
-import com.worth.ifs.documentation.CompetitionProjectsCountResourceDocs;
 import com.worth.ifs.documentation.CompetitionSearchResultDocs;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import java.util.List;
-
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
-import static com.worth.ifs.documentation.CompetitionProjectsCountResourceDocs.competitionProjectsCountResourceBuilder;
 import static com.worth.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static com.worth.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.mockito.Mockito.when;
@@ -163,21 +158,6 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                 .andDo(this.document.snippets(
                         responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
                 ));
-    }
-
-    @Test
-    public void countCompetitionProjects() throws Exception {
-        List<CompetitionProjectsCountResource> response = competitionProjectsCountResourceBuilder.build(2);
-
-        when(competitionService.countProjectsForCompetitions()).thenReturn(serviceSuccess(response));
-
-        mockMvc.perform(get("/competition/countProjects"))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                responseFields(
-                        fieldWithPath("[]").description("List project counts for competitions in setup")
-                ).andWithPrefix("[].", CompetitionProjectsCountResourceDocs.competitionProjectsCountResourceFields)
-        ));
     }
 
     @Test

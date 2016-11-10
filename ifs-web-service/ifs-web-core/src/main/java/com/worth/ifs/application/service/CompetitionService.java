@@ -34,8 +34,6 @@ public interface CompetitionService {
 
     CompetitionCountResource getCompetitionCounts();
 
-    List<CompetitionProjectsCountResource> getCompetitionProjectCounts();
-
     void update(CompetitionResource competition);
 
     void setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);

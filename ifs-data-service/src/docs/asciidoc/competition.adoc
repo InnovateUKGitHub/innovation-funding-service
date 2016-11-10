@@ -43,14 +43,3 @@ include::{snippets}/competition/bank-details/export-bank-details/response-header
 
 ==== Curl Example
 include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]
-
-
-=== Retrieve count of projects in setup for competitions
-==== Request
-include::{snippets}/competition/count-competition-projects/http-request.adoc[]
-
-==== Response
-include::{snippets}/competition/count-competition-projects/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/count-competition-projects/curl-request.adoc[]

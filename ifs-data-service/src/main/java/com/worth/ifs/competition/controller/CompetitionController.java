@@ -58,11 +58,6 @@ public class CompetitionController {
         return competitionService.countCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/countProjects", method= RequestMethod.GET)
-    public RestResult<List<CompetitionProjectsCountResource>> countProjects() {
-        return competitionService.countProjectsForCompetitions().toGetResponse();
-    }
-
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();

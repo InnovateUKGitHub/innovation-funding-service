@@ -91,11 +91,6 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
     }
 
-    @Override
-    public List<CompetitionProjectsCountResource> getCompetitionProjectCounts() {
-        return competitionsRestService.countProjectsForCompetitions().getSuccessObjectOrThrowException();
-    }
-
     private Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
         return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
     }

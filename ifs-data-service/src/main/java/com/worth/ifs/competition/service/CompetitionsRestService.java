@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 /**
  * Interface for CRUD operations on {@link com.worth.ifs.competition.domain.Competition} related data.
  */
@@ -16,7 +17,6 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
-    RestResult<List<CompetitionProjectsCountResource>> countProjectsForCompetitions();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);

@@ -7,7 +7,6 @@ import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
-import com.worth.ifs.project.status.ProjectStatusService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,7 @@ public class DashboardControllerTest {
 
     @InjectMocks
 	private DashboardController controller;
-	
+
     @Mock
     private CompetitionService competitionService;
 
@@ -73,7 +72,6 @@ public class DashboardControllerTest {
 
         Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
-        Map<Long,Integer> projectsCount = new HashMap();
 
         when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
         when(competitionService.getCompetitionCounts()).thenReturn(counts);
@@ -82,8 +80,7 @@ public class DashboardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/projectSetup"))
                 .andExpect(model().attribute("competitions", is(competitions)))
-                .andExpect(model().attribute("counts", is(counts)))
-                .andExpect(model().attribute("projectsCount", is(projectsCount)));
+                .andExpect(model().attribute("counts", is(counts)));
     }
 
     @Test
