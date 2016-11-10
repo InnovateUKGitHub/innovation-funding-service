@@ -350,7 +350,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler) {
         if(StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())){
             bindingResult.addError(createPostcodeSearchFieldError());
         }
