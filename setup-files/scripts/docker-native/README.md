@@ -44,14 +44,12 @@ You can perform some additional configuration in the `.env` file that is used du
 
 Some options that may be of interest:
 
-Option          | Default   | Description
---------------- | --------- | -----------
-DATA_XMX        | 512       | Sets the JVM `-Xmx` option value (in MB) for `data`
-DATA_XMS        | 256       | Sets the JVM `-Xms` option value (in MB) for `data`
-DATA_PORT_8081  | 8091      | Debugger port (on your localhost) for `data`
-WEB_XMX         | 512       | Sets the JVM `-Xmx` option value (in MB) for `web`
-WEB_XMS         | 256       | Sets the JVM `-Xms` option value (in MB) for `web`
-WEB_PORT_8081   | 8081      | Debugger port (on your localhost) for `web`
+Option          | Default           | Description
+------          | -------           | -----------
+DATA_JAVA_OPTS  | -Xms256m -Xmx512m | Sets the JVM options for the `data` container
+DATA_PORT_8081  | 8091              | Debugger port (on your localhost) for `data`
+WEB_JAVA_OPTS   | -Xms256m -Xmx512m | Sets the JVM options for the `web` container
+WEB_PORT_8081   | 8081              | Debugger port (on your localhost) for `web`
         
 ## Usage
 
