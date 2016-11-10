@@ -15,12 +15,15 @@ public class CompetitionSearchResultItem {
     private String startDateDisplay;
     private CompetitionResource.Status competitionStatus;
     private String competitionTypeName;
+    private Integer projectsCount;
 
     // for JSON marshalling
     CompetitionSearchResultItem() {
     }
 
-    public CompetitionSearchResultItem(Long id, String name, String innovationAreaName, Integer numberOfApplications, String startDateDisplay, CompetitionResource.Status competitionStatus, String competitionTypeName) {
+    public CompetitionSearchResultItem(Long id, String name, String innovationAreaName, Integer numberOfApplications,
+                                       String startDateDisplay, CompetitionResource.Status competitionStatus,
+                                       String competitionTypeName, Integer projectsCount) {
         this.id = id;
         this.name = name;
         this.innovationAreaName = innovationAreaName;
@@ -28,6 +31,7 @@ public class CompetitionSearchResultItem {
         this.startDateDisplay = startDateDisplay;
         this.competitionStatus = competitionStatus;
         this.competitionTypeName = competitionTypeName;
+        this.projectsCount = projectsCount;
     }
 
     public Long getId() {
@@ -86,6 +90,14 @@ public class CompetitionSearchResultItem {
         this.competitionTypeName = competitionTypeName;
     }
 
+    public Integer getProjectsCount() {
+        return projectsCount;
+    }
+
+    public void setProjectsCount(Integer projectsCount) {
+        this.projectsCount = projectsCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,6 +112,7 @@ public class CompetitionSearchResultItem {
                 .append(numberOfApplications, that.numberOfApplications)
                 .append(startDateDisplay, that.startDateDisplay)
                 .append(competitionStatus, that.competitionStatus)
+                .append(projectsCount, that.projectsCount)
                 .isEquals();
     }
 
@@ -111,6 +124,7 @@ public class CompetitionSearchResultItem {
                 .append(numberOfApplications)
                 .append(startDateDisplay)
                 .append(competitionStatus)
+                .append(projectsCount)
                 .toHashCode();
     }
 }

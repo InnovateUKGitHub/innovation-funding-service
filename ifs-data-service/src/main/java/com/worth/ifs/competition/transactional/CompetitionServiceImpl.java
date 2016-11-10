@@ -133,7 +133,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
-                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null));
+                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
+                projectRepository.findByApplicationCompetitionId(c.getId()).size()
+                );
     }
 
     @Override

@@ -25,7 +25,7 @@
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
                     cell3=${competition.innovationAreaName},
-                    cell4=${projectsCount.get(competition.id) + ' projects'}">
+                    cell4=${competition.projectsCount + ' projects'}">
                 </th:block>
             </li>
         </ul>

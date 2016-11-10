@@ -2,8 +2,6 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.project.status.ProjectStatusService;
-import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -22,9 +19,6 @@ public class DashboardController {
 
     @Autowired
     CompetitionService competitionService;
-
-    @Autowired
-    private ProjectStatusService projectStatusService;
 
     @RequestMapping(value="", method= RequestMethod.GET)
     public String dashboard() {
@@ -40,14 +34,8 @@ public class DashboardController {
 
     @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
     public String projectSetup(Model model, HttpServletRequest request) {
-
         model.addAttribute("competitions", competitionService.getProjectSetupCompetitions());
         model.addAttribute("counts", competitionService.getCompetitionCounts());
-        model.addAttribute("projectsCount", CollectionFunctions.simpleToLinkedMap(
-                competitionService.getCompetitionProjectCounts(),
-                compProjectsCountResource -> compProjectsCountResource.getCompetitionId(),
-                compProjectsCountResource -> compProjectsCountResource.getNumProjects()));
-
         return TEMPLATE_PATH + "projectSetup";
     }
 
