@@ -21,14 +21,14 @@ import static java.util.Arrays.asList;
 @PermissionRules
 public class AssessmentPermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "Assessors can view all Assessments on the competition dashboard, except those rejected")
-    public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
+    @PermissionRule(value = "READ_DASHBOARD", description = "Assessors can view all Assessments on the competition dashboard, except those rejected")
+    public boolean userCanReadAssessmentOnDashboard(AssessmentResource assessment, UserResource user) {
         List<AssessmentStates> allowedDashboardReadStates = asList(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         return isAssessorForAssessment(assessment, user, allowedDashboardReadStates);
     }
 
-    @PermissionRule(value = "READ_NON_DASHBOARD", description = "Assessors can directly read Assessments, except those rejected or submitted")
-    public boolean userCanReadAssessmentNonDashboard(AssessmentResource assessment, UserResource user) {
+    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments, except those rejected or submitted")
+    public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
         List<AssessmentStates> allowedNonDashboardReadStates = asList(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedNonDashboardReadStates);
     }

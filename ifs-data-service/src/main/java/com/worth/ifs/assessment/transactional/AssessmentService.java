@@ -15,10 +15,10 @@ import java.util.List;
  */
 public interface AssessmentService {
 
-    @PostAuthorize("hasPermission(returnObject, 'READ_NON_DASHBOARD')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findById(Long id);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")

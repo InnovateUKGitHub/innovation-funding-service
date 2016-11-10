@@ -48,7 +48,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         assertAccessDenied(
                 () -> classUnderTest.findById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanReadAssessmentNonDashboard(eq(assessmentResource), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
         );
     }
 
@@ -58,7 +58,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         classUnderTest.findByUserAndCompetition(userId, competitionId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test

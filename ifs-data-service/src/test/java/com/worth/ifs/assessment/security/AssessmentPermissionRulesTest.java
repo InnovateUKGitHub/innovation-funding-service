@@ -84,33 +84,33 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void ownerCanReadOpenAssessment() {
-        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessment(openAssessmentResource, assessorUser));
+    public void ownerCanReadOpenAssessmentOnDashboard() {
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessmentOnDashboard(openAssessmentResource, assessorUser));
     }
 
     @Test
     public void ownerCanReadSubmittedAssessmentOnDashboard() {
-        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessment(submittedAssessmentResource, assessorUser));
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessmentOnDashboard(submittedAssessmentResource, assessorUser));
     }
 
     @Test
     public void ownerCanReadOpenAssessmentNonDashboard() {
-        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessmentNonDashboard(openAssessmentResource, assessorUser));
+        assertTrue("the owner of an assessment should be able to read that assessment", rules.userCanReadAssessment(openAssessmentResource, assessorUser));
     }
 
     @Test
     public void ownerCanNotReadSubmittedAssessmentNonDashboard() {
-        assertFalse("the owner of an assessment should not be able to read that assessment", rules.userCanReadAssessmentNonDashboard(submittedAssessmentResource, assessorUser));
+        assertFalse("the owner of an assessment should not be able to read that assessment", rules.userCanReadAssessment(submittedAssessmentResource, assessorUser));
     }
 
     @Test
-    public void otherUsersCanNotReadOpenAssessment() {
-        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(openAssessmentResource, otherUser));
+    public void otherUsersCanNotReadOpenAssessmentOnDashboard() {
+        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessmentOnDashboard(openAssessmentResource, otherUser));
     }
 
     @Test
     public void otherUsersCanNotReadOpenAssessmentNonDashboard() {
-        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessmentNonDashboard(openAssessmentResource, otherUser));
+        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(openAssessmentResource, otherUser));
     }
 
     @Test
@@ -129,13 +129,13 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void ownersCanNotReadRejectedAssessments() {
-        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessment(rejectedAssessmentResource, assessorUser));
+    public void ownersCanNotReadRejectedAssessmentsOnDashboard() {
+        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessmentOnDashboard(rejectedAssessmentResource, assessorUser));
     }
 
     @Test
     public void ownersCanNotReadRejectedAssessmentsNonDashboard() {
-        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessmentNonDashboard(rejectedAssessmentResource, assessorUser));
+        assertFalse("the owner of a rejected assessment should not be able to read that assessment", rules.userCanReadAssessment(rejectedAssessmentResource, assessorUser));
     }
 
     @Test
