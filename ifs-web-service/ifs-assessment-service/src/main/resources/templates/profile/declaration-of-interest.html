@@ -38,7 +38,9 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control width-full" type="text" th:field="*{principalEmployer}" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a principal employer" />
+                    <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
+                           th:errorclass="field-error" required="required"
+                           data-required-errormessage="Please enter a principal employer" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
@@ -48,7 +50,9 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control width-full" type="text" th:field="*{role}" th:errorclass="field-error" required="required" data-required-errormessage="Please enter the role at your principal employer" />
+                    <input class="form-control width-full" type="text" th:field="*{role}"
+                           th:errorclass="field-error" required="required"
+                           data-required-errormessage="Please enter your role with your principal employer" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
@@ -330,7 +334,8 @@
                           </span>
                       </legend>
                       <label class="block-label">
-                          <input type="checkbox" th:field="*{accurateAccount}" required="required" data-required-errormessage="In order to register an account you have to agree that this is an accurate account" />
+                          <input type="checkbox" th:field="*{accurateAccount}" required="required"
+                                 data-required-errormessage="You must agree that your account is accurate" />
                           <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
