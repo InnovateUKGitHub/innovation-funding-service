@@ -13,63 +13,78 @@ Hello world <small>(just testing smalltext)</small>
 ```
 */
 .greentext {
-	color:$green;
+  color:$green;
 }
 .uppercase {
-	text-transform:uppercase;
+  text-transform: uppercase;
 }
+
 strong {
-	font-weight:700;
+  font-weight:700;
 }
 
 img {
-	max-width: 100%;
+  max-width: 100%;
 }
+
 caption {
-	font-weight:bold;
-	text-align:left;
+  font-weight:bold;
+  text-align:left;
 }
+
 .icon {
-	@include inline-block;
-	vertical-align: middle;
-	margin-right:2px;
+  @include inline-block;
+  vertical-align: middle;
+  margin-right:2px;
 }
 
 small {
-	@extend .form-hint;
-	display: inline;
-	font-size: 16px;
+  @extend .form-hint;
+  display: inline;
+  font-size: 16px;
 }
-.blue-block {
-	background: $govuk-blue;
-	color:#fff;
-	text-align: center;
-	@include inline-block;
-	padding:20px;
 
-	@include media-down(mobile){
-		display:block;
-	}
+.blue-block {
+  @include inline-block;
+  @include media-down(mobile){
+    display:block;
+  }
+
+  background: $govuk-blue;
+  color:#fff;
+  text-align: center;
+  padding:20px;
 }
+
 .bordered {
-	border:1px solid $border-colour;
+  border:1px solid $border-colour;
 }
+
+.grey-box {
+  padding: 15px;
+  background: $grey-4;
+}
+
 .border-right,
 .cell-border-right td,
 .cell-border-right th {
-    border-right: 1px solid $border-colour;
+  border-right: 1px solid $border-colour;
 }
+
 table small {
-	display: block;
+  display: block;
 }
+
 tfoot td,
 tfoot th {
   border-top:3px solid #000;
   border-bottom:none;
 }
+
 th[scope="row"]{
-	font-weight:bold;
+  font-weight:bold;
 }
+
 /* SG
 
 # IFS/Right aligned buttons

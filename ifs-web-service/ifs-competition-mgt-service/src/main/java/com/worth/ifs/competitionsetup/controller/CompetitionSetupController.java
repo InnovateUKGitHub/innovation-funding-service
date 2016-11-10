@@ -10,15 +10,16 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.*;
-import com.worth.ifs.competitionsetup.model.Funder;
-import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
 
@@ -51,9 +54,10 @@ import static java.util.stream.Collectors.toList;
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
-    private static final String COMPETITION_ID_KEY = "competitionId";
-    private static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
+    public static final String COMPETITION_ID_KEY = "competitionId";
+    public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
+    private static final String SUBSECTION_PATH_KEY = "subsectionPath";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -114,28 +118,6 @@ public class CompetitionSetupController {
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
     }
 
-    @RequestMapping(value = "/{competitionId}/section/application/question/{questionId}", method = RequestMethod.GET)
-    public String editCompetitionSetupApplication(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              @PathVariable("questionId") Long questionId,
-                                              Model model) {
-
-    	CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-        ApplicationFormForm competitionSetupForm = (ApplicationFormForm) competitionSetupService.getSectionFormData(competition, section);
-
-        addQuestionToUpdate(questionId, model, competitionSetupForm);
-        model.addAttribute("competitionSetupForm", competitionSetupForm);
-
-        return "competition/setup";
-    }
-
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}", method = RequestMethod.GET)
     public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               @PathVariable(SECTION_PATH_KEY) String sectionPath,
@@ -145,6 +127,8 @@ public class CompetitionSetupController {
         if(section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
+        } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
+            return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
         }
 
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -172,7 +156,43 @@ public class CompetitionSetupController {
     }
 
     /**
-     * This method is for supporting ajax saving from the application form.
+     * This method is for supporting ajax saving from the competition setup subsections forms.
+     */
+    @ProfileExecution
+    @RequestMapping(value = "/{competitionId}/section/{sectionPath}/sub/{subsectionPath}/saveFormElement", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
+                                    @RequestParam("value") String value,
+                                    @RequestParam(name = "objectId", required = false) Long objectId,
+                                    @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                    @PathVariable(SECTION_PATH_KEY) String sectionPath,
+                                    @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath,
+                                    HttpServletRequest request) {
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
+        CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
+
+        List<String> errors = new ArrayList<>();
+        try {
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSubsection(
+                    competitionResource,
+                    section, subsection,
+                    fieldName, value,
+                    Optional.ofNullable(objectId)
+                    )
+            );
+
+            return this.createJsonObjectNode(errors.isEmpty(), errors);
+        } catch (Exception e) {
+            errors.add(e.getMessage());
+            return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+
+    /**
+     * This method is for supporting ajax saving from the competition setup sections forms.
      */
     @ProfileExecution
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/saveFormElement", method = RequestMethod.POST)
@@ -199,11 +219,10 @@ public class CompetitionSetupController {
     }
 
     private List<String> toStringList(List<Error> errors) {
-        List<String> stringErrors = errors
+        return errors
                 .stream()
                 .map(this::lookupErrorMessage)
                 .collect(toList());
-        return stringErrors;
     }
 
     private String lookupErrorMessage(Error e) {
@@ -233,8 +252,8 @@ public class CompetitionSetupController {
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
-            List<Funder> funders = competitionSetupForm.getFunders();
-            funders.add(new Funder());
+            List<FunderViewModel> funders = competitionSetupForm.getFunders();
+            funders.add(new FunderViewModel(new CompetitionFunderResource()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {
@@ -273,50 +292,13 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
 
-    @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
-    public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
-
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
-    }
-
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
     public String submitApplicationFormSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFormForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
+                                                      BindingResult bindingResult,
+                                                      @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                      Model model) {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
-    }
-
-    @RequestMapping(value = "/{competitionId}/section/application/question/{questionId}", method = RequestMethod.POST)
-    public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFormForm competitionSetupForm,
-                                            BindingResult bindingResult,
-                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            @PathVariable("questionId") Long questionId,
-                                            Model model) {
-
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestionToUpdate());
-
-        if(!bindingResult.hasErrors()) {
-            return "redirect:/competition/setup/" + competitionId + "/section/application";
-        } else {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM);
-            addQuestionToUpdate(questionId, model, competitionSetupForm);
-            model.addAttribute("competitionSetupForm", competitionSetupForm);
-            return "competition/setup";
-        }
-    }
-
-    @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
-    public String submitFinanceSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
-
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.FINANCE, model);
     }
 
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
@@ -324,6 +306,7 @@ public class CompetitionSetupController {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
+
 
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
@@ -384,12 +367,6 @@ public class CompetitionSetupController {
         return !bindingResult.hasErrors();
     }
 
-    private boolean isSendToDashboard(CompetitionResource competition) {
-        return competition == null ||
-                (!CompetitionStatus.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
-                !CompetitionStatus.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
-    }
-
     private ObjectNode createJsonObjectNode(boolean success, String message) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -413,18 +390,6 @@ public class CompetitionSetupController {
         return node;
     }
 
-    private void addQuestionToUpdate(Long questionId, Model model, ApplicationFormForm applicationFormForm) {
-        if(model.containsAttribute("questions")) {
-            List<Question> questions = (List<Question>) model.asMap().get("questions");
-            Optional<Question> question = questions.stream().filter(questionObject -> questionObject.getId().equals(questionId)).findFirst();
-            if(question.isPresent()) {
-                applicationFormForm.setQuestionToUpdate(question.get());
-            } else {
-                LOG.error("Question(" + questionId + ") not found");
-            }
-        }
-    }
-
     private void checkRestrictionOfInitialDetails(CompetitionSetupSection section,
                                                 CompetitionResource competitionResource,
                                                 Model model) {
@@ -433,4 +398,5 @@ public class CompetitionSetupController {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }
+
 }

@@ -9,7 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -66,7 +66,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -646,9 +645,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        project.addProjectUser(financeContact);
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
+
+        project.addProjectUser(newFinanceContact);
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
             projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
@@ -708,6 +710,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -729,7 +732,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
-                    leadProjectDetailsSubmitted,
+                    partnerProjectDetailsSubmittedStatus,
                     NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,
@@ -790,7 +793,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }
@@ -828,12 +831,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         if (result.isFailure()) {
             return result;
-        }
-
-        ProjectUser existingUser = result.getSuccessObject();
-
-        if (existingUser != null) {
-            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION);
         }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
@@ -1049,34 +1046,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    /**
-     * A temporary method for generating finance checks for existing projects.
-     * See INFUND-5591 for an explanation.
-     * This is required temporarily and will be removed in near future.
-     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
-     * @return result of attempting to generate finance checks for all projects
-     */
-    @Override
-    public ServiceResult<Void> generateFinanceChecksForAllProjects() {
-        return find(projectRepository.findAll(), notFoundError(Project.class, emptyList())).
-                andOnSuccess(projects -> {
-                    List<ServiceResult> results = projects.stream().filter(p -> find(financeCheckRepository.findByProjectId(p.getId()), notFoundError(FinanceCheck.class, emptyList())).isFailure()).
-                            map(project -> generateFinanceCheckEntitiesForNewProject(project).
-                                    handleSuccessOrFailure(
-                                            failure -> {
-                                                LOG.error("Could not generate finance checks manually for project no. " + project.getId());
-                                                return serviceFailure(new Error(FINANCE_CHECKS_CANNOT_GENERATE_FOR_PROJECT, project.getId()));
-                                            },
-                                            success -> {
-                                                LOG.debug("Finance check entries generated for project no. " + project.getId());
-                                                return serviceSuccess();
-                                            }
-                                    )
-                            ).collect(toList());
-
-                    return results.stream().filter(result -> result.isFailure()).findFirst().orElse(serviceSuccess());
-                });
     }
 }

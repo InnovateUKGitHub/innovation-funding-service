@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    
+
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
 
     <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
@@ -21,16 +21,10 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Your skills and innovation area':'Edit your skills')}">MAIN TITLE</h1>
+        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Your skills':'Edit your skills')}">MAIN TITLE</h1>
     </div>
 
     <p th:unless="${param.edit != null}">Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
-
-    <h2 class="heading-large">Innovation area</h2>
-
-    <p>The Innovate Lead for this competition has identified you as an expert in the following sector:</p>
-
-    <p><strong>High Value Manufacturing</strong></p>
 
 	<form>
 		<!-- <fieldset>
@@ -166,18 +160,14 @@
 			</div>
 		</fieldset> -->
 
-		<h2 class="heading-large">Skills areas</h2>
-		<fieldset>
-			<legend class="visuallyhidden">Skills areas</legend>
-
-			<label for="skills-areas">Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.</label>
-
-			<p class="form-hint">For example ‘Solar Power’, ‘Genetics’, ‘Recycling’</p>
-
-			<textarea name="skills-areas" id="skills-areas" cols="30" rows="5" class="width-full"><div th:if="${param.edit != null}" th:remove="tag">Human Computer Interaction, Wearables, IoT</div>
-			</textarea>
-
-		</fieldset>
+    <label class="form-label" for="skills-areas">
+        <span class="heading-large">Skill areas</span>
+    </label>
+    <p class="form-hint">
+        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
+        For example; Solar Power, Genetics, Recycling
+    </p>
+    <textarea name="skills-areas" id="skills-areas" cols="30" rows="5" class="width-full"><div th:if="${param.edit != null}" th:remove="tag">Human Computer Interaction, Wearables, IoT</div></textarea>
 
 		<h2 class="heading-large no-margin-bottom">Assessor type</h2>
 		<fieldset class="inline">
@@ -200,7 +190,7 @@
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 			<hr />
-			
+
 			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
 				<input type="hidden" name="version" value="v2" />
 				<input type="hidden" name="accepted" value="yes" />

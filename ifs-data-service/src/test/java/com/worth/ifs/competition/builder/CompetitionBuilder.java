@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static java.util.Collections.emptyList;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
@@ -42,12 +43,19 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withEndDate(LocalDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
-    public CompetitionBuilder withAssessmentStartDate(LocalDateTime startDate) {
-        return with(competition -> setField("assessmentStartDate", startDate, competition));
+
+    public CompetitionBuilder withAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+        return with(competition -> setField("assessorAcceptsDate", assessorAcceptsDate, competition));
     }
-    public CompetitionBuilder withAssessmentEndDate(LocalDateTime endDate) {
-        return with(competition -> setField("assessmentEndDate", endDate, competition));
+
+    public CompetitionBuilder withAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+        return with(competition -> setField("assessorDeadlineDate", assessorDeadlineDate, competition));
     }
+
+    public CompetitionBuilder withFundersPanelDate(LocalDateTime fundersPanelDate) {
+        return with(competition -> setField("fundersPanelDate", fundersPanelDate, competition));
+    }
+
     public CompetitionBuilder withFundersPanelEndDate(LocalDateTime endDate) {
         return with(competition -> setField("fundersPanelEndDate", endDate, competition));
     }
@@ -78,43 +86,43 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         LocalDateTime now = LocalDateTime.now();
-        if(CompetitionStatus.READY_TO_OPEN.equals(status)) {
+        if(READY_TO_OPEN.equals(status)) {
     		return withSetupComplete(true)
                     .withStartDate(now.plusDays(1L));
-    	} else if(CompetitionStatus.OPEN.equals(status)) {
+    	} else if(OPEN.equals(status)) {
     		return withSetupComplete(true)
                     .withStartDate(now.minusDays(1L))
     				.withEndDate(now.plusDays(1L));
-    	} else if(CompetitionStatus.CLOSED.equals(status)) {
+    	} else if(CLOSED.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(2L))
                     .withEndDate(now.minusDays(1L))
-    				.withAssessmentStartDate(now.plusDays(1L));
-        } else if(CompetitionStatus.IN_ASSESSMENT.equals(status)) {
+    				.withAssessorAcceptsDate(now.plusDays(1L));
+        } else if(IN_ASSESSMENT.equals(status)) {
     		return withSetupComplete(true)
                     .withStartDate(now.minusDays(2L))
     				.withEndDate(now.minusDays(1L))
-    				.withAssessmentEndDate(now.plusDays(1L));
-    	} else if(CompetitionStatus.FUNDERS_PANEL.equals(status)) {
+    				.withFundersPanelDate(now.plusDays(1L));
+    	} else if(FUNDERS_PANEL.equals(status)) {
     		return withSetupComplete(true)
                     .withStartDate(now.minusDays(3L))
     				.withEndDate(now.minusDays(2L))
-    				.withAssessmentEndDate(now.minusDays(1L))
+    				.withFundersPanelDate(now.minusDays(1L))
     				.withFundersPanelEndDate(null);
-    	} else if(CompetitionStatus.ASSESSOR_FEEDBACK.equals(status)) {
+    	} else if(ASSESSOR_FEEDBACK.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(4L))
                     .withEndDate(now.minusDays(3L))
-                    .withAssessmentEndDate(now.minusDays(2L))
+                    .withFundersPanelDate(now.minusDays(2L))
                     .withFundersPanelEndDate(now.minusDays(1L));
-        } else if(CompetitionStatus.PROJECT_SETUP.equals(status)) {
+        } else if(PROJECT_SETUP.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(5L))
                     .withEndDate(now.minusDays(4L))
-                    .withAssessmentEndDate(now.minusDays(3L))
+                    .withFundersPanelDate(now.minusDays(3L))
                     .withFundersPanelEndDate(now.minusDays(2L))
                     .withAssessorFeedbackDate(now.minusDays(1L));
-        } else if(CompetitionStatus.COMPETITION_SETUP.equals(status)) {
+        } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
         } else {
                 throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");

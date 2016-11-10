@@ -23,8 +23,8 @@ public class CompetitionParticipantResource {
     private CompetitionParticipantRoleResource role;
     private ParticipantStatusResource status;
     private String competitionName;
-    private LocalDateTime assessmentStartDate;
-    private LocalDateTime assessmentEndDate;
+    private LocalDateTime assessorAcceptsDate;
+    private LocalDateTime assessorDeadlineDate;
 //    private CompetitionStatus competitionStatus;
 
     public String getCompetitionName() {
@@ -99,22 +99,21 @@ public class CompetitionParticipantResource {
         this.status = status;
     }
 
-    public LocalDateTime getAssessmentStartDate() {
-        return assessmentStartDate;
+    public LocalDateTime getAssessorAcceptsDate() {
+        return assessorAcceptsDate;
     }
 
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate) {
-        this.assessmentStartDate = assessmentStartDate;
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+        this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessmentEndDate() {
-        return assessmentEndDate;
+    public LocalDateTime getAssessorDeadlineDate() {
+        return assessorDeadlineDate;
     }
 
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-        this.assessmentEndDate = assessmentEndDate;
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+        this.assessorDeadlineDate = assessorDeadlineDate;
     }
-
 
 //    public CompetitionStatus getCompetitionStatus() {
 //        return competitionStatus;
@@ -127,17 +126,18 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), assessmentEndDate);
+        return DAYS.between(LocalDateTime.now(), assessorDeadlineDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeftPercentage() {
-        return getDaysLeftPercentage(getAssessmentDaysLeft(), DAYS.between(assessmentStartDate, assessmentEndDate));
+        return getDaysLeftPercentage(getAssessmentDaysLeft(), DAYS.between(assessorAcceptsDate, assessorDeadlineDate));
     }
 
     @JsonIgnore
     public boolean isInAssessment() {
-        return assessmentStartDate.isBefore(LocalDateTime.now()) && assessmentEndDate.isAfter(LocalDateTime.now());
+        // TODO INFUND-5199 We cannot infer the competition being in the assessment period from the assessor accepts deadline and the assessor deadline date
+        return assessorAcceptsDate.isBefore(LocalDateTime.now()) && assessorDeadlineDate.isAfter(LocalDateTime.now());
     }
 
 //    @JsonIgnore
@@ -147,7 +147,8 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public boolean isAnUpcomingAssessment() {
-        return assessmentStartDate.isAfter(LocalDateTime.now());
+        // TODO INFUND-5199 It is wrong to infer the competition being upcoming for assessment from the assessor accepts deadline
+        return assessorAcceptsDate.isAfter(LocalDateTime.now());
     }
 
 
@@ -178,8 +179,8 @@ public class CompetitionParticipantResource {
                 .append(role, that.role)
                 .append(status, that.status)
                 .append(competitionName, that.competitionName)
-                .append(assessmentStartDate, that.assessmentStartDate)
-                .append(assessmentEndDate, that.assessmentEndDate)
+                .append(assessorAcceptsDate, that.assessorAcceptsDate)
+                .append(assessorDeadlineDate, that.assessorDeadlineDate)
 //                .append(competitionStatus, that.competitionStatus)
                 .isEquals();
     }
@@ -196,8 +197,8 @@ public class CompetitionParticipantResource {
                 .append(role)
                 .append(status)
                 .append(competitionName)
-                .append(assessmentStartDate)
-                .append(assessmentEndDate)
+                .append(assessorAcceptsDate)
+                .append(assessorDeadlineDate)
 //                .append(competitionStatus)
                 .toHashCode();
     }

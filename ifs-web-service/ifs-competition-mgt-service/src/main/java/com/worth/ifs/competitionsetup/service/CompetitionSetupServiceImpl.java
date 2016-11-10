@@ -5,10 +5,14 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionStatus;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
+import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,38 +33,71 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	private CompetitionService competitionService;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
-	
+    private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
+
 	private Map<CompetitionSetupSection, CompetitionSetupSectionSaver> sectionSavers;
+    private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionSaver> subsectionSavers;
 
 	private Map<CompetitionSetupSection, CompetitionSetupSectionModelPopulator> modelPopulators;
+	private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionModelPopulator> subsectionModelPopulators;
 
 	
 	@Autowired
 	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
 		formPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
 	}
-	
+
+    @Autowired
+    public void setCompetitionSetupSubsectionFormPopulators(Collection<CompetitionSetupSubsectionFormPopulator> populators) {
+        subsectionFormPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
+    }
+
 	@Autowired
-	public void setCompetitionSetupSectionSavers(Collection<CompetitionSetupSectionSaver> savers) {
-		sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
-	}
+    public void setCompetitionSetupSectionSavers(Collection<CompetitionSetupSectionSaver> savers) {
+        sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
+    }
+
+    @Autowired
+    public void setCompetitionSetupSubsectionSavers(Collection<CompetitionSetupSubsectionSaver> savers) {
+        subsectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
+    }
 	
 	@Autowired
 	public void setCompetitionSetupSectionModelPopulators(Collection<CompetitionSetupSectionModelPopulator> populators) {
 		modelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
 	}
-	
+
+    @Autowired
+    public void setCompetitionSetupSubsectionModelPopulators(Collection<CompetitionSetupSubsectionModelPopulator> populators) {
+        subsectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
+    }
+
 	@Override
-	public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
-			CompetitionSetupSection section) {
-		
-		populateGeneralModelAttributes(model, competitionResource, section);
-		CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
-		
-		if(populator != null) {
-			populator.populateModel(model, competitionResource);
-		}
-	}
+    public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
+                                                          CompetitionSetupSection section) {
+
+        populateGeneralModelAttributes(model, competitionResource, section);
+        CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
+
+        if(populator != null) {
+            populator.populateModel(model, competitionResource);
+        }
+    }
+
+    @Override
+    public void populateCompetitionSubsectionModelAttributes(Model model, CompetitionResource competitionResource,
+                                                             CompetitionSetupSection section, CompetitionSetupSubsection subsection,
+                                                             Optional<Long> objectId) {
+
+        checkIfSubsectionIsInSection(section, subsection);
+        populateGeneralModelAttributes(model, competitionResource, section);
+        CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(subsection);
+
+        if(populator != null) {
+            populator.populateModel(model, competitionResource, objectId);
+        }
+    }
+
 
 	@Override
 	public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
@@ -76,6 +113,22 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
+	public CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
+													 CompetitionSetupSection section,
+													 CompetitionSetupSubsection subsection,
+                                                      Optional<Long> objectId) {
+
+        checkIfSubsectionIsInSection(section, subsection);
+		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
+		if(populator == null) {
+			LOG.error("unable to populate form for subsection " + subsection);
+			throw new IllegalArgumentException();
+		}
+
+		return populator.populateForm(competitionResource, objectId);
+	}
+
+	@Override
 	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
                                                        String fieldName, String value, Optional<Long> objectId) {
 
@@ -87,6 +140,20 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         return saver.autoSaveSectionField(competitionResource, fieldName, value, objectId);
 	}
+
+    @Override
+    public List<Error> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
+                                                          CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId) {
+
+        checkIfSubsectionIsInSection(section, subsection);
+        CompetitionSetupSubsectionSaver saver = subsectionSavers.get(subsection);
+        if(saver == null) {
+            LOG.error("unable to save subsection " + subsection);
+            throw new IllegalArgumentException();
+        }
+
+        return saver.autoSaveSectionField(competitionResource, fieldName, value, objectId);
+    }
 
 	@Override
 	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
@@ -106,6 +173,21 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		return errors;
 	}
+
+    @Override
+    public List<Error> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
+                                                      CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
+
+        checkIfSubsectionIsInSection(section, subsection);
+
+        CompetitionSetupSubsectionSaver saver = subsectionSavers.get(section);
+        if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
+            LOG.error("unable to save subsection " + subsection);
+            throw new IllegalArgumentException();
+        }
+
+        return saver.saveSection(competitionResource, competitionSetupForm);
+    }
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
@@ -169,5 +251,12 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 	}
+
+	private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
+        if(!section.getSubsections().contains(subsection)) {
+            LOG.error("Subsection(" + subsection + ") not found on section " + section);
+            throw new IllegalArgumentException();
+        }
+    }
 
 }

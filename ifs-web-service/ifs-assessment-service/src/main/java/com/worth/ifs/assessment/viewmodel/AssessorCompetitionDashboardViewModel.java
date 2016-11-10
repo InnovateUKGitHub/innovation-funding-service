@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -9,14 +10,22 @@ public class AssessorCompetitionDashboardViewModel {
 
     private String competitionTitle;
     private String competition;
-    private String fundingBody;
-    private List<AssessorCompetitionDashboardApplicationViewModel> applications;
+    private String leadTechnologist;
+    private LocalDateTime acceptDeadline;
+    private LocalDateTime submitDeadline;
+    private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
+    private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
+    private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String fundingBody, List<AssessorCompetitionDashboardApplicationViewModel> applications) {
+    public AssessorCompetitionDashboardViewModel(String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionTitle = competitionTitle;
         this.competition = competition;
-        this.fundingBody = fundingBody;
-        this.applications = applications;
+        this.leadTechnologist = leadTechnologist;
+        this.acceptDeadline = acceptDeadline;
+        this.submitDeadline = submitDeadline;
+        this.submitted = submitted;
+        this.outstanding = outstanding;
+        this.submitVisible = submitVisible;
     }
 
     public String getCompetitionTitle() {
@@ -35,19 +44,51 @@ public class AssessorCompetitionDashboardViewModel {
         this.competition = competition;
     }
 
-    public String getFundingBody() {
-        return fundingBody;
+    public String getLeadTechnologist() {
+        return leadTechnologist;
     }
 
-    public void setFundingBody(String fundingBody) {
-        this.fundingBody = fundingBody;
+    public void setLeadTechnologist(String leadTechnologist) {
+        this.leadTechnologist = leadTechnologist;
     }
 
-    public List<AssessorCompetitionDashboardApplicationViewModel> getApplications() {
-        return applications;
+    public LocalDateTime getAcceptDeadline() {
+        return acceptDeadline;
     }
 
-    public void setApplications(List<AssessorCompetitionDashboardApplicationViewModel> applications) {
-        this.applications = applications;
+    public void setAcceptDeadline(LocalDateTime acceptDeadline) {
+        this.acceptDeadline = acceptDeadline;
+    }
+
+    public LocalDateTime getSubmitDeadline() {
+        return submitDeadline;
+    }
+
+    public void setSubmitDeadline(LocalDateTime submitDeadline) {
+        this.submitDeadline = submitDeadline;
+    }
+
+    public List<AssessorCompetitionDashboardApplicationViewModel> getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(List<AssessorCompetitionDashboardApplicationViewModel> submitted) {
+        this.submitted = submitted;
+    }
+
+    public List<AssessorCompetitionDashboardApplicationViewModel> getOutstanding() {
+        return outstanding;
+    }
+
+    public void setOutstanding(List<AssessorCompetitionDashboardApplicationViewModel> outstanding) {
+        this.outstanding = outstanding;
+    }
+
+    public boolean isSubmitVisible() {
+        return submitVisible;
+    }
+
+    public void setSubmitVisible(boolean submitVisible) {
+        this.submitVisible = submitVisible;
     }
 }

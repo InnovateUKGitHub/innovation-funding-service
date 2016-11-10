@@ -2,10 +2,8 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
-import com.worth.ifs.application.model.OpenSectionModelPopulator;
-import com.worth.ifs.application.model.QuestionModelPopulator;
+import com.worth.ifs.application.model.*;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -30,7 +28,6 @@ import java.util.HashSet;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setType;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -61,6 +58,15 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     @Spy
     @InjectMocks
     private OpenSectionModelPopulator openSectionModel;
+
+    @Mock
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Mock
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Mock
+    private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Mock
     private Model model;
@@ -238,9 +244,9 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(AbstractApplicationController.MARK_SECTION_AS_COMPLETE, String.valueOf(sectionId))
-                        .param(AbstractApplicationController.TERMS_AGREED_KEY, "1")
-                        .param(AbstractApplicationController.STATE_AID_AGREED_KEY, "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf(sectionId))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+                        .param(ApplicationFormController.STATE_AID_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -252,11 +258,11 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your finances")).withType(SectionType.FINANCE).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(AbstractApplicationController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", AbstractApplicationController.TERMS_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY));
     }
 
     @Test
@@ -265,12 +271,12 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your finances")).withType(SectionType.FINANCE).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(AbstractApplicationController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(AbstractApplicationController.TERMS_AGREED_KEY, "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", AbstractApplicationController.STATE_AID_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
     }
 
     @Test
@@ -278,7 +284,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(AbstractApplicationController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
+                        .param(ApplicationFormController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))

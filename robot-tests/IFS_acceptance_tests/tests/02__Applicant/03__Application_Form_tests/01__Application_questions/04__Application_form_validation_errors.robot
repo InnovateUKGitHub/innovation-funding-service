@@ -1,6 +1,5 @@
 *** Settings ***
-Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \
-...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \ INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
@@ -9,9 +8,8 @@ Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Title field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
+    [Documentation]    INFUND-43, INFUND-2843
+    [Tags]    HappyPath
     Given the user should see the text in the page    Application details
     When the user enters text to a text field    id=application_details-title    ${EMPTY}
     And the user should see an error    Please enter the full title of the project
@@ -34,6 +32,7 @@ Day field client side
     Then the user should see an error    Please enter a valid date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
+    #TODO this test case fails when running the HappyPath.
 
 Month field client side
     [Documentation]    INFUND-43
@@ -59,6 +58,7 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
+    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}

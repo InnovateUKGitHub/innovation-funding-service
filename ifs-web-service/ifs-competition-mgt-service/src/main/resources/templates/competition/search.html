@@ -143,7 +143,7 @@
                 <h2 class="heading-medium"
                     th:text="'Project set up ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
                 <ul class="list-overview">
-                    <li class="gwsection" th:each="competition : ${projectSetupComps}">
+                    <li class="grid-row" th:each="competition : ${projectSetupComps}">
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},

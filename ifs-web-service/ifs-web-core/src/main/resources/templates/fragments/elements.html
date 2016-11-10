@@ -217,7 +217,7 @@
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
             You have been successful in this round of funding.
-            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />.
+            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" th:remove="tag" />
           </p>
           <p th:if="${currentProject}">
             <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>

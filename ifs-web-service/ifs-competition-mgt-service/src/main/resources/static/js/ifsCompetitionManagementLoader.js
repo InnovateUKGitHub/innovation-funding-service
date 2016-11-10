@@ -17,17 +17,17 @@
 //Please think before adding javascript, this project should work without any of this scripts.
 
 if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
-IFS.competition_management = {};
-IFS.competition_management.loadOrder = {
+IFS.competitionManagement = {};
+IFS.competitionManagement.loadOrder = {
   common : {
-    init : function(){
-      IFS.competition_management.stickyMenu.init();
-      IFS.competition_management.various.init();
+    init : function() {
+      IFS.competitionManagement.stickyMenu.init();
+      IFS.competitionManagement.various.init();
     }
   },
   'competition-setup' : {
-    init : function(){
-      IFS.competition_management.setup.init();
+    init : function() {
+      IFS.competitionManagement.setup.init();
       IFS.core.finance.init();
 
     }

@@ -55,9 +55,9 @@
     				<h2 class="heading-medium">Decision notification</h2>
     				<p>You will be notified of our decision by
             <strong>
-              <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.assessmentEndDate})" th:remove="tag" />
-              <div th:remove="tag" th:text="${#temporals.monthName(currentCompetition.assessmentEndDate)}" />
-              <div th:remove="tag" th:text="${#temporals.year(currentCompetition.assessmentEndDate)}" />
+              <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
+              <div th:remove="tag" th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
             </strong>.
           </p>
 <p>We will email you and your project partners to tell you our decision.</p>

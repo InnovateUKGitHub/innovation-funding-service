@@ -7,5 +7,5 @@ package com.worth.ifs.invite.constant;
 public enum InviteStatus {
     SENT,
     CREATED,
-    OPENED
+    OPENED;
 }

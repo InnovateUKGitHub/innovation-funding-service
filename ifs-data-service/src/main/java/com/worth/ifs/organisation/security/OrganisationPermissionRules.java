@@ -45,14 +45,6 @@ public class OrganisationPermissionRules {
         return isProjectFinanceUser(user);
     }
 
-    /**
-     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
-     */
-    @PermissionRule(value = "READ", description = "System maintenance users can see all Organisations")
-    public boolean systemMaintenanceUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isSystemMaintenanceUser(user);
-    }
-
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isSystemRegistrationUser(user);

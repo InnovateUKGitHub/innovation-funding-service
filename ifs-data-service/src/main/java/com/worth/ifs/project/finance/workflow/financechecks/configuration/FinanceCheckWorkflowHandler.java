@@ -15,6 +15,7 @@ import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
@@ -93,6 +94,11 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
     @Override
     protected StateMachine<FinanceCheckState, FinanceCheckOutcomes> getStateMachine() {
         return stateMachine;
+    }
+
+    @Override
+    protected FinanceCheckProcess getOrCreateProcess(Message<FinanceCheckOutcomes> message) {
+        return getOrCreateProcessCommonStrategy(message);
     }
 
     private MessageBuilder<FinanceCheckOutcomes> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {

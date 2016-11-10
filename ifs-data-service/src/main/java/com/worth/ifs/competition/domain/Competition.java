@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
+
 /**
  * Competition defines database relations and a model to use client side and server side.
  */
@@ -95,16 +97,13 @@ public class Competition implements ProcessActivity {
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
+    private boolean fullApplicationFinance = true;
+    private boolean includeGrowthTable = true;
+
     private boolean setupComplete;
-
-    private boolean applicationsDistributed; // can we infer this?
-
-    private boolean assessmentClosed;
 
     public Competition() {
         setupComplete = false;
-        applicationsDistributed = false;
-        assessmentClosed = false;
     }
 
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
@@ -128,73 +127,29 @@ public class Competition implements ProcessActivity {
         this.setupComplete = true;
     }
 
-    // shouldn't this be calculated from the milestones?
     public CompetitionStatus getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
         if (setupComplete) {
             if (getStartDate() == null || getStartDate().isAfter(today)) {
-                // we've done setup, but haven't reached the start date (or there isn't one)
-                return CompetitionStatus.READY_TO_OPEN;
-            } else if (getEndDate() == null || getEndDate().isAfter(today)) {
-                // we've started, but haven't reached the end date (or there isn't one)
-                return CompetitionStatus.OPEN;
-            } else if (!isApplicationsDistributed()) {
-                // we're past the submission date, but haven't distributed applications
-                return CompetitionStatus.CLOSED;
-            } else if (!isAssessmentClosed()) {
-                // we've distributed applications, but haven't closed assessment
-                return CompetitionStatus.IN_ASSESSMENT;
+                return READY_TO_OPEN;
+            } else if (getEndDate() != null && getEndDate().isAfter(today)) {
+                return OPEN;
+            } else if (getAssessorAcceptsDate() != null && getAssessorAcceptsDate().isAfter(today)) {
+                // TODO INFUND-5199 - Should not be using the assessor accepts deadline at all here
+                // TODO INFUND-5199 - The competition is closed if we're past the submission date, but haven't distributed applications
+                return CLOSED;
+            } else if (getFundersPanelDate() != null && getFundersPanelDate().isAfter(today)) {
+                return IN_ASSESSMENT;
             } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-                // we've closed assessments, but haven't reached the inform applicants date (or there isn't one)
-                return CompetitionStatus.FUNDERS_PANEL;
+                return FUNDERS_PANEL;
             } else if (getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
-                return CompetitionStatus.ASSESSOR_FEEDBACK;
+                return ASSESSOR_FEEDBACK;
             } else {
-                return CompetitionStatus.PROJECT_SETUP;
+                return PROJECT_SETUP;
             }
+        } else {
+            return COMPETITION_SETUP;
         }
-
-
-
-
-//            if (applicationsDistributed && !assessmentClosed) {
-//                return CompetitionStatus.IN_ASSESSMENT;
-//            }
-//            else if (assessmentClosed &&
-//
-//
-//            else if (getEndDate() != null && getEndDate().isAfter(today)) {
-//                return CompetitionStatus.OPEN;
-//            } else if (getEndDate() != null && getEndDate().isBefore(today)
-//                    && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
-//                return CompetitionStatus.CLOSED;
-//            } else if (getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)) {
-//
-////            } else if (getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS) != null && getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS).isBefore(today)
-////                    && getMilestoneValue(MilestoneType.FUNDERS_PANEL != null && ) !=  {
-//                // in assessment if the start date is before today and we're not in funders panel
-//                return CompetitionStatus.IN_ASSESSMENT;
-//
-////            } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-//            } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-//                return CompetitionStatus.FUNDERS_PANEL;
-//            } else if (getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
-//                return CompetitionStatus.ASSESSOR_FEEDBACK;
-//            } else {
-//                return CompetitionStatus.PROJECT_SETUP;
-//            }
-        else {
-            return CompetitionStatus.COMPETITION_SETUP;
-        }
-    }
-
-    private boolean isApplicationsDistributed() {
-        // a couple of possibilities here, either we drive this from a state, or use one of the other milestones
-        return applicationsDistributed;
-    }
-
-    private boolean isAssessmentClosed() {
-        return assessmentClosed;
     }
 
     public List<Section> getSections() {
@@ -250,24 +205,13 @@ public class Competition implements ProcessActivity {
         return getDaysBetween(LocalDateTime.now(), this.getEndDate());
     }
     @JsonIgnore
-    public long getAssessmentDaysLeft(){
-        return getDaysBetween(LocalDateTime.now(), this.getAssessmentEndDate());
-    }
-    @JsonIgnore
     public long getTotalDays(){
         return getDaysBetween(this.getStartDate(), this.getEndDate());
     }
-    @JsonIgnore
-    public long getAssessmentTotalDays() {
-        return getDaysBetween(this.getAssessmentStartDate(), this.getAssessmentEndDate());
-    }
+
     @JsonIgnore
     public long getStartDateToEndDatePercentage() {
         return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
-    }
-    @JsonIgnore
-    public long getAssessmentDaysLeftPercentage() {
-        return getDaysLeftPercentage(getAssessmentDaysLeft(), getAssessmentTotalDays());
     }
     @JsonIgnore
     public List<Application> getApplications() {
@@ -300,21 +244,28 @@ public class Competition implements ProcessActivity {
         setMilestoneValue(MilestoneType.OPEN_DATE, startDate);
     }
 
-    public LocalDateTime getAssessmentEndDate() {
-//        return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE); // Fix for INFUND-52
-        return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
-    }
-
-    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-    	setMilestoneValue(MilestoneType.FUNDERS_PANEL, assessmentEndDate);
-    }
-
-    public LocalDateTime getAssessmentStartDate() {
+    public LocalDateTime getAssessorAcceptsDate() {
     	return getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS);
     }
 
-    public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
-    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessmentStartDate);
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate){
+    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessorAcceptsDate);
+    }
+
+    public LocalDateTime getAssessorDeadlineDate() {
+        return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE);
+    }
+
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate){
+        setMilestoneValue(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
+    }
+
+    public LocalDateTime getFundersPanelDate() {
+        return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
+    }
+
+    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+        setMilestoneValue(MilestoneType.FUNDERS_PANEL, fundersPanelDate);
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
@@ -556,21 +507,37 @@ public class Competition implements ProcessActivity {
         return "";
     }
 
+    public boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public void setIncludeGrowthTable(boolean includeGrowthTable) {
+        this.includeGrowthTable = includeGrowthTable;
+    }
+
     public void distributeApplications() {
-        if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
-            throw new IllegalStateException("Tried to distribute applications when in competitionStatus=" +
-                    getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
-                    CompetitionStatus.CLOSED);
-        }
-        this.applicationsDistributed = true;
+//        if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
+//            throw new IllegalStateException("Tried to distribute applications when in competitionStatus=" +
+//                    getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
+//                    CompetitionStatus.CLOSED);
+//        }
+//        this.applicationsDistributed = true;
     }
 
     public void closeAssessment() {
-        if (getCompetitionStatus() != CompetitionStatus.IN_ASSESSMENT) {
-
-        }
-
-        this.assessmentClosed = true;
+//        if (getCompetitionStatus() != CompetitionStatus.IN_ASSESSMENT) {
+//
+//        }
+//
+//        this.assessmentClosed = true;
     }
 }
 

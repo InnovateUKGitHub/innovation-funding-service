@@ -7,7 +7,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/3
-${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.
+${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?
 ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 
@@ -77,17 +77,17 @@ Once applicants are notified, the whole state of the competition changes to Asse
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test+fundsuccess@gmail.com    testtest1    ${email_success_message}    Your application into the competition La Fromage
+    Then the user reads his email from the default mailbox    worth.email.test+fundsuccess@gmail.com    Your application into the competition La Fromage    pleased to inform you
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user should get a confirmation email    worth.email.test.two+fundfailure@gmail.com    testtest1    ${email_failure_message}    Your application into the competition La Fromage
+    Then the user reads his email from the second default mailbox   worth.email.test.two+fundfailure@gmail.com    Your application into the competition La Fromage    unable to fund your application
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{successful_applicant_credentials}
+    [Setup]    Log in as a different user    &{successful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should see the text in the page    Projects in setup
     And the successful application shows in the project setup section
@@ -96,15 +96,14 @@ Successful applicants can see the assessment outcome on the dashboard page
 Successful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2605, INFUND-2611
     [Tags]    HappyPath
-    When the user clicks the button/link    link=00000004: Cheese is good
+    When the user clicks the button/link    link=00000016: Cheese is good
     Then the user should see the text in the page    Project setup status
     And the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
-    [Teardown]    Logout as user
 
 Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2605
     [Tags]
-    [Setup]    Guest user log-in    &{unsuccessful_applicant_credentials}
+    [Setup]    Log in as a different user   &{unsuccessful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should not see the text in the page    Projects in setup
     And the unsuccessful application shows in the previous applications section

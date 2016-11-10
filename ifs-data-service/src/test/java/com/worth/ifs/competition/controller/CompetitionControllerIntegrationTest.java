@@ -483,14 +483,14 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
    private CompetitionResource createWithDates(LocalDateTime startDate,
                                                LocalDateTime endDate,
-                                               LocalDateTime assessmentStartDate,
-                                               LocalDateTime assessmentEndDate,
+                                               LocalDateTime assessorAcceptsDate,
+                                               LocalDateTime fundersPanelDate,
                                                LocalDateTime fundersPanelEndDate,
                                                LocalDateTime assessorFeedbackDate) {
        CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
 
-       List<Milestone> milestone = createNewMilestones(comp, startDate, endDate, assessmentStartDate,
-               assessmentEndDate, fundersPanelEndDate, assessorFeedbackDate);
+       List<Milestone> milestone = createNewMilestones(comp, startDate, endDate, assessorAcceptsDate,
+               fundersPanelDate, fundersPanelEndDate, assessorFeedbackDate);
        List<Long> milestonesIds = new ArrayList<>();
 
        milestone.forEach(m -> {
@@ -510,8 +510,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
    }
 
     private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
-                                      LocalDateTime endDate, LocalDateTime assessmentStartDate,
-                                      LocalDateTime assessmentEndDate, LocalDateTime fundersPanelEndDate,
+                                      LocalDateTime endDate, LocalDateTime assessorAcceptsDate,
+                                      LocalDateTime fundersPanelDate, LocalDateTime fundersPanelEndDate,
                                       LocalDateTime assessorFeedbackDate) {
 
         LocalDateTime milestoneDate = LocalDateTime.now();
@@ -531,11 +531,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             } if (milestone.getType().name().equals("SUBMISSION_DATE")) {
                 milestone.setDate(endDate);
             } if (milestone.getType().name().equals("ASSESSOR_ACCEPTS")) {
-                milestone.setDate(assessmentStartDate);
+                milestone.setDate(assessorAcceptsDate);
             } if (milestone.getType().name().equals("ASSESSOR_DEADLINE")) {
                 milestone.setDate(assessorFeedbackDate);
             } if (milestone.getType().name().equals("FUNDERS_PANEL")) {
-                milestone.setDate(assessmentEndDate);
+                milestone.setDate(fundersPanelDate);
             } if (milestone.getType().name().equals("NOTIFICATIONS")){
                 milestone.setDate(fundersPanelEndDate);
             }

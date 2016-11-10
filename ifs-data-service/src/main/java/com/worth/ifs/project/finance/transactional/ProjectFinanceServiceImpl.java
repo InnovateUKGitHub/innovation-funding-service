@@ -8,7 +8,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
 import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
@@ -67,6 +66,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
     private static final String CSV_FILE_NAME_DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
     private static final List<String> RESEARCH_CAT_GROUP_ORDER = new LinkedList<>();
+    public static final String EMPTY_CELL = "";
 
     @Autowired
     private ProjectService projectService;
@@ -550,32 +550,52 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         StringWriter stringWriter = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(stringWriter);
         ArrayList<String[]> rows = new ArrayList<>();
+
+        ArrayList<String> byCategory = new ArrayList<>();
+
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
+        monthsRow.add(EMPTY_CELL);
         spendProfileTableResource.getMonths().forEach(
                 value -> monthsRow.add(value.getLocalDate().toString()));
         monthsRow.add(CSV_TOTAL);
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
-        rows.add(monthsRow.stream().toArray(String[]::new));
 
-        ArrayList<String> byCategory = new ArrayList<>();
+        final int[] columnSize = new int[1];
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+
             CostCategory cc = costCategoryRepository.findOne(category);
+            if ( cc.getLabel() != null ) {
+                byCategory.add(cc.getLabel());
+            }
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val -> {
                 byCategory.add(val.toString());
             });
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
+
+            if ( monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
+                monthsRow.remove(EMPTY_CELL);
+                rows.add(monthsRow.stream().toArray(String[]::new));
+            } else if (monthsRow.size() > 0 ){
+                rows.add(monthsRow.stream().toArray(String[]::new));
+            }
+            monthsRow.clear();
             rows.add(byCategory.stream().toArray(String[]::new));
+            columnSize[0] = byCategory.size();
             byCategory.clear();
         });
 
         ArrayList<String> totals = new ArrayList<>();
         totals.add(CSV_TOTAL);
+        totals.add(EMPTY_CELL);
         totalForEachMonth.forEach(value -> totals.add(value.toString()));
         totals.add(totalOfAllActualTotals.toString());
         totals.add(totalOfAllEligibleTotals.toString());
+        if ( totals.size() > columnSize[0] && totals.contains(EMPTY_CELL)) {
+            totals.remove(EMPTY_CELL);
+        }
         rows.add(totals.stream().toArray(String[]::new));
         csvWriter.writeAll(rows);
         csvWriter.close();

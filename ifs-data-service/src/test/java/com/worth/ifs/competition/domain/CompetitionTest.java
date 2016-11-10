@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -33,8 +34,6 @@ public class CompetitionTest {
     private LocalDateTime endDate;
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
-    private LocalDateTime assemmentStartDate;
-    private LocalDateTime assemmentEndDate;
 
     private String budgetCode;
 
@@ -51,8 +50,6 @@ public class CompetitionTest {
         description = "testCompetitionDescription";
         startDate = LocalDateTime.now().minusDays(5);
         endDate = startDate.plusDays(15);
-        assemmentStartDate = endDate;
-        assemmentEndDate = endDate.plusDays(15);
 
         maxResearchRatio = 10;
         academicGrantPercentage = 30;
@@ -69,8 +66,6 @@ public class CompetitionTest {
         sections.add(new Section());
 
         competition = new Competition(id, applications, questions, sections, name, description, startDate, endDate);
-        competition.setAssessmentStartDate(assemmentStartDate);
-        competition.setAssessmentEndDate(assemmentEndDate);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 
@@ -129,19 +124,19 @@ public class CompetitionTest {
 
     @Test
     public void competitionStatusOpen(){
-        assertEquals(CompetitionStatus.OPEN, competition.getCompetitionStatus());
+        assertEquals(OPEN, competition.getCompetitionStatus());
     }
 
     @Test
     public void competitionStatusReadyToOpen(){
         competition.setStartDate(LocalDateTime.now().plusDays(1));
-        assertEquals(CompetitionStatus.READY_TO_OPEN, competition.getCompetitionStatus());
+        assertEquals(READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test
     public void competitionClosingSoon(){
         CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setCompetitionStatus(CompetitionStatus.OPEN);
+        competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
         competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
         assertTrue(competitionResource.isClosingSoon());
@@ -150,7 +145,7 @@ public class CompetitionTest {
     @Test
     public void competitionNotClosingSoon(){
         CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setCompetitionStatus(CompetitionStatus.OPEN);
+        competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
         competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
         assertTrue(competitionResource.isClosingSoon());
@@ -159,33 +154,37 @@ public class CompetitionTest {
     @Test
     public void competitionStatusInAssessment(){
         competition.setEndDate(LocalDateTime.now().minusDays(1));
-        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(1));
-        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
+        // TODO INFUND-5199 - The assessor accepts deadline date should not be used for determining if we are in assessment or not
+        competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(1));
+        competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
+        assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
     
     @Test
     public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent(){
         competition.setEndDate(LocalDateTime.now().minusDays(4));
-        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
-        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
-        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+        // TODO INFUND-5199 - The assessor accepts deadline date should not be used for determining if we are in assessment or not
+        competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(3));
+        competition.setFundersPanelDate(LocalDateTime.now().minusDays(2));
+        assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
     public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture(){
         competition.setEndDate(LocalDateTime.now().minusDays(4));
-        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
-        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
+        // TODO INFUND-5199 - The assessor accepts deadline date should not be used for determining if we are in assessment or not
+        competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(3));
+        competition.setFundersPanelDate(LocalDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(LocalDateTime.now().plusDays(1));
-        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+        assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
     
     @Test
     public void competitionStatusAssessorFeedback(){
         competition.setEndDate(LocalDateTime.now().minusDays(4));
-        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(3));
-        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(2));
+        competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(3));
+        competition.setFundersPanelDate(LocalDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(1));
-        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
 }
