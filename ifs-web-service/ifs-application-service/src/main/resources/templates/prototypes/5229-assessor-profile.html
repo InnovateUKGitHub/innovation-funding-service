@@ -53,25 +53,16 @@
 			<table>
 				<thead>
 					<tr>
-						<th scope="col">Innovation sector</th>
-						<th scope="col">Innovation area</th>
+						<th scope="col" id="innovation-sector">Innovation sector</th>
+						<th scope="col" id="innovation-area">Innovation area</th>
 						<th scope="col"><span class="visuallyhidden">Remove</span></th>
 					</tr>
 				</thead>
-				<tfoot>
-					<tr>
-						<td colspan="3" class="alignright-button">
-							<a href="#" id="prototype-cancel" class="button-link">Cancel</a>
-							<a href="#" id="prototype-save" class="button">Save</a>
-						</td>
-					</tr>
-				</tfoot>
 				<tbody>
 					<tr>
 						<td>
 							<div class="form-group">
-								<label class="form-label visuallyhidden" for="innovationSector">Innovation sector</label>
-								<select class="form-control" id="innovationSector" name="innovationSector">
+								<select class="form-control" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
 									<option selected="selected">Please select an innovation sector</option>
 									<option value="Emerging and Enabling Technologies">Emerging and Enabling Technologies</option>
 									<option value="Health and Life Sciences">Health and Life Sciences</option>
@@ -82,8 +73,7 @@
 						</td>
 						<td>
 							<div class="form-group">
-								<label class="form-label visuallyhidden" for="innovationArea">Innovation area</label>
-								<select class="form-control" id="innovationArea" name="innovationArea">
+								<select class="form-control" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
 									<option selected="selected">Please select an innovation area</option>
 									<option value="Advanced Therapies">Advanced Therapies</option>
 									<option value="Precision Medicine">Precision Medicine</option>
@@ -113,6 +103,10 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="alignright-button extra-margin extra-margin-right">
+				<a href="#" id="prototype-cancel" class="button-link">Cancel</a>
+				<a href="#" id="prototype-save" class="button">Save</a>
+			</div>
 		</form>
 
 	</div>
