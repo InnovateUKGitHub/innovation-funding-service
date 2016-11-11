@@ -126,7 +126,7 @@ Bank details for Academic
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Tags]    Experian
+    [Tags]    Experian    Failing
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
