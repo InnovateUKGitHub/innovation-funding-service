@@ -10,7 +10,6 @@ import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompe
 import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
@@ -40,10 +40,10 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    CompetitionRepository competitionRepository;
+    private CompetitionRepository competitionRepository;
 
     @Autowired
-    CompetitionInviteRepository competitionInviteRepository;
+    private CompetitionInviteRepository competitionInviteRepository;
 
     @Autowired
     private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
@@ -77,6 +77,26 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 .build()
         );
 
+        competitionParticipantRepository.save( newCompetitionParticipant()
+                .with(id(null))
+                .withCompetition(competition)
+                .withUser(newUser()
+                        .withId(3L)
+                        .withFirstName("Professor")
+                )
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("fred")
+                        .withEmail("fred@test.com")
+                        .withHash("hashkey")
+                        .withCompetition(competition)
+                        .withStatus(CREATED)
+                )
+                .withStatus(ACCEPTED)
+                .withRole(ASSESSOR)
+                .build()
+        );
+
         flushAndClearSession();
     }
 
@@ -104,5 +124,20 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 .getSuccessObject();
 
         assertTrue(participants.isEmpty());
+    }
+
+    @Test
+    public void getParticipantsInviteAccepted() {
+        List<CompetitionParticipantResource> participants = controller.getParticipants(
+                getPaulPlum().getId(),
+                CompetitionParticipantRoleResource.ASSESSOR,
+                ParticipantStatusResource.ACCEPTED)
+                .getSuccessObject();
+
+        assertEquals(1, participants.size());
+        assertEquals(Long.valueOf(1L), participants.get(0).getCompetitionId());
+        assertEquals(Long.valueOf(3L), participants.get(0).getUserId());
+        assertEquals(Long.valueOf(1L), participants.get(0).getSubmittedAssessments());
+        assertEquals(Long.valueOf(3L), participants.get(0).getTotalAssessments());
     }
 }

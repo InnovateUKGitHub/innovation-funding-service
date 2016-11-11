@@ -14,7 +14,7 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
-public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<CompetitionParticipantRestServiceImpl> {
+public class CompetitionParticipantRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionParticipantRestServiceImpl> {
 
     private static final String restUrl = "/competitionparticipant";
 
@@ -31,6 +31,8 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
                 .withCompetitionParticipantRole(ASSESSOR, ASSESSOR)
                 .withStatus(ACCEPTED, ACCEPTED)
                 .withCompetition(2L, 3L)
+                .withTotalAssessments(4L, 5L)
+                .withSubmittedAssessments(1L, 2L)
                 .build(2);
 
         setupGetWithRestResultExpectations(format("%s/user/%s/role/%s/status/%s", restUrl, 1L, ASSESSOR, ACCEPTED), competitionParticipantResourceListType(), expected, OK);
