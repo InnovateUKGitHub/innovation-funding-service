@@ -3,12 +3,7 @@ Documentation     INFUND-1231: As a collaborator registering my company as Acade
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
@@ -19,7 +14,7 @@ ${INVITE_LINK_2}    ${SERVER}/accept-invite/1d92a6ace9030f2d992f47ea60529028fd49
 
 Start by deleting emails from the test mailboxes
     [Tags]    Email
-    Delete the emails from both main test mailboxes
+    delete the emails from both default remote test mailboxes
 
 
 
@@ -142,7 +137,7 @@ Catapult search (accept invitation flow)
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user opens the mailbox and verifies the email
+    Given the user reads his email from the default mailbox and clicks the link    worth.email.test+invite1@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123

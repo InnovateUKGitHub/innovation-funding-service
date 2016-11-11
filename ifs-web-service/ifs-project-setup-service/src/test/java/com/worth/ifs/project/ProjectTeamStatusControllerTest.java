@@ -1,6 +1,7 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder;
 import com.worth.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -58,7 +59,9 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){
-        List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
+        List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource().build();
+        partnerStatuses.add(leadProjectPartnerStatusResource);
         return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
     }
 }

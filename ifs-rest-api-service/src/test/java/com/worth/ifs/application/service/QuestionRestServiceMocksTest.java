@@ -142,7 +142,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void getQuestionsByAssessmentTest() {
+    public void getQuestionsByAssessment() {
         Long assessmentId = 1L;
 
         List<QuestionResource> questions = CList.listOf(2, () -> new QuestionResource());
@@ -152,5 +152,17 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         RestResult<List<QuestionResource>> result = service.getQuestionsByAssessment(assessmentId);
         assertTrue(result.isSuccess());
         Assert.assertEquals(questions, result.getSuccessObject());
+    }
+
+    @Test
+    public void getQuestionByIdAndAssessmentId() {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        QuestionResource questionResource = newQuestionResource().build();
+        setupGetWithRestResultExpectations(String.format("%s/getQuestionByIdAndAssessmentId/%s/%s", questionRestURL, questionId, assessmentId), QuestionResource.class, questionResource);
+
+        QuestionResource result = service.getByIdAndAssessmentId(questionId, assessmentId).getSuccessObject();
+        assertEquals(questionResource, result);
     }
 }

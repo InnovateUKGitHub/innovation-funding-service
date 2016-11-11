@@ -194,6 +194,8 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
+        boolean isProjectManager = getProjectManager(projectId).map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
+
         boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
 
         // TODO DW - these rejection messages to be covered in other stories
@@ -203,11 +205,11 @@ public class ProjectOtherDocumentsController {
         boolean approvalDecisionMade =  project.getOtherDocumentsApproved() != null;
         boolean otherDocumentsApproved = approvalDecisionMade && project.getOtherDocumentsApproved();
 
-        return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
+        return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
-                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
+                leadPartner, isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
                 approvalDecisionMade, isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
@@ -223,4 +225,8 @@ public class ProjectOtherDocumentsController {
         return "redirect:/project/" + projectId + "/partner/documents";
     }
 
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+    }
 }

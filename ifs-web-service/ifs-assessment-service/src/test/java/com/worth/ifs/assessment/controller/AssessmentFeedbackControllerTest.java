@@ -22,9 +22,7 @@ import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -153,16 +151,19 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertFalse(model.isAppendixExists());
         assertNull(model.getAppendixDetails());
 
-        verify(assessmentService, only()).getById(ASSESSMENT_ID);
-        verify(applicationService, only()).getById(APPLICATION_ID);
-        verify(competitionService, only()).getById(competitionResource.getId());
-        verify(questionService, atLeast(1)).getById(same(QUESTION_ID));
-        verify(formInputService, times(2)).findApplicationInputsByQuestion(QUESTION_ID);
-        verify(formInputService, times(1)).findAssessmentInputsByQuestion(QUESTION_ID);
-        applicationFormInputs.forEach(formInput -> verify(formInputResponseService, times(1)).getByFormInputIdAndApplication(formInput.getId(), APPLICATION_ID));
-        verify(questionService, times(1)).getPreviousQuestion(QUESTION_ID);
-        verify(questionService, times(1)).getNextQuestion(QUESTION_ID);
-        verify(assessorFormInputResponseService, only()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(ASSESSMENT_ID, QUESTION_ID);
+        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService, applicationService, competitionService, formInputResponseService);
+        inOrder.verify(questionService).getByIdAndAssessmentId(QUESTION_ID, ASSESSMENT_ID);
+        inOrder.verify(formInputService).findApplicationInputsByQuestion(QUESTION_ID);
+        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(ASSESSMENT_ID, QUESTION_ID);
+        inOrder.verify(assessmentService).getById(ASSESSMENT_ID);
+        inOrder.verify(applicationService).getById(APPLICATION_ID);
+        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(formInputService).findApplicationInputsByQuestion(QUESTION_ID);
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), APPLICATION_ID));
+        inOrder.verify(formInputService).findAssessmentInputsByQuestion(QUESTION_ID);
+        inOrder.verify(questionService).getPreviousQuestion(QUESTION_ID);
+        inOrder.verify(questionService).getNextQuestion(QUESTION_ID);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -218,15 +219,18 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(expectedApplication, model.getApplication());
         assertEquals("Application details", model.getQuestionShortName());
 
-        verify(assessmentService, only()).getById(ASSESSMENT_ID);
-        verify(applicationService, only()).getById(APPLICATION_ID);
-        verify(competitionService, only()).getById(competitionResource.getId());
-        verify(formInputService, only()).findApplicationInputsByQuestion(APPLICATION_DETAILS_QUESTION_ID);
-        verify(formInputService, never()).findAssessmentInputsByQuestion(APPLICATION_DETAILS_QUESTION_ID);
-        verify(formInputResponseService, never()).getByFormInputIdAndApplication(anyLong(), anyLong());
-        verify(questionService, times(1)).getPreviousQuestion(APPLICATION_DETAILS_QUESTION_ID);
-        verify(questionService, times(1)).getNextQuestion(APPLICATION_DETAILS_QUESTION_ID);
-        verify(assessorFormInputResponseService, never()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(anyLong(), anyLong());
+        InOrder inOrder = inOrder(questionService, formInputService, assessmentService, applicationService, competitionService);
+        inOrder.verify(questionService).getByIdAndAssessmentId(APPLICATION_DETAILS_QUESTION_ID, ASSESSMENT_ID);
+        inOrder.verify(formInputService).findApplicationInputsByQuestion(APPLICATION_DETAILS_QUESTION_ID);
+        inOrder.verify(assessmentService).getById(ASSESSMENT_ID);
+        inOrder.verify(applicationService).getById(APPLICATION_ID);
+        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(questionService).getPreviousQuestion(APPLICATION_DETAILS_QUESTION_ID);
+        inOrder.verify(questionService).getNextQuestion(APPLICATION_DETAILS_QUESTION_ID);
+        inOrder.verifyNoMoreInteractions();
+
+        verifyZeroInteractions(formInputResponseService);
+        verifyZeroInteractions(assessorFormInputResponseService);
     }
 
     @Test
@@ -408,12 +412,15 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void setupCompetition() {
         super.setupCompetition();
 
-        competitionResource.setAssessmentStartDate(LocalDateTime.now().minusDays(2));
-        competitionResource.setAssessmentEndDate(LocalDateTime.now().plusDays(4));
+        competitionResource.setAssessorAcceptsDate(LocalDateTime.now().minusDays(2));
+        competitionResource.setAssessorDeadlineDate(LocalDateTime.now().plusDays(4));
 
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
         questionResources.get(QUESTION_ID).setAssessorMaximumScore(50);
         questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("Application details");
+
+        when(questionService.getByIdAndAssessmentId(QUESTION_ID, ASSESSMENT_ID)).thenReturn(questionResources.get(QUESTION_ID));
+        when(questionService.getByIdAndAssessmentId(APPLICATION_DETAILS_QUESTION_ID, ASSESSMENT_ID)).thenReturn(questionResources.get(APPLICATION_DETAILS_QUESTION_ID));
     }
 
     private void setupNextQuestionSection(Long sectionId, Long expectedNextQuestionId, boolean isAssessmentQuestion) {
@@ -470,6 +477,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     private AssessmentResource setupAssessment(Long applicationId) {
         AssessmentResource assessment = newAssessmentResource()
                 .withId(1L)
+                .withCompetition(competitionResource.getId())
                 .withApplication(applicationId)
                 .build();
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);

@@ -9,7 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -54,7 +54,6 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
-import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -67,7 +66,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -81,13 +79,8 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
@@ -96,8 +89,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -653,15 +645,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
 
-        if (existingUser != null) {
-            project.removeProjectUser(existingUser);
-        }
-
-        project.addProjectUser(financeContact);
+        project.addProjectUser(newFinanceContact);
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
             projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
@@ -713,14 +702,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+
+        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -742,7 +733,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
-                    leadProjectDetailsSubmitted,
+                    partnerProjectDetailsSubmittedStatus,
                     NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,
@@ -803,7 +794,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }
@@ -835,6 +826,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+
+        ServiceResult<ProjectUser> result = find(organisation(organisationId))
+                .andOnSuccessReturn(organisation -> project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation));
+
+        if (result.isFailure()) {
+            return result;
+        }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
 

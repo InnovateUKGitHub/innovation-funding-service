@@ -15,34 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/860-comp-applications-dashboard'})" th:remove="tag" />
+      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Manage Applications</h1>
 
-	<!--<div class="grid-row extra-margin">-->
-		<!--<div class="column-half">-->
-			<!--<p>-->
-				<!--<span class="heading-small">Assessor accepts: 18 October 2016</span>-->
-			<!--</p>-->
-			<!--<p>-->
-				<!--<span class="heading-small">Assessor deadline: 23 October 2016</span>-->
-			<!--</p>-->
-
-		<!--</div>-->
-		<!--<div class="column-quarter">-->
-			<!--<p><span class="heading-large">5</span><br /> changes since last update</p>-->
-		<!--</div>-->
-		<!--<div class="column-quarter">-->
-			<!--<div class="alignright">-->
-				<!--<a href="/prototypes/5472-notify-assessors?status=incomplete" class="button large">Update Assessors</a>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-
-	<!--<h2 class="heading-medium">Applications</h2>-->
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Manage applications'}, ${null})" th:remove="tag" />
 
 	<p class="extra-margin">Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
 

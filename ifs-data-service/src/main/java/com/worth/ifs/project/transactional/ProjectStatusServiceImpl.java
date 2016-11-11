@@ -1,6 +1,6 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -8,6 +8,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -62,7 +63,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
+
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
+        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
+
         return new ProjectStatusResource(
                 project.getName(),
                 project.getId(),
@@ -73,8 +77,8 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
                 getProjectDetailsStatus(project),
                 getBankDetailsStatus(project),
-                getFinanceChecksStatus(project),
-                getSpendProfileStatus(project),
+                financeChecksStatus,
+                getSpendProfileStatus(project, financeChecksStatus),
                 getMonitoringOfficerStatus(project, projectDetailsStatus),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project));
@@ -92,8 +96,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
-            if(!bankDetails.isPresent() && !organisationBankDetailsStatus.equals(NOT_REQUIRED)){
+            if(!bankDetails.isPresent()){
                 return PENDING;
             }
         }
@@ -101,7 +104,8 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
+            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
             if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
                 return ACTION_REQUIRED;
             }
@@ -112,10 +116,17 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
-        return ACTION_REQUIRED;
+
+        List<SpendProfile> spendProfile = spendProfileRepository.findByProjectId(project.getId());
+
+        if (spendProfile.isEmpty()) {
+            return ACTION_REQUIRED;
+        }
+
+        return COMPLETE;
     }
 
-    private ProjectActivityStates getSpendProfileStatus(Project project){
+    private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
         if(ApprovalType.APPROVED.equals(approvalType)) {
@@ -128,7 +139,11 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return ACTION_REQUIRED;
         }
 
-        return PENDING;
+        if (financeCheckStatus.equals(COMPLETE)) {
+            return PENDING;
+        }
+
+        return NOT_STARTED;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
@@ -144,9 +159,25 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
+
+        ApprovalType spendProfileApprovalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+
+        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType)){
+            return PENDING;
+        }
+
+        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
+            return PENDING;
+        }
+
+        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
+            return COMPLETE;
+        }
+
         if(project.getOfferSubmittedDate() != null) {
             return ACTION_REQUIRED;
         }
+
         return NOT_STARTED;
     }
 }

@@ -16,7 +16,7 @@ import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,9 +25,10 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 
@@ -42,9 +43,7 @@ import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -71,8 +70,15 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     @Mock
     private AddressRestService addressRestService;
 
-    @Mock
-    private Validator validator;
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.afterPropertiesSet();
+        ReflectionTestUtils.setField(controller, "validator", validator);
+    }
 
     @Override
     protected AssessorRegistrationController supplyControllerUnderTest() {
@@ -142,8 +148,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         addressResource.setTown(town);
 
         addressForm.setSelectedPostcode(addressResource);
-        addressForm.setTriedToSave(true);
-        addressForm.setTriedToSearch(true);
 
         String inviteHash = "hash";
 
@@ -175,7 +179,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
 
-    @Ignore
     @Test
     public void submitYourDetails_weakPassword() throws Exception {
         String title = "Mr";
@@ -211,7 +214,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         addressResource.setTown(town);
 
         addressForm.setSelectedPostcode(addressResource);
-        addressForm.setTriedToSave(true);
 
         String inviteHash = "hash";
 
@@ -417,5 +419,28 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(form.getAddressForm().getSelectedPostcode(), addressResourceList.get(1));
+    }
+
+    @Test
+    public void submitYourDetails_withoutSelectedAddressResultsInError() throws Exception {
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+
+        String title = "Mr";
+        Long selectedPostcodeIndex = 0L;
+        String inviteHash = "hash";
+
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+
+        mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("title", title)
+                .param("addressForm.selectedPostcodeIndex", selectedPostcodeIndex.toString()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeHasFieldErrorCode("form", "addressForm.postcodeOptions", "validation.standard.postcodeoptions.required"));
+
+        verifyZeroInteractions(assessorService);
     }
 }

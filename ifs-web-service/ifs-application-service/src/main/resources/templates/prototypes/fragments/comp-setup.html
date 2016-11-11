@@ -4,7 +4,7 @@
 <!-- =================Tabbed navigation competion dashboard=========================== -->
 
 <div th:fragment="prototype-comp-dashboard-navigation">
-    <ul class="inline-nav cf">
+    <ul class="inline-nav">
         <li id="section-1" th:class="${(param.section == null or param.section[0] == 'live' ? 'selected' : '')}"><a th:href="@{'?section=live'}">Live (18)</a></li>
         <li id="section-1" th:class="${(param.section != null and param.section[0] == 'setup' ? 'selected' : '')}"><a th:href="@{'?section=setup'}">Project setup (2)</a></li>
         <li id="section-2" th:class="${(param.section != null and param.section[0] == 'upcoming' ? 'selected' : '')}"><a th:href="@{'?section=upcoming'}">Upcoming (4)</a></li>
@@ -65,7 +65,7 @@
                     th:with="rowTitle=${'Technology inspired'},
                     rowType=${'Programme'},
                     rowSector=${'Advanced materials'},
-                    rowUrl=${'/prototypes/1348-open-applications'},
+                    rowUrl=${'/prototypes/5721-dashboard'},
                     rowStatus=${'132 applications'}">
                 </th:block>
                 <th:block 
@@ -124,7 +124,7 @@
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Programme'},
                     rowSector=${'Emerging &#38; enabling technology'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=Closed'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -136,7 +136,18 @@
         
         <h2 class="heading-medium">In assessment (1)</h2>
 
-        
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Portable power station'}, 
+                    rowType=${'SBRI'},
+                    rowSector=${'Emerging &#38; enabling technology'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=assessment'},
+                    rowStatus=${'132 applications'}">
+                </th:block>
+            </ul>
+        </div>
 
     </section>
 
@@ -151,7 +162,7 @@
                     th:with="rowTitle=${'Portable renewable energy generation'}, 
                     rowType=${'Special'},
                     rowSector=${'Manufacturing &#38; materials'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=panel'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -170,7 +181,7 @@
                     th:with="rowTitle=${'Solving problems with data'}, 
                     rowType=${'Managed service'},
                     rowSector=${'Health &#38; life sciences'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=Inform'},
                     rowStatus=${'132 applications'}">
                 </th:block>
             </ul>
@@ -286,84 +297,86 @@
 
     <h2 class="heading-medium">Complete (27)</h2>
 
-        <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Programme'}, 
-                rowSector=${'Advanced therapies'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-           <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Managed service'},
-                rowSector=${'Precision medicine'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
-                rowType=${'SBRI'},
-                rowSector=${'Medicines technology'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'},
-                rowType=${'Special'},
-                rowSector=${'Bioscience'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Agri productivity'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'},
-                rowType=${'Special'}, 
-                rowSector=${'Enhanced food quality'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Programme'}, 
-                rowSector=${'Transport systems'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'Managed service'}, 
-                rowSector=${'Urban living'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Special'},
-                rowSector=${'Health &#38; life sciences'},  
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Solving problems with data'}, 
-                rowType=${'SBRI'},
-                rowSector=${'Health &#38; life sciences'},
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                rowType=${'Managed service'},
-                rowType=${'Nuclear'}, 
-                rowStatus=${'12/06/2016'}">
-            </th:block>
-        </ul>
+        <div class="table-overflow">
+            <ul class="list-overview">
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Programme'}, 
+                    rowSector=${'Advanced therapies'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+               <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Managed service'},
+                    rowSector=${'Precision medicine'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
+                    rowType=${'SBRI'},
+                    rowSector=${'Medicines technology'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'},
+                    rowType=${'Special'},
+                    rowSector=${'Bioscience'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Agri productivity'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'},
+                    rowType=${'Special'}, 
+                    rowSector=${'Enhanced food quality'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Programme'}, 
+                    rowSector=${'Transport systems'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'Managed service'}, 
+                    rowSector=${'Urban living'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Special'},
+                    rowSector=${'Health &#38; life sciences'},  
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Solving problems with data'}, 
+                    rowType=${'SBRI'},
+                    rowSector=${'Health &#38; life sciences'},
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    rowType=${'Managed service'},
+                    rowType=${'Nuclear'}, 
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+            </ul>
+        </div>
 
 </div>
 
@@ -483,6 +496,7 @@
                     <option value="Managed services">Managed services</option>
                     <option value="SBRI">SBRI</option>
                     <option value="Special">Special</option>
+                    <option value="Sector competition">Sector competition</option>
                 </select>
             </div>
 
@@ -535,6 +549,37 @@
                     <option value="Urban living and built" class="infrastructure">Urban living and built</option>
                 </select>
             </div>
+            <div class="form-group" id="innovation-area2-form-group">
+                <label class="form-label" for="compInnovationArea2">
+                    <span class="form-label-bold visuallyhidden">Innovation area</span>
+                </label>
+                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                    <option value="">Please select &hellip;</option>
+                    <option value="Health and care" class="health">Health and care</option>
+                    <option value="Agriculture and food" class="health">Agriculture and food</option>
+                    <option value="Biosciences" class="health">Biosciences</option>
+
+                    <option value="High value manufacturing" class="materials">High value manufacturing</option>
+                    <option value="Resource efficiency" class="materials">Resource efficiency</option>
+                    <option value="Advanced materials" class="materials">Advanced materials</option>
+
+                    <option value="Digital" class="emerging">Digital</option>
+                    <option value="Satellite applications" class="emerging">Satellite applications</option>
+                    <option value="ICT" class="emerging">ICT</option>
+                    <option value="Design and creative economy" class="emerging">Design and creative economy</option>
+                    <option value="Emerging tech and industries" class="emerging">Emerging tech and industries</option>
+                    <option value="Robotics and autonomous systems" class="emerging">Robotics and autonomous systems</option>
+                    <option value="Electronics, sensors and photonics" class="emerging">Electronics, sensors and photonics</option>
+
+                    <option value="Transport" class="infrastructure">Transport</option>
+                    <option value="Energy" class="infrastructure">Energy</option>
+                    <option value="Urban living and built" class="infrastructure">Urban living and built</option>
+                </select>
+                <a href="#" id="remove-innovation-area">Remove</a>
+            </div>
+            <p id="add-innovation-area">
+                <a href="#">+ add another innovation area</a>
+            </p>
 
             <fieldset class="form-group">
                 <h3 class="heading-small no-margin">Opening date</h3>
@@ -566,13 +611,13 @@
 
             <div class="form-group">
                 <label class="form-label" for="compLeadTechnologist">
-                    <span class="form-label-bold">Competition lead technologist</span>
+                    <span class="form-label-bold">Competition Innovation Lead</span>
                 </label>
                 <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
-                    <option value="">Lead technologist 1</option>
-                    <option value="">Lead technologist 2</option>
-                    <option value="">Lead technologist 3</option>
+                    <option value="">Innovation Lead 1</option>
+                    <option value="">Innovation Lead 2</option>
+                    <option value="">Innovation Lead 3</option>
                 </select>
             </div>
 
@@ -634,9 +679,9 @@
                 <dd>Agriculture &#38; food</dd>
 
                 <dt>Opening date</dt>
-                <dd>15/07/2017</dd>
+                <dd>15 July 2017</dd>
 
-                <dt>Competition lead technologist</dt>
+                <dt>Competition Innovation Lead</dt>
                 <dd>Natalie Wilson</dd>
 
                 <dt>Competition executive</dt>

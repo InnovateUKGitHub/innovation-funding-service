@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle='Your details'" th:remove="tag"></div>
     </head>
@@ -10,32 +10,41 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
-            <div class="hgroup">
-                <h1 class="heading-xlarge no-margin extra-margin">Your details</h1>
-                <small><a href="#">Edit your details</a></small>
-            </div>
+            <h1 class="heading-large">Your profile</h1>
 
-            <h2 class="heading-small">Your name</h2>
-            <p>Mr Joe Bloggs</p>
+            <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a th:href="@{/profile/details/edit}"> Edit your details</a></small></h2>
 
-            <h2 class="heading-small">Gender</h2>
-            <p>Male</p>
-
-            <h2 class="heading-small">Address</h2>
+            <h3 class="heading-small">Your name</h3>
             <p>
-                4 Station Road<br>
-                Swindon <br>
-                Wiltshire <br>
-                SN1 2BD
+                <span th:text="${model.title}" th:remove="tag" />
+                <span th:text="${model.firstName}" th:remove="tag" />
+                <span th:text="${model.lastName}" th:remove="tag" />
             </p>
-
-            <h2 class="heading-small">Phone number</h2>
-            <p>01234 567891</p>
-
-            <h2 class="heading-small">Email address</h2>
-            <p>J.b@assessor.com</p>
+            <h3 class="heading-small" th:if="${model.gender}">Gender</h3>
+            <p th:if="${model.gender}" th:text="${model.gender}? ${model.gender.displayName}" />
+            <h3 class="heading-small" th:if="${model.ethnicity}">Your ethnic group</h3>
+            <p th:if="${model.ethnicity}" th:text="${model.ethnicity}? ${model.ethnicity.description}" />
+            <h3 class="heading-small" th:if="${model.disability}">Do you consider yourself disabled?</h3>
+            <p th:if="${model.disability}" th:text="${model.disability}? ${model.disability.displayName}" />
+            <h3 class="heading-small" th:if="${model.address}">Address</h3>
+            <p th:if="${model.address}">
+                <span th:text="${model.address.addressLine1}" th:remove="tag" /><br />
+                <div th:unless="${#strings.isEmpty(model.address.addressLine2)}" th:remove="tag">
+                    <span th:text="${model.address.addressLine2}" th:remove="tag" /><br />
+                </div>
+                <div th:unless="${#strings.isEmpty(model.address.addressLine3)}" th:remove="tag">
+                    <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
+                </div>
+                <span th:text="${model.address.town}" th:remove="tag" /><br />
+                <span th:text="${model.address.county}" th:remove="tag" /><br />
+                <span th:text="${model.address.postcode}" th:remove="tag" />
+            </p>
+            <h3 class="heading-small" th:if="${model.phoneNumber}">Phone number</h3>
+            <p th:if="${model.phoneNumber}" th:text="${model.phoneNumber}" />
+            <h3 class="heading-small">Email address</h3>
+            <p th:text="${model.email}" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>

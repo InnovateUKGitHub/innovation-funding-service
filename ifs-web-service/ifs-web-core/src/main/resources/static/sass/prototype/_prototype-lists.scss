@@ -1,459 +1,459 @@
+/*-------- Adding roman numeral style list -------------*/
+ol.list-style-type-roman{
+  list-style-type: lower-roman;
+}
+
+/*-------- Horizonatl bordered list -------------*/
+
 .list-overview{
+  margin-left: 0;
+  padding: 0;
+  list-style-type: none;
 
-	margin-left: 0;
-    padding: 0;
-    list-style-type: none;
+  /*li{
+  	border-bottom: 1px solid $border-colour;
 
-    /*li{
-    	border-bottom: 1px solid $border-colour;
+      &:first-child{
+         border-top: 1px solid $border-colour;
+      }
+  }*/
 
-        &:first-child{
-           border-top: 1px solid $border-colour;
-        }
-    }*/
+  .list-bullet{
+    li{
+      border: none;
+    }
+  }
 
-    .list-bullet{
-        li{
-            border: none;
-        }
+  .grid-row{
+    //overflow: auto;
+    //margin: 2px 0 2px 0;
+    //border-left: 5px solid red;
+    min-height: 30px;
+
+    &:after{
+      height: 0;
     }
 
+    h3{
+      padding: 10px 0px 10px 20px;
+
+      &.heading-small{
+        margin: 0;
+      }
+    }
+
+    .column-third{
+      padding: 12px 0 0 20px;
+      @include media-down(mobile) {
+        padding: 0 0 10px 35px;
+      }
+    }
+  }
+
+  .assigned-to-me{
     .grid-row{
-    	//overflow: auto;
-    	//margin: 2px 0 2px 0;
-    	//border-left: 5px solid red;
-    	min-height: 30px;
+      //border-left: 5px solid $light-blue;
+      //@extend %icon-assigned;
+    }
+  }
 
-    	&:after{
-			height: 0;
-		}
+  .assign-container{
 
-		h3{
-			padding: 10px 0px 10px 20px;
+    font-size: 14px;
 
-			&.heading-small{
-				margin: 0;
-			}
-		}
-
-		.column-third{
-			padding: 12px 0 0 20px;
-            @include media-down(mobile) {
-                padding: 0 0 10px 35px;
-            }
-		}
+    .assign-team{
+      //position: static;
+      margin-top: 0;
+      margin-bottom: 10px;
     }
 
-    .assigned-to-me{
-    	.grid-row{
-    		//border-left: 5px solid $light-blue;
-    		//@extend %icon-assigned;
-    	}
+    li{
+      border: none;
     }
+ }
 
-    .assign-container{
+  .marked-as-complete {
+    @extend %mark-done-right;
+    background-position: right top;
+    background-size: 30px;
+  }
 
-    	font-size: 14px;
-
-    	.assign-team{
-    		//position: static;
-    		margin-top: 0;
-    		margin-bottom: 10px;
-    	}
-
-    	li{
-    		border: none;
-    	}
-    }
-
-    .marked-as-complete {
-		@extend %mark-done-right;
-		background-position: right top;
-		background-size: 30px;
-	}
-
-	.assigned-to-me {
-		@extend %mark-assigned-right;
-		background-position: right top;
-		background-size: 30px;
-	}
+  .assigned-to-me {
+    @extend %mark-assigned-right;
+    background-position: right top;
+    background-size: 30px;
+  }
 }
 
 .application-overview{
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 /*-------- Comp setup editing questions view -------------*/
 
-.list-overview{ 
-    &.application-questions{
-        .heading-medium{
-            margin: 0.5em 0 0.4em 0;
-        }
-        .button{
-            margin-top: 10px;
-        }
-        .question{
-            margin: 30px 0 0 20px;
-
-            & + .alignright{
-                margin-bottom: 60px;
-            }
-        }
-        .grid-row{
-            h3{
-                padding-top: 5px; 
-            }
-        }
+.list-overview{
+  &.application-questions{
+    .heading-medium{
+      margin: 0.5em 0 0.4em 0;
     }
+    .button{
+      margin-top: 10px;
+    }
+    .question{
+      margin: 30px 0 0 20px;
+
+      & + .alignright{
+        margin-bottom: 60px;
+      }
+    }
+    .grid-row{
+      h3{
+        padding-top: 5px;
+      }
+    }
+  }
 }
-
-
 
 /*-------- Companies House results panel example -------------*/
 
 li.type-company{
-    padding: 0 0 25px 0;
+  padding: 0 0 25px 0;
 
-    .meta.crumbtrail{
-        margin: 0;
-        padding: 0;
-    }
+ .meta.crumbtrail{
+    margin: 0;
+    padding: 0;
+  }
 }
 
 /*----- Standard definition list ----*/
 
 dl.standard-definition-list{
-    overflow: auto;
-    @include core-19;
+  overflow: auto;
+  @include core-19;
 
-    dt{
-        display: block;
-        float: left;
-        width: 50%;
-        max-width: 250px;
-        margin-bottom: 0.5em;
+  dt{
+    display: block;
+    float: left;
+    width: 50%;
+    max-width: 250px;
+    margin-bottom: 0.5em;
 
-        @include media-down(tablet) {
-            width: 70%;
-        }
+    @include media-down(tablet) {
+        width: 70%;
+    }
+  }
+
+  dd{
+    display: block;
+    float: left;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+
+    &.warning{
+      color: $red;
     }
 
-    dd{
-        display: block;
-        float: left;
-        font-weight: normal;
-        margin-bottom: 0.5em;
-
-        &.warning{
-            color: $red;
-        }
-
-        & + dt{
-            clear: both;
-        }
+    & + dt{
+      clear: both;
     }
+  }
 }
 
 /*----- Eligibility criteria for finances ----*/
 
 .eligibility{
-    border: 1px solid $border-colour;
-    padding: 20px 20px 10px 20px;
+  border: 1px solid $border-colour;
+  padding: 20px 20px 10px 20px;
 
-    &-warning{
-        border: 1px solid $red;
-    }
+  &-warning{
+    border: 1px solid $red;
+  }
 }
 
 .list-eligibility{
-    overflow: auto;
-    @include core-24;
+  overflow: auto;
+  @include core-24;
 
-    dt{
-        display: block;
-        float: left;
-        width: 50%;
-        margin-bottom: 0.5em;
+  dt{
+    display: block;
+    float: left;
+    width: 50%;
+    margin-bottom: 0.5em;
 
-        @include media-down(tablet) {
-            width: 70%;
-        }
+    @include media-down(tablet) {
+      width: 70%;
+    }
+  }
+
+  dd{
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+
+    &.warning{
+      color: $red;
     }
 
-    dd{
-        display: block;
-        float: left;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-
-        &.warning{
-            color: $red;
-        }
-
-        & + dt{
-            clear: both;
-        }
+    & + dt{
+      clear: both;
     }
+  }
 }
 
 /*----- Comp admin lists ----*/
 
 .comp-timeline-status{
-    li{
-        border-top: 1px solid $secondary-text-colour;
-        color: $secondary-text-colour;
+  li{
+    border-top: 1px solid $secondary-text-colour;
+    color: $secondary-text-colour;
 
-        h3{
-            margin: 10px 0 0 0;
-        }
-
-        p{
-            margin: 0 0 10px 0;
-        }
-
-        &:first-child{
-            border-top: none;
-        }
-
-        &.done{
-            border-top: 1px solid $text-colour;
-            color: $text-colour;
-            @extend %icon-tick;
-            background-position: right 50%;
-
-            &:first-child{
-                border-top: none;
-            }
-        }
+    h3{
+      margin: 10px 0 0 0;
     }
+
+    p{
+      margin: 0 0 10px 0;
+    }
+
+    &:first-child{
+      border-top: none;
+    }
+
+    &.done{
+      border-top: 1px solid $text-colour;
+      color: $text-colour;
+      @extend %icon-tick;
+      background-position: right 1em;
+
+      &:first-child{
+        border-top: none;
+      }
+    }
+
+    .button{
+      width: 100%;
+    }
+  }
 }
 
 /*----- Application progress lists ----*/
 
 .application-progress-list{
+  > li{
+    background: url(../images/charts/offer-status-default.png) no-repeat;
+    overflow: auto;
+    margin-bottom: 10px;
 
-    > li{
-        background: url(../images/charts/offer-status-default.png) no-repeat;
-        overflow: auto;
-        margin-bottom: 10px;
+    &:last-child{
+      background: url(../images/charts/offer-status-default-last.png) no-repeat;
+    }
 
-        &:last-child{
-             background: url(../images/charts/offer-status-default-last.png) no-repeat;
+    span{
+      margin-left: 100px;
+      padding: 20px;
+      border: 3px solid $grey-2;
+      border-radius: 5px;
+      display: block;
+      margin-bottom: 10px;
+
+      .heading-medium{
+        margin: 0;
+      }
+
+      &:before{
+        content: "";
+        position: absolute;
+        margin-left: -56px;
+        border: 18px solid transparent;
+        border-right: 18px solid $grey-2;
+      }
+    }
+
+    &.complete{
+      background: url(../images/charts/offer-status-tick.png) no-repeat;
+
+      &:last-child{
+        background: url(../images/charts/offer-status-tick-last.png) no-repeat;
+      }
+
+      span{
+        background: $grey-4;
+      }
+    }
+
+    &.waiting{
+      background: url(../images/charts/offer-status-wait.png) no-repeat;
+
+      &:last-child{
+        background: url(../images/charts/offer-status-wait-last.png) no-repeat;
+     }
+    }
+
+    &.processing{
+      background: url(../images/charts/offer-status-processing.png) no-repeat;
+
+      &:last-child{
+        background: url(../images/charts/offer-status-processing-last.png) no-repeat;
+      }
+
+      span{
+        background: $link-colour;
+        color: $white;
+
+        a{
+          color: $white;
         }
+      }
+    }
 
-        span{
-            margin-left: 100px;
-            padding: 20px;
-            border: 3px solid $grey-2;
-            border-radius: 5px;
-            display: block;
-            margin-bottom: 10px;
+    &.require-action{
+      background: url(../images/charts/offer-status-flag.png) no-repeat;
 
-            .heading-medium{
-                margin: 0;
-            }
+      &:last-child{
+        background: url(../images/charts/offer-status-flag-last.png) no-repeat;
+      }
 
-            &:before{
-                content: "";
-                position: absolute;
-                margin-left: -56px;
-                border: 18px solid transparent;
-                border-right: 18px solid $grey-2;
-            }
+      span{
+        background: $link-colour;
+        color: $white;
+
+        a{
+          color: $white;
         }
+      }
+    }
 
-        &.complete{
-            background: url(../images/charts/offer-status-tick.png) no-repeat;
+    &.successful{
+      background: url(../images/charts/offer-success-last.png) no-repeat;
+    }
 
-             &:last-child{
-                background: url(../images/charts/offer-status-tick-last.png) no-repeat;
-             }
-
-            span{
-                background: $grey-4;
-            }
-        }
-
-        &.waiting{
-            background: url(../images/charts/offer-status-wait.png) no-repeat;
-
-             &:last-child{
-                background: url(../images/charts/offer-status-wait-last.png) no-repeat;
-             }
-        }
-
-        &.processing{
-            background: url(../images/charts/offer-status-processing.png) no-repeat;
-
-             &:last-child{
-                background: url(../images/charts/offer-status-processing-last.png) no-repeat;
-             }
-
-            span{
-                background: $link-colour;
-                color: $white;
-
-                a{
-                    color: $white;
-                }
-            }
-        }
-
-        &.require-action{
-            background: url(../images/charts/offer-status-flag.png) no-repeat;
-
-             &:last-child{
-                background: url(../images/charts/offer-status-flag-last.png) no-repeat;
-             }
-
-            span{
-                background: $link-colour;
-                color: $white;
-
-                a{
-                    color: $white;
-                }
-            }
-        }
-
-        &.successful{
-            background: url(../images/charts/offer-success-last.png) no-repeat;
-        }
-
-        &.unsuccessful{
-            background: url(../images/charts/offer-unsuccessful-last.png) no-repeat;
-        }
+    &.unsuccessful{
+      background: url(../images/charts/offer-unsuccessful-last.png) no-repeat;
+    }
 
     }
 
-    &.setup-complete{
+  &.setup-complete{
 
-        >li{
-            background: none;
-            
-            span{
-                margin-left: 0;
+    >li{
+      background: none;
 
-                &:before{
-                    border: none;
-                }
-            }
+      span{
+        margin-left: 0;
 
+        &:before{
+          border: none;
         }
-
+      }
     }
+  }
 }
 
+/*----- Table style lists for assessor management----*/
 
-
- /*----- Table style lists for assessor management----*/
-
- %tabular-row{
-    display: block;
-    clear: both;
-    border-bottom: 1px solid $border-colour;
-    @extend .cf;
- }
+%tabular-row{
+  display: block;
+  clear: both;
+  border-bottom: 1px solid $border-colour;
+  @extend .cf;
+}
 
 %tabular-cell{
-    float:left;
-    box-sizing: border-box;
-    padding: 0.5em 0.5em 0 0.5em;
+  float:left;
+  box-sizing: border-box;
+  padding: 0.5em 0.5em 0 0.5em;
 }
 
 .tabular-list{
-    display: table;
-    width: 100%;
+  display: table;
+  width: 100%;
 
-    &__row-header{
-        
-        @extend %tabular-row;
-        
-        li{
-            @extend %tabular-cell;
-            font-weight: bold;
-            padding-bottom: 0.5em;
+  &__row-header{
 
-            /*&:first-child{
-                padding-left: 0;
-            }*/
-        }
+    @extend %tabular-row;
 
+    li{
+      @extend %tabular-cell;
+      font-weight: bold;
+      padding-bottom: 0.5em;
+
+      /*&:first-child{
+          padding-left: 0;
+      }*/
     }
 
-    &__row{
+  }
 
-        @extend %tabular-row;
+  &__row{
 
-        > li{
-            @extend %tabular-cell;
+    @extend %tabular-row;
 
-            /*&:first-child{
-                padding-left: 0;
-            }*/
-        }
+    > li{
+      @extend %tabular-cell;
+
+      /*&:first-child{
+          padding-left: 0;
+      }*/
+    }
+  }
+
+  &__row--internal{
+
+    @extend %tabular-row;
+    border-bottom: none;
+
+    > li{
+      @extend %tabular-cell;
+
+      /*&:first-child{
+          padding-left: 0;
+      }*/
     }
 
-    &__row--internal{
+  }
 
-        @extend %tabular-row;
-        border-bottom: none;
+  .width{
 
-        > li{
-            @extend %tabular-cell;
-
-            /*&:first-child{
-                padding-left: 0;
-            }*/
-        }
-
+    &-third{
+      width: 33%;
     }
+
+    &-two-thirds{
+      width: 66%;
+    }
+
+    &-quarter{
+      width: 25%;
+    }
+
+    &-half{
+      width: 50%;
+    }
+
+    &-full{
+      padding: 0;
+    }
+
+ }
+
+  @include media-down(mobile) {
 
     .width{
-        
-        &-third{
-            width: 33%;
-        }
 
-        &-two-thirds{
-            width: 66%;
-        }
-
-        &-quarter{
-            width: 25%;
-        }
-
-        &-half{
-            width: 50%; 
-        }
-        
-        &-full{
-            padding: 0;
-        }
-
+      &-third,
+      &-two-thirds,
+      &-quarter,
+      &-half{
+        width: 100%;
+        border: none;
+      }
     }
 
-    @include media-down(mobile) {
-
-        .width{
-            
-            &-third,
-            &-two-thirds,
-            &-quarter,
-            &-half{
-                width: 100%;
-                border: none;
-            }
-
-        }
-
-        &__row > li{
-            padding-left: 0;
-        }
-
+    &__row > li{
+      padding-left: 0;
     }
 
+  }
 
 }
-

@@ -2,25 +2,21 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
-import org.junit.Assert;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
-
-
-
-
+import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -51,19 +47,18 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         List<UserResource> users = service.findAll().getSuccessObject();
         assertEquals(2, users.size());
-        Assert.assertEquals(user1, users.get(0));
-        Assert.assertEquals(user2, users.get(1));
+        assertEquals(user1, users.get(0));
+        assertEquals(user2, users.get(1));
     }
 
     @Test
     public void findExistingUserByEmailShouldReturnUserResource() {
-        UserResource userResource = new UserResource();
-        userResource.setEmail("testemail@email.com");
+        UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
         setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
         UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
-        Assert.assertEquals(userResource, user);
+        assertEquals(userResource, user);
     }
 
     @Test
@@ -81,7 +76,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         String email = "";
         RestResult<UserResource> restResult = service.findUserByEmail(email);
         assertTrue(restResult.isFailure());
-        Assert.assertEquals(restResult.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(restResult.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -89,14 +84,15 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setLoggedInUser(null);
 
-        UserResource userResource = new UserResource();
-        userResource.setId(null);
-        userResource.setEmail("testemail@test.test");
-        userResource.setTitle("testTitle");
-        userResource.setFirstName("testFirstName");
-        userResource.setLastName("testLastName");
-        userResource.setPassword("testPassword");
-        userResource.setPhoneNumber("1234567890");
+        UserResource userResource = newUserResource()
+                .with(id(null))
+                .withEmail("testemail@test.test")
+                .withTitle("testTitle")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPassword("testPassword")
+                .withPhoneNumber("1234567890")
+                .build();
 
         Long organisationId = 1L;
 
@@ -111,7 +107,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 organisationId
         ).getSuccessObject();
 
-        Assert.assertEquals(userResource, receivedResource);
+        assertEquals(userResource, receivedResource);
     }
 
     @Test
@@ -126,18 +122,18 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource expected = new ProfileSkillsResource();
+        ProfileSkillsResource expected = newProfileSkillsResource().build();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", usersUrl, userId), ProfileSkillsResource.class, expected, OK);
 
         ProfileSkillsResource response = service.getProfileSkills(userId).getSuccessObjectOrThrowException();
-        Assert.assertEquals(expected, response);
+        assertEquals(expected, response);
     }
 
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = new ProfileSkillsResource();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
 
@@ -148,12 +144,12 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getProfileContract() {
         Long userId = 1L;
-        ProfileContractResource expected = new ProfileContractResource();
+        ProfileContractResource expected = newProfileContractResource().build();
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileContract", usersUrl, userId), ProfileContractResource.class, expected, OK);
 
         ProfileContractResource response = service.getProfileContract(userId).getSuccessObjectOrThrowException();
-        Assert.assertEquals(expected, response);
+        assertEquals(expected, response);
     }
 
 
@@ -170,7 +166,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void getUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = Arrays.asList(1,2).stream().map(i -> new AffiliationResource()).collect(Collectors.toList());
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", usersUrl, userId), affiliationResourceListType(), expected, OK);
 
@@ -181,11 +177,44 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateUserAffiliations() {
         Long userId = 1L;
-        List<AffiliationResource> expected = Arrays.asList(1,2).stream().map(i -> new AffiliationResource()).collect(Collectors.toList());
+        List<AffiliationResource> expected = newAffiliationResource().build(2);
 
         setupPutWithRestResultExpectations(format("%s/id/%s/updateUserAffiliations", usersUrl, userId), expected, OK);
 
         RestResult<Void> response = service.updateUserAffiliations(userId, expected);
         assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void getProfileAddress() {
+        Long userId = 1L;
+        UserProfileResource expected = newUserProfileResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", usersUrl, userId), UserProfileResource.class, expected, OK);
+
+        UserProfileResource response = service.getUserProfile(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void updateProfileAddress() {
+        Long userId = 1L;
+        UserProfileResource profileDetails = newUserProfileResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserProfile", usersUrl, userId), profileDetails, OK);
+
+        RestResult<Void> response = service.updateUserProfile(userId, profileDetails);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void getProfileStatus() {
+        Long userId = 1L;
+        UserProfileStatusResource expected = newUserProfileStatusResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", usersUrl, userId), UserProfileStatusResource.class, expected, OK);
+
+        UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
     }
 }

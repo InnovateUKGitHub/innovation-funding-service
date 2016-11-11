@@ -20,6 +20,7 @@ import java.util.Map;
 public class ProjectSpendProfileViewModel {
     private List<ObjectError> objectErrors;
     private Long projectId;
+    private Long applicationId;
     private Long organisationId;
     private String projectName;
     private String organisationName;
@@ -36,19 +37,21 @@ public class ProjectSpendProfileViewModel {
     private Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap;
     private Map<Long, CostCategoryResource> costCategoryResourceMap;
     private boolean submitted;
+    private boolean userPartOfThisOrganisation;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<Long, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
-                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research) {
+                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
         this.organisationName = organisationResource.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
+        this.applicationId = project.getApplication();
         this.summary = summary;
         this.table = table;
         this.markedAsComplete = markedAsComplete;
@@ -60,6 +63,7 @@ public class ProjectSpendProfileViewModel {
         this.costCategoryResourceMap = costCategoryResourceMap;
         this.research = research;
         this.submitted = submitted;
+        this.userPartOfThisOrganisation = userPartOfThisOrganisation;
     }
 
     public Long getProjectId() {
@@ -194,6 +198,14 @@ public class ProjectSpendProfileViewModel {
             return submitted;
     }
 
+    public boolean isUserPartOfThisOrganisation() {
+        return userPartOfThisOrganisation;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -204,8 +216,10 @@ public class ProjectSpendProfileViewModel {
 
         return new EqualsBuilder()
                 .append(submitted, that.submitted)
+                .append(userPartOfThisOrganisation, that.userPartOfThisOrganisation)
                 .append(objectErrors, that.objectErrors)
                 .append(projectId, that.projectId)
+                .append(applicationId, that.applicationId)
                 .append(organisationId, that.organisationId)
                 .append(projectName, that.projectName)
                 .append(organisationName, that.organisationName)
@@ -214,10 +228,13 @@ public class ProjectSpendProfileViewModel {
                 .append(summary, that.summary)
                 .append(table, that.table)
                 .append(markedAsComplete, that.markedAsComplete)
+                .append(research, that.research)
                 .append(categoryToActualTotal, that.categoryToActualTotal)
                 .append(totalForEachMonth, that.totalForEachMonth)
                 .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
                 .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
+                .append(costCategoryGroupMap, that.costCategoryGroupMap)
+                .append(costCategoryResourceMap, that.costCategoryResourceMap)
                 .isEquals();
     }
 
@@ -226,6 +243,7 @@ public class ProjectSpendProfileViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(objectErrors)
                 .append(projectId)
+                .append(applicationId)
                 .append(organisationId)
                 .append(projectName)
                 .append(organisationName)
@@ -234,11 +252,15 @@ public class ProjectSpendProfileViewModel {
                 .append(summary)
                 .append(table)
                 .append(markedAsComplete)
+                .append(research)
                 .append(categoryToActualTotal)
                 .append(totalForEachMonth)
                 .append(totalOfAllActualTotals)
                 .append(totalOfAllEligibleTotals)
+                .append(costCategoryGroupMap)
+                .append(costCategoryResourceMap)
                 .append(submitted)
+                .append(userPartOfThisOrganisation)
                 .toHashCode();
     }
 
@@ -247,6 +269,7 @@ public class ProjectSpendProfileViewModel {
         return new ToStringBuilder(this)
                 .append("objectErrors", objectErrors)
                 .append("projectId", projectId)
+                .append("applicationId", applicationId)
                 .append("organisationId", organisationId)
                 .append("projectName", projectName)
                 .append("organisationName", organisationName)
@@ -255,11 +278,15 @@ public class ProjectSpendProfileViewModel {
                 .append("summary", summary)
                 .append("table", table)
                 .append("markedAsComplete", markedAsComplete)
+                .append("research", research)
                 .append("categoryToActualTotal", categoryToActualTotal)
                 .append("totalForEachMonth", totalForEachMonth)
                 .append("totalOfAllActualTotals", totalOfAllActualTotals)
                 .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
+                .append("costCategoryGroupMap", costCategoryGroupMap)
+                .append("costCategoryResourceMap", costCategoryResourceMap)
                 .append("submitted", submitted)
+                .append("userPartOfThisOrganisation", userPartOfThisOrganisation)
                 .toString();
     }
 }

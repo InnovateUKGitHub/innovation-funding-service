@@ -72,12 +72,12 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((competitionName, competitionParticipantResource) -> setField("competitionName", competitionName, competitionParticipantResource), competitionNames);
     }
 
-    public CompetitionParticipantResourceBuilder withAssessmentStartDate(LocalDateTime... competitionStartDates) {
-        return withArray((competitionStartDate, competitionParticipantResource) -> setField("assessmentStartDate", competitionStartDate, competitionParticipantResource), competitionStartDates);
+    public CompetitionParticipantResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
+        return withArray((assessorAcceptsDate, competitionParticipantResource) -> setField("assessorAcceptsDate", assessorAcceptsDate, competitionParticipantResource), assessorAcceptsDates);
     }
 
-    public CompetitionParticipantResourceBuilder withAssessmentEndDate(LocalDateTime... competitionEndDates) {
-        return withArray((competitionEndDate, competitionParticipantResource) -> setField("assessmentEndDate", competitionEndDate, competitionParticipantResource), competitionEndDates);
+    public CompetitionParticipantResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
+        return withArray((assessorDeadlineDate, competitionParticipantResource) -> setField("assessorDeadlineDate", assessorDeadlineDate, competitionParticipantResource), assessorDeadlineDates);
     }
 
     @Override

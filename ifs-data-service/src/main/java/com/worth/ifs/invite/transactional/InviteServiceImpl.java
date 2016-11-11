@@ -9,6 +9,8 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -96,6 +99,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private FormInputResponseRepository formInputResponseRepository;
 
     LocalValidatorFactoryBean validator;
 
@@ -200,7 +206,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            return serviceFailure(badRequestError("The Invite is not valid"));
+            return serviceFailure(PROJECT_INVITE_INVALID);
         }
 
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
@@ -305,12 +311,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                return serviceFailure(notFoundError(ApplicationInvite.class));
             }
 
+            ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
+            Long applicationId = applicationInvite.getTarget().getId();
+
             List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
 
-            setMarkedAsCompleteQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
-            setAssignedQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
-            removeProcessRolesOnApplication(processRoles);
+            setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
+            setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
+            setAssignedQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
 
+            removeProcessRolesOnApplication(processRoles);
             applicationInviteRepository.delete(applicationInvite);
 
             return serviceSuccess();
@@ -489,29 +499,41 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     }
 
-    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationInvite.getTarget().getId(), processRole.getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
             if(!questionStatuses.isEmpty()) {
                 questionStatuses.forEach(questionStatus ->
-                        questionStatus.setMarkedAsCompleteBy(applicationInvite.getTarget().getLeadApplicantProcessRole())
+                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole)
                 );
                 questionStatusRepository.save(questionStatuses);
             }
         });
     }
 
-    private void setAssignedQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+    private void setAssignedQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeId(applicationInvite.getTarget().getId(), processRole.getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeIdOrAssignedById(applicationId, processRole.getId(), processRole.getId());
             if (!questionStatuses.isEmpty()) {
                 questionStatuses.forEach(questionStatus ->
                         questionStatus.setAssignee(
-                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
-                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                leadApplicantProcessRole,
+                                leadApplicantProcessRole,
                                 LocalDateTime.now())
                 );
                 questionStatusRepository.save(questionStatuses);
+            }
+        });
+    }
+
+    private void setAssignedQuestionsToLeadApplicant(ProcessRole leadApplicantProcessRole, List<ProcessRole> processRoles) {
+        processRoles.forEach(processRole -> {
+            List<FormInputResponse> collaboratorQuestions = formInputResponseRepository.findByUpdatedById(processRole.getId());
+            if (!collaboratorQuestions.isEmpty()) {
+                collaboratorQuestions.forEach(collaboratorQuestion -> {
+                    collaboratorQuestion.setUpdatedBy(leadApplicantProcessRole);
+                    formInputResponseRepository.save(collaboratorQuestion);
+                });
             }
         });
     }

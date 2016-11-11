@@ -163,8 +163,8 @@
 
 
 <!-- ======== Assessment - reject assessment modal ======= -->
-<div th:fragment="assessment-reject-assesment-modal (assessmentId)">
-    <div class="reject-assesment-modal" role="dialog" aria-hidden="true">
+<div th:fragment="assessment-reject-assessment-modal (assessmentId)">
+    <div class="reject-assessment-modal" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
         <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" th:remove="tag" />
@@ -217,6 +217,21 @@
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
     </form>
+</div>
+
+
+<!-- ======== Confirmation assessment submissions ======= -->
+<div th:fragment="modal-submit-assessments">
+    <div class="modal-submit-assessments" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+        <h2 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h2>
+        <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
+        <div>
+            <button class="button large" type="submit">Yes, I want to submit the applications</button>
+            <button class="js-close button buttonlink large" type="button">Cancel</button>
+        </div>
+    </div>
 </div>
 
 

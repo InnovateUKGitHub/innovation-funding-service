@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Terms of contract</h1>
@@ -26,7 +26,15 @@
                     </ul>
                 </div>
 
+                <p>Please read through all of the terms of service before agreeing.</p>
+
                 <div ifs:utext="${model.text}" />
+
+                <ul class="list-bullet extra-margin">
+                    <li th:each="annex : ${T(com.worth.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter).values()}">
+                        <a th:href="@{/profile/terms/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
+                    </li>
+                </ul>
 
                 <p class="form-hint">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
@@ -41,7 +49,7 @@
                             </legend>
                             <label class="block-label">
                                 <input data-required-errormessage="Please agree to the terms and conditions" required="required" type="checkbox" th:field="*{agreesToTerms}" />
-                                I agree to the terms of contract for becoming an assessor
+                                I agree to and sign the terms of contract for becoming an assessor
                             </label>
                         </fieldset>
                     </div>
@@ -49,9 +57,9 @@
                     <button class="button button-large extra-margin" type="submit">Save and continue</button>
                 </form>
 
-                <p class="extra-margin" th:text="|You agreed to the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+                <p class="extra-margin" th:text="|You signed the contract on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                     <span class="icon icon-important"></span>
-                    You agreed to the contract on 1 January 1970.
+                    You signed the contract on 1 January 1970.
                 </p>
 
                 <a class="button-secondary app-submit-btn" th:href="@{/assessor/dashboard}" th:if="${model.currentAgreement}">Back to assessor dashboard</a>

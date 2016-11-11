@@ -303,12 +303,21 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionMapper.mapToResource(questionUpdated));
     }
 
-
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
-        return getAssessment(assessmentId).andOnSuccess(assessment ->
+        return find(getAssessment(assessmentId)).andOnSuccess(assessment ->
                 sectionService.getByCompetitionIdVisibleForAssessment(assessment.getParticipant().getApplication().getCompetition().getId())
                         .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
+    }
+
+    @Override
+    public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
+        return find(getAssessment(assessmentId), getQuestion(questionId)).andOnSuccess((assessment, question) -> {
+            if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId())) {
+                return serviceSuccess(questionMapper.mapToResource(question));
+            }
+            return serviceFailure(notFoundError(Question.class, questionId, assessmentId));
+        });
     }
 
     private List<QuestionResource> questionsOfType(Section section, QuestionType type) {
@@ -451,8 +460,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 .collect(Collectors.toList());
     }
 
-    private ServiceResult<Assessment> getAssessment(Long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
+    private Supplier<ServiceResult<Assessment>> getAssessment(Long assessmentId) {
+        return () -> find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
     private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {

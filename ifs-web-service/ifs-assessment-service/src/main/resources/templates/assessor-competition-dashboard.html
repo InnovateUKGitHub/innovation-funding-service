@@ -5,12 +5,13 @@
 </head>
 
     <body th:with="context='assessment'" class="assessor-comp-dashboard">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
@@ -20,26 +21,73 @@
                 <div class="column-two-thirds competition details">
                     <ul class="no-bullet">
                         <li><strong>Competition:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
-                        <li><strong>Funding body:</strong> <span th:text="${model.fundingBody}" th:remove="tag"/></li>
+                        <li><strong>Innovation Lead:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
+                        <li><strong>Accept applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.acceptDeadline, 'hh:mma'))} ${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
+                        <li><strong>Submit applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.submitDeadline, 'hh:mma'))} ${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
                     </ul>
                 </div>
             </div>
 
             <div class="my-applications">
-                <div class="in-progress"  th:unless="${#lists.isEmpty(model.applications)}">
-                    <h2 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.applications)}" />)</h2>
-                    <form>
-                        <ul class="boxed-list bulk-select">
-                            <li th:each="application : ${model.applications}">
+                <div class="in-progress"  th:unless="${#lists.isEmpty(model.outstanding)}">
+                    <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
+                    <form class="bulk-select" action="" method="post">
+                        <ul class="boxed-list">
+                            <li th:each="application : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
-                                        <h3 class="heading-medium"><a th:href="@{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
+                                        <h3 class="heading-medium"><a th:href="${application.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
                                         <p th:text="${application.leadOrganisation}" />
                                     </div>
+                                    <div class="column-assessment-status navigation-right">
+                                        <div th:if="${application.pending}" class="application-status pending empty">
+                                            <p>Pending</p>
+                                            <p class="application-listing_pending">
+                                                <a th:href="${assignmentUrl}">accept / reject assessment</a>
+                                            </p>
+                                        </div>
+                                        <div th:if="${application.accepted or application.open}" class="application-status open empty">
+                                            <p>Open</p>
+                                        </div>
+                                        <div th:if="${application.readyToSubmit}" class="application-status assessed">
+                                            <p>Assessed</p>
+                                        </div>
+                                    </div>
                                 </div>
+                                <label th:if="${application.readyToSubmit}">
+                                    <span class="visuallyhidden">Mark assessment for submission</span>
+                                    <input class="assessment-submit-checkbox" type="checkbox" />
+                                </label>
                             </li>
                         </ul>
+
+                        <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
+
+                        <div class="alignright" th:if="${model.submitVisible}">
+                            <button class="button large button-pull-right no-margin extra-margin" data-js-modal="modal-submit-assessments" type="submit">Submit assessments</button>
+                        </div>
+
+                        <div th:include="fragments/assessment :: modal-submit-assessments" th:remove="tag"/>
                     </form>
+                </div>
+
+                <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
+                    <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                    <ul class="boxed-list bulk-select">
+                        <li th:each="application : ${model.submitted}">
+                            <div class="grid-row">
+                                <div class="column-assessment-details">
+                                    <h4 class="heading-medium" th:text="${application.displayLabel}" />
+                                    <p th:text="${application.leadOrganisation}" />
+                                </div>
+                                <div class="column-assessment-status navigation-right">
+                                    <div class="application-status submitted">
+                                        <p>Submitted</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
 

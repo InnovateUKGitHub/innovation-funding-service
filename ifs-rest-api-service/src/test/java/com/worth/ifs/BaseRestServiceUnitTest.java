@@ -1,7 +1,8 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.security.authentication.token.Authentication;
-import com.worth.ifs.commons.service.*;
+import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
+import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,9 +14,16 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.ExecutionException;
+
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.*;
@@ -27,8 +35,7 @@ import static org.springframework.http.HttpStatus.OK;
  * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
  * that the REST services use to exchange data with the "data" layer.
  */
-@RunWith(MockitoJUnitRunner.class)
-public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> {
+public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
 
     @Mock
     protected RestTemplate mockRestTemplate;
@@ -64,6 +71,16 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         service.setRestTemplateAdaptor(adaptor);
         service.setAnonymousRestTemplateAdaptor(anonymousUserRestTemplateAdaptor);
         setLoggedInUser(VALID_AUTH_TOKEN);
+    }
+
+    private <T> ListenableFuture<ResponseEntity<T>> getAsyncResponseFromEntity(ResponseEntity<T> response) {
+        ListenableFuture<ResponseEntity<T>> asyncResponse = mock(ListenableFuture.class);
+        try {
+            when(asyncResponse.get()).thenReturn(response);
+        } catch (InterruptedException | ExecutionException e) {
+            //won't ever get thrown as this is just a mock.
+        }
+        return asyncResponse;
     }
 
     protected void setLoggedInUser(String authToken) {
@@ -114,6 +131,17 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return httpEntityForRestCallWithoutAuthToken("");
     }
 
+    protected <T> ResponseEntity<T> setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
+        return setupGetWithRestResultAsyncExpectations(nonBaseUrl, responseType, responseBody, OK);
+    }
+
+    protected <T> ResponseEntity<T> setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        ListenableFuture<ResponseEntity<T>> asyncResponse = getAsyncResponseFromEntity(response);
+        when(mockAsyncRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(asyncResponse);
+        return response;
+    }
+
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
         return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
@@ -123,7 +151,6 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
-        System.out.println("HEY! mockRestTemplate is null? " + (mockRestTemplate == null) + " and dataUrl is" + dataUrl);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
         return response;
     }
@@ -170,6 +197,10 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCallAnonymous(requestBody), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPostWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody) {
+        return setupPostWithRestResultExpectations(nonBaseUrl, responseType, requestBody, responseBody, HttpStatus.OK);
     }
 
     protected <T> ResponseEntity<T> setupPostWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {

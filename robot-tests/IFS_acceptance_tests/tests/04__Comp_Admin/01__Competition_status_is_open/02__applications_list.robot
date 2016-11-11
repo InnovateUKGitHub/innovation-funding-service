@@ -8,12 +8,7 @@ Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    The user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -27,7 +22,7 @@ Competitions admin should be able to see the list of applications
 The correct columns show for the application list table
     [Documentation]    INFUND-2135: listing of applications for an open competition, INFUND-3063
     [Tags]    HappyPath
-    Then the user should see the text in the page    Application no.
+    Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead name
     And the user should see the text in the page    Lead
@@ -42,7 +37,7 @@ The correct number of applications shows in the table header
 The applications can be sorted by application number
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    HappyPath
-    When the application list is sorted by    Application no.
+    When the application list is sorted by    Application number
     Then the applications should be sorted by column    1
 
 The applications can be sorted by project title

@@ -20,12 +20,18 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin">Terms of contract</h1>
+        <h1 class="heading-xlarge no-margin">Terms of contract</h1>
     </div>
 
 	<p>Please read through all of the terms of service before agreeing.</p>
 
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-terms" th:remove="tag" />
+
+	<ul class="list-bullet extra-margin">
+		<li><a href="/prototypes/5645-annex?page=a">Annex A</a></li>
+		<li><a href="/prototypes/5645-annex?page=b">Annex B</a></li>
+		<li><a href="/prototypes/5645-annex?page=c">Annex C</a></li>
+	</ul>
 
 	<p class="form-hint extra-margin">
 		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.
@@ -40,7 +46,7 @@
 			<div class="form-block">
 				<label class="block-label" for="confirm-assessor-terms">
 					<input id="confirm-assessor-terms" type="checkbox" value="" />
-					I agree to the terms of contract for becoming an assessor
+					I agree to and sign the terms of contract for becoming an assessor
 				</label>
 			</div>
 

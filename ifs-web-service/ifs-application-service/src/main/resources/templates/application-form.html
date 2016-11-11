@@ -62,12 +62,12 @@
             <div th:unless="${allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
-            <div th:if="${(currentSection != null) and
+            <div th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
             (currentSection.getName() != null) and
             (#strings.equals(currentSection.getName(), 'Your finances'))
             and !completedSections?.contains(currentSection.getId())}">
-                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
                 <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
             </div>
 
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">

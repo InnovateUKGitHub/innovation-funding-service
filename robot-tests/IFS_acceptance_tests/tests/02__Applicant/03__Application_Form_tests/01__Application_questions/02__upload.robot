@@ -1,16 +1,13 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../../resources/defaultResources.robot
+# Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
+# If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
+# But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
 ${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download
@@ -26,10 +23,10 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    the user can see the option to upload a file on the question    link=5. Technical approach
-    the user can see the option to upload a file on the question    link=6. Innovation
+    the user can see the option to upload a file on the question       link=5. Technical approach
+    the user can see the option to upload a file on the question       link=6. Innovation
     the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question    link=8. Project team
+    the user can see the option to upload a file on the question       link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
     the user cannot see the option to upload a file on the question    link=10. Adding value
 
@@ -52,12 +49,12 @@ Non pdf uploads not allowed
     And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file to the 'technical approach' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
-    [Teardown]    Logout as user
+
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -76,7 +73,7 @@ Lead applicant can view a file
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -101,7 +98,7 @@ Questions can be assigned with appendices
     [Documentation]    INFUND-832
     ...    INFUND-409
     [Tags]    SmokeTest
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -115,7 +112,7 @@ Questions can be assigned with appendices
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]    SmokeTest
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -148,7 +145,7 @@ Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
     [Tags]    Pending
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     #TODO INFUND-4008, review this failing test case when 4008 is completed
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf

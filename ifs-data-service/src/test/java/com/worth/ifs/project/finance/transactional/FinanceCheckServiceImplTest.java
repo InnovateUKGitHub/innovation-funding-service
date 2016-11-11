@@ -12,7 +12,6 @@ import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
 import com.worth.ifs.project.finance.domain.FinanceCheckProcess;
 import com.worth.ifs.project.finance.domain.SpendProfile;
-import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -24,7 +23,6 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.resource.State;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
@@ -44,14 +42,14 @@ import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
 import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static com.worth.ifs.project.builder.CostResourceBuilder.newCostResource;
-import static com.worth.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
-import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
+import static com.worth.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
 import static com.worth.ifs.project.finance.builder.FinanceCheckProcessBuilder.newFinanceCheckProcess;
+import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -63,9 +61,6 @@ import static org.mockito.Mockito.when;
 
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
-
-    @Mock
-    private FinanceCheckRepository financeCheckRepositoryMock;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {

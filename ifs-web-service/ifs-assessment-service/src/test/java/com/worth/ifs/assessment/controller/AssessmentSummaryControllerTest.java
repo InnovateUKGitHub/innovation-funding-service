@@ -101,8 +101,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         competition = newCompetitionResource()
                 .with(id(competitionId))
-                .withAssessmentStartDate(now().minusDays(2))
-                .withAssessmentEndDate(now().plusDays(4))
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(4))
                 .build();
         when(competitionService.getById(competitionId)).thenReturn(competition);
 

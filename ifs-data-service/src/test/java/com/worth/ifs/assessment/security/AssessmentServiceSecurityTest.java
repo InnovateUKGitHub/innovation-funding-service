@@ -1,11 +1,12 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
@@ -56,27 +57,37 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         classUnderTest.findByUserAndCompetition(userId, competitionId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test
     public void recommend() {
-        final Long assessmentId = 1L;
-        ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
+        Long assessmentId = 1L;
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> classUnderTest.recommend(assessmentId, outcome),
+                () -> classUnderTest.recommend(assessmentId, assessmentFundingDecision),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void rejectInvitation() {
-        final Long assessmentId = 1L;
-        ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
+        Long assessmentId = 1L;
+        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> classUnderTest.rejectInvitation(assessmentId, outcome),
+                () -> classUnderTest.rejectInvitation(assessmentId, applicationRejection),
+                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void accept() {
+        Long assessmentId = 1L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvitation(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -93,12 +104,17 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, ProcessOutcomeResource processOutcome) {
+        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ProcessOutcomeResource processOutcome) {
+        public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ApplicationRejectionResource applicationRejection) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
             return null;
         }
     }

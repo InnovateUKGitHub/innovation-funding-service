@@ -58,8 +58,8 @@ include::{snippets}/user/update-password/curl-request.adoc[]
 include::{snippets}/user/update-password-token-not-found/http-response.adoc[]
 
 == Verify email
-==== Success case
-==== Request
+=== Success case
+=== Request
 include::{snippets}/user/verify-email/http-request.adoc[]
 include::{snippets}/user/verify-email/path-parameters.adoc[]
 
@@ -69,41 +69,103 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
 
+== Retrieve Profile Contract
+=== Success case
+=== Request
+include::{snippets}/user/get-profile-contract/http-request.adoc[]
+include::{snippets}/user/get-profile-contract/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/user/get-profile-contract/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/user/get-profile-contract/curl-request.adoc[]
+
+== Update Profile Contract
+=== Success case
+=== Request
+include::{snippets}/user/update-profile-contract/http-request.adoc[]
+include::{snippets}/user/update-profile-contract/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/user/update-profile-contract/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/user/update-profile-contract/curl-request.adoc[]
+
+== Retrieve Profile Skills
+=== Success case
+=== Request
+include::{snippets}/user/get-profile-skills/http-request.adoc[]
+include::{snippets}/user/get-profile-skills/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/user/get-profile-skills/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/user/get-profile-skills/curl-request.adoc[]
+
 == Update Profile Skills
-==== Success case
-==== Request
+=== Success case
+=== Request
 include::{snippets}/user/update-profile-skills/http-request.adoc[]
 include::{snippets}/user/update-profile-skills/path-parameters.adoc[]
 include::{snippets}/user/update-profile-skills/request-fields.adoc[]
 
-==== Response
+=== Response
 include::{snippets}/user/update-profile-skills/http-response.adoc[]
 
-==== Curl Example
+=== Curl Example
 include::{snippets}/user/update-profile-skills/curl-request.adoc[]
 
 == Retrieve user affiliations
-==== Success case
-==== Request
+=== Success case
+=== Request
 include::{snippets}/user/get-user-affiliations/http-request.adoc[]
 include::{snippets}/user/get-user-affiliations/path-parameters.adoc[]
 
-==== Response
+=== Response
 include::{snippets}/user/get-user-affiliations/http-response.adoc[]
 include::{snippets}/user/get-user-affiliations/response-fields.adoc[]
 
-==== Curl Example
+=== Curl Example
 include::{snippets}/user/get-user-affiliations/curl-request.adoc[]
 
 == Update user affiliations
-==== Success case
-==== Request
+=== Success case
+=== Request
 include::{snippets}/user/update-user-affiliations/http-request.adoc[]
 include::{snippets}/user/update-user-affiliations/path-parameters.adoc[]
 include::{snippets}/user/update-user-affiliations/request-fields.adoc[]
 
-==== Response
+=== Response
 include::{snippets}/user/update-user-affiliations/http-response.adoc[]
 
-==== Curl Example
+=== Curl Example
 include::{snippets}/user/update-user-affiliations/curl-request.adoc[]
+
+== Retrieve user details
+=== Success case
+=== Request
+include::{snippets}/user/get-profile-details/http-request.adoc[]
+include::{snippets}/user/get-profile-details/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/user/get-profile-details/http-response.adoc[]
+include::{snippets}/user/get-profile-details/response-fields.adoc[]
+
+=== Curl Example
+include::{snippets}/user/get-profile-details/curl-request.adoc[]
+
+== Update user details
+=== Success case
+=== Request
+include::{snippets}/user/update-profile-details/http-request.adoc[]
+include::{snippets}/user/update-profile-details/path-parameters.adoc[]
+include::{snippets}/user/update-profile-details/request-fields.adoc[]
+
+=== Response
+include::{snippets}/user/update-profile-details/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/user/update-profile-details/curl-request.adoc[]

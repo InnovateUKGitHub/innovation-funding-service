@@ -27,7 +27,7 @@ public class ContractResourceBuilder extends BaseBuilder<ContractResource, Contr
     }
 
     public ContractResourceBuilder withId(Long... ids) {
-        return withArray((id, contract) -> setField("id", id, contract) , ids);
+        return withArray((id, contract) -> setField("id", id, contract), ids);
     }
 
     public ContractResourceBuilder withCurrent(Boolean... currents) {
@@ -38,16 +38,16 @@ public class ContractResourceBuilder extends BaseBuilder<ContractResource, Contr
         return withArray((text, contract) -> setField("text", text, contract), texts);
     }
 
-    public ContractResourceBuilder withAnnexOne(String... annexOnes) {
-        return withArray((annexOne, contract) -> setField("annexOne", annexOne, contract), annexOnes);
+    public ContractResourceBuilder withAnnexA(String... annexAs) {
+        return withArray((annexA, contract) -> setField("annexA", annexA, contract), annexAs);
     }
 
-    public ContractResourceBuilder withAnnexTwo(String... annexTwos) {
-        return withArray((annexTwo, contract) -> setField("annexTwo", annexTwo, contract), annexTwos);
+    public ContractResourceBuilder withAnnexB(String... annexBs) {
+        return withArray((annexB, contract) -> setField("annexB", annexB, contract), annexBs);
     }
 
-    public ContractResourceBuilder withAnnexThree(String... annexThrees) {
-        return withArray((annexThree, contract) -> setField("annexThree", annexThree, contract), annexThrees);
+    public ContractResourceBuilder withAnnexC(String... annexCs) {
+        return withArray((annexC, contract) -> setField("annexC", annexC, contract), annexCs);
     }
 
     @Override

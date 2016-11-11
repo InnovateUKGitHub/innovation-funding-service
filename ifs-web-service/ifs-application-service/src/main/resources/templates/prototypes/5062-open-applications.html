@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -31,17 +31,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Competition open'})" th:remove="tag" />
-
-	
-	<h2 class="heading-large">All applications</h2>
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'All applications'}, ${'competition open'})" th:remove="tag" />
 
 			<section class="boxed">
-				
+
 				<div class="grid-row">
 					<div class="column-one">
 				 		<p><span class="heading-medium">30th March 2016</span> <br />Application deadline</p>
@@ -53,16 +50,16 @@
 				 	<div class="column-quarter">
 				 		<p><span class="heading-large">22</span> total number of applications</p>
 				 	</div>
-				 	
+
 				 	<div class="column-quarter">
 				 		<p><span class="heading-large">12</span> applications started</p>
 				 	</div>
-					
+
 					<div class="column-quarter">
 					 	<p><span class="heading-large">6</span> applications in progress <br />(Beyond 50%)</p>
 					</div>
-					
-					<div class="column-quarter"> 	
+
+					<div class="column-quarter">
 					 	<p><span class="heading-large">4</span> applications submitted</p>
 					</div>
 
@@ -72,22 +69,22 @@
 
 
 
-		
-		
+
+
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		
-	
-		
+
+
+
 
 			<h2 class="heading-large" id="current-assessors">Application list</h2>
-			
+
 			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='openApplications'" th:remove="tag" />
-			
+
 			<div class="table-overflow">
 				<table id="application-list">
 					<thead>
 						<tr>
-							<th scope="col">Application no</th>
+							<th scope="col">Application number</th>
 							<th scope="col">Project title</th>
 							<th scope="col">Lead</th>
 							<th scope="col">Area</th>
@@ -96,9 +93,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						
+
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194731</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194731</a></td>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
 							<td>HVM</td>
@@ -107,7 +104,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194732</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194732</a></td>
 							<td>AI in learning</td>
 							<td>BBC</td>
 							<td>HVM</td>
@@ -116,7 +113,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194733</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194733</a></td>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
 							<td>HVM</td>
@@ -125,7 +122,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194734</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194734</a></td>
 							<td>Robots that learn</td>
 							<td>Kingfisher</td>
 							<td>HVM</td>
@@ -134,7 +131,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194735</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194735</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -143,7 +140,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194736</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194736</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -152,7 +149,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194737</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194737</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -161,7 +158,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194738</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194738</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -170,7 +167,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194739</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194739</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -179,7 +176,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194740</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194740</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -188,7 +185,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194741</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194741</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -197,7 +194,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194742</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194742</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -206,7 +203,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194743</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194743</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -215,7 +212,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194744</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194744</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -224,7 +221,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194745</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194745</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -233,7 +230,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194746</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194746</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -242,7 +239,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194747</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194747</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -251,7 +248,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194748</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194748</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -260,7 +257,7 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194749</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194749</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
@@ -269,20 +266,20 @@
 						</tr>
 
 						<tr class="filtered-result">
-							<td><a href="/prototypes/1968-admin-readonly-application">194750</a></td>
+							<td><a href="/prototypes/1968-admin-readonly-application?comp=Open">194750</a></td>
 							<td>Example application</td>
 							<td>Example lead</td>
 							<td>HVM</td>
 							<td>Started</td>
-							<td class="alignright">10</td> 
+							<td class="alignright">10</td>
 						</tr>
 
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
-			
+
 				<ul class="pagination">
 				    <li class="next">
 				        <a href="#" rel="next" title="Navigate to next part">
@@ -291,12 +288,12 @@
 				        </a>
 				    </li>
 				</ul>
-			
+
 			</div>
-	
 
 
-	
+
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

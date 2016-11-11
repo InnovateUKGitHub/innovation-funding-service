@@ -7,10 +7,12 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.user.builder.RoleResourceBuilder;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
@@ -30,6 +32,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 
 /**
  * Tests around the security rules defining who can upload files to a response to a Question in the Application Form
@@ -101,6 +104,22 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         when(roleRepositoryMock.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()))).thenReturn(emptyList());
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
         verify(roleRepositoryMock).findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+    }
+
+    @Test
+    public void testCompAdminCanDownloadFilesInResponses() {
+        UserResource user = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+
+        assertTrue(fileUploadRules.compAdminCanDownloadFilesInResponses(fileEntry, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanDownloadFilesInResponses() {
+        UserResource user = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+
+        assertTrue(fileUploadRules.projectFinanceUserCanDownloadFilesInResponses(fileEntry, user));
     }
 
 }

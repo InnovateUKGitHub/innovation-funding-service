@@ -1,5 +1,7 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -37,12 +39,17 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Void> recommend(Long id, ProcessOutcomeResource processOutcome) {
-        return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), processOutcome, Void.class);
+    public RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), assessmentFundingDecision, Void.class);
     }
 
     @Override
-    public RestResult<Void> rejectInvitation(Long id, ProcessOutcomeResource processOutcome) {
-        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), processOutcome, Void.class);
+    public RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection) {
+        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), applicationRejection, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvitation(Long id) {
+        return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
     }
 }

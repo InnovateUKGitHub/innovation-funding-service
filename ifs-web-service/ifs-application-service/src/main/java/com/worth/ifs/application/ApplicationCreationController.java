@@ -1,6 +1,8 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.registration.AcceptInviteController;
 import com.worth.ifs.registration.OrganisationCreationController;
 import com.worth.ifs.registration.RegistrationController;
@@ -10,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,17 +28,18 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/application/create")
-public class ApplicationCreationController extends AbstractApplicationController {
+public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String USER_ID = "userId";
     private static final String APPLICATION_ID = "applicationId";
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
-    Validator validator;
 
     @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
+    private ApplicationService applicationService;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
 
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,

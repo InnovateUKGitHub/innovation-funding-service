@@ -1,18 +1,19 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
+import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -37,7 +38,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
     @Test
     public void getById() throws Exception {
-        AssessmentResource expected = new AssessmentResource();
+        AssessmentResource expected = newAssessmentResource().build();
 
         Long assessmentId = 1L;
 
@@ -48,7 +49,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
     @Test
     public void getByUserAndCompetition() throws Exception {
-        List<AssessmentResource> expected = Arrays.asList(1,2,3).stream().map(i -> new AssessmentResource()).collect(Collectors.toList());
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
 
         Long userId = 1L;
         Long competitionId = 2L;
@@ -62,9 +63,9 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void recommend() throws Exception {
         Long assessmentId = 1L;
 
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), processOutcome, OK);
-        RestResult<Void> response = service.recommend(assessmentId, processOutcome);
+        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecision, OK);
+        RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecision);
         assertTrue(response.isSuccess());
     }
 
@@ -72,9 +73,18 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
 
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId), processOutcome, OK);
-        RestResult<Void> response = service.rejectInvitation(assessmentId, processOutcome);
+        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId), applicationRejection, OK);
+        RestResult<Void> response = service.rejectInvitation(assessmentId, applicationRejection);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 1L;
+
+        setupPutWithRestResultExpectations(format("%s/%s/acceptInvitation", assessmentRestURL, assessmentId), null, OK);
+        RestResult<Void> response = service.acceptInvitation(assessmentId);
         assertTrue(response.isSuccess());
     }
 }

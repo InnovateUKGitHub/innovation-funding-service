@@ -1,8 +1,9 @@
 package com.worth.ifs.competition.resource;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CompetitionSetupSectionTest {
 
@@ -52,15 +53,6 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathAssessors() {
-		String path = "assessors";
-		
-		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
-		
-		assertEquals(CompetitionSetupSection.ASSESSORS, result);
-	}
-	
-	@Test
 	public void testFromPathApplication() {
 		String path = "application";
 		
@@ -68,14 +60,4 @@ public class CompetitionSetupSectionTest {
 		
 		assertEquals(CompetitionSetupSection.APPLICATION_FORM, result);
 	}
-	
-	@Test
-	public void testFromPathFinance() {
-		String path = "finance";
-		
-		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
-		
-		assertEquals(CompetitionSetupSection.FINANCE, result);
-	}
-
 }

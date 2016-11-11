@@ -1,7 +1,7 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -78,15 +78,20 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            if (project.getDocumentsSubmittedDate() != null) {
-                return COMPLETE;
-            } else {
-                return PENDING;
-            }
-        } else {
+
+        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+            return COMPLETE;
+        }
+
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
+            return PENDING;
+        }
+
+        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
             return ACTION_REQUIRED;
         }
+
+        return PENDING;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -104,22 +109,21 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
+            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
         } else {
             return NOT_STARTED;
         }
 
     }
 
-    protected ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
+    protected ProjectActivityStates createBankDetailStatus(final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
-            Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
-            if (!isSeekingFunding) {
-                return NOT_REQUIRED;
-            } else {
+            if (COMPLETE.equals(financeContactStatus)) {
                 return ACTION_REQUIRED;
+            } else {
+                return NOT_STARTED;
             }
         }
     }

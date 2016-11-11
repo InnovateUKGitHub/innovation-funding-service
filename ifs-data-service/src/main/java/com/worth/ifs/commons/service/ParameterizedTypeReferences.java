@@ -5,6 +5,7 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.category.resource.CategoryResource;
@@ -30,6 +31,7 @@ import com.worth.ifs.user.resource.*;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -54,6 +56,12 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<String>> stringsListType() {
         return new ParameterizedTypeReference<List<String>>() {};
     }
+
+
+    public static ParameterizedTypeReference<Map<Long, Set<Long>>> mapOfLongToLongsSetType() {
+        return new ParameterizedTypeReference<Map<Long, Set<Long>>>() {};
+    }
+
 
     /**
      * IFS types
@@ -189,5 +197,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
         return new ParameterizedTypeReference<List<EthnicityResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {
+        return new ParameterizedTypeReference<List<SectionResource>>() {};
     }
 }

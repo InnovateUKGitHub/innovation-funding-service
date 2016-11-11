@@ -5,7 +5,7 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
@@ -38,10 +38,7 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -51,7 +48,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -383,6 +380,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -400,43 +398,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWithExistingFinanceContactChosenForSameOrganisation() {
-
-        Project project = newProject().withId(123L).build();
-        Organisation organisation = newOrganisation().withId(5L).build();
-
-        User newFinanceContactUser = newUser().withId(7L).build();
-        newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
-
-        User existingFinanceContactUser = newUser().withId(9999L).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-
-        List<ProjectUser> existingFinanceContactForOrganisation = simpleFilter(project.getProjectUsers(), projectUser ->
-                projectUser.getOrganisation().equals(organisation) &&
-                        projectUser.getProcess().equals(project) &&
-                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
-
-        assertEquals(1, existingFinanceContactForOrganisation.size());
-
-        setLoggedInUser(newUserResource().withId(existingFinanceContactUser.getId()).build());
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
-
-        assertTrue(updateResult.isSuccess());
-
-        List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
-                projectUser.getOrganisation().equals(organisation) &&
-                        projectUser.getUser().equals(newFinanceContactUser) &&
-                        projectUser.getProcess().equals(project) &&
-                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
-
-        assertEquals(1, foundFinanceContacts.size());
-    }
-
-    @Test
     public void testUpdateFinanceContactButUserIsNotExistingPartner() {
 
         Project project = newProject().withId(123L).build();
@@ -445,6 +406,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
@@ -465,6 +427,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
 
         Organisation organisation = newOrganisation().withId(5L).build();
+        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
 
@@ -472,6 +436,35 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+    }
+
+    @Test
+    public void testUpdateFinanceContactAllowedWhenFinanceContactAlreadySet() {
+
+        User anotherUser = newUser().build();
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
+
+        Organisation organisation = newOrganisation().build();
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+
+        newProjectUser().
+                withOrganisation(organisation).
+                withUser(user, anotherUser).
+                withProject(existingProject).
+                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
+
+        assertTrue(updateResult.isSuccess());
+
+        List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
+                pu.getOrganisation().equals(organisation));
+
+        assertEquals(1, organisationFinanceContacts.size());
+        assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
     }
 
     @Test
@@ -1244,7 +1237,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(ACTION_REQUIRED).
-                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withOtherDocumentsStatus(PENDING).
                 withGrantOfferStatus(NOT_STARTED).
                 build();
 
@@ -1256,8 +1249,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withFinanceChecksStatus(ACTION_REQUIRED, COMPLETE).
+                withBankDetailsStatus(NOT_STARTED, NOT_STARTED).
+                withFinanceChecksStatus(NOT_STARTED, COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1280,7 +1273,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED).
+                withBankDetailsStatus(NOT_STARTED).
                 withFinanceChecksStatus(COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED).

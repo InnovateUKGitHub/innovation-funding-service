@@ -11,13 +11,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 Suite Setup       Login and create a new application
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?newApplication
@@ -93,7 +87,7 @@ Link to add multiple partner organisation
     And The user should see the element    css=li:nth-child(3)
     And The user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
     Then The user should not see the element    jQuery=li:nth-child(3) button:contains("Remove")
-    [Teardown]    And The user clicks the button/link    jQuery=li:nth-child(2) button:contains("Remove")
+    [Teardown]  The user clicks the button/link    jQuery=li:nth-child(2) button:contains("Remove")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901

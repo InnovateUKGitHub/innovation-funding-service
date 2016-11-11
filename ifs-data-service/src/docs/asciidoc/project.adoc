@@ -150,24 +150,6 @@ include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-pro
 ====== Curl Example
 include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
 
-=== Submit Banks Details
-==== Success
-===== Request
-include::{snippets}/project/submit-bank-details/http-request.adoc[]
-include::{snippets}/project/submit-bank-details/path-parameters.adoc[]
-include::{snippets}/project/submit-bank-details/request-fields.adoc[]
-
-===== Response
-include::{snippets}/project/submit-bank-details/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/submit-bank-details/curl-request.adoc[]
-
-==== Failure cases
-===== Update Bank Details with invalid input
-include::{snippets}/project/submit-invalid-bank-details/http-response.adoc[]
-
-
 === Upload Collaboration Agreement Document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
@@ -380,14 +362,14 @@ include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents
 
 === Save Documents Submitted DateTime
 
-===== Request
+==== Request
 include::{snippets}/project/set-partner-documents-submitted-date/http-request.adoc[]
 include::{snippets}/project/set-partner-documents-submitted-date/path-parameters.adoc[]
 
-===== Response
+==== Response
 include::{snippets}/project/set-partner-documents-submitted-date/http-response.adoc[]
 
-===== Curl Example
+==== Curl Example
 include::{snippets}/project/set-partner-documents-submitted-date/curl-request.adoc[]
 
 === Get Spend Profile
@@ -462,19 +444,6 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
-
-=== Get Project Team Bank Details Status Summary
-==== Success
-===== Request
-include::{snippets}/project/get-bank-details-project-summary/http-request.adoc[]
-include::{snippets}/project/get-bank-details-project-summary/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/get-bank-details-project-summary/http-response.adoc[]
-include::{snippets}/project/get-bank-details-project-summary/response-fields.adoc[]
-
-===== Curl Example
-include::{snippets}/project/get-bank-details-project-summary/curl-request.adoc[]
 
 === Get current status for all projects in competition
 ==== Success
