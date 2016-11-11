@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.resource.UserRelatedURLs.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

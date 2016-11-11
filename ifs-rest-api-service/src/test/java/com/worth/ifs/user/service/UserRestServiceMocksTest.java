@@ -1,6 +1,7 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.*;
 import org.junit.Test;
@@ -24,10 +25,10 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 
+
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
-
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();

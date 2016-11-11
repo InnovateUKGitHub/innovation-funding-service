@@ -1,13 +1,14 @@
 package com.worth.ifs;
 
+import com.worth.ifs.commons.security.authentication.token.Authentication;
 import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -15,14 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.ExecutionException;
 
-import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,7 +33,9 @@ import static org.springframework.http.HttpStatus.OK;
  * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
  * that the REST services use to exchange data with the "data" layer.
  */
-public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
+@RunWith(MockitoJUnitRunner.class)
+
+public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> {
 
     @Mock
     protected RestTemplate mockRestTemplate;
@@ -145,9 +145,6 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
         return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
-
-    @Value("${ifs.data.service.rest.baseURL}")
-    private String dataUrl;
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
