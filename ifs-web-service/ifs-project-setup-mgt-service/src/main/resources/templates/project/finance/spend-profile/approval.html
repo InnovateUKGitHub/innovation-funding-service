@@ -52,9 +52,10 @@
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
             Innovation Lead
         </p>
-        <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
+        <!-- TODO - Brent please confirm if its ok to delete this. If so, I will delete the commented code.
+               <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
             Robin Wilson
-        </p>
+        </p>-->
         <h2 class="heading-medium">Project spend profile</h2>
 
         <ul>
