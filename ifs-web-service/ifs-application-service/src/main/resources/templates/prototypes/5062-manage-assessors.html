@@ -104,6 +104,32 @@
 
 		});
 
+		jQuery('#prototype-assessor-row-two, #prototype-assessor-addable-rows').hide();
+
+		jQuery('#prototype-remove-one, #prototype-remove-two').on('click',function(e){
+			e.preventDefault();
+
+			jQuery(this).parent().parent().hide();
+
+		});
+
+		jQuery('#prototype-assessor-add-row').on('click',function(e){
+			e.preventDefault();
+
+			jQuery('#prototype-assessor-row-two').show();
+
+		});
+
+
+		jQuery('#prototype-add-assessors').on('click',function(e){
+			e.preventDefault();
+
+			jQuery('#prototype-assessor-addable-rows').show();
+
+		});
+
+
+
     });
 	// ]]>
 </script>
