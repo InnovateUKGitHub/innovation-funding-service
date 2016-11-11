@@ -49,8 +49,7 @@ Client-side empty yes/no question validations
     And The user should not see the text in the page    Please enter your financial interests
     When the user selects the radio button    hasFamilyAffiliations    Yes
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then The user should see an error    Please tell us if you have any appointments, directorships or consultancies.
-    And The user should see an error    Please enter a relation.
+    Then The user should see an error    Please enter a relation.
     And The user should see an error    Please enter an organisation.
     And The user should see an error    Please enter a position.
     When the user selects the radio button    hasFamilyAffiliations    No
@@ -60,14 +59,13 @@ Client-side empty yes/no question validations
     And The user should not see the text in the page    Please enter a position.
     When the user selects the radio button    hasFamilyFinancialInterests    Yes
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then The user should see an error    Please tell us if any of your close family members have any other financial interests.
-    And The user should see an error    Please enter your family financial interests.
+    Then The user should see an error    Please enter your family financial interests.
     When the user selects the radio button    hasFamilyFinancialInterests    No
     Then The user should not see the text in the page    Please enter your family financial interests
 
 Successful editing with no at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
@@ -77,8 +75,9 @@ Successful editing with no at yes/no questions
 
 Successful editing with yes at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
+    #TODO pending due to INFUND-6132 and INFUND-6140
     When the user selects yes at yes/no question radio buttons
     Then the user adds positions
     And the user adds an additional position
@@ -88,6 +87,7 @@ Successful editing with yes at yes/no questions
     Then the user removes the first two family member affiliations
     And the user enters text to a text field    id=financialInterests    Financial Interests
     And the user enters text to a text field    id=familyFinancialInterests    Family Financial Interests
+    And the user selects the checkbox    id=accurateAccount1
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     Then the user should see correctly filled out the role, employer, affiliation and accurate fields
@@ -141,8 +141,8 @@ the user adds positions
 
 the user adds an additional position
     the user clicks the button/link    jQuery=button:contains("Add another position")
-    the user enters text to a text field    id=appointments2.organisation    Organisation2
-    the user enters text to a text field    id=appointments2.position    Position2
+    the user enters text to a text field    id=appointments1.organisation    Organisation2
+    the user enters text to a text field    id=appointments1.position    Position2
 
 the user adds close family member affiliations
     the user clicks the button/link    jQuery=button:contains("Add another family member")
@@ -184,8 +184,8 @@ the user should see the correct close family member financial interests
     Textarea Value Should Be    id=familyFinancialInterests    Family Financial Interests
 
 the user removes the first two positions
-    the user clicks the button/link    jQuery=#position-table button:contains("Remove"):first
-    the user clicks the button/link    jQuery=#position-table button:contains("Remove"):first
+    the user clicks the button/link    css=tr:nth-child(1) td:nth-child(3) button
+    the user clicks the button/link    css=tr:nth-child(2) td:nth-child(3) button
 
 the user removes the first two family member affiliations
     the user clicks the button/link    jQuery=#family-table button:contains("Remove"):first
