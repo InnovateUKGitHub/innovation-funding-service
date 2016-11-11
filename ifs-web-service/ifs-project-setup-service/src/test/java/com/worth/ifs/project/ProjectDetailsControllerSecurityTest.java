@@ -62,7 +62,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null));
     }
 
     @Test

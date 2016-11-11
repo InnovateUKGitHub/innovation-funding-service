@@ -92,54 +92,50 @@
 
 		<h2 class="heading-medium">Appendices</h2>
 
-			<div class="form-group download">
-		        <h3 class="heading-small no-margin">View project management appendix:</h3>
-		        <a href="#">Project-plan.pdf (161.96 KB)</a>
-		    </div>
+		<div class="form-group download">
+			<h3 class="heading-small no-margin">View project management appendix:</h3>
+			<a href="#">Project-plan.pdf (161.96 KB)</a>
+		</div>
 
-		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View innovation appendix:</h3>
-		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
-		    </div>
+		<div class="form-group download">
+			<h3 class="heading-small no-margin">View innovation appendix:</h3>
+			<a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
+		</div>
 
-		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View project team appendix:</h3>
-		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
-		    </div>
+		<div class="form-group download">
+			<h3 class="heading-small no-margin">View project team appendix:</h3>
+			<a href="#">CVs-of-team.pdf (161.96 KB)</a>
+		</div>
 
-		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
-		    	<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="button button-secondary">Remove application from assessment</a>
-		    </div>
+		<div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
+			<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="button button-secondary">Mark application as ineligible</a>
+		</div>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+		<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
 				<!-- <form action="/prototypes/5698-draft-email" id="removeApp"> -->
-        <form th:action="${#httpServletRequest.requestURI}" id="removeApp">
-          <fieldset>
-						<legend class="heading-medium">Remove application from assessment</legend>
-					</fieldset>
-					<div class="form-group no-margin-bottom">
-						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
-						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
-						<div class="textarea-footer">
-							<span class="count-label">
-								<span class="count-down">Words remaing: 400</span>
-							</span>
-						</div>
+        	<form th:action="${#httpServletRequest.requestURI}" id="removeApp">
+				<!--<fieldset>-->
+					<!--<legend class="heading-medium">Remove application from assessment</legend>-->
+				<!--</fieldset>-->
+				<div class="form-group no-margin-bottom">
+					<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
+					<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
+					<div class="textarea-footer">
+						<span class="count-label">
+							<span class="count-down">Words remaining: 400</span>
+						</span>
 					</div>
+				</div>
 
-					<div class="grid-row">
-						<div class="column-half">
-							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
-						</div>
-						<div class="column-half alignright">
-              <a href="#" class="button" data-js-modal="modal-inform-remove">Remove application from assessment</a>
-							<!-- <button class="button no-margin-right">Continue and draft email</button> -->
-						</div>
-					</div>
+				<div class="alignright">
+					<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
+					<a th:href="${#httpServletRequest.requestURI}" class="button">Mark application as ineligible</a>
+					<!-- <button class="button no-margin-right">Continue and draft email</button> -->
+				</div>
 
-          <div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-  	        <button class="js-close close" aria-label="Close Popup">X</button>
-  	        <div>
+          		<div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+  	        		<button class="js-close close" aria-label="Close Popup">X</button>
+  	        		<div>
 
     					<h2 class="heading-medium no-margin">Remove application</h2>
 
@@ -147,19 +143,19 @@
 
     					<hr />
 
-              <div class="alignright-button">
-    						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-    	          <a th:href="${#httpServletRequest.requestURI}" class="button">Remove application from assessment</a>
-              </div>
+					  	<div class="alignright-button">
+							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						  	<a th:href="${#httpServletRequest.requestURI}" class="button">Remove application from assessment</a>
+              			</div>
 
-  	        </div>
-  		    </div>
+  	        		</div>
+  		    	</div>
 
 
-				</form>
-			</th:block>
+			</form>
+		</th:block>
 
-		</div>
+	</div>
 
 
 
