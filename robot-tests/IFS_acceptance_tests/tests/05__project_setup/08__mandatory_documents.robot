@@ -341,7 +341,7 @@ Project Finance is able to Approve and Reject
     Then the user should not see an error in the page
 
 
-Project Finance user can clik the link and go back to the Project setup status page
+Project Finance user can clik the link and go back to the Competition Dashboard page
     [Documentation]    INFUND-5516
     [Tags]
     When the user clicks the button/link           link=Competition dashboard
