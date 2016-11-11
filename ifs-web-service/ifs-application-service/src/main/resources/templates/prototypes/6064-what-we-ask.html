@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='What we ask you'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/front-door :: prototype-front-door-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition details'}, ${'/prototypes/6064-competition-page'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<p class="subtitle">Funding competition</p>
+	<h1 class="heading-large no-margin">Emerging &amp; enabling technologies round 1</h1>
+	<h2 class="heading-large">What we ask....</h2>
+
+	<p>The application has the following sections:</p>
+
+	<dl>
+		<dt></dt>
+			<dd></dd>
+		<dt></dt>
+			<dd></dd>
+		<dt></dt>
+			<dd></dd>
+		<dt></dt>
+			<dd></dd>
+	</dl>
+
+	<hr />
+
+	<section>
+		<h2 class="heading-medium">Project details</h2>
+
+		<p>In this section you will provide the details of your project. This section is not scored, but our assessors will use it to decide whether the project fits with the scope of the competition. If it doesn't fit the scope then it will not be funded.</p>
+
+	</section>
+
+	<hr />
+
+	<section>
+		<h2 class="heading-medium">Application questions</h2>
+
+		<p></p>
+
+		<ol class="list-number">
+			<li>
+
+				<ul class="list-bullet">
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</li>
+			<li>
+
+				<ul class="list-bullet">
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</li>
+		</ol>
+
+	</section>
+
+	<hr />
+
+	<section>
+		<h2 class="heading-medium">Finances</h2>
+
+		<h3 class="heading-small">Your finances</h3>
+
+		<p></p>
+
+		<ul class="list-bullet">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+
+		<dl>
+			<dt></dt>
+				<dd></dd>
+			<dt></dt>
+				<dd></dd>
+			<dt></dt>
+				<dd></dd>
+		</dl>
+
+		<h3 class="heading-small">Finances overview - this covers 3 areas:</h3>
+
+		<dl>
+			<dt></dt>
+				<dd></dd>
+			<dt></dt>
+				<dd></dd>
+			<dt></dt>
+				<dd></dd>
+		</dl>
+
+	</section>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>
