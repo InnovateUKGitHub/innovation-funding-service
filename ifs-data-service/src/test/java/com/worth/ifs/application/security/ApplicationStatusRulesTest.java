@@ -24,7 +24,7 @@ public class ApplicationStatusRulesTest extends BasePermissionRulesTest<Applicat
     @Test
     public void testUserCanReadApplicationStatusResource() {
         boolean result =  rules.userCanReadApplicationStatusResource(new ApplicationStatusResource(), new UserResource());
-        assertTrue(result);;
+        assertTrue(result);
     }
 
 }

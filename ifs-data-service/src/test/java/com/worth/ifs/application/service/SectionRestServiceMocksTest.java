@@ -4,12 +4,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import com.worth.ifs.application.builder.SectionResourceBuilder;
