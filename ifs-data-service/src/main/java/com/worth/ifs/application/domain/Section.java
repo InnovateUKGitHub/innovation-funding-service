@@ -53,7 +53,7 @@ public class Section implements Comparable<Section> {
 
     @Column(nullable = false)
     private boolean displayInAssessmentApplicationSummary = false;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name="section_type")
     private SectionType type = SectionType.GENERAL;
@@ -156,7 +156,7 @@ public class Section implements Comparable<Section> {
     public boolean isType(SectionType queriedType) {
     	return queriedType.equals(type);
     }
-    
+
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }
 
     public boolean isDisplayInAssessmentApplicationSummary() {
@@ -190,11 +190,11 @@ public class Section implements Comparable<Section> {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public void setType(SectionType type) {
 		this.type = type;
 	}
-    
+
     public SectionType getType() {
 		return type;
 	}
