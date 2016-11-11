@@ -10,7 +10,8 @@ import java.util.Map;
 public enum CompetitionSetupSubsection {
 	PROJECT_DETAILS("project", "Project Details"),
 	QUESTIONS("question", "Questions"),
-	FINANCES("finance", "Finances");
+	FINANCES("finance", "Finances"),
+	APPLICATION_DETAILS("detail", "Application Details");
 
 	private String path;
 	private String name;

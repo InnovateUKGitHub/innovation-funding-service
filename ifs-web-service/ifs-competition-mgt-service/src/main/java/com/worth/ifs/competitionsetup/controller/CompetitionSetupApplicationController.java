@@ -1,9 +1,11 @@
 package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
@@ -15,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
@@ -147,6 +151,40 @@ public class CompetitionSetupApplicationController {
             return questionView;
         }
     }
+
+
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String getApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        return getDetailsPage(model, competitionId);
+    }
+
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+
+        Supplier<String> failureView = () -> getDetailsPage(model, competitionId);
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        CompetitionResource resource = competitionService.getById(competitionId);
+        resource.setUseProjectTitleQuestion(form.isUseProjectTitleQuestion());
+        resource.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
+        resource.setUseEstimatedStartDateQuestion(form.isUseEstimatedStartDateQuestion());
+        resource.setUseDurationQuestion(form.isUseDurationQuestion());
+        competitionService.update(resource);
+
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
+    private String getDetailsPage(Model model, Long competitionId) {
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
+                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.empty());
+        return "competition/application-details";
+    }
+
 
     private void setupQuestionToModel(final CompetitionResource competition, final Long questionId, Model model) {
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;

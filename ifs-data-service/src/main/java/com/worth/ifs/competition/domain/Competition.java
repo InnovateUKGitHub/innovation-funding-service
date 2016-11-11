@@ -100,6 +100,12 @@ public class Competition implements ProcessActivity {
 
     private Boolean setupComplete;
 
+    private boolean useProjectTitleQuestion = true;
+    private boolean useResubmissionQuestion = true;
+    private boolean useEstimatedStartDateQuestion = true;
+    private boolean useDurationQuestion = true;
+
+
     public Competition() {
         setupComplete = false;
     }
@@ -519,6 +525,38 @@ public class Competition implements ProcessActivity {
 
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    public boolean isUseProjectTitleQuestion() {
+        return useProjectTitleQuestion;
+    }
+
+    public void setUseProjectTitleQuestion(boolean useProjectTitleQuestion) {
+        this.useProjectTitleQuestion = useProjectTitleQuestion;
+    }
+
+    public boolean isUseResubmissionQuestion() {
+        return useResubmissionQuestion;
+    }
+
+    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+        this.useResubmissionQuestion = useResubmissionQuestion;
+    }
+
+    public boolean isUseEstimatedStartDateQuestion() {
+        return useEstimatedStartDateQuestion;
+    }
+
+    public void setUseEstimatedStartDateQuestion(boolean useEstimatedStartDateQuestion) {
+        this.useEstimatedStartDateQuestion = useEstimatedStartDateQuestion;
+    }
+
+    public boolean isUseDurationQuestion() {
+        return useDurationQuestion;
+    }
+
+    public void setUseDurationQuestion(boolean useDurationQuestion) {
+        this.useDurationQuestion = useDurationQuestion;
     }
 }
 
