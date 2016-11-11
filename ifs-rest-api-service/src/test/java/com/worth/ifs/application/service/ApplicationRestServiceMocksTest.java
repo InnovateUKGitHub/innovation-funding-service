@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;

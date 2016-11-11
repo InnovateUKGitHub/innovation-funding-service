@@ -18,6 +18,7 @@ import java.util.Set;
 import com.worth.ifs.commons.rest.RestResult;
 
 
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
