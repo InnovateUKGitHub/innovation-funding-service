@@ -557,7 +557,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("appointments"));
-        assertEquals("Please enter your appointments, directorships or consultancies", bindingResult.getFieldError("appointments").getDefaultMessage());
+        assertEquals("Please enter your appointments, directorships or consultancies.", bindingResult.getFieldError("appointments").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -620,7 +620,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("appointments[0].position"));
-        assertEquals("Please enter a position", bindingResult.getFieldError("appointments[0].position").getDefaultMessage());
+        assertEquals("Please enter a position.", bindingResult.getFieldError("appointments[0].position").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -761,7 +761,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("financialInterests"));
-        assertEquals("Please enter your financial interests", bindingResult.getFieldError("financialInterests").getDefaultMessage());
+        assertEquals("Please enter your financial interests.", bindingResult.getFieldError("financialInterests").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -827,7 +827,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("familyAffiliations"));
-        assertEquals("Please enter the appointments, directorships or consultancies of your close family members", bindingResult.getFieldError("familyAffiliations").getDefaultMessage());
+        assertEquals("Please enter the appointments, directorships or consultancies of your close family members.", bindingResult.getFieldError("familyAffiliations").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -891,9 +891,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("familyAffiliations[0].organisation"));
-        assertEquals("Please enter an organisation", bindingResult.getFieldError("familyAffiliations[0].organisation").getDefaultMessage());
+        assertEquals("Please enter an organisation.", bindingResult.getFieldError("familyAffiliations[0].organisation").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("familyAffiliations[0].position"));
-        assertEquals("Please enter a position", bindingResult.getFieldError("familyAffiliations[0].position").getDefaultMessage());
+        assertEquals("Please enter a position.", bindingResult.getFieldError("familyAffiliations[0].position").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -1034,7 +1034,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("familyFinancialInterests"));
-        assertEquals("Please enter your family financial interests", bindingResult.getFieldError("familyFinancialInterests").getDefaultMessage());
+        assertEquals("Please enter your family financial interests.", bindingResult.getFieldError("familyFinancialInterests").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
@@ -1075,19 +1075,19 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(7, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("principalEmployer"));
-        assertEquals("Please enter a principal employer", bindingResult.getFieldError("principalEmployer").getDefaultMessage());
+        assertEquals("Please enter a principal employer.", bindingResult.getFieldError("principalEmployer").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("role"));
-        assertEquals("Please enter your role with your principal employer", bindingResult.getFieldError("role").getDefaultMessage());
+        assertEquals("Please enter your role with your principal employer.", bindingResult.getFieldError("role").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasAppointments"));
-        assertEquals("Please tell us if you have any appointments, directorships or consultancies", bindingResult.getFieldError("hasAppointments").getDefaultMessage());
+        assertEquals("Please tell us if you have any appointments, directorships or consultancies.", bindingResult.getFieldError("hasAppointments").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFinancialInterests"));
-        assertEquals("Please tell us if you have any other financial interests", bindingResult.getFieldError("hasFinancialInterests").getDefaultMessage());
+        assertEquals("Please tell us if you have any other financial interests.", bindingResult.getFieldError("hasFinancialInterests").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFamilyAffiliations"));
-        assertEquals("Please tell us if any of your close family members have any appointments, directorships or consultancies", bindingResult.getFieldError("hasFamilyAffiliations").getDefaultMessage());
+        assertEquals("Please tell us if any of your close family members have any appointments, directorships or consultancies.", bindingResult.getFieldError("hasFamilyAffiliations").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFamilyFinancialInterests"));
-        assertEquals("Please tell us if any of your close family members have any other financial interests", bindingResult.getFieldError("hasFamilyFinancialInterests").getDefaultMessage());
+        assertEquals("Please tell us if any of your close family members have any other financial interests.", bindingResult.getFieldError("hasFamilyFinancialInterests").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("accurateAccount"));
-        assertEquals("You must agree that your account is accurate", bindingResult.getFieldError("accurateAccount").getDefaultMessage());
+        assertEquals("You must agree that your account is accurate.", bindingResult.getFieldError("accurateAccount").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
