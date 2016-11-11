@@ -96,8 +96,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
-            if(!bankDetails.isPresent() && !organisationBankDetailsStatus.equals(NOT_REQUIRED)){
+            if(!bankDetails.isPresent()){
                 return PENDING;
             }
         }
@@ -105,7 +104,8 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
+            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
             if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
                 return ACTION_REQUIRED;
             }
