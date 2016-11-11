@@ -22,4 +22,8 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
         }
         return object.getId();
     }
+
+    public Milestone build() {
+        return createDefault(Milestone.class);
+    }
 }

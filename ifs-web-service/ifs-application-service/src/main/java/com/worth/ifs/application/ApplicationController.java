@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
+import static com.worth.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;

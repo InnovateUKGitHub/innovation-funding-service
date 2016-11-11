@@ -521,9 +521,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         Milestone milestone;
 
         for(MilestoneType milestoneType : milestoneTypes) {
-            milestone = new Milestone();
-            milestone.setType(milestoneType);
-            milestone.setCompetition(assignCompetitionId(comp));
+            milestone = new Milestone(milestoneType, assignCompetitionId(comp));
 
             milestone.setDate(milestoneDate);
             if (milestone.getType().name().equals("OPEN_DATE")){

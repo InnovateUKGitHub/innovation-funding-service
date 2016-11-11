@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static com.worth.ifs.competition.resource.CompetitionStatus.*;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -128,21 +129,20 @@ public class Competition implements ProcessActivity {
     }
 
     public CompetitionStatus getCompetitionStatus() {
-        LocalDateTime today = dateProvider.provideDate();
         if (setupComplete) {
-            if (getStartDate() == null || getStartDate().isAfter(today)) {
+            if ( !isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
-            } else if (getEndDate() != null && getEndDate().isAfter(today)) {
+            } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
-            } else if (getAssessorAcceptsDate() != null && getAssessorAcceptsDate().isAfter(today)) {
+            } else if (isMilestoneSet(ASSESSOR_ACCEPTS) && !isMilestoneReached(ASSESSOR_ACCEPTS)) {
                 // TODO INFUND-5199 - Should not be using the assessor accepts deadline at all here
                 // TODO INFUND-5199 - The competition is closed if we're past the submission date, but haven't distributed applications
                 return CLOSED;
-            } else if (getFundersPanelDate() != null && getFundersPanelDate().isAfter(today)) {
+            } else if (!isMilestoneReached(MilestoneType.FUNDERS_PANEL)) {
                 return IN_ASSESSMENT;
-            } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-                return FUNDERS_PANEL;
-            } else if (getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
+            } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
+                return CompetitionStatus.FUNDERS_PANEL;
+            } else if (!isMilestoneReached(MilestoneType.ASSESSOR_DEADLINE)) {
                 return ASSESSOR_FEEDBACK;
             } else {
                 return PROJECT_SETUP;
@@ -229,81 +229,91 @@ public class Competition implements ProcessActivity {
     }
 
     public LocalDateTime getEndDate() {
-        return getMilestoneValue(MilestoneType.SUBMISSION_DATE);
+        return getMilestoneDate(SUBMISSION_DATE).orElse(null);
     }
 
     public void setEndDate(LocalDateTime endDate) {
-    	setMilestoneValue(MilestoneType.SUBMISSION_DATE, endDate);
+    	setMilestoneDate(SUBMISSION_DATE, endDate);
     }
 
     public LocalDateTime getStartDate() {
-    	return getMilestoneValue(MilestoneType.OPEN_DATE);
+    	return getMilestoneDate(OPEN_DATE).orElse(null);
     }
 
     public void setStartDate(LocalDateTime startDate) {
-        setMilestoneValue(MilestoneType.OPEN_DATE, startDate);
+        setMilestoneDate(OPEN_DATE, startDate);
     }
 
     public LocalDateTime getAssessorAcceptsDate() {
-    	return getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS);
+    	return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
     }
 
     public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate){
-    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessorAcceptsDate);
+    	setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
     }
 
     public LocalDateTime getAssessorDeadlineDate() {
-        return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE);
+        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
     public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate){
-        setMilestoneValue(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
+        setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
     }
 
     public LocalDateTime getFundersPanelDate() {
-        return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
+        return getMilestoneDate(MilestoneType.FUNDERS_PANEL).orElse(null);
     }
 
     public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
-        setMilestoneValue(MilestoneType.FUNDERS_PANEL, fundersPanelDate);
+        setMilestoneDate(MilestoneType.FUNDERS_PANEL, fundersPanelDate);
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
-    	return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE);
+    	return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
-    	setMilestoneValue(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
+    	setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
 
     public LocalDateTime getFundersPanelEndDate() {
-    	return getMilestoneValue(MilestoneType.NOTIFICATIONS);
+    	return getMilestoneDate(MilestoneType.NOTIFICATIONS).orElse(null);
 	}
 
     public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
-    	setMilestoneValue(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
+    	setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
 	}
 
-    private void setMilestoneValue(MilestoneType MilestoneType, LocalDateTime dateTime) {
-		Milestone milestone = milestones.stream().filter(m -> MilestoneType.equals(m.getType())).findAny().orElseGet(() -> {
-			Milestone m = new Milestone();
-			m.setCompetition(this);
-			m.setType(MilestoneType);
+    private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
+        Milestone milestone = milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny().orElseGet(() -> {
+            final Milestone m;
+            if (dateTime == null) {
+                m = new Milestone(milestoneType, this);
+            }
+            else {
+                m = new Milestone(milestoneType, dateTime, this);
+            }
 			milestones.add(m);
-			return m;
+            return m;
 		});
-
-		milestone.setDate(dateTime);
+        milestone.setDate(dateTime);
 	}
 
-	private LocalDateTime getMilestoneValue(MilestoneType milestoneType) {
-		Optional<Milestone> milestone = milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny();
+	private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
+        return milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny();
+    }
 
-		if(milestone.isPresent()) {
-			return milestone.get().getDate();
-		}
+    private boolean isMilestoneReached(MilestoneType milestoneType) {
+        LocalDateTime today = dateProvider.provideDate();
+        return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
+    }
 
-		return null;
+    private boolean isMilestoneSet(MilestoneType milestoneType) {
+        return getMilestone(milestoneType).isPresent();
+    }
+
+    private Optional<LocalDateTime> getMilestoneDate(MilestoneType milestoneType) {
+         return getMilestone(milestoneType).map(Milestone::getDate);
 	}
 
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {

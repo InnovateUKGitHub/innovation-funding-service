@@ -16,21 +16,33 @@ public enum MilestoneType {
     ASSESSOR_BRIEFING("5. Assessor briefing"),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),
     ASSESSOR_DEADLINE("7. Assessor deadline"),
-    LINE_DRAW("8. Line draw"),
-    ASSESSMENT_PANEL("9. Assessment panel"),
-    PANEL_DATE("10. Panel date"),
-    FUNDERS_PANEL("11. Funders panel"),
-    NOTIFICATIONS("12. Notifications"),
-    RELEASE_FEEDBACK("13. Release feedback");
+    ASSESSORS_NOTIFIED("8. Assessors Notified", false),
+    ASSESSMENT_CLOSE("9. Assessment close", false),
+    LINE_DRAW("10. Line draw"),
+    ASSESSMENT_PANEL("11. Assessment panel"),
+    PANEL_DATE("12. Panel date"),
+    FUNDERS_PANEL("13. Funders panel"),
+    NOTIFICATIONS("14. Notifications"),
+    RELEASE_FEEDBACK("15. Release feedback");
 
-    private String milestoneDescription;
+    private final String milestoneDescription;
+    private final boolean dateMandatory;
 
-    MilestoneType(String milestoneDescription) {
+    private MilestoneType(String milestoneDescription) {
+        this(milestoneDescription, false);
+    }
+
+    private MilestoneType(String milestoneDescription, boolean dateMandatory) {
         this.milestoneDescription = milestoneDescription;
+        this.dateMandatory = dateMandatory;
     }
 
     public String getMilestoneDescription() {
         return milestoneDescription;
+    }
+
+    public boolean isDateMandatory() {
+        return dateMandatory;
     }
 }
 

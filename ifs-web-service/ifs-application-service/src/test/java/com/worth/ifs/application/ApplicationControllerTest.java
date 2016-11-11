@@ -10,7 +10,6 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatus;
@@ -24,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,6 +40,8 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
@@ -368,7 +368,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.OPEN).build();
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
@@ -387,7 +387,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     
     @Test
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.FUNDERS_PANEL).build();
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 

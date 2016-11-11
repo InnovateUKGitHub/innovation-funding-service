@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;

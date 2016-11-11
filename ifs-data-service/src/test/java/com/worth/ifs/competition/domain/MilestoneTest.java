@@ -48,13 +48,12 @@ public class MilestoneTest {
         competition = new Competition();
         competition.setId(competitionId);
 
-        milestone = new Milestone(id, type, date, competition);
+        milestone = new Milestone(type, date, competition);
         populateMilestoneTypes();
     }
 
     @Test
     public void getMilestone() {
-        assertEquals(milestone.getId(), id);
         assertEquals(milestone.getType(), type);
         assertEquals(milestone.getDate(), date);
         assertEquals(milestone.getCompetition().getId(), competitionId);
@@ -62,7 +61,7 @@ public class MilestoneTest {
 
     @Test
     public void milestoneTypeSize() {
-        assertTrue(MilestoneType.values().length == 13);
+        assertTrue(MilestoneType.values().length == 15);
 
         List<String> milestoneEnum = new ArrayList<>();
 

@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -41,9 +44,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 			@Override
 			public Milestone answer(InvocationOnMock invocation) throws Throwable {
 				MilestoneResource arg = invocation.getArgumentAt(0, MilestoneResource.class);
-				Milestone milestone = new Milestone();
-				milestone.setType(arg.getType());
-				milestone.setDate(arg.getDate());
+                Milestone milestone = newMilestone().withType(arg.getType()).withDate(arg.getDate()).build();
 				return milestone;
 			}
 		});
@@ -54,17 +55,17 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
-		List<MilestoneResource> milestones = asList(
-                milestone(MilestoneType.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-                milestone(MilestoneType.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0))
-			);
-		
+		List<MilestoneResource> milestones = newMilestoneResource()
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
+                .build(2);
+
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(MilestoneType.ASSESSMENT_PANEL, competition.getMilestones().get(0).getType());
+		assertEquals(ASSESSMENT_PANEL, competition.getMilestones().get(0).getType());
 		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
-		assertEquals(MilestoneType.FUNDERS_PANEL, competition.getMilestones().get(1).getType());
+		assertEquals(FUNDERS_PANEL, competition.getMilestones().get(1).getType());
 		assertEquals(LocalDateTime.of(2050, 3, 11, 0, 0), competition.getMilestones().get(1).getDate());
 	}
 	
@@ -73,11 +74,11 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
-		List<MilestoneResource> milestones = asList(
-                milestone(MilestoneType.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0)),
-                milestone(MilestoneType.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0))
-			);
-		
+		List<MilestoneResource> milestones = newMilestoneResource()
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+                .withDate(LocalDateTime.of(2050, 3, 10, 0, 0), LocalDateTime.of(2050, 3, 11, 0, 0))
+                .build(2);
+
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
 		assertFalse(result.isSuccess());
@@ -91,11 +92,11 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
-		List<MilestoneResource> milestones = asList(
-                milestone(MilestoneType.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-                milestone(MilestoneType.ASSESSMENT_PANEL, null)
-			);
-		
+		List<MilestoneResource> milestones = newMilestoneResource()
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), null)
+                .build(2);
+
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
 		assertFalse(result.isSuccess());
@@ -109,11 +110,11 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
-		List<MilestoneResource> milestones = asList(
-                milestone(MilestoneType.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-                milestone(MilestoneType.ASSESSMENT_PANEL, LocalDateTime.of(1985, 3, 10, 0, 0))
-			);
-		
+		List<MilestoneResource> milestones = newMilestoneResource()
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(1985, 3, 10, 0, 0))
+                .build(2);
+
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
 		assertFalse(result.isSuccess());
@@ -127,11 +128,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
-		List<MilestoneResource> milestones = asList(
-                milestone(MilestoneType.FUNDERS_PANEL, null),
-                milestone(MilestoneType.ASSESSMENT_PANEL, null),
-                milestone(MilestoneType.ALLOCATE_ASSESSORS, null),
-				milestone(MilestoneType.ASSESSOR_ACCEPTS, null));
+		List<MilestoneResource> milestones = newMilestoneResource()
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL, ALLOCATE_ASSESSORS, ASSESSOR_ACCEPTS)
+                .build(4);
 
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
@@ -145,16 +144,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	public void updateMilestone() {
 		LocalDateTime milestoneDate = LocalDateTime.now();
 
-		ServiceResult<Void> result = service.updateMilestone(milestone(MilestoneType.BRIEFING_EVENT, milestoneDate.plusMonths(1)));
+		ServiceResult<Void> result = service.updateMilestone(newMilestoneResource().withType(MilestoneType.BRIEFING_EVENT).withDate(milestoneDate.plusMonths(1)).build());
 		assertTrue(result.isSuccess());
 	}
 
 	@Test
 	public void getAllMilestones() {
-		List<Milestone> milestones = asList(
-				milestone(MilestoneType.BRIEFING_EVENT),
-				milestone(MilestoneType.LINE_DRAW),
-				milestone(MilestoneType.NOTIFICATIONS));
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.BRIEFING_EVENT, MilestoneType.LINE_DRAW, MilestoneType.NOTIFICATIONS).build(3);
 		when(milestoneRepository.findAllByCompetitionId(1L)).thenReturn(milestones);
 
 		ServiceResult<List<MilestoneResource>> result = service.getAllMilestonesByCompetitionId(1L);
@@ -166,26 +162,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
 	@Test
 	public void getMilestoneByTypeAndCompetition() {
-		Milestone milestone = milestone(MilestoneType.NOTIFICATIONS);
-		when(milestoneRepository.findByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L)).thenReturn(milestone);
+        Milestone milestone = newMilestone().withType(NOTIFICATIONS).build();
+		when(milestoneRepository.findByTypeAndCompetitionId(NOTIFICATIONS, 1L)).thenReturn(milestone);
 
 		ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L);
 		assertTrue(result.isSuccess());
 		assertEquals(MilestoneType.NOTIFICATIONS, milestone.getType());
 		assertNull(milestone.getDate());
-	}
-
-	private MilestoneResource milestone(MilestoneType type, LocalDateTime date) {
-		MilestoneResource resource = new MilestoneResource();
-		resource.setType(type);
-		resource.setDate(date);
-		return resource;
-	}
-
-	private Milestone milestone(MilestoneType type) {
-		Milestone milestone = new Milestone();
-		milestone.setType(type);
-		return milestone;
 	}
 
 	@Override

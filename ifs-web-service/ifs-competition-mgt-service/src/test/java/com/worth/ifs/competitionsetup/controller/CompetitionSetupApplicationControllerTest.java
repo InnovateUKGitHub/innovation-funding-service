@@ -3,7 +3,6 @@ package com.worth.ifs.competitionsetup.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
 import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
@@ -20,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
@@ -59,7 +59,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -72,7 +72,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testPostCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         final boolean fullApplicationFinance = true;
@@ -92,7 +92,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testApplicationProcessLandingPage() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -108,7 +108,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testSetApplicationProcessAsComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
