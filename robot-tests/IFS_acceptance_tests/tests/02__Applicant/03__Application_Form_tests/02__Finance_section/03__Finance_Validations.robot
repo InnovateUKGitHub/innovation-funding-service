@@ -99,7 +99,7 @@ Admin costs client side
     When the user enters text to a text field    css=[id$="customRate"]    101
     Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    12121212121212121212121212
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits    You must enter a value less than 10 digits    #Entered two times the same error because this keyword expects two errors
+    Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    -1
     Then the user gets the expected validation errors    This field should be 1 or higher    This field should be 1 or higher    #Entered two times the same error because this keyword expects two errors
 
