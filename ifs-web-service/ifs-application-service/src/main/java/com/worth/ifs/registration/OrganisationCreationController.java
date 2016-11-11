@@ -2,6 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.OrganisationService;
@@ -160,7 +161,7 @@ public class OrganisationCreationController {
             bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
 
             if(organisationForm.getAddressForm().isTriedToSearch() && isBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-                bindingResult.rejectValue("addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
+                ValidationMessages.rejectValue(bindingResult, "addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
             }
 
             validator.validate(organisationForm, bindingResult);
