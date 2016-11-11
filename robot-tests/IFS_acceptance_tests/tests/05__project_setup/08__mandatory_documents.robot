@@ -35,7 +35,7 @@ Non-lead partner cannot upload either document
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012
     [Tags]
-    Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     #Then the user should see the 2 Upload buttons
@@ -47,7 +47,7 @@ PM cannot submit when both documents are not uploaded
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
-    [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user uploads to the collaboration agreement question    ${too_large_pdf}
@@ -106,7 +106,7 @@ Lead partner does not have the option to submit the mandatory documents
 Non-lead partner can view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806
     [Tags]
-    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  jQuery=ul li:nth-child(7)
     And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
@@ -132,7 +132,7 @@ Non-lead partner cannot remove or submit right
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
-    Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf}
@@ -154,7 +154,7 @@ PM can remove the second document
 
 Non-lead partner can still view the first document
     [Documentation]    INFUND-4252
-    [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should see the text in the page    ${valid_pdf}
@@ -163,7 +163,7 @@ Non-lead partner can still view the first document
 PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]
-    [Setup]    log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    name=removeCollaborationAgreementClicked
@@ -171,7 +171,7 @@ PM can remove the first document
 
 Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
-    [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
@@ -180,7 +180,7 @@ Non-lead partner cannot view either document once removed
 PM can upload both documents
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
-    [Setup]    log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
@@ -199,7 +199,7 @@ Status in the dashboard remains pending after uploads
 Mandatory document submission
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
-    [Setup]    log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -237,7 +237,7 @@ PM cannot remove the documents after submitting
 
 Lead partner cannot remove the documents after submission by PM
     [Documentation]    INFUND-3012
-    [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Remove
@@ -256,7 +256,7 @@ Lead partner can still view both documents after submitting
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]    INFUND-3012
-    [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Remove
@@ -311,7 +311,7 @@ Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424
     ...       This test Case has been deactivated for project id=1. Because the Other Documents are Approved instead.
     [Tags]    Failing
-    Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
     Given log in as a different user    steve.smith@empire.com    Passw0rd    #Lead Partner
@@ -359,7 +359,7 @@ CompAdmin approves other documents
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    Ludlow
     And the user should see the text in the page    EGGS
-    And the user should see the text in the page    worth.email.test+projectlead@gmail.com
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}
     Then the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
@@ -374,16 +374,16 @@ Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424
     [Tags]    HappyPath    Pending
     #TO DO:INFUND-5887
-    Given log in as user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
+    Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    steve.smith@empire.com    Passw0rd    #Lead Partner
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd    #Lead Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    pete.tom@egg.com    Passw0rd    #Academic Partner
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}    Passw0rd    #Academic Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd    #Other Partner
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd    #Other Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
 

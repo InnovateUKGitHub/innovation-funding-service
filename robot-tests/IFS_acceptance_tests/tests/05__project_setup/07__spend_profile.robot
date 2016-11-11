@@ -100,31 +100,31 @@ Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
     [Tags]     #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the text box should be editable               css=#row-1-0
-    When the user enters text to a text field          css=#row-1-0    2899
-    And the user moves focus to the element            css=#row-1-2
+    Then the text box should be editable               css=#row-24-0
+    When the user enters text to a text field          css=#row-24-0    2899
+    And the user moves focus to the element            css=#row-24-2
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-1    £ 8,233
-    And the user should see the element                jQuery=.cell-error #row-total-1
+    Then the field has value                           css=#row-total-24    £ 8,233
+    And the user should see the element                jQuery=.cell-error #row-total-24
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page      Your spend profile has total costs higher than eligible project costs,
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=#row-1-0    2666
-    And the user should not see the element            jQuery=.cell-error #row-total-1
-    When the user enters text to a text field          css=#row-3-2    -55
-    And the user moves focus to the element            css=#row-3-1
+    Then the user enters text to a text field          css=#row-24-0    2666
+    And the user should not see the element            jQuery=.cell-error #row-total-24
+    When the user enters text to a text field          css=#row-26-2    -55
+    And the user moves focus to the element            css=#row-26-1
     Then the user should see the text in the page      This field should be 0 or higher
-    When the user enters text to a text field          css=#row-1-2    35.25
-    And the user moves focus to the element            css=#row-4-2
+    When the user enters text to a text field          css=#row-24-2    35.25
+    And the user moves focus to the element            css=#row-27-2
     Then the user should see the text in the page      This field should be a number
-    When the user enters text to a text field          css=#row-3-2    3333
-    And the user moves focus to the element            css=#row-3-1
+    When the user enters text to a text field          css=#row-26-2    3333
+    And the user moves focus to the element            css=#row-26-1
     And the user should not see the text in the page   This field should be 0 or higher
-    When the user enters text to a text field          css=#row-3-2    2667
-    And the user moves focus to the element            css=#row-3-1
+    When the user enters text to a text field          css=#row-26-2    2667
+    And the user moves focus to the element            css=#row-26-1
     Then the user should not see the text in the page  This field should be 0 or higher
-    And the user should not see the element            jQuery=.cell-error #row-total-1
+    And the user should not see the element            jQuery=.cell-error #row-total-24
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
 
@@ -134,14 +134,14 @@ Lead partner can edit his spend profile with valid values
     Given the user navigates to the page                 ${external_spendprofile_summary}
     When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
     And the user should not see the element              css=table a[type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                 css=#row-1-0
-    When the user enters text to a text field            css=#row-1-0    2000
-    And the user moves focus to the element              css=#row-1-1
-    Then the field has value                             css=#row-total-1    £ 7,334
+    Then the text box should be editable                 css=#row-24-0
+    When the user enters text to a text field            css=#row-24-0    2000
+    And the user moves focus to the element              css=#row-24-1
+    Then the field has value                             css=#row-total-24    £ 7,334
     And the user should not see the text in the page     Unable to save spend profile
-    When the user enters text to a text field            css=#row-6-1    0
-    And the user moves focus to the element              css=#row-6-2
-    Then the field has value                             css=#row-total-6    £ 6,667
+    When the user enters text to a text field            css=#row-29-1    0
+    And the user moves focus to the element              css=#row-29-2
+    Then the field has value                             css=#row-total-29    £ 6,667
     And the user should not see the text in the page     Unable to save spend profile
     Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
