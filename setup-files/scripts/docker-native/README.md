@@ -72,6 +72,17 @@ You will most likely want to utilise `deploy.sh` to actually perform further dev
 It is pretty much the same as the current `Docker Machine` setup (although this workflow should be improved). 
 The usage of `deploy.sh` is documented below.
 
+## Running acceptance tests
+
+Included is an alternative `docker_run_tests_native.sh` in the Robot test directory that should be run instead of 
+the standard `docker_run_tests.sh` script. 
+
+This adds an additional `-n` flag which stops the application build step from occurring. It is currently not guaranteed 
+that the built WARs will be deployed properly in the web/data Tomcat containers before the Robot tests kick in.
+
+Consequently, a safer choice is to manually deploy with `deploy.sh` (like the current Docker Machine 
+setup), check that the application is deployed and then run the tests with `-n`.
+
 ## Additional information
 
 The following scripts are rationalized as:
