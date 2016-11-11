@@ -296,7 +296,7 @@ CompAdmin rejects other documents
     [Documentation]    INFUND-4620
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/1/partner/documents
+    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
@@ -329,7 +329,7 @@ Project Finance is able to Approve and Reject
     [Documentation]    INFUND-4621, INFUND-5440
     [Tags]
     [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/1/partner/documents
+    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     Then the user should see the text in the page    Other documents
     And the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
@@ -354,9 +354,9 @@ CompAdmin approves other documents
     [Documentation]    INFUND-4621
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/1/partner/documents
+    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    Ludlow
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    worth.email.test+projectlead@gmail.com

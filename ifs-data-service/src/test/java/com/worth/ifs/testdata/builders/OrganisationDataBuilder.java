@@ -16,28 +16,9 @@ import static java.util.Collections.emptyList;
 
 public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, OrganisationDataBuilder> {
 
-    public static OrganisationDataBuilder newOrganisationData(ServiceLocator serviceLocator) {
-
-        return new OrganisationDataBuilder(emptyList(), serviceLocator);
-    }
-
-    private OrganisationDataBuilder(List<BiConsumer<Integer, OrganisationData>> multiActions,
-                                    ServiceLocator serviceLocator) {
-
-        super(multiActions, serviceLocator);
-    }
-
-    @Override
-    protected OrganisationDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, OrganisationData>> actions) {
-        return new OrganisationDataBuilder(actions, serviceLocator);
-    }
-
-    @Override
-    protected OrganisationData createInitial() {
-        return new OrganisationData();
-    }
-
-    public OrganisationDataBuilder createOrganisation(String organisationName, OrganisationTypeEnum organisationType) {
+    public OrganisationDataBuilder createOrganisation(String organisationName,
+                                                      String companyRegistrationNumber,
+                                                      OrganisationTypeEnum organisationType) {
 
         return with(data -> {
 
@@ -46,6 +27,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                 OrganisationResource created = organisationService.create(newOrganisationResource().
                         withId().
                         withName(organisationName).
+                        withCompanyHouseNumber(companyRegistrationNumber).
                         withOrganisationType(organisationType.getOrganisationTypeId()).
                         build()).getSuccessObjectOrThrowException();
 
@@ -75,5 +57,26 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                 organisationService.addAddress(data.getOrganisation().getId(), addressType, address);
             });
         });
+    }
+
+    public static OrganisationDataBuilder newOrganisationData(ServiceLocator serviceLocator) {
+
+        return new OrganisationDataBuilder(emptyList(), serviceLocator);
+    }
+
+    private OrganisationDataBuilder(List<BiConsumer<Integer, OrganisationData>> multiActions,
+                                    ServiceLocator serviceLocator) {
+
+        super(multiActions, serviceLocator);
+    }
+
+    @Override
+    protected OrganisationDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, OrganisationData>> actions) {
+        return new OrganisationDataBuilder(actions, serviceLocator);
+    }
+
+    @Override
+    protected OrganisationData createInitial() {
+        return new OrganisationData();
     }
 }

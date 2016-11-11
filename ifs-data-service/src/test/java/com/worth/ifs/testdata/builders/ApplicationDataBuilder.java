@@ -9,6 +9,7 @@ import com.worth.ifs.testdata.builders.data.ApplicationData;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -98,16 +99,23 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder openApplication() {
+    public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()));
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()).
+                        getSuccessObjectOrThrowException());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
-        return asLeadApplicant(data ->
-            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()));
+        return asLeadApplicant(data -> {
+
+            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()).
+                    getSuccessObjectOrThrowException();
+
+            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
+            applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
+        });
     }
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {

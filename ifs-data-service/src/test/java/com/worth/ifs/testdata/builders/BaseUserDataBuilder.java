@@ -26,21 +26,21 @@ import static java.util.Optional.empty;
  */
 public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends BaseDataBuilder<T, S> {
 
-    public abstract S registerUser(String firstName, String lastName, String emailAddress, String organisationName);
+    public abstract S registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber);
 
     public S withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
         return with(data -> organisationBuilder.build().getOrganisation());
     }
 
-    protected void registerUser(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
+    protected void registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, UserRoleType role, T data) {
 
         doAs(systemRegistrar(), () -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
-            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, organisation.getId(), role, data);
+            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, organisation.getId(), role, data);
         });
     }
 
-    protected void registerUserWithNewOrganisation(String firstName, String lastName, String emailAddress, String organisationName, UserRoleType role, T data) {
+    protected void registerUserWithNewOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, String organisationName, UserRoleType role, T data) {
 
         doAs(systemRegistrar(), () -> {
             OrganisationResource newOrganisation =
@@ -49,7 +49,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                             withName(organisationName).
                             build()).getSuccessObjectOrThrowException();
 
-            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, newOrganisation.getId(), role, data);
+            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, newOrganisation.getId(), role, data);
         });
     }
 
@@ -75,7 +75,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         data.setUser(user);
     }
 
-    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, UserRoleType role, Long organisationId) {
+    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, UserRoleType role, Long organisationId) {
 
         List<Role> roles = roleRepository.findByNameIn(singletonList(role.getName()));
 
@@ -83,6 +83,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withFirstName(firstName).
                 withLastName(lastName).
                 withEmail(emailAddress).
+                withPhoneNumber(phoneNumber).
                 withRolesGlobal(simpleMap(roles, r -> newRoleResource().withId(r.getId()).build())).
                 withPassword("Passw0rd").
                 build()).
@@ -93,8 +94,8 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         return created;
     }
 
-    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, Long organisationId, UserRoleType role, T data) {
-        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, role, organisationId);
+    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, Long organisationId, UserRoleType role, T data) {
+        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, phoneNumber, role, organisationId);
         updateUserInUserData(data, registeredUser.getId());
     }
 

@@ -14,7 +14,7 @@ Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -39,12 +39,12 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
@@ -59,12 +59,12 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 

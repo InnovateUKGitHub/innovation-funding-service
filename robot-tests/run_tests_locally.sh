@@ -378,9 +378,9 @@ elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
     stopServers
-    resetDB
-    clearDownFileRepository
-    addTestFiles
+   ## resetDB
+   ## clearDownFileRepository
+   ## addTestFiles
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]

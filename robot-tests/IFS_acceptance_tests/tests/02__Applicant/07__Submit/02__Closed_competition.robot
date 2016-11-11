@@ -17,7 +17,7 @@ Application shows as not submitted on the dashboard
     [Documentation]    INFUND-2741
     [Tags]
     Then the user should see that the application is not submitted
-    And the user clicks the button/link    link=00000022: Spherical interactions in hyperdimensional space
+    And the user clicks the button/link    link=${IN_ASSESSMENT_APPLICATION_1_HEADER}
 
 Application shows as not submitted on the overview
     [Documentation]    INFUND-2742
@@ -46,7 +46,7 @@ Already submitted application should not show error when the competition is clos
     [Documentation]    INFUND-3175
     [Tags]
     When the user navigates to the page    ${dashboard_url}
-    And the user clicks the button/link    link=00000003: Mobile Phone Data for Logistics Analytics
+    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_3_HEADER}
     Then the user should not see the text in the page    Application not submitted
 
 *** Keywords ***

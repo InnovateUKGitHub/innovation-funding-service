@@ -29,8 +29,8 @@ Other internal users cannot see Bank details or Finance checks
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/review-all-bank-details    You do not have the necessary permissions for your request
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 
 Project Finance user can see the internal project summary page
@@ -39,27 +39,27 @@ Project Finance user can see the internal project summary page
     [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/monitoring-officer')]
+    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
     And the user should not see an error in the page
     And the user goes back to the previous page
-    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/1/review-all-bank-details')]
+    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details')]
     And the user should not see an error in the page
     And the user goes back to the previous page
-    And the user should not see the element    xpath=//a[contains(@href, '/project-setup-management/project/4/spend-profile/approval')]    # since the spend profile hasn't been generated yet - see INFUND-5144
+    And the user should not see the element    xpath=//a[contains(@href, '/project-setup-management/project/${INFORM_APPLICATION_1_PROJECT}/spend-profile/approval')]    # since the spend profile hasn't been generated yet - see INFUND-5144
 
 
 Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
     [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/finance-check    You do not have the necessary permissions for your request
+    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/1/monitoring-officer')]
+    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
     And the user should not see an error in the page
 
 
@@ -74,7 +74,7 @@ Project Finance has a dashboard and can see projects in PS
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element     jQuery=tr:nth-child(1) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("3 partners")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: Empire Ltd")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("better riffs")
     And the user should see the element     jQuery=tr:nth-child(3) th:contains("awesome riffs")
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}
@@ -96,16 +96,16 @@ Project Finance can see the progress of partners bank details
     [Tags]
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
-    Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
+    Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Complete")
     # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
     # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
-    When the user clicks the button/link            link=Vitruvius Stonework Limited
-    Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
-    And the user should see the text in the page    Bob Jones
-    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
-    And the user should see the text in the page    0987654321
+    When the user clicks the button/link            link=Empire Ltd
+    Then the user should see the text in the page   Empire Ltd - Account details
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+changepsw@gmail.com")
+    And the user should see the text in the page    7789123456
     #TODO for Jessica and Pete
 
 

@@ -130,7 +130,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
 
     private void createBaseOrganisations() {
         organisationBuilder.
-                createOrganisation(INNOVATE_UK_ORG_NAME, OrganisationTypeEnum.BUSINESS).
+                createOrganisation(INNOVATE_UK_ORG_NAME, "111", OrganisationTypeEnum.BUSINESS).
                 withAddress(OrganisationAddressType.REGISTERED, "North Star House", "", "", "", "", "").
                 build();
     }
@@ -139,7 +139,7 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
         internalUserBuilder.
                 withRole(COMP_ADMIN).
                 createPreRegistrationEntry(COMP_ADMIN_EMAIL).
-                registerUser("John", "Doe", "john.doe@innovateuk.test", INNOVATE_UK_ORG_NAME).
+                registerUser("John", "Doe", "john.doe@innovateuk.test", "0789123456", INNOVATE_UK_ORG_NAME).
                 verifyEmail().
                 build();
     }
@@ -147,31 +147,31 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
     private void createExternalUsers() {
 
         externalUserBuilder.
-                withNewOrganisation(organisationBuilder.createOrganisation("Empire Ltd", OrganisationTypeEnum.BUSINESS)).
-                registerUser("Steve", "Smith", "steve.smith@empire.com", "Empire Ltd").
+                withNewOrganisation(organisationBuilder.createOrganisation("Empire Ltd", "111", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Steve", "Smith", "steve.smith@empire.com", "07897654321", "Empire Ltd").
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                registerUser("Malik", "Strandberg", "worth.email.test+submit@gmail.com", "Empire Ltd").
+                registerUser("Malik", "Strandberg", "worth.email.test+submit@gmail.com", "07897654321", "Empire Ltd").
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                withNewOrganisation(organisationBuilder.createOrganisation("Ludlow", OrganisationTypeEnum.BUSINESS)).
-                registerUser("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "Ludlow").
+                withNewOrganisation(organisationBuilder.createOrganisation("Ludlow", "111", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Jessica", "Doe", "jessica.doe@ludlow.co.uk", "07897654321", "Ludlow").
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                withNewOrganisation(organisationBuilder.createOrganisation("EGGS", OrganisationTypeEnum.ACADEMIC)).
-                registerUser("Pete", "Tom", "pete.tom@egg.com", "EGGS").
+                withNewOrganisation(organisationBuilder.createOrganisation("EGGS", "111", OrganisationTypeEnum.ACADEMIC)).
+                registerUser("Pete", "Tom", "pete.tom@egg.com", "07897654321", "EGGS").
                 verifyEmail().
                 build();
 
         externalUserBuilder.
-                withNewOrganisation(organisationBuilder.createOrganisation("HIVE IT LIMITED", OrganisationTypeEnum.BUSINESS)).
-                registerUser("Ewan", "Cormack", "ewan+1@hiveit.co.uk", "HIVE IT LIMITED").
+                withNewOrganisation(organisationBuilder.createOrganisation("HIVE IT LIMITED", "111", OrganisationTypeEnum.BUSINESS)).
+                registerUser("Ewan", "Cormack", "ewan+1@hiveit.co.uk", "07897654321", "HIVE IT LIMITED").
                 build();
     }
 

@@ -12,11 +12,12 @@ import static java.util.Collections.emptyList;
 
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
-    public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName) {
+    @Override
+    public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
         return with(data -> {
 
             doAs(systemRegistrar(), () ->
-                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, data.getRole(), data));
+                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRole(), data));
         });
     }
 

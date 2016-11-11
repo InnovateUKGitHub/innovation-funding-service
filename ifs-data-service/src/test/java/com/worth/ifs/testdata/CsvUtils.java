@@ -275,6 +275,8 @@ class CsvUtils {
         String postcode;
         String county;
         OrganisationAddressType addressType;
+        String companyRegistrationNumber;
+        String phoneNumber;
 
         private UserLine(List<String> line) {
 
@@ -294,6 +296,8 @@ class CsvUtils {
             String addressTypeLine = nullable(line.get(i++));
             addressType = addressTypeLine != null ?
                     OrganisationAddressType.valueOf(addressTypeLine) : null;
+            companyRegistrationNumber = nullable(line.get(i++));
+            phoneNumber = nullable(line.get(i++));
         }
     }
 

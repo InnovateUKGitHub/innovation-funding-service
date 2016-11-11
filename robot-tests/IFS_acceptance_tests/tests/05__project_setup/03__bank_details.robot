@@ -170,16 +170,16 @@ Project Finance can see the progress of partners bank details
     [Setup]  log in as a different user             project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
-    Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
+    Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
     # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
     # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
-    When the user clicks the button/link            link=Vitruvius Stonework Limited
-    Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
-    And the user should see the text in the page    Bob Jones
-    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
-    And the user should see the text in the page    0987654321
+    When the user clicks the button/link            link=Empire Ltd
+    Then the user should see the text in the page   Empire Ltd - Account details
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+changepsw@gmail.com")
+    And the user should see the text in the page    7789123456
     #TODO for Jessica and Pete
 
 

@@ -308,7 +308,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
 
         if (line.status != ApplicationStatusConstants.CREATED) {
-            baseBuilder = baseBuilder.openApplication();
+            baseBuilder = baseBuilder.beginApplication();
         }
 
         if (line.submittedDate != null) {
@@ -410,7 +410,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withIndustrialCosts(
                                 costs -> costs.
                                         withWorkingDaysPerYear(123).
-                                        withGrantClaim(456).
+                                        withGrantClaim(30).
                                         withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
@@ -559,7 +559,7 @@ public class GenerateTestData extends BaseIntegrationTest {
             }
 
             OrganisationDataBuilder organisation = organisationBuilder.
-                    createOrganisation(line.organisationName, lookupOrganisationType(line.organisationType));
+                    createOrganisation(line.organisationName, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
 
             if (line.addressType != null) {
                 organisation = organisation.withAddress(line.addressType, line.addressLine1, line.addressLine2,
@@ -570,7 +570,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         };
 
         Function<S, S> registerUser = builder ->
-                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName);
+                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
         Function<S, S> verifyEmailIfNecessary = builder ->
                 line.emailVerified ? builder.verifyEmail() : builder;
