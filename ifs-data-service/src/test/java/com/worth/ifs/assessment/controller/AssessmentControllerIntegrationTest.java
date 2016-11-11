@@ -22,6 +22,7 @@ import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -40,15 +41,15 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findById() throws Exception {
-        Long assessmentId = 5L;
+        Long assessmentId = 6L;
 
         loginFelixWilson();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(assessmentId, assessmentResource.getId());
-        assertEquals(Long.valueOf(20L), assessmentResource.getProcessRole());
-        assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
+        assertEquals(Long.valueOf(21L), assessmentResource.getProcessRole());
+        assertEquals(Long.valueOf(4L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
+        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
     }
 
     @Test
