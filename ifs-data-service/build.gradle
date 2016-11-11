@@ -194,7 +194,7 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/Builder.class"
         include "com/worth/ifs/commons/test/*.class"
         include "com/worth/ifs/**/builder/*ResourceBuilder.class"
-        include "com/worth/ifs/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
+        include "com/worth/ifs/project/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
         include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
     }
 }
