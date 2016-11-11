@@ -73,7 +73,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.document(
+                .andDo(document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
