@@ -38,14 +38,14 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.organisation" ' +
           'name="appointments[' + uniqueRowId + '].organisation" value="" ' +
-          'data-required-errormessage="Please enter an organisation" required="required" />' +
+          'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.position" ' +
           'name="appointments[' + uniqueRowId + '].position" value="" ' +
-          'data-required-errormessage="Please enter a position" required="required" />' +
+          'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
           '<td>' +
           '<button class="remove-another-row buttonlink" name="removeAppointment" type="button" value="0">Remove</button>' +
@@ -58,21 +58,21 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
-          'data-required-errormessage="Please enter a relation" required="required" />' +
+          'data-required-errormessage="Please enter a relation." required="required" />' +
           '</td>' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
-          'data-required-errormessage="Please enter an organisation" required="required" />' +
+          'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +
           'name="familyAffiliations[' + uniqueRowId + '].position" value="" ' +
-          'data-required-errormessage="Please enter a position" required="required" />' +
+          'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
           '<td>' +
           '<button class="remove-another-row buttonlink" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +

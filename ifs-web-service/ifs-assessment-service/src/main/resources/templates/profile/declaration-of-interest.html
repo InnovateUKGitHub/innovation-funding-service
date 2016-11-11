@@ -40,7 +40,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter a principal employer" />
+                           data-required-errormessage="Please enter a principal employer." />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
@@ -52,7 +52,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{role}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter your role with your principal employer" />
+                           data-required-errormessage="Please enter your role with your principal employer." />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
@@ -78,14 +78,14 @@
                             <input value="yes" type="radio" th:field="*{hasAppointments}"
                                    data-repeatable-rowcontainer="#position-table tbody"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies"
+                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
                                    data-conditionally-add-required="input.appointment-field" />
                             Yes
                         </label>
                         <label class="block-label">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies"
+                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
                                    data-conditionally-remove-required="input.appointment-field" />
                             No
                         </label>
@@ -118,7 +118,7 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].organisation}"
                                                required="required"
-                                               data-required-errormessage="Please enter an organisation" />
+                                               data-required-errormessage="Please enter an organisation." />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
                                         <label>
@@ -133,7 +133,7 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].position}"
                                                required="required"
-                                               data-required-errormessage="Please enter a position" />
+                                               data-required-errormessage="Please enter a position." />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
@@ -163,14 +163,14 @@
                         <label class="block-label" data-target="toggle-interest">
                             <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any other financial interests"
+                                   data-required-errormessage="Please tell us if you have any other financial interests."
                                    data-conditionally-add-required="#financialInterests" />
                             Yes
                         </label>
                         <label class="block-label">
                             <input value="No" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any other financial interests"
+                                   data-required-errormessage="Please tell us if you have any other financial interests."
                                    data-conditionally-remove-required="#financialInterests" />
                             No
                         </label>
@@ -184,7 +184,7 @@
                             </label>
                             <textarea class="form-control width-full" cols="30" rows="3"
                                       th:field="*{financialInterests}" th:errorclass="field-error"
-                                      data-required-errormessage="Please enter your financial interests"></textarea>
+                                      data-required-errormessage="Please enter your financial interests."></textarea>
                         </div>
                     </fieldset>
                 </div>
@@ -206,14 +206,14 @@
                             <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
                                    data-repeatable-rowcontainer="#family-table tbody"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies"
+                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies."
                                    data-conditionally-add-required="input.family-affiliation-field" />
                             Yes
                         </label>
                         <label class="block-label">
                             <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies"
+                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies."
                                    data-conditionally-remove-required="input.family-affiliation-field" />
                             No
                         </label>
@@ -245,7 +245,7 @@
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
                                                th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].relation'"
                                                required="required"
-                                               data-required-errormessage="Please enter a relation" />
+                                               data-required-errormessage="Please enter a relation." />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
                                         <label>
@@ -258,7 +258,7 @@
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
                                                th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].organisation'"
                                                required="required"
-                                               data-required-errormessage="Please enter an organisation" />
+                                               data-required-errormessage="Please enter an organisation." />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
                                         <label>
@@ -272,7 +272,7 @@
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
                                                th:attr="data-errorfield='familyAffiliations[__${familyAffiliationStat.index}__].position'"
                                                required="required"
-                                               data-required-errormessage="Please enter a position" />
+                                               data-required-errormessage="Please enter a position." />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
@@ -300,14 +300,14 @@
                         <label class="block-label" data-target="toggle-family-interest">
                             <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests"
+                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests."
                                    data-conditionally-add-required="#familyFinancialInterests" />
                             Yes
                         </label>
                         <label class="block-label">
                             <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests"
+                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests."
                                    data-conditionally-remove-required="#familyFinancialInterests" />
                             No
                         </label>
@@ -321,7 +321,7 @@
                         </label>
                         <textarea class="form-control width-full" cols="30" rows="3"
                                   th:field="*{familyFinancialInterests}" th:errorclass="field-error"
-                                  data-required-errormessage="Please enter your family financial interests"></textarea>
+                                  data-required-errormessage="Please enter your family financial interests."></textarea>
                     </div>
                 </div>
 
@@ -335,7 +335,7 @@
                       </legend>
                       <label class="block-label">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required"
-                                 data-required-errormessage="You must agree that your account is accurate" />
+                                 data-required-errormessage="You must agree that your account is accurate." />
                           <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
