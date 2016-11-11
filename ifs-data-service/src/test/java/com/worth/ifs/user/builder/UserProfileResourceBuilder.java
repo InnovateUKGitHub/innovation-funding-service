@@ -7,8 +7,8 @@ import com.worth.ifs.user.resource.*;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.createDefault;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
 public class UserProfileResourceBuilder extends BaseBuilder<UserProfileResource, UserProfileResourceBuilder> {
