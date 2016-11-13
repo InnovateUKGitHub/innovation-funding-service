@@ -25,7 +25,7 @@ Comp admin can open the view mode of the application
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     Then the user should see the element    id=sort-by
     And the user selects the option from the drop-down menu    id    id=sort-by
-    When the user clicks the button/link    link=${IN_ASSESSMENT_APPLICATION_3_NUMBER}
+    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
     And the user should see the text in the page    A novel solution to an old problem
@@ -73,17 +73,23 @@ the user cannot see this file but gets a quarantined message
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £127,059
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £9,000
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £88,941
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £9,000
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £38,118
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £100,837
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £100,837
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £100,837
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(5) td:nth-of-type(1)    £495
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    30%
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    30%
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(2)    30%
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(5) td:nth-of-type(2)    100%
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £29,017
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £29,017
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £29,017
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(5) td:nth-of-type(3)    £495
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £70,586
 
 the finance Project cost breakdown calculations should be correct
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £127,059
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £100,837
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £495
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")

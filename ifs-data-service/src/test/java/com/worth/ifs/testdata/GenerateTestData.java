@@ -102,6 +102,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationDataBuilder organisationBuilder;
 
+    private static List<OrganisationLine> organisationLines;
+
     /**
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
@@ -153,6 +155,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @BeforeClass
     public static void readCsvs() throws Exception {
+        organisationLines = readOrganisations();
         competitionLines = readCompetitions();
         applicationLines = readApplications();
         externalUserLines = readExternalUsers();
@@ -550,7 +553,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
 
-        Function<S, S> creatOrgIfNecessary = builder -> {
+        Function<S, S> createOrgIfNecessary = builder -> {
 
             boolean newOrganisation = organisationRepository.findOneByName(line.organisationName) == null;
 
@@ -558,12 +561,16 @@ public class GenerateTestData extends BaseIntegrationTest {
                 return builder;
             }
 
-            OrganisationDataBuilder organisation = organisationBuilder.
-                    createOrganisation(line.organisationName, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
+            OrganisationLine matchingOrganisationDetails = simpleFindFirst(organisationLines, orgLine -> orgLine.name.equals(line.organisationName)).get();
 
-            if (line.addressType != null) {
-                organisation = organisation.withAddress(line.addressType, line.addressLine1, line.addressLine2,
-                        line.addressLine3, line.town, line.postcode, line.county);
+            OrganisationDataBuilder organisation = organisationBuilder.
+                    createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
+
+            if (matchingOrganisationDetails.addressType != null) {
+                organisation = organisation.withAddress(matchingOrganisationDetails.addressType,
+                        matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
+                        matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,
+                        matchingOrganisationDetails.postcode, matchingOrganisationDetails.county);
             }
 
             return builder.withNewOrganisation(organisation);
@@ -575,7 +582,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         Function<S, S> verifyEmailIfNecessary = builder ->
                 line.emailVerified ? builder.verifyEmail() : builder;
 
-        creatOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
+        createOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {

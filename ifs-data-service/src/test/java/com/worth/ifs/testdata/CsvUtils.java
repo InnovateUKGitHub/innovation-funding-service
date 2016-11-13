@@ -32,6 +32,10 @@ class CsvUtils {
     static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    static List<OrganisationLine> readOrganisations() {
+        return simpleMap(readCsvLines("organisations"), OrganisationLine::new);
+    }
+
     static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
     }
@@ -245,7 +249,8 @@ class CsvUtils {
 
             int i = 0;
             name = nullable(line.get(i++));
-            description = nullable(line.get(i++));;
+            description = nullable(line.get(i++));
+            ;
             type = line.get(i++);
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
@@ -267,15 +272,6 @@ class CsvUtils {
         String lastName;
         boolean emailVerified;
         String organisationName;
-        String organisationType;
-        String addressLine1;
-        String addressLine2;
-        String addressLine3;
-        String town;
-        String postcode;
-        String county;
-        OrganisationAddressType addressType;
-        String companyRegistrationNumber;
         String phoneNumber;
 
         private UserLine(List<String> line) {
@@ -286,6 +282,27 @@ class CsvUtils {
             lastName = line.get(i++);
             emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
             organisationName = line.get(i++);
+            phoneNumber = nullable(line.get(i++));
+        }
+    }
+
+    static class OrganisationLine {
+
+        String name;
+        String organisationType;
+        String addressLine1;
+        String addressLine2;
+        String addressLine3;
+        String town;
+        String postcode;
+        String county;
+        OrganisationAddressType addressType;
+        String companyRegistrationNumber;
+
+        private OrganisationLine(List<String> line) {
+
+            int i = 0;
+            name = line.get(i++);
             organisationType = line.get(i++);
             addressLine1 = nullable(line.get(i++));
             addressLine2 = nullable(line.get(i++));
@@ -297,7 +314,6 @@ class CsvUtils {
             addressType = addressTypeLine != null ?
                     OrganisationAddressType.valueOf(addressTypeLine) : null;
             companyRegistrationNumber = nullable(line.get(i++));
-            phoneNumber = nullable(line.get(i++));
         }
     }
 
