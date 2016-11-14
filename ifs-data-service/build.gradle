@@ -244,6 +244,11 @@ task syncShib(type:Exec) {
     commandLine './syncShib.sh'
 }
 
+task upgradeShib(type:Exec) {
+    workingDir '../setup-files/scripts/docker'
+    commandLine './upgradeShib.sh'
+}
+
 
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
