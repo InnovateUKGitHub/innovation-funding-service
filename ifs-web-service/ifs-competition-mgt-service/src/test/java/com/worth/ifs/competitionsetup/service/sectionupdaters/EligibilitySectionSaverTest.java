@@ -20,9 +20,7 @@ import java.util.Set;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +40,8 @@ public class EligibilitySectionSaverTest {
 	public void testSaveCompetitionSetupSection() {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
 		competitionSetupForm.setLeadApplicantType("business");
+		competitionSetupForm.setMultipleStream("yes");
+		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResubmission("yes");
 		competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
 		competitionSetupForm.setResearchParticipationAmountId(1);
@@ -52,8 +52,8 @@ public class EligibilitySectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 		
 		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
-		assertFalse(competition.isMultiStream());
-		assertNull(competition.getStreamName());
+		assertTrue(competition.isMultiStream());
+		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
 		assertEquals(Integer.valueOf(30), competition.getMaxResearchRatio());
 		assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());
@@ -101,7 +101,7 @@ public class EligibilitySectionSaverTest {
 	}
 
 	@Test
-	public void testAutoSaveSingleOrCollaborative() {
+	public void testAutoSaveMultipleStreamYes() {
 		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
@@ -112,6 +112,48 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(asList(10L));
 		competition.setMultiStream(false);
+
+		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "yes", null);
+
+		assertTrue(errors.isEmpty());
+		verify(competitionService).update(competition);
+
+		assertTrue(competition.isMultiStream());
+	}
+
+	@Test
+	public void testAutoSaveMultipleStreamNo() {
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+
+		Set<Long> researchCategories = new HashSet<>();
+		researchCategories.add(33L);
+		researchCategories.add(34L);
+		researchCategories.add(35L);
+
+		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
+		competition.setMilestones(asList(10L));
+		competition.setMultiStream(true);
+
+		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "no", null);
+
+		assertTrue(errors.isEmpty());
+		verify(competitionService).update(competition);
+
+		assertTrue(!competition.isMultiStream());
+	}
+
+	@Test
+	public void testAutoSaveSingleOrCollaborative() {
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+
+		Set<Long> researchCategories = new HashSet<>();
+		researchCategories.add(33L);
+		researchCategories.add(34L);
+		researchCategories.add(35L);
+
+		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
+		competition.setMilestones(asList(10L));
+		competition.setMultiStream(true);
 		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
 
 		List<Error> errors = service.autoSaveSectionField(competition, "singleOrCollaborative", "single", null);
@@ -133,7 +175,7 @@ public class EligibilitySectionSaverTest {
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(asList(10L));
-		competition.setMultiStream(false);
+		competition.setMultiStream(true);
 		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
 		competition.setMaxResearchRatio(Integer.valueOf(50));
 

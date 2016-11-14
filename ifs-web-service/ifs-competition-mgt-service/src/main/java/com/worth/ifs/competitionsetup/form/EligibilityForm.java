@@ -11,6 +11,10 @@ import java.util.Set;
  * Form for the eligibility competition setup section.
  */
 public class EligibilityForm extends CompetitionSetupForm {
+	@NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
+	private String multipleStream;
+	@Size(max = 255, message = "{validation.eligibilityform.streamname.length.max}")
+	private String streamName;
 	@NotEmpty(message = "{validation.eligibilityform.researchcategoryid.required}")
 	private Set<Long> researchCategoryId;
 	@NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
@@ -22,6 +26,13 @@ public class EligibilityForm extends CompetitionSetupForm {
 	@NotBlank(message = "{validation.eligibilityform.resubmission.required}")
 	private String resubmission;
 
+	public String getMultipleStream() {
+		return multipleStream;
+	}
+	public void setMultipleStream(String multipleStream) {
+		this.multipleStream = multipleStream;
+	}
+
     public String getResubmission() {
         return resubmission;
     }
@@ -30,6 +41,12 @@ public class EligibilityForm extends CompetitionSetupForm {
         this.resubmission = resubmission;
     }
 
+    public String getStreamName() {
+		return streamName;
+	}
+	public void setStreamName(String streamName) {
+		this.streamName = streamName;
+	}
 	public Set<Long> getResearchCategoryId() {
 		return researchCategoryId;
 	}

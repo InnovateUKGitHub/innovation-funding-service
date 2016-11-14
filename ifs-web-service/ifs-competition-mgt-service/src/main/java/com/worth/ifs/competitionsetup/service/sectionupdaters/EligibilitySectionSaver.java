@@ -47,8 +47,13 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 			competition.setMaxResearchRatio(amount.getAmount());
 		}
 
-		competition.setMultiStream(false);
-		competition.setStreamName(null);
+		boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
+		competition.setMultiStream(multiStream);
+		if(multiStream) {
+			competition.setStreamName(eligibilityForm.getStreamName());
+		} else {
+			competition.setStreamName(null);
+		}
 
 		competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
@@ -76,6 +81,12 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	@Override
 	public List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
 		switch (fieldName) {
+			case "multipleStream":
+				competitionResource.setMultiStream(CompetitionUtils.textToBoolean(value));
+				break;
+			case "streamName":
+				competitionResource.setStreamName(value);
+				break;
 			case "singleOrCollaborative":
 				competitionResource.setCollaborationLevel(CollaborationLevel.fromCode(value));
 				break;

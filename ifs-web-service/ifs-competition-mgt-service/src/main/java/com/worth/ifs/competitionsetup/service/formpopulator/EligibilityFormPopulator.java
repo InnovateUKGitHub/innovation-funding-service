@@ -32,6 +32,12 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setResearchParticipationAmountId(amount.getId());
 		}
 
+		if(competitionResource.isMultiStream()) {
+			competitionSetupForm.setStreamName(competitionResource.getStreamName());
+		}
+
+		competitionSetupForm.setMultipleStream(CompetitionUtils.booleanToText(competitionResource.isMultiStream()));
+
 		CollaborationLevel level = competitionResource.getCollaborationLevel();
 		if(level != null) {
 			competitionSetupForm.setSingleOrCollaborative(level.getCode());
