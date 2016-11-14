@@ -292,3 +292,10 @@ span.no{
 	@extend %icon-cross;
 	padding-left: 28px;
 }
+.error-summary-list {
+  @extend .list-bullet;
+
+  li:first-letter {
+    text-transform:lowercase;
+  }
+}
