@@ -16,8 +16,8 @@ public enum MilestoneType {
     ASSESSOR_BRIEFING("5. Assessor briefing"),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),
     ASSESSOR_DEADLINE("7. Assessor deadline"),
-    ASSESSORS_NOTIFIED("8. Assessors Notified", false),
-    ASSESSMENT_CLOSE("9. Assessment close", false),
+    ASSESSORS_NOTIFIED("8. Assessors Notified", false), // terminology varies, but this corresponds to the button in Assessor Management
+    ASSESSMENT_CLOSED("9. Assessment closed", false),
     LINE_DRAW("10. Line draw"),
     ASSESSMENT_PANEL("11. Assessment panel"),
     PANEL_DATE("12. Panel date"),

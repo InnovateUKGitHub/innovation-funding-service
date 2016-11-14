@@ -67,6 +67,7 @@ public class CompetitionStatusTest {
     public void competitionStatusInAssessmentIfEndDateInPastAndAssessmentEndDateInFuture(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
+        competition.notifyAssessors(past);
     	competition.setFundersPanelDate(future);
 
         assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
@@ -76,6 +77,7 @@ public class CompetitionStatusTest {
     public void competitionStatusInAssessmentIfEndDateMetAndAssessmentEndDateInFuture(){
     	competition.setStartDate(past);
     	competition.setEndDate(currentDate);
+        competition.notifyAssessors(past);
     	competition.setFundersPanelDate(future);
 
         assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
@@ -85,6 +87,8 @@ public class CompetitionStatusTest {
     public void competitionStatusFundersPanelIfFundersPanelDateInPastAndFundersPanelEndDateInFuture(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelDate(past);
     	competition.setFundersPanelEndDate(future);
 
@@ -95,6 +99,8 @@ public class CompetitionStatusTest {
     public void competitionStatusFundersPanelIfFundersPanelDateMetAndFundersPanelEndDateInFuture(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelDate(currentDate);
     	competition.setFundersPanelEndDate(future);
 
@@ -105,6 +111,8 @@ public class CompetitionStatusTest {
     public void competitionStatusFundersPanelIfFundersPanelDateInPastAndFundersPanelEndDateNotSet(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelDate(past);
 
         assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
@@ -114,6 +122,8 @@ public class CompetitionStatusTest {
     public void competitionStatusFundersPanelIfFundersPanelDateMetAndFundersPanelEndDateNotSet(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelDate(currentDate);
 
         assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
@@ -125,6 +135,8 @@ public class CompetitionStatusTest {
     	competition.setEndDate(past);
     	competition.setFundersPanelDate(past);
     	competition.setFundersPanelEndDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setAssessorFeedbackDate(future);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
@@ -135,6 +147,8 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(past);
     	competition.setFundersPanelDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(currentDate);
     	competition.setAssessorFeedbackDate(future);
 
@@ -146,6 +160,8 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(past);
     	competition.setFundersPanelDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
@@ -156,6 +172,8 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(past);
     	competition.setFundersPanelDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(currentDate);
     	competition.setAssessorFeedbackDate(future);
 
@@ -167,6 +185,8 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
     	competition.setAssessorFeedbackDate(past);
 
@@ -178,6 +198,8 @@ public class CompetitionStatusTest {
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
+        competition.notifyAssessors(past);
+        competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
     	competition.setAssessorFeedbackDate(currentDate);
 

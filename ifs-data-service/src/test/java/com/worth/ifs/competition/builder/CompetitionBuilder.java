@@ -84,6 +84,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("status", status, competition));
     }
 
+    public CompetitionBuilder withAssessorsNotifiedDate(LocalDateTime... dates) {
+        return withArray((date, competition) -> competition.notifyAssessors(date), dates);
+    }
+
+    public CompetitionBuilder withAssessmentClosedDate(LocalDateTime... dates) {
+        return withArray((date, competition) -> competition.closeAssessment(date), dates);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         LocalDateTime now = LocalDateTime.now();
         if(READY_TO_OPEN.equals(status)) {
@@ -105,8 +113,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     				.withFundersPanelDate(now.plusDays(1L));
     	} else if(FUNDERS_PANEL.equals(status)) {
     		return withSetupComplete(true)
-                    .withStartDate(now.minusDays(3L))
-    				.withEndDate(now.minusDays(2L))
+                    .withStartDate(now.minusDays(5L))
+    				.withEndDate(now.minusDays(4L))
+                    .withAssessorsNotifiedDate(now.minusDays(3L))
+                    .withAssessmentClosedDate(now.minusDays(2L))
     				.withFundersPanelDate(now.minusDays(1L))
     				.withFundersPanelEndDate(null);
     	} else if(ASSESSOR_FEEDBACK.equals(status)) {

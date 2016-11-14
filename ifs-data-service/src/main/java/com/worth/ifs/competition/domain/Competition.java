@@ -134,11 +134,9 @@ public class Competition implements ProcessActivity {
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
-            } else if (isMilestoneSet(ASSESSOR_ACCEPTS) && !isMilestoneReached(ASSESSOR_ACCEPTS)) {
-                // TODO INFUND-5199 - Should not be using the assessor accepts deadline at all here
-                // TODO INFUND-5199 - The competition is closed if we're past the submission date, but haven't distributed applications
+            } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
-            } else if (!isMilestoneReached(MilestoneType.FUNDERS_PANEL)) {
+            } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
@@ -533,21 +531,17 @@ public class Competition implements ProcessActivity {
         this.includeGrowthTable = includeGrowthTable;
     }
 
-    public void distributeApplications() {
-//        if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
-//            throw new IllegalStateException("Tried to distribute applications when in competitionStatus=" +
-//                    getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
-//                    CompetitionStatus.CLOSED);
-//        }
-//        this.applicationsDistributed = true;
+    public void notifyAssessors(LocalDateTime date) {
+        if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
+            throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
+                    getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
+                    CompetitionStatus.CLOSED);
+        }
+        setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
     }
 
-    public void closeAssessment() {
-//        if (getCompetitionStatus() != CompetitionStatus.IN_ASSESSMENT) {
-//
-//        }
-//
-//        this.assessmentClosed = true;
+    public void closeAssessment(LocalDateTime date) {
+        setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
     }
 }
 
