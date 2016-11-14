@@ -131,14 +131,14 @@
 
 					<h2 class="heading-medium"><a th:href="${(param.status != null and param.status[0] == 'docs-reject' ? '/prototypes/1590-document-upload?status=reject' : '/prototypes/1590-document-upload')}">Other documents</a></h2>
 					
-					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+					<p>As Project Manager in the consortium you will need to upload the following documents:</p>
 
 				</div>
 				
 				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 					
 					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
-					<p>The lead partner of the consortium will need to upload documents including:</p>
+					<p>The lead partner of the consortium will need to upload the following documents:</p>
 
 				</div>
 

@@ -111,7 +111,7 @@
 
                 <div class="textarea-wrapped word-count">
 
-                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
+                    <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text"></textarea>
 
                     <div class="textarea-footer">
 
@@ -782,6 +782,30 @@
 
                         </label>
                     </li>
+                    <!--<li>-->
+                        <!--<div class="grid-row">-->
+                            <!--<div class="column-assessment-details">-->
+                                <!--<h3 class="heading-medium">-->
+                                    <!--<a href="#">Security for the Internet of Things</a>-->
+                                <!--</h3>-->
+                                <!--<div><p>Ludlow</p></div>-->
+                            <!--</div>-->
+                            <!--<div class="column-assessment-status navigation-right">-->
+                                <!--<div class="application-status pending empty">-->
+                                    <!--<p>Pending</p>-->
+                                    <!--&lt;!&ndash;if assessment is pending acceptance&ndash;&gt;-->
+                                    <!--<p class="application-listing_pending">-->
+                                        <!--<a href="#">accept / reject assessment</a>-->
+                                    <!--</p>-->
+                                    <!--&lt;!&ndash;otherwise shows the overall score &ndash;&gt;-->
+
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<label>-->
+
+                        <!--</label>-->
+                    <!--</li>-->
                     <li>
                         <div class="grid-row">
                             <div class="column-assessment-details">
@@ -791,16 +815,24 @@
                                 <div><p>Ludlow</p></div>
                             </div>
                             <div class="column-assessment-status navigation-right">
-                                <div class="application-status pending empty">
-                                    <p>Pending</p>
+                                <div class="application-status assessed yes">
+                                    <p>Assessed</p>
                                     <!--if assessment is pending acceptance-->
-                                    <p class="application-listing_pending">
-                                        <a href="#">accept / reject assessment</a>
-                                    </p>
-                                    <!--otherwise shows the overall score -->
 
+                                    <!--otherwise shows the overall score -->
+                                    <p class="application-listing_pending"></p>
+                                    <h3 class="score"><span>51.0</span> %</h3>
+                                    <small>Overall score</small>
+                                    <div class="recommend-container">
+                                        <p class="recommend yes"> <span>Recommended</span> </p>
+
+                                    </div>
+                                    <p></p>
                                 </div>
                             </div>
+                            <label>
+                                <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
+                            </label>
                         </div>
                         <label>
 
@@ -837,33 +869,41 @@
                                 </h3>
                                 <div><p>Empire Ltd</p></div>
                             </div>
+                            <!--<div class="column-assessment-status navigation-right">-->
+                                <!--<div class="application-status assessed yes">-->
+                                    <!--<p>Assessed</p>-->
+                                    <!--&lt;!&ndash;if assessment is pending acceptance&ndash;&gt;-->
+
+                                    <!--&lt;!&ndash;otherwise shows the overall score &ndash;&gt;-->
+                                    <!--<p class="application-listing_pending"></p>-->
+                                    <!--<h3 class="score"><span>21.0</span> %</h3>-->
+                                    <!--<small>Overall score</small>-->
+                                    <!--<div class="recommend-container">-->
+                                        <!--<p class="recommend yes"> <span>Recommended</span> </p>-->
+
+                                    <!--</div>-->
+                                    <!--<p></p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
                             <div class="column-assessment-status navigation-right">
-                                <div class="application-status assessed yes">
-                                    <p>Assessed</p>
-                                    <!--if assessment is pending acceptance-->
 
-                                    <!--otherwise shows the overall score -->
-                                    <p class="application-listing_pending">
-                                        </p><h3 class="score"><span>21.0</span> %</h3>
-                                        <small>Overall score</small>
-                                        <div class="recommend-container">
-                                            <p class="recommend yes"> <span>Recommended</span> </p>
-
-                                        </div>
-                                        <p></p>
-                                    </div>
+                                <div class="application-status open empty">
+                                    <p>Open</p>
                                 </div>
+
                             </div>
-                            <label>
-                                <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
-                            </label>
-                        </li>
-                        <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
-                        <div class="alignright">
-                            <input type="hidden" name="competitionId" value="1" />
-                            <a class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit">Submit assessments</a>
                         </div>
-                    </form>
+                        <!--<label>-->
+                            <!--<input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />-->
+                        <!--</label>-->
+                    </li>
+                    <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
+                    <div class="alignright">
+                        <input type="hidden" name="competitionId" value="1" />
+                        <a class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit">Submit assessments</a>
+                    </div>
+                </form>
             </ul>
         </div>
         <!--all the submitted assessments-->
