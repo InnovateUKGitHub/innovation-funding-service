@@ -14,6 +14,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="page-title">
@@ -51,9 +53,6 @@
         <h2 class="heading-medium">Innovation Lead</h2>
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
             Innovation Lead
-        </p>
-        <p th:if="${#strings.isEmpty(model.leadTechnologist)}">
-            Robin Wilson
         </p>
         <h2 class="heading-medium">Project spend profile</h2>
 

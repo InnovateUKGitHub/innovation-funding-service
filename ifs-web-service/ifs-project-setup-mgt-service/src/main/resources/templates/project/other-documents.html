@@ -9,7 +9,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
+         th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
          th:remove="tag"/>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
