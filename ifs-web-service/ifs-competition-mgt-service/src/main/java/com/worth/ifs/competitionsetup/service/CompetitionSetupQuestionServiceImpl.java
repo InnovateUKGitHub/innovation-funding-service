@@ -27,9 +27,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     private final Long fileUploadId = 4L;
     private final Long assessorScoreId = 23L;
-    private final Long textAreaId = 2L;
-
-
+    
     @Override
     public QuestionViewModel getQuestion(final Long questionId) {
         QuestionResource questionResource = questionService.getById(questionId);
@@ -62,6 +60,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 	public void updateQuestion(QuestionViewModel question) {
 		QuestionResource questionResource = questionService.getById(question.getId());
 		List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(question.getId());
+        final Long textAreaId = 2L;
         //TODO AssessorScore for application questions
         //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(question.getId());
 
