@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -13,7 +14,10 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -75,5 +79,33 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
+        Iterable<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
+        List<Error> failures = new ArrayList<>();
+        Set<Long> foundAssessmentIds = new HashSet<>();
+
+        assessments.forEach(assessment -> {
+            foundAssessmentIds.add(assessment.getId());
+
+            if (!assessmentWorkflowService.submit(assessment)) {
+                failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId()));
+            }
+        });
+
+        assessmentSubmissionsResource.getAssessmentIds()
+                .forEach(assessmentId -> {
+                    if (!foundAssessmentIds.contains(assessmentId)) {
+                        failures.add(notFoundError(AssessmentRepository.class, assessmentId));
+                    }
+                });
+
+        if (!failures.isEmpty()) {
+            return serviceFailure(failures);
+        }
+
+        return serviceSuccess();
     }
 }

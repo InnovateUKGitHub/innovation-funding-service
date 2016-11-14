@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,11 @@ public class AssessmentController {
     @RequestMapping(value= "/{id}/acceptInvitation", method = PUT)
     public RestResult<Void> acceptInvitation(@PathVariable("id") Long id) {
         return assessmentService.acceptInvitation(id).toPutResponse();
+    }
+
+    @RequestMapping(value = "/submitAssessments", method = PUT)
+    public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
+        return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
+
     }
 }
