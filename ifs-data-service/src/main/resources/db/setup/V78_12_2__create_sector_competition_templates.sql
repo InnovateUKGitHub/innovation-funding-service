@@ -5,7 +5,7 @@ INSERT INTO `competition_template`
 SELECT id from competition_type WHERE NAME = 'Sector';
 
 
-INSERT INTO `section_template` (section_type, name, description, assessor_guidance_description, parent_section_template_id, competition_template_id, priority)
+ INSERT INTO `section_template` (section_type, name, description, assessor_guidance_description, parent_section_template_id, competition_template_id, priority)
 VALUES ('GENERAL', 'Project details', 'Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.', 'These sections give important background information on the project. They do not need scoring.', null,
 (SELECT id FROM competition_template WHERE competition_type_id = (SELECT id FROM competition_type WHERE NAME = 'Sector')), 1);
 
