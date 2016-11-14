@@ -273,10 +273,6 @@ public class CompetitionSetupController {
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
 
-    	if("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())){
-    		bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
-    	}
-
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
     }
 
@@ -348,7 +344,7 @@ public class CompetitionSetupController {
 
     private Boolean isSuccessfulSaved(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-           return false;
+            return false;
         }
 
         List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);

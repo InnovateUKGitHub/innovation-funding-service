@@ -595,13 +595,16 @@
         <fieldset th:if="${!editable}" id="section-3-">
 
             <dl class="standard-definition-list">
-                <dt>Multiple Stream</dt>
+
+                <!-- INFUND-5682 : Competition streams options have been hidden, but there is a possibility they will be re-instated -->
+                <!-- <dt>Multiple Stream</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.multipleStream)}"></dd>
 
                 <div th:if="${'yes' == competitionSetupForm.multipleStream}" th:remove="tag">
                     <dt>Stream name</dt>
                     <dd th:text="${competitionSetupForm.streamName}"></dd>
-                </div>
+                </div>-->
+
 
                 <dt>Research categories</dt>
                 <dd th:text="${researchCategoriesFormatted}"></dd>

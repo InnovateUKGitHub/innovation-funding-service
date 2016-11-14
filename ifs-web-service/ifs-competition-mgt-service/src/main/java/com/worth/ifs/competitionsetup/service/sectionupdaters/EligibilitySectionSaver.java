@@ -76,12 +76,6 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	@Override
 	public List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
 		switch (fieldName) {
-			case "multipleStream":
-				competitionResource.setMultiStream(CompetitionUtils.textToBoolean(value));
-				break;
-			case "streamName":
-				competitionResource.setStreamName(value);
-				break;
 			case "singleOrCollaborative":
 				competitionResource.setCollaborationLevel(CollaborationLevel.fromCode(value));
 				break;
