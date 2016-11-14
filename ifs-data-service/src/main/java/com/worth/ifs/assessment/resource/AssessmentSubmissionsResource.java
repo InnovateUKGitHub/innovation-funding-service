@@ -2,18 +2,25 @@ package com.worth.ifs.assessment.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AssessmentSubmissionsResource {
 
-    private List<Long> assessmentIds;
+    @NotEmpty(message = "{validation.assessmentSubmissions.assessmentIds.required}")
+    private List<Long> assessmentIds = new ArrayList<>();
 
     public List<Long> getAssessmentIds() {
         return assessmentIds;
     }
 
     public void setAssessmentIds(List<Long> assessmentIds) {
+        if (assessmentIds == null) {
+            return;
+        }
+
         this.assessmentIds = assessmentIds;
     }
 
