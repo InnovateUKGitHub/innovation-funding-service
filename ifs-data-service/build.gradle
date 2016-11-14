@@ -162,8 +162,6 @@ task client(type: Jar) {
         exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
-        include "com/worth/ifs/config/rest/**"
-        include "**/**.properties"
     }
 }
 task clientCopy(type: Copy) {
