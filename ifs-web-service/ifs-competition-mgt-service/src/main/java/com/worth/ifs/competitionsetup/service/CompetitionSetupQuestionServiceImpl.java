@@ -27,6 +27,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     private final Long fileUploadId = 4L;
     private final Long assessorScoreId = 23L;
+    private final Long textAreaId = 2L;
 
 
     @Override
@@ -42,7 +43,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         question.setTitle(questionResource.getName());
         question.setSubTitle(questionResource.getDescription());
 
-        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(fileUploadId)).findFirst();
         if(result.isPresent()) {
             FormInputResource formInputResource = result.get();
             question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
@@ -66,16 +67,18 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
 		questionResource.setName(question.getTitle());
         questionResource.setDescription(question.getSubTitle());
+        questionResource.setShortName(question.getShortTitle());
+
         questionService.save(questionResource);
 
         FormInputResource formInputResource = new FormInputResource();
-        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(fileUploadId)).findFirst();
         if(result.isPresent()) {
             formInputResource = result.get();
         } else {
             formInputResource.setQuestion(question.getId());
             formInputResource.setScope(FormInputScope.APPLICATION);
-            formInputResource.setFormInputType(2L);
+            formInputResource.setFormInputType(textAreaId);
         }
 
         formInputResource.setGuidanceQuestion(question.getGuidanceTitle());
