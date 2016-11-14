@@ -5,19 +5,21 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -25,7 +27,9 @@ import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -343,5 +347,75 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).acceptInvitation(assessmentId);
+    }
+
+    @Test
+    public void submitAssessments_notEmpty() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(Arrays.asList(1L, 2L))
+                .build();
+
+        assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
+
+        when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/submitAssessments")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .andExpect(status().isOk());
+
+        verify(assessmentServiceMock, only()).submitAssessments(assessmentSubmissions);
+    }
+
+    @Test
+    public void submitAssessments_null() throws Exception {
+        Error error = fieldError("assessmentIds", emptyList(), "validation.assessmentSubmissions.assessmentIds.required", "");
+
+        mockMvc.perform(put("/assessment/submitAssessments")
+                .contentType(APPLICATION_JSON)
+                .content("{\"assessmentIds\": null}"))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(error))));
+
+        verifyZeroInteractions(assessmentServiceMock);
+    }
+
+    @Test
+    public void submitAssessments_empty() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().build();
+        assertEquals(0, assessmentSubmissions.getAssessmentIds().size());
+
+        Error error = fieldError("assessmentIds", emptyList(), "validation.assessmentSubmissions.assessmentIds.required", "");
+
+        mockMvc.perform(put("/assessment/submitAssessments")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(error))));
+
+        verifyZeroInteractions(assessmentServiceMock);
+    }
+
+    @Test
+    public void submitAssessments_eventNotAccepted() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(Arrays.asList(100L, 200L))
+                .build();
+
+        List<Error> errorList = Arrays.asList(
+                new Error(ASSESSMENT_SUBMIT_FAILED, 100L),
+                new Error(ASSESSMENT_SUBMIT_FAILED, 200L)
+        );
+
+        when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceFailure(errorList));
+
+        mockMvc.perform(put("/assessment/submitAssessments")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(toJson(new RestErrorResponse(errorList))))
+                .andReturn();
+
+        verify(assessmentServiceMock, only()).submitAssessments(assessmentSubmissions);
     }
 }

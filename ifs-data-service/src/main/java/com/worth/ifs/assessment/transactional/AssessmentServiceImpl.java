@@ -98,7 +98,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         assessmentSubmissionsResource.getAssessmentIds()
                 .forEach(assessmentId -> {
                     if (!foundAssessmentIds.contains(assessmentId)) {
-                        failures.add(notFoundError(AssessmentRepository.class, assessmentId));
+                        failures.add(notFoundError(Assessment.class, assessmentId));
                     }
                 });
 

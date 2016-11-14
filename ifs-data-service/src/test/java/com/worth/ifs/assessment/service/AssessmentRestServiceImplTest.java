@@ -4,6 +4,7 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,5 +91,10 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
     @Test
     public void submitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().build();
+
+        setupPutWithRestResultExpectations(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, OK);
+        RestResult<Void> response = service.submitAssessments(assessmentSubmissions);
+        assertTrue(response.isSuccess());
     }
 }
