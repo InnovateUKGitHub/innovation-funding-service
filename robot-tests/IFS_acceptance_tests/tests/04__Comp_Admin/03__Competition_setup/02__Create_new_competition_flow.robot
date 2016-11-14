@@ -237,7 +237,7 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    And the user selects the checkbox    id=research-categories-33
+    Given the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
