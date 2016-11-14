@@ -231,11 +231,11 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createCompetitions() {
 
         competitionLines.forEach(line -> {
-            if ("Connected digital additive manufacturing".equals(line.name)) {
-                createCompetitionWithApplications(line, Optional.of(1L));
-            } else {
+//            if ("Connected digital additive manufacturing".equals(line.name)) {
+//                createCompetitionWithApplications(line, Optional.of(1L));
+//            } else {
                 createCompetitionWithApplications(line, Optional.empty());
-            }
+//            }
         });
     }
 

@@ -21,6 +21,7 @@ mysqldump -uroot -ppassword ifs_baseline \
                             participant_status \
                             project_role \
                             role \
+                            competition_type \
                             --no-create-info --extended-insert=false > "generated/db/migration/V0_1_2__Reference_data.sql"
 echo "**Copy a script to create the system users, note that we do not do this as a dump or reference ids as they are different in UAT and LIVE. This is the third flyway script in the migration folder"
 cp V0_1_3__System_users.sql generated/db/migration/V0_1_3__System_users.sql
