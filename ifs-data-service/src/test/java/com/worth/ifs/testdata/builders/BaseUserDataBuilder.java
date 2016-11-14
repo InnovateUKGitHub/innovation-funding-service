@@ -28,6 +28,8 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
 
     public abstract S registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber);
 
+    public abstract S createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber);
+
     public S withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
         return with(data -> organisationBuilder.build().getOrganisation());
     }

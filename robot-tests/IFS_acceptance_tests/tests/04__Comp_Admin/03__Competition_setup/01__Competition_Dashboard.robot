@@ -54,8 +54,8 @@ PS projects title and lead
     And the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("better riffs")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
     And the user should see the element    jQuery=tr:nth-child(3) th:contains("awesome riffs")
@@ -101,7 +101,7 @@ Competition Opens automatically on date
     And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
     And The competition should be open
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
     [Documentation]    INFUND-3829

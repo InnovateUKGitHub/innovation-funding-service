@@ -3,12 +3,16 @@ package com.worth.ifs.testdata.builders;
 import com.worth.ifs.testdata.builders.data.InternalUserData;
 import com.worth.ifs.user.domain.CompAdminEmail;
 import com.worth.ifs.user.domain.ProjectFinanceEmail;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
@@ -18,6 +22,17 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
             doAs(systemRegistrar(), () ->
                     registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRole(), data));
+        });
+    }
+
+    @Override
+    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
+        return with(data -> {
+
+            User user = userRepository.save(new User(firstName, lastName, emailAddress, null, emptyList(), UUID.randomUUID().toString()));
+            Role role = roleRepository.findOneByName(data.getRole().getName());
+            user.setRoles(singletonList(role));
+            userRepository.save(user);
         });
     }
 
@@ -60,6 +75,9 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
                     ProjectFinanceEmail preregistrationEntry = new ProjectFinanceEmail();
                     preregistrationEntry.setEmail(emailAddress);
                     projectFinanceEmailRepository.save(preregistrationEntry);
+                }
+                default: {
+                    // no pre-reg entry
                 }
             }
 

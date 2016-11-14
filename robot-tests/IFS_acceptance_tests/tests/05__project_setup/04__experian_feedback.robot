@@ -34,7 +34,7 @@ The user can see the company name with score
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     And the user clicks the button/link     link=Empire Ltd
-    Then the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
+    Then the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
     And the user should see the text in the page    Empire Ltd
     And the user should see the element    css = tr:nth-child(1) .no
 
@@ -68,7 +68,7 @@ The user can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     Given the user clicks the button/link        link=Change bank account details
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details/change
+    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/change
     And the text box should be editable          id=company-name
     When the user enters text to a text field    id=street    Empire Road
     And the user enters text to a text field     id=company-name    Empire Ltd
@@ -103,7 +103,7 @@ The user cancels bank details changes
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
-    Then the user should be redirected to the correct page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details
+    Then the user should be redirected to the correct page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details
     When the user clicks the button/link          link=Change bank account details
     Then the text box should be editable          id=company-name
     And the user moves focus to the element       id=street
@@ -127,7 +127,7 @@ The user updates bank account details
 The user approves the bank details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details/
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/
     And the user should see the text in the page  Empire Ltd - Account details
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
@@ -142,7 +142,7 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details    You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
 
 
 Project partners cannot access this page
@@ -150,7 +150,7 @@ Project partners cannot access this page
     [Tags]    Pending
     #TODO  Pending due to INFUND-4680
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION}/review-bank-details    You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
 
 
 

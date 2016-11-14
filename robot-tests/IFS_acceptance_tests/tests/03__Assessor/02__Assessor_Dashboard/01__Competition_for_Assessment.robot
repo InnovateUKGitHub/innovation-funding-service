@@ -11,4 +11,4 @@ When the deadline has passed the assessment should not be visible
     When The assessment deadline for the Juggling Craziness changes to the past
     And the user reloads the page
     Then The user should not see the element    link=Juggling is fun
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-28 00:00:00' WHERE `id`='35';
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-28 00:00:00' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';

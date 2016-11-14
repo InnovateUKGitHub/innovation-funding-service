@@ -282,7 +282,7 @@ Lead partner selects a project manager
     ...    INFUND-2996
     ...    INFUND-5610
     [Tags]    HappyPath
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     And the user clicks the button/link    link=Project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
@@ -303,7 +303,7 @@ Lead partner can change the project address
     ...
     ...    INFUND-2165
     [Tags]    HappyPath
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You need to select a project address before you can continue
@@ -475,7 +475,7 @@ Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]    HappyPath
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     When all the fields are completed
     And the applicant clicks the submit button and then clicks cancel in the submit modal
     And the user should not see the text in the page    The project details have been submitted to Innovate UK
@@ -500,7 +500,7 @@ Lead partner can see the status update when all Project details are submitted
 Project details read only after submission
     [Documentation]    INFUND-3381
     [Tags]
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     Then all the fields are completed
     And The user should not see the element    link=Target start date
     And The user should not see the element    link=Project address
@@ -510,7 +510,7 @@ All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Tags]    HappyPath
     When log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    And the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
@@ -518,7 +518,7 @@ All partners can view submitted project details
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user    steve.smith@empire.com    Passw0rd
-    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    And the user navigates to the page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Empire Ltd
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}

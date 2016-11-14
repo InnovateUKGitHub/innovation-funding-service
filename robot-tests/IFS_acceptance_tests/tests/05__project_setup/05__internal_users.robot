@@ -74,7 +74,7 @@ Project Finance has a dashboard and can see projects in PS
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element     jQuery=tr:nth-child(1) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("3 partners")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: Empire Ltd")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("better riffs")
     And the user should see the element     jQuery=tr:nth-child(3) th:contains("awesome riffs")
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}

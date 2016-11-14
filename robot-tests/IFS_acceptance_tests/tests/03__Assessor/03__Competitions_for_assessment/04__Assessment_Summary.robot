@@ -60,7 +60,7 @@ Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 50/50
-    And The user should see the text in the page    100%
+    And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
     And the collapsible button should contain    jQuery=button:contains(1. How many)    Score: 20/20
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Score: 10/10
@@ -235,4 +235,4 @@ the word count should be correct
 
 the total scores should be correct
     Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
-    Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
+    Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}

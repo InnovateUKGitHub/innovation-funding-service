@@ -49,6 +49,8 @@ import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInterna
 import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_EXEC;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
@@ -210,17 +212,19 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-        externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
+        externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true));
     }
 
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
+            UserRoleType role = UserRoleType.fromName(line.role);
+
             InternalUserDataBuilder baseBuilder = internalUserBuilder.
-                    withRole(UserRoleType.fromName(line.role)).
+                    withRole(role).
                     createPreRegistrationEntry(line.emailAddress);
 
-            createUser(baseBuilder, line);
+            createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, COMP_EXEC).contains(role));
         });
     }
 
@@ -551,7 +555,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
 
         Function<S, S> createOrgIfNecessary = builder -> {
 
@@ -576,13 +580,15 @@ public class GenerateTestData extends BaseIntegrationTest {
             return builder.withNewOrganisation(organisation);
         };
 
-        Function<S, S> registerUser = builder ->
-                builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
+        Function<S, S> registerUserIfNecessary = builder ->
+                createViaRegistration ?
+                        builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber) :
+                        builder.createUserDirectly(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
         Function<S, S> verifyEmailIfNecessary = builder ->
-                line.emailVerified ? builder.verifyEmail() : builder;
+                createViaRegistration && line.emailVerified ? builder.verifyEmail() : builder;
 
-        createOrgIfNecessary.andThen(registerUser).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
+        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {

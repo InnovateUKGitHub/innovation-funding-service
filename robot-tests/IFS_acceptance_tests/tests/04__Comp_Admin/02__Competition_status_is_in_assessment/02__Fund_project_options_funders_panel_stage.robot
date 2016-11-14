@@ -98,7 +98,7 @@ Successful applicants can see the assessment outcome on the overview page
     [Tags]    HappyPath
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the text in the page    Project setup status
-    And the user should be redirected to the correct page    ${SUCCESSFUL_PROJECT_PAGE}
+    And the user should be redirected to the correct page    ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}
 
 Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2605
@@ -111,7 +111,7 @@ Unsuccessful applicants can see the assessment outcome on the dashboard page
 Unsuccessful applicants can see the assessment outcome on the overview page
     [Documentation]    INFUND-2604
     [Tags]
-    When the user clicks the button/link    link=0${FUNDERS_PANEL_APPLICATION_2_HEADER}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_2_HEADER}
     Then the user should not see the text in the page    Project setup status
     And the user should see the text in the page    Your application has not been successful in this competition
 

@@ -53,8 +53,8 @@ Sort by Total project cost
 Finances are showing in the list
     [Documentation]    INFUND-2411
     [Tags]    HappyPath
-    Then the user should see the text in the page    4608.00
-    And the user should see the text in the page    7680.00
+    Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITHOUT_COMMAS}
+    And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}
 
 Excel download button should be visible
     [Documentation]    INFUND-2307
