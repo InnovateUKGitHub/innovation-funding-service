@@ -262,12 +262,12 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("false")))
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\"}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
     }
 
@@ -284,12 +284,12 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("false")))
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\"}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
     }
 

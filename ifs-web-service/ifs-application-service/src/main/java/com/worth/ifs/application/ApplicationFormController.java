@@ -888,18 +888,14 @@ public class ApplicationFormController {
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
-            errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
 
-            if (!errors.isEmpty()) {
-                return this.createJsonObjectNode(false, errors, fieldId);
-            } else {
-                return this.createJsonObjectNode(true, null, fieldId);
-            }
+            return this.createJsonObjectNode(true, fieldId);
+
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, errors, fieldId);
+            return this.createJsonObjectNode(false, fieldId);
         }
     }
 
@@ -927,7 +923,7 @@ public class ApplicationFormController {
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
-            
+
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
                 if(validationMessages == null) {
@@ -958,7 +954,7 @@ public class ApplicationFormController {
         return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
+    private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");

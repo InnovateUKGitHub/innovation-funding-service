@@ -93,10 +93,12 @@ public class AssessmentFeedbackController {
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
-
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-        List<String> lookupUpMessages = lookupErrorMessageResourceBundleEntries(messageSource, result);
-        return createJsonObjectNode(result.isSuccess(), lookupUpMessages);
+        try {
+          ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+          return createJsonObjectNode(true);
+        } catch (Exception e) {
+            return createJsonObjectNode(false);
+        }
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
@@ -180,7 +182,7 @@ public class AssessmentFeedbackController {
         return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
