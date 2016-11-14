@@ -22,6 +22,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,7 +52,7 @@ public class EligibilitySectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 		
 		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
-		assertTrue(!competition.isMultiStream());
+		assertFalse(competition.isMultiStream());
 		assertNull(competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
 		assertEquals(Integer.valueOf(30), competition.getMaxResearchRatio());
