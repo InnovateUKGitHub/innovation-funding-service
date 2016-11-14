@@ -1,8 +1,8 @@
-package com.worth.ifs.bankdetails.form;
+package com.worth.ifs.project.form;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.controller.BaseBindingResultTarget;
+import com.worth.ifs.form.AddressForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
