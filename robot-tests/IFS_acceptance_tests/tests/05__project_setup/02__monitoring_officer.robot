@@ -28,6 +28,7 @@ Before Monitoring Officer is assigned
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
@@ -169,6 +170,9 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
     When Log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=ul li.complete:nth-child(3)

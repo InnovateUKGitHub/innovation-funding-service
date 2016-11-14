@@ -119,6 +119,10 @@ Bank details for Academic
     And the user should see the text in the page    The bank account details below are being reviewed
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
@@ -155,6 +159,10 @@ Bank details for non-lead partner
     And the user should see the element             jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page             ${project_in_setup_page}
     And the user should see the element             jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903

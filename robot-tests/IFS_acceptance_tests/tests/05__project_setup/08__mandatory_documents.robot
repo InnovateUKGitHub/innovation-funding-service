@@ -117,6 +117,9 @@ Non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
     [Documentation]    INFUND-3013
@@ -269,7 +272,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
-
+    And the user clicks the button/link    link=What's the status of each of my partners?
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621

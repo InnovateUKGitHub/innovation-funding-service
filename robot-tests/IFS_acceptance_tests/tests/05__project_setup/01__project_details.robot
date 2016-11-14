@@ -90,6 +90,11 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Other documents
     And the user should see the element             jQuery=li.require-action:nth-of-type(2)  #Action required, seen by non-lead
     And the user should see the text in the page    Grant offer letter
+    And the user should see the text in the page    What's the status of each of my partners?
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page    ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -335,6 +340,9 @@ Non lead partner nominates finance contact
     [Tags]    HappyPath
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+    And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
@@ -346,6 +354,8 @@ Non lead partner nominates finance contact
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
@@ -456,6 +466,9 @@ Academic Partner nominates Finance contact
     [Tags]    HappyPath
     [Setup]  Log in as a different user              pete.tom@egg.com    Passw0rd
     Then the user navigates to the page              ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link              link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page     Partner
@@ -467,6 +480,8 @@ Academic Partner nominates Finance contact
     And the user should see the element              link=EGGS
     When the user navigates to the page              ${project_in_setup_page}
     Then the user should see the element             jQuery=li.complete:nth-of-type(2)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
 
 Project details submission flow
@@ -512,6 +527,9 @@ All partners can view submitted project details
     Then the user should see the text in the page    Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
+    Then the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should see the text in the page    Vitruvius Stonework Limited
