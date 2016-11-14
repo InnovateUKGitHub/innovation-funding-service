@@ -353,8 +353,8 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element                     jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been rejected")
-    When the user should see the text in the page           Innovation Lead
-    Then the user should see the text in the page           Robin Wilson
+    # TODO - Set up test data with Innovate lead and check for the lead.
+    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed. See INFUND-6046.
     When the user should see the text in the page           Project spend profile
     Then the user clicks the button/link                    link=Cheeseco-spend-profile.csv
     And the user clicks the button/link                     link=Ludlow-spend-profile.csv
