@@ -4,7 +4,9 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5628 As an assessor I want to be able to monitor my contract expiry so that I can be sure that I am eligible to assess competitions
 ...
 ...               INFUND-5645 As an assessor I want to be able to review annexes to the contract from the same screen so that I have all the information I need about assessing competitions
-Suite Setup       guest user log-in    &{assessor2_credentials}
+...
+...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
+Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -12,8 +14,11 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Server-side validations
     [Documentation]    INFUND-1481
+    ...
+    ...    INFUND-5432
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("Your contract")
+    Given The user should see the element    link=your contract
+    And the user clicks the button/link    jQuery=a:contains("Your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see an error    Please agree to the terms and conditions
 
@@ -38,11 +43,15 @@ Review Annexes
 
 Client-side validations and redirect to dashboard
     [Documentation]    INFUND-1481
+    ...
+    ...
+    ...    INFUND-5432
     [Tags]
     When the user selects the checkbox    id=agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    And The user should not see the element    link=your contract
 
 Agreement Confirmation
     [Documentation]    INFUND-5628

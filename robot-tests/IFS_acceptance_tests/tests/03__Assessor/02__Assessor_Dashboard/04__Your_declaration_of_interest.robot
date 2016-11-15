@@ -1,21 +1,25 @@
 *** Settings ***
 Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts of interest so that Innovate UK does not assign me assessments that are inappropriate for me.
-Suite Setup       guest user log-in    &{assessor2_credentials}
+...
+...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
+Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Assessor
+Force Tags        Assessor    Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Back to the dashboard link
     [Documentation]    INFUND-3715
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
+    ...
+    ...    INFUND-5432
+    Given The user should see the element    link=your declaration of interest
+    When the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
+    And the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
-Client-side empty form validations
+Server-side empty form validations
     [Documentation]    INFUND-3715
     [Tags]
-    #TODO: Will need changes once client side validations have been implemented INFUND-5867
     Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a principal employer
@@ -32,40 +36,40 @@ Client-side empty yes/no question validations
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Will need changes once client side validations have been implemented INFUND-5867
     Given the user selects the radio button    hasAppointments    yes
-        When the user clicks the button/link    jQuery=button:contains("Save and continue")
-        Then the user should see a field and summary error    Please enter an organisation
-        And the user should see a field and summary error    Please enter a position
-        When the user selects the radio button    hasAppointments    no
-        and the user clicks the button/link    jQuery=button:contains("Save and continue")
-        #TODO uncomment it after INFUND-5868 is fixed
-      # Then The user should not see the text in the page    Please enter an organisation
-      # And The user should not see the text in the page    Please enter a position
-        When the user selects the radio button    hasFinancialInterests    Yes
-        And the user clicks the button/link    jQuery=button:contains("Save and continue")
-        Then the user should see a field and summary error    Please enter your financial interests
-        When the user selects the radio button    hasFinancialInterests    No
-        #TODO uncomment it after INFUND-5868 is fixed
-       #Then The user should not see the text in the page    Please enter your financial interests
-        When the user selects the radio button    hasFamilyAffiliations    Yes
-        And the user clicks the button/link    jQuery=button:contains("Save and continue")
-        Then the user should see a field and summary error    Please enter a relation
-        And the user should see a field and summary error    Please enter an organisation
-        And the user should see a field and summary error    Please enter a position
-        When the user selects the radio button    hasFamilyAffiliations    No
-        #TODO uncomment it after INFUND-5868 is fixed
-       # Then The user should not see the text in the page    Please enter a relation
-       # And The user should not see the text in the page    Please enter an organisation
-       # And The user should not see the text in the page    Please enter a position
-        When the user selects the radio button    hasFamilyFinancialInterests    Yes
-        And the user clicks the button/link    jQuery=button:contains("Save and continue")
-        Then the user should see a field and summary error    Please enter your family financial interests
-        When the user selects the radio button    hasFamilyFinancialInterests    No
-        #TODO uncomment it after INFUND-5868 is fixed
-      #  Then The user should not see the text in the page    Please enter your family financial interests
+    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    Then the user should see a field and summary error    Please enter an organisation
+    And the user should see a field and summary error    Please enter a position
+    When the user selects the radio button    hasAppointments    no
+    and the user clicks the button/link    jQuery=button:contains("Save and continue")
+    #TODO uncomment it after INFUND-5868 is fixed
+    Then The user should not see the text in the page    Please enter an organisation
+    #And The user should not see the text in the page    Please enter a position
+    When the user selects the radio button    hasFinancialInterests    Yes
+    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    #Then the user should see a field and summary error    Please enter your financial interests
+    When the user selects the radio button    hasFinancialInterests    No
+    #TODO uncomment it after INFUND-5868 is fixed
+    #Then The user should not see the text in the page    Please enter your financial interests
+    When the user selects the radio button    hasFamilyAffiliations    Yes
+    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    #Then the user should see a field and summary error    Please enter a relation
+    #And the user should see a field and summary error    Please enter an organisation
+    #And the user should see a field and summary error    Please enter a position
+    When the user selects the radio button    hasFamilyAffiliations    No
+    #TODO uncomment it after INFUND-5868 is fixed
+    #Then The user should not see the text in the page    Please enter a relation
+    #And The user should not see the text in the page    Please enter an organisation
+    And The user should not see the text in the page    Please enter a position
+    When the user selects the radio button    hasFamilyFinancialInterests    Yes
+    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    Then the user should see a field and summary error    Please enter your family financial interests
+    When the user selects the radio button    hasFamilyFinancialInterests    No
+    #TODO uncomment it after INFUND-5868 is fixed
+    Then The user should not see the text in the page    Please enter your family financial interests
 
 Client-side empty close family member validation # (this scenario is covered above, can be removed after review)
     [Documentation]    INFUND-3715
-    [Tags]    Pending
+    [Tags]
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Will need changes once client side validations have been implemented (INFUND-5867)
     Given the user selects yes at yes/no question radio buttons
@@ -73,20 +77,20 @@ Client-side empty close family member validation # (this scenario is covered abo
     And the user clicks the button/link    jQuery=button:contains("Add another family member")
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a relation
-    Then the user should see a field and summary error    Please enter a position
-    Then the user should see a field and summary error    Please enter an organisation
+    And the user should see a field and summary error    Please enter a position
+    And the user should see a field and summary error    Please enter an organisation
 
 Successful editing with no at yes/no questions
     [Documentation]    INFUND-3715
-    [Tags]    Pending    HappyPath
+    [Tags]    HappyPath
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
     Given the user correctly fills out the role, principle employer and accurate fields
-   # And the user selects no at yes/no question radio buttons
+    And the user selects no at yes/no question radio buttons
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    Then the user should see correctly filled out the role, employer, affiliation and accurate fields
+    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
+    And the user should see correctly filled out the role, employer, affiliation and accurate fields
     And the user should see no selected at yes/no questions
 
 Successful editing with yes at yes/no questions
@@ -94,7 +98,7 @@ Successful editing with yes at yes/no questions
     [Tags]    HappyPath    Pending
     [Setup]    the user is on the page or will navigate there    ${assessment_skills}
     #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
-   # Given the user correctly fills out the role, principle employer and accurate fields
+    Given the user correctly fills out the role, principle employer and accurate fields
     And the user selects yes at yes/no question radio buttons
     When the user adds positions
     And the user adds an additional position
