@@ -1,3 +1,4 @@
+include 'ifs-commons'
 include 'ifs-data-service'
 include 'ifs-rest-api-service'
 include 'ifs-web-service'
@@ -7,3 +8,4 @@ include 'ifs-web-service:ifs-competition-mgt-service'
 include 'ifs-web-service:ifs-assessment-service'
 include 'ifs-web-service:ifs-project-setup-service'
 include 'ifs-web-service:ifs-project-setup-mgt-service'
+
