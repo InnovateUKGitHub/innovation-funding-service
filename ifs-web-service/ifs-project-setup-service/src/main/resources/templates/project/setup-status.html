@@ -32,7 +32,7 @@
         </div>
       </li>
       <!--/* ========================= Project Details ========================= */-->
-      <li th:classappend="${model.projectDetailsProcessCompleted ? 'complete' : (model.leadPartner and model.awaitingProjectDetailsActionFromOtherPartners ? 'waiting' : 'require-action')}">
+      <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -43,7 +43,7 @@
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
-      <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : (model.projectDetailsSubmitted ? 'waiting' : '')}">
+      <li th:classappend="${model.monitoringOfficerStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
 
@@ -69,7 +69,7 @@
       </li>
 
       <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
-          th:classappend="${model.isBankDetailsActionRequired() ? 'require-action' : (model.isBankDetailsComplete() ? 'complete' : 'waiting')}">
+          th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -81,7 +81,7 @@
       </li>
       <!--/* ========================= Finance Check ========================= */-->
 
-      <li th:classappend="${model.allBankDetailsApprovedOrNotRequired ? (model.allFinanceChecksApproved ? 'complete' : 'waiting') : ''}">
+      <li th:classappend="${model.financeChecksStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -94,7 +94,7 @@
 
       <!--/* ========================= Spend Profile ========================= */-->
 
-      <li th:classappend="${model.spendProfileSubmitted ? 'complete' : ''}">
+      <li th:classappend="${model.financeChecksStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
 
@@ -110,7 +110,7 @@
 
       <!--/* ========================= Other documents ========================= */-->
 
-      <li th:classappend="${model.partnerDocumentsSubmitted ? 'complete' : (model.leadPartner ? 'require-action' : 'waiting')}">
+      <li th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
@@ -127,7 +127,8 @@
       </li>
       <!--/* ========================= GOL ========================= */-->
 
-      <li th:classappend="${model.grantOfferLetterSubmitted ? 'complete' : ''}">
+      <!--TODO extra case to be outlined before GOL has been sent by internal user-->
+      <li th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
