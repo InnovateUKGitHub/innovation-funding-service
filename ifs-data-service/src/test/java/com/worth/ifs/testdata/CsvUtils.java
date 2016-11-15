@@ -4,6 +4,8 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.invite.constant.InviteStatus;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -43,6 +45,10 @@ class CsvUtils {
 
     static List<InternalUserLine> readInternalUsers() {
         return simpleMap(readCsvLines("internal-users"), InternalUserLine::new);
+    }
+
+    static List<AssessorUserLine> readAssessorUsers() {
+        return simpleMap(readCsvLines("assessor-users"), AssessorUserLine::new);
     }
 
     static List<CompetitionLine> readCompetitions() {
@@ -341,6 +347,22 @@ class CsvUtils {
             addressType = addressTypeLine != null ?
                     OrganisationAddressType.valueOf(addressTypeLine) : null;
             companyRegistrationNumber = nullable(line.get(i++));
+        }
+    }
+
+    static class AssessorUserLine extends UserLine {
+
+        Disability disability;
+        Gender gender;
+        String ethnicity;
+
+        private AssessorUserLine(List<String> line) {
+
+            super(line);
+            int i = line.size() - 3;
+            disability = Disability.fromName(line.get(i++));
+            ethnicity = line.get(i++);
+            gender = Gender.fromName(line.get(i++));
         }
     }
 

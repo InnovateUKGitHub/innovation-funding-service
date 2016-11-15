@@ -42,6 +42,7 @@ import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.CsvUtils.*;
+import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static com.worth.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -49,9 +50,7 @@ import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInterna
 import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_EXEC;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
-import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -97,12 +96,10 @@ public class GenerateTestData extends BaseIntegrationTest {
     private NotificationSender emailNotificationSender;
 
     private CompetitionDataBuilder competitionDataBuilder;
-
     private ExternalUserDataBuilder externalUserBuilder;
-
     private InternalUserDataBuilder internalUserBuilder;
-
     private OrganisationDataBuilder organisationBuilder;
+    private AssessorDataBuilder assessorUserBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -122,6 +119,8 @@ public class GenerateTestData extends BaseIntegrationTest {
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private static List<ExternalUserLine> externalUserLines;
+
+    private static List<AssessorUserLine> assessorUserLines;
 
     /**
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type","Role" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name, r.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id join user_role ur on ur.user_id = u.id and ur.role_id != 4 join role r on ur.role_id = r.id INTO OUTFILE '/var/lib/mysql-files/internal-users3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
@@ -168,6 +167,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
+        assessorUserLines = readAssessorUsers();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
     }
@@ -200,6 +200,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
+        assessorUserBuilder = newAssessorData(serviceLocator);
     }
 
     @Test
@@ -209,6 +210,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         createInternalUsers();
         createExternalUsers();
+        createAssessors();
         createCompetitions();
 
         long after = System.currentTimeMillis();
@@ -219,6 +221,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createExternalUsers() {
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true));
+    }
+
+    private void createAssessors() {
+        assessorUserLines.forEach(line -> createAssessor(assessorUserBuilder, line));
     }
 
     private void createInternalUsers() {
@@ -567,6 +573,13 @@ public class GenerateTestData extends BaseIntegrationTest {
         } finally {
             setLoggedInUser(currentUser);
         }
+    }
+
+    private void createAssessor(AssessorDataBuilder assessorUserBuilder, AssessorUserLine line) {
+        assessorUserBuilder.
+                registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
+                             line.ethnicity, line.gender, line.disability).
+                build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {

@@ -24,11 +24,13 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.RoleService;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.user.transactional.UsersRolesService;
 
@@ -79,6 +81,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
+    protected EthnicityRepository ethnicityRepository;
+    protected RoleService roleService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -110,6 +114,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
         this.usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         this.applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
+        this.ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
+        this.roleService = serviceLocator.getBean(RoleService.class);
     }
 
     protected UserResource compAdmin() {
@@ -171,7 +177,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource systemRegistrar() {
-        return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
+        User user = userRepository.findByEmail("ifs_system_maintenance_user@innovateuk.org").get();
+        return newUserResource().
+                withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).
+                withId(user.getId()).
+                build();
     }
 
     protected <T> T doAs(UserResource user, Supplier<T> action) {
