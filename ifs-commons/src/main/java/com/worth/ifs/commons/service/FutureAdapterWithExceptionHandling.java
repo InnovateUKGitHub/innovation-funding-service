@@ -1,4 +1,4 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.commons.service;
 
 
 import com.worth.ifs.util.Either;

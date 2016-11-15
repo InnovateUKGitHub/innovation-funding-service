@@ -1,6 +1,5 @@
 package com.worth.ifs.commons.service;
 
-import com.worth.ifs.application.service.FutureAdapterWithExceptionHandling;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
