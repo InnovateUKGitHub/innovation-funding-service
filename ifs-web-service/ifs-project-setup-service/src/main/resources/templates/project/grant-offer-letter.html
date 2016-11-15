@@ -105,8 +105,12 @@
             <h2 class="heading-medium">Annex 2</h2>
             <p>Annex 2 contains any additional contracts agreed upon during the application process. The signed grant offer letter agrees to the conditions set out in this appendix. </p>
             <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
-        </th:block>
 
+            <th:block th:if="${model.competitionTeamMember}">
+                <a th:href="@{/project/{id}/offer/send/confirmation(id=${project.getId()})}"
+                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-totals">Send to project team</a>
+            </th:block>
+        </th:block>
 
     </form>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
