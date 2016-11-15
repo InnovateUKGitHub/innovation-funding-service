@@ -39,9 +39,10 @@ Other funding server side
     And the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    And the user marks the finances as complete
     Then the user should see an error    Funding source cannot be blank
     And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field cannot be left blank
+    And the user should see an error    This field should be 1 or higher
 
 Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
