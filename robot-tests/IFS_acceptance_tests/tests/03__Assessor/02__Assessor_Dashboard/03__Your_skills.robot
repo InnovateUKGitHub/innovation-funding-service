@@ -20,7 +20,7 @@ Client-side validations
     ...    INFUND-5432
     [Tags]
     Given The user should see the text in the page    Complete your assessor account
-    And The user should see the element    link=your skills
+    And The user should see the element    link=your skills    #his checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("Your skills")
     And the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Continue")
@@ -47,7 +47,7 @@ Save new skills and business type redirects to dashboard
     When the user enters text to a text field    id=skillAreas    assessor skill areas text
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    link=your skills
+    And The user should not see the element    link=your skills    #his checks the alert message on the top od the page
 
 Skills and business type are saved correctly
     [Documentation]    INFUND-5182
