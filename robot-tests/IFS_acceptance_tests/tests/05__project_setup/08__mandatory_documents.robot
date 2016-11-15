@@ -313,16 +313,16 @@ Partners can see the documents rejected
     [Tags]    Failing
     Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    steve.smith@empire.com    Passw0rd    #Lead Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    pete.tom@egg.com    Passw0rd    #Academic Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd    #Other Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
 
 
 Project Finance is able to Approve and Reject
@@ -341,10 +341,10 @@ Project Finance is able to Approve and Reject
     Then the user should not see an error in the page
 
 
-Project Finance user can clik the link and go back to the Project setup status page
+Project Finance user can clik the link and go back to the Competition Dashboard page
     [Documentation]    INFUND-5516
     [Tags]
-    When the user clicks the button/link           link=Project setup status
+    When the user clicks the button/link           link=Competition dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page   Projects in setup
     [Teardown]    the user goes back to the previous page

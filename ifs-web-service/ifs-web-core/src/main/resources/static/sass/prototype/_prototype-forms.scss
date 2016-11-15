@@ -95,6 +95,12 @@ select.form-control{
   }
 }
 
+select.form-control{
+  &.width-full{
+    width: 100%;
+  }
+}
+
 /*----- Inline form elements for academic finances ----*/
 
 .form-inline{
