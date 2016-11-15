@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -60,6 +61,9 @@ public class CompetitionResource {
 
     private boolean fullApplicationFinance;
     private boolean includeGrowthTable;
+
+    private Integer assessorCount;
+    private BigDecimal assessorPay;
 
 
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
@@ -448,5 +452,21 @@ public class CompetitionResource {
 
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    public Integer getAssessorCount() {
+        return assessorCount;
+    }
+
+    public void setAssessorCount(Integer assessorCount) {
+        this.assessorCount = assessorCount;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
     }
 }

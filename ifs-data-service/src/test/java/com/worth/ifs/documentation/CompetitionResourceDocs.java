@@ -47,7 +47,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
             fieldWithPath("funders").description("the funders for this competition"),
             fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applicantions"),
-            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table")
+            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
+            fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
+            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

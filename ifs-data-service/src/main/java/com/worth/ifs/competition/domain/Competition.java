@@ -11,6 +11,7 @@ import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -50,6 +51,10 @@ public class Competition implements ProcessActivity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
     private CompetitionType competitionType;
+
+    private Integer assessorCount;
+
+    private BigDecimal assessorPay;
 
     @OneToMany(mappedBy = "competition")
     private List<Milestone> milestones = new ArrayList<>();
@@ -519,6 +524,22 @@ public class Competition implements ProcessActivity {
 
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    public Integer getAssessorCount() {
+        return assessorCount;
+    }
+
+    public void setAssessorCount(Integer assessorCount) {
+        this.assessorCount = assessorCount;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
     }
 }
 

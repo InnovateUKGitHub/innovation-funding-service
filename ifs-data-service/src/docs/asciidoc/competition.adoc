@@ -35,7 +35,6 @@ include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
 === Get all bank details for a competition as a csv export
 ==== Request
 include::{snippets}/competition/bank-details/export-bank-details/http-request.adoc[]
-include::{snippets}/competition/bank-details/export-bank-details/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competition/bank-details/export-bank-details/http-response.adoc[]
@@ -43,3 +42,16 @@ include::{snippets}/competition/bank-details/export-bank-details/response-header
 
 ==== Curl Example
 include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]
+
+
+=== Get all assessor count options based on the competition type
+==== Request
+include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/http-request.adoc[]
+include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/http-response.adoc[]
+include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/curl-request.adoc[]

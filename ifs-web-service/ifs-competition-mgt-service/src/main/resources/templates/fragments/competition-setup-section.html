@@ -222,8 +222,6 @@
 
 </th:block>
 
-
-
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-additional">
     <div class="page-title">
@@ -639,10 +637,7 @@
     </ul>
 </th:block>
 
-
-
 <!-- =================Section: Milestones (4) =========================== -->
-
 <th:block th:fragment="section-milestones">
 
     <div class="page-title">
@@ -841,3 +836,67 @@
     </ul>
 </th:block>
 
+<!-- =================== Comp setup section - Assessors (6) ============================== -->
+<th:block th:fragment="section-assessors">
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Assessment</h1>
+    </div>
+
+
+    <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
+        <fieldset th:if="${editable}" id="section-assessors-edit">
+            <legend class="visuallyhidden">Assessors</legend>
+            <div class="form-group">
+                <fieldset class="inline">
+                    <h3 class="heading-small">How many assessors are required to assess each application?</h3>
+
+                    <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
+                     <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
+                            th:value="${assessorOption.assessorOptionValue}" type="radio"
+                            th:checked="${assessorOption.assessorOptionValue == competitionSetupForm.assessorCount}" />
+                        <span th:text="${assessorOption.assessorOptionName}"></span>
+                    </label>
+
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="remittance">
+                    <span class="form-label-bold">How much will assessors be paid per application they assess?</span>
+                    <span class="form-hint">This information will be distributed in the assessor invites.</span>
+                </label>
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
+                       th:value="${#numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT')}"
+                       data-required-errormessage="Please enter a value"
+                       data-min-errormessage="Please enter a valid number" />
+            </div>
+
+            <button class="button">Done</button>
+        </fieldset>
+
+        <fieldset th:if="${!editable}" id="section-assessors-readonly">
+
+            <dl class="standard-definition-list">
+                <dt>How many assessors are required to assess each application?</dt>
+                <dd th:text="${competitionSetupForm.assessorCount}"></dd>
+
+                <dt>How much will assessors be paid per application they assess?</dt>
+                <dd th:text="${#numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT')}"></dd>
+            </dl>
+
+            <button type="submit" class="button">Edit</button>
+        </fieldset>
+    </form>
+
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

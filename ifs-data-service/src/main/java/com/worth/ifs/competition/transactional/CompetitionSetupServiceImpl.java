@@ -8,8 +8,10 @@ import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
+import com.worth.ifs.competition.repository.CompetitionTypeAssessorOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
@@ -32,10 +34,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -67,6 +66,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionFunderService competitionFunderService;
 	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
+    @Autowired
+    private CompetitionTypeAssessorOptionRepository competitionTypeAssessorOptionRepository;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -155,6 +156,16 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
     	Competition competition = competitionRepository.findById(competitionId);
     	competition.getSectionSetupStatus().put(section, Boolean.TRUE);
+        if (section == CompetitionSetupSection.INITIAL_DETAILS) {
+            if (competition.getAssessorCount() == null) {
+                Optional<CompetitionTypeAssessorOption> defaultAssessorOption =
+                        competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
+                if (defaultAssessorOption.isPresent()) {
+                    competition.setAssessorCount(defaultAssessorOption.get().getAssessorOptionValue());
+                    competitionRepository.save(competition);
+                }
+            }
+        }
         return serviceSuccess();
     }
 

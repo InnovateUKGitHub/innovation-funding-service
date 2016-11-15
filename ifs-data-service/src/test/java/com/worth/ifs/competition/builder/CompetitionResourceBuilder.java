@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -150,6 +151,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withMilestones(List<Long> milestonesList) {
         return withList(milestonesList, (milestones, object) -> object.setMilestones(milestonesList));
+    }
+
+    public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
+        return withArray((id, object) -> setField("assessorCount", id, object), assessorCount);
+    }
+
+    public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
+        return withArray((id, object) -> setField("assessorPay", id, object), assessorPay);
     }
 
     @Override
