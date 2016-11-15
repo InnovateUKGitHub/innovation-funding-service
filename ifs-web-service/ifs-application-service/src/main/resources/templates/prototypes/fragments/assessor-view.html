@@ -649,7 +649,7 @@
                         <h3 class="heading-medium">
                         <a href="/prototypes/865-assessor-comp-invite">Technology inspired</a>
                         </h3>
-                        <p>Please respond to this request for you to assess on this new competition.</p>
+                        <p>Please respond to the request for you to assess on this competition.</p>
                     </div>
                     <div class="column-assessment-status navigation-right">
                         <div class="application-status invite">
@@ -670,7 +670,7 @@
             <li>
                 <div class="grid-row">
                     <div class="column-assessment-details">
-                        <h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">Technology inspired</a></h3>
+                        <h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>
                         <p class="form-hint">Upcoming competition</p>
                         <p class="no-margin">Applications allocated 15 April</p>
                     </div>
@@ -693,7 +693,7 @@
             <div class="grid-row">
                 <div class="column-half">
                     <h2 class="heading-medium">
-                    <a href="/prototypes/871-assessor-comp-dashboard">An example competition</a>
+                    <a href="/prototypes/871-assessor-comp-dashboard">Technology inspired</a>
                     </h2>
                     <p class="form-hint">Assessment progress:</p>
                     <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
@@ -889,11 +889,33 @@
 
                             <div class="column-assessment-status navigation-right">
 
+                              <th:block th:unless="${param.app != null}">
                                 <div class="application-status open empty">
                                     <p>In progress</p>
                                 </div>
+                              </th:block>
+
+                              <th:block th:if="${param.app != null and param.app[0] == 'ok'}">
+                                <div class="application-status assessed yes">
+                                    <p>Assessed</p>
+                                    <!--if assessment is pending acceptance-->
+
+                                    <!--otherwise shows the overall score -->
+                                    <p class="application-listing_pending"></p>
+                                    <h3 class="score"><span>75.0</span> %</h3>
+                                    <small>Overall score</small>
+                                    <div class="recommend-container">
+                                        <p class="recommend yes"> <span>Recommended</span> </p>
+                                    </div>
+                                </div>
+                                <label>
+                                    <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
+                                </label>
+                              </th:block>
+
 
                             </div>
+
                         </div>
                         <!--<label>-->
                             <!--<input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />-->
