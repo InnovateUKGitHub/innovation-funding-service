@@ -35,7 +35,7 @@
             <div class="pie-container">
                 <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
                 <div class="pie-overlay">
-                    <div>0</div>
+                    <span class="day">0</span>
                 </div>
             </div>
         </div>
@@ -670,7 +670,7 @@
             <li>
                 <div class="grid-row">
                     <div class="column-assessment-details">
-                        <h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">Technology inspired</a></h3>
+                        <h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>
                         <p class="form-hint">Upcoming competition</p>
                         <p class="no-margin">Applications allocated 15 April</p>
                     </div>
@@ -693,7 +693,7 @@
             <div class="grid-row">
                 <div class="column-half">
                     <h2 class="heading-medium">
-                    <a href="/prototypes/871-assessor-comp-dashboard">An example competition</a>
+                    <a href="/prototypes/871-assessor-comp-dashboard">Technology inspired</a>
                     </h2>
                     <p class="form-hint">Assessment progress:</p>
                     <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
@@ -748,6 +748,7 @@
                         <h3 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h3>
                         <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
                         <div>
+                            <input type="hidden" name="status" value="accept" />
                             <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes, I want to submit the applications</button>
                             <button class="js-close button buttonlink large">Cancel</button>
                         </div>
@@ -821,7 +822,7 @@
 
                                     <!--otherwise shows the overall score -->
                                     <p class="application-listing_pending"></p>
-                                    <h3 class="score"><span>51.0</span> %</h3>
+                                    <h3 class="score"><span>71.0</span> %</h3>
                                     <small>Overall score</small>
                                     <div class="recommend-container">
                                         <p class="recommend yes"> <span>Recommended</span> </p>
@@ -850,7 +851,7 @@
                             <div class="column-assessment-status navigation-right">
 
                                 <div class="application-status open empty">
-                                    <p>Open</p>
+                                    <p>Accepted</p>
                                 </div>
 
                             </div>
@@ -889,7 +890,7 @@
                             <div class="column-assessment-status navigation-right">
 
                                 <div class="application-status open empty">
-                                    <p>Open</p>
+                                    <p>In progress</p>
                                 </div>
 
                             </div>
@@ -942,7 +943,7 @@
     <div class="modal-reject-assessment" role="dialog" aria-hidden="true" style="margin-top: -174px;">
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
-            <form method="post" th:action="${backTo}">
+            <form method="get" th:action="${backTo}" >
 
                 <div class="form-group">
 
@@ -958,6 +959,7 @@
                     <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
+                <input type="hidden" name="status" value="reject" />
                 <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
             </form>
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
@@ -975,7 +977,7 @@
 
                 <div class="form-group">
 
-                    <label for="reject-reason" class="form-label">Please select a reason for rejecting the competition</label>
+                    <label for="reject-reason" class="form-label">Please select the reason why you are unable to assess this competition</label>
                     <select name="decisionReason" id="reject-reason" required="required" class="form-control">
                         <option value="none">Please select one reason</option>
                         <option value="not-available">Not available</option>

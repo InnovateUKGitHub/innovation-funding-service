@@ -87,7 +87,8 @@ public class ApplicationLandingModelPopulatorTest {
 
 		populator.populateModel(model, competition);
 		
-		assertEquals(1, model.asMap().size());
+		assertEquals(2, model.asMap().size());
 		assertEquals(new ArrayList(), model.asMap().get("questions"));
+		assertEquals(new ArrayList(), model.asMap().get("projectDetails"));
 	}
 }
