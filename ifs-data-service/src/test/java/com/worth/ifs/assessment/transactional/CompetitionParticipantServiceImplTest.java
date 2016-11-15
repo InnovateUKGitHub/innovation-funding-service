@@ -47,8 +47,8 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
 
         List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
         assertSame(expected, found.get(0));
-        assertEquals(new Long(0L), found.get(0).getSubmittedAssessments());
-        assertEquals(new Long(0L), found.get(0).getTotalAssessments());
+        assertEquals(0L, found.get(0).getSubmittedAssessments());
+        assertEquals(0L, found.get(0).getTotalAssessments());
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, competitionParticipantMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByUserIdAndRoleAndStatus(1L, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.PENDING);
         inOrder.verify(competitionParticipantMapperMock, calls(1)).mapToResource(any(CompetitionParticipant.class));
@@ -82,8 +82,8 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
 
         List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
         assertSame(expected, found.get(0));
-        assertEquals(new Long(1L), found.get(0).getSubmittedAssessments());
-        assertEquals(new Long(2L), found.get(0).getTotalAssessments());
+        assertEquals(1L, found.get(0).getSubmittedAssessments());
+        assertEquals(2L, found.get(0).getTotalAssessments());
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, competitionParticipantMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByUserIdAndRoleAndStatus(1L, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.ACCEPTED);
         inOrder.verify(competitionParticipantMapperMock, calls(1)).mapToResource(any(CompetitionParticipant.class));

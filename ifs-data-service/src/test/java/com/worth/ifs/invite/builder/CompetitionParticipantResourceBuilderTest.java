@@ -26,8 +26,8 @@ public class CompetitionParticipantResourceBuilderTest {
         String expectedCompetitionName = "Juggling Craziness";
         LocalDateTime expectedAssessorAcceptsDate = LocalDateTime.now().minusDays(1);
         LocalDateTime expectedAssessorDeadlineDate = LocalDateTime.now().plusDays(2);
-        Long expectedTotalAssessments = 4L;
-        Long expectedSubmittedAssessments = 1L;
+        long expectedTotalAssessments = 4L;
+        long expectedSubmittedAssessments = 1L;
 
         CompetitionParticipantResource competitionParticipant = newCompetitionParticipantResource()
                 .withId(expectedId)
@@ -55,6 +55,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedStatus, competitionParticipant.getStatus());
         assertEquals(expectedCompetitionName, competitionParticipant.getCompetitionName());
         assertEquals(expectedAssessorAcceptsDate, competitionParticipant.getAssessorAcceptsDate());
+        assertEquals(expectedAssessorDeadlineDate, competitionParticipant.getAssessorDeadlineDate());
         assertEquals(expectedTotalAssessments, competitionParticipant.getTotalAssessments());
         assertEquals(expectedSubmittedAssessments, competitionParticipant.getSubmittedAssessments());
     }
@@ -104,8 +105,8 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedCompetitionNames[0], first.getCompetitionName());
         assertEquals(expectedAssessorAcceptsDates[0], first.getAssessorAcceptsDate());
         assertEquals(expectedAssessorDeadlineDates[0], first.getAssessorDeadlineDate());
-        assertEquals(expectedTotalAssessments[0], first.getTotalAssessments());
-        assertEquals(expectedSubmittedAssessments[0], first.getSubmittedAssessments());
+        assertEquals(expectedTotalAssessments[0].longValue(), first.getTotalAssessments());
+        assertEquals(expectedSubmittedAssessments[0].longValue(), first.getSubmittedAssessments());
 
         CompetitionParticipantResource second = competitionParticipants.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -119,7 +120,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
         assertEquals(expectedAssessorAcceptsDates[1], second.getAssessorAcceptsDate());
         assertEquals(expectedAssessorDeadlineDates[1], second.getAssessorDeadlineDate());
-        assertEquals(expectedTotalAssessments[1], second.getTotalAssessments());
-        assertEquals(expectedSubmittedAssessments[1], second.getSubmittedAssessments());
+        assertEquals(expectedTotalAssessments[1].longValue(), second.getTotalAssessments());
+        assertEquals(expectedSubmittedAssessments[1].longValue(), second.getSubmittedAssessments());
     }
 }

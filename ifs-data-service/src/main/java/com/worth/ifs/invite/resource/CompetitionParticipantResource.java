@@ -24,8 +24,8 @@ public class CompetitionParticipantResource {
     private String competitionName;
     private LocalDateTime assessorAcceptsDate;
     private LocalDateTime assessorDeadlineDate;
-    private Long submittedAssessments;
-    private Long totalAssessments;
+    private long submittedAssessments;
+    private long totalAssessments;
 
     public String getCompetitionName() {
         return competitionName;
@@ -115,19 +115,19 @@ public class CompetitionParticipantResource {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 
-    public Long getSubmittedAssessments() {
+    public long getSubmittedAssessments() {
         return submittedAssessments;
     }
 
-    public void setSubmittedAssessments(Long submittedAssessments) {
+    public void setSubmittedAssessments(long submittedAssessments) {
         this.submittedAssessments = submittedAssessments;
     }
 
-    public Long getTotalAssessments() {
+    public long getTotalAssessments() {
         return totalAssessments;
     }
 
-    public void setTotalAssessments(Long totalAssessments) {
+    public void setTotalAssessments(long totalAssessments) {
         this.totalAssessments = totalAssessments;
     }
 

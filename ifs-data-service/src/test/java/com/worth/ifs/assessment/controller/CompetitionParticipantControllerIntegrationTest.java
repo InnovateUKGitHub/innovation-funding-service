@@ -137,7 +137,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         assertEquals(1, participants.size());
         assertEquals(Long.valueOf(1L), participants.get(0).getCompetitionId());
         assertEquals(Long.valueOf(3L), participants.get(0).getUserId());
-        assertEquals(Long.valueOf(1L), participants.get(0).getSubmittedAssessments());
-        assertEquals(Long.valueOf(3L), participants.get(0).getTotalAssessments());
+        assertEquals(1L, participants.get(0).getSubmittedAssessments());
+        assertEquals(3L, participants.get(0).getTotalAssessments());
     }
 }
