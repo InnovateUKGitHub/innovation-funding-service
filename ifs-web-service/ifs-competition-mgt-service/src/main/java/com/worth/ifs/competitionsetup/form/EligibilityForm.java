@@ -25,7 +25,7 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private Integer researchParticipationAmountId;
 	@NotBlank(message = "{validation.eligibilityform.resubmission.required}")
 	private String resubmission;
-
+	
 	public String getMultipleStream() {
 		return multipleStream;
 	}
