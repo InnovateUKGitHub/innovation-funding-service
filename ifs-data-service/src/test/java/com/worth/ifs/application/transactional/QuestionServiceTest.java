@@ -1,13 +1,16 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -15,10 +18,6 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.user.domain.ProcessRole;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -34,12 +33,11 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.*;
 
 public class QuestionServiceTest extends BaseUnitTestMocksTest {
 

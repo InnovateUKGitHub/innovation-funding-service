@@ -24,10 +24,27 @@ public class QuestionResource {
     private Long section;
     private String questionNumber;
     private QuestionType type;
+    private Long questionAssessment;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
         //default constructor
+    }
+
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
+
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
+    }
+
+    public Long getQuestionAssessment() {
+        return questionAssessment;
+    }
+
+    public void setQuestionAssessment(Long questionAssessment) {
+        this.questionAssessment = questionAssessment;
     }
 
     public String getName() {
@@ -95,10 +112,6 @@ public class QuestionResource {
         return this.questionNumber;
     }
 
-    public Integer getAssessorMaximumScore() {
-        return assessorMaximumScore;
-    }
-
     public List<Long> getFormInputs() {
         return this.formInputs;
     }
@@ -152,23 +165,15 @@ public class QuestionResource {
 		this.type = type;
 	}
 
-    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
-        this.assessorMaximumScore = assessorMaximumScore;
-    }
-
     public void setFormInputs(List<Long> formInputs) {
         this.formInputs = formInputs;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         QuestionResource that = (QuestionResource) o;
 
@@ -185,6 +190,8 @@ public class QuestionResource {
                 .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
+                .append(type, that.type)
+                .append(questionAssessment, that.questionAssessment)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
@@ -204,6 +211,8 @@ public class QuestionResource {
                 .append(competition)
                 .append(section)
                 .append(questionNumber)
+                .append(type)
+                .append(questionAssessment)
                 .append(assessorMaximumScore)
                 .toHashCode();
     }

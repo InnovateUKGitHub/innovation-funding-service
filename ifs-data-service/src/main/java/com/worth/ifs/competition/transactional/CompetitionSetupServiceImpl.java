@@ -1,7 +1,11 @@
 package com.worth.ifs.competition.transactional;
 
+import com.worth.ifs.application.domain.AssessmentScoreRow;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionAssessment;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.repository.AssessmentScoreRowRepository;
+import com.worth.ifs.application.repository.QuestionAssessmentRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
@@ -62,6 +66,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionFunderService competitionFunderService;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionAssessmentRepository questionAssessmentRepository;
+    @Autowired
+    private AssessmentScoreRowRepository assessmentScoreRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -223,6 +231,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
 
+        List<AssessmentScoreRow> scoreRows = assessmentScoreRowRepository.findByQuestionAssessment_Question_CompetitionId(competition.getId());
+        assessmentScoreRowRepository.delete(scoreRows);
+
+        List<QuestionAssessment> assessments = questionAssessmentRepository.findByQuestion_CompetitionId(competition.getId());
+        questionAssessmentRepository.delete(assessments);
+
         List<Question> questions = questionRepository.findByCompetitionId(competition.getId());
         questionRepository.delete(questions);
 
@@ -278,11 +292,39 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             questionRepository.save(question);
 
             question.setFormInputs(createFormInputs(competition, question, question.getFormInputs()));
+            if(question.getQuestionAssessment() != null) {
+                question.setQuestionAssessment(createQuestionAssessment(question, question.getQuestionAssessment()));
+            }
 			return question;
 		};
 	}
-	
-	private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
+
+    private QuestionAssessment createQuestionAssessment(Question question, QuestionAssessment questionAssessment) {
+        entityManager.detach(questionAssessment);
+        questionAssessment.setQuestion(question);
+        questionAssessment.setId(null);
+        questionAssessmentRepository.save(questionAssessment);
+
+        questionAssessment.setScoreRows(createAssessmentScoreRows(questionAssessment, questionAssessment.getScoreRows()));
+        return questionAssessment;
+    }
+
+    private List<AssessmentScoreRow> createAssessmentScoreRows(QuestionAssessment questionAssessment, List<AssessmentScoreRow> scoreRows) {
+        return scoreRows.stream().map(createAssessmentScoreRow(questionAssessment)).collect(Collectors.toList());
+    }
+
+    private Function<AssessmentScoreRow, AssessmentScoreRow> createAssessmentScoreRow(QuestionAssessment questionAssessment) {
+        return (AssessmentScoreRow row) -> {
+            entityManager.detach(row);
+            row.setQuestionAssessment(questionAssessment);
+            row.setId(null);
+            assessmentScoreRowRepository.save(row);
+            return row;
+        };
+    }
+
+
+    private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
 		return formInputTemplates.stream().map(createFormInput(competition, question)).collect(Collectors.toList());
 	}
 	

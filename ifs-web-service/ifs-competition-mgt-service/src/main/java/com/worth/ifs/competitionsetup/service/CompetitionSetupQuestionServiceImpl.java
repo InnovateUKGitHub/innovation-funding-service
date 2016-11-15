@@ -1,6 +1,8 @@
 package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.service.QuestionAssessmentRestService;
+import com.worth.ifs.application.service.QuestionAssessmentService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -25,36 +27,27 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 	@Autowired
 	private FormInputService formInputService;
 
+    @Autowired
+    private QuestionAssessmentService questionAssessmentService;
+
     private final Long fileUploadId = 4L;
     private final Long assessorScoreId = 23L;
 
 
     @Override
     public QuestionViewModel getQuestion(final Long questionId) {
-        QuestionResource questionResource = questionService.getById(questionId);
+        return questionAssessmentService.findByQuestionId(questionId).andOnSuccessReturn(assessment -> {
+            QuestionResource questionResource = questionService.getById(questionId);
+            List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(questionId);
+            Optional<FormInputResource> optionalFormInput = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+            Boolean hasAppendix = hasAppendix(formInputResources);
+            if(optionalFormInput.isPresent()) {
+                return new QuestionViewModel(questionResource, optionalFormInput.get(), hasAppendix, assessment);
+            } else {
+                return new QuestionViewModel();
+            }
+        }).getSuccessObjectOrThrowException();
 
-        QuestionViewModel question = new QuestionViewModel();
-        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(questionId);
-        //TODO AssessorScore for application questions
-        //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(questionId);
-
-        question.setId(questionResource.getId());
-        question.setTitle(questionResource.getName());
-        question.setSubTitle(questionResource.getDescription());
-
-        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
-        if(result.isPresent()) {
-            FormInputResource formInputResource = result.get();
-            question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
-            question.setGuidance(formInputResource.getGuidanceAnswer());
-            question.setMaxWords(formInputResource.getWordCount());
-        }
-
-        question.setAppendix(hasAppendix(formInputResources));
-        //TODO AssessorScore for application questions
-        //question.setScored(hasAssessorScore(formInputAssessmentResources));
-
-        return question;
     }
 
     @Override

@@ -8,9 +8,13 @@ import static org.mockito.Mockito.when;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.application.builder.QuestionAssessmentBuilder.newQuestionAssessment;
+import static com.worth.ifs.application.builder.AssessmentScoreRowBuilder.newAssessmentScoreRow;
 
 import java.util.ArrayList;
 
+import com.worth.ifs.application.repository.AssessmentScoreRowRepository;
+import com.worth.ifs.application.repository.QuestionAssessmentRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -44,8 +48,12 @@ public class CompetitionSetupServiceImplTest {
     private FormInputRepository formInputRepository;
     @Mock
     private QuestionRepository questionRepository;
-    @Mock
-    private SectionRepository sectionRepository;
+	@Mock
+	private SectionRepository sectionRepository;
+	@Mock
+	private QuestionAssessmentRepository questionAssessmentRepository;
+	@Mock
+	private AssessmentScoreRowRepository assessmentScoreRowRepository;
 	@Mock
 	private EntityManager entityManager;
 
@@ -65,11 +73,14 @@ public class CompetitionSetupServiceImplTest {
     			.withSections(newSection()
 						.withSectionType(SectionType.GENERAL)
 						.withQuestions(newQuestion()
-								.withFormInputs(newFormInput()
-										.build(2)
-								).build(2)
-						).build(2)
-				).build();
+								.withFormInputs(newFormInput().build(2)
+								)
+								.withQuestionAssessment(newQuestionAssessment()
+									.withScoreRows(newAssessmentScoreRow().build(2)
+								).build()
+							).build(2)
+					).build(2)
+			).build();
 
 		long typeId = 4L;
 		long competitionId = 2L;

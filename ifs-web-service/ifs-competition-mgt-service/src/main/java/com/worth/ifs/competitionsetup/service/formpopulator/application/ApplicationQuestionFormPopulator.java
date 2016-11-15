@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -31,6 +32,9 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 	@Autowired
 	private FormInputService formInputService;
 
+	@Autowired
+	private CompetitionSetupQuestionService competitionSetupQuestionService;
+
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
 		return CompetitionSetupSubsection.QUESTIONS;
@@ -51,26 +55,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 	}
 
 	private QuestionViewModel initQuestionForForm(QuestionResource questionResource) {
-        Long appendixTypeId = 4L;
-        Long scoreTypeId = 23L;
-
-		List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
-		List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
-
-		Boolean appendix = inputsTypeMatching(formInputs, appendixTypeId);
-		Boolean scored = inputsTypeMatching(formAssessmentInputs, scoreTypeId);
-
-
-		Optional<FormInputResource> foundInputs = formInputs.stream()
-				.filter(formInputResource -> formInputResource.getFormInputType() != null
-						&& !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
-
-		QuestionViewModel result = null;
-		if(foundInputs.isPresent()) {
-			result = new QuestionViewModel(questionResource, foundInputs.get(), appendix, scored);
-		}
-
-		return result;
+		return competitionSetupQuestionService.getQuestion(questionResource.getId());
 	}
 
 

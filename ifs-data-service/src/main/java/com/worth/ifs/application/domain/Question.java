@@ -57,8 +57,19 @@ public class Question {
 
     private Integer assessorMaximumScore;
 
+    @OneToOne(mappedBy = "question")
+    private QuestionAssessment questionAssessment;
+
     public Question() {
         //default constructor
+    }
+
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
+
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
     }
 
     public String getName() {
@@ -190,14 +201,6 @@ public class Question {
         this.questionNumber = questionNumber;
     }
 
-    public Integer getAssessorMaximumScore() {
-        return assessorMaximumScore;
-    }
-
-    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
-        this.assessorMaximumScore = assessorMaximumScore;
-    }
-    
     public QuestionType getType() {
 		return type;
 	}
@@ -208,5 +211,13 @@ public class Question {
     
     public boolean isType(QuestionType queriedType) {
     	return queriedType.equals(type);
+    }
+
+    public QuestionAssessment getQuestionAssessment() {
+        return questionAssessment;
+    }
+
+    public void setQuestionAssessment(QuestionAssessment questionAssessment) {
+        this.questionAssessment = questionAssessment;
     }
 }

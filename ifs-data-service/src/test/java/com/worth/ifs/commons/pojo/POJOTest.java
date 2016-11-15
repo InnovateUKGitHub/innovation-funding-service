@@ -17,18 +17,16 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.AssessmentScoreRowResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.application.resource.QuestionAssessmentResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.project.bankdetails.domain.BankDetails;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
-import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -43,6 +41,10 @@ import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -141,7 +143,9 @@ public class POJOTest {
             ProfileContractResource.class,
             ProfileSkillsResource.class,
             UserProfileResource.class,
-            UserProfileStatusResource.class
+            UserProfileStatusResource.class,
+            QuestionAssessmentResource.class,
+            AssessmentScoreRowResource.class
     );
 
     @Before
