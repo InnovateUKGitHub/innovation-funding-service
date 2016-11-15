@@ -17,7 +17,7 @@ public class CompetitionInviteModelPopulator {
 
     public CompetitionInviteViewModel populateModel(String inviteHash) {
         CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
-        return new CompetitionInviteViewModel(inviteHash, invite.getCompetitionName());
+        return new CompetitionInviteViewModel(inviteHash, invite.getCompetitionName(), invite.getAcceptsDate(), invite.getDeadlineDate());
     }
 
 }
