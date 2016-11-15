@@ -3,6 +3,7 @@ package com.worth.ifs.testdata;
 import au.com.bytecode.opencsv.CSVReader;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -50,6 +51,10 @@ class CsvUtils {
 
     static List<ApplicationLine> readApplications() {
         return simpleMap(readCsvLines("applications"), ApplicationLine::new);
+    }
+
+    static List<InviteLine> readInvites() {
+        return simpleMap(readCsvLines("invites"), InviteLine::new);
     }
 
     static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
@@ -122,6 +127,28 @@ class CsvUtils {
         });
 
         return organisationFinances;
+    }
+
+    static class InviteLine {
+
+        String email;
+        String hash;
+        String name;
+        InviteStatus status;
+        String type;
+        String targetName;
+        String ownerName;
+
+        private InviteLine(List<String> line) {
+            int i = 0;
+            email = line.get(i++);
+            hash = line.get(i++);
+            name = line.get(i++);
+            status = InviteStatus.valueOf(line.get(i++));
+            type = line.get(i++);
+            targetName = line.get(i++);
+            ownerName = line.get(i++);
+        }
     }
 
     static class ApplicationOrganisationFinanceBlock {

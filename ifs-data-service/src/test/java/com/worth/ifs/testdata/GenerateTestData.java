@@ -114,6 +114,11 @@ public class GenerateTestData extends BaseIntegrationTest {
     private static List<ApplicationLine> applicationLines;
 
     /**
+     * select "Email", "Hash", "Name", "Status", "Type", "Target", "Owner" UNION ALL select i.email, i.hash, i.name, i.status, i.type, i.target_id, i.owner_id from invite i where not exists (select 1 from user where email = i.email) into OUTFILE '/tmp/invites3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '';
+     */
+    private static List<InviteLine> inviteLines;
+
+    /**
      * select "Email","First name","Last name","Status","Organisation name","Organisation type","Organisation address line 1", "Line 2","Line3","Town or city","Postcode","County","Address Type" UNION ALL SELECT u.email, u.first_name, u.last_name, u.status, o.name, ot.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, at.name from user u join user_organisation uo on uo.user_id = u.id join organisation o on o.id = uo.organisation_id join organisation_type ot on ot.id = o.organisation_type_id join user_role ur on ur.user_id = u.id and ur.role_id = 4 left join organisation_address oa on oa.organisation_id = o.id left join address a on oa.address_id = a.id left join address_type at on at.id = oa.address_type_id INTO OUTFILE '/var/lib/mysql-files/external-users8.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private static List<ExternalUserLine> externalUserLines;
@@ -160,6 +165,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
         applicationLines = readApplications();
+        inviteLines = readInvites();
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
         questionResponseLines = readApplicationQuestionResponses();
@@ -312,6 +318,14 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         for (String collaborator : line.collaborators) {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
+        }
+
+        List<InviteLine> pendingInvites = simpleFilter(GenerateTestData.inviteLines,
+                invite -> "APPLICATION".equals(invite.type) && line.title.equals(invite.targetName));
+
+        for (InviteLine invite : pendingInvites) {
+            baseBuilder = baseBuilder.inviteCollaboratorNotYetRegistered(invite.email, invite.hash, invite.name,
+                    invite.status, invite.ownerName);
         }
 
         if (line.status != ApplicationStatusConstants.CREATED) {

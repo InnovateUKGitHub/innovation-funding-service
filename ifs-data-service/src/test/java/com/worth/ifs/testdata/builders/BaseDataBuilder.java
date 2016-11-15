@@ -17,6 +17,7 @@ import com.worth.ifs.competition.transactional.MilestoneService;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
+import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -76,7 +77,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
-    private UsersRolesService usersRolesService;
+    protected UsersRolesService usersRolesService;
+    protected ApplicationInviteRepository applicationInviteRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -107,6 +109,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.sectionService = serviceLocator.getBean(SectionService.class);
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
         this.usersRolesService = serviceLocator.getBean(UsersRolesService.class);
+        this.applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
     }
 
     protected UserResource compAdmin() {
@@ -137,6 +140,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
         return organisationRepository.findOneByName(organisationName);
+    }
+
+    protected Organisation retrieveOrganisationById(Long id) {
+        return organisationRepository.findOne(id);
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {

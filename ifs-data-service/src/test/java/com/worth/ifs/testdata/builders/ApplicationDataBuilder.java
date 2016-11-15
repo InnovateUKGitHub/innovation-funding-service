@@ -3,15 +3,20 @@ package com.worth.ifs.testdata.builders;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder;
+import com.worth.ifs.invite.constant.InviteStatus;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.testdata.builders.data.ApplicationData;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -63,22 +68,21 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return asLeadApplicant(data -> {
 
-            inviteService.createApplicationInvites(newInviteOrganisationResource().
-                    withOrganisation(collaborator.getOrganisations().get(0)).
-                    withInviteResources(newApplicationInviteResource().
-                            withUsers(collaborator.getId()).
-                            withApplication(data.getApplication().getId()).
-                            withName(collaborator.getFirstName()).
-                            withEmail(collaborator.getEmail()).
-                            build(1)).
-                    build()).getSuccessObjectOrThrowException();
+            Organisation organisation = retrieveOrganisationById(collaborator.getOrganisations().get(0));
 
-            Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
-
-            InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).isPresent()).get();
-            ApplicationInviteResource singleInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(collaborator.getEmail())).get();
+            ApplicationInviteResource singleInvite = doInviteCollaborator(data, Optional.of(organisation.getId()), organisation.getName(),
+                    Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
             doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
+        });
+    }
+
+    public ApplicationDataBuilder inviteCollaboratorNotYetRegistered(String email, String hash, String name, InviteStatus status, String organisationName) {
+
+        return asLeadApplicant(data -> {
+            Organisation organisation = retrieveOrganisationByName(organisationName);
+            Optional<Long> organisationId = organisation != null ? Optional.of(organisation.getId()) : Optional.empty();
+            doInviteCollaborator(data, organisationId, organisationName, Optional.empty(), email, name, Optional.of(hash));
         });
     }
 
@@ -116,6 +120,46 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
             applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
         });
+    }
+
+    private ApplicationInviteResource doInviteCollaborator(ApplicationData data, Optional<Long> organisationId, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
+
+        ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
+                userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
+
+        Organisation leadOrganisation = retrieveOrganisationById(data.getLeadApplicant().getOrganisations().get(0));
+
+        List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.
+                withApplication(data.getApplication().getId()).
+                withName(name).
+                withEmail(email).
+                withLeadApplicant(data.getLeadApplicant().getName()).
+                withLeadApplicantEmail(data.getLeadApplicant().getEmail()).
+                withLeadOrganisation(leadOrganisation.getName()).
+                withCompetitionId(data.getCompetition().getId()).
+                build(1);
+
+        inviteService.createApplicationInvites(newInviteOrganisationResource().
+                withOrganisation(organisationId.map(id -> id).orElse(null)).
+                withOrganisationName(organisationName).
+                withInviteResources(applicationInvite).
+                build()).getSuccessObjectOrThrowException();
+
+        Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
+
+        InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
+        ApplicationInviteResource usersInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(email)).get();
+
+        hash.ifPresent(h -> {
+
+            ApplicationInvite saved = applicationInviteRepository.findOne(usersInvite.getId());
+            saved.setHash(h);
+            applicationInviteRepository.save(saved);
+
+            usersInvite.setHash(h);
+        });
+
+        return usersInvite;
     }
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {

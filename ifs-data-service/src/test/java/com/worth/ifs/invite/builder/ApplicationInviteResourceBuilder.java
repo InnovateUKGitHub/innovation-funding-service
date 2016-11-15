@@ -43,6 +43,10 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
         return withArray((leadApplicantEmail, applicationInviteResource) -> setField("leadApplicantEmail", leadApplicantEmail, applicationInviteResource), leadApplicantEmails);
     }
 
+    public ApplicationInviteResourceBuilder withLeadOrganisation(String... leadOrganisation) {
+        return withArraySetFieldByReflection("leadOrganisation", leadOrganisation);
+    }
+
     public ApplicationInviteResourceBuilder withEmail(String... emails) {
         return withArray((email, applicationInviteResource) -> setField("email", email, applicationInviteResource), emails);
     }
