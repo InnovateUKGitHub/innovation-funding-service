@@ -889,11 +889,33 @@
 
                             <div class="column-assessment-status navigation-right">
 
+                              <th:block th:unless="${param.app != null}">
                                 <div class="application-status open empty">
                                     <p>In progress</p>
                                 </div>
+                              </th:block>
+
+                              <th:block th:if="${param.app != null and param.app[0] == 'ok'}">
+                                <div class="application-status assessed yes">
+                                    <p>Assessed</p>
+                                    <!--if assessment is pending acceptance-->
+
+                                    <!--otherwise shows the overall score -->
+                                    <p class="application-listing_pending"></p>
+                                    <h3 class="score"><span>75.0</span> %</h3>
+                                    <small>Overall score</small>
+                                    <div class="recommend-container">
+                                        <p class="recommend yes"> <span>Recommended</span> </p>
+                                    </div>
+                                </div>
+                                <label>
+                                    <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
+                                </label>
+                              </th:block>
+
 
                             </div>
+
                         </div>
                         <!--<label>-->
                             <!--<input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />-->
