@@ -268,7 +268,7 @@ Academic partner spend profile validations
 
 
 Academic partner edits spend profile and this updates on the table
-    [Documentation]    INFUND-4856
+    [Documentation]    INFUND-5846
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
