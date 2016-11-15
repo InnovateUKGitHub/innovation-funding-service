@@ -140,7 +140,7 @@
                                 <legend>
                                     <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
                                     <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:remove="tag" />
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-resubmissione')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-resubmission')" th:remove="tag" />
                                 </legend>
 
                                 <label th:class="${'block-label'  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"

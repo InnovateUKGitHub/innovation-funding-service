@@ -460,7 +460,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSaveFormElementApplicationInvalidDuration() throws Exception {
+    public void testSaveFormElementApplicationInvalidDurationNonInteger() throws Exception {
         String value = "aaaa";
         String fieldName = "application.durationInMonths";
 
@@ -475,6 +475,26 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
 
         String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value\"]}";
+        Assert.assertEquals(jsonExpectedContent, content);
+    }
+
+
+    @Test
+    public void testSaveFormElementApplicationInvalidDurationLength() throws Exception {
+        String value = "37";
+        String fieldName = "application.durationInMonths";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Your project should last between 1 and 36 months\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -498,7 +518,89 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSaveFormElementApplicationStartDate() throws Exception {
+    public void testSaveFormElementCostSubcontractingWithErrors() throws Exception {
+        String value = "BOB";
+        String questionId = "cost-subcontracting-13-subcontractingCost";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", "bobbins")
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+    }
+
+    @Test
+    public void testSaveFormElementFinancePosition() throws Exception {
+        String value = "222";
+        String questionId = "financePosition-organisationSize";
+        String fieldName = "financePosition.organisationSize";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+    }
+
+
+
+    @Test
+    public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
+        String value = "25-10-2025";
+        String questionId= "application_details-startdate";
+        String fieldName = "application.startDate";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/1/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+
+    }
+
+
+    @Test
+    public void testSaveFormElementApplicationInvalidStartDateMMDDYYYY() throws Exception {
+        String value = "10-25-2025";
+        String questionId= "application_details-startdate";
+        String fieldName = "application.startDate";
+
+        mockMvc.perform(
+                post("/application/1/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}"));
+    }
+
+    @Test
+    public void testSaveFormElementApplicationStartDateValidDay() throws Exception {
         String value = "25";
         String questionId= "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
@@ -560,9 +662,10 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSaveFormElementApplicationAttributeValidYear() throws Exception {
+    public void testSaveFormElementApplicationAttributeInvalidYear() throws Exception {
 
         String questionId = "application_details-startdate_year";
+        String fieldName  = "application.startDate.year";
         String value = "2015";
 
         when(sectionService.getById(anyLong())).thenReturn(null);
@@ -570,11 +673,78 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")
                         .param("formInputId", questionId)
-                        .param("fieldName", "question[" + questionId + "]")
+                        .param("fieldName", fieldName)
                         .param("value", value)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a future date\"]}"));
+    }
+
+    @Test
+    public void testSaveFormElementApplicationResubmission() throws Exception {
+        String value = "true";
+        String questionId= "application_details-resubmission";
+        String fieldName = "application.resubmission";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/1/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+
+    }
+
+    @Test
+    public void testSaveFormElementApplicationPreviousApplicationNumber() throws Exception {
+        String value = "999";
+        String questionId= "application_details-previousapplicationnumber";
+        String fieldName = "application.previousApplicationNumber";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/1/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+
+    }
+
+    @Test
+    public void testSaveFormElementApplicationPreviousApplicationTitle() throws Exception {
+        String value = "test";
+        String questionId= "application_details-previousapplicationtitle";
+        String fieldName = "application.previousApplicationTitle";
+
+        MvcResult result = mockMvc.perform(
+                post("/application/1/form/saveFormElement")
+                        .param("formInputId", questionId)
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        String jsonExpectedContent = "{\"success\":\"true\"}";
+        Assert.assertEquals(jsonExpectedContent, content);
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+
     }
 
     @Test
