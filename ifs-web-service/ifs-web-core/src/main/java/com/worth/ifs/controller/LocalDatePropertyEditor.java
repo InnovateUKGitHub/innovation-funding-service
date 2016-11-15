@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * This class is used to convert our custom implementation of the date fields, to the LocalDate object.
  * This way, the submitted fields, can be cast / injected into a domain object.
- * We use this to save form fields, into the ApplicationForm object, for example properties of the domain.Application object.
+ * We use this to save form fields, into the ApplicationForm object, for example properties of the domain.com.worth.ifs.Application object.
  *
  * One other way to remove this class, would be to merge the day/month/year value into 1 form-input element.
  */

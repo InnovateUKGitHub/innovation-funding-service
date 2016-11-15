@@ -15,12 +15,12 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        LOG.info("IFS Application builder configure method");
+        LOG.info("IFS com.worth.ifs.Application builder configure method");
         return application.sources(Application.class);
     }
 
     public static void main(String[] args) throws Exception {
-        LOG.info("IFS boot Application main method");
+        LOG.info("IFS boot com.worth.ifs.Application main method");
         SpringApplication.run(Application.class, args);
     }
 }

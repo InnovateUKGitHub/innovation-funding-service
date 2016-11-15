@@ -7,6 +7,7 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.commons.security.authentication.token.Authentication;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -47,7 +48,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_NOT_FOUND.getErrorKey(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
-            assertEquals(expectedResponse, restErrorResponse);
+            Assert.assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
@@ -66,7 +67,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
-            assertEquals(expectedResponse, restErrorResponse);
+            Assert.assertEquals(expectedResponse, restErrorResponse);
         }
     }
 

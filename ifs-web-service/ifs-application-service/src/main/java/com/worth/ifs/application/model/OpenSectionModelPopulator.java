@@ -233,7 +233,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
+            //com.worth.ifs.Application Not open, so add empty lists
             model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
             model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());

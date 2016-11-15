@@ -24,7 +24,7 @@ public class AlertResourceBuilder extends BaseBuilder<AlertResource, AlertResour
 
     public static AlertResourceBuilder newAlertResource() {
         return new AlertResourceBuilder(emptyList())
-                .with(uniqueIds())
+                .with(BaseBuilderAmendFunctions.uniqueIds())
                 .withMessage("Sample message")
                 .withType(AlertType.MAINTENANCE)
                 .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"))
@@ -46,18 +46,18 @@ public class AlertResourceBuilder extends BaseBuilder<AlertResource, AlertResour
     }
 
     public AlertResourceBuilder withMessage(final String... messages) {
-        return withArray((message, alertResource) -> setField("message", message, alertResource), messages);
+        return withArray((message, alertResource) -> BaseBuilderAmendFunctions.setField("message", message, alertResource), messages);
     }
 
     public AlertResourceBuilder withType(final Enum<?>... types) {
-        return withArray((type, alertResource) -> setField("type", type, alertResource), types);
+        return withArray((type, alertResource) -> BaseBuilderAmendFunctions.setField("type", type, alertResource), types);
     }
 
     public AlertResourceBuilder withValidFromDate(final LocalDateTime... validFromDates) {
-        return withArray((validFromDate, alertResource) -> setField("validFromDate", validFromDate, alertResource), validFromDates);
+        return withArray((validFromDate, alertResource) -> BaseBuilderAmendFunctions.setField("validFromDate", validFromDate, alertResource), validFromDates);
     }
 
     public AlertResourceBuilder withValidToDate(final LocalDateTime... validToDates) {
-        return withArray((validToDate, alertResource) -> setField("validToDate", validToDate, alertResource), validToDates);
+        return withArray((validToDate, alertResource) -> BaseBuilderAmendFunctions.setField("validToDate", validToDate, alertResource), validToDates);
     }
 }

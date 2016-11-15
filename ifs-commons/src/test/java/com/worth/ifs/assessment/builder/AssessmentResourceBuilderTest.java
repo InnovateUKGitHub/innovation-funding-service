@@ -7,11 +7,11 @@ import com.worth.ifs.workflow.resource.ProcessStates;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
@@ -27,7 +27,7 @@ public class AssessmentResourceBuilderTest {
         final Calendar expectedLastModifiedDate = GregorianCalendar.getInstance();
         final LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         final LocalDate expectedEndDate = LocalDate.now().minusDays(1);
-        final List<Long> expectedProcessOutcomes = asList(1L);
+        final List<Long> expectedProcessOutcomes = Arrays.asList(1L);
         final Long expectedProcessRole = 2L;
         final Long expectedApplication = 3L;
         final Long expectedCompetition = 4L;
@@ -66,8 +66,8 @@ public class AssessmentResourceBuilderTest {
         final Calendar[] expectedLastModifiedDates = { GregorianCalendar.getInstance(), GregorianCalendar.getInstance() };
         final LocalDate[] expectedStartDates = { LocalDate.now().minusDays(2), LocalDate.now().minusDays(3) };
         final LocalDate[] expectedEndDates = { LocalDate.now().minusDays(1), LocalDate.now().minusDays(2) };
-        final List<Long> expectedProcessOutcomes1 = asList(1L);
-        final List<Long> expectedProcessOutcomes2 = asList(2L);
+        final List<Long> expectedProcessOutcomes1 = Arrays.asList(1L);
+        final List<Long> expectedProcessOutcomes2 = Arrays.asList(2L);
         final Long[] expectedProcessRoles = { 1L, 2L };
         final Long[] expectedApplications = { 3L, 4L };
         final Long[] expectedCompetitions = { 5L, 6L };

@@ -15,6 +15,4 @@ import org.springframework.boot.test.WebIntegrationTest;
 @WebIntegrationTest("server.port:23456")
 public abstract class BaseWebIntegrationTest extends BaseIntegrationTest {
 
-
-
 }

@@ -22,7 +22,7 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public static AssessorFormInputResponseResourceBuilder newAssessorFormInputResponseResource() {
-        return new AssessorFormInputResponseResourceBuilder(emptyList()).with(uniqueIds());
+        return new AssessorFormInputResponseResourceBuilder(emptyList()).with(BaseBuilderAmendFunctions.uniqueIds());
     }
 
     @Override
@@ -40,15 +40,15 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public AssessorFormInputResponseResourceBuilder withAssessment(Long... assessments) {
-        return withArray((assessment, assessorFormInputResponse) -> setField("assessment", assessment, assessorFormInputResponse), assessments);
+        return withArray((assessment, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("assessment", assessment, assessorFormInputResponse), assessments);
     }
 
     public AssessorFormInputResponseResourceBuilder withQuestion(Long... questions) {
-        return withArray((question, assessorFormInputResponse) -> setField("question", question, assessorFormInputResponse), questions);
+        return withArray((question, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("question", question, assessorFormInputResponse), questions);
     }
 
     public AssessorFormInputResponseResourceBuilder withFormInput(Long... formInputs) {
-        return withArray((formInput, assessorFormInputResponse) -> setField("formInput", formInput, assessorFormInputResponse), formInputs);
+        return withArray((formInput, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("formInput", formInput, assessorFormInputResponse), formInputs);
     }
 
     public AssessorFormInputResponseResourceBuilder withValue(String... values) {
@@ -56,10 +56,10 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public AssessorFormInputResponseResourceBuilder withFormInputMaxWordCount(Integer... formInputMaxWordCounts) {
-        return withArray((formInputMaxWordCount, assessorFormInputResponse) -> setField("formInputMaxWordCount", formInputMaxWordCount, assessorFormInputResponse), formInputMaxWordCounts);
+        return withArray((formInputMaxWordCount, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("formInputMaxWordCount", formInputMaxWordCount, assessorFormInputResponse), formInputMaxWordCounts);
     }
 
     public AssessorFormInputResponseResourceBuilder withUpdatedDate(LocalDateTime... updatedDates) {
-        return withArray((updatedDate, assessorFormInputResponse) -> setField("updatedDate", updatedDate, assessorFormInputResponse), updatedDates);
+        return withArray((updatedDate, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("updatedDate", updatedDate, assessorFormInputResponse), updatedDates);
     }
 }

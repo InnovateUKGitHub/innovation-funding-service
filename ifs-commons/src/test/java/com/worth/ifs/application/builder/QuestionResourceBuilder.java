@@ -1,9 +1,9 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((assessorMaximumScore, object) -> setField("assessorMaximumScore", assessorMaximumScore, object), assessorMaximumScores);
     }
 
-    public QuestionResourceBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
+    public QuestionResourceBuilder withCompetitionAndSectionAndPriority(CompetitionResource competition, SectionResource section, Integer priority) {
         return with(question -> {
             question.setCompetition(competition.getId());
             question.setSection(section.getId());

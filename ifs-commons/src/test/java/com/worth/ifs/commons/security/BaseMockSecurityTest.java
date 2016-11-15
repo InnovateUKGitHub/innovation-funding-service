@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -23,8 +24,6 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 /**
  * A base class for testing services with Spring Security integrated into them.  PermissionRules-annotated beans are
@@ -81,7 +80,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         // get the custom permission evaluator from the applicationContext and swap its rulesMap for one containing only
         // Mockito mocks
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-            originalRulesMap = (PermissionedObjectClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
+        originalRulesMap = (PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(permissionEvaluator, "rulesMap");
 
         Pair<PermissionRulesClassToMock, PermissionedObjectClassToPermissionsToPermissionsMethods> mocksAndRecorders =
                 generateMockedOutRulesMap(originalRulesMap);
@@ -92,13 +91,13 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         mockPermissionRulesBeans = mocks;
         setRuleMap(permissionEvaluator, recordingProxies);
 
-        originalLookupStrategyMap = (PermissionedObjectClassesToListOfLookup) getField(permissionEvaluator, "lookupStrategyMap");
+        originalLookupStrategyMap = (PermissionedObjectClassesToListOfLookup) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
 
         Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
         mockPermissionEntityLookupStrategies = mockedOut.getLeft();
         setLookupStrategyMap(permissionEvaluator, mockedOut.getRight());
 
-        setLoggedInUser(newUserResource().build());
+        BaseIntegrationTest.setLoggedInUser(newUserResource().build());
     }
 
     /**
@@ -112,11 +111,11 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     }
 
     private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassesToListOfLookup right) {
-        setField(permissionEvaluator, "lookupStrategyMap", right);
+        ReflectionTestUtils.setField(permissionEvaluator, "lookupStrategyMap", right);
     }
 
     private void setRuleMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToPermissionsToPermissionsMethods recordingProxies) {
-        setField(permissionEvaluator, "rulesMap", recordingProxies);
+        ReflectionTestUtils.setField(permissionEvaluator, "rulesMap", recordingProxies);
     }
 
     protected Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> generateMockedOutLookupMap(PermissionedObjectClassesToListOfLookup originalLookupStrategyMap) {
@@ -126,7 +125,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         for (Entry<Class<?>, ListOfOwnerAndMethod> entry : originalLookupStrategyMap.entrySet()) {
             final Class<?> permissionedObjectClass = entry.getKey();
             final ListOfOwnerAndMethod originalLookups = entry.getValue();
-            for (Pair<Object, Method> originalLookup: originalLookups) {
+            for (Pair<Object, Method> originalLookup : originalLookups) {
                 final Object originalLookupBeans = originalLookup.getLeft();
                 final Method originalLookupMethod = originalLookup.getRight();
 
@@ -235,11 +234,13 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     }
 
     protected void assertPostFilter(List list, Runnable verifications) {
-            assertTrue(list.isEmpty());
-            verifications.run();
+        assertTrue(list.isEmpty());
+        verifications.run();
     }
 
-    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
+    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {
+    }
 
-    public static class PermissionedObjectClassToMockLookupStrategyClasses extends HashMap<Class<?>, Object> {}
+    public static class PermissionedObjectClassToMockLookupStrategyClasses extends HashMap<Class<?>, Object> {
+    }
 }

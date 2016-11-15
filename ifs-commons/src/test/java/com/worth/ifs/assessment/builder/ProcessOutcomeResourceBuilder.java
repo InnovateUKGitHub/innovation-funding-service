@@ -17,7 +17,7 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
     }
 
     public static ProcessOutcomeResourceBuilder newProcessOutcomeResource() {
-        return new ProcessOutcomeResourceBuilder(emptyList()).with(uniqueIds());
+        return new ProcessOutcomeResourceBuilder(emptyList()).with(BaseBuilderAmendFunctions.uniqueIds());
     }
 
     @Override
@@ -35,18 +35,18 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
     }
 
     public ProcessOutcomeResourceBuilder withOutcome(String... outcomes) {
-        return withArray((outcome, processOutcomeResource) -> setField("outcome", outcome, processOutcomeResource), outcomes);
+        return withArray((outcome, processOutcomeResource) -> BaseBuilderAmendFunctions.setField("outcome", outcome, processOutcomeResource), outcomes);
     }
 
     public ProcessOutcomeResourceBuilder withDescription(String... descriptions) {
-        return withArray((description, processOutcomeResource) -> setField("description", description, processOutcomeResource), descriptions);
+        return withArray((description, processOutcomeResource) -> BaseBuilderAmendFunctions.setField("description", description, processOutcomeResource), descriptions);
     }
 
     public ProcessOutcomeResourceBuilder withComment(String... comments) {
-        return withArray((comment, processOutcomeResource) -> setField("comment", comment, processOutcomeResource), comments);
+        return withArray((comment, processOutcomeResource) -> BaseBuilderAmendFunctions.setField("comment", comment, processOutcomeResource), comments);
     }
 
     public ProcessOutcomeResourceBuilder withOutcomeType(String... outcomeTypes) {
-        return withArray((outcomeType, processOutcomeResource) -> setField("outcomeType", outcomeType, processOutcomeResource), outcomeTypes);
+        return withArray((outcomeType, processOutcomeResource) -> BaseBuilderAmendFunctions.setField("outcomeType", outcomeType, processOutcomeResource), outcomeTypes);
     }
 }

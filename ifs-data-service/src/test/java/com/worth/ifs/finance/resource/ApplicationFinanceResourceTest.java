@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationSize;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,13 +71,13 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
                 .withApplication(application.getId())
                 .withOrganisation(organisation.getId()).build();
 
-        assertEquals(applicationFinanceResource.getApplication(), new Long(1L));
-        assertEquals(applicationFinanceResource.getOrganisation(), new Long(2L));
+        Assert.assertEquals(applicationFinanceResource.getApplication(), new Long(1L));
+        Assert.assertEquals(applicationFinanceResource.getOrganisation(), new Long(2L));
     }
 
     @Test
     public void calculatedTotalMustBeZeroWhenQuantityOrCostAreNotSetTest() throws Exception {
         Materials materialWithoutValues = new Materials();
-        assertEquals(BigDecimal.ZERO, materialWithoutValues.getTotal());
+        Assert.assertEquals(BigDecimal.ZERO, materialWithoutValues.getTotal());
     }
 }

@@ -1,7 +1,6 @@
 package com.worth.ifs.commons;
 
 import com.worth.ifs.Application;
-import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.user.resource.UserResource;
@@ -16,8 +15,8 @@ import java.util.List;
 
 /**
  * This is the base class for all integration tests against a configured Spring application.  Subclasses of this base can be
- * of the form of either integration tests with a running server ({@link BaseWebIntegrationTest}) or without
- * (e.g. {@link BaseRepositoryIntegrationTest}).
+ * of the form of either integration tests with a running server ({BaseWebIntegrationTest}) or without
+ * (e.g. {BaseRepositoryIntegrationTest}).
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)

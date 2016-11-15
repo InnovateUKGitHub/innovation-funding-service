@@ -27,7 +27,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public static ApplicationBuilder newApplication() {
-        return new ApplicationBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Application "));
+        return new ApplicationBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("com.worth.ifs.Application "));
     }
 
     @Override

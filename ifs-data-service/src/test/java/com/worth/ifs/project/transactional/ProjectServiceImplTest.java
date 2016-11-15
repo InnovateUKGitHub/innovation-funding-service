@@ -135,7 +135,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
-                withName("My Application").
+                withName("My com.worth.ifs.Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();

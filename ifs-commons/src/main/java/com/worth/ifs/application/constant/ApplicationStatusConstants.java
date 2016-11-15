@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Java enumeration of the current available Application workflow statuses.
+ * Java enumeration of the current available com.worth.ifs.Application workflow statuses.
  * The value of these entries are used when saving to the database.
  */
 public enum ApplicationStatusConstants {

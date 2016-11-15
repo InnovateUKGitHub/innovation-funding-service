@@ -7,6 +7,6 @@ public class Application {
     private static final Log LOG = LogFactory.getLog(Application.class);
 
     public static void main(String[] args) throws Exception {
-        LOG.info("IFS CORE boot Application main method");
+        LOG.info("IFS CORE boot com.worth.ifs.Application main method");
     }
 }

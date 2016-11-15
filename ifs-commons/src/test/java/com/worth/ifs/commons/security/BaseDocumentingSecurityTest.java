@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.user.resource.UserRoleType;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -106,7 +108,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         Class<?> serviceInterface = interfaces.length > 0 ? interfaces[0] : getClassUnderTest();
         recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
 
-        SecuredBySpring simpleSecuredAnnotation = findAnnotation(methodCalled, SecuredBySpring.class);
+        SecuredBySpring simpleSecuredAnnotation = AnnotationUtils.findAnnotation(methodCalled, SecuredBySpring.class);
         if (simpleSecuredAnnotation != null) {
             recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
         }
@@ -231,10 +233,10 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
     }
 
     protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, UserRoleType... roles){
-        EnumSet<UserRoleType> rolesThatShouldSucceed = copyOf(asList(roles));
+        EnumSet<UserRoleType> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
         EnumSet<UserRoleType> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 functionToCall.run();
                 fail("Should not have been able to run the function given the role: " + role);
@@ -243,7 +245,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
             }
         });
         rolesThatShouldSucceed.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 functionToCall.run();
                 // Should not throw

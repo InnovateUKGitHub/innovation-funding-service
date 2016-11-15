@@ -23,14 +23,14 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        log.info("Spring Application builder configure method");
-        log.info("======== Application.configure()");
+        log.info("Spring com.worth.ifs.Application builder configure method");
+        log.info("======== com.worth.ifs.Application.configure()");
         return application.sources(Application.class);
     }
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        log.info("======== Application.onStartup()");
+        log.info("======== com.worth.ifs.Application.onStartup()");
     }
 
     /**
@@ -42,7 +42,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) throws Exception {
-        log.info("======== Application.main()");
+        log.info("======== com.worth.ifs.Application.main()");
         SpringApplication.run(Application.class, args);
     }
 }

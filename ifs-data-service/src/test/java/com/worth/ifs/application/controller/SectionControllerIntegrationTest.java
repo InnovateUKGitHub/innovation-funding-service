@@ -82,7 +82,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals("Project details", section.getName());
 
         section = controller.getById(2L).getSuccessObject();
-        assertEquals("Application questions", section.getName());
+        assertEquals("com.worth.ifs.Application questions", section.getName());
     }
 
     /**

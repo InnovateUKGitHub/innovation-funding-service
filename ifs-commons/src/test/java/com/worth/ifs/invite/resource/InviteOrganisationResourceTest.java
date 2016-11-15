@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,21 +8,21 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 public class InviteOrganisationResourceTest {
     InviteOrganisationResource setInviteOrganisationResource;
     InviteOrganisationResource constructedInviteOrganisationResource;
 
     String name;
-    Organisation organisation;
+    OrganisationResource organisation;
     List<ApplicationInviteResource> invites;
     Long id;
 
     @Before
     public void setUp() throws Exception {
         name = "organisationTestName";
-        organisation = newOrganisation().build();
+        organisation = newOrganisationResource().build();
         invites = newInviteResource().build(5);
         id = 1L;
 

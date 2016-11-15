@@ -51,7 +51,7 @@ public class OrganisationPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The System Registration User can see Organisations on behalf of non-logged in users " +
-            "whilst the Organisation is not yet linked to an Application")
+            "whilst the Organisation is not yet linked to an com.worth.ifs.Application")
     public boolean systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, UserResource user) {
         return isSystemRegistrationUser(user) && organisationNotYetLinkedToAnApplication(organisation);
     }
@@ -64,7 +64,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Users linked to Applications can view the basic details of the other Organisations on their own Applications")
     public boolean usersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
 
-        // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
+        // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an com.worth.ifs.Application
         List<Long> applicationRoles = user.getProcessRoles();
         List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
         List<Application> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplication);

@@ -8,12 +8,14 @@ import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObje
 import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -180,8 +182,8 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         // Method under test
         PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
-        assertEquals(1, dtoClassToMethods.size());
-        assertEquals(1, dtoClassToMethods.get(String.class).size());
+        Assert.assertEquals(1, dtoClassToMethods.size());
+        Assert.assertEquals(1, dtoClassToMethods.get(String.class).size());
     }
 
     @Test
@@ -189,9 +191,9 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         // Method under test
         PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
-        assertEquals(2, dtoClassToMethods.size());
-        assertEquals(3, dtoClassToMethods.get(String.class).size());
-        assertEquals(1, dtoClassToMethods.get(Integer.class).size());
+        Assert.assertEquals(2, dtoClassToMethods.size());
+        Assert.assertEquals(3, dtoClassToMethods.get(String.class).size());
+        Assert.assertEquals(1, dtoClassToMethods.get(Integer.class).size());
     }
 
     @Test
@@ -201,11 +203,11 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         // Method under test
         PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
-        assertEquals(1, dtoClassToPermissionToMethods.size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class));
-        assertEquals(1, dtoClassToPermissionToMethods.get(String.class).size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.get(String.class).size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class).get("Read"));
-        assertEquals(1, dtoClassToPermissionToMethods.get(String.class).get("Read").size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.get(String.class).get("Read").size());
     }
 
     @Test
@@ -216,19 +218,19 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         // Method under test
         PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
 
-        assertEquals(2, dtoClassToPermissionToMethods.size());
+        Assert.assertEquals(2, dtoClassToPermissionToMethods.size());
 
         assertNotNull(dtoClassToPermissionToMethods.get(String.class));
-        assertEquals(2, dtoClassToPermissionToMethods.get(String.class).size());
+        Assert.assertEquals(2, dtoClassToPermissionToMethods.get(String.class).size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class).get("Read"));
-        assertEquals(2, dtoClassToPermissionToMethods.get(String.class).get("Read").size());
+        Assert.assertEquals(2, dtoClassToPermissionToMethods.get(String.class).get("Read").size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class).get("Write"));
-        assertEquals(1, dtoClassToPermissionToMethods.get(String.class).get("Write").size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.get(String.class).get("Write").size());
 
         assertNotNull(dtoClassToPermissionToMethods.get(Integer.class));
-        assertEquals(1, dtoClassToPermissionToMethods.get(Integer.class).size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.get(Integer.class).size());
         assertNotNull(dtoClassToPermissionToMethods.get(Integer.class).get("Read"));
-        assertEquals(1, dtoClassToPermissionToMethods.get(Integer.class).get("Read").size());
+        Assert.assertEquals(1, dtoClassToPermissionToMethods.get(Integer.class).get("Read").size());
     }
 
     @Test
@@ -444,23 +446,23 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     public void test_getPermissions() {
         permissionEvaluator.generateRules();
         permissionEvaluator.generateLookupStrategies();
-        assertEquals(
+        Assert.assertEquals(
                 "There should only be a Read permission on Integers",
             singletonList("Read"),
                 permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), 123));
-        assertEquals(
+        Assert.assertEquals(
                 "There should only be a Read and Write permission on String",
                 Arrays.asList(new String[]{"Read", "Write"}),
                 permissionEvaluator.getPermissions(new UserAuthentication(readWriteUser), "A String"));
-        assertEquals(
+        Assert.assertEquals(
                 "There should only be a Read and Write permission on String",
                 Arrays.asList(new String[]{"Read"}),
                 permissionEvaluator.getPermissions(new UserAuthentication(readOnlyUser), "A String"));
-        assertEquals(
+        Assert.assertEquals(
                 "A user can have no permissions",
                 new ArrayList<>(),
                 permissionEvaluator.getPermissions(new UserAuthentication(new UserResource()), "A String"));
-        assertEquals(
+        Assert.assertEquals(
                 "A domain object can have no permissions",
                 new ArrayList<>(),
                 permissionEvaluator.getPermissions(new UserAuthentication(new UserResource()), 1.0f));
@@ -469,11 +471,11 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
 
     private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> getRulesMap() {
-        return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");
+        return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) ReflectionTestUtils.getField(permissionEvaluator, "rulesMap");
     }
 
     private Map<Class<?>, ListOfOwnerAndMethod> getPermissionLookupStrategyMap() {
-        return (Map<Class<?>, ListOfOwnerAndMethod>) getField(permissionEvaluator, "lookupStrategyMap");
+        return (Map<Class<?>, ListOfOwnerAndMethod>) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
     }
 
 }

@@ -25,7 +25,7 @@ public class ApplicationDocs {
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
-            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
+            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the com.worth.ifs.Application"),
             fieldWithPath("completion").description("percentage of completion of the application"),
             fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
             fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),

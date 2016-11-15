@@ -22,7 +22,7 @@ import java.util.List;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
- * Rules defining who is allowed to upload files as part of an Application Form response to a Question
+ * Rules defining who is allowed to upload files as part of an com.worth.ifs.Application Form response to a Question
  */
 @Component
 @PermissionRules

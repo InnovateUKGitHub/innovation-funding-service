@@ -96,7 +96,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         setLoggedInUser(null);
         try {
             classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
-            fail("Should not have been able to create an Application without first logging in");
+            fail("Should not have been able to create an com.worth.ifs.Application without first logging in");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -107,7 +107,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         try {
             classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
-            fail("Should not have been able to create an Application without the global Applicant role");
+            fail("Should not have been able to create an com.worth.ifs.Application without the global Applicant role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -122,7 +122,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
             try {
                 classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
-                fail("Should not have been able to create an Application without the global Applicant role or as a system registrar");
+                fail("Should not have been able to create an com.worth.ifs.Application without the global Applicant role or as a system registrar");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }

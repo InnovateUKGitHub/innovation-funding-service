@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents an invite for a Collaborator to join an Application
+ * Represents an invite for a Collaborator to join an com.worth.ifs.Application
  */
 public class InviteCollaboratorResource {
 

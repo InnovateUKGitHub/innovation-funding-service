@@ -17,7 +17,7 @@ import java.util.Set;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * SectionController exposes Application data and operations through a REST API.
+ * SectionController exposes com.worth.ifs.Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/section")

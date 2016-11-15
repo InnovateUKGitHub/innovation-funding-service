@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Transactional and secure service for Application processing work
+ * Transactional and secure service for com.worth.ifs.Application processing work
  */
 public interface ApplicationService {
 

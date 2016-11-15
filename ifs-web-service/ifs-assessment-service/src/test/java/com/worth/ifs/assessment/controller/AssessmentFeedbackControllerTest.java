@@ -217,7 +217,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(3, model.getDaysLeft());
         assertEquals(expectedCompetition, model.getCompetition());
         assertEquals(expectedApplication, model.getApplication());
-        assertEquals("Application details", model.getQuestionShortName());
+        assertEquals("com.worth.ifs.Application details", model.getQuestionShortName());
 
         InOrder inOrder = inOrder(questionService, formInputService, assessmentService, applicationService, competitionService);
         inOrder.verify(questionService).getByIdAndAssessmentId(APPLICATION_DETAILS_QUESTION_ID, ASSESSMENT_ID);
@@ -417,7 +417,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
         questionResources.get(QUESTION_ID).setAssessorMaximumScore(50);
-        questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("Application details");
+        questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("com.worth.ifs.Application details");
 
         when(questionService.getByIdAndAssessmentId(QUESTION_ID, ASSESSMENT_ID)).thenReturn(questionResources.get(QUESTION_ID));
         when(questionService.getByIdAndAssessmentId(APPLICATION_DETAILS_QUESTION_ID, ASSESSMENT_ID)).thenReturn(questionResources.get(APPLICATION_DETAILS_QUESTION_ID));

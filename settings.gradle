@@ -8,4 +8,3 @@ include 'ifs-web-service:ifs-competition-mgt-service'
 include 'ifs-web-service:ifs-assessment-service'
 include 'ifs-web-service:ifs-project-setup-service'
 include 'ifs-web-service:ifs-project-setup-mgt-service'
-

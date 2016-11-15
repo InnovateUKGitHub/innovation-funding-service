@@ -78,7 +78,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setDurationInMonths(18L);
         application.setResubmission(true);
         application.setPreviousApplicationNumber("A Number");
-        application.setPreviousApplicationTitle("Failed Application");
+        application.setPreviousApplicationTitle("Failed com.worth.ifs.Application");
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();

@@ -144,7 +144,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .withId(1L, 2L, 3L, 4L)
                 .withSection(1L, 2L, 2L, 2L)
                 .withQuestionNumber(null, null, "1", "2")
-                .withShortName("Application details", "Scope", "Business opportunity", "Potential market")
+                .withShortName("com.worth.ifs.Application details", "Scope", "Business opportunity", "Potential market")
                 .withAssessorMaximumScore(null, null, 20, null)
                 .build(4);
 

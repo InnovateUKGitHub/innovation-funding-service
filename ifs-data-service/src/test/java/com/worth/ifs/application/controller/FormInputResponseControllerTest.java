@@ -66,7 +66,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 andDo(document("forminputresponse/find-responses-by-form-input-id-and-application-id",
                         pathParameters(
                                 parameterWithName("formInputId").description("Form Input Id"),
-                                parameterWithName("applicationId").description("Application Id")
+                                parameterWithName("applicationId").description("com.worth.ifs.Application Id")
                         ),
                         requestHeaders(
                                 headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")

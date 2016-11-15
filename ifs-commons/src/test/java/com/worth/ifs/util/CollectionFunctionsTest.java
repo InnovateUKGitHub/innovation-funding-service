@@ -1,12 +1,10 @@
 package com.worth.ifs.util;
 
-import com.google.common.base.Functions;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import static com.worth.ifs.util.CollectionFunctions.containsAll;
 import static com.worth.ifs.util.CollectionFunctions.toSortedMap;

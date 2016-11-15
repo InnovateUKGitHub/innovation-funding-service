@@ -39,11 +39,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+//import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+//import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+//import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
@@ -311,7 +311,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
 
         List<Object> arguments = new ArrayList<>();
-        arguments.add("Application");
+        arguments.add("com.worth.ifs.Application");
         arguments.add(1234l);
 
         LOG.debug("Show dashboard for application: " + app.getId());

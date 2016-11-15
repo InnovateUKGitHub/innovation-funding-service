@@ -69,8 +69,8 @@ public class ApplicationCreationController {
 
         ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
         if (application == null || application.getId() == null) {
-            log.error("Application not created with competitionID: " + competitionId);
-            log.error("Application not created with userId: " + userId);
+            log.error("com.worth.ifs.Application not created with competitionID: " + competitionId);
+            log.error("com.worth.ifs.Application not created with userId: " + userId);
         } else {
             CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
 

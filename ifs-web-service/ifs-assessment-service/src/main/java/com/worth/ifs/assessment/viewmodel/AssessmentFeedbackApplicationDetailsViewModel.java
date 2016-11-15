@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for the Application Detail view shown as part of the assessment journey.
+ * Holder of model attributes for the com.worth.ifs.Application Detail view shown as part of the assessment journey.
  */
 public class AssessmentFeedbackApplicationDetailsViewModel {
 
