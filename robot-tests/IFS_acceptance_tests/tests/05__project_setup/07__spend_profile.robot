@@ -20,6 +20,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5911 Internal users should not have access to external users' pages
 ...
 ...               INFUND-3973 As a Project Finance team member I want to be able to export submitted spend profile tables so that these may be distributed offline to Lead Technologists and Monitoring Officers
+...
+...               INFUND-5846 As a partner in an acedemic organisation I want to be able to edit my Spend profile so I can prepare an updated profile for my organisation before submission to the Project Manager
+
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -239,6 +242,37 @@ Academic partner can see the alternative academic view of the spend profile
     And the user should see the text in the page    Investigations
     And the user should see the text in the page    Estates costs
 
+Academic partner spend profile validations
+    [Documentation]    INFUND-5846
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[8][1]    abc
+    And the user moves focus to the element    link=Project setup status
+    Then the user should see the text in the page    This field should be a number
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[8][1]    330
+    And the user moves focus to the element    link=Project setup status
+    Then the user should not see the text in the page    This field should be a number
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[9][0]    -1
+    And the user moves focus to the element    link=Project setup status
+    Then the user should see the text in the page    This field should be 0 or higher
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[9][0]    330
+    And the user moves focus to the element    link=Project setup status
+    Then the user should not see the text in the page    This field should be 0 or higher
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[10][2]    3306
+    And the user moves focus to the element    link=Project setup status
+    Then the user should see the text in the page    Your total costs are higher than your eligible costs
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[10][2]    330
+    And the user moves focus to the element    link=Project setup status
+    Then the user should not see the text in the page      Your total costs are higher than your eligible costs
+    Then the user should not see the text in the page    Unable to submit spend profile
+
+
+Academic partner edits spend profile and this updates on the table
+    [Documentation]    INFUND-4856
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    And the user sees the text in the text field    .spend-profile-table.academic td    330
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
@@ -335,7 +369,7 @@ Partners can see the Spend Profile section completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Tags]    Experian    #HappyPath
+    [Tags]    Experian
     [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page     ${server}/project-setup-management/competition/3/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
