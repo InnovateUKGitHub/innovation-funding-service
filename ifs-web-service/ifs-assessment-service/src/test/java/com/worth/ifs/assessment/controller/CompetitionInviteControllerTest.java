@@ -22,6 +22,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -82,10 +83,13 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
+        LocalDateTime acceptsDate = LocalDateTime.now();
+        LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
 
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition");
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -116,9 +120,12 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void openInvite() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        LocalDateTime acceptsDate = LocalDateTime.now();
+        LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition");
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
