@@ -19,8 +19,8 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e
-${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/${READY_TO_OPEN_COMPETITION}69ffd${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}2ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
-${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/${READY_TO_OPEN_COMPETITION}69ffd${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}2ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
+${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
+${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
 

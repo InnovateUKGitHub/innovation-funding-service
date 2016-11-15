@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static com.worth.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Collections.emptyList;
@@ -20,7 +21,7 @@ import static java.util.Collections.singletonList;
 
 public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorDataBuilder> {
 
-    public AssessorDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, String ethnicity, Gender gender, Disability disability) {
+    public AssessorDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, String ethnicity, Gender gender, Disability disability, String hash) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
@@ -39,14 +40,20 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withRoles(singletonList(getAssessorRoleResource())).
                     build();
 
+//            assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
             registrationService.createUser(registration).andOnSuccess(created ->
                     registrationService.activateUser(created.getId())).getSuccessObjectOrThrowException();
         }));
     }
 
+    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash) {
+        return with(data -> newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash));
+    }
+
     private RoleResource getAssessorRoleResource() {
         return roleService.findByUserRoleType(ASSESSOR).getSuccessObjectOrThrowException();
     }
+
 
     public static AssessorDataBuilder newAssessorData(ServiceLocator serviceLocator) {
         return new AssessorDataBuilder(emptyList(), serviceLocator);

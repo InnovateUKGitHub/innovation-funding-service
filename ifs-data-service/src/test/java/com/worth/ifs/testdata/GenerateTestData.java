@@ -12,6 +12,7 @@ import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.testdata.builders.*;
 import com.worth.ifs.testdata.builders.data.BaseUserData;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
@@ -43,6 +44,7 @@ import java.util.function.UnaryOperator;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
+import static com.worth.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static com.worth.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -87,6 +89,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Autowired
@@ -100,6 +105,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
     private AssessorDataBuilder assessorUserBuilder;
+    private AssessorInviteDataBuilder assessorInviteUserBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -201,6 +207,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
         assessorUserBuilder = newAssessorData(serviceLocator);
+        assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
     }
 
     @Test
@@ -210,8 +217,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         createInternalUsers();
         createExternalUsers();
-        createAssessors();
         createCompetitions();
+        createNonRegisteredAssessorInvites();
+        createAssessors();
 
         long after = System.currentTimeMillis();
 
@@ -225,6 +233,12 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createAssessors() {
         assessorUserLines.forEach(line -> createAssessor(assessorUserBuilder, line));
+    }
+
+    private void createNonRegisteredAssessorInvites() {
+        List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
+        List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
+        nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
     }
 
     private void createInternalUsers() {
@@ -576,10 +590,26 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessor(AssessorDataBuilder assessorUserBuilder, AssessorUserLine line) {
-        assessorUserBuilder.
-                registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                             line.ethnicity, line.gender, line.disability).
+
+        String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
+
+        List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
+                invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
+
+        AssessorDataBuilder builder = assessorUserBuilder;
+
+        for (InviteLine invite : assessorInvitesForThisAssessor) {
+            builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
+                    invite.name, invite.hash);
+        }
+
+        builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
+                             line.ethnicity, line.gender, line.disability, inviteHash).
                 build();
+    }
+
+    private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
+        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash).build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {

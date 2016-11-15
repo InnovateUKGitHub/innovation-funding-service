@@ -355,14 +355,20 @@ class CsvUtils {
         Disability disability;
         Gender gender;
         String ethnicity;
+        String competitionName;
+        String hash;
+        InviteStatus inviteStatus;
 
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 3;
+            int i = line.size() - 6;
             disability = Disability.fromName(line.get(i++));
             ethnicity = line.get(i++);
             gender = Gender.fromName(line.get(i++));
+            competitionName = line.get(i++);
+            hash = nullable(line.get(i++));
+            inviteStatus = InviteStatus.valueOf(line.get(i++));
         }
     }
 
