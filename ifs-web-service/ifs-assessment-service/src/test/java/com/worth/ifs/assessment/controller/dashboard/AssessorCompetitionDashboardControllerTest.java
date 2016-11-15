@@ -2,11 +2,13 @@ package com.worth.ifs.assessment.controller.dashboard;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.assessment.form.dashboard.AssessorCompetitionDashboardAssessmentForm;
 import com.worth.ifs.assessment.model.AssessorCompetitionDashboardModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.*;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +29,8 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -34,10 +39,11 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -239,6 +245,93 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertTrue(model.getSubmitted().isEmpty());
         assertTrue(model.getOutstanding().isEmpty());
         assertFalse(model.isSubmitVisible());
+    }
+
+    @Test
+    public void submitAssessments() throws Exception {
+        List<Long> assessmentIds = asList(1L, 2L);
+        UserResource leadTechnologist = buildTestLeadTechnologist();
+        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
+        when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceSuccess());
+
+        MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("assessmentIds[0]", "1")
+                .param("assessmentIds[1]", "2"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-dashboard"))
+                .andReturn();
+
+        AssessorCompetitionDashboardAssessmentForm form = (AssessorCompetitionDashboardAssessmentForm) result.getModelAndView().getModel().get("form");
+        assertEquals(2, form.getAssessmentIds().size());
+        assertEquals(1L, form.getAssessmentIds().get(0).longValue());
+        assertEquals(2L, form.getAssessmentIds().get(1).longValue());
+
+        verify(assessmentService, times(1)).submitAssessments(assessmentIds);
+    }
+
+    @Test
+    public void submitAssessments_invalid() throws Exception {
+        UserResource leadTechnologist = buildTestLeadTechnologist();
+        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
+        when(assessmentService.submitAssessments(emptyList())).thenReturn(serviceFailure(new Error("TEST", null)));
+
+        MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
+                .contentType(APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeHasFieldErrors("form", "assessmentIds"))
+                .andExpect(view().name("assessor-competition-dashboard"))
+                .andReturn();
+
+        AssessorCompetitionDashboardAssessmentForm form = (AssessorCompetitionDashboardAssessmentForm) result.getModelAndView().getModel().get("form");
+        assertNull(form.getAssessmentIds());
+
+        verify(assessmentService, never()).submitAssessments(emptyList());
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getErrorCount());
+        assertEquals("Please select at least one assessment to submit", bindingResult.getFieldError("assessmentIds").getDefaultMessage());
+    }
+
+    @Test
+    public void submitAssessments_serviceFailure() throws Exception {
+        List<Long> assessmentIds = asList(1L, 2L);
+        UserResource leadTechnologist = buildTestLeadTechnologist();
+        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
+        when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceFailure(new Error("Test Error", null)));
+
+        MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("assessmentIds[0]", "1")
+                .param("assessmentIds[1]", "2"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-dashboard"))
+                .andReturn();
+
+        AssessorCompetitionDashboardAssessmentForm form = (AssessorCompetitionDashboardAssessmentForm) result.getModelAndView().getModel().get("form");
+        assertEquals(assessmentIds, form.getAssessmentIds());
+
+        verify(assessmentService, times(1)).submitAssessments(assessmentIds);
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getErrorCount());
+        assertEquals(0, bindingResult.getFieldErrorCount());
+        assertEquals("Test Error", bindingResult.getGlobalError().getCode());
     }
 
     private UserResource buildTestLeadTechnologist() {

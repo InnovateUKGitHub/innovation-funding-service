@@ -1,14 +1,15 @@
 package com.worth.ifs.assessment.form.dashboard;
 
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
 
-public class AssessorCompetitionDashboardAssessmentForm {
+public class AssessorCompetitionDashboardAssessmentForm extends BaseBindingResultTarget {
 
-    @NotEmpty
+    @NotEmpty(message = "{validation.assessmentSubmissions.assessmentIds.required}")
     private List<Long> assessmentIds;
 
     public List<Long> getAssessmentIds() {
