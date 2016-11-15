@@ -1,7 +1,6 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.abstractions.CList;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import org.junit.Assert;
@@ -49,7 +48,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void findByCompetitionTest() {
-        List<QuestionResource> questions = CList.listOf(3, () -> new QuestionResource());
+        List<QuestionResource> questions = newQuestionResource().build(3);
         setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionResourceListType(), questions);
         // now run the method under test
         List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
@@ -125,7 +124,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void getQuestionsBySectionIdAndTypeTest() {
-        List<QuestionResource> questions = CList.listOf(2, () -> new QuestionResource());
+        List<QuestionResource> questions = newQuestionResource().build(2);
         setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
@@ -146,7 +145,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     public void getQuestionsByAssessment() {
         Long assessmentId = 1L;
 
-        List<QuestionResource> questions = CList.listOf(2, () -> new QuestionResource());
+        List<QuestionResource> questions = newQuestionResource().build(2);
         setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 

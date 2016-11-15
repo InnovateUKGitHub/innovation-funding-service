@@ -1,7 +1,6 @@
 package com.worth.ifs.invite.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.abstractions.CList;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -15,6 +14,8 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 
 
+import static com.worth.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 
 import static java.lang.Boolean.TRUE;
@@ -61,7 +62,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     @Test
     public void test_createInvitesByOrganisation() throws Exception {
         final Long organisationId = 1289124L;
-        final List<ApplicationInviteResource> invites = CList.listOf(42, () -> new ApplicationInviteResource());
+        final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
 
         InviteOrganisationResource inviteOrganisationResource = new InviteOrganisationResource();
         inviteOrganisationResource.setOrganisation(organisationId);
@@ -79,7 +80,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
 
     @Test
     public void test_saveInvites() throws Exception {
-        final List<ApplicationInviteResource> invites = CList.listOf(40, () -> new ApplicationInviteResource());
+        final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
 
         InviteResultsResource expected = new InviteResultsResource();
         expected.setInvitesSendSuccess(21);
@@ -163,7 +164,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     @Test
     public void test_getInvitesByApplication() throws Exception {
         Long applicationId = 2341L;
-        List<InviteOrganisationResource> expected = CList.listOf(2, () -> new InviteOrganisationResource());
+        List<InviteOrganisationResource> expected = newInviteOrganisationResource().build(2);
         String url = inviteRestURL + "/getInvitesByApplicationId/" + applicationId;
         setupGetWithRestResultExpectations(url, inviteOrganisationResourceListType(), expected, OK);
         RestResult<List<InviteOrganisationResource>> response = service.getInvitesByApplication(applicationId);
