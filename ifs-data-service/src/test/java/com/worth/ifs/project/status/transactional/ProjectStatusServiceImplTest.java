@@ -7,7 +7,9 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.project.builder.PartnerOrganisationBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
@@ -199,8 +201,10 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         Role role = newRole().build();
         ProcessRole processRole = newProcessRole().withRole(role).build();
         Application application = newApplication().withProcessRoles(processRole).build();
-        Project project = newProject().withId(projectId).withApplication(application).build();
+
         Organisation organisation = newOrganisation().build();
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
+        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).build();
         BankDetails bankDetail = newBankDetails().withProject(project).build();
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
@@ -221,7 +225,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());

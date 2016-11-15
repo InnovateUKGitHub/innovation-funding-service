@@ -4,7 +4,8 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
 ...
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
-
+...
+...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
 Suite Setup       Moving La Fromage into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -93,6 +94,13 @@ Approve Eligibility: Academic partner organisation
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
+Project Finance user can export bank details 
+    [Documentation]    INFUND-5852 
+    [Tags]              Pending
+   Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
+   Then The user should see the text in the page    Export all bank details
+   And The user clicks the button/link          css =#table-project-status > tfoot > tr > td.aligncentre > a
+# TODO : Need to include verifying the contents of the downloaded excel
 
 #Please note this test needs test data to be created [INFUND-5879]
 

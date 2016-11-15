@@ -702,14 +702,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
