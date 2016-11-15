@@ -288,6 +288,67 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         );
     }
 
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionLeadPartnerHappyPath() {
+
+        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfilesApproved(organisation)).thenReturn(true);
+
+        assertEquals(ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isLeadPartnerOrganisation(organisation),
+                mock -> mock.isSpendProfilesApproved(organisation),
+                mock -> mock.isOtherDocumentsApproved(organisation)
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionNonLeadPartner() {
+
+        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfilesApproved(organisation)).thenReturn(true);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isLeadPartnerOrganisation(organisation)
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionLeadPartnerSpendProfilesNotApproved() {
+
+        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfilesApproved(organisation)).thenReturn(false);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isLeadPartnerOrganisation(organisation),
+                mock -> mock.isSpendProfilesApproved(organisation)
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionLeadPartnerOtherDocumentsNotApproved() {
+
+        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isSpendProfilesApproved(organisation)).thenReturn(true);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isLeadPartnerOrganisation(organisation),
+                mock -> mock.isSpendProfilesApproved(organisation),
+                mock -> mock.isOtherDocumentsApproved(organisation)
+        );
+    }
+
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
         asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));

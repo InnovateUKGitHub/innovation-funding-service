@@ -59,4 +59,12 @@ class ProjectSetupProgressChecker {
     public boolean isOrganisationRequiringFunding(OrganisationResource organisation) {
         return !NOT_REQUIRED.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
+
+    public boolean isSpendProfilesApproved(OrganisationResource organisation) {
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getSpendProfileStatus());
+    }
+
+    public boolean isOtherDocumentsApproved(OrganisationResource organisation) {
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getOtherDocumentsStatus());
+    }
 }
