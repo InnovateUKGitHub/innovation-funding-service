@@ -236,6 +236,10 @@ table{
     max-width: 1400px;
     margin: 0 auto;
 
+    &.justify-left{
+      margin: 0;
+    }
+
     &.extra-margin{
       margin-top: 30px;
     }
@@ -277,6 +281,38 @@ table{
 	 }
 }
 
+/*--- highlight content in internal dashboard ---*/
+
+.dashboard-internal{
+  .highlight-panel{
+    padding: em(10) em(15) em(5) em(15);
+    min-height: 5em;
+    line-height: 1.1em;
+
+    @include media-down(mobile) {
+      min-height: auto;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+/*--- Buttons in internal dashboard ---*/
+
+.dashboard-internal{
+  .dashboard-actions{
+    .button{
+      min-height: 3.5em;
+      display: block;
+      width: 100%;
+      margin-bottom: 30px;
+
+      @include media-down(mobile) {
+        min-height: auto;
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
 /*--- Underlining ---*/
 
 .grid-row{
@@ -349,11 +385,8 @@ ul.inline-nav{
           padding: 10px;
         }
       }
-
     }
   }
-
-
 }
 
 

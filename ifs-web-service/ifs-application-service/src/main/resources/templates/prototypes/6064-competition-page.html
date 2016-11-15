@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Emerging &amp; enabling technologies round 1'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/front-door :: prototype-front-door-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<p class="subtitle">Funding competition</p>
+	<h1 class="heading-large no-margin">Emerging and enabling technologies round 1</h1>
+
+	<p>Funding up to £50,000 is available to any consortium's for research and development projects to stimulate future products, services and industries.</p>
+
+	<p>
+		Competition opens: <strong>12pm, Monday 16 January 2017</strong><br />
+		Competition closes: <strong>12pm, Monday 25 March 2017</strong><br />
+
+		<a href="#" class="button extra-margin">Start or continue your application</a>
+	</p>
+	<ul class="inline-nav">
+		<li th:class="${(param.tab == null or param.tab[0] == 'summary' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=summary'}"><strong>Summary</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'eligibility' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=eligibility'}"><strong>Eligibility</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'scope' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=scope'}"><strong>Scope</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'dates' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=dates'}"><strong>Dates</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'howToApply' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=howToApply'}"><strong>How to apply</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'supportingInformation' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=supportingInformation'}"><strong>Supporting information</strong></a></li>
+	</ul>
+
+
+	<th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content" />
+
+	<hr />
+
+	<section>
+
+		<div class="grid-row">
+			<div class="column-third">
+				<h2 class="heading-medium no-margin">Download this page</h2>
+			</div>
+			<div class="column-two-thirds">
+				<p>
+					<a href="#">Emerging and enabling technologies round 1</a><br />
+					<small>A PDF export of all competition information. Use this for printing or offline reference.</small>
+				</p>
+			</div>
+		</div>
+
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

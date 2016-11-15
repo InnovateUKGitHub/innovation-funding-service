@@ -4,6 +4,8 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * DTO for {@link com.worth.ifs.invite.domain.CompetitionInvite}s.
  */
@@ -12,6 +14,10 @@ public class CompetitionInviteResource extends InviteResource {
     private Long id;
 
     private String competitionName;
+
+    private LocalDateTime acceptsDate;
+
+    private LocalDateTime deadlineDate;
 
     private String email;
 
@@ -49,6 +55,22 @@ public class CompetitionInviteResource extends InviteResource {
         this.status = status;
     }
 
+    public LocalDateTime getAcceptsDate() {
+        return acceptsDate;
+    }
+
+    public void setAcceptsDate(LocalDateTime acceptsDate) {
+        this.acceptsDate = acceptsDate;
+    }
+
+    public LocalDateTime getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(LocalDateTime deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,6 +84,8 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
                 .append(status, that.status)
+                .append(acceptsDate, that.acceptsDate)
+                .append(deadlineDate, that.deadlineDate)
                 .isEquals();
     }
 
@@ -72,6 +96,8 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(competitionName)
                 .append(email)
                 .append(status)
+                .append(acceptsDate)
+                .append(deadlineDate)
                 .toHashCode();
     }
 }
