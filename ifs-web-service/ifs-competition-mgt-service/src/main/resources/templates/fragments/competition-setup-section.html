@@ -847,7 +847,7 @@
             <legend class="visuallyhidden">Assessors</legend>
             <div class="form-group">
                 <fieldset class="inline">
-                    <h3 class="heading-small">How many assessors are required to assess each application?</h3>
+                    <h3 class="heading-small">How many assessors are required for each application?</h3>
 
                     <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
                      <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
@@ -859,14 +859,14 @@
                 </fieldset>
             </div>
             <div class="form-group">
-                <label class="form-label" for="remittance">
-                    <span class="form-label-bold">How much will assessors be paid per application they assess?</span>
-                    <span class="form-hint">This information will be distributed in the assessor invites.</span>
+                <label class="form-label" for="assessorPay">
+                    <span class="form-label-bold">How much do assessors receive per application?</span>
+                    <span class="form-hint">This information will be available in the assessor invites.</span>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
-                       th:value="${#numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT')}"
-                       data-required-errormessage="Please enter a value"
-                       data-min-errormessage="Please enter a valid number" />
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999" data-max-errormessage="Please enter less than 8 digits and 2 decimal places."
+                       th:value="${competitionSetupForm.assessorPay}"
+                       data-required-errormessage="Please enter how much assessors will be paid"
+                       data-min-errormessage="Please enter how much assessors will be paid" />
             </div>
 
             <button class="button">Done</button>
@@ -875,10 +875,10 @@
         <fieldset th:if="${!editable}" id="section-assessors-readonly">
 
             <dl class="standard-definition-list">
-                <dt>How many assessors are required to assess each application?</dt>
+                <dt>How many assessors are required for each application?</dt>
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
 
-                <dt>How much will assessors be paid per application they assess?</dt>
+                <dt>How much do assessors receive per application?</dt>
                 <dd th:text="${#numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT')}"></dd>
             </dl>
 

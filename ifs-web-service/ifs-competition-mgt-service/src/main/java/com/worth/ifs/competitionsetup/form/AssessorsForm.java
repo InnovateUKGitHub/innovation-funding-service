@@ -1,6 +1,9 @@
 package com.worth.ifs.competitionsetup.form;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
@@ -12,6 +15,7 @@ public class AssessorsForm extends CompetitionSetupForm {
     private Integer assessorCount;
 
     @NotNull(message = "{validation.assessorsform.assessorPay.required}")
+    @Digits(integer = 8, fraction = 2, message = "{validation.assessorsform.assessorPay.max.amount.invalid}")
     private BigDecimal assessorPay;
 
     public Integer getAssessorCount() {

@@ -21,7 +21,8 @@ public class CompetitionTypeAssessorOptionsController {
     private CompetitionTypeAssessorOptionService competitionTypeAssessorOptionService;
 
     @RequestMapping("/{competitionTypeId}")
-    public RestResult<List<CompetitionTypeAssessorOptionResource>> getAllByCompetitionType(@PathVariable("competitionTypeId") final Long competitionTypeId) {
+    public RestResult<List<CompetitionTypeAssessorOptionResource>> getAllByCompetitionType(
+            @PathVariable("competitionTypeId") Long competitionTypeId) {
         return competitionTypeAssessorOptionService.findAllByCompetitionType(competitionTypeId).toGetResponse();
     }
 }

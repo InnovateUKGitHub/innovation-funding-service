@@ -63,10 +63,12 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 				competitionResource.setAssessorCount(Integer.parseInt(value));
 				break;
 			case "assessorPay":
-				if (StringUtils.isNumeric(value)) {
-					competitionResource.setAssessorPay(new BigDecimal(value));
-				} else {
+				if (!StringUtils.isNumeric(value)) {
 					return asList(new Error("validation.assessorsform.assessorPay.only.numbers", HttpStatus.BAD_REQUEST));
+				} else if (value.length() > 7) {
+					return asList(new Error("validation.assessorsform.assessorPay.max.amount.invalid", HttpStatus.BAD_REQUEST));
+				} else {
+					competitionResource.setAssessorPay(new BigDecimal(value));
 				}
 				break;
 			default:
@@ -74,4 +76,5 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		}
 		return errors;
 	}
+
 }
