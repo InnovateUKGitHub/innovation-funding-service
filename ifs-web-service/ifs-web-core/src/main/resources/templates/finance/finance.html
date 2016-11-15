@@ -500,7 +500,8 @@
                        th:id="${'section-total-'+subSection.id}"
                        data-calculation-fields="[id*=netCost]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total &lt; 0 ? 0 : costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
             </div>
         </div>
     </div>

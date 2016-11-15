@@ -35,10 +35,9 @@ IFS.application.financeSpecifics = (function() {
       //if the radio button % labour changes,
       //the total displayed in the header also changes.
       //All the other totals will get reset to 0 pounds.
-      jQuery(s.administrationCostTotal.adminSupportCosts+':checked').each(function() {
-        IFS.application.financeSpecifics.resetOtherAdministrationTotal(this);
-        IFS.application.financeSpecifics.placeRightAdministrationTotalInHeader(this);
-      });
+      var el = jQuery(s.administrationCostTotal.adminSupportCosts+':checked');
+      IFS.application.financeSpecifics.resetOtherAdministrationTotal(el);
+      IFS.application.financeSpecifics.placeRightAdministrationTotalInHeader(el);
 
       jQuery(document).on('change', s.administrationCostTotal.adminSupportCosts, function() {
         IFS.application.financeSpecifics.resetOtherAdministrationTotal(this);

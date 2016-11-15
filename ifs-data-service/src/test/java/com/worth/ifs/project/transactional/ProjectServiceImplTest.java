@@ -1249,8 +1249,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withFinanceChecksStatus(ACTION_REQUIRED, COMPLETE).
+                withBankDetailsStatus(NOT_STARTED, NOT_STARTED).
+                withFinanceChecksStatus(NOT_STARTED, COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1273,7 +1273,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED).
+                withBankDetailsStatus(NOT_STARTED).
                 withFinanceChecksStatus(COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
