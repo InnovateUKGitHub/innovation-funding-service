@@ -21,7 +21,7 @@
 
             <section class="boxed">
                 <h2 class="heading-medium no-margin" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
-                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remote="tag"/>
+                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remove="tag"/>
                 </h2>
                 <!--/*p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
 
