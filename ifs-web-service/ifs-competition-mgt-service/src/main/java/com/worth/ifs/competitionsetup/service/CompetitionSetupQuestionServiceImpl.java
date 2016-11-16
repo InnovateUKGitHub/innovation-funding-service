@@ -27,8 +27,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     private final Long fileUploadId = 4L;
     private final Long assessorScoreId = 23L;
-
-
+    
     @Override
     public QuestionViewModel getQuestion(final Long questionId) {
         QuestionResource questionResource = questionService.getById(questionId);
@@ -42,7 +41,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         question.setTitle(questionResource.getName());
         question.setSubTitle(questionResource.getDescription());
 
-        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(fileUploadId)).findFirst();
         if(result.isPresent()) {
             FormInputResource formInputResource = result.get();
             question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
@@ -61,21 +60,24 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 	public void updateQuestion(QuestionViewModel question) {
 		QuestionResource questionResource = questionService.getById(question.getId());
 		List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(question.getId());
+        final Long textAreaId = 2L;
         //TODO AssessorScore for application questions
         //List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(question.getId());
 
 		questionResource.setName(question.getTitle());
         questionResource.setDescription(question.getSubTitle());
+        questionResource.setShortName(question.getShortTitle());
+
         questionService.save(questionResource);
 
         FormInputResource formInputResource = new FormInputResource();
-        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(fileUploadId)).findFirst();
         if(result.isPresent()) {
             formInputResource = result.get();
         } else {
             formInputResource.setQuestion(question.getId());
             formInputResource.setScope(FormInputScope.APPLICATION);
-            formInputResource.setFormInputType(2L);
+            formInputResource.setFormInputType(textAreaId);
         }
 
         formInputResource.setGuidanceQuestion(question.getGuidanceTitle());
