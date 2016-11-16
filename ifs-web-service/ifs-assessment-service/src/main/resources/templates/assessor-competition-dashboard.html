@@ -29,11 +29,18 @@
             </div>
 
             <div class="my-applications">
-                <div class="in-progress"  th:unless="${#lists.isEmpty(model.outstanding)}">
+                <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
                     <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
-                    <form class="bulk-select" action="" method="post">
+                    <form class="bulk-select" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
+                        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                            <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                            <ul class="error-summary-list">
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+
                         <ul class="boxed-list">
-                            <li th:each="application : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">
+                            <li th:each="application,iterStat : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
                                         <h3 class="heading-medium"><a th:href="${application.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
@@ -56,7 +63,7 @@
                                 </div>
                                 <label th:if="${application.readyToSubmit}">
                                     <span class="visuallyhidden">Mark assessment for submission</span>
-                                    <input class="assessment-submit-checkbox" type="checkbox" />
+                                    <input class="assessment-submit-checkbox" type="checkbox" th:field="*{assessmentIds}" th:value="${application.assessmentId}" />
                                 </label>
                             </li>
                         </ul>

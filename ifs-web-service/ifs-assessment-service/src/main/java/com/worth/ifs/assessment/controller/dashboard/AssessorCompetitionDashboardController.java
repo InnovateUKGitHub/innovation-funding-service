@@ -38,7 +38,8 @@ public class AssessorCompetitionDashboardController {
     @RequestMapping(value = "/dashboard/competition/{competitionId}", method = RequestMethod.GET)
     public String competitionDashboard(final Model model,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                       @PathVariable("competitionId") final Long competitionId) {
+                                       @PathVariable("competitionId") final Long competitionId,
+                                       @ModelAttribute(FORM_ATTR_NAME) AssessorCompetitionDashboardAssessmentForm form) {
 
         model.addAttribute("model", assessorCompetitionDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
         return "assessor-competition-dashboard";
@@ -52,7 +53,7 @@ public class AssessorCompetitionDashboardController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId);
+        Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, form);
 
         return validationHandler.failNowOrSucceedWith(
                 renderDashboard,
