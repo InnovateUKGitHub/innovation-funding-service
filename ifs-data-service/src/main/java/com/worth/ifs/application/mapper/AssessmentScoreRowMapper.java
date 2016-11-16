@@ -1,9 +1,7 @@
 package com.worth.ifs.application.mapper;
 
-import com.worth.ifs.application.domain.AssessmentScoreRow;
-import com.worth.ifs.application.domain.QuestionAssessment;
+import com.worth.ifs.application.domain.FormInputGuidanceRow;
 import com.worth.ifs.application.resource.AssessmentScoreRowResource;
-import com.worth.ifs.application.resource.QuestionAssessmentResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import org.mapstruct.Mapper;
@@ -15,18 +13,18 @@ import org.mapstruct.Mappings;
 //    uses = {
 //    }
 )
-public abstract class AssessmentScoreRowMapper extends BaseMapper<AssessmentScoreRow, AssessmentScoreRowResource, Long> {
+public abstract class AssessmentScoreRowMapper extends BaseMapper<FormInputGuidanceRow, AssessmentScoreRowResource, Long> {
 
-    public Long questionToId(AssessmentScoreRow assessmentScoreRow){
-        return assessmentScoreRow.getId();
+    public Long questionToId(FormInputGuidanceRow formInputGuidanceRow){
+        return formInputGuidanceRow.getId();
     }
 
     @Override
-    public abstract AssessmentScoreRowResource mapToResource(AssessmentScoreRow domain);
+    public abstract AssessmentScoreRowResource mapToResource(FormInputGuidanceRow domain);
 
     @Override
     @Mappings({
         @Mapping(target = "questionAssessment", ignore = true)
     })
-    public abstract AssessmentScoreRow mapToDomain(AssessmentScoreRowResource resource);
+    public abstract FormInputGuidanceRow mapToDomain(AssessmentScoreRowResource resource);
 }

@@ -1,7 +1,7 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.AssessmentScoreRow;
+import com.worth.ifs.application.domain.FormInputGuidanceRow;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionAssessment;
 
@@ -52,7 +52,7 @@ public class QuestionAssessmentBuilder extends BaseBuilder<QuestionAssessment, Q
         return with(questionAssessment -> setField("wordCount", wordCount, questionAssessment));
     }
 
-    public QuestionAssessmentBuilder withScoreRows(List<AssessmentScoreRow> scoreRows) {
+    public QuestionAssessmentBuilder withScoreRows(List<FormInputGuidanceRow> scoreRows) {
         return with(questionAssessment -> setField("scoreRows", scoreRows, questionAssessment));
     }
 

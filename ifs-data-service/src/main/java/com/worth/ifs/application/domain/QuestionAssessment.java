@@ -27,7 +27,7 @@ public class QuestionAssessment {
     private Integer wordCount;
 
     @OneToMany(mappedBy = "questionAssessment")
-    private List<AssessmentScoreRow> scoreRows;
+    private List<FormInputGuidanceRow> scoreRows;
 
     public Long getId() {
         return id;
@@ -85,11 +85,11 @@ public class QuestionAssessment {
         this.wordCount = wordCount;
     }
 
-    public List<AssessmentScoreRow> getScoreRows() {
+    public List<FormInputGuidanceRow> getScoreRows() {
         return scoreRows;
     }
 
-    public void setScoreRows(List<AssessmentScoreRow> scoreRows) {
+    public void setScoreRows(List<FormInputGuidanceRow> scoreRows) {
         this.scoreRows = scoreRows;
     }
 }

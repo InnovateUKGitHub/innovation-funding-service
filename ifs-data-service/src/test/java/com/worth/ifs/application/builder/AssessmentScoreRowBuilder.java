@@ -2,27 +2,21 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.form.domain.FormInput;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
-public class AssessmentScoreRowBuilder extends BaseBuilder<AssessmentScoreRow, AssessmentScoreRowBuilder> {
+public class AssessmentScoreRowBuilder extends BaseBuilder<FormInputGuidanceRow, AssessmentScoreRowBuilder> {
 
-    private AssessmentScoreRowBuilder(List<BiConsumer<Integer, AssessmentScoreRow>> newMultiActions) {
+    private AssessmentScoreRowBuilder(List<BiConsumer<Integer, FormInputGuidanceRow>> newMultiActions) {
         super(newMultiActions);
     }
 
     @Override
-    protected AssessmentScoreRowBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentScoreRow>> actions) {
+    protected AssessmentScoreRowBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FormInputGuidanceRow>> actions) {
         return new AssessmentScoreRowBuilder(actions);
     }
 
@@ -48,7 +42,7 @@ public class AssessmentScoreRowBuilder extends BaseBuilder<AssessmentScoreRow, A
     }
 
     @Override
-    protected AssessmentScoreRow createInitial() {
-        return new AssessmentScoreRow();
+    protected FormInputGuidanceRow createInitial() {
+        return new FormInputGuidanceRow();
     }
 }

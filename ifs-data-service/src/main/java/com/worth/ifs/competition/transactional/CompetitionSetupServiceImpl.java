@@ -1,6 +1,6 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.AssessmentScoreRow;
+import com.worth.ifs.application.domain.FormInputGuidanceRow;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionAssessment;
 import com.worth.ifs.application.domain.Section;
@@ -231,7 +231,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
 
-        List<AssessmentScoreRow> scoreRows = assessmentScoreRowRepository.findByQuestionAssessment_Question_CompetitionId(competition.getId());
+        List<FormInputGuidanceRow> scoreRows = assessmentScoreRowRepository.findByQuestionAssessment_Question_CompetitionId(competition.getId());
         assessmentScoreRowRepository.delete(scoreRows);
 
         List<QuestionAssessment> assessments = questionAssessmentRepository.findByQuestion_CompetitionId(competition.getId());
@@ -309,12 +309,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return questionAssessment;
     }
 
-    private List<AssessmentScoreRow> createAssessmentScoreRows(QuestionAssessment questionAssessment, List<AssessmentScoreRow> scoreRows) {
+    private List<FormInputGuidanceRow> createAssessmentScoreRows(QuestionAssessment questionAssessment, List<FormInputGuidanceRow> scoreRows) {
         return scoreRows.stream().map(createAssessmentScoreRow(questionAssessment)).collect(Collectors.toList());
     }
 
-    private Function<AssessmentScoreRow, AssessmentScoreRow> createAssessmentScoreRow(QuestionAssessment questionAssessment) {
-        return (AssessmentScoreRow row) -> {
+    private Function<FormInputGuidanceRow, FormInputGuidanceRow> createAssessmentScoreRow(QuestionAssessment questionAssessment) {
+        return (FormInputGuidanceRow row) -> {
             entityManager.detach(row);
             row.setQuestionAssessment(questionAssessment);
             row.setId(null);

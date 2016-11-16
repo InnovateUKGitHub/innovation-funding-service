@@ -1,7 +1,6 @@
 package com.worth.ifs.application.repository;
 
-import com.worth.ifs.application.domain.AssessmentScoreRow;
-import com.worth.ifs.application.domain.QuestionAssessment;
+import com.worth.ifs.application.domain.FormInputGuidanceRow;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentScoreRowRepository extends CrudRepository<AssessmentScoreRow, Long> {
+public interface AssessmentScoreRowRepository extends CrudRepository<FormInputGuidanceRow, Long> {
 
-    List<AssessmentScoreRow> findByQuestionAssessment_Question_CompetitionId(Long competitionId);
+    List<FormInputGuidanceRow> findByQuestionAssessment_Question_CompetitionId(Long competitionId);
 
 }

@@ -1,173 +1,97 @@
+SET @programme_competition_id = (SELECT `template_competition_id` FROM `competition_type` WHERE name='Programme');
+SET @sector_competition_id = (SELECT `template_competition_id` FROM `competition_type` WHERE name='Sector');
 
-SET @scored=1;
-SET @written_feedback=1;
-SET @score_total=10;
-SET @word_count=400;
+SET @assessment_scope='ASSESSMENT';
 SET @guidance='Your score should be based on the following:';
 
--- Programme Assessment Questions
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (1, 301, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (2, 302, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (3, 303, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (4, 304, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (5, 305, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (6, 306, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (7, 307, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (8, 308, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (9, 313, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (10, 314, @scored, @written_feedback, @score_total, @word_count, @guidance);
+SET @assessor_research_category_type=21;
+SET @assessor_scope_type=22;
+SET @assessor_score_type=23;
+SET @assessor_feedback_type=2;
 
--- Sector Assessment Questions
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (11, 336, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (12, 337, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (13, 338, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (14, 339, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (15, 340, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (16, 341, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (17, 342, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (18, 343, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (19, 348, @scored, @written_feedback, @score_total, @word_count, @guidance);
-INSERT INTO `question_assessment` (id, question_id, scored, written_feedback, score_total, word_count, guidance) VALUES (20, 349, @scored, @written_feedback, @score_total, @word_count, @guidance);
+INSERT INTO `form_input` (`question_id`, `competition_id`, `form_input_type_id`, `included_in_application_summary`, `description`, `priority`, `scope`, `guidance_question`, `guidance_answer`) VALUES
+ -- Programme Assessment form inputs
+ -- Application questions
+ (301, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (301, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing business opportunity', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The applicants have a very clear understanding of the business opportunity and the problems that must be overcome to enable successful exploitation. The project is well aligned with these needs.<tr><th scope=\"row\">7-8</th><td>The applicants have a good idea of the potential market and opportunities. The needs of the customer are central to the project\'s objectives.<tr><th scope=\"row\">5-6</th><td>The business opportunity is plausible but not clearly expressed in terms of customer needs.<tr><th scope=\"row\">3-4</th><td>The business opportunity is unrealistic or poorly defined. The customer\'s true needs are not well understood and are not linked to the project\'s objectives.<tr><th scope=\"row\">1-2</th><td>There is little or no business drive to the project. The results are not relevant to the target customers or no customer interests are provided.</table>'),
+ (302, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (302, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope,  'Guidance for assessing market opportunity', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The market size and dynamics are quantified clearly and to sufficient resolution to be relevant to the project. The market is clearly well understood. The return on investment is clearly stated, quantified and realistic.<tr><th scope=\"row\">7-8</th><td>The market size and dynamics are described with some quantification relevant to the project. Market understanding is acceptable and the return on investment is achievable.<tr><th scope=\"row\">5-6</th><td>The market size and dynamics are understood but poorly quantified or stated at a level not really relevant for the project. Return on investment is plausible or badly defined.<tr><th scope=\"row\">3-4</th><td>The market size is not quantified but there is some understanding. Return on investment is ill defined or unrealistic.<tr><th scope=\"row\">1-2</th><td>The market is not well defined or is wrong. No sensible return on investment is provided.</table>'),
+ (303, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (303, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing project exploitation', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The principle exploitable outputs of the project are identified together with clear and achievable exploitation methods. Dissemination opportunities are also identified and appropriate.<tr><th scope=\"row\">7-8</th><td>The main exploitable output of the project is identified and a realistic method defined. Some dissemination is also explained.<tr><th scope=\"row\">5-6</th><td>An exploitation method is defined but lacking in detail or is only just feasible. Dissemination is mentioned.<tr><th scope=\"row\">3-4</th><td>The exploitation and dissemination methods described are unrealistic or ill-defined.<tr><th scope=\"row\">1-2</th><td>The exploitation method is missing or un-feasible and unlikely to succeed.</table>'),
+ (304, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (304, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing project benefits', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.<tr><th scope=\"row\">7-8</th><td>Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.<tr><th scope=\"row\">5-6</th><td>Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.<tr><th scope=\"row\">3-4</th><td>The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.<tr><th scope=\"row\">1-2</th><td>The project is damaging to other stakeholders with no realistic mitigation or balance described.</table>'),
+ (305, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (305, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing technical approach', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project plan is fully described and complete with milestones and timeframes. The plan is realistic and should meet the objectives of the project.<tr><th scope=\"row\">7-8</th><td>The plan is well described and complete. There is a reasonable chance that it will meet the objectives of the project.<tr><th scope=\"row\">5-6</th><td>The plan is not completely described or there may be deficiencies in some aspects. More work will be required before the plan can be said to be realistic.<tr><th scope=\"row\">3-4</th><td>The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.<tr><th scope=\"row\">1-2</th><td>The plan is totally unrealistic or fails to meet the objectives of the project.</table>'),
+ (306, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (306, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing innovation', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project is significantly innovative either commercially or technically and will make a substantial contribution to the field. Solid evidence is presented to substantiate the level of innovation.<tr><th scope=\"row\">7-8</th><td>The project will be innovative and relevant to the market. There is high confidence that there is freedom to operate.<tr><th scope=\"row\">5-6</th><td>The project is innovative but there is a lack of presented evidence as to the freedom to operate.<tr><th scope=\"row\">3-4</th><td>The project lacks sufficient innovation both technically and commercially.<tr><th scope=\"row\">1-2</th><td>The project is either not innovative or there is no exploitable route due to previous IP.</table>'),
+ (307, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (307, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing risks', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>A thorough risk analysis has been presented across all 3 risk categories. The mitigation and risk management strategies proposed are also appropriate and professional.<tr><th scope=\"row\">7-8</th><td>A good risk analysis has been carried out and the management methods and mitigation strategies proposed are realistic.<tr><th scope=\"row\">5-6</th><td>Most major risks have been identified but there are some gaps or the mitigation and management is insufficient to properly control the risks.<tr><th scope=\"row\">3-4</th><td>The risk analysis is poor or misses major areas of risk. The mitigation and management is poor.<tr><th scope=\"row\">1-2</th><td>The risk analysis is superficial with minimal mitigation or management suggested.</table>'),
+ (308, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (308, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing team skills', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The consortium is ideally placed to carry out the project AND exploit the results. The skills are well balanced and the partners likely to form a strong consortium with good knowledge transfer.<tr><th scope=\"row\">7-8</th><td>The consortium is strong and contains all the required skills and experience. The consortium is likely to work well.<tr><th scope=\"row\">5-6</th><td>The consortium has most of the required skills and experience but there are a few gaps. The consortium will need to work hard to maintain a good working relationship.<tr><th scope=\"row\">3-4</th><td>There are significant gaps in the consortium or the formation objectives are unclear. There could be some passengers or the balance of work/commitment is poor.<tr><th scope=\"row\">1-2</th><td>The consortium is not capable of either carrying out the project or exploiting the results.</table>'),
+ (313, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (313, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing financial commitment', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project costs are entirely appropriate. Any mix of research and development types (eg industrial research with some work packages of experimental development) is justified and costed correctly.<tr><th scope=\"row\">7-8</th><td>The project costs are appropriate and should be sufficient to successfully complete the project. Any mix of research and development types is justified and costed correctly.<tr><th scope=\"row\">5-6</th><td>The project costs and justifications are broadly correct but there are some concerns. Any mix of research and development types is just about acceptable.<tr><th scope=\"row\">3-4</th><td>The costs are either too high or too low to carry out the project. Poor justification is provided for any research and development type mix.<tr><th scope=\"row\">1-2</th><td>The costs are not appropriate or justified. Any mix of research and development type is not justified.</table>'),
+ (314, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (314, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing added value', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project will significantly increase the industrial partners\' R&D spend during the project and afterwards. The additionality arguments are very strong and believable.<tr><th scope=\"row\">7-8</th><td>The project will increase the industrial partners\' commitment to R&D. The additionality arguments are good and justified.<tr><th scope=\"row\">5-6</th><td>The project will improve the industrial partners\' commitment to R&D. The additionality arguments are just about acceptable.<tr><th scope=\"row\">3-4</th><td>There is not likely to be any improvement to the industrial partner\'s commitment to R&D. The additionality arguments are poor or not sufficiently justified.<tr><th scope=\"row\">1-2</th><td>The work should be funded internally and does not deserve state funding.</table>'),
+ -- Scope question
+ (312, @programme_competition_id, @assessor_research_category_type, '0', 'Please select the research category for this project', '0', @assessment_scope, NULL, NULL),
+ (312, @programme_competition_id, @assessor_scope_type, '0', 'Is the application in scope?', '0', @assessment_scope, NULL, NULL),
+ (312, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing scope', '<p>Your answer should be based upon the following:<table><tr><th scope=\"row\">YES<td><p>The application contains the following:<ul><li>Is the consortia business led?<li>Are there two or more partners to the collaboration?<li>Does it meet the scope of the competition as defined in the competition brief?</ul><tr><th scope=\"row\">NO<td><p>One or more of the above requirements have not been satisfied.</table><p class=extra-margin>Your assessment of the project scope should be based upon the <a href=\"https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief\">competition brief</a>.'),
+ -- Sector Assessment form inputs
+ -- Application questions
+ (336, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (336, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing business opportunity', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The applicants have a very clear understanding of the business opportunity and the problems that must be overcome to enable successful exploitation. The project is well aligned with these needs.<tr><th scope=\"row\">7-8</th><td>The applicants have a good idea of the potential market and opportunities. The needs of the customer are central to the project\'s objectives.<tr><th scope=\"row\">5-6</th><td>The business opportunity is plausible but not clearly expressed in terms of customer needs.<tr><th scope=\"row\">3-4</th><td>The business opportunity is unrealistic or poorly defined. The customer\'s true needs are not well understood and are not linked to the project\'s objectives.<tr><th scope=\"row\">1-2</th><td>There is little or no business drive to the project. The results are not relevant to the target customers or no customer interests are provided.</table>'),
+ (337, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (337, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope,  'Guidance for assessing market opportunity', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The market size and dynamics are quantified clearly and to sufficient resolution to be relevant to the project. The market is clearly well understood. The return on investment is clearly stated, quantified and realistic.<tr><th scope=\"row\">7-8</th><td>The market size and dynamics are described with some quantification relevant to the project. Market understanding is acceptable and the return on investment is achievable.<tr><th scope=\"row\">5-6</th><td>The market size and dynamics are understood but poorly quantified or stated at a level not really relevant for the project. Return on investment is plausible or badly defined.<tr><th scope=\"row\">3-4</th><td>The market size is not quantified but there is some understanding. Return on investment is ill defined or unrealistic.<tr><th scope=\"row\">1-2</th><td>The market is not well defined or is wrong. No sensible return on investment is provided.</table>'),
+ (338, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (338, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing project exploitation', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The principle exploitable outputs of the project are identified together with clear and achievable exploitation methods. Dissemination opportunities are also identified and appropriate.<tr><th scope=\"row\">7-8</th><td>The main exploitable output of the project is identified and a realistic method defined. Some dissemination is also explained.<tr><th scope=\"row\">5-6</th><td>An exploitation method is defined but lacking in detail or is only just feasible. Dissemination is mentioned.<tr><th scope=\"row\">3-4</th><td>The exploitation and dissemination methods described are unrealistic or ill-defined.<tr><th scope=\"row\">1-2</th><td>The exploitation method is missing or un-feasible and unlikely to succeed.</table>'),
+ (339, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (339, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing project benefits', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.<tr><th scope=\"row\">7-8</th><td>Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.<tr><th scope=\"row\">5-6</th><td>Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.<tr><th scope=\"row\">3-4</th><td>The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.<tr><th scope=\"row\">1-2</th><td>The project is damaging to other stakeholders with no realistic mitigation or balance described.</table>'),
+ (340, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (340, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing technical approach', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project plan is fully described and complete with milestones and timeframes. The plan is realistic and should meet the objectives of the project.<tr><th scope=\"row\">7-8</th><td>The plan is well described and complete. There is a reasonable chance that it will meet the objectives of the project.<tr><th scope=\"row\">5-6</th><td>The plan is not completely described or there may be deficiencies in some aspects. More work will be required before the plan can be said to be realistic.<tr><th scope=\"row\">3-4</th><td>The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.<tr><th scope=\"row\">1-2</th><td>The plan is totally unrealistic or fails to meet the objectives of the project.</table>'),
+ (341, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (341, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing innovation', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project is significantly innovative either commercially or technically and will make a substantial contribution to the field. Solid evidence is presented to substantiate the level of innovation.<tr><th scope=\"row\">7-8</th><td>The project will be innovative and relevant to the market. There is high confidence that there is freedom to operate.<tr><th scope=\"row\">5-6</th><td>The project is innovative but there is a lack of presented evidence as to the freedom to operate.<tr><th scope=\"row\">3-4</th><td>The project lacks sufficient innovation both technically and commercially.<tr><th scope=\"row\">1-2</th><td>The project is either not innovative or there is no exploitable route due to previous IP.</table>'),
+ (342, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (342, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing risks', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>A thorough risk analysis has been presented across all 3 risk categories. The mitigation and risk management strategies proposed are also appropriate and professional.<tr><th scope=\"row\">7-8</th><td>A good risk analysis has been carried out and the management methods and mitigation strategies proposed are realistic.<tr><th scope=\"row\">5-6</th><td>Most major risks have been identified but there are some gaps or the mitigation and management is insufficient to properly control the risks.<tr><th scope=\"row\">3-4</th><td>The risk analysis is poor or misses major areas of risk. The mitigation and management is poor.<tr><th scope=\"row\">1-2</th><td>The risk analysis is superficial with minimal mitigation or management suggested.</table>'),
+ (343, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (343, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing team skills', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The consortium is ideally placed to carry out the project AND exploit the results. The skills are well balanced and the partners likely to form a strong consortium with good knowledge transfer.<tr><th scope=\"row\">7-8</th><td>The consortium is strong and contains all the required skills and experience. The consortium is likely to work well.<tr><th scope=\"row\">5-6</th><td>The consortium has most of the required skills and experience but there are a few gaps. The consortium will need to work hard to maintain a good working relationship.<tr><th scope=\"row\">3-4</th><td>There are significant gaps in the consortium or the formation objectives are unclear. There could be some passengers or the balance of work/commitment is poor.<tr><th scope=\"row\">1-2</th><td>The consortium is not capable of either carrying out the project or exploiting the results.</table>'),
+ (348, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (348, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing financial commitment', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project costs are entirely appropriate. Any mix of research and development types (eg industrial research with some work packages of experimental development) is justified and costed correctly.<tr><th scope=\"row\">7-8</th><td>The project costs are appropriate and should be sufficient to successfully complete the project. Any mix of research and development types is justified and costed correctly.<tr><th scope=\"row\">5-6</th><td>The project costs and justifications are broadly correct but there are some concerns. Any mix of research and development types is just about acceptable.<tr><th scope=\"row\">3-4</th><td>The costs are either too high or too low to carry out the project. Poor justification is provided for any research and development type mix.<tr><th scope=\"row\">1-2</th><td>The costs are not appropriate or justified. Any mix of research and development type is not justified.</table>'),
+ (349, @programme_competition_id, @assessor_score_type, '0', 'Question score', '0', @assessment_scope, NULL, NULL),
+ (349, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing added value', '<p>Your score should be based upon the following:<table><tr><th scope=\"row\">9-10</th><td>The project will significantly increase the industrial partners\' R&D spend during the project and afterwards. The additionality arguments are very strong and believable.<tr><th scope=\"row\">7-8</th><td>The project will increase the industrial partners\' commitment to R&D. The additionality arguments are good and justified.<tr><th scope=\"row\">5-6</th><td>The project will improve the industrial partners\' commitment to R&D. The additionality arguments are just about acceptable.<tr><th scope=\"row\">3-4</th><td>There is not likely to be any improvement to the industrial partner\'s commitment to R&D. The additionality arguments are poor or not sufficiently justified.<tr><th scope=\"row\">1-2</th><td>The work should be funded internally and does not deserve state funding.</table>'),
+ -- Scope question
+ (347, @programme_competition_id, @assessor_research_category_type, '0', 'Please select the research category for this project', '0', @assessment_scope, NULL, NULL),
+ (347, @programme_competition_id, @assessor_scope_type, '0', 'Is the application in scope?', '0', @assessment_scope, NULL, NULL),
+ (347, @programme_competition_id, @assessor_feedback_type, '0', 'Feedback', '0', @assessment_scope, 'Guidance for assessing scope', '<p>Your answer should be based upon the following:<table><tr><th scope=\"row\">YES<td><p>The application contains the following:<ul><li>Is the consortia business led?<li>Are there two or more partners to the collaboration?<li>Does it meet the scope of the competition as defined in the competition brief?</ul><tr><th scope=\"row\">NO<td><p>One or more of the above requirements have not been satisfied.</table><p class=extra-margin>Your assessment of the project scope should be based upon the <a href=\"https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief\">competition brief</a>.');
 
-SET @row1_start=1;
-SET @row1_end=2;
+
+SET @row1_subject='1-2';
 SET @row1_justification='The plan is totally unrealistic or fails to meet the objectives of the project.';
 
-SET @row2_start=3;
-SET @row2_end=4;
+SET @row2_subject='3-4';
 SET @row2_justification='The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.';
 
-SET @row3_start=5;
-SET @row3_end=6;
+SET @row3_subject='5-6';
 SET @row3_justification='The plan is not completely described or there may be some deficiencies in some aspects. More work will be required before the plan can be said to be realistic.';
 
-SET @row4_start=7;
-SET @row4_end=8;
+SET @row4_subject='7-8';
 SET @row4_justification='The plan is well described and complete. There is a reasonable chance it will meet the objectives if the project.';
 
-SET @row5_start=9;
-SET @row5_end=10;
+SET @row5_subject='9-10';
 SET @row5_justification='The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.';
 
 
 -- Programme Assessment Score Rows
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (1, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (1, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (1, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (1, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (1, @row5_start, @row5_end, @row5_justification);
+INSERT INTO `form_input_guidance_row` (form_input_id, subject, justification)
+    SELECT id as form_input_id, @row1_subject as subject, @row1_justification as justification FROM form_input WHERE (competition_id=@programme_competition_id OR competition_id=@sector_competition_id) AND form_input_type_id=@assessor_score_type;
 
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (2, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (2, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (2, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (2, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (2, @row5_start, @row5_end, @row5_justification);
+INSERT INTO `form_input_guidance_row` (form_input_id, subject, justification)
+    SELECT id as form_input_id, @row2_subject as subject, @row2_justification as justification FROM form_input WHERE (competition_id=@programme_competition_id OR competition_id=@sector_competition_id) AND form_input_type_id=@assessor_score_type;
 
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (3, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (3, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (3, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (3, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (3, @row5_start, @row5_end, @row5_justification);
+INSERT INTO `form_input_guidance_row` (form_input_id, subject, justification)
+    SELECT id as form_input_id, @row3_subject as subject, @row3_justification as justification FROM form_input WHERE (competition_id=@programme_competition_id OR competition_id=@sector_competition_id) AND form_input_type_id=@assessor_score_type;
 
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (4, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (4, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (4, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (4, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (4, @row5_start, @row5_end, @row5_justification);
+INSERT INTO `form_input_guidance_row` (form_input_id, subject, justification)
+    SELECT id as form_input_id, @row4_subject as subject, @row4_justification as justification FROM form_input WHERE (competition_id=@programme_competition_id OR competition_id=@sector_competition_id) AND form_input_type_id=@assessor_score_type;
 
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (5, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (5, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (5, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (5, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (5, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (6, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (6, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (6, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (6, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (6, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (7, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (7, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (7, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (7, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (7, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (8, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (8, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (8, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (8, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (8, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (9, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (9, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (9, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (9, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (9, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (10, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (10, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (10, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (10, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (10, @row5_start, @row5_end, @row5_justification);
-
--- Sector Assessment Score Rows
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (11, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (11, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (11, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (11, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (11, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (12, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (12, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (12, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (12, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (12, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (13, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (13, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (13, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (13, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (13, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (14, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (14, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (14, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (14, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (14, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (15, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (15, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (15, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (15, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (15, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (16, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (16, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (16, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (16, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (16, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (17, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (17, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (17, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (17, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (17, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (18, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (18, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (18, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (18, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (18, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (19, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (19, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (19, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (19, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (19, @row5_start, @row5_end, @row5_justification);
-
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (20, @row1_start, @row1_end, @row1_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (20, @row2_start, @row2_end, @row2_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (20, @row3_start, @row3_end, @row3_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (20, @row4_start, @row4_end, @row4_justification);
-INSERT INTO `assessment_score_row` (question_assessment_id, start, end, justification) VALUES (20, @row5_start, @row5_end, @row5_justification);
+INSERT INTO `form_input_guidance_row` (form_input_id, subject, justification)
+    SELECT id as form_input_id, @row5_subject as subject, @row5_justification as justification FROM form_input WHERE (competition_id=@programme_competition_id OR competition_id=@sector_competition_id) AND form_input_type_id=@assessor_score_type;
