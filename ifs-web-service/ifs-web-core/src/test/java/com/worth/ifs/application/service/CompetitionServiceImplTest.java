@@ -134,9 +134,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getLiveCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.OPEN, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.OPEN, "Special");
-        CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", "innovation area 3", 123, "12/02/2016", CompetitionStatus.IN_ASSESSMENT, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.OPEN, "Special", 0);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.OPEN, "Special", 0);
+        CompetitionSearchResultItem resource3 = new CompetitionSearchResultItem(3L, "31", "innovation area 3", 123, "12/02/2016", CompetitionStatus.IN_ASSESSMENT, "Special", 0);
 
         when(competitionsRestService.findLiveCompetitions()).thenReturn(restSuccess(asList(resource1, resource2, resource3)));
 
@@ -150,8 +150,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getProjectSetupCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0);
         when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
@@ -163,8 +163,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void test_getUpcomingCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.COMPETITION_SETUP, "Special");
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.READY_TO_OPEN, "Special");
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", "innovation area 1", 123, "12/02/2016", CompetitionStatus.COMPETITION_SETUP, "Special", 0);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", "innovation area 2", 123, "12/02/2016", CompetitionStatus.READY_TO_OPEN, "Special", 0);
         when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getUpcomingCompetitions();
