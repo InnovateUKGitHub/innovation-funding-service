@@ -91,7 +91,7 @@ Assessor should be able to re-edit before submit
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
     and The user should see the text in the page    This is the applicant response from Test Seven for Business opportunity
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
-    And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
+    And the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review assessment)
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
@@ -176,12 +176,12 @@ the user adds score and feedback for every question
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
-    And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
+    And The user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} .editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    20    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-195 .editor    Testing Business opportunity feedback text
+    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
