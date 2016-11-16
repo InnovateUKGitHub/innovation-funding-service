@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.category.resource.CategoryType;
@@ -8,6 +9,8 @@ import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.testdata.builders.data.CompetitionData;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -106,6 +109,34 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     Section originalSection = sectionRepository.findByNameAndCompetitionId(s.getName(), 1L);
                     s.setPriority(originalSection.getPriority());
                     sectionRepository.save(s);
+                });
+            });
+
+            // TODO DW - temporary fix for pulling over question assessment details
+            testService.doWithinTransaction(() -> {
+                List<Question> newQuestions = questionRepository.findByCompetitionId(competition.getId());
+                newQuestions.forEach(q -> {
+                    Question originalQuestion = questionRepository.findByNameAndCompetitionIdAndSectionName(q.getName(), 1L, q.getSection().getName());
+                    q.setAssessorMaximumScore(originalQuestion.getAssessorMaximumScore());
+                    originalQuestion.getFormInputs().forEach(fi -> {
+                        if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
+                            FormInput newFormInput = new FormInput();
+                            newFormInput.setPriority(fi.getPriority());
+                            newFormInput.setCompetition(fi.getCompetition());
+                            newFormInput.setDescription(fi.getDescription());
+                            newFormInput.setFormInputType(fi.getFormInputType());
+                            newFormInput.setGuidanceAnswer(fi.getGuidanceQuestion());
+                            newFormInput.setGuidanceQuestion(fi.getGuidanceQuestion());
+                            newFormInput.setIncludedInApplicationSummary(fi.isIncludedInApplicationSummary());
+                            newFormInput.setQuestion(q);
+                            newFormInput.setScope(fi.getScope());
+                            newFormInput.setWordCount(fi.getWordCount());
+                            q.getFormInputs().add(newFormInput);
+
+                            formInputRepository.save(newFormInput);
+                        }
+                    });
+                    questionRepository.save(q);
                 });
             });
 

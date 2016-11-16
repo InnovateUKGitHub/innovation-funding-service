@@ -60,29 +60,47 @@ Project details sections should not be scorable
     And the user should see the text in the page    Project title
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
+    And the user should see the text in the page    This is the applicant response for project summary.
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
+    And the user should see the text in the page    This is the applicant response for public description.
     Then the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test One for Scope.
+    And the user should see the text in the page    This is the applicant response for scope.
     Then the user should not see the text in the page    Question score
 
 Application questions should be scorable
     [Documentation]    INFUND-3400
     [Tags]
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    Business opportunity balls can you juggle
+    And The user should see the text in the page    This is the applicant response for business opportunity.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    What mediums can you juggle with
+    And The user should see the text in the page    This is the applicant response for potential market.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    What is your preferred juggling pattern
+    And The user should see the text in the page    This is the applicant response for project exploitation.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    What do you wear when juggling
+    And The user should see the text in the page    This is the applicant response for economic benefits.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for technical approach.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for innovation.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for risks.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for project team.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for project cost.
+    Then The user should see the element    jQuery=label:contains(Question score)
+    When the user clicks the button/link    jQuery=span:contains(Next)
+    And The user should see the text in the page    This is the applicant response for adding value.
     Then The user should see the element    jQuery=label:contains(Question score)
 
 Choosing 'not in scope' should update on the overview page

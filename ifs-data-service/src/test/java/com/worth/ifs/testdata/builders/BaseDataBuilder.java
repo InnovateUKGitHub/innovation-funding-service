@@ -2,6 +2,7 @@ package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -21,6 +22,7 @@ import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.competition.transactional.MilestoneService;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.ApplicationInviteRepository;
@@ -102,6 +104,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProcessRoleRepository processRoleRepository;
     protected ActivityStateRepository activityStateRepository;
     protected SectionRepository sectionRepository;
+    protected QuestionRepository questionRepository;
+    protected FormInputRepository formInputRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -145,6 +149,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
         this.activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
+        this.questionRepository = serviceLocator.getBean(QuestionRepository.class);
+        this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
     }
 
     protected UserResource compAdmin() {
