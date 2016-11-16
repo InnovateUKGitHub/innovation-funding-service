@@ -17,6 +17,7 @@ import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityRe
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorDataBuilder> {
@@ -25,8 +26,14 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
-            Ethnicity ethnicitySelected = ethnicityRepository.findOneByDescription(ethnicity);
-            EthnicityResource ethnicityResource = newEthnicityResource().withId(ethnicitySelected.getId()).build();
+            EthnicityResource ethnicityResource;
+
+            if (!isBlank(ethnicity)) {
+                Ethnicity ethnicitySelected = ethnicityRepository.findOneByDescription(ethnicity);
+                ethnicityResource = newEthnicityResource().withId(ethnicitySelected.getId()).build();
+            } else {
+                ethnicityResource = newEthnicityResource().withId().build();
+            }
 
             UserRegistrationResource registration = newUserRegistrationResource().
                     withFirstName(firstName).
@@ -43,11 +50,17 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 //            assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
             registrationService.createUser(registration).andOnSuccess(created ->
                     registrationService.activateUser(created.getId())).getSuccessObjectOrThrowException();
+
+            data.setEmail(emailAddress);
         }));
     }
 
     public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash) {
-        return with(data -> newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash));
+        return with(data -> newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash).build());
+    }
+
+    public AssessorDataBuilder acceptInvite(String hash) {
+        return with(data -> newAssessorInviteData(serviceLocator).acceptInvite(hash, data.getEmail()).build());
     }
 
     private RoleResource getAssessorRoleResource() {

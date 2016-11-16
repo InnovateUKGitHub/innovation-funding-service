@@ -4,6 +4,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
+import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -34,6 +35,16 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                 competitionParticipantRepository.save(new CompetitionParticipant(competition, savedInvite));
             });
         }));
+    }
+
+    public AssessorInviteDataBuilder acceptInvite(String hash, String assessorEmail) {
+        return with(data -> {
+
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+
+            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
+            doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccessObjectOrThrowException());
+        });
     }
 
     public static AssessorInviteDataBuilder newAssessorInviteData(ServiceLocator serviceLocator) {

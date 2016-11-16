@@ -6,6 +6,7 @@ import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.email.service.EmailService;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.notifications.service.senders.NotificationSender;
 import com.worth.ifs.notifications.service.senders.email.EmailNotificationSender;
 import com.worth.ifs.organisation.transactional.OrganisationService;
@@ -221,8 +222,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
-        createNonRegisteredAssessorInvites();
         createAssessors();
+        createNonRegisteredAssessorInvites();
 
         long after = System.currentTimeMillis();
 
@@ -594,8 +595,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createAssessor(AssessorDataBuilder assessorUserBuilder, AssessorUserLine line) {
 
-        String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
-
         List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
                 invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
 
@@ -606,9 +605,18 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.name, invite.hash);
         }
 
-        builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                             line.ethnicity, line.gender, line.disability, inviteHash).
-                build();
+        String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
+
+        AssessorDataBuilder builderWithUserRegistration = builder.
+                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash).
+                registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
+                        line.ethnicity, line.gender, line.disability, inviteHash);
+
+        if (InviteStatus.OPENED.equals(line.inviteStatus)) {
+            builderWithUserRegistration.acceptInvite(inviteHash).build();
+        } else {
+            builderWithUserRegistration.build();
+        }
     }
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
