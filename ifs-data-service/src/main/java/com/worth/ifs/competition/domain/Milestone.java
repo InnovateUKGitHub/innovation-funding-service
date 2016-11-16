@@ -29,7 +29,7 @@ public class Milestone {
     public Milestone(MilestoneType type, Competition competition) {
         if (type == null) throw new NullPointerException("type cannot be null");
         if (competition == null) throw new NullPointerException("competition cannot be null");
-        if (type.isDateMandatory()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' cannot have a null date");
+        if (type.isPresetDate()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' cannot have a null date");
         this.type = type;
         this.competition = competition;
     }
@@ -48,8 +48,20 @@ public class Milestone {
         return id;
     }
 
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
     public MilestoneType getType() {
         return type;
+    }
+
+    public void setType(MilestoneType type) {
+        this.type = type;
     }
 
     public LocalDateTime getDate() {
@@ -57,17 +69,12 @@ public class Milestone {
     }
 
     public void setDate(LocalDateTime date) {
-        // XXX as always the mappers are making this difficult
-//        if (date == null) throw new NullPointerException("date cannot be null");
         this.date = date;
     }
 
-    public Competition getCompetition() {
-        return competition;
-    }
 
     public boolean isSet() {
-        assert date != null || !type.isDateMandatory();
+        assert date != null || !type.isPresetDate();
         return date != null;
     }
 

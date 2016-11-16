@@ -16,33 +16,33 @@ public enum MilestoneType {
     ASSESSOR_BRIEFING("5. Assessor briefing"),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),
     ASSESSOR_DEADLINE("7. Assessor deadline"),
-    ASSESSORS_NOTIFIED("8. Assessors Notified", false), // terminology varies, but this corresponds to the button in Assessor Management
-    ASSESSMENT_CLOSED("9. Assessment closed", false),
-    LINE_DRAW("10. Line draw"),
-    ASSESSMENT_PANEL("11. Assessment panel"),
-    PANEL_DATE("12. Panel date"),
-    FUNDERS_PANEL("13. Funders panel"),
-    NOTIFICATIONS("14. Notifications"),
-    RELEASE_FEEDBACK("15. Release feedback");
+    ASSESSORS_NOTIFIED("Assessors Notified", false), // terminology varies, but this corresponds to the button in Assessor Management
+    ASSESSMENT_CLOSED("Assessment closed", false),
+    LINE_DRAW("8. Line draw"),
+    ASSESSMENT_PANEL("9. Assessment panel"),
+    PANEL_DATE("10. Panel date"),
+    FUNDERS_PANEL("11. Funders panel"),
+    NOTIFICATIONS("12. Notifications"),
+    RELEASE_FEEDBACK("13. Release feedback");
 
     private final String milestoneDescription;
-    private final boolean dateMandatory;
+    private final boolean presetDate;
 
-    private MilestoneType(String milestoneDescription) {
-        this(milestoneDescription, false);
+    MilestoneType(String milestoneDescription) {
+        this(milestoneDescription, true);
     }
 
-    private MilestoneType(String milestoneDescription, boolean dateMandatory) {
+    MilestoneType(String milestoneDescription, boolean presetDate) {
         this.milestoneDescription = milestoneDescription;
-        this.dateMandatory = dateMandatory;
+        this.presetDate = presetDate;
     }
 
     public String getMilestoneDescription() {
         return milestoneDescription;
     }
 
-    public boolean isDateMandatory() {
-        return dateMandatory;
+    public boolean isPresetDate() {
+        return presetDate;
     }
 }
 

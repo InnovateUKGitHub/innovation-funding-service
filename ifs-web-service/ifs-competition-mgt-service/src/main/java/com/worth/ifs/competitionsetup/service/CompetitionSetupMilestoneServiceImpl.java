@@ -23,12 +23,13 @@ import java.util.stream.Stream;
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
 
     @Autowired
-    MilestoneService milestoneService;
+    private MilestoneService milestoneService;
 
     @Override
     public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
+        // TODO I don't think we should be doing this in the web tier
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.values()).forEach(type -> {
+        Stream.of(MilestoneType.values()).filter(MilestoneType::isPresetDate).forEach(type -> {
             MilestoneResource newMilestone = milestoneService.create(type, competitionId);
             newMilestones.add(newMilestone);
         });
