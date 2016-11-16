@@ -14,6 +14,7 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.assessorCount.required}")
     private Integer assessorCount;
 
+    @Min(value=0, message = "{validation.assessorsform.assessorPay.min}")
     @NotNull(message = "{validation.assessorsform.assessorPay.required}")
     @Digits(integer = 8, fraction = 2, message = "{validation.assessorsform.assessorPay.max.amount.invalid}")
     private BigDecimal assessorPay;
