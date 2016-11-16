@@ -417,7 +417,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -436,7 +436,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -475,7 +475,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -535,7 +535,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-        		.andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}"));
+        		.andExpect(content().json("{\"success\":\"false\"}"));
     }
 
     @Test
@@ -556,7 +556,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
         log.info("Response : "+ content);
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 

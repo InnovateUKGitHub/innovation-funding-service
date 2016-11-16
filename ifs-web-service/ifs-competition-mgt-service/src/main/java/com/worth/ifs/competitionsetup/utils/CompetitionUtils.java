@@ -14,7 +14,7 @@ import static com.worth.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN
 public class CompetitionUtils {
 
     public static boolean textToBoolean(String value) {
-        return (value != null && value.equalsIgnoreCase("yes")) ? true : false;
+        return (value != null && (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("1"))) ? true : false;
     }
 
     public static String booleanToText(Boolean value) {
