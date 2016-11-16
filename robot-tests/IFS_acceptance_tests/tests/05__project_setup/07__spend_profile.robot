@@ -47,15 +47,15 @@ Project Finance cancels the generation of the Spend Profile
     When the user clicks the button/link           jQuery=.button:contains("Generate Spend Profile")
     Then the user should see the text in the page  This will generate a flat profile spend for all project partners.
     When the user clicks the button/link           jQuery=.button:contains("Cancel")
-    Then the user should not see an error in the page
 
 Project Finance generates the Spend Profile
-    [Documentation]  INFUND-5194
+    [Documentation]  INFUND-5194, INFUND-5987
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
     And the user clicks the button/link     jQuery=.button:contains("Generate spend profile")
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-
+    When the user navigates to the page     ${server}/project-setup-management/competition/3/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -417,7 +417,7 @@ Project Finance is able to Reject Spend Profile
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
 Project Finance is able to Approve Spend Profile
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page             ${internal_spend_profile_approval}
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
@@ -429,7 +429,8 @@ Project Finance is able to Approve Spend Profile
     When the user clicks the button/link             jQuery=button:contains("Approved")
     And the user clicks the button/link              jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element         jQuery=h3:contains("The spend profile has been approved")
-    When the user navigates to the page              ${server}/project-setup-management/competition/3/status
+    When the user navigates to the page              ${internal_spend_profile_approval}
+    And the user clicks the button/link              link=Competition dashboard
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
 
 Project finance user cannot access internal users' spend profile page

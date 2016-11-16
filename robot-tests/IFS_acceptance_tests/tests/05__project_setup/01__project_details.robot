@@ -563,13 +563,16 @@ Non-lead partner cannot change any project details
 
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
+    [Documentation]    INFUND-4049, INFUND-5507
     [Tags]
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    When the user clicks the button/link    jQuery=#table-project-status td.status.ok a
+    Then the user should see the element    jQuery=h1:contains("Project details")
+    And the user clicks the button/link     link=Competition dashboard
 
 
 Internal user can see the Project details as sumbmitted
