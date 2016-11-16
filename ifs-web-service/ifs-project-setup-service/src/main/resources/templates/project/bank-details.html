@@ -109,7 +109,7 @@
     	</dl>
 
           <h2 class="heading-medium no-margin-bottom">Billing address</h2>
-          <p th:if="${bankDetails?.organisationAddress.address == null}" class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+          <p th:if="${bankDetails?.organisationAddress.address == null}" class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
       <p class="extra-margin" th:if="${bankDetails?.organisationAddress.address}" >
         <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
