@@ -223,11 +223,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		competitionService.returnToSetup(competitionId);
 	}
 
-	@Override
-	public List<CompetitionTypeAssessorOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
-		return null;
-	}
-
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
 		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);

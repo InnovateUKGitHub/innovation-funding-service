@@ -2,7 +2,9 @@ package com.worth.ifs.application.service;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.competition.builder.CompetitionTypeAssessorOptionBuilder;
 import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.service.CompetitionTypeAssessorOptionsRestService;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import java.util.Map;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
+import static com.worth.ifs.competition.builder.CompetitionTypeAssessorOptionResourceBuilder.newCompetitionTypeAssessorOptionResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -29,6 +32,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private CompetitionsRestService competitionsRestService;
+
+    @Mock
+    private CompetitionTypeAssessorOptionsRestService competitionTypeAssessorOptionsRestService;
 
     @Override
     protected CompetitionService supplyServiceUnderTest() {
@@ -220,5 +226,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionsRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
 
         service.returnToSetup(competitionId);
+    }
+
+    @Test
+    public void testGetAssessorOptionsForCompetitionType() throws Exception {
+        CompetitionTypeAssessorOptionResource expectedResource = newCompetitionTypeAssessorOptionResource()
+                .withId(1L).withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.FALSE).build();
+
+        final List<CompetitionTypeAssessorOptionResource> expectedList = new ArrayList<>(asList(expectedResource));
+
+        when(competitionTypeAssessorOptionsRestService.findAllByCompetitionType(1L)).thenReturn(restSuccess(expectedList));
+
+        final List<CompetitionTypeAssessorOptionResource> found = service.getAssessorOptionsForCompetitionType(1L);
+        assertEquals(1, found.size());
+        assertEquals(Long.valueOf(1L), found.get(0).getId());
     }
 }

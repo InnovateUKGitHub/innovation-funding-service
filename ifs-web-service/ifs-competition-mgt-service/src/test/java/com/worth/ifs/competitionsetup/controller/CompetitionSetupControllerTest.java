@@ -408,4 +408,97 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("restrictInitialDetailsEdit", nullValue()));
     }
+
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithoutErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("assessorCount", "1")
+                .param("assessorPay", "10"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
+
+        verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ASSESSORS));
+    }
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorCount() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("assessorCount", "")
+                .param("assessorPay", "10"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "assessorCount"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("assessorCount", "3")
+                .param("assessorPay", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "assessorPay"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_Bignumber() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("assessorCount", "3")
+                .param("assessorPay", "12345678912334"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "assessorPay"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_NegativeNumber() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("assessorCount", "3")
+                .param("assessorPay", "-1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "assessorPay"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
 }

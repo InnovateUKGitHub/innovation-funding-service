@@ -62,11 +62,38 @@ public class AssessorSectionSaverTest {
 	}
 
 	@Test
-	public void testAutoSaveAssessorPayInvalid() {
+	public void testAutoSaveAssessorPayInvalid_String() {
 		CompetitionResource competition = newCompetitionResource().build();
 		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay", "TEN", null);
 		assertEquals(1, errors.size());
 		assertEquals("validation.assessorsform.assessorPay.only.numbers", errors.get(0).getErrorKey());
+		verifyZeroInteractions(competitionService);
+	}
+
+	@Test
+	public void testAutoSaveAssessorPayInvalid_Null() {
+		CompetitionResource competition = newCompetitionResource().build();
+		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay", null, null);
+		assertEquals(1, errors.size());
+		assertEquals("validation.assessorsform.assessorPay.required", errors.get(0).getErrorKey());
+		verifyZeroInteractions(competitionService);
+	}
+
+	@Test
+	public void testAutoSaveAssessorPayInvalid_Range() {
+		CompetitionResource competition = newCompetitionResource().build();
+		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay", "9999999999999", null);
+		assertEquals(1, errors.size());
+		assertEquals("validation.assessorsform.assessorPay.max.amount.invalid", errors.get(0).getErrorKey());
+		verifyZeroInteractions(competitionService);
+	}
+
+	@Test
+	public void testAutoSaveAssessorPayInvalid_FieldName() {
+		CompetitionResource competition = newCompetitionResource().build();
+		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay_invalid", "10", null);
+		assertEquals(1, errors.size());
+		assertEquals("Field not found", errors.get(0).getErrorKey());
 		verifyZeroInteractions(competitionService);
 	}
 

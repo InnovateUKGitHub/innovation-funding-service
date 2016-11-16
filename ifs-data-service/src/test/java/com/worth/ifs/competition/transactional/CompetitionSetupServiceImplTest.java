@@ -1,22 +1,23 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competitiontemplate.builder.CompetitionTemplateBuilder.newCompetitionTemplate;
-import static com.worth.ifs.competitiontemplate.builder.FormInputTemplateBuilder.newFormInputTemplate;
-import static com.worth.ifs.competitiontemplate.builder.QuestionTemplateBuilder.newQuestionTemplate;
-import static com.worth.ifs.competitiontemplate.builder.SectionTemplateBuilder.newSectionTemplate;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.repository.CompetitionTypeAssessorOptionRepository;
+import com.worth.ifs.competition.repository.CompetitionTypeRepository;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
+import com.worth.ifs.competitiontemplate.domain.SectionTemplate;
+import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepository;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,19 +26,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
-import com.worth.ifs.competitiontemplate.domain.SectionTemplate;
-import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepository;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionTypeAssessorOptionBuilder.newCompetitionTypeAssessorOption;
+import static com.worth.ifs.competitiontemplate.builder.CompetitionTemplateBuilder.newCompetitionTemplate;
+import static com.worth.ifs.competitiontemplate.builder.FormInputTemplateBuilder.newFormInputTemplate;
+import static com.worth.ifs.competitiontemplate.builder.QuestionTemplateBuilder.newQuestionTemplate;
+import static com.worth.ifs.competitiontemplate.builder.SectionTemplateBuilder.newSectionTemplate;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -56,6 +58,8 @@ public class CompetitionSetupServiceImplTest {
     private QuestionRepository questionRepository;
     @Mock
     private SectionRepository sectionRepository;
+	@Mock
+	private CompetitionTypeAssessorOptionRepository competitionTypeAssessorOptionRepository;
 
     @Before
 	public void setup() {
@@ -204,6 +208,37 @@ public class CompetitionSetupServiceImplTest {
 		service.returnToSetup(competitionId);
 
 		assertFalse(comp.getSetupComplete());
+	}
+
+	@Test
+	public void testMarkSectionComplete() {
+		Long competitionId = 1L;
+		Competition comp = newCompetition().withId(competitionId).build();
+		CompetitionType competitionType = new CompetitionType();
+		competitionType.setId(1L);
+		comp.setCompetitionType(competitionType);
+		CompetitionTypeAssessorOption assessorOption = newCompetitionTypeAssessorOption().withId(1L)
+				.withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.TRUE).build();
+
+		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(1L)).thenReturn(Optional.of(assessorOption));
+		service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+
+		assertEquals(Integer.valueOf(1), comp.getAssessorCount());
+	}
+
+	@Test
+	public void testMarkSectionCompleteWithNoDefault() {
+		Long competitionId = 1L;
+		Competition comp = newCompetition().withId(competitionId).build();
+		CompetitionType competitionType = new CompetitionType();
+		competitionType.setId(1L);
+		comp.setCompetitionType(competitionType);
+		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(1L)).thenReturn(Optional.empty());
+		service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+
+		assertNull(comp.getAssessorCount());
 	}
 
 }
