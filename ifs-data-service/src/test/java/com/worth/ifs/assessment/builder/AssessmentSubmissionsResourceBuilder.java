@@ -28,7 +28,8 @@ public class AssessmentSubmissionsResourceBuilder extends BaseBuilder<Assessment
         return new AssessmentSubmissionsResource();
     }
 
-    public AssessmentSubmissionsResourceBuilder withAssessmentIds(List<Long> ...assessmentIds) {
+    @SafeVarargs
+    public final AssessmentSubmissionsResourceBuilder withAssessmentIds(List<Long>... assessmentIds) {
         return withArray((ids, resource) -> BuilderAmendFunctions.setField("assessmentIds", ids, resource), assessmentIds);
     }
 }

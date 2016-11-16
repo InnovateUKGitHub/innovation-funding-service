@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,6 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(Long assessmentId);
 
-    @PreAuthorize("hasPermission('com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
-    ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource);
+    @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")
+    ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
 }

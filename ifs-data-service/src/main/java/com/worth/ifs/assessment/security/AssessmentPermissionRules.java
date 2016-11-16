@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.security;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.security.BasePermissionRules;
@@ -37,6 +38,14 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     public boolean userCanUpdateAssessment(AssessmentResource assessment, UserResource user) {
         List<AssessmentStates> allowedUpdateStates = asList(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedUpdateStates);
+    }
+
+    @PermissionRule(value = "SUBMIT", description = "Only owners can submit Assessments")
+    public boolean userCanSubmitAssessments(AssessmentSubmissionsResource submissions, UserResource user) {
+        List<Assessment> assessments = assessmentRepository.findAll(submissions.getAssessmentIds());
+
+        return assessments.stream().allMatch(assessment ->
+                assessment.getParticipant().getUser().getId().equals(user.getId()));
     }
 
     private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user, List<AssessmentStates> allowedStates) {
