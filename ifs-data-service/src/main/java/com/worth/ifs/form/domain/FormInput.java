@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * FormInput represents an Input field and associated value on a Form (e.g. an com.worth.ifs.Application Form, a piece of Recommendation Feedback etc).
+ * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
  * <p>
- * A single FormInput would represent an input field under, for example, an com.worth.ifs.Application Form Question, and will have one
+ * A single FormInput would represent an input field under, for example, an Application Form Question, and will have one
  * or more FOrmInputResponses for that input field (so that more than one parties can respond to the same FormInput in,
- * for example, collaborative com.worth.ifs.Application Forms
+ * for example, collaborative Application Forms
  */
 @Entity
 public class FormInput{

@@ -23,7 +23,7 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        log.info("Spring com.worth.ifs.Application builder configure method");
+        log.info("Spring Application builder configure method");
         log.info("======== com.worth.ifs.Application.configure()");
         return application.sources(Application.class);
     }

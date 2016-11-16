@@ -20,7 +20,7 @@ public enum CompetitionSetupSection {
 	ADDITIONAL_INFO("additional", "Funding Information", emptyList()),
 	ELIGIBILITY("eligibility", "Eligibility", emptyList()),
 	MILESTONES("milestones", "Milestones", emptyList()),
-	APPLICATION_FORM("application", "com.worth.ifs.Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES)),
+	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES)),
 	ASSESSORS("assessors", "Assessors", emptyList());
 	
 	private String path;

@@ -354,11 +354,11 @@ public class BaseUnitTest {
 
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withCompetition(competitionResource.getId());
 
-        QuestionResource q01Resource = setupQuestionResource(1L, "com.worth.ifs.Application details", questionResourceBuilder);
+        QuestionResource q01Resource = setupQuestionResource(1L, "Application details", questionResourceBuilder);
 
         SectionResource sectionResource1 = sectionResourceBuilder.
                 with(id(1L)).
-                with(name("com.worth.ifs.Application details")).
+                with(name("Application details")).
                 withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
                 build();
 

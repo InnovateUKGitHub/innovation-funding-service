@@ -19,7 +19,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 /**
- * ApplicationController exposes com.worth.ifs.Application data and operations through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/forminputresponse")

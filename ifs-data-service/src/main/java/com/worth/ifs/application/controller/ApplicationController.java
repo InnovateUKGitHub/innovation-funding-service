@@ -18,7 +18,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * ApplicationController exposes com.worth.ifs.Application data and operations through a REST API.
+ * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/application")

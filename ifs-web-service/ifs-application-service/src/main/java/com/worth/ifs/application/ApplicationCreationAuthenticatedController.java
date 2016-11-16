@@ -59,7 +59,7 @@ public class ApplicationCreationAuthenticatedController {
             if (application != null) {
                 return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
             } else {
-                // com.worth.ifs.Application not created, throw exception
+                // Application not created, throw exception
                 List<Object> args = new ArrayList<>();
                 args.add(competitionId);
                 args.add(user.getId());

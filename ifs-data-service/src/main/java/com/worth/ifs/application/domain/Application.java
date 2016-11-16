@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * com.worth.ifs.Application defines database relations and a model to use client side and server side.
+ * Application defines database relations and a model to use client side and server side.
  */
 @Entity
 public class Application implements ProcessActivity {

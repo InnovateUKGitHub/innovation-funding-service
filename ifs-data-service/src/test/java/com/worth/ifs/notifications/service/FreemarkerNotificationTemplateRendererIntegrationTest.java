@@ -34,7 +34,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testInviteCollaboratorEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationName", "My com.worth.ifs.Application",
+                "applicationName", "My Application",
                 "competitionName", "Competition 123",
                 "inviteUrl", "http://acceptinvite.com",
                 "inviteOrganisationName", "Nomensa",
@@ -51,7 +51,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testFundedApplicationEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationName", "My com.worth.ifs.Application",
+                "applicationName", "My Application",
                 "competitionName", "Competition 123",
                 "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
@@ -66,7 +66,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testUnfundedApplicationEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationName", "My com.worth.ifs.Application",
+                "applicationName", "My Application",
                 "competitionName", "Competition 123",
                 "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
@@ -81,7 +81,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testFundedApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationName", "My com.worth.ifs.Application",
+                "applicationName", "My Application",
                 "applicationNumber", "00000456",
                 "competitionName", "Competition 123",
                 "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
@@ -97,7 +97,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testUnfundedApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationName", "My com.worth.ifs.Application",
+                "applicationName", "My Application",
                 "applicationNumber", "00000456",
                 "competitionName", "Competition 123",
                 "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),

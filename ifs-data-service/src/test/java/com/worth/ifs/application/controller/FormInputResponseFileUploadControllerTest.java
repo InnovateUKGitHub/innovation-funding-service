@@ -93,7 +93,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput"),
                                 parameterWithName("filename").description("The filename of the file being uploaded")
                         ),
@@ -315,7 +315,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput"),
                                 parameterWithName("filename").description("The filename of the file being uploaded")
                         ),
@@ -503,7 +503,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDelete",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput")
                         ),
                         requestHeaders(
@@ -584,7 +584,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file details for"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse")
                         ),
                         requestHeaders(
@@ -663,7 +663,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file for"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse")
                         ),
                         requestHeaders(
@@ -765,7 +765,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry",
                         requestParameters(
                                 parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file entry for"),
-                                parameterWithName("applicationId").description("Id of the com.worth.ifs.Application that the FormInputResponse is related to"),
+                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
                                 parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse")
                         ),
                         requestHeaders(

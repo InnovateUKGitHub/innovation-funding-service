@@ -30,7 +30,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.EnumSet.allOf;
 
 /**
- * An implementation of CostCategoryTypeStrategy that uses the original com.worth.ifs.Application Finances for the given Organisation
+ * An implementation of CostCategoryTypeStrategy that uses the original Application Finances for the given Organisation
  * to search for an existing CostCategoryType that supports its Cost Categories
  */
 @Component

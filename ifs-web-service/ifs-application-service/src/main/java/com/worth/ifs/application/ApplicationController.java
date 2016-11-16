@@ -47,7 +47,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to the application overview.
- * com.worth.ifs.Application overview is the page that contains the most basic information about the current application and
+ * Application overview is the page that contains the most basic information about the current application and
  * the basic information about the competition the application is related to.
  */
 

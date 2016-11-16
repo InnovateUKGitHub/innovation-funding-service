@@ -229,7 +229,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                         .param("formInput[application_details-startdate_year]", "2015")
                         .param("formInput[application_details-startdate_day]", "15")
                         .param("formInput[application_details-startdate_month]", "11")
-                        .param("formInput[application_details-title]", "New com.worth.ifs.Application Title")
+                        .param("formInput[application_details-title]", "New Application Title")
                         .param("formInput[application_details-duration]", "12")
                         .param("submit-section", "Save")
         ).andExpect(status().is3xxRedirection())

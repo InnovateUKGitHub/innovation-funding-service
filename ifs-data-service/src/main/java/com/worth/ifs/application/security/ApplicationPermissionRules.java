@@ -133,18 +133,18 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPLOAD_ASSESSOR_FEEDBACK",
-            description = "A Comp Admin user can upload Assessor Feedback documentation for an com.worth.ifs.Application whilst " +
-                          "the com.worth.ifs.Application's Competition is in Funders' Panel or Assessor Feedback state",
-            particularBusinessState = "com.worth.ifs.Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
+            description = "A Comp Admin user can upload Assessor Feedback documentation for an Application whilst " +
+                          "the Application's Competition is in Funders' Panel or Assessor Feedback state",
+            particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
     public boolean compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
         return isCompAdmin(user) && application.isInEditableAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
             value = "UPLOAD_ASSESSOR_FEEDBACK",
-            description = "A Project Finance user can upload Assessor Feedback documentation for an com.worth.ifs.Application whilst " +
-                    "the com.worth.ifs.Application's Competition is in Funders' Panel or Assessor Feedback state",
-            particularBusinessState = "com.worth.ifs.Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
+            description = "A Project Finance user can upload Assessor Feedback documentation for an Application whilst " +
+                    "the Application's Competition is in Funders' Panel or Assessor Feedback state",
+            particularBusinessState = "Application's Competition Status = 'Funders Panel' or 'Assessor Feedback'")
     public boolean projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(ApplicationResource application, UserResource user) {
         return isProjectFinanceUser(user) && application.isInEditableAssessorFeedbackCompetitionState();
     }
@@ -152,7 +152,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "REMOVE_ASSESSOR_FEEDBACK",
             description = "A Comp Admin user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
-            particularBusinessState = "com.worth.ifs.Application's Competition Status != 'Project Setup' or beyond")
+            particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
     public boolean compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
         return isCompAdmin(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
     }
@@ -160,29 +160,29 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "REMOVE_ASSESSOR_FEEDBACK",
             description = "A Project Finance user can remove Assessor Feedback documentation so long as the Feedback has not yet been published",
-            particularBusinessState = "com.worth.ifs.Application's Competition Status != 'Project Setup' or beyond")
+            particularBusinessState = "Application's Competition Status != 'Project Setup' or beyond")
     public boolean projectFinanceUserCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(ApplicationResource application, UserResource user) {
         return isProjectFinanceUser(user) && !application.isInPublishedAssessorFeedbackCompetitionState();
     }
 
     @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
-            description = "A Comp Admin user can see and download Assessor Feedback at any time for any com.worth.ifs.Application")
+            description = "A Comp Admin user can see and download Assessor Feedback at any time for any Application")
     public boolean compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
         return isCompAdmin(user);
     }
 
     @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
-            description = "A Project Finance user can see and download Assessor Feedback at any time for any com.worth.ifs.Application")
+            description = "A Project Finance user can see and download Assessor Feedback at any time for any Application")
     public boolean projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(ApplicationResource application, UserResource user) {
         return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
             value = "DOWNLOAD_ASSESSOR_FEEDBACK",
-            description = "A member of the com.worth.ifs.Application Team can see and download Assessor Feedback attached to their com.worth.ifs.Application when it has been published",
-            particularBusinessState = "com.worth.ifs.Application's Competition Status = 'Project Setup' or beyond")
+            description = "A member of the Application Team can see and download Assessor Feedback attached to their Application when it has been published",
+            particularBusinessState = "Application's Competition Status = 'Project Setup' or beyond")
     public boolean applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(ApplicationResource application, UserResource user) {
         return application.isInPublishedAssessorFeedbackCompetitionState() && isMemberOfProjectTeam(application.getId(), user);
     }

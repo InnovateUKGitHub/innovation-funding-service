@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * populates the model for the com.worth.ifs.Application Questions landing page of the competition setup section.
+ * populates the model for the Application Questions landing page of the competition setup section.
  */
 @Service
 public class ApplicationLandingModelPopulator implements CompetitionSetupSectionModelPopulator {
@@ -45,7 +45,7 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
    }
 
 	private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("com.worth.ifs.Application questions")).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
         return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
                 : new ArrayList<>();
     }

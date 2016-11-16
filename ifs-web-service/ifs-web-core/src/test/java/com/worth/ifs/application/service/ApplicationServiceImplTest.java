@@ -107,7 +107,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
         
-        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("com.worth.ifs.Application not found", asList(applicationId)));
+        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", asList(applicationId)));
         
         service.getById(applicationId);
     }

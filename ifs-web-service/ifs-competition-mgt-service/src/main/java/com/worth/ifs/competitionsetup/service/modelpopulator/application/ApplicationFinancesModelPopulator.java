@@ -15,7 +15,7 @@ import static com.worth.ifs.competitionsetup.controller.CompetitionSetupControll
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
- * populates the model for the Finances sub-section under the com.worth.ifs.Application of competition setup section.
+ * populates the model for the Finances sub-section under the Application of competition setup section.
  */
 @Service
 public class ApplicationFinancesModelPopulator implements CompetitionSetupSubsectionModelPopulator {

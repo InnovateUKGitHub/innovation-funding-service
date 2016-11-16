@@ -107,8 +107,8 @@ public class ApplicationDownloadController {
         // ADD HEADER ROW
         headerCount = 0;
         XSSFRow headerRow = sheet.createRow(rowCount++);
-        headerRow = createHeaderCellWithValue(headerRow, "com.worth.ifs.Application ID");
-        headerRow = createHeaderCellWithValue(headerRow, "com.worth.ifs.Application Title");
+        headerRow = createHeaderCellWithValue(headerRow, "Application ID");
+        headerRow = createHeaderCellWithValue(headerRow, "Application Title");
         headerRow = createHeaderCellWithValue(headerRow, "Lead Organisation");
         headerRow = createHeaderCellWithValue(headerRow, "Lead first name");
         headerRow = createHeaderCellWithValue(headerRow, "Lead last name");

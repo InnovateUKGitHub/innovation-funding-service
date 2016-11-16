@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * com.worth.ifs.Application finance resource holds the organisation's finance resources for an application
+ * Application finance resource holds the organisation's finance resources for an application
  */
 public class ApplicationFinanceResource {
 

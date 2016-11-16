@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * AddressType entity defines all the different types of addresses that can be associated either with com.worth.ifs.Application
+ * AddressType entity defines all the different types of addresses that can be associated either with Application
  * or with a Project entity.
  */
 @Entity

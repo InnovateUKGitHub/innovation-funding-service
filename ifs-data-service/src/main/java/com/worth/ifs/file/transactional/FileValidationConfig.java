@@ -11,7 +11,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Spring Configuration that is able to supply a number of FileValidators for the use of various Controllers in order
- * to ensure that files being uploaded for particular contexts (e.g. a file upload for an com.worth.ifs.Application Form question)
+ * to ensure that files being uploaded for particular contexts (e.g. a file upload for an Application Form question)
  * are valid for those contexts
  */
 @Configuration

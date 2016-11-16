@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 
 /**
- * Tests around the security rules defining who can upload files to a response to a Question in the com.worth.ifs.Application Form
+ * Tests around the security rules defining who can upload files to a response to a Question in the Application Form
  */
 public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest {
 

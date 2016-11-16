@@ -72,7 +72,7 @@ public class CompetitionBankDetailsController {
         // Note: I don't like the unnecessarily long column names below but they are as described in INFUND-5852, and possibly required to match exactly for import into target IFS system
         List<String> title = new ArrayList<>();
         title.add("Company name");
-        title.add("com.worth.ifs.Application Number");
+        title.add("Application Number");
         title.add("Company address");
         title.add("Company address 2");
         title.add("Company address 3");

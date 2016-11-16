@@ -75,7 +75,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
-                withName("My com.worth.ifs.Application").
+                withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();

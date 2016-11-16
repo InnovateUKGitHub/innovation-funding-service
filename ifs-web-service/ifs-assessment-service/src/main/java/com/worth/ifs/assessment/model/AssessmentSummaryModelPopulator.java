@@ -30,7 +30,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
- * Build the model for the Assessment com.worth.ifs.Application Summary view.
+ * Build the model for the Assessment Application Summary view.
  */
 @Component
 public class AssessmentSummaryModelPopulator {

@@ -23,14 +23,14 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        log.info("Spring com.worth.ifs.Application builder configure method");
-        log.info("======== com.worth.ifs.Application.configure()");
+        log.info("Spring Application builder configure method");
+        log.info("======== Application.configure()");
         return application.sources(Application.class);
     }
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        log.info("======== com.worth.ifs.Application.onStartup()");
+        log.info("======== Application.onStartup()");
     }
 
     /**

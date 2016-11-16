@@ -186,7 +186,7 @@ public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPop
 
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
-            //com.worth.ifs.Application Not open, so add empty lists
+            //Application Not open, so add empty lists
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
             return true;

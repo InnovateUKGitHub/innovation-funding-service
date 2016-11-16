@@ -30,7 +30,7 @@ import java.util.Optional;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
- * Controller to manage the com.worth.ifs.Application Questions and it's sub-sections in the
+ * Controller to manage the Application Questions and it's sub-sections in the
  * competition setup process
  */
 @Controller
