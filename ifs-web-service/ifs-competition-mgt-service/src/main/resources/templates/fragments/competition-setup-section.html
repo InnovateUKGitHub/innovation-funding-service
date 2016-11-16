@@ -845,10 +845,12 @@
           th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
         <fieldset th:if="${editable}" id="section-assessors-edit">
             <legend class="visuallyhidden">Assessors</legend>
-            <div class="form-group">
+            <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <h3 class="heading-small">How many assessors are required for each application?</h3>
-
+                     <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
+                    </span>
                     <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
                      <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                             th:value="${assessorOption.assessorOptionValue}" type="radio"
@@ -858,13 +860,17 @@
 
                 </fieldset>
             </div>
-            <div class="form-group">
+            <div th:class="${#fields.hasErrors('assessorPay')}? 'form-group error':'form-group'">
                 <label class="form-label" for="assessorPay">
                     <span class="form-label-bold">How much do assessors receive per application?</span>
                     <span class="form-hint">This information will be available in the assessor invites.</span>
+                     <span th:if="${#fields.hasErrors('assessorPay')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
+                    </span>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999" data-max-errormessage="Please enter less than 8 digits and 2 decimal places."
-                       th:value="${competitionSetupForm.assessorPay}"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" step="any"
+                       max="99999999.99" data-max-errormessage="Please enter less than 8 digits and 2 decimal places."
+                       th:value="${competitionSetupForm.assessorPay != null ? #numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT') : ''}"
                        data-required-errormessage="Please enter how much assessors will be paid"
                        data-min-errormessage="Please enter how much assessors will be paid" />
             </div>

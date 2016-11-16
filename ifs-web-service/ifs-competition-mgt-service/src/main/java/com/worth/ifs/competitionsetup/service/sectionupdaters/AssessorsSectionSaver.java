@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,9 +64,11 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 				competitionResource.setAssessorCount(Integer.parseInt(value));
 				break;
 			case "assessorPay":
-				if (!StringUtils.isNumeric(value)) {
+				if (value == null || StringUtils.isEmpty(value)) {
+					return asList(new Error("validation.assessorsform.assessorPay.required", HttpStatus.BAD_REQUEST));
+				} else if (!NumberUtils.isNumber(value)) {
 					return asList(new Error("validation.assessorsform.assessorPay.only.numbers", HttpStatus.BAD_REQUEST));
-				} else if (value.length() > 7) {
+				} else if (!assessorPayInRange(value)) {
 					return asList(new Error("validation.assessorsform.assessorPay.max.amount.invalid", HttpStatus.BAD_REQUEST));
 				} else {
 					competitionResource.setAssessorPay(new BigDecimal(value));
@@ -75,6 +78,12 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 				return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
 		}
 		return errors;
+	}
+
+
+	private boolean assessorPayInRange(String value) {
+		BigDecimal pay = new BigDecimal(value);
+		return (new BigDecimal("99999999.99").compareTo(pay) > 0 && pay.scale() <= 2) ? true : false;
 	}
 
 }
