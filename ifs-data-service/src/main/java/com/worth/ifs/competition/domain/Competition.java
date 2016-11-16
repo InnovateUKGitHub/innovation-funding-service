@@ -273,7 +273,6 @@ public class Competition implements ProcessActivity {
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
     	setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
-
     public LocalDateTime getFundersPanelEndDate() {
     	return getMilestoneDate(MilestoneType.NOTIFICATIONS).orElse(null);
 	}
@@ -284,13 +283,9 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny().orElseGet(() -> {
-            final Milestone m;
-            if (dateTime == null) {
-                m = new Milestone(milestoneType, this);
-            }
-            else {
-                m = new Milestone(milestoneType, dateTime, this);
-            }
+            Milestone m = new Milestone();
+            m.setType(milestoneType);
+            m.setCompetition(this);
 			milestones.add(m);
             return m;
 		});

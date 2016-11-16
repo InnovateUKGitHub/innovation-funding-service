@@ -57,7 +57,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public CompetitionBuilder withFundersPanelEndDate(LocalDateTime endDate) {
-        return with(competition -> setField("fundersPanelEndDate", endDate, competition));
+        return with(competition -> competition.setFundersPanelEndDate(endDate));
     }
 
     public CompetitionBuilder withResubmission(Boolean resubmission) {
@@ -118,7 +118,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                     .withAssessorsNotifiedDate(now.minusDays(3L))
                     .withAssessmentClosedDate(now.minusDays(2L))
     				.withFundersPanelDate(now.minusDays(1L))
-    				.withFundersPanelEndDate(null);
+    				.withFundersPanelEndDate(null); // or now, or null?
     	} else if(ASSESSOR_FEEDBACK.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(4L))

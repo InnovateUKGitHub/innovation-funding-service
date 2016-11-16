@@ -44,8 +44,8 @@ public class CompetitionSetupMilestoneServiceImplTest {
 		List<MilestoneResource> result = service.createMilestonesForCompetition(123L);
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
-		assertEquals(MilestoneType.values().length, result.size());
-		verify(milestoneService, times(MilestoneType.values().length)).create(any(MilestoneType.class), anyLong());
+		assertEquals(MilestoneType.presetValues().length, result.size());
+		verify(milestoneService, times(MilestoneType.presetValues().length)).create(any(MilestoneType.class), anyLong());
 	}
 
 	@Test

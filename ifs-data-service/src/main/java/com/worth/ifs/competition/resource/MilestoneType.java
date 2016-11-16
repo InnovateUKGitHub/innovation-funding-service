@@ -1,9 +1,6 @@
 package com.worth.ifs.competition.resource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This enum defines the milestones type for the competition
@@ -43,6 +40,10 @@ public enum MilestoneType {
 
     public boolean isPresetDate() {
         return presetDate;
+    }
+
+    public static MilestoneType[] presetValues() {
+        return Stream.of(values()).filter(MilestoneType::isPresetDate).toArray(length -> new MilestoneType[length]);
     }
 }
 

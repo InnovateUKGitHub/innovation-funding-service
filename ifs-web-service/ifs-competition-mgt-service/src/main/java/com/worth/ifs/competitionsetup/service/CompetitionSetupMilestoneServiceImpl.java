@@ -27,9 +27,8 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
     @Override
     public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
-        // TODO I don't think we should be doing this in the web tier
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.values()).filter(MilestoneType::isPresetDate).forEach(type -> {
+        Stream.of(MilestoneType.presetValues()).forEach(type -> {
             MilestoneResource newMilestone = milestoneService.create(type, competitionId);
             newMilestones.add(newMilestone);
         });

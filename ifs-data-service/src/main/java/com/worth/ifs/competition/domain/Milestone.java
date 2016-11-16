@@ -29,7 +29,7 @@ public class Milestone {
     public Milestone(MilestoneType type, Competition competition) {
         if (type == null) throw new NullPointerException("type cannot be null");
         if (competition == null) throw new NullPointerException("competition cannot be null");
-        if (type.isPresetDate()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' cannot have a null date");
+        if (type.isPresetDate()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' must have a date");
         this.type = type;
         this.competition = competition;
     }
@@ -46,6 +46,10 @@ public class Milestone {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setCompetition(Competition competition) {
