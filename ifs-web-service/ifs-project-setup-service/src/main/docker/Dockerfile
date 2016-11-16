@@ -1,9 +1,8 @@
 FROM davidcaste/alpine-java-unlimited-jce:jdk8
 MAINTAINER David Soff <dsoff@worth.systems>
 RUN apk --update add curl
+EXPOSE 8009
 EXPOSE 8080
-EXPOSE 8081
-EXPOSE 12345
 VOLUME /tmp
 ADD project-setup-0.0.1-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'

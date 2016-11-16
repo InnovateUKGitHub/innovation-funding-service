@@ -34,7 +34,7 @@ services:
       - hub
     networks:
       - selenium-network
-      - ifs_front-tier
+      - innovationfundingservice_front-tier
 networks:
   selenium-network:
     driver: bridge

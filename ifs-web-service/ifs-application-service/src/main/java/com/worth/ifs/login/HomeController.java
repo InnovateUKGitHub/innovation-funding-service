@@ -47,7 +47,7 @@ public class HomeController {
                 .append("redirect:");
 
         if (StringUtils.hasText(roleUrl)) {
-            stringBuilder.append("/" + roleUrl);
+            stringBuilder.append("/").append(roleUrl);
         }else{
             stringBuilder.append("/dashboard");
         }
