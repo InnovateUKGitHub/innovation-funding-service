@@ -74,7 +74,9 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        return getFinancePage(model, competitionId);
+        String view = getFinancePage(model, competitionId);
+        model.addAttribute("editable", true);
+        return view;
     }
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
