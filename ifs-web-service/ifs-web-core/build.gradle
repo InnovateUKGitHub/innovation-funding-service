@@ -3,6 +3,10 @@ jar {
     version = '0.0.1-SNAPSHOT'
 }
 
+configurations {
+    forTesting
+}
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
@@ -45,11 +49,19 @@ processTestResources {
     }
 }
 
+task testCommonCode(type: Jar) {
+    baseName += '-tests'
+    version = '0.0.1-SNAPSHOT'
+    from(sourceSets.test.output) {
+        include "**"
+    }
+}
+
+artifacts {
+    forTesting testCommonCode
+}
+
 task cleanDeploy() {
-    dependsOn ':ifs-data-service:client'
-    dependsOn ':ifs-data-service:clientCopy'
-    dependsOn ':ifs-rest-api-service:client'
-    dependsOn ':ifs-rest-api-service:clientCopy'
     build.mustRunAfter clean
     dependsOn clean
     dependsOn build

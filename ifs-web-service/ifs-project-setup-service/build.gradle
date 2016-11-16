@@ -4,12 +4,13 @@ war {
     baseName = 'project-setup'
     version = '0.0.1-SNAPSHOT'
 }
+
 configurations {
     providedRuntime
 }
 
 dependencies {
-
+    compile project(':ifs-web-service:ifs-web-core')
 
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
@@ -17,7 +18,6 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
-    compile project(':ifs-web-service:ifs-web-core')
 
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -50,7 +50,6 @@ task copyJsInPlace(type: Copy) {
     into "$tomcatWebAppsDir/project-setup/WEB-INF/classes/static/js/dest"
     from 'src/main/resources/static/js/dest'
 }
-
 
 task deployToTomcat(type: Copy) {
     from war

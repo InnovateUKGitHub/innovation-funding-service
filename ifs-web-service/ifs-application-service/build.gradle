@@ -2,7 +2,6 @@ bootRun {
     addResources = false
 }
 
-
 apply plugin: 'war'
 
 configurations {
@@ -14,14 +13,14 @@ war {
     version = '0.0.1-SNAPSHOT'
 }
 
-
 dependencies {
+    compile project(':ifs-web-service:ifs-web-core')
+
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
-    compile project(':ifs-web-service:ifs-web-core')
 
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile "com.openpojo:openpojo:0.8.3"
