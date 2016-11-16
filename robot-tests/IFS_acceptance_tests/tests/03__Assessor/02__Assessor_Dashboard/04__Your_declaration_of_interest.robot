@@ -63,7 +63,7 @@ Successful save for the Declaration form
     [Documentation]    INFUND-3715
     ...
     ...    INFUND-5432
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And The user should not see the element    link=your declaration of interest    #his checks the alert message on the top od the page
