@@ -54,6 +54,13 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return with(formInput -> formInput.setFormInputType(formInputType));
     }
 
+
+    public FormInputBuilder withFormInputType(String title) {
+        FormInputType type = new FormInputType();
+        type.setTitle(title);
+        return with(formInput -> formInput.setFormInputType(type));
+    }
+
     public FormInputBuilder withQuestion(Question... questions) {
         return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }

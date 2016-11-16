@@ -134,9 +134,9 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
 
         if(!bindingResult.hasErrors()) {
+            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,

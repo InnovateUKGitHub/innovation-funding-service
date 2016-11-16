@@ -1,5 +1,7 @@
 package com.worth.ifs.application.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
@@ -30,7 +32,6 @@ public class CompetitionSetupQuestionResource {
     private Boolean scored;
     private Integer scoreTotal;
     private Boolean writtenFeedback;
-    private Integer wordCount;
     private List<FormInputGuidanceRowResource> guidanceRows;
 
     public Long getQuestionId() {
@@ -129,14 +130,6 @@ public class CompetitionSetupQuestionResource {
         this.writtenFeedback = writtenFeedback;
     }
 
-    public Integer getWordCount() {
-        return wordCount;
-    }
-
-    public void setWordCount(Integer wordCount) {
-        this.wordCount = wordCount;
-    }
-
     public List<FormInputGuidanceRowResource> getGuidanceRows() {
         return guidanceRows;
     }
@@ -159,5 +152,53 @@ public class CompetitionSetupQuestionResource {
 
     public void setShortTitle(String shortTitle) {
         this.shortTitle = shortTitle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionSetupQuestionResource that = (CompetitionSetupQuestionResource) o;
+
+        return new EqualsBuilder()
+                .append(questionId, that.questionId)
+                .append(number, that.number)
+                .append(shortTitle, that.shortTitle)
+                .append(title, that.title)
+                .append(subTitle, that.subTitle)
+                .append(guidanceTitle, that.guidanceTitle)
+                .append(guidance, that.guidance)
+                .append(maxWords, that.maxWords)
+                .append(appendix, that.appendix)
+                .append(assessmentGuidance, that.assessmentGuidance)
+                .append(assessmentMaxWords, that.assessmentMaxWords)
+                .append(scored, that.scored)
+                .append(scoreTotal, that.scoreTotal)
+                .append(writtenFeedback, that.writtenFeedback)
+                .append(guidanceRows, that.guidanceRows)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(questionId)
+                .append(number)
+                .append(shortTitle)
+                .append(title)
+                .append(subTitle)
+                .append(guidanceTitle)
+                .append(guidance)
+                .append(maxWords)
+                .append(appendix)
+                .append(assessmentGuidance)
+                .append(assessmentMaxWords)
+                .append(scored)
+                .append(scoreTotal)
+                .append(writtenFeedback)
+                .append(guidanceRows)
+                .toHashCode();
     }
 }

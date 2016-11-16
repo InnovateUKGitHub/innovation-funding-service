@@ -73,6 +73,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setShortTitle(question.getShortName());
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
+        setupResource.setQuestionId(question.getId());
         return ServiceResult.serviceSuccess(setupResource);
     }
 
@@ -107,7 +108,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
         question.setShortName(competitionSetupQuestionResource.getShortTitle());
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
@@ -115,7 +115,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputType_Title(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle());
         questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
-        questionFormInput.setWordCount(competitionSetupQuestionResource.getWordCount());
+        questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         createOrDeleteAppendixFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
 

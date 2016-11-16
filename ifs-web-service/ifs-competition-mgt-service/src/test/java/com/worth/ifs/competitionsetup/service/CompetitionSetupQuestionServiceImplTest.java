@@ -1,84 +1,49 @@
 package com.worth.ifs.competitionsetup.service;
 
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.commons.service.*;
+import com.worth.ifs.competition.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
+import static com.worth.ifs.commons.rest.RestResult.*;
+import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupQuestionServiceImplTest {
 
 	@InjectMocks
 	private CompetitionSetupQuestionServiceImpl service;
-	
-	@Mock
-	private CompetitionService competitionService;
 
 	@Mock
-	private FormInputService formInputService;
+	private CompetitionSetupQuestionRestService restService;
 
-	@Mock
-	private QuestionService questionService;
+    @Test
+    public void testGetQuestion() {
+        long questionId = 1L;
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource().build();
 
-	@Test
-	public void testUpdateQuestion() {
-		QuestionViewModel question = new QuestionViewModel();
-		question.setId(2L);
-        question.setAppendix(false);
-        question.setScored(false);
-		question.setGuidance("Guidance");
-        question.setTitle("Title");
-		question.setShortTitle("ShortTitle");
-		question.setGuidanceTitle("Guidance Title");
-		question.setMaxWords(123);
+        when(restService.getByQuestionId(questionId)).thenReturn(restSuccess(resource));
 
-        when(questionService.getById(question.getId())).thenReturn(newQuestionResource().build());
-        when(formInputService.findApplicationInputsByQuestion(question.getId())).thenReturn(asList());
-        when(formInputService.findAssessmentInputsByQuestion(question.getId())).thenReturn(asList());
+        ServiceResult<CompetitionSetupQuestionResource> result = service.getQuestion(questionId);
 
-		service.updateQuestion(question);
-		
-		verify(formInputService).save(any(FormInputResource.class));
-		verify(questionService).save(any(QuestionResource.class));
-	}
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccessObjectOrThrowException(), resource);
+    }
 
-	@Test
-	public void testGetQuestion() {
-        Long questionId = 1234L;
+    @Test
+    public void testSave() {
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource().build();
 
-        FormInputResource formInput = new FormInputResource();
-        formInput.setFormInputType(2L);
-        formInput.setGuidanceQuestion("Guidance");
-        formInput.setGuidanceAnswer("Answer");
-        formInput.setWordCount(500);
+        when(restService.save(resource)).thenReturn(restSuccess());
 
-        when(questionService.getById(questionId)).thenReturn(
-                newQuestionResource()
-                        .withId(questionId)
-                        .withName("Title")
-                        .withDescription("ShortTitle")
-                        .build());
-		when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(asList(formInput));
-		when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(asList());
+        ServiceResult<Void> result = service.updateQuestion(resource);
 
-		QuestionViewModel questionResult = service.getQuestion(questionId);
-
-		assertEquals(questionId, questionResult.getId());
-        assertEquals("Title", questionResult.getTitle());
-        assertEquals("ShortTitle", questionResult.getSubTitle());
-        assertEquals("Guidance", questionResult.getGuidanceTitle());
-        assertEquals("Answer", questionResult.getGuidance());
-        assertEquals(Integer.valueOf(500), questionResult.getMaxWords());
-	}
+        assertTrue(result.isSuccess());
+    }
 }
