@@ -64,8 +64,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/finances"))
-                .andExpect(model().attribute("editable", true));
+                .andExpect(view().name("competition/finances"));
 
         verify(competitionService, never()).update(competition);
     }
@@ -82,8 +81,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
                 .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"))
-                .andExpect(model().attribute("editable", false));
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
         ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
         verify(competitionService).update(argument.capture());
