@@ -1,6 +1,7 @@
 package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.CompetitionType;
@@ -97,6 +98,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             competitionSetupService.initialiseFormForCompetitionType(competition.getId(), competition.getCompetitionType()).
                     getSuccessObjectOrThrowException();
+
+            // TODO DW - temporary fix for pulling over section priorities
+            testService.doWithinTransaction(() -> {
+                List<Section> newSections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
+                newSections.forEach(s -> {
+                    Section originalSection = sectionRepository.findByNameAndCompetitionId(s.getName(), 1L);
+                    s.setPriority(originalSection.getPriority());
+                    sectionRepository.save(s);
+                });
+            });
 
             updateCompetitionInCompetitionData(data, competition.getId());
         });

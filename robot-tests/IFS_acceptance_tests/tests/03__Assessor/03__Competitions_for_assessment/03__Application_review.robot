@@ -25,21 +25,27 @@ Navigation using next button
     And the user clicks next and goes to the page    Project summary
     And the user clicks next and goes to the page    Public description
     And the user clicks next and goes to the page    Scope
-    And the user clicks next and goes to the page    How many
-    And the user clicks next and goes to the page    Mediums
-    And the user clicks next and goes to the page    Preferences
-    And the user clicks next and goes to the page    Attire
+    And the user clicks next and goes to the page    Business opportunity
+    And the user clicks next and goes to the page    Potential market
+    And the user clicks next and goes to the page    Project exploitation
+    And the user clicks next and goes to the page    Economic benefit
+    And the user clicks next and goes to the page    Technical approach
+    And the user clicks next and goes to the page    Innovation
+    And the user clicks next and goes to the page    Risks
+    And the user clicks next and goes to the page    Project team
+    And the user clicks next and goes to the page    Funding
+    And the user clicks next and goes to the page    Adding value
     And the user should not see the element    css=.next
 
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_10}
-    When the user clicks the button/link    link=4. Attire
-    Then the user should see the text in the page    Attire
-    And the user clicks previous and goes to the page    Preferences
-    And the user clicks previous and goes to the page    Mediums
-    And the user clicks previous and goes to the page    How many
+    When the user clicks the button/link    link=4. Economic benefit
+    Then the user should see the text in the page    Economic benefit
+    And the user clicks previous and goes to the page    Project exploitation
+    And the user clicks previous and goes to the page    Potential market
+    And the user clicks previous and goes to the page    Business opportunity
     And the user clicks previous and goes to the page    Scope
     And the user clicks previous and goes to the page    Public description
     And the user clicks previous and goes to the page    Project summary
@@ -54,20 +60,20 @@ Project details sections should not be scorable
     And the user should see the text in the page    Project title
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test Seven for Project Summary.
+    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test Seven for Public Description.
+    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
     Then the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response from Test Seven for Scope.
+    And the user should see the text in the page    This is the applicant response from Test One for Scope.
     Then the user should not see the text in the page    Question score
 
 Application questions should be scorable
     [Documentation]    INFUND-3400
     [Tags]
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    How many balls can you juggle
+    And The user should see the text in the page    Business opportunity balls can you juggle
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What mediums can you juggle with
@@ -133,7 +139,7 @@ Feedback: word count
     [Documentation]    INFUND-3859
     [Tags]
     Given I am on the assessor assessment overview page
-    and I open one of the application questions    link=4. Attire
+    and I open one of the application questions    link=4. Economic benefit
     And I should see word count underneath feedback form    Words remaining: 91
     When I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
@@ -145,11 +151,11 @@ Question 1: Autosave
     [Documentation]    INFUND-3780
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_10}
-    And the user clicks the button/link    link=1. How many
+    And the user clicks the button/link    link=1. Business opportunity
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
-    And the user clicks the button/link    link=1. How many
+    And the user clicks the button/link    link=1. Business opportunity
     Then the user should see the text in the page    This is to test the feedback entry.
     And the user should see the text in the page    9
 

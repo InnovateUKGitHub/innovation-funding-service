@@ -179,20 +179,28 @@ ${text_file}            testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 
 # Assessor variables
-${Assessment_overview_9}    ${server}/assessment/9
-${Assessment_summary_complete_9}    ${server}/assessment/9/summary
-${Application_question_url}    ${server}/assessment/9/question/47
-${Application_question_168}    ${server}/assessment/9/question/168
-${Application_question_169}    ${server}/assessment/9/question/169
-${Application_question_170}    ${server}/assessment/9/question/170
-${Finance_summar_9_url}    ${server}/assessment/9/finances
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    25
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    30
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    26
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    29
+${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    16
+${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    17
+${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    18
+
+${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
+${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
+${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/47
+${Application_question_168}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/168
+${Application_question_169}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/169
+${Application_question_170}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/170
+${Finance_summar_9_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/finances
 ${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
-${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${READY_TO_OPEN_COMPETITION}
-${Assessment_overview_11}    ${server}/assessment/11
-${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
-${Assessment_summary_open_11}    ${server}/assessment/11/summary
+${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
+${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
+${Assessment_summary_Pending_12}    ${server}assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/summary
+${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
 ${assessment_skills}    ${server}/assessment/profile/declaration
-${Assessment_overview_10}    ${server}/assessment/10
+${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 
 # Database variables
 ${database_name}    ifs

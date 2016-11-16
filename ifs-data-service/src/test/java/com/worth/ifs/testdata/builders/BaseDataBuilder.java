@@ -2,12 +2,14 @@ package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.category.repository.CategoryRepository;
@@ -39,6 +41,7 @@ import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.RoleService;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.user.transactional.UsersRolesService;
+import com.worth.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -95,6 +98,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionParticipantRepository competitionParticipantRepository;
     protected CompetitionInviteService competitionInviteService;
     protected TestService testService;
+    protected AssessmentRepository assessmentRepository;
+    protected ProcessRoleRepository processRoleRepository;
+    protected ActivityStateRepository activityStateRepository;
+    protected SectionRepository sectionRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -134,6 +141,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
         this.competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
         this.testService = serviceLocator.getBean(TestService.class);
+        this.assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
+        this.processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
+        this.activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
+        this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
     }
 
     protected UserResource compAdmin() {

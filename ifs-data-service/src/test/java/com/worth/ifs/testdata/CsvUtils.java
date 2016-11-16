@@ -3,6 +3,7 @@ package com.worth.ifs.testdata;
 import au.com.bytecode.opencsv.CSVReader;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
@@ -57,6 +58,10 @@ class CsvUtils {
 
     static List<ApplicationLine> readApplications() {
         return simpleMap(readCsvLines("applications"), ApplicationLine::new);
+    }
+
+    static List<AssessmentLine> readAssessments() {
+        return simpleMap(readCsvLines("assessments"), AssessmentLine::new);
     }
 
     static List<InviteLine> readInvites() {
@@ -259,6 +264,21 @@ class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationStatusConstants.getFromName(line.get(i++));
+        }
+    }
+
+    static class AssessmentLine {
+
+        String assessorEmail;
+        String applicationName;
+        AssessmentStates state;
+
+        private AssessmentLine(List<String> line) {
+
+            int i = 0;
+            assessorEmail = line.get(i++);
+            applicationName = line.get(i++);
+            state = AssessmentStates.valueOf(line.get(i++));
         }
     }
 

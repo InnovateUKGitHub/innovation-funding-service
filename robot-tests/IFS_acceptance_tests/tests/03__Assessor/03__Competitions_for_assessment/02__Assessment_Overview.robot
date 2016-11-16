@@ -20,7 +20,7 @@ Assessment overview should show the expected questions
     [Tags]    HappyPath
     Given The user clicks the button/link    link=Juggling Craziness
     when the user clicks the button/link    link=Juggling is fun
-    Then The user should be redirected to the correct page    /assessment/11
+    Then The user should be redirected to the correct page    /assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
     And the user should see four sections
 
 Number of days remaining until assessment submission
@@ -49,9 +49,9 @@ Assessor should not be able to access the rejected application
 
 *** Keywords ***
 the user should see four sections
-    the user should see the element    css=#section-16 .bold-medium
-    the user should see the element    css=#section-71 .heading-medium
-    the user should see the element    css=#section-17 .heading-medium
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION} .bold-medium
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION} .heading-medium
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION} .heading-medium
 
 the user fills in rejection details
     And the user should see the element    id=rejectReason

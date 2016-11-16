@@ -11,11 +11,11 @@ Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${ASSESSOR_DASHBOARD}    ${SERVER}/assessment/assessor/dashboard
-${ASSESSOR_OVERVIEW}    ${SERVER}/assessment/9
-${ASSESSOR_ASSESSMENT_QUESTIONS}    ${SERVER}/assessment/9/question/43
-${ASSESSOR_ASSESSMENT_QUESTIONS_11}    ${SERVER}/assessment/11/question/43
-${ASSESSOR_REVIEW_SUMMARY}    ${SERVER}/assessment/9/summary
-${ASSESSOR_ASSESSMENT_QUESTIONS_48}    ${SERVER}/assessment/9/question/48
+${ASSESSOR_OVERVIEW}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
+${ASSESSOR_ASSESSMENT_QUESTIONS}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/43
+${ASSESSOR_ASSESSMENT_QUESTIONS_11}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/question/43
+${ASSESSOR_REVIEW_SUMMARY}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
+${ASSESSOR_ASSESSMENT_QUESTIONS_48}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/48
 
 *** Test Cases ***
 Guest user can't access the assessor dashboard

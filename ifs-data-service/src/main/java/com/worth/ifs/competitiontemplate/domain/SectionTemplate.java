@@ -1,20 +1,10 @@
 package com.worth.ifs.competitiontemplate.domain;
 
+import com.worth.ifs.application.resource.SectionType;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-
-import com.worth.ifs.application.resource.SectionType;
 
 @Entity
 public class SectionTemplate {
@@ -49,6 +39,8 @@ public class SectionTemplate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTemplateId", referencedColumnName="id")
     private CompetitionTemplate competitionTemplate;
+
+	private boolean displayInAssessmentOverview;
 
 	public Long getId() {
 		return id;
@@ -121,5 +113,12 @@ public class SectionTemplate {
 	public void setCompetitionTemplate(CompetitionTemplate competitionTemplate) {
 		this.competitionTemplate = competitionTemplate;
 	}
-    
+
+	public boolean isDisplayInAssessmentOverview() {
+		return displayInAssessmentOverview;
+	}
+
+	public void setDisplayInAssessmentOverview(boolean displayInAssessmentOverview) {
+		this.displayInAssessmentOverview = displayInAssessmentOverview;
+	}
 }

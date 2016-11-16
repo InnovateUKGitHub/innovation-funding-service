@@ -32,28 +32,28 @@ Number of days remaining until assessment submission
 
 Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Incomplete
+    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
 Questions should show without score
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    N/A
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    N/A
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    N/A
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    N/A
+    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    N/A
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    N/A
 
 Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Given the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    Complete
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Complete
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Complete
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Complete
+    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Complete
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
 Questions should show the scores
@@ -62,10 +62,10 @@ Questions should show the scores
     Then The user should see the text in the page    Total: 50/50
     And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. How many)    Score: 20/20
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 20/20
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
 
 Overall scores section
     [Documentation]    INFUND-4648
@@ -75,26 +75,26 @@ Overall scores section
 
 Feedback should show in each section
     [Documentation]    INFUND-550
-    When The user clicks the button/link    jQuery=button:contains(1. How many)
-    Then The user should see the text in the page    Testing how many feedback text
-    When The user clicks the button/link    jQuery=button:contains(2. Mediums)
-    Then The user should see the text in the page    Testing Mediums feedback text
-    When The user clicks the button/link    jQuery=button:contains(3. Preference)
-    Then The user should see the text in the page    Testing Preferences feedback text
-    When The user clicks the button/link    jQuery=button:contains(4. Attire)
-    Then The user should see the text in the page    Testing Attire feedback text
+    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    Then The user should see the text in the page    Testing Business opportunity feedback text
+    When The user clicks the button/link    jQuery=button:contains(2. Potential market)
+    Then The user should see the text in the page    Testing Potential market feedback text
+    When The user clicks the button/link    jQuery=button:contains(3. Project exploitation)
+    Then The user should see the text in the page    Testing Project exploitation feedback text
+    When The user clicks the button/link    jQuery=button:contains(4. Economic benefit)
+    Then The user should see the text in the page    Testing Economic benefit feedback text
     When The user clicks the button/link    jQuery=button:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
 Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
-    and The user should see the text in the page    This is the applicant response from Test Seven for How Many
+    and The user should see the text in the page    This is the applicant response from Test Seven for Business opportunity
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review assessment)
-    When The user clicks the button/link    jQuery=button:contains(1. How many)
+    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
@@ -181,22 +181,22 @@ the user adds score and feedback for every question
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    20    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
+    the user enters text to a text field    css=#form-input-195 .editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
+    the user enters text to a text field    css=#form-input-219 .editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
+    the user enters text to a text field    css=#form-input-222 .editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
+    the user enters text to a text field    css=#form-input-225 .editor    Testing Economic benefit feedback text
     the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores

@@ -44,6 +44,7 @@ import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.testdata.CsvUtils.*;
+import static com.worth.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static com.worth.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static com.worth.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
@@ -101,15 +102,13 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private NotificationSender emailNotificationSender;
 
-    @Autowired
-    private TestService testService;
-
     private CompetitionDataBuilder competitionDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
+    private AssessmentDataBuilder assessmentDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -164,6 +163,8 @@ public class GenerateTestData extends BaseIntegrationTest {
      */
     private static List<ApplicationOrganisationFinanceBlock> applicationFinanceLines;
 
+    private static List<AssessmentLine> assessmentLines;
+
     @Before
     public void setup() throws Exception {
         freshDb();
@@ -180,6 +181,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorUserLines = readAssessorUsers();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        assessmentLines = readAssessments();
     }
 
     @PostConstruct
@@ -212,6 +214,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         organisationBuilder = newOrganisationData(serviceLocator);
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
+        assessmentDataBuilder = newAssessmentData(serviceLocator);
     }
 
     @Test
@@ -224,6 +227,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         createCompetitions();
         createAssessors();
         createNonRegisteredAssessorInvites();
+        createAssessments();
 
         long after = System.currentTimeMillis();
 
@@ -236,13 +240,22 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessors() {
-        assessorUserLines.forEach(line -> createAssessor(assessorUserBuilder, line));
+        assessorUserLines.forEach(this::createAssessor);
     }
 
     private void createNonRegisteredAssessorInvites() {
         List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
         List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
         nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
+    }
+
+    private void createAssessments() {
+        assessmentLines.forEach(this::createAssessment);
+    }
+
+    private void createAssessment(AssessmentLine line) {
+        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.state).
+                build();
     }
 
     private void createInternalUsers() {
@@ -593,7 +606,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private void createAssessor(AssessorDataBuilder assessorUserBuilder, AssessorUserLine line) {
+    private void createAssessor(AssessorUserLine line) {
 
         List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
                 invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
