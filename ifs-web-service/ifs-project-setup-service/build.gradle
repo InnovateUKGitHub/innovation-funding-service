@@ -4,12 +4,13 @@ war {
     baseName = 'project-setup'
     version = '0.0.1-SNAPSHOT'
 }
+
 configurations {
     providedRuntime
 }
 
 dependencies {
-
+    compile project(':ifs-web-service:ifs-web-core')
 
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
@@ -17,14 +18,15 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
-    compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile files('../../ifs-libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+    testCompile project(path: ':ifs-data-service', configuration: 'publicApi')
+    testCompile project(path: ':ifs-data-service', configuration: 'forTesting')
+    testCompile project(path: ':ifs-web-service:ifs-web-core', configuration: 'forTesting')
+
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile "net.sf.opencsv:opencsv:2.3"
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
 processResources {
@@ -50,7 +52,6 @@ task copyJsInPlace(type: Copy) {
     into "$tomcatWebAppsDir/project-setup/WEB-INF/classes/static/js/dest"
     from 'src/main/resources/static/js/dest'
 }
-
 
 task deployToTomcat(type: Copy) {
     from war

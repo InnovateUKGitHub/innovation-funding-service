@@ -3,6 +3,7 @@ apply from: targetBuild+"-build.gradle";
 
 
 apply plugin: 'war'
+apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
 
@@ -14,10 +15,13 @@ war {
 configurations {
     providedRuntime
     clientCompile
+    publicApi
+    forTesting
 }
 
 bootRepackage {
     mainClass = 'com.worth.ifs.Application'
+    withJarTask = war
 }
 
 ext {
@@ -25,8 +29,6 @@ ext {
     javaLanguageLevel = 1.8
     generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
 }
-
-sourceCompatibility = 1.8
 
 sourceSets {
     client {
@@ -51,17 +53,16 @@ ext {
 // Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
 ext['spring-restdocs.version']='1.1.2.RELEASE'
 
-jar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
-}
+//jar {
+//    dependsOn asciidoctor
+//    from ("${asciidoctor.outputDir}/html5") {
+//        into 'static/docs'
+//    }
+//}
 
 configurations {
     mapstruct
 }
-
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -91,9 +92,6 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
-
-    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile fileTree(dir: "libs", include: "*.jar")
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -148,6 +146,7 @@ task generateMainMapperClasses(type: JavaCompile) {
 
 task client(type: Jar) {
     baseName += '-public'
+    version = '0.0.1-SNAPSHOT'
     from(sourceSets.main.output) {
         // filter to only include certain class files (Ant glob pattern)
         include "com/worth/ifs/**/service/**"
@@ -165,20 +164,10 @@ task client(type: Jar) {
         exclude "com/worth/ifs/email/**"
     }
 }
-task clientCopy(type: Copy) {
-    into "../ifs-libs"
-    from "build/libs/"
-    include "ifs-data-service-public*.jar"
-}
-
-task clientLib {
-    clientCopy.mustRunAfter client
-    dependsOn client
-    dependsOn clientCopy
-}
 
 task testCommonCode(type: Jar) {
     baseName += '-tests'
+    version = '0.0.1-SNAPSHOT'
     from(sourceSets.test.output) {
         // filter to only include certain class files (Ant glob pattern)
         include "**/application-web-integration-test.properties"
@@ -191,19 +180,16 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/BaseBuilder.class"
         include "com/worth/ifs/Builder.class"
         include "com/worth/ifs/commons/test/*.class"
-        include "com/worth/ifs/**/builder/*ResourceBuilder.class"
+        include "com/worth/ifs/**/builder/*.class"
+        include "com/worth/ifs/**/builder/**/*.class"
         include "com/worth/ifs/project/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
         include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
     }
 }
-task testCommonCodeCopy(type: Copy){
-    into "../ifs-libs"
-    from "build/libs/"
-    include("ifs-data-service-tests*.jar")
-}
 
 artifacts {
-    archives client
+    publicApi client
+    forTesting testCommonCode
 }
 
 task deployToTomcat(type: Copy) {
@@ -212,13 +198,11 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'ROOT.war'
 }
 
-
 watch {
     java {
         files files('src/main/java')
-        tasks 'client', 'clientCopy', 'deployToTomcat'
+        tasks 'client', 'deployToTomcat'
     }
-
     resources {
         files files('src/main/resources')
         tasks 'deployToTomcat'
@@ -244,14 +228,11 @@ flywayClean.dependsOn processResources
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    clientCopy.mustRunAfter client
     testCommonCode.mustRunAfter build
-    testCommonCodeCopy.mustRunAfter testCommonCode
     deployToTomcat.mustRunAfter build
     dependsOn clean
     dependsOn build
-    dependsOn clientCopy
+    dependsOn client
     dependsOn testCommonCode
-    dependsOn testCommonCodeCopy
     dependsOn deployToTomcat
 }

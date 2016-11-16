@@ -3,7 +3,14 @@ jar {
     version = '0.0.1-SNAPSHOT'
 }
 
+configurations {
+    forTesting
+}
+
 dependencies {
+    compile project(':ifs-rest-api-service')
+    compile project(path: ':ifs-data-service', configuration: 'publicApi')
+
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
     compile "org.thymeleaf:thymeleaf-spring4:2.1.4.RELEASE"
@@ -20,16 +27,11 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient:4.1.1"
     compile 'org.jsoup:jsoup:1.9.1'
 
-    // Use this for including the api lib from the data-service.
-
-    compile files('../../ifs-libs/ifs-rest-api-service-1.0-SNAPSHOT.jar')
-    compile files('../../ifs-libs/ifs-data-service-public-1.0-SNAPSHOT.jar')
-
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
-    testCompile files('../../ifs-libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+    testCompile project(path: ':ifs-data-service', configuration: 'forTesting')
 }
 
 processResources {
@@ -44,11 +46,19 @@ processTestResources {
     }
 }
 
+task testCommonCode(type: Jar) {
+    baseName += '-tests'
+    version = '0.0.1-SNAPSHOT'
+    from(sourceSets.test.output) {
+        include "**"
+    }
+}
+
+artifacts {
+    forTesting testCommonCode
+}
+
 task cleanDeploy() {
-    dependsOn ':ifs-data-service:client'
-    dependsOn ':ifs-data-service:clientCopy'
-    dependsOn ':ifs-rest-api-service:client'
-    dependsOn ':ifs-rest-api-service:clientCopy'
     build.mustRunAfter clean
     dependsOn clean
     dependsOn build

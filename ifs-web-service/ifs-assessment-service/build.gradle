@@ -10,17 +10,19 @@ configurations {
 }
 
 dependencies {
+    compile project(':ifs-web-service:ifs-web-core')
+
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
-    compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile files('../../ifs-libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+    testCompile project(path: ':ifs-data-service', configuration: 'forTesting')
+    testCompile project(path: ':ifs-web-service:ifs-web-core', configuration: 'forTesting')
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
 task copyTemplatesInPlace(type: Copy) {
