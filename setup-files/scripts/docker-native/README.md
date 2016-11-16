@@ -44,14 +44,12 @@ You can perform some additional configuration in the `.env` file that is used du
 
 Some options that may be of interest:
 
-Option          | Default   | Description
---------------- | --------- | -----------
-DATA_XMX        | 512       | Sets the JVM `-Xmx` option value (in MB) for `data`
-DATA_XMS        | 256       | Sets the JVM `-Xms` option value (in MB) for `data`
-DATA_PORT_8081  | 8091      | Debugger port (on your localhost) for `data`
-WEB_XMX         | 512       | Sets the JVM `-Xmx` option value (in MB) for `web`
-WEB_XMS         | 256       | Sets the JVM `-Xms` option value (in MB) for `web`
-WEB_PORT_8081   | 8081      | Debugger port (on your localhost) for `web`
+Option          | Default           | Description
+------          | -------           | -----------
+DATA_JAVA_OPTS  | -Xms256m -Xmx512m | Sets the JVM options for the `data` container
+DATA_PORT_8081  | 8091              | Debugger port (on your localhost) for `data`
+WEB_JAVA_OPTS   | -Xms256m -Xmx512m | Sets the JVM options for the `web` container
+WEB_PORT_8081   | 8081              | Debugger port (on your localhost) for `web`
         
 ## Usage
 
@@ -73,6 +71,17 @@ You will most likely want to utilise `deploy.sh` to actually perform further dev
 
 It is pretty much the same as the current `Docker Machine` setup (although this workflow should be improved). 
 The usage of `deploy.sh` is documented below.
+
+## Running acceptance tests
+
+Included is an alternative `docker_run_tests_native.sh` in the Robot test directory that should be run instead of 
+the standard `docker_run_tests.sh` script. 
+
+This adds an additional `-n` flag which stops the application build step from occurring. It is currently not guaranteed 
+that the built WARs will be deployed properly in the web/data Tomcat containers before the Robot tests kick in.
+
+Consequently, a safer choice is to manually deploy with `deploy.sh` (like the current Docker Machine 
+setup), check that the application is deployed and then run the tests with `-n`.
 
 ## Additional information
 

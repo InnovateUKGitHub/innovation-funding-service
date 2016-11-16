@@ -32,6 +32,8 @@ services:
         aliases:
           - ifs-web-service
           - ifs-application-host
+    environment:
+      JAVA_OPTS: ${WEB_JAVA_OPTS}
 
   data:
     build:
@@ -56,6 +58,8 @@ services:
         aliases:
           - data-service
           - ifs-data-service
+    environment:
+      JAVA_OPTS: ${DATA_JAVA_OPTS}
 
   mysql:
     image: mysql:5.5.49

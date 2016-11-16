@@ -181,11 +181,10 @@ public class CompetitionSetupController {
                     Optional.ofNullable(objectId)
                     )
             );
-
-            return this.createJsonObjectNode(errors.isEmpty(), errors);
+            return this.createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false, errors);
+            return this.createJsonObjectNode(false);
         }
     }
 
@@ -210,10 +209,10 @@ public class CompetitionSetupController {
         try {
             errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
 
-            return this.createJsonObjectNode(errors.isEmpty(), errors);
+            return this.createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false, errors);
+            return this.createJsonObjectNode(false);
         }
     }
 
@@ -374,17 +373,10 @@ public class CompetitionSetupController {
 
         return node;
     }
-
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
 
         return node;
     }

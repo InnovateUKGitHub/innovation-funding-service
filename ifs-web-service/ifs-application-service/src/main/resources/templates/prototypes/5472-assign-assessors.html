@@ -21,7 +21,7 @@
 
   <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate assessors'}, ${'competition closed'})" th:remove="tag" />
 
-	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
+	<p>Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=2" th:remove="tag" />
 
