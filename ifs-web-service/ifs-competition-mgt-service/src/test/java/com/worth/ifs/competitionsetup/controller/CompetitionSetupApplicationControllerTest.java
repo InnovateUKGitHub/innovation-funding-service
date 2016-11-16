@@ -5,10 +5,9 @@ import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,36 +57,50 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetCompetitionFinance() throws Exception {
+    public void testGetEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        mockMvc.perform(get(URL_PREFIX + "/question/finance"))
+        mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/finances"));
+                .andExpect(view().name("competition/finances"))
+                .andExpect(model().attribute("editable", true));
 
         verify(competitionService, never()).update(competition);
     }
 
     @Test
-    public void testPostCompetitionFinance() throws Exception {
+    public void testPostEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         final boolean fullApplicationFinance = true;
         final boolean includeGrowthTable = false;
-        mockMvc.perform(post(URL_PREFIX + "/question/finance")
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
                 .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"))
+                .andExpect(model().attribute("editable", false));
 
         ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
         verify(competitionService).update(argument.capture());
         assertThat(argument.getValue().isFullApplicationFinance(), equalTo(fullApplicationFinance));
         assertThat(argument.getValue().isIncludeGrowthTable(), equalTo(includeGrowthTable));
+    }
+
+    @Test
+    public void testViewCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/question/finance"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/finances"))
+                .andExpect(model().attribute("editable", false));
     }
 
     @Test
