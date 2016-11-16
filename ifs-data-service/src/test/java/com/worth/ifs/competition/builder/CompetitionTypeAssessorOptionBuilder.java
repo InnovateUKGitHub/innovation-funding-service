@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
 
 import java.util.List;
@@ -38,8 +39,8 @@ public class CompetitionTypeAssessorOptionBuilder extends BaseBuilder<Competitio
         return withArray((streamName, object) -> setField("assessorOptionName", streamName, object), optionNames);
     }
 
-    public CompetitionTypeAssessorOptionBuilder withCompetitionTypeId(Long... competitionTypeId) {
-        return withArray((streamName, object) -> setField("competitionTypeId", streamName, object), competitionTypeId);
+    public CompetitionTypeAssessorOptionBuilder withCompetitionType(CompetitionType... competitionType) {
+        return withArray((streamName, object) -> setField("competitionType", streamName, object), competitionType);
     }
 
     public CompetitionTypeAssessorOptionBuilder withAssessorOptionValue(Integer... optionValues) {

@@ -7,7 +7,10 @@ import com.worth.ifs.competition.resource.CompetitionTypeAssessorOptionResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
-    config = GlobalMapperConfig.class
+    config = GlobalMapperConfig.class,
+    uses = {
+            CompetitionTypeMapper.class,
+    }
 )
 public abstract class CompetitionTypeAssessorOptionMapper extends
         BaseMapper<CompetitionTypeAssessorOption, CompetitionTypeAssessorOptionResource, Long> {

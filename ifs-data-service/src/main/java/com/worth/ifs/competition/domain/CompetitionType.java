@@ -12,10 +12,8 @@ public class CompetitionType {
     private Boolean stateAid;
     private Boolean active;
 
-
-    @OneToMany(mappedBy="competitionType")
+    @OneToMany(mappedBy="competitionType",fetch=FetchType.LAZY)
     private List<Competition> competitions;
-
 
     public String getName() {
         return name;

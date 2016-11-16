@@ -4,7 +4,7 @@ public class CompetitionTypeAssessorOptionResource {
 
     private Long id;
 
-    private Long competitionTypeId;
+    private Long competitionType;
 
     private String assessorOptionName;
 
@@ -20,12 +20,12 @@ public class CompetitionTypeAssessorOptionResource {
         this.id = id;
     }
 
-    public Long getCompetitionTypeId() {
-        return competitionTypeId;
+    public Long getCompetitionType() {
+        return competitionType;
     }
 
-    public void setCompetitionTypeId(Long competitionTypeId) {
-        this.competitionTypeId = competitionTypeId;
+    public void setCompetitionType(Long competitionType) {
+        this.competitionType = competitionType;
     }
 
     public String getAssessorOptionName() {

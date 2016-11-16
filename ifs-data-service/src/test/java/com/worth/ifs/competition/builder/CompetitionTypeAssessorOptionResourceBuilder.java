@@ -38,8 +38,8 @@ public class CompetitionTypeAssessorOptionResourceBuilder extends BaseBuilder<Co
         return withArray((streamName, object) -> setField("assessorOptionName", streamName, object), optionNames);
     }
 
-    public CompetitionTypeAssessorOptionResourceBuilder withCompetitionTypeId(Long... competitionTypeId) {
-        return withArray((streamName, object) -> setField("competitionTypeId", streamName, object), competitionTypeId);
+    public CompetitionTypeAssessorOptionResourceBuilder withCompetitionType(Long... competitionType) {
+        return withArray((streamName, object) -> setField("competitionType", streamName, object), competitionType);
     }
 
     public CompetitionTypeAssessorOptionResourceBuilder withAssessorOptionValue(Integer... optionValues) {

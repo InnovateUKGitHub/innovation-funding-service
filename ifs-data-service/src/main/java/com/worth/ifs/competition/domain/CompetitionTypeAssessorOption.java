@@ -1,9 +1,6 @@
 package com.worth.ifs.competition.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class CompetitionTypeAssessorOption {
@@ -12,7 +9,9 @@ public class CompetitionTypeAssessorOption {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long competitionTypeId;
+    @ManyToOne
+    @JoinColumn(name="competitionTypeId", referencedColumnName="id")
+    private CompetitionType competitionType;
 
     private String assessorOptionName;
 
@@ -26,14 +25,6 @@ public class CompetitionTypeAssessorOption {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getCompetitionTypeId() {
-        return competitionTypeId;
-    }
-
-    public void setCompetitionTypeId(Long competitionTypeId) {
-        this.competitionTypeId = competitionTypeId;
     }
 
     public String getAssessorOptionName() {
@@ -58,5 +49,13 @@ public class CompetitionTypeAssessorOption {
 
     public void setDefaultOption(Boolean defaultOption) {
         this.defaultOption = defaultOption;
+    }
+
+    public CompetitionType getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(CompetitionType competitionType) {
+        this.competitionType = competitionType;
     }
 }
