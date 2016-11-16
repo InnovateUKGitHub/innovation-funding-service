@@ -34,39 +34,36 @@ Details of the competition are visible
 Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
-    ...              INFUND-4128
+    ...    INFUND-4128
     [Tags]
-    Then the user should see the text in the page    Pending
-    And the user should see the element    jQuery=a:contains("accept / reject assessment")
+    Given the user should see the text in the page    Pending
     When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
-    Then the user should see the text in the page    Accept application
+    And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
-    Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
+    Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
     And the status should update as Open
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
     ...
-    ...               INFUND-4128
+    ...    INFUND-4128
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=Juggling Craziness
-    Then the user should see the text in the page    Pending
-    And the user should see the element    jQuery=a:contains("accept / reject assessment")
-    When The user clicks the button/link    link=Juggling is fun
-    Then the user should see the text in the page    Accept application
+    And the user should see the text in the page    Pending
+    When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     Then the user should see an error    Please enter a reason
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=.button:contains("Reject")
-    Then the application for assessment should be removed
+    And the application for assessment should be removed
 
 Assessor can only make selection once
     [Documentation]    INFUND-1180
     [Tags]
     Then The user should not see the element    jQuery=a:contains("accept / reject assessment")
-    [Teardown]    Logout as user
 
 *** Keywords ***
 the status should update as Open
