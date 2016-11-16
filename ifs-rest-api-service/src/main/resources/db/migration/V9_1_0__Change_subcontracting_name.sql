@@ -1,1 +1,0 @@
-UPDATE `form_input_type` SET `title`='subcontracting' WHERE `id`='12';
