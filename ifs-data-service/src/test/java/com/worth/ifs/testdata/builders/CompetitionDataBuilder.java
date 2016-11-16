@@ -125,8 +125,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                             newFormInput.setCompetition(fi.getCompetition());
                             newFormInput.setDescription(fi.getDescription());
                             newFormInput.setFormInputType(fi.getFormInputType());
-                            newFormInput.setGuidanceAnswer(fi.getGuidanceQuestion());
-                            newFormInput.setGuidanceQuestion(fi.getGuidanceQuestion());
+                            newFormInput.setGuidanceAnswer(!isBlank(fi.getGuidanceAnswer()) ? fi.getGuidanceAnswer() : "Some guidance answer for assessor");
+                            newFormInput.setGuidanceQuestion(!isBlank(fi.getGuidanceQuestion()) ? fi.getGuidanceQuestion() : "Some guidance question for assessor");
                             newFormInput.setIncludedInApplicationSummary(fi.isIncludedInApplicationSummary());
                             newFormInput.setQuestion(q);
                             newFormInput.setScope(fi.getScope());

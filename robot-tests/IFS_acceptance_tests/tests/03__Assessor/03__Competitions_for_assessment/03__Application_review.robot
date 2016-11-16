@@ -227,18 +227,31 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(2)    £150
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(1) td:nth-child(3)    12%
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(4)    £0
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(5)    £0
-    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(6)    £150
+
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £${DEFAULT_INDUSTRIAL_OTHER_FUNDING_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(3)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £${DEFAULT_ACADEMIC_OTHER_FUNDING_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
+
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(2)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(3)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(4)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(5)    £${DEFAULT_ACADEMIC_OTHER_FUNDING_WITH_COMMAS}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(6)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(2)    £150
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(3)    £100
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(4)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(5)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(6)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £50
-    Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £385
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £276
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £2,985
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £550
