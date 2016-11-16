@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Upcoming competition'" th:remove="tag" />
+    </head>
+
+    <body th:with="context='assessment'" class="app-dashboard">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+            <div class="page-title">
+                <h1 class="heading-xlarge" th:text="|Upcoming competition '${model.competitionName}'|">Upcoming competition 'My Competition'</h1>
+            </div>
+
+            <p th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
+
+            <section class="boxed">
+                <!-- <h2 class="heading-medium no-margin"><span th:text="|${#temporals.day(model.assessmentPeriodDateFrom)} ${#temporals.monthName(model.assessmentPeriodDateFrom)}|" th:remove="tag" /> to <span th:text="|${#temporals.day(model.assessmentPeriodDateTo)} ${#temporals.monthName(model.assessmentPeriodDateTo)}|" th:remove="tag" />: Assessment period</h2> -->
+
+                <!-- <p>Assessment period for reading, scoring, providing written comments and submitting to our online service. Each assessor could receive up to 10 applications to assess. This depends on the application response. Our assessment fee for this competition is <span th:text="${model.assessmentFee}" th:remove="tag">&pound;100</span> per application.</p> -->
+
+                <!-- <p>The assessor briefing is mandatory. It will consist of a one hour webinar on <span th:text="${#temporals.day(model.assessmentBriefingDate)} ${#temporals.monthName(model.assessmentBriefingDate)} ${#temporals.year(model.assessmentBriefingDate)}" th:remove="tag">21 March 2017</span>.</p> -->
+            </section>
+
+            <section>
+                <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: My Competition</h2>
+                <!-- <p th:text="${model.competitionDescription}">Competition description</p> -->
+
+                <!-- <p><a href="#" rel="external">See competition brief</a></p> -->
+
+                <p>If you have any queries, please contact the competitions team <a href="mailto:competitions@innovateuk.gov.uk">competitions@innovateuk.gov.uk</a>.</p>
+            </section>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>

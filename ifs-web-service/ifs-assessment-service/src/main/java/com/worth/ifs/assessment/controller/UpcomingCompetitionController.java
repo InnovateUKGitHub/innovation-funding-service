@@ -23,6 +23,6 @@ public class UpcomingCompetitionController extends BaseController {
     public String upcomingCompetitionSummary(@PathVariable("id") final Long competitionId,
                                              final Model model) {
         model.addAttribute("model", upcomingCompetitionModelPopulator.populateModel(competitionId));
-        return "upcoming-competition";
+        return "assessor-competition-upcoming";
     }
 }
