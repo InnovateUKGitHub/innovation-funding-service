@@ -207,14 +207,6 @@ the user moves focus and waits for autosave
     sleep    500ms
     Wait For Autosave
 
-the user should not see the error any more
-    [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
-    Focus    jQuery=.button:contains("Done")
-    Wait for autosave
-    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    sleep    500ms
-
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
@@ -428,3 +420,11 @@ The user enters valid data in the initial details
 The user navigates to the Validation competition
     The user navigates to the page    ${SERVER}/management/dashboard/upcoming
     The user clicks the button/link    link=Validations Test
+
+the user should not see the error any more
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait for autosave
+    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    sleep    500ms
