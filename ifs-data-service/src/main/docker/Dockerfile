@@ -9,7 +9,7 @@ WORKDIR $JAVA_HOME
 RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
 WORKDIR /
 VOLUME /tmp
-ADD data-service-0.0.1-SNAPSHOT.jar app.jar
+ADD ifs-data-service-0.0.1-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx100m", "-jar", "/app.jar"]
 

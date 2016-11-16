@@ -4,14 +4,15 @@ if (project.hasProperty("profile")) {
     apply from: "docker-build.gradle"
 }
 
+apply plugin: 'war'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
 
-
-jar {
-    baseName = 'data-service'
+war {
+    baseName = 'ifs-data-service'
     version = '0.0.1-SNAPSHOT'
 }
+
 
 configurations {
     providedRuntime
@@ -113,11 +114,11 @@ test {
 
 task buildDocker( type:Docker, dependsOn: build) {
     push = false
-    applicationName = jar.baseName
+    applicationName = 'data-service'
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy{
-            from jar
+            from war
             into stageDir
         }
         copy{
@@ -212,6 +213,26 @@ artifacts {
     archives client
 }
 
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'ROOT.war'
+}
+
+
+watch {
+    java {
+        files files('src/main/java')
+        tasks 'client', 'clientCopy', 'deployToTomcat'
+    }
+
+    resources {
+        files files('src/main/resources')
+        tasks 'deployToTomcat'
+    }
+}
+
+
 //noinspection GroovyMissingReturnStatement
 processResources {
     filesMatching("*.properties") {
@@ -241,7 +262,7 @@ task startMySql(type:Exec) {
 
 task syncShib(type:Exec) {
     workingDir '../setup-files/scripts/docker'
-    commandLine './syncShib.sh'
+    commandLine './syncShibMicroservices.sh'
 }
 
 task upgradeShib(type:Exec) {
@@ -254,7 +275,26 @@ compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
+
+
 task cleanDeploy() {
+    build.mustRunAfter clean
+    clientCopy.mustRunAfter client
+    testCommonCode.mustRunAfter build
+    testCommonCode.mustRunAfter flywayMigrate
+    testCommonCodeCopy.mustRunAfter testCommonCode
+    deployToTomcat.mustRunAfter build
+
+    dependsOn clean
+    dependsOn build
+    dependsOn clientCopy
+    dependsOn testCommonCode
+    dependsOn testCommonCodeCopy
+    dependsOn deployToTomcat
+
+}
+
+task cleanDeployDocker() {
     buildDocker.mustRunAfter clean
     clientCopy.mustRunAfter client
     flywayClean.mustRunAfter buildDocker
@@ -271,6 +311,7 @@ task cleanDeploy() {
     dependsOn startMySql
     dependsOn flywayClean
     dependsOn flywayMigrate
+
 }
 
 

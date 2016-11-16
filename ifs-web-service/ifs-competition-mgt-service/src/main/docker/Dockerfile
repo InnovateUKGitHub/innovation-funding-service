@@ -5,7 +5,7 @@ EXPOSE 8080
 EXPOSE 8081
 EXPOSE 12345
 VOLUME /tmp
-ADD competition-management-service-0.0.1-SNAPSHOT.jar app.jar
+ADD management-0.0.1-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx150m", "-jar", "/app.jar"]
 HEALTHCHECK --interval=10s --timeout=5s \

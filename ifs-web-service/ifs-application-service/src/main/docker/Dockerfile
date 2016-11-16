@@ -6,7 +6,7 @@ EXPOSE 8081
 EXPOSE 9090
 EXPOSE 12345
 VOLUME /tmp
-ADD application-service-0.0.1-SNAPSHOT.jar app.jar
+ADD ifs-application-service-0.0.1-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx150m", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8081,suspend=n", "-jar", "/app.jar"]
 HEALTHCHECK --interval=10s --timeout=5s \

@@ -1,11 +1,19 @@
+bootRun {
+    addResources = false
+}
+
+
+apply plugin: 'war'
+
 configurations {
     providedRuntime
 }
 
-jar {
-    baseName = 'application-service'
+war {
+    baseName = 'ifs-application-service'
     version = '0.0.1-SNAPSHOT'
 }
+
 
 bootRepackage {
     mainClass = 'com.worth.ifs.Application'
@@ -25,20 +33,86 @@ dependencies {
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'ROOT.war'
+}
+
+task copyTemplatesInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/templates"
+    from 'src/main/resources/templates'
+}
+
+task copyCssInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/css"
+    from 'src/main/resources/static/css'
+}
+
+task copyJsInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/js/dest"
+    from 'src/main/resources/static/js/dest'
+}
+
+watch {
+    java {
+        files files('src/main/java')
+        tasks('deployToTomcat')
+    }
+
+    templates {
+        files files('src/main/resources/templates')
+        tasks 'copyTemplatesInPlace'
+    }
+
+    css {
+        files files('src/main/resources/static/css')
+        tasks 'copyCssInPlace'
+    }
+    js {
+        files files('src/main/resources/static/js/dest')
+        tasks 'copyJsInPlace'
+    }
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+
 task buildDocker( type:Docker, dependsOn: build) {
     push = false
-    applicationName = jar.baseName
+    applicationName = war.baseName.replaceAll(/ifs-/, "")
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy {
-            from jar
+            from war
             into stageDir
         }
     }
 }
 
-task cleanDeploy() {
+task cleanDeployDocker() {
     build.mustRunAfter clean
     dependsOn clean
+    dependsOn build
     dependsOn buildDocker
+}
+
+task cleanDeploy() {
+    inputs.dir 'src/main/java'
+    outputs.dir 'build/classes/main'
+    build.mustRunAfter clean
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
+    dependsOn deployToTomcat
 }
