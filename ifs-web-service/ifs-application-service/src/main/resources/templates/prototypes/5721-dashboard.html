@@ -31,49 +31,57 @@
 
   <div class="no-constrain-width justify-left">
 
-    <h2 class="heading-medium">Competition information</h2>
-
-    <dl class="standard-definition-list">
-      <dt>Competition type</dt>
-      <dd>Study of feasibility</dd>
-
-      <dt>Innovation sector</dt>
-      <dd>Health and life sciences</dd>
-
-      <dt>Innovation area</dt>
-      <dd>Health care</dd>
-
-      <dt>Funding available</dt>
-      <dd>&pound;250,000</dd>
-
-      <dt>Competition innovate lead</dt>
-      <dd>Mark Daily</dd>
-
-      <dt>Comp executive</dt>
-      <dd>Paul Ray</dd>
-    </dl>
-
-    <p>
-      <a href="#">Update competition</a>
-    </p>
-
-    <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-      <div class="grid-row extra-margin">
-        <div class="column-two-thirds">
-          <div class="highlight-panel">
-            <span class="heading-large">10</span><br />
-            Changes since last notification
-          </div>
-        </div>
-        <div class="column-third aligncentre">
-          <a href="#" class="button">Notify assessors</a>
-        </div>
-      </div>
-    </th:block>
-
     <div class="grid-row">
 
       <div class="column-two-thirds">
+
+        <div class="boxed">
+          <h2 class="heading-medium no-margin-top">Competition information</h2>
+
+          <dl class="standard-definition-list">
+            <dt>Competition type</dt>
+            <dd>Study of feasibility</dd>
+
+            <dt>Innovation sector</dt>
+            <dd>Health and life sciences</dd>
+
+            <dt>Innovation area</dt>
+            <dd>Health care</dd>
+
+            <dt>Funding available</dt>
+            <dd>&pound;250,000</dd>
+
+            <dt>Competition innovate lead</dt>
+            <dd>Mark Daily</dd>
+
+            <dt>Comp executive</dt>
+            <dd>Paul Ray</dd>
+          </dl>
+
+          <p>
+            <a href="#">Update competition</a>
+          </p>
+        </div>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
+          <div class="grid-row extra-margin">
+            <div class="column-third dashboard-actions">
+              <a href="#" class="button">Notify assessors</a>
+            </div>
+            <div class="column-third">
+              <div class="highlight-panel">
+                <span class="heading-large">10</span><br />
+                <small>Changes since last notification</small>
+              </div>
+            </div>
+            <div class="column-third">
+              <div class="highlight-panel">
+                <span class="heading-large">2</span><br />
+                <small>Days since last notification</small>
+              </div>
+            </div>
+          </div>
+        </th:block>
 
         <h2 class="heading-medium">Key statistics</h2>
 
@@ -228,7 +236,7 @@
 
       <div class="column-third">
 
-        <h2 class="heading-medium">Competition milestones</h2>
+        <h2 class="heading-medium extra-margin-top">Competition milestones</h2>
 
         <ul class="comp-timeline-status">
            <li class="done">

@@ -286,8 +286,9 @@ table{
 .dashboard-internal{
   .highlight-panel{
     padding: em(10) em(15) em(5) em(15);
-    min-height: 5em;
+    min-height: 80px;
     line-height: 1.1em;
+    box-sizing: border-box;
 
     @include media-down(mobile) {
       min-height: auto;
@@ -301,7 +302,8 @@ table{
 .dashboard-internal{
   .dashboard-actions{
     .button{
-      min-height: 3.5em;
+      padding: em(10) em(15) em(5) em(15);
+      min-height: 80px;
       display: block;
       width: 100%;
       margin-bottom: 30px;
