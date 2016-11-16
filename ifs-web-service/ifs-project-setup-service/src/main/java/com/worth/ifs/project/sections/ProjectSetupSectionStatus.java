@@ -34,12 +34,15 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus bankDetailsSectionStatus(final ProjectActivityStates bankDetails) {
-        if (bankDetails != null && bankDetails.equals(ProjectActivityStates.ACTION_REQUIRED)) {
-            return HOURGLASS;
-        } else if (bankDetails != null && bankDetails.equals(ProjectActivityStates.COMPLETE)) {
-            return TICK;
+        if (bankDetails != null) {
+            if (bankDetails.equals(ProjectActivityStates.PENDING)) {
+                return HOURGLASS;
+            } else if (bankDetails.equals(ProjectActivityStates.COMPLETE)) {
+                return TICK;
+            }
+            return FLAG;
         }
-        return FLAG;
+        return EMPTY;
     }
 
     public SectionStatus financeChecksSectionStatus(final boolean allBankDetailsApprovedOrNotRequired,

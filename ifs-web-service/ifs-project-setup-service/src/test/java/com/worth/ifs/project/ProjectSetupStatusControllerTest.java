@@ -46,7 +46,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
     private SectionStatus projectDetails = SectionStatus.FLAG;
     private SectionStatus monitoringDetails = SectionStatus.EMPTY;
-    private SectionStatus bankDetails = SectionStatus.FLAG;
+    private SectionStatus bankDetails = SectionStatus.EMPTY;
     private SectionStatus financeChecks = SectionStatus.EMPTY;
     private SectionStatus spendProfile = SectionStatus.EMPTY;
     private SectionStatus otherDocuments = SectionStatus.FLAG;
@@ -206,7 +206,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Arrays.asList("projectDetailsStatus", SectionStatus.TICK),
-                Arrays.asList("monitoringOfficerStatus", SectionStatus.TICK));
+                Arrays.asList("monitoringOfficerStatus", SectionStatus.TICK),
+                Arrays.asList("bankDetailsStatus", SectionStatus.EMPTY));
     }
 
     @Test
