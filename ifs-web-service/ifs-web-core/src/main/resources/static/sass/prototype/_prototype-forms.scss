@@ -95,6 +95,12 @@ select.form-control{
   }
 }
 
+select.form-control{
+  &.width-full{
+    width: 100%;
+  }
+}
+
 /*----- Inline form elements for academic finances ----*/
 
 .form-inline{
@@ -221,4 +227,10 @@ select.form-control{
   button{
     margin: 20px 0 0 0;
   }
+}
+
+
+/*----- Cell alignment ----*/
+.cell-align-top{
+  vertical-align: top;
 }

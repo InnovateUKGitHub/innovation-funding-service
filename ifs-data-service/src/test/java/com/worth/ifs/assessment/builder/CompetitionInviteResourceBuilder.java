@@ -5,6 +5,7 @@ import com.worth.ifs.Builder;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -33,6 +34,22 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
 
     public CompetitionInviteResourceBuilder withCompetitionName(Builder<String, ?> competitionName) {
         return withCompetitionName(competitionName.build());
+    }
+
+    public CompetitionInviteResourceBuilder withAcceptsDate(LocalDateTime... acceptsDates) {
+        return withArray((acceptsDate, inviteResource) -> inviteResource.setAcceptsDate(acceptsDate), acceptsDates);
+    }
+
+    public CompetitionInviteResourceBuilder withAcceptsDate(Builder<LocalDateTime, ?> acceptsDate) {
+        return withAcceptsDate(acceptsDate.build());
+    }
+
+    public CompetitionInviteResourceBuilder withDeadlineDate(LocalDateTime... deadlineDates) {
+        return withArray((deadlineDate, inviteResource) -> inviteResource.setDeadlineDate(deadlineDate), deadlineDates);
+    }
+
+    public CompetitionInviteResourceBuilder withDeadlineDate(Builder<LocalDateTime, ?> deadlineDate) {
+        return withDeadlineDate(deadlineDate.build());
     }
 
     public CompetitionInviteResourceBuilder withEmail(String... emails) {
