@@ -20,6 +20,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5911 Internal users should not have access to external users' pages
 ...
 ...               INFUND-3973 As a Project Finance team member I want to be able to export submitted spend profile tables so that these may be distributed offline to Lead Technologists and Monitoring Officers
+...
+...               INFUND-5441 As a Project Finance team member I want to be able to export submitted spend profile tables from academic organisations so that these may be distributed offline to Lead Technologists and Monitoring Officers
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -387,7 +389,7 @@ Comp Admin is able to see Spend Profile approval page
     Then the user should not see an error in the page
 
 Comp Admin can download the Spend Profile csv
-    [Documentation]  INFUND-3973
+    [Documentation]  INFUND-3973, INFUND-5875
     [Tags]
     Given the user navigates to the page       ${internal_spend_profile_approval}
     And the user should see the element        jQuery=h2:contains("Spend profile")
@@ -400,6 +402,7 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
     When the user clicks the button/link       link=EGGS-spend-profile.csv
     Then the user should not see an error in the page
+    #TODO update ticket along with INFND-6187
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
