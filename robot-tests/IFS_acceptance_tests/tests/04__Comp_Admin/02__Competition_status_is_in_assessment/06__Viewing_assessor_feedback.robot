@@ -2,13 +2,7 @@
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${successful_application_overview}    ${server}/application/16
@@ -36,12 +30,11 @@ Comp admin can view unsuccessful uploaded feedback
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
     Then the user should not see an error in the page
     And the user navigates to the page    ${unsuccessful_application_comp_admin_view}
-    [Teardown]    Logout as user
 
 Unsuccessful applicant can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]
-    [Setup]    guest user log-in    worth.email.test.two+fundfailure@gmail.com    Passw0rd
+    [Setup]    Log in as a different user    worth.email.test.two+fundfailure@gmail.com    Passw0rd
     Given the user navigates to the page    ${unsuccessful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
@@ -58,7 +51,7 @@ Unsuccessful applicant cannot remove the uploaded feedback
 Partner can view the uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
-    Given guest user log-in    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given Log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user navigates to the page    ${successful_application_overview}
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)

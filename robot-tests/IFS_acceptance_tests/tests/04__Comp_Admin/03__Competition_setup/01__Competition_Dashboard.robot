@@ -13,13 +13,7 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Live Competitions
@@ -75,7 +69,7 @@ PS projects status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     [Teardown]    The user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions

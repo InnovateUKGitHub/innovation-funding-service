@@ -11,6 +11,7 @@ import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
 import com.worth.ifs.project.validation.SpendProfileCostValidator;
+import com.worth.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
@@ -23,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
@@ -40,6 +40,7 @@ import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjec
 import static com.worth.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
@@ -120,6 +121,38 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
+    }
+
+    @Test
+    public void testProjectManagerViewSpendProfile() throws Exception {
+        long organisationId = 1L;
+
+        ProjectResource projectResource = newProjectResource().withId(123L).withApplication(456L).build();
+        List<ProjectUserResource> projectUserResources = newProjectUserResource()
+                .withUser(1L)
+                .withRoleName(UserRoleType.PROJECT_MANAGER)
+                .withOrganisation(organisationId)
+                .build(1);
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
+                .withId(1L)
+                .withName("abc")
+                .build(1);
+        SpendProfileResource spendProfileResource = newSpendProfileResource().build();
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_MANAGER).build(1);
+        loggedInUser.setRoles(roleResources);
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
+        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
+
+        when(projectFinanceService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
+
+        ProjectSpendProfileProjectManagerViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations);
+
+        mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/spend-profile-review"))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andReturn();
     }
 
     @Test
@@ -212,7 +245,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Test
     public void editSpendProfileSuccess() throws Exception {
 
-        Long organisationId = 123L;
+        Long organisationId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -239,32 +272,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("project/spend-profile"));
     }
 
-    @Test
-    public void testProjectManagerViewSpendProfile() throws Exception {
-        long projectId = 123L;
-        long organisationId = 1L;
-
-        ProjectResource projectResource = newProjectResource().withId(123L).build();
-        List<ProjectUserResource> projectUserResources = newProjectUserResource()
-                .withUser(1L)
-                .withRoleName(UserRoleType.PROJECT_MANAGER)
-                .build(1);
-        OrganisationResource organisationResource = newOrganisationResource().withId(1L).build();
-        SpendProfileResource spendProfileResource = newSpendProfileResource().build();
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_MANAGER).build(1);
-        loggedInUser.setRoles(roleResources);
-        when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
-        when(projectFinanceService.getSpendProfile(projectId, organisationId)).thenReturn(Optional.of(spendProfileResource));
-
-        MvcResult result = mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/spend-profile-review"))
-                .andReturn();
-    }
-
-
-
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {
 
         SpendProfileTableResource expectedTable = new SpendProfileTableResource();
@@ -278,14 +285,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         ));
 
         expectedTable.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("100"),
-                "Materials", new BigDecimal("150"),
-                "Other costs", new BigDecimal("55")));
+                1L, new BigDecimal("100"),
+                2L, new BigDecimal("150"),
+                3L, new BigDecimal("55")));
 
         expectedTable.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
 
         List<LocalDate> months = IntStream.range(0, projectResource.getDurationInMonths().intValue()).mapToObj(projectResource.getTargetStartDate()::plusMonths).collect(toList());
@@ -296,6 +303,22 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         return expectedTable;
     }
 
+    private ProjectSpendProfileProjectManagerViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations) {
+
+        Map<String, Boolean> partnersSpendProfileProgress = new HashMap<>();
+        partnersSpendProfileProgress.put("abc", false);
+
+        Map<String, Boolean> editablePartners = new HashMap<>();
+        editablePartners.put("abc", false);
+
+        return new ProjectSpendProfileProjectManagerViewModel(projectResource.getId(),
+                projectResource.getApplication(), projectResource.getName(),
+                partnersSpendProfileProgress,
+                partnerOrganisations,
+                projectResource.getSpendProfileSubmittedDate() != null,
+                editablePartners);
+    }
+
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource, SpendProfileTableResource expectedTable) {
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
@@ -303,17 +326,24 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .withName("Org1")
                 .build();
 
+        List<ProjectUserResource> projectUsers = newProjectUserResource()
+                .withUser(1L)
+                .withOrganisation(1L)
+                .withRoleName(PARTNER)
+                .build(1);
+
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();
 
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
         // Build the expectedCategoryToActualTotal map based on the input
-        Map<String, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
-        expectedCategoryToActualTotal.put("Labour", new BigDecimal("100"));
-        expectedCategoryToActualTotal.put("Materials", new BigDecimal("180"));
-        expectedCategoryToActualTotal.put("Other costs", new BigDecimal("55"));
+        Map<Long, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
+        expectedCategoryToActualTotal.put(1L, new BigDecimal("100"));
+        expectedCategoryToActualTotal.put(2L, new BigDecimal("180"));
+        expectedCategoryToActualTotal.put(3L, new BigDecimal("55"));
 
         // Expected total for each month based on the input
         List<BigDecimal> expectedTotalForEachMonth = asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100"));
@@ -325,7 +355,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

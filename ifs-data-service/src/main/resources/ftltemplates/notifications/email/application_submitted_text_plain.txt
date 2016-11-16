@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+Congratulations, you have successfully submitted an application for funding to Innovate UK's ${competitionName} competition.
+
+<#assign endDate = assesmentEndDate?datetime.iso>You will be notified via e-mail of the result by ${endDate?string["hh:mma dd-MM-yyyy"]}.
+
+If you have any queries with your submission please contact our customer support services at support@innovateuk.gov.uk or 0300 321 4357.
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

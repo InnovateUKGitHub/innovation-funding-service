@@ -2,12 +2,14 @@ package com.worth.ifs.project.status.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.project.builder.PartnerOrganisationBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -36,6 +38,7 @@ import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -198,8 +201,10 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         Role role = newRole().build();
         ProcessRole processRole = newProcessRole().withRole(role).build();
         Application application = newApplication().withProcessRoles(processRole).build();
-        Project project = newProject().withId(projectId).withApplication(application).build();
+
         Organisation organisation = newOrganisation().build();
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
+        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).build();
         BankDetails bankDetail = newBankDetails().withProject(project).build();
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
@@ -213,10 +218,20 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
         assertTrue(result.isSuccess());
-        assertEquals(project.getName(), result.getSuccessObject().getProjectTitle());
-        assertEquals(project.getId(), result.getSuccessObject().getProjectNumber());
-        assertEquals(Integer.valueOf(1), result.getSuccessObject().getNumberOfPartners());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);

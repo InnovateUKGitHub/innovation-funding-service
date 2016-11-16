@@ -51,7 +51,7 @@
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                 </small>
               </th>
-              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" />
+              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                         th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
@@ -78,9 +78,23 @@
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
                         th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" />
 
-              <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})"/>
+
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetter}"
+                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" th:with="url=${''}" />
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetter}"
+                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" />
+
           </tr>
         </tbody>
+        <tfoot class="bank-export">
+          <tr th:if="${model.canExportBankDetails}">
+            <td colspan="3"></td>
+            <td class="aligncentre">
+              <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}">Export all bank details</a>
+            </td>
+            <td colspan="4"></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

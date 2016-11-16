@@ -8,12 +8,7 @@ Documentation     INFUND-399: As a client, I would like to demo the system with 
 ...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Log-out
@@ -49,7 +44,8 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO INFUND-5990  Assessor bin slow in building
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -81,15 +77,16 @@ Valid login as Project Finance role
 Reset password
     [Documentation]    INFUND-1889
     [Tags]    Email    HappyPath
-    [Setup]    Run Keywords    delete the emails from the main test mailbox
+    [Setup]    Run Keywords    delete the emails from the default test mailbox
     ...    AND    the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user opens the mailbox and clicks the reset link    worth.email.test+changepsw@gmail.com
+    And the user reads his email from the default mailbox and clicks the link    worth.email.test+changepsw@gmail.com    Reset your password    If you didn't request this
     And the user should see the text in the page    Password reset
+    # TODO INFUND-5582
 
 Reset password validations
     [Documentation]    INFUND-1889
@@ -98,6 +95,7 @@ Reset password validations
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see an error    Passwords must match
+    # TODO INFUND-5582
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
@@ -115,6 +113,7 @@ Reset password user enters new psw
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
+    # TODO INFUND-5582
 
 *** Keywords ***
 the user is not logged-in

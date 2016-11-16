@@ -9,12 +9,7 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 Suite Setup       Delete the emails from both test mailboxes
 Test Teardown     The user closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
@@ -53,7 +48,7 @@ Non registered users CH route (email step)
     ...    INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+${unique_email_number}@gmail.com
+    Given the user reads his email and clicks the link    ${test_mailbox_one}+${unique_email_number}@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
@@ -104,7 +99,7 @@ Non registered users non CH route (email step)
     ...    INFUND-1920
     [Tags]    Email    HappyPath
     [Setup]    The guest user opens the browser
-    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+2@gmail.com
+    Given the user reads his email and clicks the link    ${test_mailbox_one}+2@gmail.com    Please verify your email address    If you did not request an account with us
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
@@ -140,19 +135,18 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
+    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
-    [Tags]    Email    Pending
+    [Tags]    Email
     [Setup]    The guest user opens the browser
-    # TODO Pending ongoing work on the project finance role
-    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+project.finance1@gmail.com
+    Given the user reads his email from the default mailbox and clicks the link    worth.email.test+project.finance1@gmail.com    Please verify your email address    If you did not request an account with us
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
+    Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
     [Teardown]    Logout as user
 
 *** Keywords ***

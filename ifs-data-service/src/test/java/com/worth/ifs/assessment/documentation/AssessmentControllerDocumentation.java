@@ -3,16 +3,19 @@ package com.worth.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.AssessmentController;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
-import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.assessment.documentation.ApplicationRejectionDocs.applicationRejectionResourceBuilder;
+import static com.worth.ifs.assessment.documentation.ApplicationRejectionDocs.applicationRejectionResourceFields;
+import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceBuilder;
+import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceFields;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
@@ -23,10 +26,10 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
 
@@ -38,7 +41,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Before
-    public void setup(){
+    public void setup() {
         this.document = document("assessment/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
@@ -51,6 +54,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}", assessmentId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the assessment that is being requested")
@@ -68,6 +72,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
 
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("userId").description("Id of the user whose assessments are being requested"),
@@ -82,44 +87,53 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void recommend() throws Exception {
         Long assessmentId = 1L;
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcome("yes")
-                .withDescription("Decision feedback that will be sent to the applicant")
-                .withComment("Other comments about this application")
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
+        AssessmentFundingDecisionResource assessmentFundingDecision = assessmentFundingDecisionResourceBuilder.build();
 
-        when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecision)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId, processOutcome)
+        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(processOutcome)))
+                .content(new ObjectMapper().writeValueAsString(assessmentFundingDecision)))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to recommend")
-                        )
+                        ),
+                        requestFields(assessmentFundingDecisionResourceFields)
                 ));
     }
 
     @Test
     public void reject() throws Exception {
         Long assessmentId = 1L;
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withDescription("Conflict of interest")
-                .withComment("Own company")
-                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
-                .build();
+        ApplicationRejectionResource applicationRejection = applicationRejectionResourceBuilder.build();
 
-        when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.rejectInvitation(assessmentId, applicationRejection)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId, processOutcome)
+        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(processOutcome)))
+                .content(new ObjectMapper().writeValueAsString(applicationRejection)))
+                .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to reject")
-                        )
+                        ),
+                        requestFields(applicationRejectionResourceFields)
                 ));
     }
 
+    @Test
+    public void accept() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the assessment for which to accept")
+                        )
+                ));
+    }
 }

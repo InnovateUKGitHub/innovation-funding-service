@@ -13,11 +13,12 @@ import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.contract.service.ContractService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.FinanceRowRestService;
@@ -121,6 +122,8 @@ public class BaseUnitTest {
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
+    public ContractService contractService;
+    @Mock
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
@@ -188,6 +191,7 @@ public class BaseUnitTest {
     public ProjectStatusService projectStatusServiceMock;
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
+
     @Spy
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;

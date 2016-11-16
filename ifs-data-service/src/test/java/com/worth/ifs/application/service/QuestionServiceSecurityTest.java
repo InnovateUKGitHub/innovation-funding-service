@@ -130,6 +130,18 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     }
 
     @Test
+    public void testGetQuestionByIdAndAssessmentId() {
+        Long questionId = 1L;
+        Long assessmentId = 2L;
+
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getQuestionByIdAndAssessmentId(questionId, assessmentId),
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void testGetQuestionsByAssessmentId() {
         Long assessmentId = 1L;
 
@@ -257,6 +269,11 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
 		@Override
         public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
             return null;
         }
 

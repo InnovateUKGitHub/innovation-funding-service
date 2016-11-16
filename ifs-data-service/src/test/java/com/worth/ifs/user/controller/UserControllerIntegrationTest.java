@@ -2,11 +2,14 @@ package com.worth.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.ContractRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
 import org.junit.Ignore;
@@ -18,11 +21,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ContractBuilder.newContract;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.lang.Boolean.TRUE;
@@ -45,6 +53,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     protected void setControllerUnderTest(UserController controller) {
         this.controller = controller;
     }
+
+    @Autowired
+    private ContractRepository contractRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -214,6 +225,31 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
     }
 
+    @Test
+    public void testUpdateProfileContract() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        // Save a contract as the current contract
+        contractRepository.deleteAll();
+        Contract contract = contractRepository.save(newContract()
+                .with(id(null))
+                .withCurrent(Boolean.TRUE)
+                .withText("Contract text...")
+                .withAnnexA("Annex one text...")
+                .withAnnexB("Annex two text...")
+                .withAnnexC("Annex three text...")
+                .build());
+
+        RestResult<Void> restResult = controller.updateProfileContract(userId);
+        assertTrue(restResult.isSuccess());
+
+        User userAfterUpdate = userRepository.findOne(userId);
+        assertEquals(contract, userAfterUpdate.getProfile().getContract());
+    }
+
     @Ignore("TODO DW - INFUND-936 - this test will cause issues when not running Shib or on an environment like Bamboo where no Shib is available")
     @Test
     public void testCreateLeadApplicant() {
@@ -295,5 +331,89 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(2, getAfterUpdateResponse.size());
         assertEquals(PROFESSIONAL, getAfterUpdateResponse.get(0).getAffiliationType());
         assertEquals(FAMILY_FINANCIAL, getAfterUpdateResponse.get(1).getAffiliationType());
+    }
+
+    @Test
+    public void testGetProfileDetails() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        Address address = newAddress()
+                .with(id(null))
+                .withAddressLine1("10 Test St")
+                .withTown("Test Town")
+                .build();
+
+        user.setProfile(newProfile()
+                .with(id(null))
+                .withAddress(address)
+                .build());
+        userRepository.save(user);
+
+        UserProfileResource response = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        assertEquals(address.getAddressLine1(), response.getAddress().getAddressLine1());
+        assertEquals(address.getTown(), response.getAddress().getTown());
+    }
+
+    @Test
+    public void testUpdateProfileDetails() {
+        loginPaulPlum();
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        user.setPhoneNumber("12345678");
+        user.setDisability(Disability.NO);
+        userRepository.save(user);
+
+        UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        assertEquals("12345678", saveResponse.getPhoneNumber());
+        assertEquals(Disability.NO, saveResponse.getDisability());
+
+        UserProfileResource profileDetails = newUserProfileResource()
+                .withEthnicity(newEthnicityResource().build())
+                .withDisability(Disability.YES)
+                .withPhoneNumber("87654321")
+                .build();
+
+        RestResult<Void> restResult = controller.updateUserProfile(userId, profileDetails);
+        assertTrue(restResult.isSuccess());
+
+        UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        assertEquals("87654321", updateResponse.getPhoneNumber());
+        assertEquals(Disability.YES, updateResponse.getDisability());
+    }
+
+    @Test
+    public void testGetUserProfileStatus() {
+        loginPaulPlum();
+
+        User user = userRepository.findOne(getPaulPlum().getId());
+        Long userId = user.getId();
+
+        user.setAffiliations(newAffiliation()
+                .withId(null, null)
+                .withAffiliationType(EMPLOYER, FAMILY)
+                .withUser(user, user)
+                .withExists(true, false)
+                .build(2));
+        user.setProfile(newProfile()
+                .with(id(null))
+                .withSkillsAreas("java developer")
+                .withContractSignedDate(LocalDateTime.now())
+                .build());
+        userRepository.save(user);
+        flushAndClearSession();
+
+        UserProfileStatusResource profileStatus = controller.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+
+        UserProfileStatusResource expectedUserProfileStatus = newUserProfileStatusResource()
+                .withUser(user.getId())
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withContractComplete(true)
+                .build();
+        assertEquals(expectedUserProfileStatus, profileStatus);
     }
 }

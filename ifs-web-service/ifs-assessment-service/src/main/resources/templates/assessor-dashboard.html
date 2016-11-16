@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor dashboard'" th:remove="tag" />
 </head>
 
     <body th:with="context='assessment'" class="assessor-dashboard">
@@ -12,7 +12,24 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
             <div class="page-title">
-                <h1 class="heading-xlarge">Assessor Dashboard</h1>
+                <h1 class="heading-xlarge">Assessor dashboard</h1>
+            </div>
+
+            <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
+                <h2 class="heading-small no-margin">Complete your assessor account</h2>
+
+                <p>You must complete your profile before we can assign you applications.</p>
+                <ul class="list-bullet extra-margin-top">
+                    <li th:unless="${model.profileStatus.skillsComplete}">
+                        <a th:href="@{/profile/skills}">your skills</a>
+                    </li>
+                    <li th:unless="${model.profileStatus.affiliationsComplete}">
+                        <a th:href="@{/profile/declaration}">your declaration of interest</a>
+                    </li>
+                    <li th:unless="${model.profileStatus.contractComplete}">
+                        <a th:href="@{/profile/terms}">your contract</a>
+                    </li>
+                </ul>
             </div>
 
             <div class="my-applications">
@@ -29,8 +46,8 @@
 
                                 <div class="column-half">
                                     <div class="competition-deadline">
-                                        <div class="day" th:text="${#temporals.day(activeCompetition.deadline)}" />
-                                        <div class="month" th:text="|${#temporals.monthName(activeCompetition.deadline)} deadline|" />
+                                        <div class="day" th:text="${#temporals.day(activeCompetition.submitDeadline)}" />
+                                        <div class="month" th:text="|${#temporals.monthName(activeCompetition.submitDeadline)} deadline|" />
                                     </div>
 
                                     <div th:include="fragments/elements :: pie" th:with="daysPercentage=${activeCompetition.daysLeftPercentage},daysLeft=${activeCompetition.daysLeft}" th:remove="tag" />
@@ -56,9 +73,9 @@
                                 <div class="application-status invite">
                                     <p class="subtitle no-margin">Assessment period:</p>
                                     <p class="heading-small no-margin">
-                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentStartDate)} ${#temporals.monthName(upcomingCompetition.assessmentStartDate)}|" th:remove="tag" />
+                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|" th:remove="tag" />
                                         to
-                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentEndDate)} ${#temporals.monthName(upcomingCompetition.assessmentEndDate)}|" th:remove="tag" />
+                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateTo)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateTo)}|" th:remove="tag" />
                                     </p>
                                 </div>
                             </div>
@@ -69,11 +86,9 @@
 
             <h2 class="heading-medium">Your profile</h2>
             <ul class="list-bullet">
-
-                    <!--
-                    TODO INFUND-1480 Introduce view to edit Basic Details
+                <li>
                     <a th:href="@{/profile/details}">Your details</a>
-                    -->
+                </li>
                 <li>
                     <a th:href="@{/profile/skills}">Your skills</a>
                 </li>

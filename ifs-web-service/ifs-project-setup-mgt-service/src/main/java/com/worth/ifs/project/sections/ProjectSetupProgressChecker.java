@@ -33,11 +33,15 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isSpendProfileSubmitted() {
+        return ACTION_REQUIRED.equals(projectStatus.getSpendProfileStatus());
+    }
+
+    public boolean isSpendProfileApproved() {
         return COMPLETE.equals(projectStatus.getSpendProfileStatus());
     }
 
     public boolean isOtherDocumentsSubmitted() {
-        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
+        return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
     }
 
     public boolean isOrganisationRequiringFunding() {
@@ -50,5 +54,9 @@ class ProjectSetupProgressChecker {
 
     public boolean isFinanceChecksSubmitted() {
         return COMPLETE.equals(projectStatus.getFinanceChecksStatus());
+    }
+
+    public boolean isGrantOfferLetterSubmitted() {
+        return ACTION_REQUIRED.equals(projectStatus.getGrantOfferLetterStatus());
     }
 }

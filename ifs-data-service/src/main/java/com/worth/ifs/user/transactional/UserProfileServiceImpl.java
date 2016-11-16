@@ -1,18 +1,23 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.domain.Profile;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
+import com.worth.ifs.user.mapper.ContractMapper;
+import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.UserMapper;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.repository.ContractRepository;
+import com.worth.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
@@ -35,10 +40,25 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private UserMapper userMapper;
 
     @Autowired
+    private ContractRepository contractRepository;
+
+    @Autowired
+    private ContractMapper contractMapper;
+
+    @Autowired
     private AffiliationMapper affiliationMapper;
 
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private EthnicityMapper ethnicityMapper;
+
+    private Clock clock = Clock.systemDefaultZone();
+
+
     public enum ServiceFailures {
-        UNABLE_TO_UPDATE_USER
+        UNABLE_TO_UPDATE_USER;
     }
 
     @Override
@@ -62,10 +82,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
-        if (user.getProfile() == null) {
-            user.setProfile(new Profile(user));
-        }
-
+        setUserProfileIfNoneExists(user);
         Profile profile = user.getProfile();
 
         profile.setBusinessType(profileSkills.getBusinessType());
@@ -74,6 +91,42 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         userRepository.save(user);
 
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user ->
+                        getCurrentContract().andOnSuccess(currentContract -> {
+                            Profile profile = user.getProfile();
+                            boolean hasAgreement = profile != null && profile.getContract() != null;
+                            boolean hasCurrentAgreement = hasAgreement && currentContract.getId().equals(profile.getContract().getId());
+                            ProfileContractResource profileContract = new ProfileContractResource();
+                            profileContract.setUser(user.getId());
+                            profileContract.setContract(contractMapper.mapToResource(currentContract));
+                            profileContract.setCurrentAgreement(hasCurrentAgreement);
+                            if (hasCurrentAgreement) {
+                                profileContract.setContractSignedDate(profile.getContractSignedDate());
+                            }
+                            return serviceSuccess(profileContract);
+                        })
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileContract(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    setUserProfileIfNoneExists(user);
+                    return getCurrentContract().andOnSuccess(currentContract ->
+                            validateContract(currentContract, user).andOnSuccess(() -> {
+                                user.getProfile().setContractSignedDate(LocalDateTime.now(clock));
+                                user.getProfile().setContract(currentContract);
+                                userRepository.save(user);
+                                return serviceSuccess();
+                            })
+                    );
+                });
     }
 
     @Override
@@ -107,12 +160,110 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    @Override
+    public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> {
+                    UserProfileResource profileDetails = assignUserProfileDetails(user);
+
+                    if (user.getProfile() != null) {
+                        profileDetails.setAddress(addressMapper.mapToResource(user.getProfile().getAddress()));
+                    }
+                    return serviceSuccess(profileDetails);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
+    }
+
+    private ServiceResult<Void> updateUserProfileDetails(User user, UserProfileResource profileDetails) {
+        updateBasicDetails(user, profileDetails);
+
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile());
+        }
+
+        Profile profile = user.getProfile();
+        profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
+        userRepository.save(user);
+
+        return serviceSuccess();
+    }
+
+    private void updateBasicDetails(User user, UserProfileResource profileDetails) {
+        user.setTitle(profileDetails.getTitle());
+        user.setFirstName(profileDetails.getFirstName());
+        user.setLastName(profileDetails.getLastName());
+        user.setGender(profileDetails.getGender());
+        user.setDisability(profileDetails.getDisability());
+        user.setEthnicity(ethnicityMapper.mapIdToDomain(profileDetails.getEthnicity().getId()));
+        user.setPhoneNumber(profileDetails.getPhoneNumber());
+    }
+
+    private UserProfileResource assignUserProfileDetails(User user) {
+        UserProfileResource profile = new UserProfileResource();
+
+        profile.setUser(user.getId());
+        profile.setTitle(user.getTitle());
+        profile.setFirstName(user.getFirstName());
+        profile.setLastName(user.getLastName());
+        profile.setGender(user.getGender());
+        profile.setDisability(user.getDisability());
+        profile.setEthnicity(ethnicityMapper.mapToResource(user.getEthnicity()));
+        profile.setEmail(user.getEmail());
+        profile.setPhoneNumber(user.getPhoneNumber());
+
+        return profile;
+    }
+
+
+    @Override
+    public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
+        return getUser(userId).andOnSuccess(this::getProfileStatusForUser);
+    }
+
+    private ServiceResult<UserProfileStatusResource> getProfileStatusForUser(User user) {
+        Profile profile = user.getProfile();
+        return serviceSuccess(
+                new UserProfileStatusResource(
+                        user.getId(),
+                        profile != null && profile.getSkillsAreas() != null,
+                        user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
+                        profile != null && profile.getContractSignedDate() != null
+                )
+        );
+    }
+
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
+        existingUserResource.setGender(updatedUserResource.getGender());
+        existingUserResource.setDisability(updatedUserResource.getDisability());
+        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> validateContract(Contract contract, User user) {
+        if (user.getProfile().getContract() != null && contract.getId().equals(user.getProfile().getContract().getId())) {
+            return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
+        }
+        return serviceSuccess();
+    }
+
+
+    private void setUserProfileIfNoneExists(User user) {
+        if (user.getProfile() == null) {
+            user.setProfile(new Profile());
+        }
+    }
+
+    private ServiceResult<Contract> getCurrentContract() {
+        return find(contractRepository.findByCurrentTrue(), notFoundError(Contract.class));
     }
 }

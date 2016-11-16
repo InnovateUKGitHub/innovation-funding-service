@@ -7,12 +7,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Mark as complete with empty other funding row should be impossible
@@ -44,6 +39,7 @@ Other funding server side
     And the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    And the user marks the finances as complete
     Then the user should see an error    Funding source cannot be blank
     And the user should see an error    This field cannot be left blank
     And the user should see an error    This field should be 1 or higher
@@ -86,9 +82,11 @@ Labour server side
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     And the user marks the finances as complete
-    Then the user should see an error    This field should be 365 or lower
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    This field should be 1 or higher
+    Then the user should see an error       This field should be 1 or higher
+    And the user should see an error        This field cannot be left blank
+    Then the user should see the element    jQuery=.error-summary-list li:contains("This field should be 365 or lower")
+    And the user should see the element     jQuery=.error-summary-list li:contains("This field should be 1 or higher")
+    And the user should see the element     jQuery=.error-summary-list li:contains("This field cannot be left blank")
     And the user should see the element    css=.error-summary-list
     [Teardown]    Run keywords    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    21
     ...    AND    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
@@ -102,7 +100,7 @@ Admin costs client side
     When the user enters text to a text field    css=[id$="customRate"]    101
     Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    12121212121212121212121212
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits    You must enter a value less than 10 digits    #Entered two times the same error because this keyword expects two errors
+    Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    -1
     Then the user gets the expected validation errors    This field should be 1 or higher    This field should be 1 or higher    #Entered two times the same error because this keyword expects two errors
 
@@ -211,7 +209,7 @@ Travel and subsistence client side
     Then the user gets the expected validation errors    This field cannot be left blank    You must enter a value less than 10 digits
     And the user should see an error    This field should be 1 or higher
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
+    And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    13123232134234234234234234423
     Then the user gets the expected validation errors    This field cannot be left blank    You must enter a value less than 20 digits
     And the user should see an error    This field should be 1 or higher
@@ -313,7 +311,7 @@ Remove row
 
 The user gets the expected validation errors
     [Arguments]    ${ERROR1}    ${ERROR2}
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Save and return to application overview")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
     And the user should see an error    ${ERROR2}

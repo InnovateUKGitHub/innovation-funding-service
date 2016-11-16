@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -120,7 +121,7 @@ public class UserController {
                         tokenService.handleExtraAttributes(token);
                         tokenService.removeToken(token);
                     });
-                    return RestResult.restSuccess();
+                    return restSuccess();
                 });
     }
 
@@ -156,15 +157,25 @@ public class UserController {
         return userProfileService.updateDetails(userResource).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{id}/getProfileSkills", method = GET)
-    public RestResult<ProfileSkillsResource> getProfileSkills(@PathVariable("id") Long id) {
-        return userProfileService.getProfileSkills(id).toGetResponse();
+    @RequestMapping(value = "/id/{userId}/getProfileSkills", method = GET)
+    public RestResult<ProfileSkillsResource> getProfileSkills(@PathVariable("userId") Long userId) {
+        return userProfileService.getProfileSkills(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{id}/updateProfileSkills", method = PUT)
-    public RestResult<Void> updateProfileSkills(@PathVariable("id") Long id,
-                                          @RequestBody ProfileSkillsResource profileSkills) {
+    @RequestMapping(value = "/id/{userId}/updateProfileSkills", method = PUT)
+    public RestResult<Void> updateProfileSkills(@PathVariable("userId") Long id,
+                                                @RequestBody ProfileSkillsResource profileSkills) {
         return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/getProfileContract", method = GET)
+    public RestResult<ProfileContractResource> getProfileContract(@PathVariable("userId") Long userId) {
+        return userProfileService.getProfileContract(userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/updateProfileContract", method = PUT)
+    public RestResult<Void> updateProfileContract(@PathVariable("userId") Long userId) {
+        return userProfileService.updateProfileContract(userId).toPutResponse();
     }
 
     @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)
@@ -176,5 +187,21 @@ public class UserController {
     public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
                                                    @RequestBody List<AffiliationResource> affiliations) {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/getUserProfile", method = GET)
+    public RestResult<UserProfileResource> getUserProfile(@PathVariable("userId") Long userId) {
+        return userProfileService.getUserProfile(userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/updateUserProfile", method = PUT)
+    public RestResult<Void> updateUserProfile(@PathVariable("userId") Long userId,
+                                              @RequestBody UserProfileResource profileDetails) {
+        return userProfileService.updateUserProfile(userId, profileDetails).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{userId}/profileStatus", method = GET)
+    public RestResult<UserProfileStatusResource> getUserProfileStatus(@PathVariable("userId") Long userId) {
+        return userProfileService.getUserProfileStatus(userId).toGetResponse();
     }
 }

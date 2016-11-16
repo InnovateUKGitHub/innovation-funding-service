@@ -5,8 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,12 +15,14 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
@@ -308,6 +309,44 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testUsersCanViewTheirOwnProfileSkills() {
+        UserResource user = newUserResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkills, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkills, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileContract() {
+        UserResource user = newUserResource().build();
+        ProfileContractResource profileContract = newProfileContractResource()
+                .withUser(user.getId())
+                .build();
+        assertTrue(rules.usersCanViewTheirOwnProfileContract(profileContract, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileContractButAttemptingToViewAnotherUsersProfileContract() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        ProfileContractResource profileContract = newProfileContractResource()
+                .withUser(user.getId())
+                .build();
+        assertFalse(rules.usersCanViewTheirOwnProfileContract(profileContract, anotherUser));
+    }
+
+    @Test
     public void testUsersCanViewTheirOwnAffiliations() {
         UserResource user = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
@@ -317,7 +356,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToUpdateAnotherUsersAffiliation() {
+    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToViewAnotherUsersAffiliation() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
@@ -327,16 +366,17 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanUpdateTheirAffiliations() {
+    public void testUsersCanViewTheirOwnDetails() {
         UserResource user = newUserResource().build();
-        assertTrue(rules.usersCanUpdateTheirOwnAffiliations(user, user));
+        UserProfileResource userDetails = newUserProfileResource().withUser(user.getId()).build();
+        assertTrue(rules.usersCanViewTheirOwnProfile(userDetails, user));
     }
 
     @Test
-    public void testUsersCanUpdateTheirAffiliationsButAttemptingToUpdateAnotherUsersProfile() {
-        UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.usersCanUpdateTheirOwnAffiliations(anotherUser, user));
+    public void testUsersCanViewTheirOwnDetailsButNotAnotherUsersDetails() {
+        UserResource anotherUser = newUserResource().withId(1L).build();
+        UserProfileResource userDetails = newUserProfileResource().withUser(2L).build();
+        assertFalse(rules.usersCanViewTheirOwnProfile(userDetails, anotherUser));
     }
 
     @Test
@@ -344,6 +384,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanChangeTheirOwnPassword(user, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileStatus() {
+        UserResource user = newUserResource().build();
+        UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
+        assertTrue(rules.usersCanViewTheirOwnProfileStatus(userProfileStatus, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
+        UserResource user = newUserResource().withId(1L).build();
+        UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
+        assertFalse(rules.usersCanViewTheirOwnProfileStatus(anotherUsersProfileStatus, user));
     }
 
     @Override

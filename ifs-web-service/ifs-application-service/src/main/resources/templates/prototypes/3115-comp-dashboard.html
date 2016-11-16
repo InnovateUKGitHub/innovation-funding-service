@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="comp-dashboard">
+<body class="comp-dashboard full-width">
 
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
@@ -16,10 +16,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div class="grid-row">
 		<div class="column-half">
-			<h1 class="heading-large">All competitions</h1>
+			<h1 class="heading-xlarge">All competitions</h1>
 		</div>
 
 		<div class="column-half alignright">
@@ -32,11 +32,14 @@
 		</div>
 	</div>
 
-	<div th:include="prototypes/fragments/comp-setup :: prototype-comp-dashboard-navigation" th:unless="${param.section != null and param.section[0] == 'search'}" th:remove="tag" />
+  <div class="no-constrain-width justify-left">
 
-	<div th:include="prototypes/fragments/comp-setup :: ${'prototype-dashboard-'+ (param.section == null ? 'live' : param.section[0])}" th:remove="tag"/>
+    <div th:include="prototypes/fragments/comp-setup :: prototype-comp-dashboard-navigation" th:unless="${param.section != null and param.section[0] == 'search'}" th:remove="tag" />
 
-	
+  	<div th:include="prototypes/fragments/comp-setup :: ${'prototype-dashboard-'+ (param.section == null ? 'live' : param.section[0])}" th:remove="tag"/>
+
+  </div>
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

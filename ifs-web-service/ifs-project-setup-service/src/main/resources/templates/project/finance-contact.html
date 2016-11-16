@@ -13,19 +13,19 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Finance contact</h1>
     </div>
 
-    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}">
+    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
         <fieldset>
             <h2 class="heading-medium">Finance contact</h2>
-            <div class="form-group" th:classappend="${#fields.hasErrors('financeContact') ? 'error' : ''}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
                 <legend>
                     <span class="visuallyhidden">Finance contact</span>
-                    <div th:if="${#fields.hasErrors('financeContact')}" th:remove="tag">
-                        <span class="error-message" th:each="err : ${#fields.errors('financeContact')}" th:text="${err}" />
-                    </div>
+                    <div th:if="${#fields.hasErrors('*')}" th:remove="tag">
+                       <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+                   </div>
                 </legend>
                 <p class="form-hint">Who will be responsible for project finances in your organisation?</p>
                 <p>We will ask this person to</p>
@@ -35,59 +35,63 @@
                     <li>review the spend profile of your project costs</li>
                 </ul>
                 <div class="extra-margin">
-                    <div th:each="user : ${model.organisationUsers}" th:remove="tag">
+
+                    <th:block th:each="user : ${model.organisationUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
                             <input type="radio" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
-                    </div>
-                    <div th:each="user : ${model.invitedUsers}" th:remove="tag">
+                    </th:block>
+
+                    <th:block th:each="user : ${model.invitedUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label">
+                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
-                    </div>
+                    </th:block>
+
                     <label for="new" class="block-label" data-target="finance-contact-table">
-                        <input id="new" th:field="*{financeContact}" type="radio" value="-1" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
+                        <input id="new" name="financeContact" th:checked="${model.inviteAction} or *{financeContact == -1}" type="radio" value="-1" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
                         Add new team member
                         <span class="form-hint">A new team member will be invited to join the project</span>
                     </label>
                 </div>
+                <table id="finance-contact-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th scope="col" id="finance-contact-name">Name</th>
+                        <th scope="col" colspan="2" id="finance-contact-email">E-mail</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <span class="visuallyhidden">invitee</span>
+                            </th>
+                            <td>
+                                <label for="name-finance-contact" class="visuallyhidden">name</label>
+                                <input type="text" class="form-control width-full"  th:value="*{name}" th:classappend="${#fields.hasErrors('name') ? 'field-error' : ''}" name="name" id="name-finance-contact" data-required-errormessage="Please enter a valid name" required="required"/>
+                            </td>
+                            <td>
+                                <label for="email-finance-contact" class="visuallyhidden">email</label>
+                                <input type="email" class="form-control width-full" th:value="*{email}" th:classappend="${#fields.hasErrors('email') ? 'field-error' : ''}" name="email" id="email-finance-contact" data-required-errormessage="Please enter an email address" required="required"/>
+                            </td>
+                            <td class="alignright">
+                                <button class="buttonlink no-margin-bottom" name="invite_fc" id="invite-finance-contact">Invite to project</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </fieldset>
-        <button class="visuallyhidden" type="submit" id="save">Save</button>
+        <p>If you add a new team member this section will show as pending until they have accepted. Once the team member has accepted and created their account, they will automatically be submitted as your finance contact.</p>
+        <button class="button extra-margin" type="submit"  name="save_fc" id="save">Save</button>
     </form>
-    <table class="extra-margin js-hidden" id="finance-contact-table">
-        <thead>
-        <tr>
-            <th scope="col" id="finance-contact-name">Name</th>
-            <th scope="col" id="finance-contact-email">E-mail</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        <form method="POST" th:action="@{/project/{projectId}/details/invite-finance-contact?organisation={organisation}(projectId=${model.projectId}, organisation=${model.organisationId})}" th:object="${inviteForm}">
-            <tr>
-                <td>
-                    <label for="name-finance-contact" class="visuallyhidden">name</label>
-                    <input type="text" class="form-control width-full"  value="" name="name" id="name-finance-contact" required="required"/>
-                </td>
-                <td>
-                    <label for="email-finance-contact" class="visuallyhidden">email</label>
-                    <input type="email" class="form-control width-full" value="" name="email" id="email-finance-contact" required="required"/>
-                </td>
-                <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
-                    <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>
-                </td>
-                <td class="alignright">
-                    <button class="buttonlink no-margin-bottom" id="invite-finance-contact">Invite to project</button>
-                </td>
-            </tr>
-        </form>
-        </tbody>
-    </table>
-    <label for="save" tabindex="0" role="button" class="button no-margin-right">Save</label>
+
+
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

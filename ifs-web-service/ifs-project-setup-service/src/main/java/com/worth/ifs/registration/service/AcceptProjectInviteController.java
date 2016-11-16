@@ -8,6 +8,7 @@ import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,27 +95,22 @@ public class AcceptProjectInviteController extends BaseController {
     private String acceptInviteShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         String hash = getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash)
-                .andOnSuccess(invite -> {
-                    ValidationMessages errors = errorMessages(loggedInUser, invite);
-                    if (errors.hasErrors()) {
-                        return populateModelWithErrorsAndReturnErrorView(errors, model);
-                    }
-                    return organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())
-                            .andOnSuccessReturn(organisation -> {
-                                JoinAProjectViewModel japvm = new JoinAProjectViewModel();
-                                japvm.setCompetitionName(invite.getCompetitionName());
-                                japvm.setLeadApplicantName(invite.getLeadApplicant());
-                                if (organisation.getAddresses() != null && !organisation.getAddresses().isEmpty()) {
-                                    japvm.setOrganisationAddress(organisation.getAddresses().get(0));
-                                }
-                                japvm.setOrganisationName(organisation.getName());
-                                japvm.setProjectName(invite.getProjectName());
-                                model.addAttribute("model", japvm);
-                                return ACCEPT_INVITE_SHOW_PROJECT;
-                            });
-                }).getSuccessObject();
+            .andOnSuccess(invite -> {
 
+                ValidationMessages errors = errorMessages(loggedInUser, invite);
+                if (errors.hasErrors()) {
+                    return populateModelWithErrorsAndReturnErrorView(errors, model);
+                }
 
+                JoinAProjectViewModel japvm = new JoinAProjectViewModel();
+                japvm.setCompetitionName(invite.getCompetitionName());
+                japvm.setLeadApplicantName(invite.getLeadApplicant());
+                japvm.setOrganisationName(invite.getOrganisationName());
+                japvm.setLeadOrganisationName(invite.getLeadOrganisation());
+                japvm.setProjectName(invite.getProjectName());
+                model.addAttribute("model", japvm);
+                return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
+            }).getSuccessObjectOrThrowException();
     }
 
     //======================================================
@@ -127,12 +123,13 @@ public class AcceptProjectInviteController extends BaseController {
                                                    Model model) {
         String hash = getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
-                    ValidationMessages errors = errorMessages(loggedInUser, invite);
-                    if (errors.hasErrors()) {
-                        return populateModelWithErrorsAndReturnErrorView(errors, model);
-                    }
-                    // Accept the invite - adding the user to the project
-                    return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() -> "redirect:/");
+            ValidationMessages errors = errorMessages(loggedInUser, invite);
+            if (errors.hasErrors()) {
+                return populateModelWithErrorsAndReturnErrorView(errors, model);
+            }
+            // Accept the invite - adding the user to the project
+            return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
+                    RedirectUtils.redirectToApplicationService(request, "/applicant/dashboard"));
 
                 }
         ).getSuccessObject();

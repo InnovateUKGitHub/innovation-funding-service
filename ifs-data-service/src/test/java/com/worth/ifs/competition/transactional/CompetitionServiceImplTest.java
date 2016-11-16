@@ -23,6 +23,7 @@ import java.util.Set;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
+import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -95,36 +96,31 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findLiveCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
         when(competitionRepository.findLive()).thenReturn(competitions);
-        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
 
-        List<CompetitionResource> response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
 
-        assertEquals(resources, response);
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
     }
+
     @Test
     public void test_findProjectSetupCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
         when(competitionRepository.findProjectSetup()).thenReturn(competitions);
-        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
 
-        List<CompetitionResource> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
 
-        assertEquals(resources, response);
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
     }
 
     @Test
     public void test_findUpcomingCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
         when(competitionRepository.findUpcoming()).thenReturn(competitions);
-        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
 
-        List<CompetitionResource> response = service.findUpcomingCompetitions().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> response = service.findUpcomingCompetitions().getSuccessObjectOrThrowException();
 
-        assertEquals(resources, response);
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
     }
 
     @Test
@@ -168,7 +164,20 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(page, response.getNumber());
         assertEquals(size, response.getSize());
 
-        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(), competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type");
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
+                competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type",0);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
+    }
+
+    private void assertCompetitionSearchResultsEqualToCompetitions(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+
+        assertEquals(competitions.size(), searchResults.size());
+
+        forEachWithIndex(searchResults, (i, searchResult) -> {
+
+            Competition originalCompetition = competitions.get(i);
+            assertEquals(originalCompetition.getId(), searchResult.getId());
+            assertEquals(originalCompetition.getName(), searchResult.getName());
+        });
     }
 }

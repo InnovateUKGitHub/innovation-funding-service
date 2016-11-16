@@ -3,6 +3,8 @@ package com.worth.ifs.user.domain;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.util.AuditableEntity;
 import com.worth.ifs.user.resource.BusinessType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,9 +17,6 @@ public class Profile extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToOne(optional = false)
-    private User user;
 
     @ManyToOne(targetEntity = Address.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
@@ -35,14 +34,8 @@ public class Profile extends AuditableEntity {
 
     private LocalDateTime contractSignedDate;
 
-    Profile() {
-        // default constructor
-    }
-
-    public Profile(User user) {
-        if (user == null) throw new NullPointerException("user cannot be null");
-        // default constructor
-        this.user = user;
+    public Profile() {
+        // no-arg constructor
     }
 
     public void signContract(Contract contract, LocalDateTime signedDate) {
@@ -58,14 +51,6 @@ public class Profile extends AuditableEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Address getAddress() {
@@ -106,5 +91,39 @@ public class Profile extends AuditableEntity {
 
     public void setContractSignedDate(LocalDateTime contractSignedDate) {
         this.contractSignedDate = contractSignedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Profile profile = (Profile) o;
+
+        return new EqualsBuilder()
+                .append(id, profile.id)
+                .append(address, profile.address)
+                .append(skillsAreas, profile.skillsAreas)
+                .append(businessType, profile.businessType)
+                .append(contract, profile.contract)
+                .append(contractSignedDate, profile.contractSignedDate)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(address)
+                .append(skillsAreas)
+                .append(businessType)
+                .append(contract)
+                .append(contractSignedDate)
+                .toHashCode();
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static java.lang.String.format;
 
 /**
@@ -60,12 +58,8 @@ public class AssessorRegistrationController {
     @Autowired
     private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
-    private Validator validator;
-
     @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
+    private Validator validator;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -85,18 +79,26 @@ public class AssessorRegistrationController {
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                    BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
-        addSelectedAddress(registrationForm);
         validateAddressForm(registrationForm, bindingResult);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
-            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
+
+            result.getErrors().forEach(error -> {
+                if (StringUtils.hasText(error.getFieldName())) {
+                    bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
+                } else {
+                    bindingResult.reject("registration." + error.getErrorKey());
+                }
+            });
+
+            return validationHandler.
                     failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
         });
     }
@@ -121,9 +123,10 @@ public class AssessorRegistrationController {
 
         addAddressOptions(registrationForm);
         registrationForm.getAddressForm().setTriedToSearch(true);
+        registrationForm.getAddressForm().setSelectedPostcodeIndex(null);
 
         if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
-            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcode.required");
+            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
         }
 
         return validationHandler.failNowOrSucceedWith(view, view);
@@ -141,12 +144,21 @@ public class AssessorRegistrationController {
 
     private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
         if (postcodeIsSelected(assessorRegistrationForm)) {
-            validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
+            ValidationUtils.invokeValidator(validator, assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
         } else {
-            FieldError fieldError = new FieldError("address", "address", "Please enter your address details");
-            bindingResult.addError(fieldError);
+            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
+                bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
+                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
+            } else {
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
+                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+            }
         }
-        assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+    }
+
+    private boolean postcodeIndexIsSubmitted(AssessorRegistrationForm assessorRegistrationForm) {
+        return StringUtils.hasText(assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex());
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
@@ -167,10 +179,9 @@ public class AssessorRegistrationController {
 
     private void addSelectedAddress(AssessorRegistrationForm registrationForm) {
         AddressForm addressForm = registrationForm.getAddressForm();
-        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex())) {
+        if (postcodeIndexIsSubmitted(registrationForm)) {
             try {
-                AddressResource selectedAddress = new AddressResource();
-                selectedAddress = addressForm.getPostcodeOptions().get(
+                AddressResource selectedAddress = addressForm.getPostcodeOptions().get(
                         Integer.parseInt(
                                 addressForm.getSelectedPostcodeIndex()));
                 addressForm.setSelectedPostcode(selectedAddress);
@@ -178,7 +189,6 @@ public class AssessorRegistrationController {
                 LOG.info(e);
             }
         }
-
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {

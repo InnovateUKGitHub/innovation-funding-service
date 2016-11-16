@@ -1,6 +1,5 @@
 package com.worth.ifs.user.builder;
 
-import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.resource.ContractResource;
 import org.junit.Test;
 
@@ -15,43 +14,43 @@ public class ContractResourceBuilderTest {
         Long expectedId = 1L;
         boolean expectedCurrent = true;
         String expectedText = "text";
-        String expectedAnnexOne = "annex1";
-        String expectedAnnexTwo = "annex2";
-        String expectedAnnexThree = "annex3";
+        String expectedAnnexA = "annexA";
+        String expectedAnnexB = "annexB";
+        String expectedAnnexC = "annexC";
 
         ContractResource contract = newContractResource()
                 .withId(expectedId)
                 .withCurrent(expectedCurrent)
                 .withText(expectedText)
-                .withAnnexOne(expectedAnnexOne)
-                .withAnnexTwo(expectedAnnexTwo)
-                .withAnnexThree(expectedAnnexThree)
+                .withAnnexA(expectedAnnexA)
+                .withAnnexB(expectedAnnexB)
+                .withAnnexC(expectedAnnexC)
                 .build();
 
         assertEquals(expectedId, contract.getId());
         assertEquals(expectedCurrent, contract.isCurrent());
         assertEquals(expectedText, contract.getText());
-        assertEquals(expectedAnnexOne, contract.getAnnexOne());
-        assertEquals(expectedAnnexTwo, contract.getAnnexTwo());
-        assertEquals(expectedAnnexThree, contract.getAnnexThree());
+        assertEquals(expectedAnnexA, contract.getAnnexA());
+        assertEquals(expectedAnnexB, contract.getAnnexB());
+        assertEquals(expectedAnnexC, contract.getAnnexC());
     }
 
     @Test
     public void buildMany() {
-        Long[] expectedIds = { 1L, 2L };
-        Boolean[] expectedCurrents = { true, false };
-        String[] expectedTexts = { "text1", "text2" };
-        String[] expectedAnnexOnes = { "annex11", "annex12" };
-        String[] expectedAnnexTwos = { "annex21", "annex22" };
-        String[] expectedAnnexThrees = { "annex31", "annex32" };
+        Long[] expectedIds = {1L, 2L};
+        Boolean[] expectedCurrents = {true, false};
+        String[] expectedTexts = {"text1", "text2"};
+        String[] expectedAnnexAs = {"annexA1", "annexA2"};
+        String[] expectedAnnexBs = {"annexB1", "annexB2"};
+        String[] expectedAnnexCs = {"annexC1", "annexC2"};
 
         List<ContractResource> contracts = newContractResource()
                 .withId(expectedIds)
                 .withCurrent(expectedCurrents)
                 .withText(expectedTexts)
-                .withAnnexOne(expectedAnnexOnes)
-                .withAnnexTwo(expectedAnnexTwos)
-                .withAnnexThree(expectedAnnexThrees)
+                .withAnnexA(expectedAnnexAs)
+                .withAnnexB(expectedAnnexBs)
+                .withAnnexC(expectedAnnexCs)
                 .build(2);
 
         ContractResource first = contracts.get(0);
@@ -59,17 +58,17 @@ public class ContractResourceBuilderTest {
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedCurrents[0], first.isCurrent());
         assertEquals(expectedTexts[0], first.getText());
-        assertEquals(expectedAnnexOnes[0], first.getAnnexOne());
-        assertEquals(expectedAnnexTwos[0], first.getAnnexTwo());
-        assertEquals(expectedAnnexThrees[0], first.getAnnexThree());
+        assertEquals(expectedAnnexAs[0], first.getAnnexA());
+        assertEquals(expectedAnnexBs[0], first.getAnnexB());
+        assertEquals(expectedAnnexCs[0], first.getAnnexC());
 
         ContractResource second = contracts.get(1);
 
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedCurrents[1], second.isCurrent());
         assertEquals(expectedTexts[1], second.getText());
-        assertEquals(expectedAnnexOnes[1], second.getAnnexOne());
-        assertEquals(expectedAnnexTwos[1], second.getAnnexTwo());
-        assertEquals(expectedAnnexThrees[1], second.getAnnexThree());
+        assertEquals(expectedAnnexAs[1], second.getAnnexA());
+        assertEquals(expectedAnnexBs[1], second.getAnnexB());
+        assertEquals(expectedAnnexCs[1], second.getAnnexC());
     }
 }

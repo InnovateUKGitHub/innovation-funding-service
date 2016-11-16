@@ -1,9 +1,9 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder;
+import com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -37,7 +37,8 @@ public class BankDetailsDocs {
     public static final FieldDescriptor[] projectBankDetailsStatusSummaryFields = {
             fieldWithPath("competitionId").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition name"),
-            fieldWithPath("projectId").description("Project id to which the "),
+            fieldWithPath("projectId").description("Project id for bank details status summary"),
+            fieldWithPath("applicationId").description("Application id for bank details status summary"),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status")
     };
 }

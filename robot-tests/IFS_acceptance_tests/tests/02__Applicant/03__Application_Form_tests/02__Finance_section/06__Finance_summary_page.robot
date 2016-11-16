@@ -1,31 +1,20 @@
 *** Settings ***
 Documentation     INFUND-524 As an applicant I want to see the finance summary updated and recalculated as each partner adds their finances.
 ...
-...
 ...               INFUND-435 As an applicant and I am on the finance summary, I want to see the partner details listed horizontally so I can see all partner details in the finance summary table
-...
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 ...
-...
 ...               INFUND-894 As a lead partner I want to easily see whether or not my partner's finances are marked as complete, so that i can have the right level of confidence in the figures
 ...
-...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
-...
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Default Tags
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
@@ -89,7 +78,7 @@ Green check should show when the finances are complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Log in create a new invite application invite academic collaborators and accept the invite
+    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
     When the user enters text to a text field    id=incurred-staff    1000000000
@@ -105,9 +94,8 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]    Email    Pending
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    #TODO Pending INFUND-5218
+    [Tags]    Email
+    [Setup]    Log in as a different user   &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are within the required range

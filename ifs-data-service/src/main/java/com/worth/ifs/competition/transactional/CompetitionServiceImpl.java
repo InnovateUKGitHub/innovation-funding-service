@@ -12,6 +12,7 @@ import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,20 +36,22 @@ import static java.util.Optional.ofNullable;
  */
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
-    
+
 	private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
-	
+
 	public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
-    
+
     @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
-    
+
     @Autowired
     private CompetitionMapper competitionMapper;
 
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -78,7 +81,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Category category = categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
         competition.setInnovationArea(category);
     }
-    
+
     private void addResearchCategories(Competition competition) {
         Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.RESEARCH_CATEGORY, COMPETITION_CLASS_NAME, competition.getId());
         competition.setResearchCategories(categories);
@@ -92,24 +95,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findLiveCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findLive(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findProjectSetupCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findProjectSetup(), this::searchResultFromCompetition));
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+    public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+        return serviceSuccess(simpleMap(competitionRepository.findUpcoming(), this::searchResultFromCompetition));
     }
 
     @Override
@@ -136,7 +133,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
-                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null));
+                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
+                projectRepository.findByApplicationCompetitionId(c.getId()).size()
+                );
     }
 
     @Override

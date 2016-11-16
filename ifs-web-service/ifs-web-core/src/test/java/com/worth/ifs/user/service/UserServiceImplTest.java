@@ -2,6 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +16,14 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Matchers.eq;
@@ -30,10 +34,9 @@ import static org.mockito.Mockito.*;
  * Test Class for functionality in {@link UserServiceImpl}
  */
 public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
-
     private static final String EMAIL_THAT_EXISTS_FOR_USER = "sample@me.com";
-    private static final String EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR = "i-am-bad@me.com";
 
+    private static final String EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR = "i-am-bad@me.com";
     @Mock
     private UserRestService userRestService;
 
@@ -122,6 +125,30 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
+    public void getProfileContract() throws Exception {
+        Long userId = 1L;
+        ProfileContractResource expected = newProfileContractResource().build();
+
+        when(userRestService.getProfileContract(userId)).thenReturn(restSuccess(expected));
+
+        ProfileContractResource response = service.getProfileContract(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getProfileContract(userId);
+    }
+
+    @Test
+    public void updateProfileContract() throws Exception {
+        Long userId = 1L;
+
+        when(userRestService.updateProfileContract(userId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.updateProfileContract(userId);
+        assertTrue(response.isSuccess());
+
+        verify(userRestService, only()).updateProfileContract(userId);
+    }
+
+    @Test
     public void getUserAffilliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> expected = newAffiliationResource().build(2);
@@ -142,5 +169,30 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         service.updateUserAffiliations(userId, affiliations).getSuccessObjectOrThrowException();
         verify(userRestService, only()).updateUserAffiliations(userId, affiliations);
+    }
+
+    @Test
+    public void getProfileDetails() throws Exception {
+        Long userId = 1L;
+        UserProfileResource expected = newUserProfileResource().build();
+
+        when(userRestService.getUserProfile(userId)).thenReturn(restSuccess(expected));
+
+        UserProfileResource response = service.getUserProfile(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getUserProfile(userId);
+    }
+
+    @Test
+    public void updateProfileDetails() throws Exception {
+        Long userId = 1L;
+
+        UserProfileResource profileDetails = newUserProfileResource().build();
+        when(userRestService.updateUserProfile(userId, profileDetails)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.updateUserProfile(userId, profileDetails);
+        assertTrue(response.isSuccess());
+
+        verify(userRestService, only()).updateUserProfile(userId, profileDetails);
     }
 }

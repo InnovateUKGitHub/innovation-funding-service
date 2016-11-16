@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Prototype index page  =========================== --> 
+<!-- ===========================Prototype index page  =========================== -->
 
 <div th:fragment="prototype-sprint-nav">
-    
+
     <header class="no-margin-bottom ">
         <h1 class="heading-xlarge no-margin-bottom">Prototype index</h1>
         <h2 class="subtitle">Directory of front end code to show user journeys</h2>
@@ -26,9 +26,15 @@
         <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13</a></li>
         <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14</a></li>
         <li th:class="${(sprint == 'sprint15' ? 'selected' : '')}"><a href="/prototypes/index-sprint15">15</a></li>
-        <li th:class="${(sprint == 'sprint16' ? 'selected' : '')}"><a href="/prototypes/index-sprint16">16 <small>(<strong>Current sprint</strong>)</small></a></li>
-        <li style="float: right" th:class="${(sprint == 'demo' ? 'selected' : '')}"><a href="/prototypes/index-demo">Demo</a></li>
+        <li th:class="${(sprint == 'sprint16' ? 'selected' : '')}"><a href="/prototypes/index-sprint16">16</a></li>
+        <li th:class="${(sprint == 'sprint17' ? 'selected' : '')}"><a href="/prototypes/index-sprint17">17</a></li>
+        <li th:class="${(sprint == 'sprint18' ? 'selected' : '')}"><a href="/prototypes/index-sprint18"><strong>18</strong></a></li>
     </ul>
+
+    <div class="alignright">
+        <a href="/prototypes/index-demo">Demo</a>
+    </div>
+
 </div>
 
 <!-- ===========================Place: main <header>  =========================== -->
@@ -72,7 +78,7 @@
     </div>
 </div>
 
-<!-- ===========================Place: main <header>  =========================== --> 
+<!-- ===========================Place: main <header>  =========================== -->
 
 <div th:fragment="prototype-nav">
     <div class="prototype-nav">
@@ -80,7 +86,7 @@
     </div>
 </div>
 
-<!-- ===========================Sub header for application lead =========================== --> 
+<!-- ===========================Sub header for application lead =========================== -->
 
 <div th:fragment="prototype-sub-header">
 	<div class="sub-header">
@@ -97,7 +103,7 @@
     </div>
 </div>
 
-<!-- ===========================Sub header for collaborator =========================== --> 
+<!-- ===========================Sub header for collaborator =========================== -->
 
 <div th:fragment="prototype-sub-header-collaborator">
     <div class="sub-header">
@@ -113,7 +119,7 @@
     </div>
 </div>
 
-<!-- ===========================Sub header with no links =========================== --> 
+<!-- ===========================Sub header with no links =========================== -->
 
 <div th:fragment="prototype-sub-header-no-link">
     <div class="sub-header">
@@ -142,15 +148,15 @@
             <ul class="list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-                    
+
                 </li>
             </ul>
         </div>
@@ -170,15 +176,15 @@
             <ul class="list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-                    
+
                 </li>
             </ul>
         </div>
@@ -186,7 +192,7 @@
 </div>
 
 
-<!-- ==============Reassign question in application summary  ====================== --> 
+<!-- ==============Reassign question in application summary  ====================== -->
 
 <div th:fragment="prototype-reassign-question">
 	<div class="column-third assign-container collapsible">
@@ -199,15 +205,15 @@
             <ul class="list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-                    
+
                 </li>
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-                    
+
                 </li>
             </ul>
         </div>
@@ -237,11 +243,11 @@
 </div>
 
 
-<!-- ================== Application progress snippet  =========================== --> 
+<!-- ================== Application progress snippet  =========================== -->
 
 <div th:fragment="prototype-application-progress">
     <h3 class="heading-medium no-margin">Application progress:</h3>
-                
+
     <div class="progress-container">
         <div class="progress-indicator">
             <div class="progress" aria-valuemin="0" aria-valuemax="100" role="progressbar" aria-valuenow="55" style="width:55%">
@@ -251,10 +257,10 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
-<!-- ========== Javscripts that are loaded exlcusively in the prototype ========= --> 
+<!-- ========== Javscripts that are loaded exlcusively in the prototype ========= -->
 
 <div th:fragment="prototype-js">
 	<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>

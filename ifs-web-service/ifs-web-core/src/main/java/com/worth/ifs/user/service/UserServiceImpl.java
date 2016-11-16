@@ -1,5 +1,6 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
@@ -9,6 +10,7 @@ import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
+    @Override
 	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
 		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
 		if(leadProcessRole == null) {
@@ -125,6 +127,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserProfileResource getUserProfile(Long userId) {
+        return userRestService.getUserProfile(userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile) {
+        return userRestService.updateUserProfile(userId, userProfile).toServiceResult();
+    }
+
+    @Override
     public List<AffiliationResource> getUserAffiliations(Long userId) {
         return userRestService.getUserAffiliations(userId).getSuccessObjectOrThrowException();
     }
@@ -132,6 +144,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
         return userRestService.updateUserAffiliations(userId, affiliations).toServiceResult();
+    }
+
+    @Override
+    public ProfileContractResource getProfileContract(Long userId) {
+        return userRestService.getProfileContract(userId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> updateProfileContract(Long userId) {
+        return userRestService.updateProfileContract(userId).toServiceResult();
     }
 
     @Override

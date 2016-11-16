@@ -3,16 +3,10 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
-import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -30,7 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -48,9 +45,6 @@ public class ProjectSetupStatusController {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private BankDetailsRestService bankDetailsRestService;
-	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -76,20 +70,18 @@ public class ProjectSetupStatusController {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
-        // TODO - INFUND-5285 - can we do away with getting monitoring officer here, if we are getting a ProjectTeamStatusResource anyway?
         Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
 
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
 
-        // TODO - INFUND-5285 - can we do away with getting bank details here, if we are getting a ProjectTeamStatusResource anyway?
-        RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
-        Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
-
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
+
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
-        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
+        boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
+        boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -97,8 +89,23 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails,
-                organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
+        boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
+
+        boolean projectDetailsProcessCompleted;
+        boolean awaitingProjectDetailsActionFromOtherPartners = false;
+        if (leadPartner) {
+            projectDetailsProcessCompleted = checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
+            awaitingProjectDetailsActionFromOtherPartners = awaitingProjectDetailsActionFromOtherPartners(teamStatus);
+
+        } else {
+            projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
+        }
+
+        ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
+                organisation.getId(), projectDetailsSubmitted, projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners,
+                leadPartner, allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved, grantOfferLetterSubmitted, spendProfilesSubmitted,
                 statusAccessor.canAccessCompaniesHouseSection(organisation),
                 statusAccessor.canAccessProjectDetailsSection(organisation),
                 statusAccessor.canAccessMonitoringOfficerSection(organisation),
@@ -106,6 +113,37 @@ public class ProjectSetupStatusController {
                 statusAccessor.canAccessFinanceChecksSection(organisation),
                 statusAccessor.canAccessSpendProfileSection(organisation),
                 statusAccessor.canAccessOtherDocumentsSection(organisation),
-                SectionAccess.ACCESSIBLE);
+                statusAccessor.canAccessGrantOfferLetterSection(organisation));
+    }
+
+    private boolean checkAllFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
+    }
+
+    private boolean checkAllBankDetailsApprovedOrNotRequired(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status ->
+                asList(NOT_REQUIRED, COMPLETE).contains(status.getBankDetailsStatus()));
+    }
+
+    private boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
+    }
+
+    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
+    }
+
+    private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
     }
 }

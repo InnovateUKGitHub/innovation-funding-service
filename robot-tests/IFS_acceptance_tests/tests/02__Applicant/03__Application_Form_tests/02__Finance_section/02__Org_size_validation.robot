@@ -3,12 +3,7 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${no_org_selected_message}    Funding level allowed depends on organisation size. Please select your organisation size.

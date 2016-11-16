@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Innovation areas'" th:remove="tag"></div>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Your skills'" th:remove="tag"></div>
     </head>
 
     <body th:with="context='assessment'">
@@ -10,16 +10,12 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()'" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
             <div class="hgroup">
-                <h1 class="heading-xlarge">Your skills and innovation area</h1>
+                <h1 class="heading-xlarge">Your skills</h1>
                 <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
             </div>
-
-            <h2 class="heading-large">Innovation areas</h2>
-            <p>The lead technologist for this competition has identified you as an expert in the following sector:</p>
-            <p class="heading-small">High Value Manufacturing</p>
 
             <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -37,7 +33,8 @@
                         </span>
                     </label>
                     <p class="form-hint">
-                        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment. For example ‘Solar Power’, ‘Genetics’, ‘Recycling’
+                        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
+                        For example; Solar Power, Genetics, Recycling
                     </p>
                     <div class="textarea-wrapped word-count">
                         <textarea

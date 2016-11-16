@@ -53,17 +53,16 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
-    public AssessmentFeedbackViewModel populateModel(Long assessmentId, Long questionId) {
+    public AssessmentFeedbackViewModel populateModel(Long assessmentId, QuestionResource question) {
         AssessmentResource assessment = getAssessment(assessmentId);
         ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = getCompetition(application.getCompetition());
-        QuestionResource question = getQuestion(questionId);
-        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
+        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(question.getId());
         FormInputResource applicationFormInput = applicationFormInputs.get(0);
         Map<Long, FormInputResponseResource> applicantResponses = getApplicantResponses(application.getId(), applicationFormInputs);
         FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInput.getId());
         String applicantResponseValue = applicantResponse != null ? applicantResponse.getValue() : null;
-        List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(questionId);
+        List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(question.getId());
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, "fileupload");
         boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, SCORE);
         boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, APPLICATION_IN_SCOPE);

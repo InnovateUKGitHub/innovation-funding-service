@@ -21,8 +21,6 @@ public class AssessmentDocs {
             fieldWithPath("endDate").description("end date of the assessment"),
             fieldWithPath("processOutcomes").description("outcomes of the assessment process"),
             fieldWithPath("processRole").description("process role of the assigned assessor"),
-            fieldWithPath("submitted").description("the assessment is submitted"),
-            fieldWithPath("started").description("the assessment is started"),
             fieldWithPath("application").description("the id of the application being assessed"),
             fieldWithPath("competition").description("the competition id of the application being assessed"),
             fieldWithPath("assessmentState").description("the current workflow state of the assessment process"),
@@ -36,8 +34,6 @@ public class AssessmentDocs {
             .withProcessOutcome(asList(1L, 2L))
             .withActivityState(OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withStarted(true)
-            .withSubmitted(false)
             .withLastModifiedDate(GregorianCalendar.getInstance())
             .withProcessRole(1L)
             .withApplication(2L);

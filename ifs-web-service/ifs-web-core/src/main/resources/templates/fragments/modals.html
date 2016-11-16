@@ -62,7 +62,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
         <h2 class="heading-medium no-margin">Notify applicants</h2>
-        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
         <p>This step cannot be undone.</p>
         <hr/>
         <div class="grid-row extra-margin">
@@ -82,7 +82,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
         <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
-        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
         <p>This step cannot be undone.</p>
         <hr/>
         <div class="grid-row extra-margin">
@@ -92,7 +92,7 @@
                     <button type="button" class="js-close buttonlink large">Cancel</button>
                 </div>
                 <div class="column-half alignright-button">
-                    <button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
+                    <button class="button large" name="publish" value="publish" type="submit">Publish assessor feedback</button>
                 </div>
             </form>
         </div>
@@ -241,9 +241,10 @@
             <div class="column-half">
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
-            <button class="button large" name="approved" value="true">Accept Documents</button>
+            <div class="column-half alignright">
+              <button class="button large" name="approved" value="true">Accept Documents</button>
+            </div>
         </div>
-
     </div>
 </div>
 
@@ -338,8 +339,8 @@
     <div class="modal-accept-profile" role="dialog" aria-hidden="true">
       <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <div>
-            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
-            <p>The project spend profile has been approved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <h2 class="heading-medium no-margin">Approved by Innovation Lead</h2>
+            <p>The project spend profile has been approved and accepted by the Innovation Lead, by confirming the project manager will be notified of this decision via email.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
                 <div class="column-half">

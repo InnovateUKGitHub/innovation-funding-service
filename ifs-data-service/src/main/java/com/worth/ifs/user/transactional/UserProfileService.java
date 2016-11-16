@@ -2,12 +2,12 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
 
@@ -16,11 +16,17 @@ import java.util.List;
  */
 public interface UserProfileService {
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileResource);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<ProfileContractResource> getProfileContract(Long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
+    ServiceResult<Void> updateProfileContract(Long userId);
 
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
@@ -28,6 +34,15 @@ public interface UserProfileService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId);
 
-    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE_AFFILIATIONS')")
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ_USER_PROFILE')")
+    ServiceResult<UserProfileResource> getUserProfile(Long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
+    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
 }

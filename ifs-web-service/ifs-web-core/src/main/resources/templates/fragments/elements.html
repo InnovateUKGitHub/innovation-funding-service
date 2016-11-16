@@ -198,9 +198,13 @@
         </span>
         <label class="block-label" for="agree-state-aid-page">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
-            I confirm that my organisation is eligible for state aid funding.
+            I confirm that the project costs entered for my organisation are all eligible.
         </label>
     </div>
+    <span class="form-hint">
+        By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
+        <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
+    </span>
 </div>
 
 <!-- =========================== Element: Competition status warning ================ -->
@@ -213,7 +217,7 @@
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
             You have been successful in this round of funding.
-            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />.
+            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" th:remove="tag" />
           </p>
           <p th:if="${currentProject}">
             <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>

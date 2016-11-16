@@ -18,9 +18,9 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
     DIRECTLY_ALLOCATED_INVESTIGATORS("Directly allocated", "Investigations", "allocated_investigators"),
     DIRECTLY_ALLOCATED_ESTATES_COSTS("Directly allocated", "Estates costs", "allocated_estates_costs"),
     DIRECTLY_ALLOCATED_OTHER_COSTS("Directly allocated", "Other costs", "allocated_other_costs"),
-    INDIRECT_COSTS("Indirect Costs", "Indirect costs", "indirect_costs"),
-    INDIRECT_COSTS_STAFF("Indirect costs", "Staff", "exceptions_staff"),
-    INDIRECT_COSTS_OTHER_COSTS("Indirect costs", "Other costs", "exceptions_other_costs");
+    INDIRECT_COSTS("Indirect costs", "Investigations", "indirect_costs"),
+    INDIRECT_COSTS_STAFF("Exceptions", "Staff", "exceptions_staff"),
+    INDIRECT_COSTS_OTHER_COSTS("Exceptions", "Other costs", "exceptions_other_costs");
 
     private final String name;
     private final String label;

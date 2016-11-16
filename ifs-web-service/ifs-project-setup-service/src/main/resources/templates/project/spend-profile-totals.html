@@ -14,7 +14,7 @@
 
 
         <div class="page-title">
-                <div th:include="fragments/elements :: project-title (projectId=${project.id}, projectName=${project.name})"
+                <div th:include="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"
                  th:remove="tag"/>
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
@@ -68,7 +68,7 @@
                 <tbody>
                 <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="form-group-row">
                     <th scope="row" class="fix-left">
-                        <span th:text="${row.key}" />
+                        <span th:text="${model.table.getOrganisationNameMap().get(row.key)}" />
                     </th>
                     <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
                     <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'COMMA')}" />
