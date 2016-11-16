@@ -82,6 +82,9 @@ public class GenerateTestDataRaw extends BaseIntegrationTest {
     private RegistrationService registrationService;
 
     @Autowired
+    private TestService testService;
+
+    @Autowired
     private UserService userService;
 
     private CompetitionDataBuilder competitionDataBuilder;

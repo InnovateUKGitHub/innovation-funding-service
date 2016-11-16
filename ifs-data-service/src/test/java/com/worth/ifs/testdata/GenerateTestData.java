@@ -100,6 +100,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private NotificationSender emailNotificationSender;
 
+    @Autowired
+    private TestService testService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;

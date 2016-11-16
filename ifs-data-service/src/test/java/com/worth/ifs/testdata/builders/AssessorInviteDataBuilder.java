@@ -1,7 +1,9 @@
 package com.worth.ifs.testdata.builders;
 
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
+import com.worth.ifs.invite.domain.CompetitionParticipant;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -16,15 +18,21 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
-            CompetitionInvite invite = newCompetitionInvite().
-                    withCompetition(retrieveCompetitionByName(competitionName)).
+            final Competition competition = retrieveCompetitionByName(competitionName);
+
+            final CompetitionInvite invite = newCompetitionInvite().
+                    withCompetition(competition).
                     withEmail(emailAddress).
                     withStatus(InviteStatus.SENT).
                     withHash(inviteHash).
                     withName(name).
                     build();
 
-            competitionInviteRepository.save(invite);
+            testService.doWithinTransaction(() -> {
+
+                CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
+                competitionParticipantRepository.save(new CompetitionParticipant(competition, savedInvite));
+            });
         }));
     }
 

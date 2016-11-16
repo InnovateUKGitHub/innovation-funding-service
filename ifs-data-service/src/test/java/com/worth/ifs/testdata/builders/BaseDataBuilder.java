@@ -9,6 +9,7 @@ import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -22,6 +23,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
+import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.transactional.ProjectService;
@@ -90,6 +92,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionInviteRepository competitionInviteRepository;
     protected CompetitionRepository competitionRepository;
     protected AssessorService assessorService;
+    protected CompetitionParticipantRepository competitionParticipantRepository;
+    protected CompetitionInviteService competitionInviteService;
+    protected TestService testService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -126,6 +131,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
         this.competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         this.assessorService = serviceLocator.getBean(AssessorService.class);
+        this.competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
+        this.competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
+        this.testService = serviceLocator.getBean(TestService.class);
     }
 
     protected UserResource compAdmin() {
