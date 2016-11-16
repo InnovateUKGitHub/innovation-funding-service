@@ -18,7 +18,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5609 PM can see partners' spend profiles before they are marked as complete, and can see buttons to edit and mark as complete
 ...
 ...               INFUND-5911 Internal users should not have access to external users' pages
-
+...
+...               INFUND-3973 As a Project Finance team member I want to be able to export submitted spend profile tables so that these may be distributed offline to Lead Technologists and Monitoring Officers
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -171,7 +172,7 @@ Project Manager can see Spend Profile in Progress
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
-    [Setup]  Log in as a different user                         steve.smith@empire.com    Passw0rd
+    [Setup]  Log in as a different user             steve.smith@empire.com    Passw0rd
     Given the user navigates to the page            ${external_spendprofile_summary}
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
@@ -344,12 +345,12 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
     [Tags]    HappyPath
     [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page                    ${server}/project-setup-management/competition/3/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
-    Then the user should be redirected to the correct page  ${server}/project-setup-management/project/4/spend-profile/approval
+    Then the user should be redirected to the correct page  ${internal_spend_profile_approval}
     And the user should see the element                     jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been rejected")
@@ -365,11 +366,12 @@ Project Finance is able to see Spend Profile approval page
     Then the user should see the element                    jQuery=#accept-profile
     And the user should see the element                     jQuery=#content .button.button.button-warning.large:contains("Reject")
 
+
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
     [Setup]  Log in as a different user              john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
+    Given the user navigates to the page             ${internal_spend_profile_approval}
     Then the user should see the element             jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled               jQuery=#accept-profile
     And the user should see the element              jQuery=#content .button.button.button-warning.large:contains("Reject")
@@ -384,11 +386,26 @@ Comp Admin is able to see Spend Profile approval page
     When the user clicks the button/link             jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
+Comp Admin can download the Spend Profile csv
+    [Documentation]  INFUND-3973
+    [Tags]
+    Given the user navigates to the page       ${internal_spend_profile_approval}
+    And the user should see the element        jQuery=h2:contains("Spend profile")
+    Then the user should see the element   link=Cheeseco-spend-profile.csv
+    And the user should see the element    link=Ludlow-spend-profile.csv
+    And the user should see the element    link=EGGS-spend-profile.csv
+    When the user clicks the button/link       link=Cheeseco-spend-profile.csv
+    Then the user should not see an error in the page
+    When the user clicks the button/link       link=Ludlow-spend-profile.csv
+    Then the user should not see an error in the page
+    When the user clicks the button/link       link=EGGS-spend-profile.csv
+    Then the user should not see an error in the page
+
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
     [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page           ${server}/project-setup-management/project/4/spend-profile/approval
+    Given the user navigates to the page           ${internal_spend_profile_approval}
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
     Then the user should see the text in the page  Before taking this action please contact the project manager
@@ -402,7 +419,7 @@ Project Finance is able to Reject Spend Profile
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]    HappyPath
-    Given the user navigates to the page             ${server}/project-setup-management/project/4/spend-profile/approval
+    Given the user navigates to the page             ${internal_spend_profile_approval}
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
     Then the user should see the element             jQuery=button:contains("Approved")
     When the user clicks the button/link             jQuery=button:contains("Approved")
