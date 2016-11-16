@@ -91,7 +91,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             foundAssessmentIds.add(assessment.getId());
 
             if (!assessmentWorkflowService.submit(assessment)) {
-                failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId()));
+                failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId(), assessment.getTarget().getName()));
             }
         });
 
