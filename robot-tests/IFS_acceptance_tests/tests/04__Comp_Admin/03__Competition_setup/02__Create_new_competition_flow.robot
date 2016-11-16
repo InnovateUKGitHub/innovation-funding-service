@@ -334,6 +334,14 @@ Application: Scope
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
+Application: Project Summary
+    [Documentation]    INFUND-5636
+    When the user clicks the button/link    link=Project summary
+    Then the user should see the element    jQuery=h1:contains("Project summary")
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the element    jQuery=a:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link=Application
+
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
