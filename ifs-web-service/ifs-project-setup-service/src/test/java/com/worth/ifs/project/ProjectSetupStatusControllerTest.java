@@ -187,7 +187,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
-                Arrays.asList("projectDetailsStatus", SectionStatus.HOURGLASS),
+                Arrays.asList("projectDetailsStatus", SectionStatus.FLAG),
                 Arrays.asList("monitoringOfficerStatus", SectionStatus.HOURGLASS));
     }
 

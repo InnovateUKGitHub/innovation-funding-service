@@ -15,7 +15,7 @@ public class ProjectSetupSectionStatus {
                                                      final boolean leadPartner) {
         if (!projectDetailsProcessCompleted) {
             if (leadPartner && awaitingProjectDetailsActionFromPartners) {
-                return HOURGLASS;
+                return FLAG;
             }
             return FLAG;
         }
