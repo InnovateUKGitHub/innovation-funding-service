@@ -14,6 +14,9 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.workflow.ProcessOutcomeService;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +54,9 @@ public class AssessorCompetitionDashboardModelPopulator {
     private ProcessRoleService processRoleService;
 
     @Autowired
+    private ProcessOutcomeService  processOutcomeService;
+
+    @Autowired
     private UserService userService;
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
@@ -79,11 +85,13 @@ public class AssessorCompetitionDashboardModelPopulator {
         ApplicationResource application = applicationService.getById(assessment.getApplication());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        Boolean recommended = getRecommended(assessment);
         return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
                 assessment.getId(),
                 application.getApplicationDisplayName(),
                 leadOrganisation.get().getName(),
-                assessment.getAssessmentState());
+                assessment.getAssessmentState(),
+                recommended);
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
@@ -91,6 +99,11 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
+    }
+
+    private Boolean getRecommended(AssessmentResource assessmentResource) {
+        Optional<ProcessOutcomeResource> outcome = assessmentResource.getProcessOutcomes().stream().reduce((id1, id2) -> id2).map(id -> processOutcomeService.getById(id));
+        return outcome.map(oc -> Optional.ofNullable(oc.getOutcome()).map(BooleanUtils::toBoolean).orElse(null)).orElse(null);
     }
 
     private String getLeadTechnologist(CompetitionResource competition) {

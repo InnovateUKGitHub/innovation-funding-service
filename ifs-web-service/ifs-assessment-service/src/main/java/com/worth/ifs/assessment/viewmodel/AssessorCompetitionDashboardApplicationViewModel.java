@@ -16,13 +16,15 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private String displayLabel;
     private String leadOrganisation;
     private AssessmentStates state;
+    private Boolean recommended;
 
-    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state) {
+    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.displayLabel = displayLabel;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
+        this.recommended = recommended;
     }
 
     public Long getApplicationId() {
@@ -89,6 +91,14 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return state == this.state;
     }
 
+    public Boolean getRecommended() {
+        return recommended;
+    }
+
+    public void setRecommended(Boolean recommended) {
+        this.recommended = recommended;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -107,6 +117,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                 .append(displayLabel, that.displayLabel)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
+                .append(recommended, that.recommended)
                 .isEquals();
     }
 
@@ -118,6 +129,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                 .append(displayLabel)
                 .append(leadOrganisation)
                 .append(state)
+                .append(recommended)
                 .toHashCode();
     }
 }
