@@ -26,7 +26,7 @@
     </div>
 
     <div th:if="${model.isShowGenericRejectionMessage()}" class="warning-alert">
-        <h2 class="heading-small no-margin">We are unable to approve these documents. Please contact Customer Support.</h2>
+        <h2 class="heading-small no-margin">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
     </div>
 
     <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
@@ -38,7 +38,7 @@
     </div>
 
     <th:block th:if="${model.isShowLeadPartnerGuidanceInformation()}">
-        <p>As the lead partner in this project you must supply additional documents to support your grant
+        <p>As the Project Manager you must supply additional documents to support your grant
             application.</p>
         <p>These documents are:</p>
         <ul class="list-bullet">
@@ -134,7 +134,7 @@
                     <li>exploitation can be monitored by the stakeholders</li>
                 </ul>
 
-                <p>A framework of the exploitation plan is available for <a href="#">download</a></p>
+                <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a></p>
                 <p>The uploaded exploitation plan must:</p>
                 <ul class="list-bullet">
                     <li>be in a Portable Document Format (.pdf)</li>
