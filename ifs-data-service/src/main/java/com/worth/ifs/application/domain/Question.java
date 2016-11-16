@@ -57,9 +57,6 @@ public class Question {
 
     private Integer assessorMaximumScore;
 
-    @OneToOne(mappedBy = "question")
-    private QuestionAssessment questionAssessment;
-
     public Question() {
         //default constructor
     }
@@ -213,11 +210,4 @@ public class Question {
     	return queriedType.equals(type);
     }
 
-    public QuestionAssessment getQuestionAssessment() {
-        return questionAssessment;
-    }
-
-    public void setQuestionAssessment(QuestionAssessment questionAssessment) {
-        this.questionAssessment = questionAssessment;
-    }
 }

@@ -1,7 +1,7 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.AssessmentScoreRowResource;
+import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,14 +10,14 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class AssessmentScoreRowResourceBuilder extends BaseBuilder<AssessmentScoreRowResource, AssessmentScoreRowResourceBuilder> {
+public class AssessmentScoreRowResourceBuilder extends BaseBuilder<FormInputGuidanceRowResource, AssessmentScoreRowResourceBuilder> {
 
-    private AssessmentScoreRowResourceBuilder(List<BiConsumer<Integer, AssessmentScoreRowResource>> newMultiActions) {
+    private AssessmentScoreRowResourceBuilder(List<BiConsumer<Integer, FormInputGuidanceRowResource>> newMultiActions) {
         super(newMultiActions);
     }
 
     @Override
-    protected AssessmentScoreRowResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentScoreRowResource>> actions) {
+    protected AssessmentScoreRowResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FormInputGuidanceRowResource>> actions) {
         return new AssessmentScoreRowResourceBuilder(actions);
     }
 
@@ -39,7 +39,7 @@ public class AssessmentScoreRowResourceBuilder extends BaseBuilder<AssessmentSco
     }
 
     @Override
-    protected AssessmentScoreRowResource createInitial() {
-        return new AssessmentScoreRowResource();
+    protected FormInputGuidanceRowResource createInitial() {
+        return new FormInputGuidanceRowResource();
     }
 }

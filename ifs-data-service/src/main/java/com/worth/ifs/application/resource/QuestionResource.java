@@ -24,7 +24,6 @@ public class QuestionResource {
     private Long section;
     private String questionNumber;
     private QuestionType type;
-    private Long questionAssessment;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
@@ -37,14 +36,6 @@ public class QuestionResource {
 
     public void setAssessorMaximumScore(Integer assessorMaximumScore) {
         this.assessorMaximumScore = assessorMaximumScore;
-    }
-
-    public Long getQuestionAssessment() {
-        return questionAssessment;
-    }
-
-    public void setQuestionAssessment(Long questionAssessment) {
-        this.questionAssessment = questionAssessment;
     }
 
     public String getName() {
@@ -191,7 +182,6 @@ public class QuestionResource {
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
-                .append(questionAssessment, that.questionAssessment)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
@@ -212,7 +202,6 @@ public class QuestionResource {
                 .append(section)
                 .append(questionNumber)
                 .append(type)
-                .append(questionAssessment)
                 .append(assessorMaximumScore)
                 .toHashCode();
     }

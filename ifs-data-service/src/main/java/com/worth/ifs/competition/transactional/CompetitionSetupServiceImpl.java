@@ -2,10 +2,8 @@ package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.application.domain.FormInputGuidanceRow;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionAssessment;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.AssessmentScoreRowRepository;
-import com.worth.ifs.application.repository.QuestionAssessmentRepository;
+import com.worth.ifs.application.repository.FormInputGuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
@@ -67,9 +65,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private QuestionAssessmentRepository questionAssessmentRepository;
-    @Autowired
-    private AssessmentScoreRowRepository assessmentScoreRowRepository;
+    private FormInputGuidanceRowRepository formInputGuidanceRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -228,14 +224,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
 	private void cleanUpCompetitionSections(Competition competition) {
+        List<FormInputGuidanceRow> scoreRows = formInputGuidanceRowRepository.findByFormInput_Question_CompetitionId(competition.getId());
+        formInputGuidanceRowRepository.delete(scoreRows);
+
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
-
-        List<FormInputGuidanceRow> scoreRows = assessmentScoreRowRepository.findByQuestionAssessment_Question_CompetitionId(competition.getId());
-        assessmentScoreRowRepository.delete(scoreRows);
-
-        List<QuestionAssessment> assessments = questionAssessmentRepository.findByQuestion_CompetitionId(competition.getId());
-        questionAssessmentRepository.delete(assessments);
 
         List<Question> questions = questionRepository.findByCompetitionId(competition.getId());
         questionRepository.delete(questions);
@@ -292,36 +285,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             questionRepository.save(question);
 
             question.setFormInputs(createFormInputs(competition, question, question.getFormInputs()));
-            if(question.getQuestionAssessment() != null) {
-                question.setQuestionAssessment(createQuestionAssessment(question, question.getQuestionAssessment()));
-            }
 			return question;
 		};
 	}
-
-    private QuestionAssessment createQuestionAssessment(Question question, QuestionAssessment questionAssessment) {
-        entityManager.detach(questionAssessment);
-        questionAssessment.setQuestion(question);
-        questionAssessment.setId(null);
-        questionAssessmentRepository.save(questionAssessment);
-
-        questionAssessment.setScoreRows(createAssessmentScoreRows(questionAssessment, questionAssessment.getScoreRows()));
-        return questionAssessment;
-    }
-
-    private List<FormInputGuidanceRow> createAssessmentScoreRows(QuestionAssessment questionAssessment, List<FormInputGuidanceRow> scoreRows) {
-        return scoreRows.stream().map(createAssessmentScoreRow(questionAssessment)).collect(Collectors.toList());
-    }
-
-    private Function<FormInputGuidanceRow, FormInputGuidanceRow> createAssessmentScoreRow(QuestionAssessment questionAssessment) {
-        return (FormInputGuidanceRow row) -> {
-            entityManager.detach(row);
-            row.setQuestionAssessment(questionAssessment);
-            row.setId(null);
-            assessmentScoreRowRepository.save(row);
-            return row;
-        };
-    }
 
 
     private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
@@ -335,7 +301,23 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			formInput.setQuestion(question);
             formInput.setId(null);
             formInputRepository.save(formInput);
+
+            formInput.setFormInputGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getFormInputGuidanceRows()));
             return formInput;
 		};
 	}
+
+    private List<FormInputGuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<FormInputGuidanceRow> formInputGuidanceRows) {
+        return formInputGuidanceRows.stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
+    }
+
+    private Function<FormInputGuidanceRow, FormInputGuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
+        return (FormInputGuidanceRow row) -> {
+            entityManager.detach(row);
+            row.setFormInput(formInput);
+            row.setId(null);
+            formInputGuidanceRowRepository.save(row);
+            return row;
+        };
+    }
 }

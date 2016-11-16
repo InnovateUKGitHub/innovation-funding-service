@@ -2,7 +2,6 @@ package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionAssessment;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionType;
@@ -56,11 +55,6 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
     public QuestionBuilder withFormInputs(List<FormInput> formInputs) {
         return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
     }
-
-    public QuestionBuilder withQuestionAssessment(QuestionAssessment questionAssessment) {
-        return with(question -> setField("questionAssessment", questionAssessment, question));
-    }
-
 
     public QuestionBuilder withCompetitionAndSectionAndPriority(Competition competition, Section section, Integer priority) {
         return with(question -> {

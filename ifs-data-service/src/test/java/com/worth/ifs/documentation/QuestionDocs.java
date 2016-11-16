@@ -21,8 +21,7 @@ public class QuestionDocs {
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition"),
             fieldWithPath("type").description("The type of question"),
-            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor"),
-            fieldWithPath("questionAssessment").description("Id of the assessment guidance for this question")
+            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor")
     };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()

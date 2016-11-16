@@ -11,5 +11,6 @@ import java.util.List;
  */
 public interface FormInputTypeRepository extends PagingAndSortingRepository<FormInputType, Long> {
     List<FormInputType> findByTitle(@Param("title") String title);
+    FormInputType findOneByTitle(@Param("title") String title);
 
 }

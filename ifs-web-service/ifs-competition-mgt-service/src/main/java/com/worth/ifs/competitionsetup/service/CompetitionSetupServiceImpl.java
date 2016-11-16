@@ -127,6 +127,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		return populator.populateForm(competitionResource, objectId);
 	}
 
+
 	@Override
 	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
                                                        String fieldName, String value, Optional<Long> objectId) {

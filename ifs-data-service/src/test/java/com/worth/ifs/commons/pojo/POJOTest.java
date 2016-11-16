@@ -17,10 +17,10 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.AssessmentScoreRowResource;
+import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
-import com.worth.ifs.application.resource.QuestionAssessmentResource;
+import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
@@ -144,8 +144,8 @@ public class POJOTest {
             ProfileSkillsResource.class,
             UserProfileResource.class,
             UserProfileStatusResource.class,
-            QuestionAssessmentResource.class,
-            AssessmentScoreRowResource.class
+            CompetitionSetupQuestionResource.class,
+            FormInputGuidanceRowResource.class
     );
 
     @Before

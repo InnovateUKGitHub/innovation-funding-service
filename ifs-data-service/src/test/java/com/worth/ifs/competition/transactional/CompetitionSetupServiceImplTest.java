@@ -1,22 +1,15 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
-import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.application.builder.QuestionAssessmentBuilder.newQuestionAssessment;
-import static com.worth.ifs.application.builder.AssessmentScoreRowBuilder.newAssessmentScoreRow;
-
-import java.util.ArrayList;
-
-import com.worth.ifs.application.repository.AssessmentScoreRowRepository;
-import com.worth.ifs.application.repository.QuestionAssessmentRepository;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.repository.FormInputGuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,15 +18,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.application.builder.FormInputGuidanceRowBuilder.newFormInputGuidanceRow;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -51,9 +47,7 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private SectionRepository sectionRepository;
 	@Mock
-	private QuestionAssessmentRepository questionAssessmentRepository;
-	@Mock
-	private AssessmentScoreRowRepository assessmentScoreRowRepository;
+	private FormInputGuidanceRowRepository assessmentScoreRowRepository;
 	@Mock
 	private EntityManager entityManager;
 
@@ -73,11 +67,9 @@ public class CompetitionSetupServiceImplTest {
     			.withSections(newSection()
 						.withSectionType(SectionType.GENERAL)
 						.withQuestions(newQuestion()
-								.withFormInputs(newFormInput().build(2)
-								)
-								.withQuestionAssessment(newQuestionAssessment()
-									.withScoreRows(newAssessmentScoreRow().build(2)
-								).build()
+								.withFormInputs(newFormInput()
+										.withFormInputGuidanceRows(newFormInputGuidanceRow().build(2)
+										).build(2)
 							).build(2)
 					).build(2)
 			).build();

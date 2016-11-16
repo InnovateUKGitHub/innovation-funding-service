@@ -1,7 +1,7 @@
 package com.worth.ifs.competitionsetup.form.application;
 
+import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -13,13 +13,13 @@ import javax.validation.constraints.NotNull;
 public class ApplicationQuestionForm extends CompetitionSetupForm {
     @Valid
     @NotNull
-    private QuestionViewModel question;
+    private CompetitionSetupQuestionResource question;
 
-    public QuestionViewModel getQuestion() {
+    public CompetitionSetupQuestionResource getQuestion() {
         return question;
     }
 
-    public void setQuestion(QuestionViewModel question) {
+    public void setQuestion(CompetitionSetupQuestionResource question) {
         this.question = question;
     }
 }

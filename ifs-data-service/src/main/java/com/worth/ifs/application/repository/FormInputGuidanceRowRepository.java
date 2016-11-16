@@ -10,8 +10,8 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentScoreRowRepository extends CrudRepository<FormInputGuidanceRow, Long> {
+public interface FormInputGuidanceRowRepository extends CrudRepository<FormInputGuidanceRow, Long> {
 
-    List<FormInputGuidanceRow> findByQuestionAssessment_Question_CompetitionId(Long competitionId);
+    List<FormInputGuidanceRow> findByFormInput_Question_CompetitionId(Long competitionId);
 
 }

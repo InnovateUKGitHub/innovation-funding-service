@@ -16,9 +16,41 @@ public class FormInputGuidanceRow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_input_id", referencedColumnName = "id")
-    private FormInput forminput;
+    private FormInput formInput;
 
     private String subject;
 
     private String justification;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public FormInput getFormInput() {
+        return formInput;
+    }
+
+    public void setFormInput(FormInput formInput) {
+        this.formInput = formInput;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getJustification() {
+        return justification;
+    }
+
+    public void setJustification(String justification) {
+        this.justification = justification;
+    }
 }

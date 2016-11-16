@@ -1,8 +1,8 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.AssessmentScoreRowResource;
-import com.worth.ifs.application.resource.QuestionAssessmentResource;
+import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
+import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -11,14 +11,14 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class QuestionAssessmentResourceBuilder extends BaseBuilder<QuestionAssessmentResource, QuestionAssessmentResourceBuilder> {
+public class QuestionAssessmentResourceBuilder extends BaseBuilder<CompetitionSetupQuestionResource, QuestionAssessmentResourceBuilder> {
 
-    private QuestionAssessmentResourceBuilder(List<BiConsumer<Integer, QuestionAssessmentResource>> newMultiActions) {
+    private QuestionAssessmentResourceBuilder(List<BiConsumer<Integer, CompetitionSetupQuestionResource>> newMultiActions) {
         super(newMultiActions);
     }
 
     @Override
-    protected QuestionAssessmentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, QuestionAssessmentResource>> actions) {
+    protected QuestionAssessmentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionSetupQuestionResource>> actions) {
         return new QuestionAssessmentResourceBuilder(actions);
     }
 
@@ -52,12 +52,12 @@ public class QuestionAssessmentResourceBuilder extends BaseBuilder<QuestionAsses
         return with(questionAssessment -> setField("wordCount", wordCount, questionAssessment));
     }
 
-    public QuestionAssessmentResourceBuilder withScoreRows(List<AssessmentScoreRowResource> scoreRows) {
+    public QuestionAssessmentResourceBuilder withScoreRows(List<FormInputGuidanceRowResource> scoreRows) {
         return with(questionAssessment -> setField("scoreRows", scoreRows, questionAssessment));
     }
 
     @Override
-    protected QuestionAssessmentResource createInitial() {
-        return new QuestionAssessmentResource();
+    protected CompetitionSetupQuestionResource createInitial() {
+        return new CompetitionSetupQuestionResource();
     }
 }
