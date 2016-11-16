@@ -196,7 +196,7 @@ the user adds score and feedback for every question
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-225 .editor    Testing Economic benefit feedback text
+    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT} .editor    Testing Economic benefit feedback text
     the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores

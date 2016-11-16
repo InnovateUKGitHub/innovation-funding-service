@@ -158,7 +158,7 @@ Feedback: word count
     [Tags]
     Given I am on the assessor assessment overview page
     and I open one of the application questions    link=4. Economic benefit
-    And I should see word count underneath feedback form    Words remaining: 91
+    And I should see word count underneath feedback form    Words remaining: 100
     When I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words    Test words count to enter only 10 words test test
@@ -204,7 +204,7 @@ the user clicks next and goes to the page
 
 I enter feedback of words
     [Arguments]    ${feedback_message}
-    the user enters text to a text field    css=#form-input-225 .editor    ${feedback_message}
+    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT} .editor    ${feedback_message}
 
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}
