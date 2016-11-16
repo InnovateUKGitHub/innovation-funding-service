@@ -10,94 +10,62 @@ services:
       - "443:443"
       - "389:389"
     links:
-      - web:ifs-application-host
-      - data
-    networks:
-      front-tier:
-        aliases:
-         - iuk-auth-localdev
-         - ifs-local-dev
-
-  web:
-    build:
-      context: setup-files/scripts/docker/nginx
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-    links:
       - application-service
       - assessment-service
       - competition-mgt-service
       - project-setup-mgt-service
       - project-setup-service
-    networks:
-      front-tier:
-        aliases:
-          - ifs-web-service
 
   application-service:
     image: worth/application-service:1.0-SNAPSHOT
     links:
-      - data
+      - data:data-service
+      - admin
     ports:
       - "8081:8080"
-    networks:
-      - front-tier
-      - back-tier
+
   assessment-service:
     image: worth/assessment-service:1.0-SNAPSHOT
     links:
-      - data
+      - data:data-service
+      - admin
     ports:
       - "8082:8080"
-    networks:
-      - front-tier
-      - back-tier
+
   competition-mgt-service:
     image: worth/competition-management-service:1.0-SNAPSHOT
     links:
-      - data
+      - data:data-service
+      - admin
     ports:
       - "8083:8080"
-    networks:
-      - front-tier
-      - back-tier
+
   project-setup-mgt-service:
     image: worth/project-setup-management-service:1.0-SNAPSHOT
     links:
-      - data
+      - data:data-service
+      - admin
     ports:
       - "8084:8080"
-    networks:
-      - front-tier
-      - back-tier
+
   project-setup-service:
     image: worth/project-setup-service:1.0-SNAPSHOT
     links:
-      - data
+      - data:data-service
+      - admin
     ports:
       - "8085:8080"
-    networks:
-      - front-tier
-      - back-tier
 
   data:
     image: worth/data-service:1.0-SNAPSHOT
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
-    depends_on:
-      - mysql
+    links:
+      - mysql:ifs-database
+      - admin
+      - smtp
     ports:
       - "8090:8080"
-    networks:
-      front-tier:
-        aliases:
-          - data-service
-          - ifs-data-service
-      back-tier:
-        aliases:
-          - data-service
-          - ifs-data-service
 
   mysql:
     image: mysql:5.5.49
@@ -107,20 +75,11 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs
     restart: on-failure
-    networks:
-      back-tier:
-        aliases:
-         - database
-         - ifs-database
 
   smtp:
     image: camptocamp/smtp-sink
     expose:
       - 25
-    networks:
-      back-tier:
-        aliases:
-          - smtp
 
   imap:
     image: camptocamp/courier-imap
@@ -130,37 +89,18 @@ services:
       - 143
     ports:
       - "9876:143"
-    networks:
-      front-tier:
-        aliases:
-          - imap
-      back-tier:
-        aliases:
-          - imap
 
   webmail:
     image: camptocamp/sqwebmail
     ports:
       - "1234:80"
-    depends_on:
+    links:
       - smtp
+      - imap
     volumes_from:
       - smtp:rw
-    networks:
-      back-tier:
-        aliases:
-          - webmail
 
   admin:
     image: enmobile/docker-spring-boot-admin
     ports:
     - "3000:8123"
-    networks:
-    - "back-tier"
-    - "front-tier"
-
-networks:
-  front-tier:
-    driver: bridge
-  back-tier:
-    driver: bridge
