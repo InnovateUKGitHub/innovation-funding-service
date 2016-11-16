@@ -16,18 +16,20 @@ ${la_fromage_overview}    ${server}/project-setup/project/4
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821, INFUND-5476
+    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
     [Tags]  HappyPath
-    [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user         project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
+    [Teardown]  the user clicks the button/link  link=Competition Dashboard
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
-    Given The user should not see the text in the page    Viability
+    Given the user navigates to the page    ${server}/project-setup-management/project/4/finance-check
+    Then The user should not see the text in the page    Viability
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=review

@@ -200,6 +200,7 @@ dl.standard-definition-list{
         width: 50%;
         max-width: 250px;
         margin-bottom: 0.5em;
+        margin-right: 0.5em;
 
         @include media-down(tablet) {
             width: 70%;
