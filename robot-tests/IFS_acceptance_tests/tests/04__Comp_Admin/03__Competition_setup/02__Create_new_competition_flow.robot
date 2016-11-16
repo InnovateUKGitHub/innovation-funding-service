@@ -217,14 +217,14 @@ Eligibility: Contain the correct options
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Does the competition have multiple streams?
+    And the user should see the text in the page    Should applications be from single partner or collaborative projects?
     Then the user should see the element    jQuery=label:contains(Single or Collaborative)
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
     And the user should see the element    jQuery=label:contains(Research)
     And the user should see the element    jQuery=label:contains(Either)
-    And the user should see the element    jQuery=label:contains(Yes)
-    And the user should see the element    jQuery=label:contains(No)
+    And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
+    And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains(Technical feasibility)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
@@ -237,14 +237,12 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    Given the user selects the radio button    multipleStream    yes
-    And the user selects the checkbox    id=research-categories-33
+    Given the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -252,7 +250,6 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Test stream name
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition setup
@@ -325,17 +322,25 @@ Application: Business opportunity
     [Documentation]    INFUND-5632
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user should see the text in the page  You can edit this question and the guidance text for assessors.
-    And the user should see the element      jQuery=a:contains("Edit this question")
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the element    jQuery=a:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link=Application
+
+Application: Scope
+    [Documentation]    INFUND-5634
+    When the user clicks the button/link    link=Scope
+    Then the user should see the element    jQuery=h1:contains("Scope")
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
-    When The user clicks the button/link     jQuery=label:contains("Light finances")
-    And The user clicks the button/link      jQuery=label:contains("No")
-    And The user clicks the button/link      jQuery=button:contains("Done")
-    And the user clicks the button/link      link=Finances
+    When The user clicks the button/link    jQuery=label:contains("Light finances")
+    And The user clicks the button/link    jQuery=label:contains("No")
+    And The user clicks the button/link    jQuery=button:contains("Done")
+    And the user clicks the button/link    link=Finances
     Then the Radio Button selections should be correct
     [Teardown]    The user clicks the button/link    link=Application
 

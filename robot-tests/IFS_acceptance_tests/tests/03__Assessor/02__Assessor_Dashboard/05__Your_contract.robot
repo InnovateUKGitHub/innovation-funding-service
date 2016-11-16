@@ -17,7 +17,7 @@ Server-side validations
     ...
     ...    INFUND-5432
     [Tags]
-    Given The user should see the element    link=your contract
+    Given The user should see the element    link=your contract    #his checks the alert message on the top od the page
     And the user clicks the button/link    jQuery=a:contains("Your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see an error    Please agree to the terms and conditions
@@ -34,11 +34,11 @@ Review Annexes
     When the user clicks the button/link    link=Annex A
     Then the user should see the text in the page    Technology programme: Assessor services
     And the user clicks the button/link    link=Back to your terms of contract
-    When the user clicks the button/link    link=Annex B
-    Then the user should see the text in the page    Travel and subsistence rates for non-civil service contracted personnel
+    And the user clicks the button/link    link=Annex B
+    And the user should see the text in the page    Travel and subsistence rates for non-civil service contracted personnel
     And the user clicks the button/link    link=Back to your terms of contract
-    When the user clicks the button/link    link=Annex C
-    Then the user should see the text in the page    Information management
+    And the user clicks the button/link    link=Annex C
+    And the user should see the text in the page    Information management
     And the user clicks the button/link    link=Back to your terms of contract
 
 Client-side validations and redirect to dashboard
@@ -51,9 +51,9 @@ Client-side validations and redirect to dashboard
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    link=your contract
+    And The user should not see the element    link=your contract    #his checks the alert message on the top od the page
 
 Agreement Confirmation
     [Documentation]    INFUND-5628
     Then the user clicks the button/link    jQuery=a:contains("Your contract")
-    Then the user should see the text in the page    You signed the contract on
+    And the user should see the text in the page    You signed the contract on

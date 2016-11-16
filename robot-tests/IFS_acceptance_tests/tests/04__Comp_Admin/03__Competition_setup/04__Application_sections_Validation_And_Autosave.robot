@@ -49,6 +49,50 @@ Business opportunity: Mark as done
     And The user should see the text in the page    Guidance text test
     And The user should see the text in the page    150
     And The user should see the text in the page    No
+    [Teardown]    The user clicks the button/link    link=Application
+
+Scope Server-side validations
+    [Documentation]    INFUND-5635
+    Given The user clicks the button/link    link=Scope
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    When the user leaves all the question field empty
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
+    #And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+    # Remove the above comment a soon as inf-5980 is done
+
+Scope: Client side validations
+    [Documentation]    INFUND-5635
+    When the user fills the empty question fields
+    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+
+Scope: Autosave
+    [Documentation]    INFUND-5635
+    [Tags]    Pending
+    # Pending Infund-5980
+    Given the user moves focus and waits for autosave
+    When the user clicks the button/link    link=Application
+    And The user clicks the button/link    link=Scope
+    Then the user should see the correct inputs in the Applications questions form
+
+Scope: Mark as done
+    [Documentation]    INFUND-5635
+    [Tags]
+    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then The user should see the text in the page   Scope
+    And The user should see the text in the page    Test title
+    And The user should see the text in the page    Subtitle test
+    And The user should see the text in the page    Test guidance title
+    And The user should see the text in the page    Guidance text test
+    And The user should see the text in the page    150
+    And The user should see the text in the page    No
 
 *** Keywords ***
 the user leaves all the question field empty

@@ -4,7 +4,7 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Assessor    Pending
+Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -12,12 +12,12 @@ Back to the dashboard link
     [Documentation]    INFUND-3715
     ...
     ...    INFUND-5432
-    Given The user should see the element    link=your declaration of interest
+    Given The user should see the element    link=your declaration of interest    #his checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     And the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
-Server-side empty form validations
+Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
@@ -30,196 +30,69 @@ Server-side empty form validations
     And the user should see a field and summary error    Please tell us if any of your close family members have any appointments, directorships or consultancies
     And the user should see a field and summary error    Please tell us if any of your close family members have any other financial interests
 
-Client-side empty yes/no question validations
+Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]
-    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
-    #TODO: Will need changes once client side validations have been implemented INFUND-5867
     Given the user selects the radio button    hasAppointments    yes
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter an organisation
     And the user should see a field and summary error    Please enter a position
-    When the user selects the radio button    hasAppointments    no
-    and the user clicks the button/link    jQuery=button:contains("Save and continue")
-    #TODO uncomment it after INFUND-5868 is fixed
-    Then The user should not see the text in the page    Please enter an organisation
-    #And The user should not see the text in the page    Please enter a position
+    And the user selects the radio button    hasAppointments    no
     When the user selects the radio button    hasFinancialInterests    Yes
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    #Then the user should see a field and summary error    Please enter your financial interests
-    When the user selects the radio button    hasFinancialInterests    No
-    #TODO uncomment it after INFUND-5868 is fixed
-    #Then The user should not see the text in the page    Please enter your financial interests
-    When the user selects the radio button    hasFamilyAffiliations    Yes
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    #Then the user should see a field and summary error    Please enter a relation
-    #And the user should see a field and summary error    Please enter an organisation
-    #And the user should see a field and summary error    Please enter a position
-    When the user selects the radio button    hasFamilyAffiliations    No
-    #TODO uncomment it after INFUND-5868 is fixed
-    #Then The user should not see the text in the page    Please enter a relation
-    #And The user should not see the text in the page    Please enter an organisation
-    And The user should not see the text in the page    Please enter a position
-    When the user selects the radio button    hasFamilyFinancialInterests    Yes
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field and summary error    Please enter your family financial interests
-    When the user selects the radio button    hasFamilyFinancialInterests    No
-    #TODO uncomment it after INFUND-5868 is fixed
-    Then The user should not see the text in the page    Please enter your family financial interests
-
-Client-side empty close family member validation # (this scenario is covered above, can be removed after review)
-    [Documentation]    INFUND-3715
-    [Tags]
-    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
-    #TODO: Will need changes once client side validations have been implemented (INFUND-5867)
-    Given the user selects yes at yes/no question radio buttons
-    When the user clicks the button/link    jQuery=button:contains("Add another position")
-    And the user clicks the button/link    jQuery=button:contains("Add another family member")
+    And the user selects the radio button    hasFamilyAffiliations    Yes
+    And the user selects the radio button    hasFamilyFinancialInterests    Yes
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error    Please enter a relation
-    And the user should see a field and summary error    Please enter a position
     And the user should see a field and summary error    Please enter an organisation
+    And the user should see a field and summary error    Please enter a position
+    And the user should see a field and summary error    Please enter your family financial interests
+    And the user should see a field and summary error    Please enter your financial interests
 
-Successful editing with no at yes/no questions
+Client-side validations
     [Documentation]    INFUND-3715
+    [Tags]
+    #TODO Pending due to INFUND-6186    # the disabled checks should be removed when this is fixed
+    When the user correctly fills out the role, principle employer and accurate fields
+    #Then the user should not see the validation error    Please enter a relation
+    #And the user should not see the validation error    Please enter an organisation
+    #And the user should not see the validation error    Please enter a position
+    And the user should not see the validation error    Please enter your family financial interests
+    #And The user should not see the text in the page    Please enter your financial interests
+
+Successful save for the Declaration form
+    [Documentation]    INFUND-3715
+    ...
+    ...    INFUND-5432
     [Tags]    HappyPath
-    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
-    #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
-    Given the user correctly fills out the role, principle employer and accurate fields
-    And the user selects no at yes/no question radio buttons
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    And The user should not see the element    link=your declaration of interest    #his checks the alert message on the top od the page
     And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    And the user should see correctly filled out the role, employer, affiliation and accurate fields
-    And the user should see no selected at yes/no questions
-
-Successful editing with yes at yes/no questions
-    [Documentation]    INFUND-3715
-    [Tags]    HappyPath    Pending
-    [Setup]    the user is on the page or will navigate there    ${assessment_skills}
-    #TODO: Failing because of QA issue INFUND-5868. Will need change when first rows by default have been implemented (INFUND-5871)
-    Given the user correctly fills out the role, principle employer and accurate fields
-    And the user selects yes at yes/no question radio buttons
-    When the user adds positions
-    And the user adds an additional position
-    And the user removes the first two positions
-    And the user adds close family member affiliations
-    And the user adds an additional member affiliation
-    And the user removes the first two family member affiliations
-    And the user enters text to a text field    id=financialInterests    Financial Interests
-    And the user enters text to a text field    id=familyFinancialInterests    Family Financial Interests
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
-    Then the user should see correctly filled out the role, employer, affiliation and accurate fields
-    And the user should see yes selected at yes/no questions
-    And the user should see the correct close family member affiliations
-    And the user should see the correct close family member financial interests
-    And the user should see only the additional family member affiliations
-    And the user should see only the additional position
+    And the user should see the correct inputs in the declaration form
 
 *** Keywords ***
-the user selects yes at yes/no question radio buttons
-    the user selects the checkbox    id=hasAppointments1
-    the user selects the checkbox    id=hasFinancialInterests1
-    the user selects the checkbox    id=hasFamilyAffiliations1
-    the user selects the checkbox    id=hasFamilyFinancialInterests1
-
-the user selects no at yes/no question radio buttons
-    the user selects the checkbox    id=hasAppointments2
-    the user selects the checkbox    id=hasFinancialInterests2
-    the user selects the checkbox    id=hasFamilyAffiliations2
-    the user selects the checkbox    id=hasFamilyFinancialInterests2
-
 the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=principalEmployer    University
     the user enters text to a text field    id=role    Professor
     the user enters text to a text field    id=professionalAffiliations    Role x at Company y
-    the user selects the checkbox    id=accurateAccount1
+    the user enters text to a text field    id=financialInterests    finance int
+    the user enters text to a text field    Id=familyAffiliations0.relation    Relation
+    the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
+    the user enters text to a text field    id=familyAffiliations0.position    Director
+    the user enters text to a text field    id=familyFinancialInterests    My interests
+    When the user selects the checkbox    id=accurateAccount1
+    focus    jQuery=button:contains("Save and continue")
+    sleep    500ms
+    Wait For Autosave
 
-the user should see correctly filled out the role, employer, affiliation and accurate fields
+the user should see the correct inputs in the declaration form
     Textfield Value Should Be    id=principalEmployer    University
     Textfield Value Should Be    id=role    Professor
     Textarea Value Should Be    id=professionalAffiliations    Role x at Company y
-    Checkbox Should Not Be Selected    id=accurateAccount1
+    Textarea Value Should Be    id=financialInterests    finance int
+    Textarea Value Should Be    id=familyFinancialInterests    My interests
 
-the user should see yes selected at yes/no questions
-    Checkbox Should Be Selected    id=hasAppointments1
-    Checkbox Should Be Selected    id=hasFinancialInterests1
-    Checkbox Should Be Selected    id=hasFamilyAffiliations1
-    Checkbox Should Be Selected    id=hasFamilyFinancialInterests1
-
-the user should see no selected at yes/no questions
-    Checkbox Should Be Selected    id=hasAppointments2
-    Checkbox Should Be Selected    id=hasFinancialInterests2
-    Checkbox Should Be Selected    id=hasFamilyAffiliations2
-    Checkbox Should Be Selected    id=hasFamilyFinancialInterests2
-
-the user adds positions
-    the user clicks the button/link    jQuery=button:contains("Add another position")
-    the user enters text to a text field    id=appointments0.organisation    Organisation0
-    the user enters text to a text field    id=appointments0.position    Position0
-
-the user adds an additional position
-    the user clicks the button/link    jQuery=button:contains("Add another position")
-    the user enters text to a text field    id=appointments2.organisation    Organisation2
-    the user enters text to a text field    id=appointments2.position    Position2
-
-the user adds close family member affiliations
-    the user clicks the button/link    jQuery=button:contains("Add another family member")
-    the user enters text to a text field    id=familyAffiliations0.relation    Family member relation 0
-    the user enters text to a text field    id=familyAffiliations0.organisation    Family member organisation 0
-    the user enters text to a text field    id=familyAffiliations0.position    Family member position 0
-    the user clicks the button/link    jQuery=button:contains("Add another family member")
-    the user enters text to a text field    id=familyAffiliations1.relation    Family member relation 1
-    the user enters text to a text field    id=familyAffiliations1.organisation    Family member organisation 1
-    the user enters text to a text field    id=familyAffiliations1.position    Family member position 1
-
-the user adds an additional member affiliation
-    the user clicks the button/link    jQuery=button:contains("Add another family member")
-    the user enters text to a text field    id=familyAffiliations2.relation    Family member relation 2
-    the user enters text to a text field    id=familyAffiliations2.organisation    Family member organisation 2
-    the user enters text to a text field    id=familyAffiliations2.position    Family member position 2
-
-the user adds close family member financial interests
-    the user enters text to a text field    id=familyFinancialInterests    Family Financial Interests
-
-the user should see the correct positions
-    Textfield Value Should Be    id=appointments0.organisation    Organisation0
-    Textfield Value Should Be    id=appointments0.position    Position0
-    Textfield Value Should Be    id=appointments1.organisation    Organisation1
-    Textfield Value Should Be    id=appointments1.position    Position1
-
-the user should see the correct financial interests
-    Textarea Value Should Be    id=financialInterests    Financial Interests
-
-the user should see the correct close family member affiliations
-    Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 0
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 0
-    Textfield Value Should Be    id=familyAffiliations0.position    Family member position 0
-    Textfield Value Should Be    id=familyAffiliations1.relation    Family member relation 1
-    Textfield Value Should Be    id=familyAffiliations1.organisation    Family member organisation 1
-    Textfield Value Should Be    id=familyAffiliations1.position    Family member position 1
-
-the user should see the correct close family member financial interests
-    Textarea Value Should Be    id=familyFinancialInterests    Family Financial Interests
-
-the user removes the first two positions
-    the user clicks the button/link    jQuery=#position-table button:contains("Remove"):first
-    the user clicks the button/link    jQuery=#position-table button:contains("Remove"):first
-
-the user removes the first two family member affiliations
-    the user clicks the button/link    jQuery=#family-table button:contains("Remove"):first
-    the user clicks the button/link    jQuery=#family-table button:contains("Remove"):first
-
-the user should see only the additional position
-    Textfield Value Should Be    id=appointments0.organisation    Organisation2
-    Textfield Value Should Be    id=appointments0.position    Position2
-    the user should not see the element    id=appointments1.position
-    the user should not see the element    id=appointments2.position
-
-the user should see only the additional family member affiliations
-    Textfield Value Should Be    id=familyAffiliations0.relation    Family member relation 2
-    Textfield Value Should Be    id=familyAffiliations0.organisation    Family member organisation 2
-    Textfield Value Should Be    id=familyAffiliations0.position    Family member position 2
-    the user should not see the element    id=familyAffiliations1.relation
-    the user should not see the element    id=familyAffiliations2.relation
+the user should not see the validation error
+    [Arguments]    ${ERROR_TEXT}
+    wait until page contains element    jQuery=.error-message
+    Wait Until Page Contains    ${ERROR_TEXT}
