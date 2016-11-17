@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,8 +112,8 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId) {
-        competitionsRestService.initApplicationForm(competitionId, competitionTypeId);
+    public ServiceResult<Void> initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId) {
+        return competitionsRestService.initApplicationForm(competitionId, competitionTypeId).toServiceResult();
     }
 
     @Override

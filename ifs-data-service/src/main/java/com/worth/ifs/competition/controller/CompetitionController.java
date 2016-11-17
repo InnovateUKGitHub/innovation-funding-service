@@ -65,8 +65,9 @@ public class CompetitionController {
     
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
-    	return competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionType).toGetResponse();
+        return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
+
 
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
     public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {

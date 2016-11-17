@@ -148,6 +148,7 @@ ${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SE
 ${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
+${internal_spend_profile_approval}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
