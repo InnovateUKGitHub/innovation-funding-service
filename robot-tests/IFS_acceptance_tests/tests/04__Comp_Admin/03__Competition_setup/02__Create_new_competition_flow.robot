@@ -359,8 +359,9 @@ Application: should have a green check
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]
+    [Tags]    Pending
     [Setup]
+    #TO DO Pending due to /INFUND-6068
     Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
     When The user clicks the button/link    link=Initial Details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -374,7 +375,8 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
     ...
     ...    INFUND-3002
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TO DO Pending due to /INFUND-6068
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
