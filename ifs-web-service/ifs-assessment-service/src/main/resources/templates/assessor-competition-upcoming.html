@@ -10,6 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="|Upcoming competition '${model.competitionName}'|">Upcoming competition 'My Competition'</h1>
