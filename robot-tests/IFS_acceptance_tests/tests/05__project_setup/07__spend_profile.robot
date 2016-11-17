@@ -24,6 +24,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5846 As a partner in an acedemic organisation I want to be able to edit my Spend profile so I can prepare an updated profile for my organisation before submission to the Project Manager
 ...
 ...               INFUND-5441 As a Project Finance team member I want to be able to export submitted spend profile tables from academic organisations so that these may be distributed offline to Lead Technologists and Monitoring Officers
+...
+...               INFUND-6046 Spend Profile should have a link when Done
 
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -390,7 +392,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been rejected")
     # TODO - Set up test data with Innovate lead and check for the lead.
-    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed. See INFUND-6046.
+    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed, Pending due to INFUND-5942
     When the user should see the text in the page           Project spend profile
     Then the user clicks the button/link                    link=Cheeseco-spend-profile.csv
     And the user clicks the button/link                     link=Ludlow-spend-profile.csv
@@ -468,6 +470,18 @@ Project Finance is able to Approve Spend Profile
     When the user navigates to the page              ${internal_spend_profile_approval}
     And the user clicks the button/link              link=Competition dashboard
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
+
+
+Project Finance still has a link to the spend profile after approval
+    [Documentation]    INFUND-6046
+    [Tags]
+    When the user clicks the button/link                     jQuery=td:nth-child(6) a
+    Then the user should see the text in the page           Project spend profile
+    And the user clicks the button/link                    link=Cheeseco-spend-profile.csv
+    And the user clicks the button/link                     link=Ludlow-spend-profile.csv
+    And the user clicks the button/link                     link=EGGS-spend-profile.csv
+    And the user should see the text in the page    The spend profile has been approved
+
 
 Project finance user cannot access internal users' spend profile page
     [Documentation]    INFUND-5911
