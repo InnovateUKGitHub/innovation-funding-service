@@ -2,10 +2,12 @@ package com.worth.ifs.workflow.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
@@ -41,6 +43,35 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
                 .andExpect(status().isOk());
 
         verify(processOutcomeService, only()).findOne(processOutcomeId);
+    }
+
+    @Test
+    public void findByAssessmentId() throws Exception {
+        ProcessOutcomeResource expected = newProcessOutcomeResource().build();
+
+        Long assessmentId = 1L;
+
+        when(processOutcomeService.findLatestByProcess(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+        verify(processOutcomeService, only()).findLatestByProcess(assessmentId);
+    }
+
+    @Test
+    public void findByAssessmentIdAndAssessmentOutcome() throws Exception {
+        ProcessOutcomeResource expected = newProcessOutcomeResource().build();
+
+        Long assessmentId = 1L;
+        String processType =  AssessmentOutcomes.FEEDBACK.getType();
+
+        when(processOutcomeService.findLatestByProcessAndOutcomeType(assessmentId, processType)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}/type/{type}", assessmentId, processType))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+        verify(processOutcomeService, only()).findLatestByProcessAndOutcomeType(assessmentId,processType);
     }
 
 }

@@ -4,6 +4,7 @@ import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
@@ -26,6 +27,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -54,7 +57,7 @@ public class AssessorCompetitionDashboardModelPopulator {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ProcessOutcomeService  processOutcomeService;
+    private ProcessOutcomeService processOutcomeService;
 
     @Autowired
     private UserService userService;
@@ -102,8 +105,14 @@ public class AssessorCompetitionDashboardModelPopulator {
     }
 
     private Boolean getRecommended(AssessmentResource assessmentResource) {
-        Optional<ProcessOutcomeResource> outcome = assessmentResource.getProcessOutcomes().stream().reduce((id1, id2) -> id2).map(id -> processOutcomeService.getById(id));
-        return outcome.map(oc -> Optional.ofNullable(oc.getOutcome()).map(BooleanUtils::toBoolean).orElse(null)).orElse(null);
+        switch (assessmentResource.getAssessmentState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                ProcessOutcomeResource outcome = processOutcomeService.getByProcessIdAndOutcomeType(assessmentResource.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                return Optional.ofNullable(outcome.getOutcome()).map(BooleanUtils::toBoolean).orElse(null);
+            default:
+                return null;
+        }
     }
 
     private String getLeadTechnologist(CompetitionResource competition) {

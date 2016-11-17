@@ -9,4 +9,7 @@ public interface ProcessOutcomeService {
 
     ProcessOutcomeResource getById(Long id);
 
+    ProcessOutcomeResource getByProcessId(Long processId);
+
+    ProcessOutcomeResource getByProcessIdAndOutcomeType(Long processId, String outcomeType);
 }

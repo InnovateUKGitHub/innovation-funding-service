@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import com.worth.ifs.workflow.service.ProcessOutcomeRestService;
 import org.junit.Test;
@@ -31,5 +32,30 @@ public class ProcessOutcomeServiceImplTest extends BaseServiceUnitTest<ProcessOu
 
         assertSame(expected, service.getById(processOutcomeId));
         verify(processOutcomeRestService, only()).findOne(processOutcomeId);
+    }
+
+    @Test
+    public void getByProcessId() throws Exception {
+        Long processId = 1L;
+
+        ProcessOutcomeResource expected = newProcessOutcomeResource().build();
+
+        when(processOutcomeRestService.findLatestByProcessId(processId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getByProcessId(processId));
+        verify(processOutcomeRestService, only()).findLatestByProcessId(processId);
+    }
+
+    @Test
+    public void getByProcessIdAndOutcomeType() throws Exception {
+        Long processId = 1L;
+        String outcomeType = AssessmentOutcomes.SUBMIT.getType();
+
+        ProcessOutcomeResource expected = newProcessOutcomeResource().build();
+
+        when(processOutcomeRestService.findLatestByProcessIdAndType(processId, outcomeType)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getByProcessIdAndOutcomeType(processId, outcomeType));
+        verify(processOutcomeRestService, only()).findLatestByProcessIdAndType(processId, outcomeType);
     }
 }

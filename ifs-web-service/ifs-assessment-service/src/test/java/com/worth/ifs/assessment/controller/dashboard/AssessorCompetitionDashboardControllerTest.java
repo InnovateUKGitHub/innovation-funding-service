@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.builder.ProcessOutcomeBuilder;
 import com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder;
 import com.worth.ifs.assessment.model.AssessorCompetitionDashboardModelPopulator;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
@@ -74,7 +75,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())
                 .withActivityState(PENDING, ACCEPTED, READY_TO_SUBMIT, SUBMITTED)
-                .withProcessOutcome(asList(0L,1L), emptyList(), emptyList(),singletonList(2L))
                 .build(4);
 
         List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
@@ -97,8 +97,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
-        when(processOutcomeService.getById(1L)).thenReturn(processOutcomes.get(0));
-        when(processOutcomeService.getById(2L)).thenReturn(processOutcomes.get(1));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(2).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(0));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(3).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(1));
+
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -155,7 +156,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())
                 .withActivityState(PENDING, ACCEPTED, OPEN, SUBMITTED)
-                .withProcessOutcome(asList(0L,1L), emptyList(), emptyList(),singletonList(2L))
+                .withProcessOutcome(null, emptyList(),asList(0L,1L),singletonList(2L))
                 .build(4);
 
         List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
@@ -178,8 +179,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
-        when(processOutcomeService.getById(1L)).thenReturn(processOutcomes.get(0));
-        when(processOutcomeService.getById(2L)).thenReturn(processOutcomes.get(1));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(2).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(0));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(3).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(1));
 
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 

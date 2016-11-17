@@ -26,4 +26,24 @@ public class ProcessOutcomeControllerIntegrationTest extends BaseControllerInteg
         assertEquals(FUNDING_DECISION.getType(),processOutcome.getOutcomeType());
     }
 
+    @Test
+    public void testGetByProcessId() {
+        Long processId = 7L;
+
+        ProcessOutcomeResource processOutcome = controller.findLatestByProcess(processId).getSuccessObjectOrThrowException();
+
+        assertEquals("YES",processOutcome.getOutcome());
+        assertEquals(FUNDING_DECISION.getType(),processOutcome.getOutcomeType());
+
+    }
+
+    @Test
+    public void testGetByProcessIdAndOutcomeType() {
+        Long processId = 5L;
+
+        ProcessOutcomeResource processOutcome = controller.findLatestByProcessAndOutcomeType(processId, FUNDING_DECISION.getType()).getSuccessObjectOrThrowException();
+
+        assertEquals("YES",processOutcome.getOutcome());
+        assertEquals(FUNDING_DECISION.getType(),processOutcome.getOutcomeType());
+    }
 }
