@@ -122,7 +122,7 @@ Scope: Autosave
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
-    And The user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} .editor    Testing feedback field when "No" is selected.
+    And The user enters text to a text field    css=.editor    Testing feedback field when "No" is selected.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     Then the user should see the text in the page    In scope? No
     And the user clicks the button/link    link=Scope
@@ -134,15 +134,15 @@ Scope: Word count
     ...
     ...    INFUND-3400
     [Tags]    HappyPath
-    When the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
 Scope: on click guidance section should expand and collapse
     [Documentation]    INFUND-4142
     [Tags]
-    When the user clicks the button/link    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} details summary
+    When the user clicks the button/link    css=details summary
     Then the user should see the element    css=#details-content-0 p:nth-child(1)
-    When the user clicks the button/link    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} details summary
+    When the user clicks the button/link    css=details summary
     Then The user should not see the element    css=#details-content-0 p:nth-child(1)
 
 Scope: Status in the overview
@@ -171,7 +171,7 @@ Question 1: Autosave
     Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=1. Business opportunity
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
-    And the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    This is to test the feedback entry.
+    And the user enters text to a text field    css=.editor    This is to test the feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    link=1. Business opportunity
     Then the user should see the text in the page    This is to test the feedback entry.
@@ -179,9 +179,9 @@ Question 1: Autosave
 
 Question 1: Word count
     [Documentation]    INFUND-3400
-    When the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco one
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco one
     Then the user should see the text in the page    Words remaining: -1
-    When the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    Test text
+    When the user enters text to a text field    css=.editor    Test text
     Then the user should see the text in the page    Words remaining: 98
 
 Finance overview
@@ -204,7 +204,7 @@ the user clicks next and goes to the page
 
 I enter feedback of words
     [Arguments]    ${feedback_message}
-    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT} .editor    ${feedback_message}
+    the user enters text to a text field    css=.editor    ${feedback_message}
     and the user moves focus to the element    css=.app-submit-btn
 
 I should see word count underneath feedback form
