@@ -217,7 +217,7 @@ Eligibility: Contain the correct options
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Should applications be from single partner or collaborative projects?
+    And the user should see the text in the page    Please choose the project type.
     Then the user should see the element    jQuery=label:contains(Single or Collaborative)
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
