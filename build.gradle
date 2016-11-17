@@ -1,7 +1,7 @@
 allprojects {
     group 'worth'
     version '1.0-SNAPSHOT'
-    
+
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'docker'
