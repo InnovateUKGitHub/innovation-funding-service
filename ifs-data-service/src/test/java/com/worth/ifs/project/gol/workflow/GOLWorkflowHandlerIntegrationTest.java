@@ -103,7 +103,6 @@ public class GOLWorkflowHandlerIntegrationTest extends
                 GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
     }
 
-
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
