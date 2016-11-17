@@ -21,22 +21,20 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
     public AssessmentDataBuilder withAssessmentData(String assessorEmail, String applicationName, AssessmentStates state) {
         return with(data -> {
-            testService.doWithinTransaction(() -> {
 
-                Application application = applicationRepository.findByName(applicationName).get(0);
-                User assessor = userRepository.findByEmail(assessorEmail).get();
-                Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-                Organisation organisation = organisationRepository.findOneByName("Innovate UK");
+            Application application = applicationRepository.findByName(applicationName).get(0);
+            User assessor = userRepository.findByEmail(assessorEmail).get();
+            Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+            Organisation organisation = organisationRepository.findOneByName("Innovate UK");
 
-                ProcessRole processRole = new ProcessRole(assessor, application, assessorRole, organisation);
-                ProcessRole newProcessRole = processRoleRepository.save(processRole);
+            ProcessRole processRole = new ProcessRole(assessor, application, assessorRole, organisation);
+            ProcessRole newProcessRole = processRoleRepository.save(processRole);
 
-                ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, state.getBackingState());
+            ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, state.getBackingState());
 
-                Assessment assessment = new Assessment(application, newProcessRole);
-                assessment.setActivityState(activityState);
-                assessmentRepository.save(assessment);
-            });
+            Assessment assessment = new Assessment(application, newProcessRole);
+            assessment.setActivityState(activityState);
+            assessmentRepository.save(assessment);
         });
     }
 

@@ -533,9 +533,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void freshDb() throws Exception {
         try {
-            cleanAndMigrateDatabaseWithPatches(new String[] {"db/migration", "db/setup"});
+            cleanAndMigrateDatabaseWithPatches(locations.split(","));
         } catch (Exception e){
-            fail("Exception thrown migrating with script directories: " + asList("db/migration", "db/setup") + e.getMessage());
+            fail("Exception thrown migrating with script directories: " + locations.split(",") + e.getMessage());
         }
     }
 

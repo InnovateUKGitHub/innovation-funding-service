@@ -29,11 +29,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     withName(name).
                     build();
 
-            testService.doWithinTransaction(() -> {
-
-                CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
-                competitionParticipantRepository.save(new CompetitionParticipant(competition, savedInvite));
-            });
+            CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
+            competitionParticipantRepository.save(new CompetitionParticipant(competition, savedInvite));
         }));
     }
 
