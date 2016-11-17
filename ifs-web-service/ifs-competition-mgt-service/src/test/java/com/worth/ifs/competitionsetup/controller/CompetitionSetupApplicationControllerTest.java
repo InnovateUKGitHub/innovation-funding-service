@@ -148,4 +148,44 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         verify(competitionSetupQuestionService).updateQuestion(isA(QuestionViewModel.class));
     }
 
+    @Test
+    public void testGetCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/detail"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/application-details"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testPostCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        final boolean useProjectTitleQuestion = true;
+        final boolean useDurationQuestion = true;
+        final boolean useResubmissionQuestion = true;
+        final boolean estimatedStartDateQuestion = false;
+
+        mockMvc.perform(post(URL_PREFIX + "/detail")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("useProjectTitleQuestion", String.valueOf(useProjectTitleQuestion))
+                .param("useDurationQuestion", String.valueOf(useDurationQuestion))
+                .param("useResubmissionQuestion", String.valueOf(useResubmissionQuestion))
+                .param("estimatedStartDateQuestion", String.valueOf(estimatedStartDateQuestion)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+
+        ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
+        verify(competitionService).update(argument.capture());
+        assertThat(argument.getValue().isUseProjectTitleQuestion(), equalTo(useProjectTitleQuestion));
+        assertThat(argument.getValue().isUseDurationQuestion(), equalTo(useDurationQuestion));
+        assertThat(argument.getValue().isUseResubmissionQuestion(), equalTo(useResubmissionQuestion));
+        assertThat(argument.getValue().isUseEstimatedStartDateQuestion(), equalTo(estimatedStartDateQuestion));
+    }
+
 }
