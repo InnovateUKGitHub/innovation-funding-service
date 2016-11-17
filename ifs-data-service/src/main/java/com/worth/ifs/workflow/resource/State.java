@@ -5,12 +5,12 @@ package com.worth.ifs.workflow.resource;
  */
 public enum State {
 
-    OPEN,
     PENDING,
+    REJECTED,
+    ACCEPTED,
+    OPEN,
     READY_TO_SUBMIT,
     SUBMITTED,
-    ACCEPTED,
-    REJECTED,
     VERIFIED,
     NOT_VERIFIED,
     ASSIGNED,
