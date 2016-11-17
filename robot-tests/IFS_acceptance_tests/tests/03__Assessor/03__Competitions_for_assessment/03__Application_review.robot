@@ -139,7 +139,7 @@ Feedback: word count
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words    Test words count to enter only 10 words test test
     Then I should see word count underneath feedback form    Words remaining: 90
-    Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
+    Then I should not see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
@@ -181,6 +181,7 @@ the user clicks next and goes to the page
 I enter feedback of words
     [Arguments]    ${feedback_message}
     the user enters text to a text field    css=#form-input-225 .editor    ${feedback_message}
+    and the user moves focus to the element    css=.app-submit-btn
 
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}
@@ -189,6 +190,10 @@ I should see word count underneath feedback form
 I should see validation message above the feedback form text field
     [Arguments]    ${error_message}
     the user should see the text in the page    ${error_message}
+
+I should not see validation message above the feedback form text field
+    [Arguments]    ${error_message}
+    the user should not see the text in the page    ${error_message}
 
 I am on the assessor assessment overview page
     the user navigates to the page    ${Assessment_overview_10}
