@@ -22,5 +22,5 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     Assessment findOneByParticipantId(Long participantId);
 
-    List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionId(Long userId, Long competitionId);
+    List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 }
