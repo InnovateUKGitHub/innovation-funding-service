@@ -98,7 +98,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         ct1.setCompetitions(asList(COMPETITION_ID));
         when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
     }
-    
+
     @Test
     public void initCompetitionSetupSection() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
@@ -121,12 +121,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         CompetitionSetupForm compSetupForm = mock(CompetitionSetupForm.class);
         when(competitionSetupService.getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS)).thenReturn(compSetupForm);
-        
+
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("competitionSetupForm", compSetupForm));
-        
+
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(isA(Model.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
@@ -207,8 +207,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("value", value)
                 .param("objectId", String.valueOf(objectId)))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("false")))
-                .andExpect(jsonPath("validation_errors[0]", is("Please enter a future date")));
+                .andExpect(jsonPath("success", is("true")));
 
         verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value), eq(Optional.of(objectId)));
     }
@@ -312,7 +311,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         				.param("researchParticipationAmountId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
-        
+
         verify(competitionService, never()).update(competition);
     }
 

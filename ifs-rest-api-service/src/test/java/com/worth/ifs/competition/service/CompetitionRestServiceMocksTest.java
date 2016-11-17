@@ -102,7 +102,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_findLiveCompetitions() {
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
@@ -115,7 +115,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findProjectSetupCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType(), returnedResponse);
 
@@ -128,7 +128,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findUpcomingCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 

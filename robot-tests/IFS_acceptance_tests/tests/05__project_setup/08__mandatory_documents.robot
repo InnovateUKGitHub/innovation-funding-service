@@ -27,7 +27,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The lead partner of the consortium will need to upload the following documents
+    And The user should see the text in the page    The Project Manager of the consortium will need to upload the following documents
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -313,16 +313,16 @@ Partners can see the documents rejected
     [Tags]    Failing
     Given log in as a different user    worth.email.test+projectlead@gmail.com    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    steve.smith@empire.com    Passw0rd    #Lead Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    pete.tom@egg.com    Passw0rd    #Academic Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd    #Other Partner
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
-    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve these documents. Please contact Customer Support.")
+    Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
 
 
 Project Finance is able to Approve and Reject

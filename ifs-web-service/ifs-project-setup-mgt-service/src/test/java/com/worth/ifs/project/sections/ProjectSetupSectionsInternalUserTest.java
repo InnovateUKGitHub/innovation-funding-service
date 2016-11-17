@@ -114,6 +114,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(null));
 
         verifyInteractions(
+                mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isSpendProfileSubmitted()
         );
     }

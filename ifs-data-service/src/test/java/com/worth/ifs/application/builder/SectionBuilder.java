@@ -3,8 +3,10 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.competition.domain.Competition;
 
+import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -79,6 +81,26 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     	return with(section -> setField("childSections", childSections, section));
     }
 
+    public SectionBuilder withName(String name) {
+        return with(section -> setField("name", name, section));
+    }
+
+    public SectionBuilder withSectionType(SectionType sectionType) {
+        return with(section -> setField("type", sectionType, section));
+    }
+
+    public SectionBuilder withDescription(String description) {
+        return with(section -> setField("description", description, section));
+    }
+
+    public SectionBuilder withParentSection(Section parentSection) {
+        return with(section -> setField("parentSection", parentSection, section));
+    }
+
+    public SectionBuilder withAssessorGuidanceDescription(String assessorGuidanceDescription) {
+        return with(section -> setField("assessorGuidanceDescription", assessorGuidanceDescription, section));
+    }
+
     public SectionBuilder withCompetitionAndPriority(Competition competition, Integer priority) {
         return with(section -> {
             section.setCompetition(competition);
@@ -93,6 +115,7 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
             setField("priority", priority, section);
         });
     }
+
 
     @Override
     protected Section createInitial() {
