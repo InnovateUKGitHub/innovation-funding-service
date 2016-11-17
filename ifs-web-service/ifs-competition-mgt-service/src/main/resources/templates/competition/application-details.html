@@ -13,11 +13,11 @@
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" th:remove="tag" />
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="page-title">
+        <p class="subtitle" th:text="${competitionName}"></p>
         <h1 class="heading-xlarge no-margin">Application details</h1>
     </div>
     <p>These are the default questions included in the Application details section.</p>
-
 
     <form data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
           data-th-attr="data-competition=${competitionId}" data-section="application" data-subsection="detail">
@@ -32,87 +32,91 @@
             </ul>
         </div>
 
-        <div th:class="${#fields.hasErrors('useProjectTitleQuestion')}? 'form-group error':'form-group'">
-            <fieldset class="inline">
-                <legend>
-                    <span class="form-label-bold">Project title</span>
-                    <span th:if="${#fields.hasErrors('useProjectTitleQuestion')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('useProjectTitleQuestion')}" th:text="${err}" />
-		                </span>
-                </legend>
-                <label class="block-label" for="use-project-title-question-yes">
-                    <input id="use-project-title-question-yes" value="true" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label" for="use-project-title-question-no">
-                    <input id="use-project-title-question-no" value="false" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
-                    No
-                </label>
-            </fieldset>
-        </div>
+        <fieldset>
+            <legend class="visuallyhidden">To be included:</legend>
+            <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
+            <div th:class="${#fields.hasErrors('useProjectTitleQuestion')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
 
-        <div th:class="${#fields.hasErrors('useResbmissionQuestion')}? 'form-group error':'form-group'">
-            <fieldset class="inline">
-                <legend>
-                    <span class="form-label-bold">Resubmission question</span>
-                    <span th:if="${#fields.hasErrors('useResbmissionQuestion')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('useResbmissionQuestion')}" th:text="${err}" />
-		                </span>
-                </legend>
-                <label class="block-label" for="use-resubmission-question-yes">
-                    <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResbmissionQuestion}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label" for="use-resubmission-question-no">
-                    <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResbmissionQuestion}" required="required" />
-                    No
-                </label>
-            </fieldset>
-        </div>
+                    <legend>
+                        <span class="form-label-bold">Project title</span>
+                        <span th:if="${#fields.hasErrors('useProjectTitleQuestion')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('useProjectTitleQuestion')}" th:text="${err}" />
+                            </span>
+                    </legend>
+                    <label class="block-label" for="use-project-title-question-yes">
+                        <input id="use-project-title-question-yes" value="true" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
+                        Yes
+                    </label>
+                    <label class="block-label" for="use-project-title-question-no">
+                        <input id="use-project-title-question-no" value="false" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
+                        No
+                    </label>
+                </fieldset>
+            </div>
 
-        <div th:class="${#fields.hasErrors('useEstimatedStartDateQuestion')}? 'form-group error':'form-group'">
-            <fieldset class="inline">
-                <legend>
-                    <span class="form-label-bold">Estimated start date</span>
-                    <span th:if="${#fields.hasErrors('useEstimatedStartDateQuestion')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('useEstimatedStartDateQuestion')}" th:text="${err}" />
-		                </span>
-                </legend>
-                <label class="block-label" for="use-estimated-start-date-question-yes">
-                    <input id="use-estimated-start-date-question-yes" value="true" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label" for="use-estimated-start-date-question-no">
-                    <input id="use-estimated-start-date-question-no" value="false" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
-                    No
-                </label>
-            </fieldset>
-        </div>
+            <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
+                    <legend>
+                        <span class="form-label-bold">Resubmission question</span>
+                        <span th:if="${#fields.hasErrors('useResubmissionQuestion')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}" />
+                            </span>
+                    </legend>
+                    <label class="block-label" for="use-resubmission-question-yes">
+                        <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
+                        Yes
+                    </label>
+                    <label class="block-label" for="use-resubmission-question-no">
+                        <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
+                        No
+                    </label>
+                </fieldset>
+            </div>
 
-        <div th:class="${#fields.hasErrors('useDurationQuestion')}? 'form-group error':'form-group'">
-            <fieldset class="inline">
-                <legend>
-                    <span class="form-label-bold">Duration</span>
-                    <span th:if="${#fields.hasErrors('useDurationQuestion')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('useDurationQuestion')}" th:text="${err}" />
-		                </span>
-                </legend>
-                <label class="block-label" for="use-duration-question-yes">
-                    <input id="use-duration-question-yes" value="true" type="radio" th:field="*{useDurationQuestion}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label" for="use-duration-question-no">
-                    <input id="use-duration-question-no" value="false" type="radio" th:field="*{useDurationQuestion}" required="required" />
-                    No
-                </label>
-            </fieldset>
-        </div>
+            <div th:class="${#fields.hasErrors('useEstimatedStartDateQuestion')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
+                    <legend>
+                        <span class="form-label-bold">Estimated start date</span>
+                        <span th:if="${#fields.hasErrors('useEstimatedStartDateQuestion')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('useEstimatedStartDateQuestion')}" th:text="${err}" />
+                            </span>
+                    </legend>
+                    <label class="block-label" for="use-estimated-start-date-question-yes">
+                        <input id="use-estimated-start-date-question-yes" value="true" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
+                        Yes
+                    </label>
+                    <label class="block-label" for="use-estimated-start-date-question-no">
+                        <input id="use-estimated-start-date-question-no" value="false" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
+                        No
+                    </label>
+                </fieldset>
+            </div>
+
+            <div th:class="${#fields.hasErrors('useDurationQuestion')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
+                    <legend>
+                        <span class="form-label-bold">Duration</span>
+                        <span th:if="${#fields.hasErrors('useDurationQuestion')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('useDurationQuestion')}" th:text="${err}" />
+                            </span>
+                    </legend>
+                    <label class="block-label" for="use-duration-question-yes">
+                        <input id="use-duration-question-yes" value="true" type="radio" th:field="*{useDurationQuestion}" required="required" />
+                        Yes
+                    </label>
+                    <label class="block-label" for="use-duration-question-no">
+                        <input id="use-duration-question-no" value="false" type="radio" th:field="*{useDurationQuestion}" required="required" />
+                        No
+                    </label>
+                </fieldset>
+            </div>
 
 
-        <button type="submit" class="button">Done</button>
+            <button type="submit" class="button">Done</button>
 
-        <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
-
+            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
+        </fieldset>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
