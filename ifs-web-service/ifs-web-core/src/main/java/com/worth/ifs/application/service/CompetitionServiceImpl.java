@@ -1,7 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competition.service.CompetitionTypeAssessorOptionsRestService;
+import com.worth.ifs.competition.service.AssessorCountOptionsRestService;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     private CompetitionsRestService competitionsRestService;
 
     @Autowired
-    private CompetitionTypeAssessorOptionsRestService competitionTypeAssessorOptionsRestService;
+    private AssessorCountOptionsRestService assessorCountOptionsRestService;
 
     @Override
     public CompetitionResource getById(Long competitionId){
@@ -135,7 +135,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public List<CompetitionTypeAssessorOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
-        return competitionTypeAssessorOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccessObjectOrThrowException();
+    public List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
+        return assessorCountOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccessObjectOrThrowException();
     }
 }

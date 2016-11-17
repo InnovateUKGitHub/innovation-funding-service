@@ -196,8 +196,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<EthnicityResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CompetitionTypeAssessorOptionResource>> competitionTypeAssessorOptionResourceListType() {
-        return new ParameterizedTypeReference<List<CompetitionTypeAssessorOptionResource>>() {};
+    public static ParameterizedTypeReference<List<AssessorCountOptionResource>> competitionTypeAssessorOptionResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorCountOptionResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {

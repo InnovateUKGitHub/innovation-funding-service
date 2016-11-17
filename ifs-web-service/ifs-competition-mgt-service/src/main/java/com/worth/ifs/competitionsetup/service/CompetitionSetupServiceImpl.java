@@ -5,7 +5,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competition.resource.CompetitionTypeAssessorOptionResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;

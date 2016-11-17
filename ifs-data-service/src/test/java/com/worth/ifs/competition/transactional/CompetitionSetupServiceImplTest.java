@@ -8,9 +8,9 @@ import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
+import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionTypeAssessorOptionRepository;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competition.builder.CompetitionTypeAssessorOptionBuilder.newCompetitionTypeAssessorOption;
+import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static com.worth.ifs.competitiontemplate.builder.CompetitionTemplateBuilder.newCompetitionTemplate;
 import static com.worth.ifs.competitiontemplate.builder.FormInputTemplateBuilder.newFormInputTemplate;
 import static com.worth.ifs.competitiontemplate.builder.QuestionTemplateBuilder.newQuestionTemplate;
@@ -59,7 +59,7 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private SectionRepository sectionRepository;
 	@Mock
-	private CompetitionTypeAssessorOptionRepository competitionTypeAssessorOptionRepository;
+	private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
 
     @Before
 	public void setup() {
@@ -217,7 +217,7 @@ public class CompetitionSetupServiceImplTest {
 		CompetitionType competitionType = new CompetitionType();
 		competitionType.setId(1L);
 		comp.setCompetitionType(competitionType);
-		CompetitionTypeAssessorOption assessorOption = newCompetitionTypeAssessorOption().withId(1L)
+		AssessorCountOption assessorOption = newAssessorCountOption().withId(1L)
 				.withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.TRUE).build();
 
 		when(competitionRepository.findById(competitionId)).thenReturn(comp);

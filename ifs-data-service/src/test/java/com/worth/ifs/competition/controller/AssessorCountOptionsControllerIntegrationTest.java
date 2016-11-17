@@ -3,7 +3,7 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionTypeAssessorOptionResource;
+import com.worth.ifs.competition.resource.AssessorCountOptionResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -19,28 +19,28 @@ import static org.junit.Assert.assertTrue;
  */
 @Rollback
 @Transactional
-public class CompetitionTypeAssessorOptionsControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionTypeAssessorOptionsController> {
+public class AssessorCountOptionsControllerIntegrationTest extends BaseControllerIntegrationTest<AssessorCountOptionsController> {
 
     @Override
     @Autowired
-    protected void setControllerUnderTest(CompetitionTypeAssessorOptionsController controller) {
+    protected void setControllerUnderTest(AssessorCountOptionsController controller) {
         this.controller = controller;
     }
 
     @Test
     @Rollback
     public void testGetAllByCompetitionType() {
-        RestResult<List<CompetitionTypeAssessorOptionResource>> optionsResult = controller.getAllByCompetitionType(1L);
+        RestResult<List<AssessorCountOptionResource>> optionsResult = controller.getAllByCompetitionType(1L);
         assertTrue(optionsResult.isSuccess());
-        List<CompetitionTypeAssessorOptionResource> competitionTypeAssessorOptions = optionsResult.getSuccessObject();
+        List<AssessorCountOptionResource> competitionTypeAssessorOptions = optionsResult.getSuccessObject();
 
         // Check if all the expected options are here.
         assertEquals(3, competitionTypeAssessorOptions.size());
 
         // Test three options.
-        assertEquals(Integer.valueOf(1), competitionTypeAssessorOptions.get(0).getAssessorOptionValue());
-        assertEquals(Integer.valueOf(3), competitionTypeAssessorOptions.get(1).getAssessorOptionValue());
-        assertEquals(Integer.valueOf(5), competitionTypeAssessorOptions.get(2).getAssessorOptionValue());
+        assertEquals(Integer.valueOf(1), competitionTypeAssessorOptions.get(0).getOptionValue());
+        assertEquals(Integer.valueOf(3), competitionTypeAssessorOptions.get(1).getOptionValue());
+        assertEquals(Integer.valueOf(5), competitionTypeAssessorOptions.get(2).getOptionValue());
     }
 
 

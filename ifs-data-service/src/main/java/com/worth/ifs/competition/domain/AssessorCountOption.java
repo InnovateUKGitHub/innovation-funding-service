@@ -3,7 +3,7 @@ package com.worth.ifs.competition.domain;
 import javax.persistence.*;
 
 @Entity
-public class CompetitionTypeAssessorOption {
+public class AssessorCountOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,9 +13,9 @@ public class CompetitionTypeAssessorOption {
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
     private CompetitionType competitionType;
 
-    private String assessorOptionName;
+    private String optionName;
 
-    private Integer assessorOptionValue;
+    private Integer optionValue;
 
     private Boolean defaultOption;
 
@@ -27,20 +27,20 @@ public class CompetitionTypeAssessorOption {
         this.id = id;
     }
 
-    public String getAssessorOptionName() {
-        return assessorOptionName;
+    public String getOptionName() {
+        return optionName;
     }
 
-    public void setAssessorOptionName(String assessorOptionName) {
-        this.assessorOptionName = assessorOptionName;
+    public void setOptionName(String optionName) {
+        this.optionName = optionName;
     }
 
-    public Integer getAssessorOptionValue() {
-        return assessorOptionValue;
+    public Integer getOptionValue() {
+        return optionValue;
     }
 
-    public void setAssessorOptionValue(Integer assessorOptionValue) {
-        this.assessorOptionValue = assessorOptionValue;
+    public void setOptionValue(Integer optionValue) {
+        this.optionValue = optionValue;
     }
 
     public Boolean getDefaultOption() {

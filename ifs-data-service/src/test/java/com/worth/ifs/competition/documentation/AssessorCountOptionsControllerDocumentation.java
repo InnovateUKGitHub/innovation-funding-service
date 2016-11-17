@@ -2,15 +2,15 @@ package com.worth.ifs.competition.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.controller.CompetitionTypeAssessorOptionsController;
-import com.worth.ifs.competition.fixtures.CompetitionTypeAssessorOptionFixture;
-import com.worth.ifs.competition.transactional.CompetitionTypeAssessorOptionService;
+import com.worth.ifs.competition.controller.AssessorCountOptionsController;
+import com.worth.ifs.competition.fixtures.AssessorCountOptionFixture;
+import com.worth.ifs.competition.transactional.AssessorCountOptionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static com.worth.ifs.documentation.CompetitionTypeAssessorOptionResourceDocs.competitionTypeResourceOptionResourceFields;
+import static com.worth.ifs.documentation.AssessorCountOptionResourceDocs.assessorCountOptionResourceFields;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -22,35 +22,35 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionTypeAssessorOptionsControllerDocumentation extends BaseControllerMockMVCTest<CompetitionTypeAssessorOptionsController> {
+public class AssessorCountOptionsControllerDocumentation extends BaseControllerMockMVCTest<AssessorCountOptionsController> {
 
     @Mock
-    private CompetitionTypeAssessorOptionService competitionTypeAssessorOptionService;
+    private AssessorCountOptionService assessorCountOptionService;
 
     private RestDocumentationResultHandler document;
 
     @Override
-    protected CompetitionTypeAssessorOptionsController supplyControllerUnderTest() {
-        return new CompetitionTypeAssessorOptionsController();
+    protected AssessorCountOptionsController supplyControllerUnderTest() {
+        return new AssessorCountOptionsController();
     }
 
     @Before
     public void setup() {
-        this.document = document("competition-type-assessor-options/{method-name}",
+        this.document = document("assessor-count-options/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
 
     @Test
     public void getAllByCompetitionType() throws Exception {
-        when(competitionTypeAssessorOptionService.findAllByCompetitionType(anyLong())).thenReturn(ServiceResult.serviceSuccess(CompetitionTypeAssessorOptionFixture.programmeAssessorOptionResourcesList()));
+        when(assessorCountOptionService.findAllByCompetitionType(anyLong())).thenReturn(ServiceResult.serviceSuccess(AssessorCountOptionFixture.programmeAssessorOptionResourcesList()));
 
-        mockMvc.perform(get("/competition-type-assessor-options/{id}", 1L))
+        mockMvc.perform(get("/assessor-count-options/{id}", 1L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the competition type")
                         ),
-                        responseFields(competitionTypeResourceOptionResourceFields)
+                        responseFields(assessorCountOptionResourceFields)
                 ));
     }
 }

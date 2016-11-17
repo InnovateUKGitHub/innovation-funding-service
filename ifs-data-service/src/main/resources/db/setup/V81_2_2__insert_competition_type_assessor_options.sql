@@ -1,5 +1,5 @@
 -- Programme
-INSERT INTO `competition_type_assessor_option` (`competition_type_id`, `assessor_option_name`, `assessor_option_value`,`default_option`)
+INSERT INTO `assessor_count_option` (`competition_type_id`, `option_name`, `option_value`,`default_option`)
 VALUES
 ((SELECT id from competition_type where name = 'Programme'),'1', '1', false),
 ((SELECT id from competition_type where name = 'Programme'),'3', '3', false),

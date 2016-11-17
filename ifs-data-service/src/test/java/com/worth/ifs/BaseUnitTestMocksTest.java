@@ -26,8 +26,8 @@ import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.competition.mapper.CompetitionTypeAssessorOptionMapper;
-import com.worth.ifs.competition.repository.CompetitionTypeAssessorOptionRepository;
+import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -438,10 +438,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ContractMapper contractMapperMock;
 
     @Mock
-    protected CompetitionTypeAssessorOptionMapper competitionTypeAssessorOptionMapperMock;
+    protected AssessorCountOptionMapper assessorCountOptionMapperMock;
 
     @Mock
-    protected CompetitionTypeAssessorOptionRepository competitionTypeAssessorOptionRepositoryMock;
+    protected AssessorCountOptionRepository assessorCountOptionRepositoryMock;
 
     @Before
     public void setupMockInjection() {

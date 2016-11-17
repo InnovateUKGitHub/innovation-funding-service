@@ -858,9 +858,9 @@
                     </span>
                     <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
                      <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
-                            th:value="${assessorOption.assessorOptionValue}" type="radio"
-                            th:checked="${assessorOption.assessorOptionValue == competitionSetupForm.assessorCount}" />
-                        <span th:text="${assessorOption.assessorOptionName}"></span>
+                            th:value="${assessorOption.optionValue}" type="radio"
+                            th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />
+                        <span th:text="${assessorOption.optionName}"></span>
                     </label>
 
                 </fieldset>

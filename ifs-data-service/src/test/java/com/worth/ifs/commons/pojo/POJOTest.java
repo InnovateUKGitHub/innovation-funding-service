@@ -25,8 +25,7 @@ import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
-import com.worth.ifs.competition.resource.CompetitionTypeAssessorOptionResource;
+import com.worth.ifs.competition.resource.AssessorCountOptionResource;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
@@ -144,7 +143,7 @@ public class POJOTest {
             ProfileSkillsResource.class,
             UserProfileResource.class,
             UserProfileStatusResource.class,
-            CompetitionTypeAssessorOptionResource.class
+            AssessorCountOptionResource.class
     );
 
     @Before

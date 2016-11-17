@@ -8,10 +8,10 @@ import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionTypeAssessorOption;
+import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
-import com.worth.ifs.competition.repository.CompetitionTypeAssessorOptionRepository;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
@@ -67,7 +67,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
     @Autowired
-    private CompetitionTypeAssessorOptionRepository competitionTypeAssessorOptionRepository;
+    private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -158,10 +158,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     	competition.getSectionSetupStatus().put(section, Boolean.TRUE);
         if (section == CompetitionSetupSection.INITIAL_DETAILS) {
             if (competition.getAssessorCount() == null) {
-                Optional<CompetitionTypeAssessorOption> defaultAssessorOption =
+                Optional<AssessorCountOption> defaultAssessorOption =
                         competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
                 if (defaultAssessorOption.isPresent()) {
-                    competition.setAssessorCount(defaultAssessorOption.get().getAssessorOptionValue());
+                    competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
                     competitionRepository.save(competition);
                 }
             }
