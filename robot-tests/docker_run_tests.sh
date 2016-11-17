@@ -170,10 +170,10 @@ function runTests() {
 
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://ifs-local-dev:"${vncport}
+        open "vnc://root:secret@ifs-local-dev:"${vncport}
       else
         echo "**********For remote desktop please use this url in your vnc client**********"
-        echo "ifs-local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
       fi
     fi
 
