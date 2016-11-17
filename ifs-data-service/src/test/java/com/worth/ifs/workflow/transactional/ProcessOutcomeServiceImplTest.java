@@ -48,7 +48,7 @@ public class ProcessOutcomeServiceImplTest extends BaseUnitTestMocksTest {
         ProcessOutcome processOutcome = newProcessOutcome().build();
         ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource().build();
 
-        when(processOutcomeRepository.findTopByProcessIdOrderByIdAsc(processId)).thenReturn(processOutcome);
+        when(processOutcomeRepository.findTopByProcessIdOrderByIdDesc(processId)).thenReturn(processOutcome);
         when(processOutcomeMapperMock.mapToResource(processOutcome)).thenReturn(processOutcomeResource);
 
         final ServiceResult<ProcessOutcomeResource> result = processOutcomeService.findLatestByProcess(processId);
@@ -65,7 +65,7 @@ public class ProcessOutcomeServiceImplTest extends BaseUnitTestMocksTest {
         ProcessOutcome processOutcome = newProcessOutcome().build();
         ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource().build();
 
-        when(processOutcomeRepository.findTopByProcessIdAndOutcomeTypeOrderByIdAsc(processId, outcomeType)).thenReturn(processOutcome);
+        when(processOutcomeRepository.findTopByProcessIdAndOutcomeTypeOrderByIdDesc(processId, outcomeType)).thenReturn(processOutcome);
         when(processOutcomeMapperMock.mapToResource(processOutcome)).thenReturn(processOutcomeResource);
 
         final ServiceResult<ProcessOutcomeResource> result = processOutcomeService.findLatestByProcessAndOutcomeType(processId, outcomeType);

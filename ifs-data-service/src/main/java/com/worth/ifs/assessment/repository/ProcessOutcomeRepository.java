@@ -5,7 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 
 public interface ProcessOutcomeRepository extends PagingAndSortingRepository<ProcessOutcome, Long> {
-    ProcessOutcome findTopByProcessIdOrderByIdAsc(Long processId);
+    ProcessOutcome findTopByProcessIdOrderByIdDesc(Long processId);
 
-    ProcessOutcome findTopByProcessIdAndOutcomeTypeOrderByIdAsc(Long processId, String outcomeType);
+    ProcessOutcome findTopByProcessIdAndOutcomeTypeOrderByIdDesc(Long processId, String outcomeType);
 }
