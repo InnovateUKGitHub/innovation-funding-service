@@ -59,10 +59,10 @@ Questions should show as complete
 Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
-    Then The user should see the text in the page    Total: 50/50
+    Then The user should see the text in the page    Total: 40/40
     And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 20/20
+    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
@@ -176,31 +176,31 @@ the user adds score and feedback for every question
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
-    And The user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT} .editor    Testing scope feedback text
-    Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    20    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    Testing Business opportunity feedback text
+    And The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-219 .editor    Testing Potential market feedback text
+    the user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-222 .editor    Testing Project exploitation feedback text
+    the user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT} .editor    Testing Economic benefit feedback text
+    the user enters text to a text field    css=.editor    Testing Project exploitation feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
@@ -224,7 +224,7 @@ each question will contain links to respective questions
     The user navigates to the page    ${Assessment_summary_Pending_12}
 
 the scores under each question should be correct
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
@@ -234,5 +234,5 @@ the word count should be correct
     the user should see the text in the page    ${wordCount}
 
 the total scores should be correct
-    Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
+    Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 40/40
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}

@@ -122,7 +122,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
                             FormInput newFormInput = new FormInput();
                             newFormInput.setPriority(fi.getPriority());
-                            newFormInput.setCompetition(fi.getCompetition());
+                            newFormInput.setCompetition(retrieveCompetitionByName(competition.getName()));
                             newFormInput.setDescription(fi.getDescription());
                             newFormInput.setFormInputType(fi.getFormInputType());
                             newFormInput.setGuidanceAnswer(!isBlank(fi.getGuidanceAnswer()) ? fi.getGuidanceAnswer() : "Some guidance answer for assessor");
