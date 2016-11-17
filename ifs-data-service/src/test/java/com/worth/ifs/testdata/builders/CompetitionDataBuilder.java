@@ -8,6 +8,8 @@ import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.testdata.builders.data.CompetitionData;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -116,26 +118,27 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 newQuestions.forEach(q -> {
                     Question originalQuestion = questionRepository.findByNameAndCompetitionIdAndSectionName(q.getName(), 1L, q.getSection().getName());
 //                    q.setAssessorMaximumScore(originalQuestion.getAssessorMaximumScore());
-//                    originalQuestion.getFormInputs().forEach(fi -> {
-//                        if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
-//                            FormInput newFormInput = new FormInput();
-//                            newFormInput.setPriority(fi.getPriority());
-//                            newFormInput.setCompetition(retrieveCompetitionByName(competition.getName()));
-//                            newFormInput.setDescription(fi.getDescription());
-//                            newFormInput.setFormInputType(fi.getFormInputType());
-//                            newFormInput.setGuidanceAnswer(!isBlank(fi.getGuidanceAnswer()) ? fi.getGuidanceAnswer() : "Some guidance answer for assessor");
-//                            newFormInput.setGuidanceQuestion(!isBlank(fi.getGuidanceQuestion()) ? fi.getGuidanceQuestion() : "Some guidance question for assessor");
-//                            newFormInput.setIncludedInApplicationSummary(fi.isIncludedInApplicationSummary());
-//                            newFormInput.setQuestion(q);
-//                            newFormInput.setScope(fi.getScope());
-//                            newFormInput.setWordCount(fi.getWordCount());
-//                            q.getFormInputs().add(newFormInput);
-//
-//                            formInputRepository.save(newFormInput);
-//                        }
-//                    });
+                    originalQuestion.getFormInputs().forEach(fi -> {
+                        if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
+                            FormInput newFormInput = new FormInput();
+                            newFormInput.setPriority(fi.getPriority());
+                            newFormInput.setCompetition(retrieveCompetitionByName(competition.getName()));
+                            newFormInput.setDescription(fi.getDescription());
+                            newFormInput.setFormInputType(fi.getFormInputType());
+                            newFormInput.setGuidanceAnswer(!isBlank(fi.getGuidanceAnswer()) ? fi.getGuidanceAnswer() : "Some guidance answer for assessor");
+                            newFormInput.setGuidanceQuestion(!isBlank(fi.getGuidanceQuestion()) ? fi.getGuidanceQuestion() : "Some guidance question for assessor");
+                            newFormInput.setIncludedInApplicationSummary(fi.isIncludedInApplicationSummary());
+                            newFormInput.setQuestion(q);
+                            newFormInput.setScope(fi.getScope());
+                            newFormInput.setWordCount(fi.getWordCount());
+                            q.getFormInputs().add(newFormInput);
+
+                            formInputRepository.save(newFormInput);
+                        }
+                    });
                     q.setMultipleStatuses(originalQuestion.getMultipleStatuses());
                     q.setType(originalQuestion.getType());
+//                    q.setPriority(originalQuestion.getPriority());
                     questionRepository.save(q);
                 });
             }
