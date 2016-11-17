@@ -320,15 +320,15 @@
             <div th:if="${param.filterInnovationArea == null}" th:remove="tag">
 
                 <div th:if="${type == null}" th:remove="tag">
-                    <h4><span class="heading-xlarge no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
+                    <h2><span class="heading-xlarge no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type == 'notSubmittedApplications'}" th:remove="tag">
-                    <h4><span class="heading-xlarge no-margin available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
+                    <h2><span class="heading-xlarge no-margin available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type != 'notSubmittedApplications'}" th:remove="tag">
-                    <h4><span class="heading-xlarge no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
+                    <h2><span class="heading-xlarge no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
             </div>
