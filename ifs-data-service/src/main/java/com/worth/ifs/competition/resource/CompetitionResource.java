@@ -42,6 +42,7 @@ public class CompetitionResource {
     private String competitionTypeName;
     private Long executive;
     private Long leadTechnologist;
+    private String leadTechnologistName;
     private Long innovationSector;
     private String innovationSectorName;
     private Long innovationArea;
@@ -270,6 +271,14 @@ public class CompetitionResource {
 
     public void setLeadTechnologist(Long leadTechnologist) {
         this.leadTechnologist = leadTechnologist;
+    }
+
+    public String getLeadTechnologistName() {
+        return leadTechnologistName;
+    }
+
+    public void setLeadTechnologistName(String leadTechnologistName) {
+        this.leadTechnologistName = leadTechnologistName;
     }
 
     public String getPafCode() {

@@ -33,7 +33,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     @Mappings({
             @Mapping(source = "innovationArea.name", target = "innovationAreaName"),
             @Mapping(source = "innovationSector.name", target = "innovationSectorName"),
-            @Mapping(source = "competitionType.name", target = "competitionTypeName")
+            @Mapping(source = "competitionType.name", target = "competitionTypeName"),
+            @Mapping(source = "leadTechnologist.name", target = "leadTechnologistName")
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
