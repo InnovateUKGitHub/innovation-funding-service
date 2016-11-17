@@ -2,7 +2,6 @@ apply plugin: 'war'
 
 war {
     baseName = 'project-setup'
-    version = '0.0.1-SNAPSHOT'
 }
 
 configurations {

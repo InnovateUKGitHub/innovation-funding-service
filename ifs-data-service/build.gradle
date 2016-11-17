@@ -1,3 +1,4 @@
+
 def targetBuild = hasProperty('profile') ? profile : 'dev';
 apply from: targetBuild+"-build.gradle";
 
@@ -9,7 +10,6 @@ apply plugin: 'org.asciidoctor.convert'
 
 war {
     baseName = 'ifs-data-service'
-    version = '0.0.1-SNAPSHOT'
 }
 
 configurations {

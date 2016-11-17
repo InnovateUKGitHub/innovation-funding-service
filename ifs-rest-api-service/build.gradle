@@ -8,7 +8,6 @@ if (project.hasProperty("profile")) {
 
 jar {
     baseName = 'ifs-rest-api-service'
-    version = '0.0.1-SNAPSHOT'
 }
 
 configurations {

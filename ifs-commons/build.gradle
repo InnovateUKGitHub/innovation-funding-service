@@ -25,7 +25,6 @@ configurations {
 
 task testCommonCode(type: Jar) {
     baseName += '-tests'
-    version = '0.0.1-SNAPSHOT'
     from(sourceSets.test.output) {
         include "**"
     }
