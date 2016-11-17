@@ -1,6 +1,7 @@
 package com.worth.ifs.documentation;
 
 import com.worth.ifs.assessment.builder.AssessmentResourceBuilder;
+import com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -37,4 +39,12 @@ public class AssessmentDocs {
             .withLastModifiedDate(GregorianCalendar.getInstance())
             .withProcessRole(1L)
             .withApplication(2L);
+
+    public static final FieldDescriptor[] assessmentSubmissionsFields = {
+        fieldWithPath("assessmentIds").description("list of assessment ids to submit")
+    };
+
+    public static final AssessmentSubmissionsResourceBuilder assessmentSubmissionsResourceBuilder =
+            newAssessmentSubmissionsResource()
+                    .withAssessmentIds(asList(1L, 2L));
 }
