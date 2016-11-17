@@ -23,7 +23,7 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,
-                                                         final boolean projectDetailsSubmitted) {
+                                                        final boolean projectDetailsSubmitted) {
         if (!monitoringOfficerAssigned) {
             if (projectDetailsSubmitted) {
                 return HOURGLASS;
@@ -46,7 +46,7 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus financeChecksSectionStatus(final boolean allBankDetailsApprovedOrNotRequired,
-                                                     final boolean allFinanceChecksApproved) {
+                                                    final boolean allFinanceChecksApproved) {
         if(allBankDetailsApprovedOrNotRequired) {
            if(allFinanceChecksApproved) {
                return TICK;

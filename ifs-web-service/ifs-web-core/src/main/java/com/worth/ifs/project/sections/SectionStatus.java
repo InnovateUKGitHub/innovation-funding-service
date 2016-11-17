@@ -8,9 +8,8 @@ public enum SectionStatus {
     EMPTY(""),
     HOURGLASS("waiting"),
     FLAG("require-action"),
-    TICK("complete");
-    // TODO add method for cross
-    //CROSS("???");
+    TICK("complete"),
+    CROSS("rejected");
 
     private final String status;
 
