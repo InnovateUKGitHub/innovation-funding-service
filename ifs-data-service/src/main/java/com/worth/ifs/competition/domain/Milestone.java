@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 /**
- * Entity model to store the Competition Milestones
+ * A {@link Competition} Milestone, with or without a preset date.
  */
 @Entity
 public class Milestone {
@@ -22,7 +22,8 @@ public class Milestone {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
-    Milestone() {
+    // TODO INFUND-5908 make this package protected
+    public Milestone() {
         // default constructor
     }
 
@@ -30,6 +31,7 @@ public class Milestone {
         if (type == null) throw new NullPointerException("type cannot be null");
         if (competition == null) throw new NullPointerException("competition cannot be null");
         if (type.isPresetDate()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' must have a date");
+
         this.type = type;
         this.competition = competition;
     }
@@ -75,7 +77,6 @@ public class Milestone {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
-
 
     public boolean isSet() {
         assert date != null || !type.isPresetDate();
