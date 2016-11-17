@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.application.builder.FormInputGuidanceRowBuilder.*;
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.*;
 import static com.worth.ifs.application.builder.QuestionBuilder.*;
 import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
 import static com.worth.ifs.form.builder.FormInputBuilder.*;
@@ -56,12 +56,12 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private FormInputTypeRepository formInputTypeRepository;
 
     @Mock
-    private FormInputGuidanceRowMapper formInputGuidanceRowMapper;
+    private GuidanceRowMapper guidanceRowMapper;
 
     @Test
     public void test_getByQuestionId() {
         Long questionId = 1L;
-        List<FormInputGuidanceRow> guidanceRows = newFormInputGuidanceRow().build(1);
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(1);
         Question question = newQuestion().
                 withFormInputs(asList(
                         newFormInput()
@@ -79,12 +79,12 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                             .withFormInputType(AssessorFormInputType.FEEDBACK.getTitle())
                             .withScope(FormInputScope.ASSESSMENT)
                             .withWordCount(assessmentMaxWords)
+                            .withGuidanceQuestion(assessmentGuidance)
+                            .withFormInputGuidanceRows(guidanceRows)
                             .build(),
                         newFormInput()
                             .withFormInputType(AssessorFormInputType.SCORE.getTitle())
                             .withScope(FormInputScope.ASSESSMENT)
-                            .withGuidanceQuestion(assessmentGuidance)
-                            .withFormInputGuidanceRows(guidanceRows)
                             .build()
                         )
 
@@ -99,7 +99,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
 
         when(questionRepository.findOne(questionId)).thenReturn(question);
-        when(formInputGuidanceRowMapper.mapToResource(guidanceRows)).thenReturn(new ArrayList<>());
+        when(guidanceRowMapper.mapToResource(guidanceRows)).thenReturn(new ArrayList<>());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.getByQuestionId(questionId);
 
@@ -122,7 +122,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getTitle(), title);
         assertEquals(resource.getGuidance(), guidance);
 
-        verify(formInputGuidanceRowMapper).mapToResource(guidanceRows);
+        verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
 
     @Test

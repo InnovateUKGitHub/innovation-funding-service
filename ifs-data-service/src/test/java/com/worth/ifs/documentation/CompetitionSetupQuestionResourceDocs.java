@@ -3,7 +3,7 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.competition.builder.*;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.worth.ifs.application.builder.FormInputGuidanceRowResourceBuilder.*;
+import static com.worth.ifs.application.builder.GuidanceRowResourceBuilder.*;
 import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 

@@ -2,8 +2,8 @@ package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BuilderAmendFunctions;
-import com.worth.ifs.application.domain.FormInputGuidanceRow;
-import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputScope;
@@ -93,7 +93,7 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return with(formInput -> formInput.setInputValidators(inputValidators));
     }
 
-    public FormInputBuilder withFormInputGuidanceRows(List<FormInputGuidanceRow> formInputGuidanceRows) {
-        return with(formInput -> formInput.setFormInputGuidanceRows(formInputGuidanceRows));
+    public FormInputBuilder withFormInputGuidanceRows(List<GuidanceRow> guidanceRows) {
+        return with(formInput -> formInput.setGuidanceRows(guidanceRows));
     }
 }

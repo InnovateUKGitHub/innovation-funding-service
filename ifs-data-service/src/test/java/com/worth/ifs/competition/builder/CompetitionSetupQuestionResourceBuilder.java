@@ -2,7 +2,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
+import com.worth.ifs.application.resource.GuidanceRowResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -75,7 +75,7 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setWrittenFeedback(writtenFeedback));
     }
 
-    public CompetitionSetupQuestionResourceBuilder withGuidanceRows(List<FormInputGuidanceRowResource> guidanceRows) {
+    public CompetitionSetupQuestionResourceBuilder withGuidanceRows(List<GuidanceRowResource> guidanceRows) {
         return with(competition -> competition.setGuidanceRows(guidanceRows));
     }
 

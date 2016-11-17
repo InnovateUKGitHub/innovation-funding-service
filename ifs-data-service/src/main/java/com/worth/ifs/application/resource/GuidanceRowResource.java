@@ -3,7 +3,7 @@ package com.worth.ifs.application.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class FormInputGuidanceRowResource {
+public class GuidanceRowResource {
     private Long id;
     private String subject;
     private String justification;
@@ -47,7 +47,7 @@ public class FormInputGuidanceRowResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        FormInputGuidanceRowResource that = (FormInputGuidanceRowResource) o;
+        GuidanceRowResource that = (GuidanceRowResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

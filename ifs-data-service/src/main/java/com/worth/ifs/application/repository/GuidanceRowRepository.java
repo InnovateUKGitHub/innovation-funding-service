@@ -1,6 +1,6 @@
 package com.worth.ifs.application.repository;
 
-import com.worth.ifs.application.domain.FormInputGuidanceRow;
+import com.worth.ifs.application.domain.GuidanceRow;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface FormInputGuidanceRowRepository extends CrudRepository<FormInputGuidanceRow, Long> {
+public interface GuidanceRowRepository extends CrudRepository<GuidanceRow, Long> {
 
-    List<FormInputGuidanceRow> findByFormInput_Question_CompetitionId(Long competitionId);
+    List<GuidanceRow> findByFormInput_Question_CompetitionId(Long competitionId);
 
 }

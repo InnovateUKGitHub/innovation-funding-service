@@ -32,7 +32,7 @@ public class CompetitionSetupQuestionResource {
     private Boolean scored;
     private Integer scoreTotal;
     private Boolean writtenFeedback;
-    private List<FormInputGuidanceRowResource> guidanceRows;
+    private List<GuidanceRowResource> guidanceRows;
 
     public Long getQuestionId() {
         return questionId;
@@ -130,11 +130,11 @@ public class CompetitionSetupQuestionResource {
         this.writtenFeedback = writtenFeedback;
     }
 
-    public List<FormInputGuidanceRowResource> getGuidanceRows() {
+    public List<GuidanceRowResource> getGuidanceRows() {
         return guidanceRows;
     }
 
-    public void setGuidanceRows(List<FormInputGuidanceRowResource> guidanceRows) {
+    public void setGuidanceRows(List<GuidanceRowResource> guidanceRows) {
         this.guidanceRows = guidanceRows;
     }
 

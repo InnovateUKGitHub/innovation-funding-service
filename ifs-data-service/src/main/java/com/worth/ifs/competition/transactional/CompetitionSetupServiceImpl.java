@@ -1,9 +1,8 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.FormInputGuidanceRow;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.FormInputGuidanceRowRepository;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
@@ -65,7 +64,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private FormInputGuidanceRowRepository formInputGuidanceRowRepository;
+    private GuidanceRowRepository guidanceRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -224,8 +223,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
 	private void cleanUpCompetitionSections(Competition competition) {
-        List<FormInputGuidanceRow> scoreRows = formInputGuidanceRowRepository.findByFormInput_Question_CompetitionId(competition.getId());
-        formInputGuidanceRowRepository.delete(scoreRows);
+        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInput_Question_CompetitionId(competition.getId());
+        guidanceRowRepository.delete(scoreRows);
 
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
@@ -302,21 +301,21 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             formInput.setId(null);
             formInputRepository.save(formInput);
 
-            formInput.setFormInputGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getFormInputGuidanceRows()));
+            formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
 		};
 	}
 
-    private List<FormInputGuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<FormInputGuidanceRow> formInputGuidanceRows) {
-        return formInputGuidanceRows.stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
+    private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
+        return guidanceRows.stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
     }
 
-    private Function<FormInputGuidanceRow, FormInputGuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
-        return (FormInputGuidanceRow row) -> {
+    private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
+        return (GuidanceRow row) -> {
             entityManager.detach(row);
             row.setFormInput(formInput);
             row.setId(null);
-            formInputGuidanceRowRepository.save(row);
+            guidanceRowRepository.save(row);
             return row;
         };
     }

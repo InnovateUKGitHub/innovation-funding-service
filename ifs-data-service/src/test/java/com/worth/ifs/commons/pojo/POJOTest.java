@@ -17,7 +17,7 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
+import com.worth.ifs.application.resource.GuidanceRowResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
@@ -145,7 +145,7 @@ public class POJOTest {
             UserProfileResource.class,
             UserProfileStatusResource.class,
             CompetitionSetupQuestionResource.class,
-            FormInputGuidanceRowResource.class
+            GuidanceRowResource.class
     );
 
     @Before

@@ -1,8 +1,8 @@
 package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.FormInputGuidanceRow;
-import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
 
@@ -68,7 +68,7 @@ public class FormInput{
     private FormInputScope scope;
 
     @OneToMany(mappedBy = "formInput")
-    private List<FormInputGuidanceRow> formInputGuidanceRows;
+    private List<GuidanceRow> guidanceRows;
 
 
     public FormInput() {
@@ -198,11 +198,11 @@ public class FormInput{
         this.scope = scope;
     }
 
-    public List<FormInputGuidanceRow> getFormInputGuidanceRows() {
-        return formInputGuidanceRows;
+    public List<GuidanceRow> getGuidanceRows() {
+        return guidanceRows;
     }
 
-    public void setFormInputGuidanceRows(List<FormInputGuidanceRow> formInputGuidanceRows) {
-        this.formInputGuidanceRows = formInputGuidanceRows;
+    public void setGuidanceRows(List<GuidanceRow> guidanceRows) {
+        this.guidanceRows = guidanceRows;
     }
 }

@@ -1,7 +1,7 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.FormInputGuidanceRowResource;
+import com.worth.ifs.application.resource.GuidanceRowResource;
 import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class QuestionAssessmentResourceBuilder extends BaseBuilder<CompetitionSe
         return with(questionAssessment -> setField("wordCount", wordCount, questionAssessment));
     }
 
-    public QuestionAssessmentResourceBuilder withScoreRows(List<FormInputGuidanceRowResource> scoreRows) {
+    public QuestionAssessmentResourceBuilder withScoreRows(List<GuidanceRowResource> scoreRows) {
         return with(questionAssessment -> setField("scoreRows", scoreRows, questionAssessment));
     }
 

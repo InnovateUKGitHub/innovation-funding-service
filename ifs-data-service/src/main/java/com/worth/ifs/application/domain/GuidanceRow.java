@@ -5,10 +5,10 @@ import com.worth.ifs.form.domain.FormInput;
 import javax.persistence.*;
 
 /**
- * FormInputGuidanceRow defines database relations and a model to use client side and server side.
+ * GuidanceRow defines database relations and a model to use client side and server side.
  */
 @Entity
-public class FormInputGuidanceRow {
+public class GuidanceRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

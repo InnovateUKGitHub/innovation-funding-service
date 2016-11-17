@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.FormInputGuidanceRowRepository;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionType;
@@ -25,7 +25,7 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.application.builder.FormInputGuidanceRowBuilder.newFormInputGuidanceRow;
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -47,7 +47,7 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private SectionRepository sectionRepository;
 	@Mock
-	private FormInputGuidanceRowRepository assessmentScoreRowRepository;
+	private GuidanceRowRepository assessmentScoreRowRepository;
 	@Mock
 	private EntityManager entityManager;
 

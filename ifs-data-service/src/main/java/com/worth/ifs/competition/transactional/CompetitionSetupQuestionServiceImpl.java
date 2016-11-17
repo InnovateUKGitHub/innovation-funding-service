@@ -1,18 +1,16 @@
 package com.worth.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.resource.ApplicantFormInputType;
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputType;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.mapper.FormInputGuidanceRowMapper;
-import com.worth.ifs.form.repository.FormInputRepository;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
-import com.worth.ifs.form.resource.FormInputScope;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.repository.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.assessment.resource.*;
+import com.worth.ifs.commons.service.*;
+import com.worth.ifs.form.domain.*;
+import com.worth.ifs.form.mapper.*;
+import com.worth.ifs.form.repository.*;
+import com.worth.ifs.form.resource.*;
+import com.worth.ifs.transactional.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     private FormInputTypeRepository formInputTypeRepository;
 
     @Autowired
-    private FormInputGuidanceRowMapper formInputGuidanceRowMapper;
+    private GuidanceRowMapper guidanceRowMapper;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -92,10 +90,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (AssessorFormInputType.FEEDBACK.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setWrittenFeedback(true);
             setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
+            setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
+            setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setScored(true);
-            setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
-            setupResource.setGuidanceRows(Lists.newArrayList(formInputGuidanceRowMapper.mapToResource(formInput.getFormInputGuidanceRows())));
         } else if (AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             //TODO: INFUND-5631
         } else if (AssessorFormInputType.RESEARCH_CATEGORY.getTitle().equals(formInput.getFormInputType().getTitle())) {
