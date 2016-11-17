@@ -1,7 +1,9 @@
+
 if (project.hasProperty("profile")) {
-    apply from: "${project.profile}-build.gradle"
-} else {
-    apply from: "dev-build.gradle"
+    def targetBuildFile = "${project.profile}-build.gradle"
+    if (file(targetBuildFile).exists()) {
+        apply from: targetBuildFile
+    }
 }
 
 jar {
