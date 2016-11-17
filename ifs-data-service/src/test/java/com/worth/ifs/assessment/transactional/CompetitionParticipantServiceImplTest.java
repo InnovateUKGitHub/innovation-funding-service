@@ -76,7 +76,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         List<Assessment> assessments = newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()),new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()))
                 .build(2);
-        when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId,competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId,competitionId)).thenReturn(assessments);
 
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult = competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED);
 

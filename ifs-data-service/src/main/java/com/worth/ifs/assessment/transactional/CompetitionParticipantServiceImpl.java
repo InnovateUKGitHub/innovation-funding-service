@@ -60,7 +60,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
     private void determineStatusOfCompetitionAssessments(List<CompetitionParticipantResource> competitionParticipants) {
         competitionParticipants.forEach( competitionParticipant -> {
-            List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionId(competitionParticipant.getUserId(),competitionParticipant.getCompetitionId());
+            List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(competitionParticipant.getUserId(),competitionParticipant.getCompetitionId());
             competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments));
             competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments));
         });
