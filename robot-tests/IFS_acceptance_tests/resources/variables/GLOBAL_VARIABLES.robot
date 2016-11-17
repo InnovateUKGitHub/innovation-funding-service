@@ -24,7 +24,7 @@ ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}    100836.81
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}   102,837
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
 
-${EMPIRE_LTD_ID}    24
+${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 
 ${OPEN_COMPETITION}    1
@@ -86,10 +86,10 @@ ${INFORM_COMPETITION}    5
 ${INFORM_APPLICATION_1_PROJECT}    4
 
 
-${STEVE_SMITH_ID}    54
-${JESSICA_DOE_ID}    55
-${PETE_TOM_ID}    56
-${TEST_TWENTY_ID}    43
+${STEVE_SMITH_ID}    55
+${JESSICA_DOE_ID}    56
+${PETE_TOM_ID}    57
+${TEST_TWENTY_ID}    44
 
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
@@ -144,6 +144,7 @@ ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisatio
 ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
 ${project_in_setup_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
 ${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
