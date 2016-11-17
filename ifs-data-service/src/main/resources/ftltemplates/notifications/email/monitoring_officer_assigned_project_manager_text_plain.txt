@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-The Project ${projectName} for which you are the Project Manager has been assigned a Monitoring Officer. The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.
+The project ${projectName} for which you are the Project Manager has been assigned a Monitoring Officer. The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.
 
 Monitoring Officer: ${monitoringOfficerName}
 Telephone: ${monitoringOfficerTelephone}

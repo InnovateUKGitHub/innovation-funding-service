@@ -1,17 +1,12 @@
 Dear User 2,
 
-The project My Project for which you are the Project Manager has been assigned a Monitoring Officer.
-The Monitoring Officer will be the primary point of contact for the project.
-They will monitor and report progress to Innovate UK.
+The project My Project for which you are the Project Manager has been assigned a Monitoring Officer. The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.
 
-Monitoring Officer
-DEF
-def.ghi@gmail.com
-0123456789
+Monitoring Officer: DEF
+Telephone: 0123456789
+Email: def.ghi@gmail.com
 
-No action needs to be taken by your team.
-Your Monitoring Officer will make contact for an introduction to your project.
-If there are any further questions about this appointment please contact Innovate UK for further information.
+No action needs to be taken by your team. Your Monitoring Officer will make contact for an introduction to your project. If there are any further questions about this appointment please contact the Competitions Team.
 
 Yours sincerely,
 
