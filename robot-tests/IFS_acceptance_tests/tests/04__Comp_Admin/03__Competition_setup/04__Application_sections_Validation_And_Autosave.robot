@@ -108,13 +108,6 @@ the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     Element Should Contain    ${QUESTION}    ${ERROR}
 
-the user fills the empty question fields
-    The user enters text to a text field    id=question.title    Test title
-    The user enters text to a text field    id=question.subTitle    Subtitle test
-    The user enters text to a text field    id=question.guidanceTitle    Test guidance title
-    The user enters text to a text field    css=.editor    Guidance text test
-    The user enters text to a text field    id=question.maxWords    150
-
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    jQuery=.button[value="Save and close"]

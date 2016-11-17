@@ -602,3 +602,18 @@ the user should see that the element is disabled
     the user should not see an error in the page
     wait until element is visible    ${element}
     element should be disabled    ${element}
+
+The user fills the empty question fields
+    The user enters text to a text field    id=question.title    Test title
+    The user enters text to a text field    id=question.subTitle    Subtitle test
+    The user enters text to a text field    id=question.guidanceTitle    Test guidance title
+    The user enters text to a text field    css=.editor    Guidance text test
+    The user enters text to a text field    id=question.maxWords    150
+
+The user checks the question fields
+    The user should see the text in the page    Test title
+    The user should see the text in the page    Subtitle test
+    The user should see the text in the page    Test guidance title
+    The user should see the text in the page    Guidance text test
+    The user should see the text in the page    150
+    The user should see the text in the page    No
