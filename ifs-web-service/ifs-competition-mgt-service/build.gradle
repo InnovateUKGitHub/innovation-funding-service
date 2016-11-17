@@ -82,7 +82,7 @@ task cleanDeploy() {
     dependsOn deployToTomcat
 }
 
-task cleanDeployDocker() {
+task cleanDeployMicroservices() {
     build.mustRunAfter clean
     dependsOn clean
     dependsOn buildDocker

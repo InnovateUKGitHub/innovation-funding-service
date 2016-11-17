@@ -1,0 +1,42 @@
+version: '2'
+services:
+  hub:
+    container_name: hub
+    image: selenium/hub:3.0.1-aluminum
+    environment:
+      - GRID_BROWSER_TIMEOUT=90000
+      - GRID_TIMEOUT=100000
+    ports:
+      - '4444:4444'
+      - '3000:3000'
+    networks:
+      selenium-network:
+        aliases:
+          - hub
+  chrome:
+    image: selenium/node-chrome:3.0.1-aluminum
+    environment:
+      - NODE_MAX_SESSION=20
+      - NODE_MAX_INSTANCES=20
+      - NODE_REGISTER_CYCLE=600
+      - HUB_PORT_4444_TCP_ADDR=hub
+      - HUB_PORT_4444_TCP_PORT=4444
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - '5900'
+    links:
+      - "hub:hub"
+    external_links:
+      - ifs-local-dev
+    depends_on:
+      - hub
+    networks:
+      - selenium-network
+      - innovationfundingservice_ifs
+networks:
+  selenium-network:
+    driver: bridge
+  innovationfundingservice_ifs:
+    external: true

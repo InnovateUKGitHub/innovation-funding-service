@@ -4,6 +4,6 @@ if (project.hasProperty("profile")) {
     apply from: "docker-build.gradle"
 }
 
-task cleanDeployDocker{
+task cleanDeployMicroservices{
 	println "interface for clean deploy Docker"
 }

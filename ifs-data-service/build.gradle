@@ -301,7 +301,7 @@ task cleanDeploy() {
 
 }
 
-task cleanDeployDocker() {
+task cleanDeployMicroservices() {
     buildDocker.mustRunAfter clean
     clientCopy.mustRunAfter client
     flywayClean.mustRunAfter buildDocker

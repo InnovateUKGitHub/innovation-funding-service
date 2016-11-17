@@ -15,6 +15,8 @@ services:
       - competition-mgt-service
       - project-setup-mgt-service
       - project-setup-service
+    networks:
+      - ifs
 
   application-service:
     image: worth/application-service:1.0-SNAPSHOT
@@ -23,6 +25,9 @@ services:
       - admin
     ports:
       - "8081:8080"
+    networks:
+      - ifs
+    
 
   assessment-service:
     image: worth/assessment-service:1.0-SNAPSHOT
@@ -31,6 +36,8 @@ services:
       - admin
     ports:
       - "8082:8080"
+    networks:
+      - ifs
 
   competition-mgt-service:
     image: worth/competition-management-service:1.0-SNAPSHOT
@@ -39,6 +46,8 @@ services:
       - admin
     ports:
       - "8083:8080"
+    networks:
+      - ifs
 
   project-setup-mgt-service:
     image: worth/project-setup-management-service:1.0-SNAPSHOT
@@ -47,6 +56,8 @@ services:
       - admin
     ports:
       - "8084:8080"
+    networks:
+      - ifs
 
   project-setup-service:
     image: worth/project-setup-service:1.0-SNAPSHOT
@@ -55,6 +66,8 @@ services:
       - admin
     ports:
       - "8085:8080"
+    networks:
+      - ifs
 
   data:
     image: worth/data-service:1.0-SNAPSHOT
@@ -66,6 +79,8 @@ services:
       - smtp
     ports:
       - "8090:8080"
+    networks:
+      - ifs
 
   mysql:
     image: mysql:5.5.49
@@ -75,11 +90,15 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs
     restart: on-failure
+    networks:
+      - ifs
 
   smtp:
     image: camptocamp/smtp-sink
     expose:
       - 25
+    networks:
+      - ifs
 
   imap:
     image: camptocamp/courier-imap
@@ -89,6 +108,8 @@ services:
       - 143
     ports:
       - "9876:143"
+    networks:
+      - ifs
 
   webmail:
     image: camptocamp/sqwebmail
@@ -99,8 +120,15 @@ services:
       - imap
     volumes_from:
       - smtp:rw
+    networks:
+      - ifs
 
   admin:
     image: enmobile/docker-spring-boot-admin
     ports:
-    - "3000:8123"
+    - "3001:8123"
+    networks:
+      - ifs
+networks:
+  ifs:
+    driver: bridge

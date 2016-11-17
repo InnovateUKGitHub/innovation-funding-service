@@ -117,15 +117,15 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
-task cleanDeployDocker {
+task cleanDeployMicroservices {
     println "Starting clean deploy docker"
     composeUp
 }
 
 //make sure that top level clean deploy docker is run last
 rootProject.subprojects.each { subproject ->
-    subproject.tasks.matching { it.name == "cleanDeployDocker" }.all { task ->
-        rootProject.tasks.findByName("cleanDeployDocker").mustRunAfter task
+    subproject.tasks.matching { it.name == "cleanDeployMicroservices" }.all { task ->
+        rootProject.tasks.findByName("cleanDeployMicroservices").mustRunAfter task
     }
 }
 
