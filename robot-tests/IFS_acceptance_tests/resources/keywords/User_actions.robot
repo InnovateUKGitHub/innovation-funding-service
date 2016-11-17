@@ -419,6 +419,7 @@ the user downloads the file from the link
 Download should be done
     [Documentation]    Verifies that the directory has only one folder
     ...    Returns path to the file
+    #TODO Pednging due to INFUND-6187
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
     Length Should Be    ${files}    1    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}

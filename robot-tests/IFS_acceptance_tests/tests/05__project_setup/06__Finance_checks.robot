@@ -97,10 +97,11 @@ Approve Eligibility: Lead partner organisation
 Project Finance user can export bank details 
     [Documentation]    INFUND-5852 
     [Tags]      Pending
-   Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
-   Then The user should see the text in the page    Export all bank details
-   And The user clicks the button/link          link = Export all bank details
-   And the Project finance user downloads the excel
+    #TODO Pending due to INFUND-6187
+    Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
+    Then The user should see the text in the page    Export all bank details
+    And The user clicks the button/link          link = Export all bank details
+    And the Project finance user downloads the excel
 
 #TODO :Please note this test needs test data to be created [INFUND-5879]
 Project Finance user to view Je-S Download form and then approve finances
