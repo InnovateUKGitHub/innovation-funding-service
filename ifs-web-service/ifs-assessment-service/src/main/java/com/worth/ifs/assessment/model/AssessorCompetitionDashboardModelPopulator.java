@@ -13,7 +13,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,9 +48,6 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
-    private UserService userService;
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);

@@ -79,7 +79,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
@@ -94,9 +93,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -152,7 +150,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
@@ -167,9 +164,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -210,7 +206,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(emptyList());
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -219,9 +214,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -256,6 +250,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
                 .withLeadTechnologist(leadTechnologistId)
+                .withLeadTechnologistName("Competition Technologist")
                 .withAssessorAcceptsDate(assessorAcceptsDate)
                 .withAssessorDeadlineDate(assessorDeadlineDate)
                 .build();
