@@ -145,21 +145,14 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
-        //TODO - Implement REJECT status when internal spend profile action story is completed
+        ProjectActivityStates state = createSpendProfileStatus(financeCheckStatus, spendProfile);
 
-        if (spendProfile.isPresent()) {
-            if (spendProfile.get().isMarkedAsComplete() && (spendProfile.get().getApproval() == ApprovalType.APPROVED)) {
-                return COMPLETE;
-            } else {
+        if(state == COMPLETE) {
+            if(spendProfile.get().getApproval() != ApprovalType.APPROVED) {
                 return ACTION_REQUIRED;
             }
-        } else {
-            if(financeCheckStatus.equals(COMPLETE)){
-                return PENDING;
-            } else {
-                return NOT_STARTED;
-            }
         }
+        return state;
     }
 
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
