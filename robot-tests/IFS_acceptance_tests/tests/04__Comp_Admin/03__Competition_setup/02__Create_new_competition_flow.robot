@@ -332,10 +332,15 @@ Application: Business opportunity
 
 Application: Scope
     [Documentation]    INFUND-5634
-    When the user clicks the button/link    link=Scope
-    Then the user should see the element    jQuery=h1:contains("Scope")
+    Given the user clicks the button/link    link=Scope
+    And the user should see the element    jQuery=h1:contains("Scope")
     And the user should see the text in the page    You can edit this question and the guidance text for assessors.
-    And the user should see the element    jQuery=a:contains("Edit this question")
+    And the user clicks the button/link   jQuery=a:contains("Edit this question")
+    And The user fills the empty question fields
+    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then The user should see the text in the page   Scope
+    And the user checks the question fields
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
