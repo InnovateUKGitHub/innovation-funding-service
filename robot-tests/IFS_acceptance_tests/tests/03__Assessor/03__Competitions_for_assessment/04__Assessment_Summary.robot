@@ -36,6 +36,12 @@ Assessment summary shows questions as incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Incomplete
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
 Questions should show without score
@@ -44,6 +50,12 @@ Questions should show without score
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    N/A
     And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    N/A
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    N/A
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    N/A
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    N/A
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    N/A
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    N/A
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
 
 Questions should show as complete
     [Documentation]    INFUND-550
@@ -54,18 +66,30 @@ Questions should show as complete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Complete
     And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Complete
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Complete
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Complete
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Complete
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Complete
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Complete
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
 Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
-    Then The user should see the text in the page    Total: 40/40
+    Then The user should see the text in the page    Total: 100/100
     And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
     And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
 
 Overall scores section
     [Documentation]    INFUND-4648
@@ -83,13 +107,25 @@ Feedback should show in each section
     Then The user should see the text in the page    Testing Project exploitation feedback text
     When The user clicks the button/link    jQuery=button:contains(4. Economic benefit)
     Then The user should see the text in the page    Testing Economic benefit feedback text
+    When The user clicks the button/link    jQuery=button:contains(5. Technical approach)
+    Then The user should see the text in the page    Testing Technical approach feedback text
+    When The user clicks the button/link    jQuery=button:contains(6. Innovation)
+    Then The user should see the text in the page    Testing Innovation feedback text
+    When The user clicks the button/link    jQuery=button:contains(7. Risks)
+    Then The user should see the text in the page    Testing Risks feedback text
+    When The user clicks the button/link    jQuery=button:contains(8. Project team)
+    Then The user should see the text in the page    Testing Project team feedback text
+    When The user clicks the button/link    jQuery=button:contains(9. Funding)
+    Then The user should see the text in the page    Testing Funding feedback text
+    When The user clicks the button/link    jQuery=button:contains(10. Adding value)
+    Then The user should see the text in the page    Testing Adding value feedback text
     When The user clicks the button/link    jQuery=button:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
 Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
-    and The user should see the text in the page    This is the applicant response from Test Seven for Business opportunity
+    and The user should see the text in the page    This is the applicant response for business opportunity.
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
@@ -197,6 +233,38 @@ the user adds score and feedback for every question
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=.editor    Testing Economic benefit feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Technical approach feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Innovation feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Risks feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Project team feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Funding feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=.editor    Testing Adding value feedback text
+    Focus    jQuery=a:contains("Sign out")
+    wait until page contains    Saving
     the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
@@ -204,6 +272,12 @@ the table should show the correct scores
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(5)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(6)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(7)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(8)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(9)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(10)    10
 
 each question will contain links to respective questions
     The user should see the element    link=Q1
@@ -212,15 +286,39 @@ each question will contain links to respective questions
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q2
     the user clicks the button/link    link=Q2
-    The user should be redirected to the correct page    /question/168
+    The user should be redirected to the correct page    /question/48
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q3
     the user clicks the button/link    link=Q3
-    The user should be redirected to the correct page    /question/169
+    The user should be redirected to the correct page    /question/49
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q4
     the user clicks the button/link    link=Q4
-    The user should be redirected to the correct page    /question/170
+    The user should be redirected to the correct page    /question/50
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q5
+    the user clicks the button/link    link=Q5
+    The user should be redirected to the correct page    /question/51
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q6
+    the user clicks the button/link    link=Q6
+    The user should be redirected to the correct page    /question/52
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q7
+    the user clicks the button/link    link=Q7
+    The user should be redirected to the correct page    /question/53
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q8
+    the user clicks the button/link    link=Q8
+    The user should be redirected to the correct page    /question/54
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q9
+    the user clicks the button/link    link=Q9
+    The user should be redirected to the correct page    /question/55
+    The user navigates to the page    ${Assessment_summary_Pending_12}
+    The user should see the element    link=Q10
+    the user clicks the button/link    link=Q10
+    The user should be redirected to the correct page    /question/56
     The user navigates to the page    ${Assessment_summary_Pending_12}
 
 the scores under each question should be correct
@@ -228,11 +326,17 @@ the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(5)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(6)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(7)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(8)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(9)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(10)    10
 
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
 
 the total scores should be correct
-    Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 40/40
+    Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 100/100
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
