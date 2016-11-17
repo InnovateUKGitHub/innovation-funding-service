@@ -71,20 +71,20 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         when(competitionParticipantRepositoryMock.getByUserIdAndRoleAndStatus(userId, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(competitionParticipants);
         when(competitionParticipantMapperMock.mapToResource(same(competitionParticipant))).thenReturn(expected);
         when(competitionParticipantRoleMapperMock.mapToDomain(CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(CompetitionParticipantRole.ASSESSOR);
-        when(participantStatusMapperMock.mapToDomain(ParticipantStatusResource.PENDING)).thenReturn(ParticipantStatus.ACCEPTED);
+        when(participantStatusMapperMock.mapToDomain(ParticipantStatusResource.ACCEPTED)).thenReturn(ParticipantStatus.ACCEPTED);
 
         List<Assessment> assessments = newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()),new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()))
                 .build(2);
         when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId,competitionId)).thenReturn(assessments);
 
-        ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult = competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.PENDING);
+        ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult = competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED);
 
         List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
         assertSame(expected, found.get(0));
         assertEquals(1L, found.get(0).getSubmittedAssessments());
         assertEquals(2L, found.get(0).getTotalAssessments());
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, competitionParticipantMapperMock);
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, competitionParticipantMapperMock, participantStatusMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByUserIdAndRoleAndStatus(1L, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.ACCEPTED);
         inOrder.verify(competitionParticipantMapperMock, calls(1)).mapToResource(any(CompetitionParticipant.class));
         inOrder.verifyNoMoreInteractions();

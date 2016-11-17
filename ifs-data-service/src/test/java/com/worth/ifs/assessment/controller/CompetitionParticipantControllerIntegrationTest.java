@@ -19,6 +19,7 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
@@ -44,13 +45,6 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
-
-    @Autowired
-    private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
-
-    @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
-
 
     @Before
     public void setUp() throws Exception {
@@ -90,7 +84,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                         .withEmail("fred@test.com")
                         .withHash("hashkey")
                         .withCompetition(competition)
-                        .withStatus(CREATED)
+                        .withStatus(OPENED)
                 )
                 .withStatus(ACCEPTED)
                 .withRole(ASSESSOR)
@@ -127,7 +121,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void getParticipantsInviteAccepted() {
+    public void getParticipants_accepted() {
         List<CompetitionParticipantResource> participants = controller.getParticipants(
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR,
