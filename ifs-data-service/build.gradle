@@ -14,9 +14,6 @@ war {
 
 configurations {
     providedRuntime
-    clientCompile
-    publicApi
-    forTesting
 }
 
 bootRepackage {
@@ -92,12 +89,10 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
+
     compile project(":ifs-commons")
+    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
 
-    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-//    compile fileTree(dir: "libs", include: "*.jar")
-
-    testCompile project(":ifs-commons").sourceSets.test.output
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
@@ -149,53 +144,6 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
-task client(type: Jar) {
-    baseName += '-public'
-    version = '0.0.1-SNAPSHOT'
-    from(sourceSets.main.output) {
-        // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/**/service/**"
-        include "com/worth/ifs/**/constant/**"
-        include "com/worth/ifs/**/resource/**"
-        include "com/worth/ifs/util/**"
-        include "com/worth/ifs/commons/security/**"
-        include "com/worth/ifs/commons/rest/**"
-        include "com/worth/ifs/commons/error/**"
-        include "com/worth/ifs/commons/validation/**"
-        exclude "com/worth/ifs/**/transactional/**"
-        exclude "com/worth/ifs/notifications/**"
-        exclude "com/worth/ifs/authentication/**"
-        exclude "com/worth/ifs/sil/**"
-        exclude "com/worth/ifs/email/**"
-    }
-}
-
-task testCommonCode(type: Jar) {
-    baseName += '-tests'
-    version = '0.0.1-SNAPSHOT'
-    from(sourceSets.test.output) {
-//        // filter to only include certain class files (Ant glob pattern)
-//        include "**/application-web-integration-test.properties"
-//        include "com/worth/ifs/commons/pojo/*.class"
-//        include "com/worth/ifs/commons/rest/*.class"
-//        include "com/worth/ifs/commons/security/*.class"
-//        include "com/worth/ifs/commons/service/*.class"
-//        include "com/worth/ifs/commons/util/date/*.class"
-//        include "com/worth/ifs/commons/*.class"
-//        include "com/worth/ifs/BaseBuilder.class"
-//        include "com/worth/ifs/Builder.class"
-//        include "com/worth/ifs/commons/test/*.class"
-//        include "com/worth/ifs/**/builder/*ResourceBuilder.class"
-//        include "com/worth/ifs/project/bankdetails/builder/ProjectBankDetailsStatusSummaryBuilder.class"
-//        include "com/worth/ifs/base/amend/BaseBuilderAmendFunctions.class"
-    }
-}
-
-artifacts {
-    publicApi client
-    forTesting testCommonCode
-}
-
 task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
@@ -205,7 +153,7 @@ task deployToTomcat(type: Copy) {
 watch {
     java {
         files files('src/main/java')
-        tasks 'client', 'deployToTomcat'
+        tasks 'deployToTomcat'
     }
     resources {
         files files('src/main/resources')
@@ -232,11 +180,8 @@ flywayClean.dependsOn processResources
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    testCommonCode.mustRunAfter build
     deployToTomcat.mustRunAfter build
     dependsOn clean
     dependsOn build
-    dependsOn client
-    dependsOn testCommonCode
     dependsOn deployToTomcat
 }

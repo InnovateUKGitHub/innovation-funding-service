@@ -3,10 +3,6 @@ jar {
     version = '0.0.1-SNAPSHOT'
 }
 
-configurations {
-    forTesting
-}
-
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
@@ -27,7 +23,7 @@ dependencies {
     // inter-project dependencies
     compile project(":ifs-commons")
     compile project(':ifs-rest-api-service')
-    testCompile project(":ifs-commons").sourceSets.test.output
+    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -46,6 +42,10 @@ processTestResources {
     filesMatching("*.properties") {
         expand project.properties
     }
+}
+
+configurations {
+    forTesting
 }
 
 task testCommonCode(type: Jar) {

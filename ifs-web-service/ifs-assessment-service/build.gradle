@@ -19,9 +19,9 @@ dependencies {
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
 
-    testCompile project(":ifs-commons").sourceSets.test.output
+    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
+    testCompile project(path: ':ifs-web-service:ifs-web-core', configuration: 'forTesting')
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
 task copyTemplatesInPlace(type: Copy) {

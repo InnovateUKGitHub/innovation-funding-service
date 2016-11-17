@@ -28,7 +28,7 @@ ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 dependencies {
     compile project(':ifs-commons')
-    testCompile project(":ifs-commons").sourceSets.test.output
+    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
 }
 
 task client(type: Jar) {
