@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
     config = GlobalMapperConfig.class,
     uses = {
         FinanceRowMetaFieldMapper.class,
-        FinanceRowMapper.class
+        ApplicationFinanceRowMapper.class
     }
 )
 public abstract class FinanceRowMetaValueMapper extends BaseMapper<FinanceRowMetaValue, FinanceRowMetaValueResource, FinanceRowMetaValueId> {

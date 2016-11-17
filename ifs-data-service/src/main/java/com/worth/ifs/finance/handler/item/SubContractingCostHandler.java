@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
@@ -14,8 +14,8 @@ public class SubContractingCostHandler extends FinanceRowHandler {
     public static final String COST_KEY = "subcontracting";
 
     @Override
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof SubContractingCost) {
             cost = mapSubContractingCost(costItem);
         }
@@ -23,9 +23,9 @@ public class SubContractingCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         String country = "";
-        for(FinanceRowMetaValue costValue : cost.getCostValues()) {
+        for(FinanceRowMetaValue costValue : ((ApplicationFinanceRow)cost).getCostValues()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {
                 country = costValue.getValue();
             }
@@ -34,9 +34,9 @@ public class SubContractingCostHandler extends FinanceRowHandler {
         return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
     }
 
-    public FinanceRow mapSubContractingCost(FinanceRowItem costItem) {
+    public ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
-        FinanceRow cost =  new FinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
+        ApplicationFinanceRow cost =  new ApplicationFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));

@@ -26,9 +26,6 @@ import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
-import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
-import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
@@ -45,7 +42,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -59,6 +56,9 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
@@ -256,7 +256,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserProfileService userProfileServiceMock;
 
     @Mock
-    protected FinanceRowRepository financeRowRepositoryMock;
+    protected ApplicationFinanceRowRepository financeRowRepositoryMock;
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;

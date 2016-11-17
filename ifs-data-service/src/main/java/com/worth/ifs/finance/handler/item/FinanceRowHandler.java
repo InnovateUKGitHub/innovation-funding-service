@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.validator.util.ValidationUtil;
@@ -20,9 +20,9 @@ public abstract class FinanceRowHandler {
     private static final Log LOG = LogFactory.getLog(FinanceRowHandler.class);
     Map<String, FinanceRowMetaField> costFields = new HashMap<>();
 
-    public abstract FinanceRow toCost(FinanceRowItem costItem);
+    public abstract ApplicationFinanceRow toCost(FinanceRowItem costItem);
 
-    public abstract FinanceRowItem toCostItem(FinanceRow cost);
+    public abstract FinanceRowItem toCostItem(ApplicationFinanceRow cost);
 
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);
@@ -36,8 +36,8 @@ public abstract class FinanceRowHandler {
         this.costFields = financeRowMetaFields.stream().collect(Collectors.toMap(FinanceRowMetaField::getTitle, Function.<FinanceRowMetaField>identity()));
     }
 
-    public List<FinanceRow> initializeCost() {
-        ArrayList<FinanceRow> costs = new ArrayList<>();
+    public List<ApplicationFinanceRow> initializeCost() {
+        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         return costs;
     }
 }

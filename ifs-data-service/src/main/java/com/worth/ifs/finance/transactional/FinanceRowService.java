@@ -32,7 +32,7 @@ public interface FinanceRowService {
     ServiceResult<FinanceRowItem> getCostItem(Long costItemId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
+    ServiceResult<List<? extends FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId);

@@ -5,7 +5,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
-import com.worth.ifs.finance.mapper.FinanceRowMapper;
+import com.worth.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,7 +18,7 @@ import org.mapstruct.Mappings;
         CompetitionMapper.class,
         QuestionStatusMapper.class,
         FormInputMapper.class,
-        FinanceRowMapper.class
+        ApplicationFinanceRowMapper.class
     }
 )
 public abstract class QuestionMapper extends BaseMapper<Question, QuestionResource, Long> {

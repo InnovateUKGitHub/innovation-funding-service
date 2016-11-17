@@ -19,7 +19,7 @@ import static com.worth.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESS
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "row_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class FinanceRow<TargetType> {
+public abstract class FinanceRow<FinanceType> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -50,7 +50,7 @@ public abstract class FinanceRow<TargetType> {
     /**
      * Constructor used to add a new and empty cost object.
      */
-    public FinanceRow(ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(Question question) {
         this.name = "";
         this.item = "";
         this.description = "";
@@ -140,7 +140,11 @@ public abstract class FinanceRow<TargetType> {
         this.question = question;
     }
 
-    public abstract void setTarget(TargetType target);
+    public abstract void setTarget(FinanceType target);
 
-    public abstract TargetType getTarget();
+    public abstract FinanceType getTarget();
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

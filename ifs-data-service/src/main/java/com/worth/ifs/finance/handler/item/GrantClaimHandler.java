@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.validator.GrantClaimValidator;
@@ -34,28 +34,28 @@ public class GrantClaimHandler extends FinanceRowHandler {
 
 
     @Override
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof GrantClaim) {
             GrantClaim grantClaim = (GrantClaim) costItem;
-            return new FinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+            return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
         }
         return cost;
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 
     @Override
-    public List<FinanceRow> initializeCost() {
-        ArrayList<FinanceRow> costs = new ArrayList<>();
+    public List<ApplicationFinanceRow> initializeCost() {
+        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeFundingLevel());
         return costs;
     }
 
-    private FinanceRow initializeFundingLevel() {
+    private ApplicationFinanceRow initializeFundingLevel() {
         GrantClaim costItem = new GrantClaim();
         costItem.setGrantClaimPercentage(null);
         return toCost(costItem);

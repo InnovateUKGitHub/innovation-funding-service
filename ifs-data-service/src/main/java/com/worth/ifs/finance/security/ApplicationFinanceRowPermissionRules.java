@@ -4,7 +4,7 @@ import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -25,7 +25,7 @@ import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
  */
 @Component
 @PermissionRules
-public class FinanceRowPermissionRules extends BasePermissionRules {
+public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -34,7 +34,7 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
     private RoleRepository roleRepository;
 
     @Autowired
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository financeRowRepository;
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
     public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
@@ -78,7 +78,7 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
     }
 
     private boolean isCollaborator(final FinanceRow cost, final UserResource user) {
-        final ApplicationFinance applicationFinance = cost.getApplicationFinance();
+        final ApplicationFinance applicationFinance = (ApplicationFinance) cost.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();
         final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, roleRepository, processRoleRepository);

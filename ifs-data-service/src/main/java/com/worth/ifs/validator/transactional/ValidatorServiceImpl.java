@@ -5,7 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.item.FinanceRowHandler;
-import com.worth.ifs.finance.mapper.FinanceRowMapper;
+import com.worth.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.domain.FormInput;
@@ -42,7 +42,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     private FinanceRowService financeRowService;
 
     @Autowired
-    private FinanceRowMapper financeRowMapper;
+    private ApplicationFinanceRowMapper applicationFinanceRowMapper;
 
     @Autowired
     private ValidationUtil validationUtil;

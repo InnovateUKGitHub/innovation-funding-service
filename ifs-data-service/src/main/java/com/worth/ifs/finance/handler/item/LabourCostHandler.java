@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
@@ -32,28 +32,28 @@ public class LabourCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof LabourCost) {
             LabourCost labourCostItem = (LabourCost) costItem;
-            cost = new FinanceRow(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
+            cost = new ApplicationFinanceRow(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
         }
         return cost;
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
     }
 
     @Override
-    public List<FinanceRow> initializeCost() {
-        ArrayList<FinanceRow> costs = new ArrayList<>();
+    public List<ApplicationFinanceRow> initializeCost() {
+        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeWorkingDays());
         return costs;
     }
 
-    private FinanceRow initializeWorkingDays() {
+    private ApplicationFinanceRow initializeWorkingDays() {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
         LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description);

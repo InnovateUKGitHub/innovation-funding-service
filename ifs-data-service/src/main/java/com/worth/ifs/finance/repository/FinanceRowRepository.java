@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.repository;
 
-import com.worth.ifs.finance.domain.FinanceRow;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -11,9 +9,9 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface FinanceRowRepository extends PagingAndSortingRepository<FinanceRow, Long> {
-    public List<FinanceRow> findByApplicationFinanceId(@Param("applicationFinanceId") Long applicationFinanceId);
-    public FinanceRow findOneByApplicationFinanceIdAndNameAndQuestionId(Long applicationFinanceId, String name, Long questionId);
-    public List<FinanceRow> findByApplicationFinanceIdAndNameAndQuestionId(Long applicationFinanceId, String name, Long questionId);
-    public List<FinanceRow> findByApplicationFinanceIdAndQuestionId(Long applicationFinanceId, Long questionId);
+public interface FinanceRowRepository<T> {
+    List<T> findByTargetId(@Param("targetId") Long targetId);
+    T findOneByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
+    List<T> findByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
+    List<T> findByTargetIdAndQuestionId(Long targetId, Long questionId);
 }

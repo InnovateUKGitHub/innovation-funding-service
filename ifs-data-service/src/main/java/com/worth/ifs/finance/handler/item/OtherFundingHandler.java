@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
@@ -29,8 +29,8 @@ public class OtherFundingHandler extends FinanceRowHandler {
         validator.validate(costItem, bindingResult);
     }
 
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof OtherFunding) {
             cost = mapOtherFunding(costItem);
         }
@@ -38,11 +38,11 @@ public class OtherFundingHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
     }
 
-    private FinanceRow mapOtherFunding(FinanceRowItem costItem) {
+    private ApplicationFinanceRow mapOtherFunding(FinanceRowItem costItem) {
         OtherFunding otherFunding = (OtherFunding) costItem;
         String item;
         if (otherFunding.getOtherPublicFunding() != null) {
@@ -50,17 +50,17 @@ public class OtherFundingHandler extends FinanceRowHandler {
         } else {
             item = otherFunding.getSecuredDate();
         }
-        return new FinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+        return new ApplicationFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override
-    public List<FinanceRow> initializeCost() {
-        ArrayList<FinanceRow> costs = new ArrayList<>();
+    public List<ApplicationFinanceRow> initializeCost() {
+        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeOtherFunding());
         return costs;
     }
 
-    private FinanceRow initializeOtherFunding() {
+    private ApplicationFinanceRow initializeOtherFunding() {
         Long id = null;
         String otherPublicFunding = "";
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;

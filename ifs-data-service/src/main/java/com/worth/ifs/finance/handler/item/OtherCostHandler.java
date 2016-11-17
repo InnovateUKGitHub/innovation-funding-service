@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherCost;
 
@@ -12,17 +12,17 @@ public class OtherCostHandler extends FinanceRowHandler {
     public static final String COST_KEY = "other-cost";
 
     @Override
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof OtherCost) {
             OtherCost otherCost = (OtherCost) costItem;
-            cost = new FinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+            cost = new ApplicationFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
         }
         return cost;
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new OtherCost(cost.getId(),cost.getDescription(), cost.getCost());
     }
 }

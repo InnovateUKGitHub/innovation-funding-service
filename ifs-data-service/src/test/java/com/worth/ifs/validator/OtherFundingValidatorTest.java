@@ -5,10 +5,10 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.builder.ApplicationFinanceBuilder;
-import com.worth.ifs.finance.builder.FinanceRowBuilder;
+import com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class OtherFundingValidatorTest {
     private ReloadableResourceBundleMessageSource messageSource;
 
     @Mock
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository financeRowRepository;
     
     @Mock
     private QuestionService questionService;
@@ -150,12 +150,12 @@ public class OtherFundingValidatorTest {
 
     private void mockWithRadio(String value){
         ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().build();
-        FinanceRow cost = FinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
+        ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
         when(questionService.getQuestionByFormInputType(FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
-        List<FinanceRow> listOfCostWithYes = new ArrayList<>();
+        List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
-        when(financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);
+        when(financeRowRepository.findByTargetIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);
     }
 }

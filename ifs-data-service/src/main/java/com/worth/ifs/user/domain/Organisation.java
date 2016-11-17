@@ -3,7 +3,6 @@ package com.worth.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.user.resource.OrganisationSize;
@@ -31,9 +30,6 @@ public class Organisation {
 
     @OneToMany(mappedBy="organisation")
     private List<ProcessRole> processRoles = new ArrayList<>();
-
-    @OneToMany(mappedBy="organisation")
-    private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
     @ManyToMany(mappedBy="organisations")
     private List<User> users = new ArrayList<>();
@@ -81,11 +77,6 @@ public class Organisation {
         return processRoles;
     }
 
-    @JsonIgnore
-    public List<ApplicationFinance> getApplicationFinances() {
-        return applicationFinances;
-    }
-
     public void setProcessRoles(List<ProcessRole> processRoles) {
         this.processRoles = processRoles;
     }
@@ -122,10 +113,6 @@ public class Organisation {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
-    }
-
-    public void setApplicationFinances(List<ApplicationFinance> applicationFinances) {
-        this.applicationFinances = applicationFinances;
     }
 
     public void setUsers(List<User> users) {

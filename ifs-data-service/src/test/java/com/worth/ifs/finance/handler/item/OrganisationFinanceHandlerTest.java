@@ -5,14 +5,11 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.domain.FinanceRowMetaField;
-import com.worth.ifs.finance.domain.FinanceRowMetaValue;
+import com.worth.ifs.finance.domain.*;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.*;
@@ -43,7 +40,7 @@ public class OrganisationFinanceHandlerTest {
     @Mock
     AutowireCapableBeanFactory beanFactory;
     @Mock
-    FinanceRowRepository financeRowRepositoryMock;
+    ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock
     FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
     @Mock
@@ -74,9 +71,9 @@ public class OrganisationFinanceHandlerTest {
             setUpCostTypeQuestions(costType);
         }
 
-        List<FinanceRow> costs = new ArrayList<>();
+        List<ApplicationFinanceRow> costs = new ArrayList<>();
 
-        Iterable<FinanceRow> init;
+        Iterable<ApplicationFinanceRow> init;
         for (FinanceRowType costType : FinanceRowType.values()) {
             init = handler.initialiseCostType(applicationFinance, costType);
             if(init != null){
@@ -93,18 +90,18 @@ public class OrganisationFinanceHandlerTest {
         capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
         capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         capitalUsageCost.setQuestion(costTypeQuestion.get(FinanceRowType.CAPITAL_USAGE));
-        costs.add(capitalUsageCost);
+        costs.add((ApplicationFinanceRow) capitalUsageCost);
 
         subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
         subContractingCost = handler.costItemToCost(subContracting);
         subContractingCost.getCostValues().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
         subContractingCost.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
-        costs.add(subContractingCost);
+        costs.add((ApplicationFinanceRow)subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
         FinanceRow subContractingCost2 = handler.costItemToCost(subContracting2);
         subContractingCost2.getCostValues().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
         subContractingCost2.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
-        costs.add(subContractingCost2);
+        costs.add((ApplicationFinanceRow)subContractingCost2);
 
         labour = new LabourCost();
         labour.setLabourDays(300);
@@ -113,7 +110,7 @@ public class OrganisationFinanceHandlerTest {
         labour.setDescription("");
         labourCost = handler.costItemToCost(labour);
         labourCost.setQuestion(costTypeQuestion.get(FinanceRowType.LABOUR));
-        costs.add(labourCost);
+        costs.add((ApplicationFinanceRow)labourCost);
 
         material = new Materials();
         material.setCost(BigDecimal.valueOf(100));
@@ -121,9 +118,9 @@ public class OrganisationFinanceHandlerTest {
         material.setQuantity(5);
         materialCost = handler.costItemToCost(material);
         materialCost.setQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS));
-        costs.add(materialCost);
+        costs.add((ApplicationFinanceRow)materialCost);
 
-        when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinance.getId())).thenReturn(costs);
+        when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<FinanceRowMetaField>());
 
     }

@@ -4,6 +4,7 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
+import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newFinanceRow;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -32,9 +33,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<FinanceRowPermissionRules> {
+public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<ApplicationFinanceRowPermissionRules> {
 
-    private FinanceRow cost;
+    private ApplicationFinanceRow cost;
     private FinanceRowItem costItem;
     private FinanceRow otherCost;
     private UserResource leadApplicant;
@@ -50,8 +51,8 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Finan
     private ProjectResource otherProject;
 
     @Override
-    protected FinanceRowPermissionRules supplyPermissionRulesUnderTest() {
-        return new FinanceRowPermissionRules();
+    protected ApplicationFinanceRowPermissionRules supplyPermissionRulesUnderTest() {
+        return new ApplicationFinanceRowPermissionRules();
     }
 
     @Before

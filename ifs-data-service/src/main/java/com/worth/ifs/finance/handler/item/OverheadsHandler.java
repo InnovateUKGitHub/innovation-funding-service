@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.resource.category.OverheadCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
@@ -30,8 +30,8 @@ public class OverheadsHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRow toCost(FinanceRowItem costItem) {
-        FinanceRow cost = null;
+    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
+        ApplicationFinanceRow cost = null;
         if (costItem instanceof Overhead) {
             Overhead overhead = (Overhead) costItem;
             Integer rate = overhead.getRate();
@@ -41,27 +41,27 @@ public class OverheadsHandler extends FinanceRowHandler {
                 rateType = overhead.getRateType().toString();
             }
 
-            cost = new FinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
+            cost = new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
         }
         return cost;
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
         return new Overhead(cost.getId(), type, cost.getQuantity());
     }
 
     @Override
-    public List<FinanceRow> initializeCost() {
-        ArrayList<FinanceRow> costs = new ArrayList<>();
+    public List<ApplicationFinanceRow> initializeCost() {
+        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeAcceptRate());
         return costs;
     }
 
-    private FinanceRow initializeAcceptRate() {
+    private ApplicationFinanceRow initializeAcceptRate() {
         Overhead costItem = new Overhead();
-        FinanceRow cost = toCost(costItem);
+        ApplicationFinanceRow cost = toCost(costItem);
         cost.setDescription(OverheadCostCategory.ACCEPT_RATE);
         return cost;
     }

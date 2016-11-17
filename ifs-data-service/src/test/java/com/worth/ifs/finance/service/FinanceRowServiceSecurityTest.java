@@ -33,7 +33,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
+import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newFinanceRow;
 import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static com.worth.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<FinanceRowService> {
 
     private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
-    private FinanceRowPermissionRules costPermissionsRules;
+    private ApplicationFinanceRowPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
@@ -60,7 +60,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Before
     public void lookupPermissionRules() {
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
-        costPermissionsRules = getMockPermissionRulesBean(FinanceRowPermissionRules.class);
+        costPermissionsRules = getMockPermissionRulesBean(ApplicationFinanceRowPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
@@ -366,7 +366,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         }
 
         @Override
-        public ServiceResult<List<FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+        public ServiceResult<List<? extends FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
             return serviceSuccess(newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 

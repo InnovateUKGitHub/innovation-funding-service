@@ -30,7 +30,7 @@ public class FinanceRowTest {
         applicationFinance = new ApplicationFinance();
         question = new Question();
         financeType = new FinanceType();
-        costItem = new FinanceRow(id, name, item, description, quantity, cost, applicationFinance, question);
+        costItem = new ApplicationFinanceRow(id, name, item, description, quantity, cost, applicationFinance, question);
     }
 
     @Test
@@ -47,9 +47,8 @@ public class FinanceRowTest {
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
         BigDecimal value = new BigDecimal(2.2);
-        new FinanceRow();
-        new FinanceRow("item","key","description",1,value,applicationFinance, question);
-        new FinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
+        new ApplicationFinanceRow();
+        new ApplicationFinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
     }
 
     @Test
@@ -68,7 +67,7 @@ public class FinanceRowTest {
         costItem.setQuantity(quantity2);
         costItem.setCost(cost2);
         costItem.setQuestion(question2);
-        costItem.setApplicationFinance(applicationFinance2);
+        costItem.setTarget(applicationFinance2);
 
         Assert.assertEquals(costItem.getItem(), item2);
         Assert.assertEquals(costItem.getName(), name2);
