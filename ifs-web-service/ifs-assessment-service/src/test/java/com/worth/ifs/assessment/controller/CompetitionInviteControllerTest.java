@@ -86,7 +86,8 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         LocalDateTime acceptsDate = LocalDateTime.now();
         LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
 
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource()
+                .withCompetitionName("my competition")
                 .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
 
         CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
