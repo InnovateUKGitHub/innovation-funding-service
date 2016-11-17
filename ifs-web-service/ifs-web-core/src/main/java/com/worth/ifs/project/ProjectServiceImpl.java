@@ -296,4 +296,9 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+        return projectRestService.sendGrantOfferLetter(projectId).toServiceResult();
+    }
 }

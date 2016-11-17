@@ -229,4 +229,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-project-manager", inviteResource, Void.class);
     }
 
+    @Override
+    public RestResult<Void> sendGrantOfferLetter(Long projectId) {
+        return  RestResult.restSuccess();//TODO postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/submit", Void.class);
+    }
+
 }

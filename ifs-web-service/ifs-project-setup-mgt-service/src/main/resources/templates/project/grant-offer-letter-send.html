@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Send Grant Offer Letter'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management grant-offer-letter">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-accept-send-gol" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge">Grant Offer Letter</h1>
+            </div>
+        </div>
+
+    </div>
+    <hr/>
+
+    <th:block th:if="${!model.isSentToProjectTeam()}">
+        <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+    </th:block>
+    <th:block th:if="${model.isSentToProjectTeam()}">
+        <p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
+    </th:block>
+
+    <h2 th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+
+    <h2 class="heading-medium">Grant offer letter</h2>
+    <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+
+    <h2 class="heading-medium">Annex</h2>
+    <th:block th:if="${model.additionalContractFile}">
+        <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+        <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+    </th:block>
+    <th:block th:unless="${model.additionalContractFile}">
+        <p>No Annex is specified.</p>
+    </th:block>
+
+    <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
+        <button data-js-modal="modal-accept-send-gol" id="accept-send-gol" class="button large">
+            Send to project team
+        </button>
+    </div>
+
+    <th:block th:if="${model.isSentToProjectTeam()}">
+        <h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
+        <p>If the grant offer letter has been received by post, please tick the box below.</p>
+
+        <div class="form-group">
+            <label class="block-label" for="gol-by-post">
+                <input id="gol-by-post" value="gol-by-post" type="checkbox" />
+                The grant offer letter has been received by post
+            </label>
+        </div>
+
+        <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+
+        <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+            <button class="js-close close" aria-label="Close Popup">X</button>
+            <div>
+                <h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
+                <p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
+                <hr />
+                <div class="alignright-button">
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a> <!-- TODO connect this up-->
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

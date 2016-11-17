@@ -44,6 +44,10 @@ class ProjectSetupProgressChecker {
         return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
     }
 
+    public boolean isOtherDocumentsApproved() {
+        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
+    }
+
     public boolean isOrganisationRequiringFunding() {
         return !NOT_REQUIRED.equals(projectStatus.getBankDetailsStatus());
     }
@@ -58,5 +62,9 @@ class ProjectSetupProgressChecker {
 
     public boolean isGrantOfferLetterSubmitted() {
         return ACTION_REQUIRED.equals(projectStatus.getGrantOfferLetterStatus());
+    }
+
+    public boolean isGrantOfferLetterSent() {
+        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
     }
 }

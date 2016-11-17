@@ -371,3 +371,23 @@
         </form>
     </div>
 </th:block>
+
+<!-- Confirmation on sending grant offer letters -->
+<th:block th:fragment="modal-accept-send-gol">
+    <div class="modal-accept-send-gol" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div>
+            <h2 class="heading-medium no-margin">Send grant offer letter</h2>
+            <p>The grant offer letter will now be sent to the applicants. The project manager will be informed of the availability of the GOL by email.</p>
+            <hr />
+            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send/APPROVED'}" method="post">
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" type="submit">Send to project team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>

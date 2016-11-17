@@ -94,4 +94,6 @@ public interface ProjectRestService {
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     RestResult<ProjectStatusResource> getProjectStatus(Long projectId);
+
+    RestResult<Void> sendGrantOfferLetter(Long projectId);
 }

@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
@@ -80,6 +81,13 @@ public class ProjectSetupSectionInternalUser {
         return ACCESSIBLE;
     }
 
+    public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
+        if((userResource.hasRole(COMP_ADMIN) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved() && !projectSetupProgressChecker.isGrantOfferLetterSent())) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;
