@@ -51,6 +51,8 @@ public class CompetitionSetupServiceImplTest {
     private SectionRepository sectionRepository;
 	@Mock
 	private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
+	@Mock
+	private EntityManager entityManager;
 
     @Before
 	public void setup() {
