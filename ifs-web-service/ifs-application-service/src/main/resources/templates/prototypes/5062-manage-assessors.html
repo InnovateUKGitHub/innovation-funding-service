@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="full-width">
+<body class="dashboard-internal full-width">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-	<th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${(param.comp != null ? '/prototypes/5721-dashboard?status='+ param.comp[0] :  '/prototypes/5721-dashboard')})" />
+	<th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->

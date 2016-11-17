@@ -67,6 +67,9 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name="leadTechnologistUserId", referencedColumnName="id")
     private User leadTechnologist;
 
+    @OneToOne(mappedBy = "template")
+    private CompetitionType templateForType;
+
     private String pafCode;
     private String budgetCode;
     private String code;
@@ -104,6 +107,8 @@ public class Competition implements ProcessActivity {
     private boolean includeGrowthTable = true;
 
     private Boolean setupComplete;
+
+    private boolean template = false;
 
     public Competition() {
         setupComplete = false;
@@ -540,6 +545,14 @@ public class Competition implements ProcessActivity {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public boolean isTemplate() {
+        return template;
+    }
+
+    public void setTemplate(boolean template) {
+        this.template = template;
     }
 }
 

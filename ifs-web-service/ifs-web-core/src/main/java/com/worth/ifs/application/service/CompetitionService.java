@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public interface CompetitionService {
 
     void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
 
-    void initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
+    ServiceResult<Void> initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
 
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 
