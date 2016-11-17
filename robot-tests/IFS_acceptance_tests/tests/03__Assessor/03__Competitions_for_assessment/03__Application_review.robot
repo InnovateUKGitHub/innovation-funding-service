@@ -163,7 +163,7 @@ Feedback: word count
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words    Test words count to enter only 10 words test test
     Then I should see word count underneath feedback form    Words remaining: 90
-    Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
+    Then I should not see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
