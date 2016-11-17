@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
@@ -245,9 +246,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessmentIds(asList(1L))
                 .build();
 
+        Application application = new Application();
+        application.setName("Test Application");
+
         Assessment assessment = newAssessment()
                 .withId(1L)
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .with((resource) -> resource.setTarget(application))
                 .build();
 
         assertEquals(1, assessmentSubmissions.getAssessmentIds().size());
@@ -257,7 +262,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().get(0), new Error(ASSESSMENT_SUBMIT_FAILED, 1L));
+        assertEquals(result.getErrors().get(0), new Error(ASSESSMENT_SUBMIT_FAILED, 1L, "Test Application"));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
@@ -271,9 +276,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
 
+        Application application = new Application();
+        application.setName("Test Application");
+
         Assessment assessment = newAssessment()
                 .withId(1L)
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .with((resource) -> resource.setTarget(application))
                 .build();
 
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
@@ -283,7 +292,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUBMIT_FAILED, 1L), notFoundError(Assessment.class, 2L)));
+        assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUBMIT_FAILED, 1L, "Test Application"), notFoundError(Assessment.class, 2L)));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
