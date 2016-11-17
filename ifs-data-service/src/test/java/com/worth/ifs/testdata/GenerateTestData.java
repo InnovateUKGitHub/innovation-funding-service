@@ -267,7 +267,11 @@ public class GenerateTestData extends BaseIntegrationTest {
                     withRole(role).
                     createPreRegistrationEntry(line.emailAddress);
 
-            createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, COMP_EXEC).contains(role));
+            if (line.emailVerified) {
+                createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, COMP_EXEC).contains(role));
+            } else {
+                baseBuilder.build();
+            }
         });
     }
 
