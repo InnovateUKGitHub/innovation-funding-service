@@ -2,6 +2,7 @@ package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.resource.*;
 
 import java.time.LocalDateTime;
@@ -80,8 +81,13 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((assessorDeadlineDate, competitionParticipantResource) -> setField("assessorDeadlineDate", assessorDeadlineDate, competitionParticipantResource), assessorDeadlineDates);
     }
 
+    public CompetitionParticipantResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatuses) {
+        return withArray((competitionStatus, competitionParticipantResource) -> setField("competitionStatus", competitionStatus, competitionParticipantResource), competitionStatuses);
+    }
+
     @Override
     protected void postProcess(int index, CompetitionParticipantResource instance) {
         super.postProcess(index, instance);
     }
+
 }

@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
 
+import static com.worth.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
+import static com.worth.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
@@ -25,7 +28,7 @@ public class CompetitionParticipantResource {
     private String competitionName;
     private LocalDateTime assessorAcceptsDate;
     private LocalDateTime assessorDeadlineDate;
-//    private CompetitionStatus competitionStatus;
+    private CompetitionStatus competitionStatus;
 
     public String getCompetitionName() {
         return competitionName;
@@ -115,13 +118,13 @@ public class CompetitionParticipantResource {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 
-//    public CompetitionStatus getCompetitionStatus() {
-//        return competitionStatus;
-//    }
-//
-//    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
-//        this.competitionStatus = competitionStatus;
-//    }
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
+    }
+
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
+        this.competitionStatus = competitionStatus;
+    }
 
 
     @JsonIgnore
@@ -136,21 +139,13 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public boolean isInAssessment() {
-        // TODO INFUND-5199 We cannot infer the competition being in the assessment period from the assessor accepts deadline and the assessor deadline date
-        return assessorAcceptsDate.isBefore(LocalDateTime.now()) && assessorDeadlineDate.isAfter(LocalDateTime.now());
+        return this.competitionStatus == CompetitionStatus.IN_ASSESSMENT;
     }
-
-//    @JsonIgnore
-//    public boolean isInAssessment() {
-//        return this.competitionStatus == CompetitionStatus.IN_ASSESSMENT;
-//    }
 
     @JsonIgnore
     public boolean isAnUpcomingAssessment() {
-        // TODO INFUND-5199 It is wrong to infer the competition being upcoming for assessment from the assessor accepts deadline
-        return assessorAcceptsDate.isAfter(LocalDateTime.now());
+        return competitionStatus == READY_TO_OPEN || competitionStatus == OPEN || competitionStatus == CLOSED;
     }
-
 
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
@@ -181,7 +176,7 @@ public class CompetitionParticipantResource {
                 .append(competitionName, that.competitionName)
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
-//                .append(competitionStatus, that.competitionStatus)
+                .append(competitionStatus, that.competitionStatus)
                 .isEquals();
     }
 
@@ -199,7 +194,7 @@ public class CompetitionParticipantResource {
                 .append(competitionName)
                 .append(assessorAcceptsDate)
                 .append(assessorDeadlineDate)
-//                .append(competitionStatus)
+                .append(competitionStatus)
                 .toHashCode();
     }
 }
