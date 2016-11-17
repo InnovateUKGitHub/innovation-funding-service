@@ -74,6 +74,7 @@
                            id="question.shortTitle"
                            th:name="question.shortTitle"
                            th:value="${question.shortTitle}"
+                           readonly="readonly"
                            maxlength="255"/>
                 </div>
                 <div th:class="${#fields.hasErrors('question.title')}? 'form-group error':'form-group'">

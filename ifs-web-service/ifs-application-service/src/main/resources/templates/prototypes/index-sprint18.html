@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint18'"  th:remove="tag" />
+
+	<h1 class="heading-large">Sprint 18</h1>
+
+		<section>
+			<h2 class="heading-medium">Front door</h2>
+
+			<ul class="list-bullet">
+				<li>
+					<h3 class="heading-small">INFUND-6064</h3>
+					<p>Prototype front-door work</p>
+					<ul class="list-bullet">
+						<li><a href="/prototypes/6064-competition-listings">INFUND-6064</a> Competition listings</li>
+						<li><a href="/prototypes/6064-competition-page">INFUND-6064</a> Competition page</li>
+						<li><a href="/prototypes/6064-what-we-ask">INFUND-6064</a> What we ask you</li>
+					</ul>
+				</li>
+			</ul>
+
+		</section>
+
+    <section>
+
+      <h2 class="heading-medium">Internal user</h2>
+
+      <ul class="list-bullet">
+
+        <li>
+          <h3 class="heading-small">INFUND-5052</h3>
+					<p>Revisit competition dashboard overview levels - consistency btw different states, open / closed / PSU etc</p>
+
+          <ul class="list-bullet">
+            <li><a href="/prototypes/5721-dashboard">INFUND-5721</a> Create the open Competition Dashboard</li>
+            <li><a href="/prototypes/5721-dashboard?status=Closed">INFUND-5722</a> Create the closed competition dashboard</li>
+            <li><a href="/prototypes/5721-dashboard?status=assessment">INFUND-5723</a> Create the 'In assessment' competition dashboard</li>
+            <li><a href="/prototypes/5721-dashboard?status=panel">INFUND-5725</a> Create the 'Panel' competition dashboard</li>
+            <li><a href="/prototypes/5721-dashboard?status=Inform">INFUND-5726</a> Create the 'Inform' competition dashboard</li>
+            <li><a href="/prototypes/5052-view-applications">INFUND-6020</a> Create a view for 'All' applications</li>
+            <li><a href="/prototypes/5052-manage-assessments">INFUND-6021</a> Create a view for assessor managment</li>
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </section>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

@@ -49,6 +49,10 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
         return withArray((name, competition) -> competition.setCompetitionTypeName(name), competitionTypeName);
     }
 
+    public CompetitionSearchResultItemBuilder withProjectsCount(Integer... projectsCount) {
+        return withArray((number, competition) -> competition.setProjectsCount(number), projectsCount);
+    }
+
     @Override
     protected CompetitionSearchResultItemBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionSearchResultItem>> actions) {
         return new CompetitionSearchResultItemBuilder(actions);
