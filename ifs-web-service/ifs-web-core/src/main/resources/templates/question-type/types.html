@@ -112,8 +112,8 @@
         	            <label class="form-label form-label-bold" th:for="application_details-title">
         	                  <span>Project title</span>
         	                  <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
-        	                  <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
         	            </label>
+                        <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" th:remove="tag" />
                         <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
                         <input class="form-control width-full"
                              th:readonly="${readonly}"
@@ -196,7 +196,7 @@
                                      <legend>
                                          <span class="form-label form-label-bold">Estimated timescales</span>
                                          <span>Project start date</span>
-                                         <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
+                                         <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')" th:remove="tag" />
                                          <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
                                      </legend>
 
@@ -204,7 +204,7 @@
                               </div>
                               <div class="form-group" th:with="id='application_details-duration', field='application.durationInMonths',readonly=${readonly}">
                                   <th:block th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
-                                  <th:block th:include="question-type/form-elements :: form-validation-messages (id=${id})"  />
+                                  <th:block th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                                   <input class="form-control width-extra-small"
                                          th:classAppend="${readonly == true ? 'js-visited':''}"
                                          th:readonly="${readonly}"
