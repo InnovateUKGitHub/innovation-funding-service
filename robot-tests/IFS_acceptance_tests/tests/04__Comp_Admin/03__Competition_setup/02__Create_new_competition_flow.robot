@@ -36,6 +36,11 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5634 As a Competitions team member I want to be able to view setup questions in the Scope section of Competition Setup so that I can review the questions and guidance to be shown to the applicants
 ...
 ...               INFUND-5636 As a Competitions team member I want to be able to view setup questions in the Project Summary section of Competition Setup so that I can review the questions and guidance to be shown to the applicants
+...
+...
+...               INFUND-5637 As a Competitions team member I want to be able to edit setup questions in the Project Summary section of Competition Setup so that I can amend the defaults if required for the competition
+...
+...               INFUND-5635 As a Competitions team member I want to be able to edit questions in the Scope section of Competition Setup so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -332,27 +337,31 @@ Application: Business opportunity
 
 Application: Scope
     [Documentation]    INFUND-5634
+    ...
+    ...    INFUND-5635
     Given the user clicks the button/link    link=Scope
     And the user should see the element    jQuery=h1:contains("Scope")
     And the user should see the text in the page    You can edit this question and the guidance text for assessors.
-    And the user clicks the button/link   jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
-    Then The user should see the text in the page   Scope
+    Then The user should see the text in the page    Scope
     And the user checks the question fields
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
     [Documentation]    INFUND-5636
+    ...
+    ...    INFUND-5637
     Given the user clicks the button/link    link=Project summary
     And the user should see the element    jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question and the guidance text for assessors.
-    And the user clicks the button/link   jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Project summary
-    Then The user should see the text in the page   Project summary
+    Then The user should see the text in the page    Project summary
     And the user checks the question fields
     [Teardown]    The user clicks the button/link    link=Application
 
