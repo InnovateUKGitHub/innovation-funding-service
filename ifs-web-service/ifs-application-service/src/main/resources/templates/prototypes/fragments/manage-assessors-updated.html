@@ -4,23 +4,38 @@
 <!-- =========================== Manage assessor intro=========================== -->
 <div th:fragment="prototype-assessor-intro">
 
-    <p>
-        <span class="heading-large">60</span> invited
+  <h2 class="heading-medium">Key statistics</h2>
 
-        <span class="heading-large extra-margin-left">23</span> accepted
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="highlight-panel">
+        <span class="heading-large">60</span><br />
+        <small>invited</small>
+      </div>
+    </div>
+    <div class="column-quarter">
+      <div class="highlight-panel">
+        <span class="heading-large">23</span><br />
+        <small>accepted</small>
+      </div>
+    </div>
+    <div class="column-quarter">
+      <div class="highlight-panel">
+        <span class="heading-large">3</span><br />
+        <small>declined</small>
+      </div>
+    </div>
+  </div>
 
-        <span class="heading-large extra-margin-left">3</span> declined
-    </p>
+  <dl class="standard-definition-list extra-margin-top">
+      <dt>Innovation sector</dt>
+      <dd>Health and life sciences</dd>
 
-    <dl class="standard-definition-list">
-        <dt>Innovation sector</dt>
-        <dd>Health and life sciences</dd>
+      <dt>Innovation area</dt>
+      <dd>Agriculture and food</dd>
+  </dl>
 
-        <dt>Innovation area</dt>
-        <dd>Agriculture and food</dd>
-    </dl>
-
-    <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+  <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
 </div>
 
@@ -77,7 +92,7 @@
         </li>
 
         <li class="width-15-percent">
-            <th:block th:text="${name}"></th:block>
+            <th:block th:text="${email}"></th:block>
         </li>
 
         <li class="width-15-percent">
@@ -397,13 +412,14 @@
                             <tr>
                                 <th scope="col" id="innovation-sector" class="table-column-third">Innovation sector</th>
                                 <th scope="col" id="innovation-area" class="table-column-two-thirds">Innovation area</th>
+                                <th scope="col"><span class="visuallyhidden">Remove</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="cell-align-top">
+                                <td class="cell-align-top width-40-percent">
                                     <div class="form-group">
-                                        <select class="form-control" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
+                                        <select class="form-control width-full" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
                                             <option selected="selected">Please select an innovation sector</option>
                                             <option value="Emerging and Enabling Technologies">Emerging and Enabling Technologies</option>
                                             <option value="Health and Life Sciences">Health and Life Sciences</option>
@@ -412,9 +428,9 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class="cell-align-top">
+                                <td class="cell-align-top width-40-percent">
                                     <div class="form-group">
-                                        <select class="form-control" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
+                                        <select class="form-control width-full" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
                                             <option selected="selected">Please select an innovation area</option>
                                             <option value="Advanced Therapies">Advanced Therapies</option>
                                             <option value="Precision Medicine">Precision Medicine</option>
@@ -423,48 +439,49 @@
                                             <option value="Agri Productivity">Agri Productivity</option>
                                             <option value="Enhanced Food Quality">Enhanced Food Quality</option>
                                         </select>
-                                        <div class="width-50-percent">The innovation area you select will be for all assessors you add until you click the 'Add assessor(s) to list' button</div>
+                                        <div>The innovation area you select will be for all assessors you add until you click the 'Add assessor(s) to list' button</div>
                                     </div>
                                 </td>
+                                <td class="width-20-percent"></td>
                             </tr>
                         </tbody>
                     </table>
                     <table>
                         <thead>
                             <tr>
-                                <th id="invite-label-assessor-name" scope="col" class="table-column-third">Name</th>
-                                <th id="invite-label-assessor-email" scope="col" class="table-column-third">Email</th>
-                                <th scope="col" class="table-column-third"><span class="visuallyhidden">Remove</span></th>
+                                <th id="invite-label-assessor-name" scope="col">Name</th>
+                                <th id="invite-label-assessor-email" scope="col">Email</th>
+                                <th scope="col"><span class="visuallyhidden">Remove</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
+                                <td class="width-40-percent">
                                     <div class="form-group">
                                         <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                     </div>
                                 </td>
-                                <td>
+                                <td class="width-40-percent">
                                     <div class="form-group">
                                         <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                     </div>
                                 </td>
-                                <td>
+                                <td class="width-20-percent">
 
                                 </td>
                             </tr>
                             <tr id="prototype-assessor-row-two">
-                                <td>
+                                <td class="width-40-percent">
                                     <div class="form-group">
                                         <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                     </div>
                                 </td>
-                                <td>
+                                <td class="width-40-percent">
                                     <div class="form-group">
                                         <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                     </div>
                                 </td>
-                                <td class="alignright">
+                                <td class="alignright width-20-percent">
                                     <a href="#" id="prototype-remove-two">Remove</a>
                                 </td>
                             </tr>
@@ -521,7 +538,7 @@
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},email=${'dave@email.com'},innovationArea=${'Earth Observation'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'christopher@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
+            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'chris@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},email=${'martin@email.com'},innovationArea=${'Internet of things'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null}" th:remove="tag" />
 
