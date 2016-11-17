@@ -298,16 +298,22 @@ public class ApplicationFormController {
 
             ValidationMessages errors = new ValidationMessages();
 
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
+            new ApplicationStartDateValidator().validate(request, bindingResult);
+
+            // First check if any errors already exist in bindingResult
+            if (!validationHandler.hasErrors()) {
+
+                if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                    /* Start save action */
+                    errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
+                }
             }
 
             model.addAttribute("form", form);
 
             /* End save action */
 
-            if (errors.hasErrors() && isMarkQuestionRequest(params)) {
+            if (validationHandler.hasErrors() || (errors.hasErrors() && isMarkQuestionRequest(params))) {
 
                 validationHandler.addAnyErrors(errors);
 

@@ -41,11 +41,11 @@ public class ApplicationStartDateValidator implements Validator {
 	}
 
 	private void rejectPast(Errors errors) {
-		 errors.reject("application.startDate", "validation.project.start.date.not.in.future");
+		 errors.rejectValue("application.startDate", "validation.project.start.date.not.in.future");
 	}
 
 	private void rejectInvalid(Errors errors) {
-		 errors.reject("application.startDate", "validation.project.start.date.is.valid.date");
+		 errors.rejectValue("application.startDate", "validation.project.start.date.is.valid.date");
 	}
 
 	@Override
