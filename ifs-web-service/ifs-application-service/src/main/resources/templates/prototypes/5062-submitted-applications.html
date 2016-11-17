@@ -22,7 +22,7 @@
 
 </head>
 
-<body class="comp-assessors full-width show-applications">
+<body class="dashboard-internal full-width show-applications">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -31,24 +31,31 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications submitted'}, ${null})" th:remove="tag" />
 
-		<section class="boxed">
+      <h2 class="heading-medium">Key statistics</h2>
 
 			<div class="grid-row">
-				<div class="column-half">
-			 		<p><span class="heading-large">12th April 2016</span> assessment deadline</p>
+				<div class="column-quarter">
+          <div class="highlight-panel">
+            <span class="heading-medium">17 November 2016</span><br />
+            <small>assessment deadline</small>
+          </div>
 			 	</div>
-			 	<div class="column-half">
-				 	<p><span class="heading-large">4</span> applications submitted</p>
+			 	<div class="column-quarter">
+          <div class="highlight-panel">
+            <span class="heading-medium">4</span><br />
+            <small>applications submitted</small>
+          </div>
+				</div>
+        <div class="column-quarter">
+          <a href="/prototypes/1969-export-example" class="button">Export application data (.csv)</a>
 				</div>
 			</div>
-
-			<a href="/prototypes/1969-export-example" class="button-secondary">Export application data (.csv)</a>
 
 			<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
 
@@ -80,7 +87,6 @@
 
 			</div>
 
-		</section>
 
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
@@ -104,7 +110,7 @@
 					</thead>
 					<tbody>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
+							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
 							<td>HVM</td>
@@ -121,7 +127,7 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
+							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
 							<td>Robots that learn</td>
 							<td>Max Digital</td>
 							<td>HVM</td>
@@ -138,7 +144,7 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
+							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
 							<td>AI in learning</td>
 							<td>BBC</td>
 							<td>HVM</td>
@@ -155,7 +161,7 @@
 							</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
+							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
 							<td>Progressive machines</td>
 							<td>Kingfisher</td>
 							<td>HVM</td>

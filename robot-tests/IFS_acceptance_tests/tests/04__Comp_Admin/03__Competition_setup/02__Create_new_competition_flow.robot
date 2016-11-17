@@ -145,7 +145,7 @@ Initial details: should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725
-    Given the user navigates to the page    ${server}/management/competition/setup/8
+    Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Then The user should see the element    link=Funding Information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
@@ -154,7 +154,7 @@ User should have access to all the sections
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
-    Given the user navigates to the page    ${server}/management/competition/setup/8
+    Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     And The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
