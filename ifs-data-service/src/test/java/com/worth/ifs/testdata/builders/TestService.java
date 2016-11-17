@@ -13,4 +13,6 @@ public interface TestService {
 
     @Transactional
     <T> T doWithinTransaction(Supplier<T> supplier);
+
+    void flushAndClearSession();
 }

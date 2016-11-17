@@ -12,7 +12,6 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
@@ -31,7 +30,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
             User user = userRepository.save(new User(firstName, lastName, emailAddress, null, emptyList(), UUID.randomUUID().toString()));
             Role role = roleRepository.findOneByName(data.getRole().getName());
-            user.setRoles(singletonList(role));
+            user.getRoles().add(role);
             userRepository.save(user);
         });
     }

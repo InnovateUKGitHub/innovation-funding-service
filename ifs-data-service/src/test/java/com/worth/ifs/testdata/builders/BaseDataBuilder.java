@@ -47,6 +47,7 @@ import com.worth.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.BaseIntegrationTest.setLoggedInUser;
@@ -151,6 +152,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
         this.questionRepository = serviceLocator.getBean(QuestionRepository.class);
         this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
+    }
+
+    @Override
+    public S with(Consumer<T> amendFunction) {
+        return super.with(data -> testService.doWithinTransaction(() -> amendFunction.accept(data)));
     }
 
     protected UserResource compAdmin() {

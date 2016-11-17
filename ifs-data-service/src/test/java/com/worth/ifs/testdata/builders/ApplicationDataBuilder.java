@@ -145,6 +145,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withInviteResources(applicationInvite).
                 build()).getSuccessObjectOrThrowException();
 
+        testService.flushAndClearSession();
+
         Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
 
         InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
