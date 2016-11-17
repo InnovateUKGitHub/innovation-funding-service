@@ -78,11 +78,9 @@
     <th:block th:unless="${editable}">
         <dl class="application-question-list grid-row">
             <dt class="column-third">Full application finances</dt>
-            <dd class="column-two-thirds" th:if="${competitionSetupForm.fullApplicationFinance}">Full application finances</dd>
-            <dd class="column-two-thirds" th:unless="${competitionSetupForm.fullApplicationFinance}">Light finances</dd>
+            <dd class="column-two-thirds" th:text="${competitionSetupForm.fullApplicationFinance ? 'Full application finances' :  'Light finances'}" />
             <dt class="column-third">Include Project Growth Table</dt>
-            <dd class="column-two-thirds" th:if="${competitionSetupForm.includeGrowthTable}">Yes</dd>
-            <dd class="column-two-thirds" th:unless="${competitionSetupForm.includeGrowthTable}">No</dd>
+            <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
         </dl>
         <div class="extra-margin">
             <a class="button" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${competition.id})}">Edit this question</a>
