@@ -59,11 +59,11 @@ include::{snippets}/assessment/accept/curl-request.adoc[]
 
 === Submit assessments
 ==== Request
-include::{snippets}/submit-assessments/accept/http-request.adoc[]
-include::{snippets}/submit-assessments/accept/path-parameters.adoc[]
+include::{snippets}/assessment/submit-assessments/http-request.adoc[]
+include::{snippets}/assessment/submit-assessments/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/submit-assessments/accept/http-response.adoc[]
+include::{snippets}/assessment/submit-assessments/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/submit-assessments/accept/curl-request.adoc[]
+include::{snippets}/assessment/submit-assessments/curl-request.adoc[]

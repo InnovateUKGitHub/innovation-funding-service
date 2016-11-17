@@ -41,7 +41,7 @@ public class AssessmentDocs {
             .withApplication(2L);
 
     public static final FieldDescriptor[] assessmentSubmissionsFields = {
-        fieldWithPath("assessmentIds").description("list of assessment ids to submit")
+        fieldWithPath("assessmentIds").description("List of assessment ids to submit.")
     };
 
     public static final AssessmentSubmissionsResourceBuilder assessmentSubmissionsResourceBuilder =
