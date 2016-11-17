@@ -889,18 +889,14 @@ public class ApplicationFormController {
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value);
 
-            errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
 
-            if (!errors.isEmpty()) {
-                return this.createJsonObjectNode(false, errors, fieldId);
-            } else {
-                return this.createJsonObjectNode(true, null, fieldId);
-            }
+            return this.createJsonObjectNode(true, fieldId);
+
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, errors, fieldId);
+            return this.createJsonObjectNode(false, fieldId);
         }
     }
 
@@ -959,18 +955,13 @@ public class ApplicationFormController {
         return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
+    private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
-        
+
         if(fieldId != null) {
-        	node.set("field_id", new LongNode(fieldId));
+        	node.set("fieldId", new LongNode(fieldId));
         }
         return node;
     }

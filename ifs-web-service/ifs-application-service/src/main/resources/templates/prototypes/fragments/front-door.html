@@ -3,7 +3,7 @@
 
 <!-- ===========================Prototype Front door header  =========================== -->
 
-<div th:fragment="prototype-front-door-header">
+<th:block th:fragment="prototype-front-door-header">
     <header role="banner" id="global-header" class="with-proposition">
         <div class="header-wrapper">
             <div class="header-global">
@@ -52,351 +52,405 @@
         </p>
     </div>
 
-</div>
+</th:block>
 
 <!-- ===========================Prototype Front door competition tab content  =========================== -->
 
-<div th:fragment="prototype-front-door-competition-content">
+<th:block th:fragment="prototype-front-door-competition-content">
 
-    <th:block th:if="${param.tab == null or param.tab[0] == 'summary'}">
-        <section>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Description</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.</p>
-                    <p>The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).</p>
-                    <p>We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.</p>
-                    <p>There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Funding type</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Grant, Innovate UK Sector Competition.</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Total funding</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>£15 million available</p>
-                </div>
-            </div>
-        </section>
+    <!-- Desktop layout -->
+    <div class="hide-mobile">
+        <th:block th:if="${param.tab == null or param.tab[0] == 'summary'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-summary" />
 
-    </th:block>
+        <th:block th:if="${param.tab != null and param.tab[0] == 'eligibility'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-eligibility" />
 
-    <th:block th:if="${param.tab != null and param.tab[0] == 'eligibility'}">
-        <section>
+        <th:block th:if="${param.tab != null and param.tab[0] == 'scope'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-scope" />
 
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Lead applicant eligibility</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>To lead a project, you must:</p>
-                    <ul class="list-bullet">
-                        <li>be a UK-based business (of any size)</li>
-                        <li>have at least one SME involved in your proposal</li>
-                        <li>carry out your project work, and intend to exploit the results, in the UK</li>
-                        <li>work alone or in collaboration with others (businesses, research base and third sector)</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Consortium eligibility</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>All projects must involve at least one SME and a business must lead the project.</p>
-                    <p>If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
-                    <p>If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
-                    <p><a href="#">Find out if your business fits the EU definition of an SME</a></p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Project types</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
-                    <p>For technical feasibility studies and industrial research, you could get:</p>
-                    <ul class="list-bullet">
-                        <li>up to 70% of your eligible project costs if you are a small business</li>
-                        <li>up to 60% if you are a medium-sized business</li>
-                        <li>up to 50% if you are a large business</li>
-                    </ul>
-                    <p>For experimental development projects which are nearer to market, you could get:</p>
-                    <ul class="list-bullet">
-                        <li>up to 45% of your eligible project costs if you are a small business</li>
-                        <li>up to 35% if you are a medium-sized business</li>
-                        <li>up to 25% if you are a large business</li>
-                    </ul>
-                    <p>We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Projects we won't fund</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>In this competition we will not fund applications in the following areas:</p>
-                    <ul class="list-bullet">
-                        <li>topics defined in the Innovate UK Quantum technologies competition 2016</li>
-                        <li>topics defined in the Innovate UK Robotics and autonomous systems competition 2016</li>
-                        <li>topics defined in the Innovate UK Compound semiconductor applications competition 2016</li>
-                    </ul>
-                    <p>Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
-                </div>
-            </div>
+        <th:block th:if="${param.tab != null and param.tab[0] == 'dates'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-dates" />
 
-        </section>
-    </th:block>
+        <th:block th:if="${param.tab != null and param.tab[0] == 'supportingInformation'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-supportingInformation" />
 
-    <th:block th:if="${param.tab != null and param.tab[0] == 'scope'}">
-        <section>
+        <th:block th:if="${param.tab != null and param.tab[0] == 'howToApply'}" th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-howToApply" />
+    </div>
 
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Project scope</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
-                    <p>An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
-                    <p>Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
-                    <p>The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
-                    <ul class="list-bullet">
-                        <li>harness E&amp;E technologies across the economy</li>
-                        <li>develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release</li>
-                        <li>use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes</li>
-                    </ul>
-                    <p>We are looking to fund a portfolio of projects that include:</p>
-                    <ul class="list-bullet">
-                        <li>technical feasibility</li>
-                        <li>industrial research</li>
-                        <li>experimental development</li>
-                        <li>We will choose a portfolio that achieves a balance across topic areas, timing and costs</li>
-                    </ul>
-                    <p>If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
-                    <p>Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
-                    <ul class="list-bullet">
-                        <li>any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches</li>
-                        <li>we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms</li>
-                        <li>any enabling technology in: satellite applications; electronics</li>
-                        <li>sensors; photonics; digital; internet of things; data; cybersecurity</li>
-                        <li>virtual or augmented reality; and distributed ledger technology</li>
-                    </ul>
-                    <p>The type of innovation project will depend on the challenges and opportunities your business faces</p>
-                    <p>Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
-                </div>
-            </div>
+    <!-- Mobile layout -->
+    <div class="show-mobile collapsible">
+        <h2 class="open">Summary</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-summary" />
+        </div>
+        <h2 class="open">Eligibility</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-eligibility" />
+        </div>
+        <h2 class="open">Scope</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-scope" />
+        </div>
+        <h2 class="open">Dates</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-dates" />
+        </div>
+        <h2 class="open">How to apply</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-howToApply" />
+        </div>
+        <h2 class="open">Supporting information</h2>
+        <div>
+            <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-supportingInformation" />
+        </div>
+    </div>
 
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Specific competition themes</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>We welcome applications in one or more of the following areas:</p>
-                    <p>Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
-                    <ul class="list-bullet">
-                        <li>energy harvesting</li>
-                        <li>imaging technologies</li>
-                        <li>graphene</li>
-                        <li>biofilms</li>
-                        <li>other areas of emerging technology</li>
-                    </ul>
-                    <p>Innovation in enabling technologies that:</p>
-                    <ul class="list-bullet">
-                        <li>show benefits across multiple industrial sectors or markets</li>
-                        <li>provide new products and services</li>
-                        <li>allow new applications for existing products and services</li>
-                        <li>enable new capabilities or business models</li>
-                    </ul>
-                    <p>We are particularly encouraging proposals that address:</p>
-                    <ul class="list-bullet">
-                        <li>systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance</li>
-                        <li>smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications</li>
-                        <li>smart technology that provides a richer and more informative output to the end user</li>
-                        <li>photonics for manufacturing, healthcare and imaging</li>
-                        <li>digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality</li>
-                    </ul>
-                    <p>We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
-                </div>
-            </div>
+</th:block>
 
-        </section>
-    </th:block>
+<!-- ===========================Prototype Front door competition summary  =========================== -->
 
-    <th:block th:if="${param.tab != null and param.tab[0] == 'dates'}">
-        <section>
+<th:block th:fragment="prototype-front-door-competition-content-summary">
 
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">30 September 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Launch event in Manchester. <a href="#">More information</a></p>
-                </div>
+    <section>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Description</h3>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">3 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p><strong>Competition opens</strong></p>
-                </div>
+            <div class="column-two-thirds">
+                <p>Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.</p>
+                <p>The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).</p>
+                <p>We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.</p>
+                <p>There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.</p>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">10 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Briefing event in Manchester. <a href="#">More information</a></p>
-                </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Funding type</h3>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">14 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Briefing event in Belfast. <a href="#">More information</a></p>
-                </div>
+            <div class="column-two-thirds">
+                <p>Grant, Innovate UK Sector Competition.</p>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">20 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Briefing event in Cardiff. <a href="#">More information</a></p>
-                </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Total funding</h3>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">26 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Briefing event in Bristol. <a href="#">More information</a></p>
-                </div>
+            <div class="column-two-thirds">
+                <p>£15 million available</p>
             </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">26 October 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Briefing event in Glasgow. <a href="#">More information</a></p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">7 December 2016</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Competition closes</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">16 January 2017</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Applicants notified</p>
-                </div>
-            </div>
+        </div>
+    </section>
+</th:block>
 
-        </section>
-    </th:block>
+<!-- ===========================Prototype Front door competition eligibility  =========================== -->
 
-    <th:block th:if="${param.tab != null and param.tab[0] == 'supportingInformation'}">
-        <section>
+<th:block th:fragment="prototype-front-door-competition-content-eligibility">
+    <section>
 
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Background and further information</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Technology is transforming our lives and brings great opportunity. The UK is strong in fundamental research across many different disciplines. However, we sometimes struggle to fully commercialise the opportunities. The most promising emerging technologies and industries need to be guided through the innovation process to market success.</p>
-                    <p>Enabling technologies or capabilities have the potential to make a difference in many sectors. Yet, they can be slow to spread through target industries. They need support to realise that potential. Some might need to be tailored to excel in the most important markets and sectors.</p>
-                    <p>The government’s Emerging Technologies and Industries strategy aims to provide investment to help companies explore the potential of completely new technologies in their particular markets. It aims to disrupt markets and bring the potential for significant commercial results. Small early investments are followed by increased financial and wider support. This can be seen in areas with very high potential, such as quantum technologies.</p>
-                    <p>The Enabling and Enabling Technologies programme brings together technology and end users to enhance productivity and efficiency across the UK economy. The programme provides opportunities for innovative companies to develop and use multiple technologies. Applications include disrupting markets and finding new sales routes. This could be through well-established systems integrators and manufacturers.</p>
-                    <p>In 2016 and 2017 the programme will support companies through investments such as this competition. We will invest in enabling technologies by concentrating on innovative applications and/or service-led solutions in the areas of cybersecurity, data, satellite earth observation, electronics, sensors, photonics, the internet of things and robotics and autonomous systems.</p>
-                    <p>The Emerging and Enabling Technologies sector group supports the Digital Catapult and Satellite Application and is establishing a new Compound Semiconductor Applications Catapult in Wales. Companies wishing to access the available equipment and expertise are invited to partner with the Catapults in this competition.</p>
-                    <p>If you want help to find a project partner, contact the Knowledge Transfer Network.</p>
-                </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Lead applicant eligibility</h3>
             </div>
+            <div class="column-two-thirds">
+                <p>To lead a project, you must:</p>
+                <ul class="list-bullet">
+                    <li>be a UK-based business (of any size)</li>
+                    <li>have at least one SME involved in your proposal</li>
+                    <li>carry out your project work, and intend to exploit the results, in the UK</li>
+                    <li>work alone or in collaboration with others (businesses, research base and third sector)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Consortium eligibility</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>All projects must involve at least one SME and a business must lead the project.</p>
+                <p>If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
+                <p>If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
+                <p><a href="#">Find out if your business fits the EU definition of an SME</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Project types</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
+                <p>For technical feasibility studies and industrial research, you could get:</p>
+                <ul class="list-bullet">
+                    <li>up to 70% of your eligible project costs if you are a small business</li>
+                    <li>up to 60% if you are a medium-sized business</li>
+                    <li>up to 50% if you are a large business</li>
+                </ul>
+                <p>For experimental development projects which are nearer to market, you could get:</p>
+                <ul class="list-bullet">
+                    <li>up to 45% of your eligible project costs if you are a small business</li>
+                    <li>up to 35% if you are a medium-sized business</li>
+                    <li>up to 25% if you are a large business</li>
+                </ul>
+                <p>We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Projects we won't fund</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>In this competition we will not fund applications in the following areas:</p>
+                <ul class="list-bullet">
+                    <li>topics defined in the Innovate UK Quantum technologies competition 2016</li>
+                    <li>topics defined in the Innovate UK Robotics and autonomous systems competition 2016</li>
+                    <li>topics defined in the Innovate UK Compound semiconductor applications competition 2016</li>
+                </ul>
+                <p>Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
+            </div>
+        </div>
 
-        </section>
-    </th:block>
-
-    <th:block th:if="${param.tab != null and param.tab[0] == 'howToApply'}">
-        <section>
-
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">How to apply</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>The lead applicant must register for an account using the link on this page. This will start the application process. During this process the lead applicant will be able to invite all other collaborators. Collaborators will be sent a link, which will help them to create an account and give them access to the application.</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">The application process</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>The application process uses a collaborative, online form. Application progress can be saved and resumed at a later date without being submitted.</p>
-                    <p>For more information on the online application form <a href="#">visit our general guidance for applicants.</a></p>
-                    <p>External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.</p>
-                    <p>All applicants will receive feedback from the experts, so they can understand their assessment.</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Application questions</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>Application questions are available for reference and to assist with preparation.</p>
-                    <p><a href="/prototypes/6064-what-we-ask">View questions for the competition</a></p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Competition contact</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p>If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk</p>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Rules</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <ul class="extra-margin-bottom">
-                        <li><a href="#">Funding rules</a></li>
-                        <li><a href="#">Information security and confidentiality</a></li>
-                        <li><a href="#">Assessor confidentiality and potential conflicts of interest</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="column-third">
-                    <h2 class="heading-medium no-margin">Application link</h2>
-                </div>
-                <div class="column-two-thirds">
-                    <p><a href="#" class="button">Start or continue your application</a></p>
-                </div>
-            </div>
-
-        </section>
-    </th:block>
-
-</div>
+    </section>
+</th:block>
 
 
+<!-- ===========================Prototype Front door competition scope  =========================== -->
+
+<th:block th:fragment="prototype-front-door-competition-content-scope">
+    <section>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Project scope</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
+                <p>An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
+                <p>Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
+                <p>The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
+                <ul class="list-bullet">
+                    <li>harness E&amp;E technologies across the economy</li>
+                    <li>develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release</li>
+                    <li>use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes</li>
+                </ul>
+                <p>We are looking to fund a portfolio of projects that include:</p>
+                <ul class="list-bullet">
+                    <li>technical feasibility</li>
+                    <li>industrial research</li>
+                    <li>experimental development</li>
+                    <li>We will choose a portfolio that achieves a balance across topic areas, timing and costs</li>
+                </ul>
+                <p>If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
+                <p>Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
+                <ul class="list-bullet">
+                    <li>any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches</li>
+                    <li>we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms</li>
+                    <li>any enabling technology in: satellite applications; electronics</li>
+                    <li>sensors; photonics; digital; internet of things; data; cybersecurity</li>
+                    <li>virtual or augmented reality; and distributed ledger technology</li>
+                </ul>
+                <p>The type of innovation project will depend on the challenges and opportunities your business faces</p>
+                <p>Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Specific competition themes</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>We welcome applications in one or more of the following areas:</p>
+                <p>Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
+                <ul class="list-bullet">
+                    <li>energy harvesting</li>
+                    <li>imaging technologies</li>
+                    <li>graphene</li>
+                    <li>biofilms</li>
+                    <li>other areas of emerging technology</li>
+                </ul>
+                <p>Innovation in enabling technologies that:</p>
+                <ul class="list-bullet">
+                    <li>show benefits across multiple industrial sectors or markets</li>
+                    <li>provide new products and services</li>
+                    <li>allow new applications for existing products and services</li>
+                    <li>enable new capabilities or business models</li>
+                </ul>
+                <p>We are particularly encouraging proposals that address:</p>
+                <ul class="list-bullet">
+                    <li>systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance</li>
+                    <li>smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications</li>
+                    <li>smart technology that provides a richer and more informative output to the end user</li>
+                    <li>photonics for manufacturing, healthcare and imaging</li>
+                    <li>digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality</li>
+                </ul>
+                <p>We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
+            </div>
+        </div>
+
+    </section>
+</th:block>
+
+<!-- ===========================Prototype Front door competition dates  =========================== -->
+
+<th:block th:fragment="prototype-front-door-competition-content-dates">
+    <section>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">30 September 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Launch event in Manchester. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">3 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p><strong>Competition opens</strong></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">10 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Briefing event in Manchester. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">14 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Briefing event in Belfast. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">20 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Briefing event in Cardiff. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">26 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Briefing event in Bristol. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">26 October 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Briefing event in Glasgow. <a href="#">More information</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">7 December 2016</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Competition closes</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">16 January 2017</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Applicants notified</p>
+            </div>
+        </div>
+
+    </section>
+</th:block>
+
+<!-- ===========================Prototype Front door competition supporting information  =========================== -->
+
+<th:block th:fragment="prototype-front-door-competition-content-supportingInformation">
+    <section>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Background and further information</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Technology is transforming our lives and brings great opportunity. The UK is strong in fundamental research across many different disciplines. However, we sometimes struggle to fully commercialise the opportunities. The most promising emerging technologies and industries need to be guided through the innovation process to market success.</p>
+                <p>Enabling technologies or capabilities have the potential to make a difference in many sectors. Yet, they can be slow to spread through target industries. They need support to realise that potential. Some might need to be tailored to excel in the most important markets and sectors.</p>
+                <p>The government’s Emerging Technologies and Industries strategy aims to provide investment to help companies explore the potential of completely new technologies in their particular markets. It aims to disrupt markets and bring the potential for significant commercial results. Small early investments are followed by increased financial and wider support. This can be seen in areas with very high potential, such as quantum technologies.</p>
+                <p>The Enabling and Enabling Technologies programme brings together technology and end users to enhance productivity and efficiency across the UK economy. The programme provides opportunities for innovative companies to develop and use multiple technologies. Applications include disrupting markets and finding new sales routes. This could be through well-established systems integrators and manufacturers.</p>
+                <p>In 2016 and 2017 the programme will support companies through investments such as this competition. We will invest in enabling technologies by concentrating on innovative applications and/or service-led solutions in the areas of cybersecurity, data, satellite earth observation, electronics, sensors, photonics, the internet of things and robotics and autonomous systems.</p>
+                <p>The Emerging and Enabling Technologies sector group supports the Digital Catapult and Satellite Application and is establishing a new Compound Semiconductor Applications Catapult in Wales. Companies wishing to access the available equipment and expertise are invited to partner with the Catapults in this competition.</p>
+                <p>If you want help to find a project partner, contact the Knowledge Transfer Network.</p>
+            </div>
+        </div>
+
+    </section>
+</th:block>
+
+<!-- ===========================Prototype Front door competition how to apply  =========================== -->
+
+<th:block th:fragment="prototype-front-door-competition-content-howToApply">
+    <section>
+
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">How to apply</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>The lead applicant must register for an account using the link on this page. This will start the application process. During this process the lead applicant will be able to invite all other collaborators. Collaborators will be sent a link, which will help them to create an account and give them access to the application.</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">The application process</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>The application process uses a collaborative, online form. Application progress can be saved and resumed at a later date without being submitted.</p>
+                <p>For more information on the online application form <a href="#">visit our general guidance for applicants.</a></p>
+                <p>External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.</p>
+                <p>All applicants will receive feedback from the experts, so they can understand their assessment.</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Application questions</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>Application questions are available for reference and to assist with preparation.</p>
+                <p><a href="/prototypes/6064-what-we-ask">View questions for the competition</a></p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Competition contact</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p>If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Rules</h3>
+            </div>
+            <div class="column-two-thirds">
+                <ul class="extra-margin-bottom">
+                    <li><a href="#">Funding rules</a></li>
+                    <li><a href="#">Information security and confidentiality</a></li>
+                    <li><a href="#">Assessor confidentiality and potential conflicts of interest</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-third">
+                <h3 class="heading-medium no-margin">Application link</h3>
+            </div>
+            <div class="column-two-thirds">
+                <p><a href="#" class="button">Start or continue your application</a></p>
+            </div>
+        </div>
+
+    </section>
+</th:block>
 
 </html>

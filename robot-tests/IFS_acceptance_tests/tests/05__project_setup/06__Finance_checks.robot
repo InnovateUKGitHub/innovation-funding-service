@@ -96,14 +96,13 @@ Approve Eligibility: Academic partner organisation
 
 Project Finance user can export bank details 
     [Documentation]    INFUND-5852 
-    [Tags]              Pending
+    [Tags]      Pending
    Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
    Then The user should see the text in the page    Export all bank details
-   And The user clicks the button/link          css =#table-project-status > tfoot > tr > td.aligncentre > a
-# TODO : Need to include verifying the contents of the downloaded excel
+   And The user clicks the button/link          link = Export all bank details
+   And the Project finance user downloads the excel
 
-#Please note this test needs test data to be created [INFUND-5879]
-
+#TODO :Please note this test needs test data to be created [INFUND-5879]
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
@@ -205,3 +204,24 @@ the user fills in project costs
     the user moves focus to the element    id=costs-reviewed
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
+
+Download should be done
+    [Documentation]    Verifies that the directory has only one folder
+    ...    Returns path to the file
+    ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
+    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details_*.csv   msg= "bank export success"
+    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
+    Log    File was successfully downloaded to ${file}
+    [Return]    ${file}
+
+Download File
+    [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
+    log    ${COOKIE_VALUE}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
+
+the Project finance user downloads the excel
+    ${ALL_COOKIES} =    Get Cookies
+    Log    ${ALL_COOKIES}
+    Download File    ${ALL_COOKIES}    ${server}/management/competition/3/status/bank-details/export   Bank_details.csv
+    wait until keyword succeeds    300ms    1 seconds    Download should be done
+

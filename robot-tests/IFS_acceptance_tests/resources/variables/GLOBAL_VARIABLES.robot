@@ -127,7 +127,7 @@ ${YOUR_FINANCES_URL_APPLICATION_2}    ${SERVER}/application/${OPEN_COMPETITION_A
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/8
 ${FINANCES_OVERVIEW_URL_APPLICATION_2}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
+${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
 ${CHECK_ELIGIBILITY}    ${SERVER}/application/create/check-eligibility/1
 ${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
 ${YOUR_DETAILS}    ${SERVER}/application/create/your-details

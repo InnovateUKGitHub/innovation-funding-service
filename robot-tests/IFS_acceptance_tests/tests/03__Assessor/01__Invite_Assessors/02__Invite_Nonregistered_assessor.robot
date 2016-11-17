@@ -136,15 +136,13 @@ Non-registered assessor: Reject invitation
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
-#    # TODO due to INFUND-5566
-    # And the assessor shouldn't be able to accept the rejected competition
+    And the assessor shouldn't be able to accept the rejected competition
     [Teardown]    The user closes the browser
 
 Assessor attempts to accept/reject an invitation which is already accepted
     [Documentation]    INFUND-5165
     [Tags]    Pending
     [Setup]    The guest user opens the browser
-    # TODO INFUND-5566
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 

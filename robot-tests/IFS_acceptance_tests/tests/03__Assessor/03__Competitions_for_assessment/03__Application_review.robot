@@ -205,6 +205,7 @@ the user clicks next and goes to the page
 I enter feedback of words
     [Arguments]    ${feedback_message}
     the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT} .editor    ${feedback_message}
+    and the user moves focus to the element    css=.app-submit-btn
 
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}
@@ -213,6 +214,10 @@ I should see word count underneath feedback form
 I should see validation message above the feedback form text field
     [Arguments]    ${error_message}
     the user should see the text in the page    ${error_message}
+
+I should not see validation message above the feedback form text field
+    [Arguments]    ${error_message}
+    the user should not see the text in the page    ${error_message}
 
 I am on the assessor assessment overview page
     the user navigates to the page    ${Assessment_overview_10}
