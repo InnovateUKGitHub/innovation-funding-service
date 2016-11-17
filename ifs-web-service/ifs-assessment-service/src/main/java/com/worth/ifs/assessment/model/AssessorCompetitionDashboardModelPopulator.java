@@ -15,6 +15,7 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -59,7 +61,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
 
-        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId);
+        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId, acceptDeadline);
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
         boolean submitVisible = outstanding.stream().filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit).findAny().isPresent();
@@ -67,8 +69,9 @@ public class AssessorCompetitionDashboardModelPopulator {
         return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline, submitted, outstanding, submitVisible);
     }
 
-    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
-        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId, LocalDateTime acceptDeadline) {
+        LocalDateTime now = LocalDateTime.now();
+        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().filter(x -> acceptDeadline.isAfter(now) || x.getAssessmentState() != PENDING).collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
     }
 
     private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {
