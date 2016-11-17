@@ -39,7 +39,8 @@ Business opportunity: Autosave
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]
+    [Tags]    Pending
+    #TO DO pending due to INFUND-6242
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
@@ -83,10 +84,11 @@ Scope: Autosave
 
 Scope: Mark as done
     [Documentation]    INFUND-5635
-    [Tags]
+    [Tags]    Pending
+    #TO DO pending due to INFUND-6242
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
-    Then The user should see the text in the page   Scope
+    Then The user should see the text in the page    Scope
     And The user should see the text in the page    Test title
     And The user should see the text in the page    Subtitle test
     And The user should see the text in the page    Test guidance title
