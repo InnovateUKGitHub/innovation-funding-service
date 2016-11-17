@@ -9,6 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface GOLProcessRepository extends ProcessRepository<GOLProcess>, PagingAndSortingRepository<GOLProcess, Long> {
+public interface GrantOfferLetterProcessRepository extends ProcessRepository<GOLProcess>, PagingAndSortingRepository<GOLProcess, Long> {
 
 }

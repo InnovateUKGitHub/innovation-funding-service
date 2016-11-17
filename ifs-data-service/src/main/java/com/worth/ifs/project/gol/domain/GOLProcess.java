@@ -5,6 +5,8 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,5 +57,29 @@ public class GOLProcess extends Process<ProjectUser, Project, GOLState> {
     @Override
     public GOLState getActivityState() {
         return GOLState.fromState(activityState.getState());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GOLProcess that = (GOLProcess) o;
+
+        return new EqualsBuilder()
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(activityState, that.activityState)
+                .append(getProcessEvent(), that.getProcessEvent())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(participant)
+                .append(target)
+                .toHashCode();
     }
 }

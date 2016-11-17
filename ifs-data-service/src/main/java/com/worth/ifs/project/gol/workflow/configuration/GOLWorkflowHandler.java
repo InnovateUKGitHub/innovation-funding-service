@@ -3,7 +3,7 @@ package com.worth.ifs.project.gol.workflow.configuration;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.gol.domain.GOLProcess;
-import com.worth.ifs.project.gol.repository.GOLProcessRepository;
+import com.worth.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
 import com.worth.ifs.project.gol.resource.GOLOutcomes;
 import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -40,7 +40,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
     private StateMachine<GOLState, GOLOutcomes> stateMachine;
 
     @Autowired
-    private GOLProcessRepository golProcessRepository;
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -80,7 +80,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
 
     @Override
     protected ProcessRepository<GOLProcess> getProcessRepository() {
-        return golProcessRepository;
+        return grantOfferLetterProcessRepository;
     }
 
     @Override
