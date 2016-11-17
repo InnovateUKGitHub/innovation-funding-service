@@ -12,8 +12,8 @@ ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=12345"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
 ENV CATALINA_OPTS="$CATALINA_OPTS -agentlib:jdwp=transport=dt_socket,address=8081,server=y,suspend=n"
-ENV JAVA_OPTS="-Xms${WEB_XMS}m"
-ENV JAVA_OPTS="$JAVA_OPTS -Xmx${WEB_XMX}m"
+ENV JAVA_OPTS="-Xms256m"
+ENV JAVA_OPTS="$JAVA_OPTS -Xmx512m"
 
 EXPOSE 8080
 EXPOSE 8081

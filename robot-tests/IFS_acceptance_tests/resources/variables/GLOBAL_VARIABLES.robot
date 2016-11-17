@@ -54,7 +54,7 @@ ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/1/application/1
-${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/8
+${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/10
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
@@ -64,6 +64,7 @@ ${project_in_setup_page}    ${server}/project-setup/project/1
 ${project_start_date_page}    ${server}/project-setup/project/1/details/start-date
 ${project_address_page}    ${server}/project-setup/project/1/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/1/details/start-date
+${internal_spend_profile_approval}    ${server}/project-setup-management/project/4/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/6/status
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
@@ -88,7 +89,7 @@ ${test_title}     test title
 
 # File related variables
 ${UPLOAD_FOLDER}                  uploaded_files
-${DOWNLOAD_FOLDER}                ../download_files
+${DOWNLOAD_FOLDER}                ~/Downloads
 ${empty_field_warning_message}    This field cannot be left blank
 ${valid_pdf}            testing.pdf
 ${too_large_pdf}        large.pdf
