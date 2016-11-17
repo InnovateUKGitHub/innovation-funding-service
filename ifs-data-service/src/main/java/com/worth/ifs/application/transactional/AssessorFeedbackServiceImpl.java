@@ -16,7 +16,6 @@ import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +58,6 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private NotificationService notificationService;
