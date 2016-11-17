@@ -808,7 +808,10 @@
         <div class="column-half">
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Application details</h3>
+                <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application Details</a>
+
                 <ol class="list-number">
+                    <li><a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application Details</a></li>
                     <li th:each="question : ${projectDetails}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
                 </ol>
             </div>
