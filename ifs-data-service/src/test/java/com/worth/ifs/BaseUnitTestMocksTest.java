@@ -63,6 +63,7 @@ import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -413,6 +414,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
+
+    @Mock
+    protected GOLWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
     protected PartnerOrganisationRepository partnerOrganisationRepositoryMock;
