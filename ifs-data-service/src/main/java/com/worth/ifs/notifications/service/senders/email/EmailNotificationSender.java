@@ -52,7 +52,7 @@ public class EmailNotificationSender implements NotificationSender {
             EmailAddress from = fromNotificationSource(notification.getFrom());
 
             List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-                find(getSubject(notification, recipient), getPlainTextBody(notification, recipient), getHtmlBody(notification, recipient)).andOnSuccess((subject, plainTextBody, htmlBody) ->
+                find(getSubject(notification, recipient), getPlainTextBody(notification, recipient),    getHtmlBody(notification, recipient)).andOnSuccess((subject, plainTextBody, htmlBody) ->
                     emailService.sendEmail(from, singletonList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
                 )
             );

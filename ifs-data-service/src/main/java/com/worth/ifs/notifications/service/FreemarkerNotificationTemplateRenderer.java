@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * A Notification Template Service (a service that can process a template file in order to produce a Notification message string) based
@@ -27,10 +29,10 @@ import static com.worth.ifs.commons.service.ServiceResult.*;
 @Component
 public class FreemarkerNotificationTemplateRenderer implements NotificationTemplateRenderer {
 
-    private static final Log LOG = LogFactory.getLog(FreemarkerNotificationTemplateRenderer.class);
-
     @Autowired
     private Configuration configuration;
+
+    private static final Log LOG = LogFactory.getLog(FreemarkerNotificationTemplateRenderer.class);
 
     @Override
     public ServiceResult<String> renderTemplate(NotificationSource notificationSource, NotificationTarget notificationTarget, String templatePath, Map<String, Object> templateReplacements) {
@@ -42,14 +44,19 @@ public class FreemarkerNotificationTemplateRenderer implements NotificationTempl
             replacementsWithCommonObjects.put("notificationTarget", notificationTarget);
 
             try {
-                Template temp = configuration.getTemplate(templatePath);
-                StringWriter writer = new StringWriter();
-                temp.process(replacementsWithCommonObjects, writer);
-                return serviceSuccess(writer.getBuffer().toString());
+                return getStringServiceResult(templatePath, replacementsWithCommonObjects);
             } catch (IOException | TemplateException e) {
                 LOG.error("Error rendering notification template " + templatePath, e);
                 return serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
             }
         });
     }
+
+    private ServiceResult<String> getStringServiceResult(String templatePath, Map<String, Object> replacementsWithCommonObjects) throws IOException, TemplateException {
+        Template temp = configuration.getTemplate(templatePath);
+        StringWriter writer = new StringWriter();
+        temp.process(replacementsWithCommonObjects, writer);
+        return serviceSuccess(writer.getBuffer().toString());
+    }
+
 }

@@ -94,6 +94,8 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
+    compile "org.xhtmlrenderer:flying-saucer-core:9.1.0"
+    compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.0"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
