@@ -5,9 +5,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
@@ -21,12 +19,10 @@ import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuild
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
-import static com.worth.ifs.assessment.resource.AssessmentStates.*;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -207,87 +203,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(assessmentWorkflowHandler, calls(1)).acceptInvitation(assessment);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAssessments() throws Exception {
-        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
-                .withAssessmentIds(asList(1L, 2L))
-                .build();
-        List<Assessment> assessments = newAssessment()
-                .withId(1L, 2L)
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState())
-                )
-                .build(2);
-
-        assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
-
-        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(assessments);
-        when(assessmentWorkflowHandler.submit(assessments.get(0))).thenReturn(true);
-        when(assessmentWorkflowHandler.submit(assessments.get(1))).thenReturn(true);
-
-        ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
-        assertTrue(result.isSuccess());
-
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessments.get(0));
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessments.get(1));
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAssessments_eventNotAccepted() throws Exception {
-        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
-                .withAssessmentIds(asList(1L))
-                .build();
-
-        Assessment assessment = newAssessment()
-                .withId(1L)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
-                .build();
-
-        assertEquals(1, assessmentSubmissions.getAssessmentIds().size());
-
-        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(asList(assessment));
-        when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
-
-        ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
-        assertTrue(result.isFailure());
-        assertEquals(result.getErrors().get(0), new Error(ASSESSMENT_SUBMIT_FAILED, 1L));
-
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAssessments_notFoundAndEventNotAccepted() throws Exception {
-        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
-                .withAssessmentIds(asList(1L, 2L))
-                .build();
-
-        Assessment assessment = newAssessment()
-                .withId(1L)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
-                .build();
-
-        assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
-
-        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(asList(assessment));
-        when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
-
-        ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUBMIT_FAILED, 1L), notFoundError(Assessment.class, 2L)));
-
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 }
