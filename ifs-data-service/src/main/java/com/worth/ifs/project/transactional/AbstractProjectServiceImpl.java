@@ -19,6 +19,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -143,8 +144,27 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
+    protected ProjectActivityStates createLeadSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        //TODO - Implement REJECT status when internal spend profile action story is completed
+
+        if (spendProfile.isPresent()) {
+            if (spendProfile.get().isMarkedAsComplete() && (spendProfile.get().getApproval() == ApprovalType.APPROVED)) {
+                return COMPLETE;
+            } else {
+                return ACTION_REQUIRED;
+            }
+        } else {
+            if(financeCheckStatus.equals(COMPLETE)){
+                return PENDING;
+            } else {
+                return NOT_STARTED;
+            }
+        }
+    }
+
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         //TODO - Implement REJECT status when internal spend profile action story is completed
+
         if (spendProfile.isPresent()) {
             if (spendProfile.get().isMarkedAsComplete()) {
                 return COMPLETE;

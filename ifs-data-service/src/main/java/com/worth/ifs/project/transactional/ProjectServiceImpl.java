@@ -708,6 +708,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
+        ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
 
@@ -724,7 +725,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus,
+                    leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
                     financeContactStatus);

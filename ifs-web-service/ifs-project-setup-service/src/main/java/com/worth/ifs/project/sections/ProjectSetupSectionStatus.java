@@ -14,10 +14,9 @@ public class ProjectSetupSectionStatus {
                                                      final boolean awaitingProjectDetailsActionFromPartners,
                                                      final boolean leadPartner) {
         if (!projectDetailsProcessCompleted) {
-            if (leadPartner && awaitingProjectDetailsActionFromPartners) {
+            if (!leadPartner || awaitingProjectDetailsActionFromPartners) {
                 return FLAG;
             }
-            return FLAG;
         }
         return TICK;
     }
@@ -56,9 +55,16 @@ public class ProjectSetupSectionStatus {
         return EMPTY;
     }
 
-    public SectionStatus spendProfileSectionStatus(final boolean spendProfileSubmitted) {
-        if(spendProfileSubmitted) {
-            return TICK;
+    public SectionStatus spendProfileSectionStatus(final boolean spendProfileGenerated,
+                                                   final boolean spendProfileSubmitted,
+                                                   final boolean spendProfileApproved,
+                                                   final boolean awaitingSpendProfileFromOtherPartners,
+                                                   final boolean leadPartner) {
+        if(spendProfileGenerated) {
+            if (!leadPartner && spendProfileSubmitted || leadPartner && spendProfileApproved && awaitingSpendProfileFromOtherPartners) {
+                return TICK;
+            }
+            return FLAG;
         }
         return EMPTY;
     }

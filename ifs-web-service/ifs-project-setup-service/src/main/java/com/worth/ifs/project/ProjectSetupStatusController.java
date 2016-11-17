@@ -85,7 +85,9 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
+        boolean spendProfileGenerated = teamStatus.getLeadPartnerStatus().getSpendProfileStatus() != null;
         boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
+        boolean spendProfileApproved = teamStatus.getLeadPartnerStatus().getSpendProfileStatus() == COMPLETE;
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
 
@@ -107,6 +109,11 @@ public class ProjectSetupStatusController {
             projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
         }
 
+        boolean awaitingSpendProfileFromOtherPartners = false;
+        if (leadPartner) {
+            awaitingSpendProfileFromOtherPartners = allOtherPartnersSpendProfileStatusComplete(teamStatus);
+        }
+
         ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
 
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
@@ -122,7 +129,7 @@ public class ProjectSetupStatusController {
         SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
-        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfilesSubmitted);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileGenerated, spendProfilesSubmitted, spendProfileApproved, awaitingSpendProfileFromOtherPartners, leadPartner);
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferAccess.equals(ACCESSIBLE), leadPartner, grantOfferLetterSubmitted);
 
@@ -160,5 +167,9 @@ public class ProjectSetupStatusController {
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
+    }
+
+    private boolean allOtherPartnersSpendProfileStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getSpendProfileStatus()));
     }
 }
