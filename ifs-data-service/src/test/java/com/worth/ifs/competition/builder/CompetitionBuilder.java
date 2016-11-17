@@ -3,6 +3,7 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
@@ -61,6 +62,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withResubmission(Boolean resubmission) {
         return with(competition -> setField("resubmission", resubmission, competition));
+    }
+
+    public CompetitionBuilder withCompetitionType(CompetitionType competitionType) {
+        return with(competition -> setField("competitionType", competitionType, competition));
     }
 
     public CompetitionBuilder withActitiyCode(String activityCode) {

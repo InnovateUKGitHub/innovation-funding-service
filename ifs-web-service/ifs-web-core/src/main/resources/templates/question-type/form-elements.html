@@ -21,12 +21,6 @@
         <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </div>
 </div>
-
-<div th:fragment="form-validation-custom-messages (errorId)">
-    <div th:if="${(form != null) and #fields.hasErrors('{__${errorId}__}')}"  th:remove="tag">
-        <p class="error-message no-margin" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
-    </div>
-</div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
@@ -162,34 +156,13 @@
 </div>
 
 
-<!-- ========================= Duration in months =========================== -->
-
-<div th:fragment="form-duration (id, field)">
-  <div class="form-group">
-    <div th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" th:remove="tag"/>
-    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId=${field})" th:remove="tag" />
-    <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field})" th:remove="tag"/>
-  </div>
-</div>
-
 <div th:fragment="form-percentage (id, title, field)">
     <div th:include="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" th:remove="tag"/>
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" th:remove="tag"/>
 </div>
 <!-- ========================= textarea  =========================== -->
 
-<div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea th:id="'form-textarea-'+${id}"
-              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-              th:field="*{formInput[__${id}__]}"
-              th:readonly="${readonly}"
-              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}},data-editor=${editor != null}?@{${editor}}"
-              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''} "
-              >
-		</textarea>
-</div>
 <div th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
-
 		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${(id == null) ? type +'-'+name+'-'+question.id : type +'-'+name+'-'+question.id+'-' + id}"
@@ -203,23 +176,6 @@
 		</textarea>
 </div>
 
-<div th:fragment="form-textarea-wordcount (id, name, value, readonly, maxWords)">
-    <div class="textarea-wrapped word-count">
-        <div th:include="question-type/form-elements :: form-textarea (
-		 					id=${id},
-		 					value=${value},
-		 					wordCount=${maxWords},
-		 					readonly=false,
-		 					name=${name},
-              editor='md'
-		 					)" th:remove="tag">
-        </div>
-
-        <div class="textarea-footer">
-            <div th:include="question-type/form-elements :: form-word-count (maxWords=${maxWords}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
-        </div>
-    </div>
-</div>
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <div th:fragment="form-textarea-wrapped">
@@ -258,18 +214,17 @@
                  th:remove="tag"/>
         </div>
 
-        <div th:include="question-type/form-elements :: form-textarea (
-		 					id=${formInput.getId()},
-              editor='md',
-		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
-		 					wordCount=${formInput.getWordCount()},
-		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
-		 					    markedAsComplete?.contains(question.id)} or
-		 					    ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)},
-                                name='formInput['+${formInput.getId()}+']'
-                                )" th:remove="tag">
-        </div>
+        <textarea th:id="'form-textarea-'+${formInput.id}"
+                  th:name="'formInput['+${formInput.id}+']'"
+                  th:field="*{formInput[__${formInput.id}__]}"
+                  th:readonly="${readonly} or ${question.isMarkAsCompletedEnabled() and
+                              markedAsComplete?.contains(question.id)} or
+                              ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
+                              (questionAssignee?.assignee==null and !userIsLeadApplicant)}"
+                  th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
+                  data-editor="md"
+                  data-required-errormessage="Please enter some text"
+                  required="required"></textarea>
 
         <div class="textarea-footer">
           <p>
