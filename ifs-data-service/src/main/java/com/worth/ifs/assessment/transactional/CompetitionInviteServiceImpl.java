@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -60,6 +61,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash).andOnSuccessReturn(invite -> mapper.mapToResource(openInvite(invite)));
     }

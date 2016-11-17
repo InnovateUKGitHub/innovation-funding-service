@@ -102,12 +102,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupService.initialiseFormForCompetitionType(competition.getId(), competition.getCompetitionType()).
                     getSuccessObjectOrThrowException();
 
-            // TODO DW - temporary fix for pulling over section priorities
+            // TODO DW - temporary fix for pulling over section priorities and assessment display flags
             testService.doWithinTransaction(() -> {
                 List<Section> newSections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
                 newSections.forEach(s -> {
                     Section originalSection = sectionRepository.findByNameAndCompetitionId(s.getName(), 1L);
                     s.setPriority(originalSection.getPriority());
+                    s.setDisplayInAssessmentApplicationSummary(originalSection.isDisplayInAssessmentApplicationSummary());
                     sectionRepository.save(s);
                 });
             });

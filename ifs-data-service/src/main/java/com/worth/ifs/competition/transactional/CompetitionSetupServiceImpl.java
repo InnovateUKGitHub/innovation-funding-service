@@ -244,7 +244,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			section.setDescription(sectionTemplate.getDescription());
 			section.setAssessorGuidanceDescription(sectionTemplate.getAssessorGuidanceDescription());
 			section.setCompetition(competition);
-            section.setDisplayInAssessmentApplicationSummary(sectionTemplate.isDisplayInAssessmentOverview());
 
             if(!competition.getSections().contains(section)){
 				competition.getSections().add(section);

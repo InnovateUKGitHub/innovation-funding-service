@@ -40,8 +40,6 @@ public class SectionTemplate {
     @JoinColumn(name="competitionTemplateId", referencedColumnName="id")
     private CompetitionTemplate competitionTemplate;
 
-	private boolean displayInAssessmentOverview;
-
 	public Long getId() {
 		return id;
 	}
@@ -112,13 +110,5 @@ public class SectionTemplate {
 	
 	public void setCompetitionTemplate(CompetitionTemplate competitionTemplate) {
 		this.competitionTemplate = competitionTemplate;
-	}
-
-	public boolean isDisplayInAssessmentOverview() {
-		return displayInAssessmentOverview;
-	}
-
-	public void setDisplayInAssessmentOverview(boolean displayInAssessmentOverview) {
-		this.displayInAssessmentOverview = displayInAssessmentOverview;
 	}
 }
