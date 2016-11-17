@@ -49,7 +49,7 @@
 	</p>
 
     <h2 class="heading-medium no-margin-bottom">Account details</h2>
-    <p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
+    <p th:if="${bankDetails == null}" class="form-hint">Please enter the bank account that you wish to use during the project.</p>
 
     <!--/* open */-->
     <th:block th:unless="${readonly}">
@@ -108,8 +108,8 @@
         </dd>
     	</dl>
 
-      <h2 class="heading-medium no-margin-bottom">Billing address</h2>
-      <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+          <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+          <p th:if="${bankDetails?.organisationAddress.address == null}" class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
       <p class="extra-margin" th:if="${bankDetails?.organisationAddress.address}" >
         <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">

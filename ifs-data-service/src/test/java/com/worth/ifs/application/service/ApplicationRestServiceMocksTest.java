@@ -27,6 +27,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationRestServiceImpl> {
 
     private static final String applicationRestURL = "/application";
+    private String processRoleRestURL = "/processrole";
+    private String questionStatusRestURL = "/questionStatus";
 
     @Override
     protected ApplicationRestServiceImpl registerRestServiceUnderTest() {
@@ -124,5 +126,32 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         // now run the method under test
         ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccessObject();
         assertEquals(returnedResponse.getName(), application.getName());
+    }
+
+    @Test
+    public void test_findByProcessRoleId() {
+        long processRoleId = 1L;
+        String expectedUrl = processRoleRestURL + "/" + processRoleId + "/application";
+        ApplicationResource application = newApplicationResource().build();
+
+        setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, application);
+
+        // now run the method under test
+        ApplicationResource returnedResponse = service.findByProcessRoleId(processRoleId).getSuccessObject();
+        assertEquals(returnedResponse, application);
+    }
+
+    @Test
+    public void test_getAssignedQuestionsCount() {
+        long applicationId = 1L;
+        long assigneeId = 1L;
+        String expectedUrl = questionStatusRestURL + "/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId;
+        int count = 1;
+
+        setupGetWithRestResultExpectations(expectedUrl, Integer.class, count);
+
+        // now run the method under test
+        Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
+        assertEquals(actualCount, Integer.valueOf(count));
     }
 }

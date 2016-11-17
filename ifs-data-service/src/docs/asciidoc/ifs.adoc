@@ -172,3 +172,5 @@ include::silstub.adoc[]
 [[project]]
 == Project
 include::project.adoc[]
+include::project-grant-offer.adoc[]
+include::bank-details.adoc[]

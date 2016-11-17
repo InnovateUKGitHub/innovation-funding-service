@@ -25,10 +25,11 @@ Calculation of the applications for assessment should be correct
 Details of the competition are visible
     [Documentation]    INFUND-3723
     Then the user should see the text in the page    Competition
+    And the user should see the text in the page    Innovation Lead
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    Tuesday 12 January 2016
-    And the user should see the text in the page    Saturday 28 January 2017
+    And the user should see the text in the page    12:00am Tuesday 12 January 2016
+    And the user should see the text in the page    12:00am Saturday 28 January 2017
 
 Accept an application for assessment
     [Documentation]    INFUND-1180
@@ -36,8 +37,6 @@ Accept an application for assessment
     ...              INFUND-4128
     [Tags]
     Then the user should see the text in the page    Pending
-    # TODO Pending due to INFUND-6033
-   # And The user should not see the element    link=Juggling is fun
     And the user should see the element    jQuery=a:contains("accept / reject assessment")
     When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
     Then the user should see the text in the page    Accept application
@@ -54,7 +53,7 @@ Reject an application for assessment
     Given The user clicks the button/link    link=Juggling Craziness
     Then the user should see the text in the page    Pending
     And the user should see the element    jQuery=a:contains("accept / reject assessment")
-    When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    When The user clicks the button/link    link=Juggling is fun
     Then the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")

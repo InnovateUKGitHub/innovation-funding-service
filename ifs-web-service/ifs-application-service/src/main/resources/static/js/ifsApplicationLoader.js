@@ -27,6 +27,8 @@ IFS.application.loadOrder = {
   },
   'app-form' : {
     init : function() {
+      IFS.core.mirrorElements.init();
+      IFS.core.unsavedChanges.init();
       IFS.application.repeatableRows.init();
       IFS.application.financeSpecifics.init();
     }

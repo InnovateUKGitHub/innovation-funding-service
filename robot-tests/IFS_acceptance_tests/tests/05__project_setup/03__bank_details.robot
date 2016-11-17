@@ -126,12 +126,12 @@ Bank details for Academic
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Tags]    Experian
+    [Tags]    Experian    Failing
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
 
 
@@ -165,7 +165,7 @@ Bank details for non-lead partner
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
 Project Finance can see the progress of partners bank details
-    [Documentation]  INFUND-4903
+    [Documentation]  INFUND-4903, INFUND-5966
     [Tags]    HappyPath
     [Setup]  log in as a different user             project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
@@ -173,14 +173,24 @@ Project Finance can see the progress of partners bank details
     Then the user navigates to the page             ${server}/project-setup-management/project/1/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    # And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Complete")  TODO INFUND-5966
-    # And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Complete")  TODO Upcoming functionality covering Academic user
+    And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
+    And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
     When the user clicks the button/link            link=Vitruvius Stonework Limited
     Then the user should see the text in the page   Vitruvius Stonework Limited - Account details
     And the user should see the text in the page    Bob Jones
     And the user should see the element             jQuery=a:contains("${test_mailbox_one}+invitedprojectmanager@gmail.com")
     And the user should see the text in the page    0987654321
-    #TODO for Jessica and Pete
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=Ludlow
+    Then the user should see the text in the page    Ludlow - Account details
+    And the user should see the text in the page    Jessica Doe
+    And the user should see the text in the page    jessica.doe@ludlow.co.uk
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=EGGS
+    Then the user should see the text in the page    EGGS - Account details
+    And the user should see the text in the page    Pete Tom
+    And the user should see the text in the page    pete.tom@egg.com
+
 
 
 *** Keywords ***
