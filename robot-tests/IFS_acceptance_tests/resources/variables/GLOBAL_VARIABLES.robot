@@ -187,16 +187,19 @@ ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    29
 ${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
 ${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
 ${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
-${IN_ASSESSMENT_COMPETITION_SCOPE_ASSESSOR_FORM_INPUT}    231
-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT}    233
-${IN_ASSESSMENT_COMPETITION_ECONOMIC_BENEFIT_ASSESSOR_FORM_INPUT}    239
 
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
-${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
-${Application_question_168}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/376
-${Application_question_169}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/377
-${Application_question_170}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/378
+${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/375
+${Application_question_168}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/376
+${Application_question_169}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/377
+${Application_question_170}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/378
+${Application_question_171}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/379
+${Application_question_172}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/380
+${Application_question_173}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/381
+${Application_question_174}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/382
+${Application_question_175}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/383
+${Application_question_176}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/384
 ${Finance_summar_9_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/finances
 ${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}

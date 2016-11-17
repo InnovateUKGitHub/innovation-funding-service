@@ -127,7 +127,7 @@ Assessor should be able to re-edit before submit
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
     and The user should see the text in the page    This is the applicant response for business opportunity.
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
-    And the user enters text to a text field    css=#form-input-${IN_ASSESSMENT_COMPETITION_BUSINESS_OPPORTUNITY_ASSESSOR_FORM_INPUT} .editor    This is a new feedback entry.
+    And the user enters text to a text field    css=.editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review assessment)
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
@@ -282,43 +282,43 @@ the table should show the correct scores
 each question will contain links to respective questions
     The user should see the element    link=Q1
     the user clicks the button/link    link=Q1
-    The user should be redirected to the correct page    /question/47
+    The user should be redirected to the correct page    ${Application_question_url}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q2
     the user clicks the button/link    link=Q2
-    The user should be redirected to the correct page    /question/48
+    The user should be redirected to the correct page    ${Application_question_168}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q3
     the user clicks the button/link    link=Q3
-    The user should be redirected to the correct page    /question/49
+    The user should be redirected to the correct page    ${Application_question_169}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q4
     the user clicks the button/link    link=Q4
-    The user should be redirected to the correct page    /question/50
+    The user should be redirected to the correct page    ${Application_question_170}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q5
     the user clicks the button/link    link=Q5
-    The user should be redirected to the correct page    /question/51
+    The user should be redirected to the correct page    ${Application_question_171}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q6
     the user clicks the button/link    link=Q6
-    The user should be redirected to the correct page    /question/52
+    The user should be redirected to the correct page    ${Application_question_172}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q7
     the user clicks the button/link    link=Q7
-    The user should be redirected to the correct page    /question/53
+    The user should be redirected to the correct page    ${Application_question_173}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q8
     the user clicks the button/link    link=Q8
-    The user should be redirected to the correct page    /question/54
+    The user should be redirected to the correct page    ${Application_question_174}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q9
     the user clicks the button/link    link=Q9
-    The user should be redirected to the correct page    /question/55
+    The user should be redirected to the correct page    ${Application_question_175}
     The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q10
     the user clicks the button/link    link=Q10
-    The user should be redirected to the correct page    /question/56
+    The user should be redirected to the correct page    ${Application_question_176}
     The user navigates to the page    ${Assessment_summary_Pending_12}
 
 the scores under each question should be correct
