@@ -641,7 +641,7 @@ Mark as complete button should be enabled
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
-    Should Be Equal As Integers    ${NO_OPTIONs}    3    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
+    Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 
 the user creates the account
