@@ -1,13 +1,10 @@
 package com.worth.ifs.competitionsetup.controller;
 
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.*;
+import com.worth.ifs.application.service.*;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.CompetitionResource.*;
+import com.worth.ifs.competitionsetup.service.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

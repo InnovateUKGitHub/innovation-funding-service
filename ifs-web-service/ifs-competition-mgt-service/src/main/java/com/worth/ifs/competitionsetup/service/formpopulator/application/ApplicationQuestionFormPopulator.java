@@ -1,16 +1,14 @@
 package com.worth.ifs.competitionsetup.service.formpopulator.application;
 
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
-import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.error.exception.*;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.*;
+import com.worth.ifs.competitionsetup.form.application.*;
+import com.worth.ifs.competitionsetup.service.*;
+import com.worth.ifs.competitionsetup.service.formpopulator.*;
+import com.worth.ifs.form.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

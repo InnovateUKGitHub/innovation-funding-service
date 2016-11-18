@@ -38,6 +38,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
     public void test_save() {
         long questionId = 1L;
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
+        toSave.setQuestionId(questionId);
 
         setupPutWithRestResultExpectations(competitionsRestURL + "/" +questionId, toSave, HttpStatus.OK);
 

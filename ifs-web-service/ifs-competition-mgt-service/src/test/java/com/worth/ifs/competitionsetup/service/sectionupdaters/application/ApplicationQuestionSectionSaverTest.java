@@ -1,12 +1,10 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.application.*;
+import com.worth.ifs.competitionsetup.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,12 +14,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -1,14 +1,11 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.*;
+import com.worth.ifs.competitionsetup.service.*;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
+import static com.worth.ifs.commons.error.Error.*;
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.*;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**

@@ -1,7 +1,7 @@
 package com.worth.ifs.competitionsetup.form.application;
 
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

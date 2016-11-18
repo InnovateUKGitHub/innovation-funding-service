@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +44,7 @@ public class ApplicationQuestionFormPopulatorTest {
 
 	@Test
     public void testPopulateFormWithoutErrors() {
-        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource().build();
+        CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         when(questionService.getById(questionId)).thenReturn(questionResource);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
 

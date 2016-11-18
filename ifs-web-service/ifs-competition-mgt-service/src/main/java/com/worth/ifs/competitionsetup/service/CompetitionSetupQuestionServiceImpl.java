@@ -1,7 +1,7 @@
 package com.worth.ifs.competitionsetup.service;
 
-import com.worth.ifs.application.resource.*;
 import com.worth.ifs.commons.service.*;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
