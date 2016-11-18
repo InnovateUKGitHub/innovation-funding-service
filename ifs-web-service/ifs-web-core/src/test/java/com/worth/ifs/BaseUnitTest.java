@@ -14,7 +14,7 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
 import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
@@ -65,7 +65,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
@@ -271,7 +271,7 @@ public class BaseUnitTest {
         MockitoAnnotations.initMocks(this);
 
         // start with fresh ids when using builders
-        BuilderAmendFunctions.clearUniqueIds();
+        clearUniqueIds();
 
         applications = new ArrayList<>();
         questionResources = new HashMap<>();

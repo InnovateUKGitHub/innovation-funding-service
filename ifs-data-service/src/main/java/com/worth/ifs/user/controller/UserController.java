@@ -22,6 +22,7 @@ import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.resource.UserRelatedURLs.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -30,7 +31,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the
- * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
+ * {com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
  * to manage {@link User} related data.
  */
 @RestController
@@ -38,12 +39,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 public class UserController {
 
     private static final Log LOG = LogFactory.getLog(UserController.class);
-
-    public static final String URL_CHECK_PASSWORD_RESET_HASH = "checkPasswordResetHash";
-    public static final String URL_PASSWORD_RESET = "passwordReset";
-    public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
-    public static final String URL_VERIFY_EMAIL = "verifyEmail";
-    public static final String URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION = "resendEmailVerificationNotification";
 
     @Autowired
     private UserService userService;

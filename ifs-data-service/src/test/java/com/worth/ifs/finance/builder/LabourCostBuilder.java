@@ -1,14 +1,13 @@
 package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder> {

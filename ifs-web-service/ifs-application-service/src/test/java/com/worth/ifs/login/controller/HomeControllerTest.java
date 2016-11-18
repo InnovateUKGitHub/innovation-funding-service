@@ -1,7 +1,7 @@
 package com.worth.ifs.login.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.login.HomeController;
 import com.worth.ifs.login.RoleSelectionForm;
 import com.worth.ifs.user.resource.UserResource;
