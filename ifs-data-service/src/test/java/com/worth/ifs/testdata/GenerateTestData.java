@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -36,6 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,7 +69,7 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
+//@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
@@ -225,7 +225,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     @Test
-    public void generateTestData() {
+    public void generateTestData() throws IOException {
 
         long before = System.currentTimeMillis();
 
@@ -235,6 +235,11 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
+
+//        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
+//        questionResponseLines.forEach(line -> writer.writeNext(new String[] {line.competitionName, line.applicationName, line.questionName, line.value, "", line.answeredBy, line.assignedTo, line.markedAsComplete ? "Yes" : "No"}));
+//        writer.flush();
+//        writer.close();
 
         long after = System.currentTimeMillis();
 
@@ -308,7 +313,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         List<UnaryOperator<ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
                 applicationLine -> builder ->
                         createApplicationFromCsv(builder, applicationLine).
-                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title)));
+                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title, applicationLine.leadApplicant)));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
@@ -331,18 +336,25 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName) {
+    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName, String leadApplicant) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
 
         return simpleMap(responsesForApplication, line -> baseBuilder -> {
 
+            String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
+
             UnaryOperator<ResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
 
             UnaryOperator<ResponseDataBuilder> answerIfNecessary = builder ->
-                    !isBlank(line.value) ? builder.withAssignee(line.answeredBy).withAnswer(line.value, line.answeredBy)
+                    !isBlank(line.value) ? builder.withAssignee(answeringUser).withAnswer(line.value, answeringUser)
                             : builder;
+
+            UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
+                !line.filesUploaded.isEmpty() ?
+                    builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
+                    builder;
 
             UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
@@ -350,7 +362,11 @@ public class GenerateTestData extends BaseIntegrationTest {
             UnaryOperator<ResponseDataBuilder> markAsCompleteIfNecessary = builder ->
                     line.markedAsComplete ? builder.markAsComplete() : builder;
 
-            return withQuestion.andThen(answerIfNecessary).andThen(assignIfNecessary).andThen(markAsCompleteIfNecessary).
+            return withQuestion.
+                    andThen(answerIfNecessary).
+                    andThen(uploadFilesIfNecessary).
+                    andThen(assignIfNecessary).
+                    andThen(markAsCompleteIfNecessary).
                     apply(baseBuilder);
         });
     }

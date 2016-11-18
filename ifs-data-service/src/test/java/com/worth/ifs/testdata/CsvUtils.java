@@ -8,8 +8,6 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -70,11 +68,7 @@ class CsvUtils {
     }
 
     static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
-        // TODO DW - workaround for dodgy csv export - refine query to remove file uploads and assessor answers
-        List<ApplicationQuestionResponseLine> uniqueLines = removeDuplicates(simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new));
-        List<ApplicationQuestionResponseLine> withoutFileUploads = simpleFilterNot(new ArrayList<>(uniqueLines), line -> !isBlank(line.fileUpload));
-        List<ApplicationQuestionResponseLine> withoutAssessorAnswers = simpleFilterNot(withoutFileUploads, line -> "score".equals(line.value));
-        return withoutAssessorAnswers;
+        return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
 
     static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
@@ -200,7 +194,7 @@ class CsvUtils {
         String applicationName;
         String questionName;
         String value;
-        String fileUpload;
+        List<String> filesUploaded;
         String answeredBy;
         String assignedTo;
         boolean markedAsComplete;
@@ -212,34 +206,10 @@ class CsvUtils {
             applicationName = line.get(i++);
             questionName = line.get(i++);
             value = nullable(line.get(i++));
-            fileUpload = nullable(line.get(i++));
+            filesUploaded = asList(line.get(i++).split(","));
             answeredBy = nullable(line.get(i++));
             assignedTo = nullable(line.get(i++));
             markedAsComplete = nullableBoolean(line.get(i++));
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ApplicationQuestionResponseLine that = (ApplicationQuestionResponseLine) o;
-
-            return new EqualsBuilder()
-                    .append(competitionName, that.competitionName)
-                    .append(applicationName, that.applicationName)
-                    .append(questionName, that.questionName)
-                    .isEquals();
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder(17, 37)
-                    .append(competitionName)
-                    .append(applicationName)
-                    .append(questionName)
-                    .toHashCode();
         }
     }
 
