@@ -80,6 +80,14 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((assessorDeadlineDate, competitionParticipantResource) -> setField("assessorDeadlineDate", assessorDeadlineDate, competitionParticipantResource), assessorDeadlineDates);
     }
 
+    public CompetitionParticipantResourceBuilder withSubmittedAssessments(Long... submittedAssessmentCounts) {
+        return withArray((submittedAssessments, competitionParticipantResource) -> setField("submittedAssessments", submittedAssessments, competitionParticipantResource), submittedAssessmentCounts);
+    }
+
+    public CompetitionParticipantResourceBuilder withTotalAssessments(Long... totalAssessmentCounts) {
+        return withArray((totalAssessments, competitionParticipantResource) -> setField("totalAssessments", totalAssessments, competitionParticipantResource), totalAssessmentCounts);
+    }
+
     @Override
     protected void postProcess(int index, CompetitionParticipantResource instance) {
         super.postProcess(index, instance);
