@@ -1,9 +1,6 @@
 package com.worth.ifs.user.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * The project_finance_emails table is a temporary measure to record users who
@@ -13,7 +10,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "project_finance_emails")
 public class ProjectFinanceEmail {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique=true)
