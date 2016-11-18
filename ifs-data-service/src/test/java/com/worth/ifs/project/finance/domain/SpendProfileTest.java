@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;

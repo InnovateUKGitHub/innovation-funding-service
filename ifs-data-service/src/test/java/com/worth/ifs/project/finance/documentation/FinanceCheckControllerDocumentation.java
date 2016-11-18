@@ -67,7 +67,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.save(any(FinanceCheckResource.class))).thenReturn(serviceSuccess());
 
-        String url = FINANCE_CHECK_BASE_URL + FINANCE_CHECK_PATH;
+        String url = FinanceCheckURIs.BASE_URL + FinanceCheckURIs.PATH;
 
         mockMvc.perform(post(url, 123L, 456L).
                 contentType(APPLICATION_JSON).
@@ -92,8 +92,8 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.getByProjectAndOrganisation(projectOrganisationCompositeId)).thenReturn(serviceSuccess(financeCheckResource));
 
-        String url = FINANCE_CHECK_BASE_URL + "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" +
-                FINANCE_CHECK_PATH;
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
+                FinanceCheckURIs.PATH;
 
         mockMvc.perform(get(url, 123L, 456L)).
                 andExpect(status().isOk()).
@@ -113,8 +113,8 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.approve(123L, 456L)).thenReturn(serviceSuccess());
 
-        String url = FINANCE_CHECK_BASE_URL + "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" +
-                FINANCE_CHECK_PATH + "/approve";
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
+                FinanceCheckURIs.PATH + "/approve";
 
         mockMvc.perform(post(url, 123L, 456L)).
                 andExpect(status().isOk()).
@@ -141,8 +141,8 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.getFinanceCheckApprovalStatus(123L, 456L)).thenReturn(serviceSuccess(status));
 
-        String url = FINANCE_CHECK_BASE_URL + "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" +
-                FINANCE_CHECK_PATH + "/status";
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
+                FinanceCheckURIs.PATH + "/status";
 
         mockMvc.perform(get(url, 123L, 456L)).
                 andExpect(status().isOk()).
@@ -181,7 +181,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.getFinanceCheckSummary(123L)).thenReturn(serviceSuccess(expected));
 
-        String url = FINANCE_CHECK_BASE_URL + "/{projectId}" + FINANCE_CHECK_PATH;
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH;
 
         mockMvc.perform(get(url, 123L)).
                 andExpect(status().isOk()).

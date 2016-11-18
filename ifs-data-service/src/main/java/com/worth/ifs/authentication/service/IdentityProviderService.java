@@ -1,7 +1,7 @@
 package com.worth.ifs.authentication.service;
 
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.commons.security.NotSecured;
+import com.worth.ifs.commons.service.ServiceResult;
 
 /**
  * Represents an endpoint attached to the (external) Authentication service
