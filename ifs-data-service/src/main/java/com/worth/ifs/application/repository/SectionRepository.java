@@ -21,7 +21,4 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
     Section findByQuestionsId(Long questionId);
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
-
-    // TODO DW - temporary fix for pulling over section priorities
-    Section findByNameAndCompetitionId(String name, Long id);
 }
