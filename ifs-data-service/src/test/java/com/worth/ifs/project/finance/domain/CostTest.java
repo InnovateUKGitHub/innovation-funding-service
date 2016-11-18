@@ -5,8 +5,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.project.finance.domain.TimeUnit.DAY;
-import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.resource.TimeUnit.DAY;
+import static com.worth.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

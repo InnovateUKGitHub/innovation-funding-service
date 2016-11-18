@@ -5,7 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;

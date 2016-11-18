@@ -5,7 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.competition;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
