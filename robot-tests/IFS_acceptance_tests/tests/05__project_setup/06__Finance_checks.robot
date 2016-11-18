@@ -12,14 +12,14 @@ Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${la_fromage_overview}    ${server}/project-setup/project/4
+${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476
     [Tags]  HappyPath
     [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
-    Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
+    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
@@ -57,7 +57,7 @@ Finance checks client-side validations
     And The user should not see the text in the page    Please enter a labour cost
 
 
-Approve Eligibility: Collaborator partner organisation
+Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
     When the user fills in project costs
@@ -65,30 +65,32 @@ Approve Eligibility: Collaborator partner organisation
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
+    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(1) a    approved
+
+
+Approve Eligibility: Collaborator partner organisation
+    [Documentation]    INFUND-5193
+    [Tags]    HappyPath
+    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
+    When the user fills in project costs
+    And the user selects the checkbox    id=costs-reviewed
+    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    And the user should see the text in the page    The partner finance eligibility has been approved
+    And The user clicks the button/link    link=Finance checks
+    Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
+
 
 Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
+    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
-
-Approve Eligibility: Lead partner organisation
-    [Documentation]    INFUND-5193
-    [Tags]    HappyPath
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
-    Then the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
@@ -104,7 +106,7 @@ Project Finance user can export bank details 
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
-    Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
+    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
     And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
@@ -114,16 +116,16 @@ Other internal users do not have access to Finance Checks
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/4/finance-check    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 10,800
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 360
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 0
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    3%
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 303,005
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 87,546
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 3,702
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
 
 Moving La Fromage into project setup
     the project finance user moves La Fromage into project setup if it isn't already
@@ -136,17 +138,17 @@ the project finance user moves La Fromage into project setup if it isn't already
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
 
 the project finance user moves La Fromage into project setup
-    the user navigates to the page    ${server}/management/competition/3
-    the user selects the option from the drop-down menu    Yes    id=fund16
-    the user selects the option from the drop-down menu    No    id=fund17
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    the user selects the option from the drop-down menu    Yes    id=fund24
+    the user selects the option from the drop-down menu    No    id=fund25
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user should see the text in the page    Assessor Feedback
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/16
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
     the user uploads the file    ${valid_pdf}
-    the user can see the option to upload a file on the page    ${server}/management/competition/3/application/17
+    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
     the user uploads the file    ${valid_pdf}
-    the user navigates to the page    ${server}/management/competition/3
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
     the user clicks the button/link    name=publish
 
@@ -177,7 +179,7 @@ the users fill out project details
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Cheeseco
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=Project manager

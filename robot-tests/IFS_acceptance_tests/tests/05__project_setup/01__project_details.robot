@@ -74,12 +74,12 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805
     [Tags]    HappyPath
     [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
-    When The user clicks the button/link    link=00000026: best riffs
+    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -138,7 +138,7 @@ Lead partner can see the project setup page
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application best riffs has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -257,14 +257,14 @@ Invited project manager receives an email
     [Documentation]    INFUND-3550
     [Tags]    HappyPath    Email
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Project Manager invitation    You will be managing the project
-    Then the user should see the text in the page    Vitruvius Stonework Limited
+    Then the user should see the text in the page    Empire Ltd
 
 
 Invited project manager registration flow
     [Documentation]    INFUND-3554
     [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a project
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    Bob    Jones
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
@@ -272,12 +272,12 @@ Invited project manager registration flow
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]    Email
-    When the user clicks the button/link    link=00000026: best riffs
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project manager
     Then the user should see the text in the page    Bob Jones
@@ -288,20 +288,20 @@ Lead partner selects a project manager
     ...    INFUND-2996
     ...    INFUND-5610
     [Tags]    HappyPath
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
-    When the user selects the radio button    projectManager    1
+    When the user selects the radio button    projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project manager
-    And the user sees that the radio button is selected    projectManager    1
-    And the user selects the radio button    projectManager    projectManager1
+    And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+    And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the text in the page    test twenty
+    And the user should see the text in the page    Elmo Chenault
     And the matching status checkbox is updated    project-details    3    yes
 
 Lead partner can change the project address
@@ -309,7 +309,7 @@ Lead partner can change the project address
     ...
     ...    INFUND-2165
     [Tags]    HappyPath
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    You need to select a project address before you can continue
@@ -325,7 +325,7 @@ Lead partner can change the project address
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    1, Bath, BA1 5LR
+    Then the user should see the text in the page    1, Sheffield, S1 2ED
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
@@ -350,7 +350,7 @@ Non lead partner nominates finance contact
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    1    yes
+    And the matching status checkbox is updated    project-details-finance    2    yes
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
@@ -366,7 +366,7 @@ Option to invite a finance contact
     And the user clicks the button/link    link=Project details
     And the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Vitruvius Stonework Limited
+    And the user clicks the button/link    link=Empire Ltd
     When the user selects the radio button    financeContact    new
     Then the user should see the element    id=invite-finance-contact
     When the user selects the radio button    financeContact    financeContact1
@@ -409,14 +409,14 @@ Invited finance contact receives an email
     [Documentation]    INFUND-3524
     [Tags]    HappyPath    Email
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
-    Then the user should see the text in the page    Vitruvius Stonework Limited
+    Then the user should see the text in the page    Empire Ltd
 
 
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
     [Tags]    HappyPath    Email
     Given the user should see the text in the page    You have been invited to join a project
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
     And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
@@ -424,14 +424,14 @@ Invited finance contact registration flow
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    best riffs
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]    Email
-    When the user clicks the button/link    link=00000026: best riffs
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Vitruvius Stonework Limited
+    And the user clicks the button/link    link=Empire Ltd
     Then the user should see the text in the page    John Smith
 
 Lead partner selects a finance contact
@@ -441,15 +441,15 @@ Lead partner selects a finance contact
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Vitruvius Stonework Limited
+    And the user clicks the button/link    link=Empire Ltd
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
-    And the user selects the radio button    financeContact    financeContact3
+    And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    1    yes
-    And the user should see the text in the page    test twenty
-    And the user should see the element    link=Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the element    link=Empire Ltd
 
 
 Non-lead partner cannot change start date, project manager or project address
@@ -489,7 +489,7 @@ Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]    HappyPath
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
     And the applicant clicks the submit button and then clicks cancel in the submit modal
     And the user should not see the text in the page    The project details have been submitted to Innovate UK
@@ -514,7 +514,7 @@ Lead partner can see the status update when all Project details are submitted
 Project details read only after submission
     [Documentation]    INFUND-3381
     [Tags]
-    Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    Given the user navigates to the page    ${project_in_setup_details_page}
     Then all the fields are completed
     And The user should not see the element    link=Target start date
     And The user should not see the element    link=Project address
@@ -524,7 +524,7 @@ All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Tags]    HappyPath
     When log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
+    And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
@@ -532,8 +532,8 @@ All partners can view submitted project details
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user    steve.smith@empire.com    Passw0rd
-    And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should see the text in the page    Vitruvius Stonework Limited
+    And the user navigates to the page    ${project_in_setup_details_page}
+    Then the user should see the text in the page    Empire Ltd
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
@@ -549,10 +549,10 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    1 Jan 2017
     And the user should not see the element    link=Target start date
     And the user should see the text in the page    Project manager
-    And the user should see the text in the page    test twenty
+    And the user should see the text in the page    Elmo Chenault
     And the user should not see the element    link=Project manager
     And the user should see the text in the page    Project address
-    And the user should see the text in the page    1, Bath, BA1 5LR
+    And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
     And the user navigates to the page    ${project_start_date_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
@@ -656,10 +656,10 @@ the user creates the account
 
 the user can see all project details completed
     the user should see the element  jQuery=#start-date:contains("1 Jan 2017")
-    the user should see the element  jQuery=#project-address:contains("1, Bath, BA1 5LR")
-    the user should see the element  jQuery=#project-manager:contains("test twenty")
+    the user should see the element  jQuery=#project-address:contains("1, Sheffield, S1 2ED")
+    the user should see the element  jQuery=#project-manager:contains("Elmo Chenault")
 
 the user can see all finance contacts completed
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Jessica Doe")
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Pete Tom")
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Bob Jones")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Elmo Chenault")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Jessica Doe")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Pete Tom")

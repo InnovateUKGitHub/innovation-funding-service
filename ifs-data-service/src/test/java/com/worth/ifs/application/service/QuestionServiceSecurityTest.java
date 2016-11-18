@@ -104,19 +104,17 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     }
 
     @Test
-    public void testQuestionResourceByFormInputType() {
-        final String formInputTypeTitle = "test";
+    public void testQuestionResourceByCompetitionIdAndFormInputType() {
         assertAccessDenied(
-                () -> classUnderTest.getQuestionResourceByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionResourceByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
 
     @Test
-    public void testGetQuestionByFormInputType() {
-        final String formInputTypeTitle = "test";
+    public void testGetQuestionByCompetitionIdAndFormInputType() {
         assertAccessDenied(
-                () -> classUnderTest.getQuestionByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
@@ -221,12 +219,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
+        public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
             return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
-        public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
+        public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
             return serviceSuccess(newQuestion().build());
         }
 

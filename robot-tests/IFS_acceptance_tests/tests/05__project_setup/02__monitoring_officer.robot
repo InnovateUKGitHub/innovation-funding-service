@@ -14,7 +14,7 @@ Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -37,14 +37,14 @@ Comp admin can view the Supporting information details on MO page
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
@@ -57,14 +57,14 @@ Project finance user can view MO page, and go on to assign MO
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
@@ -124,7 +124,7 @@ MO details(email step)
     [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-2630, INFUND-2621
@@ -156,7 +156,7 @@ MO details edit(email step)
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621

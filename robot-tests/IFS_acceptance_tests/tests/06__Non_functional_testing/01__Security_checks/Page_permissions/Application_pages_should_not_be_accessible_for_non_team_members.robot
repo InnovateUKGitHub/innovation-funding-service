@@ -4,8 +4,8 @@ Test Teardown     TestTeardown User closes the browser
 Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
-${APPLICATION_7_OVERVIEW_PAGE}    ${SERVER}/application/7
-${APPLICATION_7_FORM}    ${SERVER}/application/7/form/question/9
+${APPLICATION_7_OVERVIEW_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_4}
+${APPLICATION_7_FORM}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_4}/form/question/9
 
 *** Test Cases ***
 Guest user can't access overview page
