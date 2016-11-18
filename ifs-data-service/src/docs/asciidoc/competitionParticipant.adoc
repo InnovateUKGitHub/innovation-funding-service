@@ -1,0 +1,11 @@
+=== Get participants
+==== Request
+include::{snippets}/competitionparticipant/get-participants/http-request.adoc[]
+include::{snippets}/competitionparticipant/get-participants/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitionparticipant/get-participants/http-response.adoc[]
+include::{snippets}/competitionparticipant/get-participants/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitionparticipant/get-participants/curl-request.adoc[]

@@ -317,7 +317,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static <T> RestResult<T> fromResponse(final ResponseEntity<T> response, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
-        System.out.println("Haho fromResponse: allExpected null? " + (allExpectedSuccessStatusCodes==null) + " and response? " + (response==null));
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {

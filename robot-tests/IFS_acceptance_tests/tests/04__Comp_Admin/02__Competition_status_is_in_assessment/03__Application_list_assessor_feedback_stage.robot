@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/3
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Cheese is great
     And the user should see the text in the page    Cheese is good
@@ -25,8 +25,8 @@ The 'Fund project?' column title is now 'Funded' and isn't editable
     [Tags]
     When the user should see the text in the page    Funded
     And the user should not see the text in the page    Fund project?
-    Then the user should not see the element    id=fund16
-    And the user should not see the element    id=fund17
+    Then the user should not see the element    id=fund24
+    And the user should not see the element    id=fund25
 
 Publish assessor feedback button is now visible
     [Documentation]    INFUND-2606

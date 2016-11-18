@@ -8,7 +8,6 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
-${INVITE_LINK_2}    ${SERVER}/accept-invite/1d92a6ace9030f2d992f47ea60529028fd49542dffd6b179f68fae072b4f1cc61f12a419b79a5267
 
 *** Test Cases ***
 
