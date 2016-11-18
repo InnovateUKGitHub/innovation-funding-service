@@ -20,7 +20,7 @@ public class FundingDecisionAction extends BaseAssessmentAction {
     @Override
     protected void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome) {
         ProcessOutcome processOutcomeValue = processOutcome.get();
-        Optional<ProcessOutcome> existingOutcome = ofNullable(assessment.getLastOutcome(FUNDING_DECISION));
+        Optional<ProcessOutcome> existingOutcome = assessment.getLastOutcome(FUNDING_DECISION);
 
         // Update the existing outcome if it exists
         existingOutcome.ifPresent(existingOutcomeValue -> copyOutcome(processOutcomeValue, existingOutcomeValue));

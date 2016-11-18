@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Optional;
 
 @Entity
 public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
@@ -32,18 +33,12 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = application;
     }
 
-    public ProcessOutcome getLastOutcome() {
-        if(this.processOutcomes != null) {
-            return this.processOutcomes.stream().reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
-        }
-        return null;
+    public Optional<ProcessOutcome> getLastOutcome() {
+        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().reduce((outcome1, outcome2) -> outcome2));
     }
 
-    public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
-        if(this.processOutcomes != null) {
-            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).reduce((processOutcome, processOutcome2) -> processOutcome2).orElse(null);
-        }
-        return null;
+    public Optional<ProcessOutcome> getLastOutcome(OutcomeType outcomeType) {
+        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().filter(outcome -> outcomeType.getType().equals(outcome.getOutcomeType())).reduce((outcome1, outcome2) -> outcome2));
     }
 
     @Override

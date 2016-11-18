@@ -4,7 +4,9 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -12,29 +14,26 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentRepository> {
-
-    @Autowired
-    private ProcessOutcomeRepository processOutcomeRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -65,14 +64,12 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
-
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
-
-        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
+        ProcessRole participant1 = processRoleRepository.save(newProcessRole()
+                .with(id(null))
                 .build());
 
-        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
+        ProcessRole participant2 = processRoleRepository.save(newProcessRole()
+                .with(id(null))
                 .build());
 
         Application application = applicationRepository.findOne(1L);
@@ -81,8 +78,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         List<Assessment> assessments = newAssessment()
                 .withApplication(application)
-                .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
-                .withParticipant(processRole1, processRole2)
+                .withParticipant(participant1, participant2)
                 .withActivityState(openState)
                 .build(2);
 
@@ -95,14 +91,12 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findOneByParticipantId() throws Exception {
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome().build());
-
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome().build());
-
-        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
+        ProcessRole participant1 = processRoleRepository.save(newProcessRole()
+                .with(id(null))
                 .build());
 
-        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
+        ProcessRole participant2 = processRoleRepository.save(newProcessRole()
+                .with(id(null))
                 .build());
 
         Application application = applicationRepository.findOne(1L);
@@ -111,14 +105,13 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         List<Assessment> assessments = newAssessment()
                 .withApplication(application)
-                .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
-                .withParticipant(processRole1, processRole2)
+                .withParticipant(participant1, participant2)
                 .withActivityState(openState)
                 .build(2);
 
         List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(toList());
 
-        final Assessment found = repository.findOneByParticipantId(processRole1.getId());
+        Assessment found = repository.findOneByParticipantId(participant1.getId());
         assertEquals(saved.get(0), found);
     }
 
@@ -148,10 +141,42 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         });
     }
 
+    @Test
+    public void isFeedbackComplete() throws Exception {
+        Application application = applicationRepository.findOne(1L);
+        Competition competition = application.getCompetition();
+
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
+
+        // Feedback should be incomplete for a new assessment with no responses
+        Assessment assessment = repository.save(newAssessment()
+                .with(id(null))
+                .withActivityState(openState)
+                .withApplication(application)
+                .build());
+
+        assertFalse(repository.isFeedbackComplete(assessment.getId()));
+
+        // Create form input responses for each of the assessment form inputs. Feedback should now be complete
+        assessorFormInputResponseRepository.save(competition.getQuestions().stream().flatMap(question -> question.getFormInputs().stream().filter(formInput -> ASSESSMENT == formInput.getScope()).map(formInput -> newAssessorFormInputResponse()
+                .withAssessment(assessment)
+                .withFormInput(formInput)
+                .withValue("Value")
+                .withUpdatedDate(LocalDateTime.now())
+                .build())).collect(toList()));
+        assertTrue(repository.isFeedbackComplete(assessment.getId()));
+
+        // Delete a response. The feedback should be incomplete again
+        Optional<AssessorFormInputResponse> anyFormInputResponse = assessorFormInputResponseRepository.findByAssessmentId(assessment.getId()).stream().findAny();
+        assertTrue("Expecting there to be at least one assessment form input within the competition questions", anyFormInputResponse.isPresent());
+        assessorFormInputResponseRepository.delete(anyFormInputResponse.get());
+        assertFalse(repository.isFeedbackComplete(assessment.getId()));
+    }
+
     private void setUpShuffledAssessments(User user, Application application, int numOfAssessmentsForEachState) {
         List<ActivityState> states = getActivityStates();
         List<Assessment> assessments = states.stream().flatMap(activityState -> newAssessment()
-                .withId((Long) null)
+                .with(id(null))
                 .withApplication(application)
                 .withParticipant(setUpParticipants(user, application, numOfAssessmentsForEachState))
                 .withActivityState(activityState)
@@ -164,7 +189,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     private ProcessRole[] setUpParticipants(User user, Application application, int count) {
         List<ProcessRole> result = new ArrayList<>();
         processRoleRepository.save(newProcessRole()
-                .withId((Long) null)
+                .with(id(null))
                 .withUser(user)
                 .withRole(roleRepository.findOneByName(ASSESSOR.getName()))
                 .withApplication(application)
