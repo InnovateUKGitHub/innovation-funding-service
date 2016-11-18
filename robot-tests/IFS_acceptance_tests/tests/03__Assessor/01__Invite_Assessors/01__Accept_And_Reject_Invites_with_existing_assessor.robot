@@ -28,7 +28,7 @@ ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
 Assessor dashboard should be empty
     [Documentation]    INFUND-3716
     ...
-    ...    INFUND-${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}0
+    ...    INFUND-4950
     [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor dashboard

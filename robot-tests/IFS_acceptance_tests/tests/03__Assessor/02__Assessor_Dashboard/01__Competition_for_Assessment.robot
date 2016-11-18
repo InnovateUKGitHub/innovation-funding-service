@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation     INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 Suite Setup       Log in as user    email=paul.plum@gmail.com    password=Passw0rd
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
