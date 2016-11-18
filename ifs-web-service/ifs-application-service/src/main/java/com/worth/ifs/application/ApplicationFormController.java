@@ -288,7 +288,6 @@ public class ApplicationFormController {
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -316,6 +315,13 @@ public class ApplicationFormController {
             if (validationHandler.hasErrors() || (errors.hasErrors() && isMarkQuestionRequest(params))) {
 
                 validationHandler.addAnyErrors(errors);
+
+                List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+                // Add any validated fields back in so displayed on page render
+                application.setDurationInMonths(form.getApplication().getDurationInMonths());
+                application.setStartDate(form.getApplication().getStartDate());
+                application.setName(form.getApplication().getName());
 
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
