@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.util;
 
+import com.worth.ifs.config.audit.AuditConfig;
 import com.worth.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
  *     <li><pre>modified_on</pre></li>
  * </ul>
  *
- * @see com.worth.ifs.config.AuditConfig
+ * @see AuditConfig
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

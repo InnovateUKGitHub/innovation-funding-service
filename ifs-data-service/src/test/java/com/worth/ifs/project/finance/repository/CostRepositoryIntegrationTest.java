@@ -8,8 +8,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.project.finance.domain.TimeUnit.DAY;
-import static com.worth.ifs.project.finance.domain.TimeUnit.YEAR;
+import static com.worth.ifs.project.finance.resource.TimeUnit.DAY;
+import static com.worth.ifs.project.finance.resource.TimeUnit.YEAR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
