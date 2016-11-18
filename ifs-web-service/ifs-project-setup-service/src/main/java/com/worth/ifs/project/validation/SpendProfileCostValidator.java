@@ -37,6 +37,8 @@ public class SpendProfileCostValidator implements Validator {
 
         String partialErrorKey = String.format("Cost for category: %s and Month#: %d", category, index + 1);
 
+        checkNullCost(cost, category, index, errors, partialErrorKey);
+
         checkFractionalCost(cost, category, index, errors, partialErrorKey);
 
         checkCostLessThanZero(cost, category, index, errors, partialErrorKey);
@@ -44,10 +46,19 @@ public class SpendProfileCostValidator implements Validator {
         checkCostGreaterThanOrEqualToMillion(cost, category, index, errors, partialErrorKey);
     }
 
+    private void checkNullCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
+
+        String errorKey = "COST_NULL: " + partialErrorKey;
+        if (null == cost) {
+            String errorMessage = String.format("Cost cannot be null. Category: %s, Month#: %d", category, index + 1);
+            errors.reject(errorKey, errorMessage);
+        }
+    }
+
     private void checkFractionalCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_FRACTIONAL: " + partialErrorKey;
-        if (cost.scale() > 0) {
+        if ((null != cost) && (cost.scale() > 0)) {
             String errorMessage = String.format("Cost cannot contain fractional part. Category: %s, Month#: %d", category, index + 1);
             errors.reject(errorKey, errorMessage);
 
@@ -57,7 +68,7 @@ public class SpendProfileCostValidator implements Validator {
     private void checkCostLessThanZero(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_LESS_THAN_ZERO: " + partialErrorKey;
-        if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
+        if ((null != cost) && (-1 == cost.compareTo(BigDecimal.ZERO))) { // Indicates that the cost is less than zero
             String errorMessage = String.format("Cost cannot be less than zero. Category: %s, Month#: %d", category, index + 1);
             errors.reject(errorKey, errorMessage);
         }
@@ -66,7 +77,7 @@ public class SpendProfileCostValidator implements Validator {
     private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
 
         String errorKey = "COST_MILLION_OR_MORE: " + partialErrorKey;
-        if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
+        if ((null != cost) && (-1 != cost.compareTo(new BigDecimal("1000000")))) { // Indicates that the cost million or more
             String errorMessage = String.format("Cost cannot be million or more. Category: %s, Month#: %d", category, index + 1);
             errors.reject(errorKey, errorMessage);
         }

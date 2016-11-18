@@ -131,6 +131,26 @@ public class SpendProfileCostValidatorTest {
 
     }
 
+    @Test
+    public void testWhenCostsAreNull() {
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                1L, asList(new BigDecimal("0"), new BigDecimal("20"), null),
+                2L, asList(new BigDecimal("70"), null, new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("1"), null)));
+
+
+        validator.validate(table, bindingResult);
+
+        assertTrue(bindingResult.hasErrors());
+
+        List<ObjectError> errors = bindingResult.getAllErrors();
+
+        assertExpectedErrors(errors, "Cost cannot be null. Category: 1, Month#: 3");
+        assertExpectedErrors(errors, "Cost cannot be null. Category: 2, Month#: 2");
+        assertExpectedErrors(errors, "Cost cannot be null. Category: 3, Month#: 3");
+    }
+
 
     private void assertExpectedErrors(List<ObjectError> errors, String messageToExpect) {
 
