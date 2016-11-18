@@ -2,9 +2,10 @@ package com.worth.ifs.project.gol.resource;
 
 import com.worth.ifs.workflow.resource.OutcomeType;
 
+/**
+ * Represents the events that can be triggered during the Grant Offer Letter process.
+ */
 public enum GOLOutcomes implements OutcomeType {
-
-    PENDING("pending"), // TODO - Don't think we need this as this is not an event. Duncan - please let me know
 
     PROJECT_CREATED("project-created"),
     GOL_SENT("gol-sent"),

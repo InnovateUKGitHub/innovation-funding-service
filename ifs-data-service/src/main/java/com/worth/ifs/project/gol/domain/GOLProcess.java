@@ -13,6 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * The process of submitting and approving Grant Offer Letter for Projects
+ */
 @Entity
 public class GOLProcess extends Process<ProjectUser, Project, GOLState> {
 

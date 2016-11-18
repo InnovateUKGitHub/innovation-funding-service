@@ -7,6 +7,9 @@ import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Represents the states that can be transitioned during the Grant Offer Letter process.
+ */
 public enum GOLState implements ProcessStates {
 
     PENDING(State.PENDING),

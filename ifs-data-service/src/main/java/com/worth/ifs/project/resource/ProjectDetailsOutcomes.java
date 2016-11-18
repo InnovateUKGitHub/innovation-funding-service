@@ -4,7 +4,6 @@ import com.worth.ifs.workflow.resource.OutcomeType;
 
 public enum ProjectDetailsOutcomes implements OutcomeType {
 
-    PENDING("pending"),
     PROJECT_CREATED("project-created"),
     PROJECT_START_DATE_ADDED("start-date-added"),
     PROJECT_ADDRESS_ADDED("address-added"),
