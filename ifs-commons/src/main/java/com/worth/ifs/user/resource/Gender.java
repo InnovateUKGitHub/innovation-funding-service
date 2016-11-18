@@ -1,5 +1,8 @@
 package com.worth.ifs.user.resource;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
+
 /**
  * The gender of a User.
  */
@@ -25,6 +28,6 @@ public enum Gender {
     }
 
     public static Gender fromName(String name) {
-        return simpleFindFirst(asList(values()), v -> v.displayName.equals(name)).orElse(null);
+        return simpleFindFirst(asList(values()), v -> v.getDisplayName().equals(name)).orElse(null);
     }
 }
