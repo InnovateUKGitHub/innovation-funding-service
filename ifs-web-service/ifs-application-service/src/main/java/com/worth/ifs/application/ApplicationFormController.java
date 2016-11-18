@@ -270,25 +270,27 @@ public class ApplicationFormController {
                                      @PathVariable(QUESTION_ID) final Long questionId,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
         // Check if the request is to just open edit view or to save
         if(params.containsKey(EDIT_QUESTION)){
+
             ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
             if (processRole != null) {
                 questionService.markAsInComplete(questionId, applicationId, processRole.getId());
             } else {
                 LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
             }
+
             return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, request);
+
         } else {
+
             QuestionResource question = questionService.getById(questionId);
-            SectionResource section = sectionService.getSectionByQuestionId(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
@@ -317,8 +319,10 @@ public class ApplicationFormController {
                 validationHandler.addAnyErrors(errors);
 
                 List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+                SectionResource section = sectionService.getSectionByQuestionId(questionId);
+                List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
-                // Add any validated fields back in so displayed on page render
+                // Add any validated fields back in invalid entries are displayed on re-render
                 application.setDurationInMonths(form.getApplication().getDurationInMonths());
                 application.setStartDate(form.getApplication().getStartDate());
                 application.setName(form.getApplication().getName());
