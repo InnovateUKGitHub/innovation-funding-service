@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.competition.resource.AssessorCountOptionResource;
+import com.worth.ifs.competition.service.AssessorCountOptionsRestServiceImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
