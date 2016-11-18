@@ -1,6 +1,9 @@
 package com.worth.ifs.user.resource;
 
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
+
 /**
  * The disabilities of an User.
  */
@@ -23,5 +26,9 @@ public enum Disability {
 
     public Long getId() {
         return id;
+    }
+
+    public static Disability fromDisplayName(String name) {
+        return simpleFindFirst(asList(values()), v -> v.getDisplayName().equals(name)).orElse(null);
     }
 }

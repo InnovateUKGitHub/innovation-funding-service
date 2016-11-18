@@ -76,10 +76,11 @@ public class CompetitionSetupServiceImplTest {
 						).build(2)
 				).build();
 
+		competitionType.setTemplate(competitionTemplate);
+
 		long typeId = 4L;
 		long competitionId = 2L;
     	when(competitionRepository.findById(competitionId)).thenReturn(competition);
-    	when(competitionRepository.findByTemplateForType_Id(typeId)).thenReturn(competitionTemplate);
 		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
 
     	ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
@@ -106,15 +107,17 @@ public class CompetitionSetupServiceImplTest {
 				.build();
     	parent.setChildSections(new ArrayList<>(asList(child1, child2)));
 
-    	Competition competition = newCompetition().build();
+		CompetitionType competitionType = new CompetitionType();
+		Competition competition = newCompetition().build();
     	Competition competitionTemplate = newCompetition()
     			.withSections(asList(
     					parent, child1, child2
 				))
     			.build();
 
+		competitionType.setTemplate(competitionTemplate);
     	when(competitionRepository.findById(123L)).thenReturn(competition);
-    	when(competitionRepository.findByTemplateForType_Id(4L)).thenReturn(competitionTemplate);
+    	when(competitionTypeRepository.findOne(4L)).thenReturn(competitionType);
 
     	ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(123L, 4L);
 

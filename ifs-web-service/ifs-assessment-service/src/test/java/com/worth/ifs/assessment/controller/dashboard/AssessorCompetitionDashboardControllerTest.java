@@ -74,8 +74,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(4);
 
         List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
-                .withId(1L,2L)
-                .withOutcome(null,Boolean.toString(false))
+                .withId(1L, 2L)
+                .withOutcome(null, Boolean.toString(false))
                 .build(2);
 
         RoleResource role = buildLeadApplicantRole();
@@ -154,12 +154,12 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())
                 .withActivityState(PENDING, ACCEPTED, OPEN, SUBMITTED)
-                .withProcessOutcome(null, emptyList(),asList(0L,1L),singletonList(2L))
+                .withProcessOutcome(null, emptyList(), asList(0L, 1L), singletonList(2L))
                 .build(4);
 
         List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
-                .withId(1L,2L)
-                .withOutcome(null,Boolean.toString(true))
+                .withId(1L, 2L)
+                .withOutcome(null, Boolean.toString(true))
                 .build(2);
 
         RoleResource role = buildLeadApplicantRole();
@@ -193,7 +193,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService,processOutcomeService);
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
             inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));

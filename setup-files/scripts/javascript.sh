@@ -1,3 +1,3 @@
-cd ../../ifs-web-service/ifs-core/src/main/resources/static
+cd ../../ifs-web-service
 npm install
 gulp
