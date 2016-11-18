@@ -1,10 +1,15 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.resource.TokenType;
+import com.worth.ifs.user.builder.UserBuilder;
+import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;
@@ -29,15 +34,15 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testChangePassword() {
 
-        User user = newUser().build();
-        UserResource userResource = newUserResource().withUID("myuid").build();
+        User user = UserBuilder.newUser().build();
+        UserResource userResource = UserResourceBuilder.newUserResource().withUID("myuid").build();
 
-        Token token = new Token(RESET_PASSWORD, null, 123L, null, null, null);
-        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
-        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceSuccess());
-        when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(serviceSuccess("mypassword"));
+        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(ServiceResult.serviceSuccess("mypassword"));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
         assertTrue(result.isSuccess());
@@ -47,34 +52,34 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testChangePasswordButPasswordValidationFails() {
 
-        User user = newUser().build();
-        UserResource userResource = newUserResource().withUID("myuid").build();
+        User user = UserBuilder.newUser().build();
+        UserResource userResource = UserResourceBuilder.newUserResource().withUID("myuid").build();
 
-        Token token = new Token(RESET_PASSWORD, null, 123L, null, null, null);
-        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
-        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceFailure(badRequestError("bad password")));
+        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("bad password")));
+        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
         verify(tokenRepositoryMock, never()).delete(token);
     }
 
     @Test
     public void testFindInactiveByEmail() {
-        final User user = newUser().build();
-        final UserResource userResource = newUserResource().build();
+        final User user = UserBuilder.newUser().build();
+        final UserResource userResource = UserResourceBuilder.newUserResource().build();
         final String email = "sample@me.com";
 
-        when(userRepositoryMock.findByEmailAndStatus(email, INACTIVE)).thenReturn(of(user));
+        when(userRepositoryMock.findByEmailAndStatus(email, UserStatus.INACTIVE)).thenReturn(of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
 
         final ServiceResult<UserResource> result = service.findInactiveByEmail(email);
         assertTrue(result.isSuccess());
         assertSame(userResource, result.getSuccessObject());
-        verify(userRepositoryMock, only()).findByEmailAndStatus(email, INACTIVE);
+        verify(userRepositoryMock, only()).findByEmailAndStatus(email, UserStatus.INACTIVE);
     }
 
     @Override
