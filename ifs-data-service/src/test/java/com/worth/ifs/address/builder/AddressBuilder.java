@@ -1,15 +1,15 @@
 package com.worth.ifs.address.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.address.domain.Address;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class AddressBuilder extends BaseBuilder<Address, AddressBuilder> {
 
@@ -27,7 +27,7 @@ public class AddressBuilder extends BaseBuilder<Address, AddressBuilder> {
     }
 
     public AddressBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public AddressBuilder withAddressLine1(String... addressLine1s) {

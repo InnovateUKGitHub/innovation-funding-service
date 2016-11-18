@@ -64,11 +64,11 @@
       <ul class="grid-row">
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" href="#">Allocate assessors</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Allocate assessors</a>
         </li>
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" href="#">Allocate applications</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5470-manage-applications?comp=' + param.comp[0] : '/prototypes/5470-manage-applications?comp=Open')}">Allocate applications</a>
         </li>
 
       </ul>

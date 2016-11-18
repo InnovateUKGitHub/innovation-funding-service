@@ -19,31 +19,31 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     public static final String LIVE_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE";
+            "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE";
+            "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE";
+            "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE";
+            "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String UPCOMING_QUERY = "SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE";
+            "c.setupComplete = FALSE AND c.template = FALSE";
 
     public static final String UPCOMING_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE";
+            "c.setupComplete = FALSE AND c.template = FALSE";
 
     public static final String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE " +
             "ORDER BY m.date";
 
     @Query(LIVE_QUERY)
@@ -75,4 +75,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findAll();
 
     List<Competition> findByCodeLike(String code);
+
+    Competition findByTemplateForType_Id(Long id);
 }

@@ -211,7 +211,7 @@ Mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(7)
+    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     And the user goes back to the previous page

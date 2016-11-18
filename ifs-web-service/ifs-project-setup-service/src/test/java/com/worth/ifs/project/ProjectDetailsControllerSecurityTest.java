@@ -32,6 +32,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testUpdateFinanceContact() {
+
         assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null));
     }
 

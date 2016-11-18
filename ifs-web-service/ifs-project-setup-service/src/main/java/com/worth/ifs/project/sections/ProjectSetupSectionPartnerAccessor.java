@@ -136,7 +136,10 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        // TODO DW - implement when the ability to generate a Grant Offer Letter is enabled
+        if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()) {
+            return ACCESSIBLE;
+        }
+
         return NOT_ACCESSIBLE;
     }
 
