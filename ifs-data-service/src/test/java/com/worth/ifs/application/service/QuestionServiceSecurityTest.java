@@ -27,9 +27,7 @@ import static com.worth.ifs.application.service.QuestionServiceSecurityTest.Test
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in QuestionService interact with Spring Security
@@ -262,12 +260,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
             return null;
         }
 
-		@Override
-		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-			 return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-		}
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+            return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
 
-		@Override
+        @Override
         public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
             return null;
         }

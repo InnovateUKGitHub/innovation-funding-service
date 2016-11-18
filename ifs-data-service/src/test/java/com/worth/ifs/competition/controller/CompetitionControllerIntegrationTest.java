@@ -9,7 +9,7 @@ import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.util.fixtures.CompetitionCoFundersFixture;
+import com.worth.ifs.util.fixtures.CompetitionCoFundersResourceFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,7 +213,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition.setInnovationArea(areaId);
 
         //With one co-funder
-        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
+        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(1, competition.getId()));
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         checkCompetitionCount(3);
@@ -221,7 +221,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(1, savedCompetition.getFunders().size());
 
         // Now re-insert with 2 co-funders
-        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
+        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(2, competition.getId()));
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         savedCompetition = saveResult.getSuccessObject();
