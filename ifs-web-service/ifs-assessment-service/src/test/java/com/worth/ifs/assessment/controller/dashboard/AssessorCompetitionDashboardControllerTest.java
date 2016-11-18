@@ -2,8 +2,6 @@ package com.worth.ifs.assessment.controller.dashboard;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.builder.ProcessOutcomeBuilder;
-import com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder;
 import com.worth.ifs.assessment.model.AssessorCompetitionDashboardModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
