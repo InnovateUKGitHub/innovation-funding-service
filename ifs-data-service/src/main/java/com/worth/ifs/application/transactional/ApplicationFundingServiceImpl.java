@@ -48,47 +48,47 @@ import static java.util.Arrays.asList;
 @Service
 class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
 
-	@Autowired
-	private NotificationService notificationService;
+    @Autowired
+    private NotificationService notificationService;
 
-	@Autowired
-	private SystemNotificationSource systemNotificationSource;
-	
-	@Autowired
-	private FundingDecisionMapper fundingDecisionMapper;
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
-	@Value("${ifs.web.baseURL}")
-	private String webBaseUrl;
+    @Autowired
+    private FundingDecisionMapper fundingDecisionMapper;
 
-	enum Notifications {
-		APPLICATION_FUNDED,
-		APPLICATION_NOT_FUNDED,
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    enum Notifications {
+        APPLICATION_FUNDED,
+        APPLICATION_NOT_FUNDED,
     }
 
     private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
 
-	@Override
-	public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		return getCompetition(competitionId).andOnSuccess(competition -> {
-			List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
+    @Override
+    public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
 
-		    return saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
-		 });
-	}
-	
-	@Override
-	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+            return saveFundingDecisionData(competition, applicationsForCompetition, applicationFundingDecisions);
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> makeFundingDecisionOnCompetitionAndSuccess(competition, applicationFundingDecisions));
     }
 
-    private ServiceResult<Void> makeFundingDecisionOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions ) {
+    private ServiceResult<Void> makeFundingDecisionOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
 
         if (competition.getAssessorFeedbackDate() == null) {
             LOG.error("cannot make funding decision for a competition without an assessor feedback date set: " + competition.getId());
             return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
         }
 
-        if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+        if (!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())) {
             LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competition.getId());
             return serviceFailure(FUNDING_PANEL_DECISION_WRONG_STATUS);
         }
@@ -99,7 +99,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
         boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()) || FundingDecision.UNDECIDED.equals(applicationFundingDecisions.get(app.getId())));
 
-        if(!allPresent) {
+        if (!allPresent) {
             return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
         }
 
@@ -112,10 +112,10 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         competition.setFundersPanelEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
         return serviceSuccess();
-	}
+    }
 
-	@Override
-	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+    @Override
+    public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
         return getCompetition(competitionId).andOnSuccess(competition -> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(competition, applicationFundingDecisions));
     }
@@ -146,63 +146,63 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         } else {
             return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
         }
-	}
+    }
 
-	private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-		return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
-	}
-	
-	private ServiceResult<Void> saveFundingDecisionData(Competition competition, List<Application> applicationsForCompetition, Map<Long, FundingDecision> decision) {
-		decision.forEach((applicationId, decisionValue) -> {
-			Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
-			if(applicationForDecision.isPresent()) {
-				Application application = applicationForDecision.get();
-				FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
-				application.setFundingDecision(fundingDecision);
-			}
-		});
-		 
-		return serviceSuccess();
-	}
+    private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
+        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+    }
 
-	private Notification createFundingDecisionNotification(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
+    private ServiceResult<Void> saveFundingDecisionData(Competition competition, List<Application> applicationsForCompetition, Map<Long, FundingDecision> decision) {
+        decision.forEach((applicationId, decisionValue) -> {
+            Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
+            if (applicationForDecision.isPresent()) {
+                Application application = applicationForDecision.get();
+                FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
+                application.setFundingDecision(fundingDecision);
+            }
+        });
 
-		Map<String, Object> globalArguments = new HashMap<>();
-		globalArguments.put("competitionName", competition.getName());
-		globalArguments.put("dashboardUrl", webBaseUrl);
-		globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
+        return serviceSuccess();
+    }
 
-		List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
+    private Notification createFundingDecisionNotification(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
 
-			Long applicationId = pair.getKey();
-			Application application = applicationRepository.findOne(applicationId);
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("competitionName", competition.getName());
+        globalArguments.put("dashboardUrl", webBaseUrl);
+        globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
 
-			Map<String, Object> perNotificationTargetArguments = new HashMap<>();
-			perNotificationTargetArguments.put("applicationName", application.getName());
-			return Pair.of(pair.getValue(), perNotificationTargetArguments);
-		});
+        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
 
-		List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
-		Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
-		return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
-	}
+            Long applicationId = pair.getKey();
+            Application application = applicationRepository.findOne(applicationId);
 
-	private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationTargets(List<Long> applicationIds) {
-		return simpleMap(applicationIds, applicationId -> {
-			ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
-			return leadApplicantResult.andOnSuccessReturn(leadApplicant -> Pair.of(applicationId, new UserNotificationTarget(leadApplicant.getUser())));
-		});
-	}
+            Map<String, Object> perNotificationTargetArguments = new HashMap<>();
+            perNotificationTargetArguments.put("applicationName", application.getName());
+            return Pair.of(pair.getValue(), perNotificationTargetArguments);
+        });
 
-	private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
-		if(FUNDED.equals(applicationFundingDecision)) {
-			return applicationStatusRepository.findOne(APPROVED.getId());
-		} else {
-			return applicationStatusRepository.findOne(REJECTED.getId());
-		}
-	}
+        List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
+        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
+        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
+    }
 
-	protected void setFundingDecisionMapper(FundingDecisionMapper fundingDecisionMapper) {
-		this.fundingDecisionMapper = fundingDecisionMapper;
-	}
+    private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationTargets(List<Long> applicationIds) {
+        return simpleMap(applicationIds, applicationId -> {
+            ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+            return leadApplicantResult.andOnSuccessReturn(leadApplicant -> Pair.of(applicationId, new UserNotificationTarget(leadApplicant.getUser())));
+        });
+    }
+
+    private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
+        if (FUNDED.equals(applicationFundingDecision)) {
+            return applicationStatusRepository.findOne(APPROVED.getId());
+        } else {
+            return applicationStatusRepository.findOne(REJECTED.getId());
+        }
+    }
+
+    protected void setFundingDecisionMapper(FundingDecisionMapper fundingDecisionMapper) {
+        this.fundingDecisionMapper = fundingDecisionMapper;
+    }
 }

@@ -1,8 +1,8 @@
 package com.worth.ifs.application.builder;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
