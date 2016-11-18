@@ -21,23 +21,24 @@ import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import com.worth.ifs.assessment.transactional.*;
+import com.worth.ifs.assessment.transactional.AssessmentService;
+import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
-import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
-import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
-import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.service.GOLTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -56,6 +57,9 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
@@ -212,9 +216,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
-
-    @Mock
-    protected CompetitionParticipantService competitionParticipantServiceMock;
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
@@ -434,6 +435,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ContractMapper contractMapperMock;
+
+    @Mock
+    protected GOLTemplateRenderer rendererMock;
+
 
     @Before
     public void setupMockInjection() {
