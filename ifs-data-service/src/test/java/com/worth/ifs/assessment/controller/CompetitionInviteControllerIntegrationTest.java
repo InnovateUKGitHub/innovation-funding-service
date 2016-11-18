@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;

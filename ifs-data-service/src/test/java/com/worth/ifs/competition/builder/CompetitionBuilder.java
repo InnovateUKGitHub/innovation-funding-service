@@ -3,6 +3,7 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
@@ -11,9 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
@@ -61,6 +62,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withResubmission(Boolean resubmission) {
         return with(competition -> setField("resubmission", resubmission, competition));
+    }
+
+    public CompetitionBuilder withCompetitionType(CompetitionType competitionType) {
+        return with(competition -> setField("competitionType", competitionType, competition));
     }
 
     public CompetitionBuilder withActitiyCode(String activityCode) {

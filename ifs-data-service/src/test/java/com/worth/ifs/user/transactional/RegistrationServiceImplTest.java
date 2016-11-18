@@ -17,7 +17,6 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -47,7 +46,6 @@ import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityRe
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NO;

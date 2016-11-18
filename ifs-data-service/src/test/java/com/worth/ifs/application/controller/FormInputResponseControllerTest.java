@@ -5,7 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.resource.builders.FileEntryResourceBuilder;
+import com.worth.ifs.file.builder.FileEntryResourceBuilder;
 import com.worth.ifs.form.controller.FormInputResponseController;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;

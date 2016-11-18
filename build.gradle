@@ -10,7 +10,6 @@ allprojects {
     targetCompatibility = 1.8
 }
 
-
 subprojects {
     apply plugin: 'spring-boot'
     apply plugin: 'com.bluepapa32.watch'
@@ -79,7 +78,6 @@ buildscript {
     }
 }
 
-
 apply plugin: "org.sonarqube"
 
 sonarqube {
@@ -92,7 +90,6 @@ sonarqube {
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
-
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'

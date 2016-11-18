@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.worth.ifs.invite.controller.InviteProjectController.PROJECT_INVITE_BASE_URL;
+import static com.worth.ifs.invite.resource.InviteProjectConstants.*;
 
 /**
  * Project Invite controller to handle RESTful service related to Project Invite
@@ -23,13 +23,6 @@ import static com.worth.ifs.invite.controller.InviteProjectController.PROJECT_IN
 public class InviteProjectController {
 
     private static final Log LOG = LogFactory.getLog(InviteProjectController.class);
-    public static final String PROJECT_INVITE_BASE_URL = "/projectinvite";
-    public static final String PROJECT_INVITE_SAVE = "/saveInvite";
-    public static final String CHECK_EXISTING_USER_URL = "/checkExistingUser/";
-    public static final String GET_USER_BY_HASH_MAPPING = "/getUser/";
-    public static final String GET_INVITE_BY_HASH = "/getProjectInviteByHash/";
-    public static final String ACCEPT_INVITE = "/acceptInvite/";
-    public static final String GET_PROJECT_INVITE_LIST = "/getInvitesByProjectId/";
 
     @Autowired
     private InviteProjectService inviteProjectService;
