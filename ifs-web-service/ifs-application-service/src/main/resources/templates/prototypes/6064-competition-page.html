@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to all competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -24,10 +24,12 @@
 
 	<p>Funding up to £50,000 is available to any consortiums for research and development projects to stimulate future products, services and industries.</p>
 
-	<p>
-		Competition opens: <strong>12:00pm, Monday 16 January 2017</strong><br />
-		Competition closes: <strong>12:00pm, Monday 25 March 2017</strong><br />
+	<ul class="list">
+		<li><strong>Competition opens:</strong> 12:00pm, Monday 16 January 2017</li>
+		<li><strong>Competition closes:</strong> 12:00pm, Monday 25 March 2017</li>
+	</ul>
 
+	<p>
 		<a href="#" class="button extra-margin">Start or continue your application</a>
 	</p>
 	<ul class="inline-nav hide-mobile">
