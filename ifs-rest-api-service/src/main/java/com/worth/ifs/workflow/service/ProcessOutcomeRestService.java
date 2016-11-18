@@ -1,7 +1,6 @@
 package com.worth.ifs.workflow.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 
 public interface ProcessOutcomeRestService {
