@@ -22,6 +22,7 @@ import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.competition.transactional.MilestoneService;
 import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -110,6 +111,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionRepository questionRepository;
     protected FormInputRepository formInputRepository;
     protected FileEntryRepository fileEntryRepository;
+    protected ApplicationFinanceRepository applicationFinanceRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -156,6 +158,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.questionRepository = serviceLocator.getBean(QuestionRepository.class);
         this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         this.fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
+        this.applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
     }
 
     @Override

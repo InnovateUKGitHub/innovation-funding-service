@@ -523,14 +523,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withDirectlyAllocatedOtherCosts(bd("66")).
                         withIndirectCosts(bd("77")).
                         withExceptionsStaff(bd("88")).
-                        withExceptionsOtherCosts(bd("99")));
+                        withExceptionsOtherCosts(bd("99")).
+                        withUploadedJesForm());
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances) {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withTsbReference("My REF"));
+                withAcademicCosts(costs -> costs.withTsbReference("My REF").withUploadedJesForm());
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
