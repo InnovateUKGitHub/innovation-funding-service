@@ -40,7 +40,7 @@
                     <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
                     <dl class="grid-row extra-margin">
                         <th:block th:each="score : ${question.guidanceRows}">
-                            <dt class="column-quarter" th:text="${score.subject}"></dt>
+                            <dt class="column-quarter" th:text="${score.subject.replace(',', '-')}"></dt>
                             <dd class="column-three-quarters" th:text="${score.justification}"></dd>
                         </th:block>
                     </dl>
