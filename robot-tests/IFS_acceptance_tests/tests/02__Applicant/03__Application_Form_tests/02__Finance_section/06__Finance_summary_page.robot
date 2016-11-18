@@ -17,9 +17,9 @@ Default Tags
 Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
-${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/2/form/section/7
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/2/form/section/8
+${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -108,24 +108,24 @@ Alert should not show If research participation is below the maximum level
 
 *** Keywords ***
 the finance Project cost breakdown calculations should be correct
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £202,169
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £100,837
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £495
 
 the finance summary calculations should be correct
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £202,169
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    30%
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    30%
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £58,529
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £2,468
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £141,172
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
     the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    8000000
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
     Execute Javascript    jQuery('form').attr('data-test','true');
 

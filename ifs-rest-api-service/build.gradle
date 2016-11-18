@@ -1,0 +1,58 @@
+
+if (project.hasProperty("profile")) {
+    def targetBuildFile = "${project.profile}-build.gradle"
+    if (file(targetBuildFile).exists()) {
+        apply from: targetBuildFile
+    }
+}
+
+jar {
+    baseName = 'ifs-rest-api-service'
+}
+
+configurations {
+    providedRuntime
+    clientCompile
+}
+
+ext {
+    javaLanguageLevel = 1.8
+    sourceCompatibility = 1.8
+}
+
+bootRepackage {
+    enabled = false
+}
+
+// Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
+ext['spring-restdocs.version']='1.1.2.RELEASE'
+
+dependencies {
+    compile project(':ifs-commons')
+    testCompile project(':ifs-commons').sourceSets.test.output
+}
+
+task client(type: Jar) {
+    from(sourceSets.main.output) {
+        exclude "com/worth/ifs/Application.class"
+    }
+}
+
+//noinspection GroovyMissingReturnStatement
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn build
+}
