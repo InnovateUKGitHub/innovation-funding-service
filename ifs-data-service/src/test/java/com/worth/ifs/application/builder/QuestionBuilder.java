@@ -1,20 +1,18 @@
 package com.worth.ifs.application.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.*;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.competition.domain.*;
+import com.worth.ifs.finance.domain.*;
+import com.worth.ifs.form.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {

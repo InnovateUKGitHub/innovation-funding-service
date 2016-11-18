@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.application.resource.GuidanceRowResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.GuidanceRowResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;

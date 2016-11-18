@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.security;
 
 import com.worth.ifs.*;
-import com.worth.ifs.application.resource.*;
 import com.worth.ifs.commons.service.*;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.transactional.*;
 import org.junit.Before;
 import org.junit.Test;

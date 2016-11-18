@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.*;
+import com.worth.ifs.competition.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**

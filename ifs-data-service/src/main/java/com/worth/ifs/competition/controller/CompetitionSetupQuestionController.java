@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.controller;
 
-import com.worth.ifs.application.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competition.transactional.CompetitionSetupQuestionService;
-import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.*;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.transactional.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

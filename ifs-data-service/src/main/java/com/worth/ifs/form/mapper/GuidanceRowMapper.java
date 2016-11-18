@@ -1,9 +1,8 @@
 package com.worth.ifs.form.mapper;
 
-import com.worth.ifs.application.domain.GuidanceRow;
-import com.worth.ifs.application.resource.GuidanceRowResource;
-import com.worth.ifs.commons.mapper.BaseMapper;
-import com.worth.ifs.commons.mapper.GlobalMapperConfig;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.commons.mapper.*;
+import com.worth.ifs.competition.resource.*;
 import org.mapstruct.Mapper;
 
 @Mapper(

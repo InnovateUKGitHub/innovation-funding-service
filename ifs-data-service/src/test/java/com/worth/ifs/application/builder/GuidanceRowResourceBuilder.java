@@ -1,12 +1,13 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.*;
-import com.worth.ifs.application.resource.*;
+import com.worth.ifs.competition.resource.*;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
 public class GuidanceRowResourceBuilder extends BaseBuilder<GuidanceRowResource, GuidanceRowResourceBuilder> {

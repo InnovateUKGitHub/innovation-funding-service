@@ -4,6 +4,8 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputScope;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 /**
@@ -43,7 +45,7 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
     }
 
     public FormInputBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
     public FormInputBuilder withWordCount(Integer... wordCounts) {
