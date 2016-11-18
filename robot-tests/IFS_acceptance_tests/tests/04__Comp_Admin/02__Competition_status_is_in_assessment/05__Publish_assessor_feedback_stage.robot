@@ -13,7 +13,7 @@ ${assessor_feedback_competition_url}    ${server}/management/competition/3
 ${successful_application_overview}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
 ${project_setup_status_view}    ${server}/project-setup-management/competition/3/status
-${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?    
+${dialogue_warning_message}    This will inform applicants that assessor feedback is available. 
 
 *** Test Cases ***
 The publish feedback should be disabled
