@@ -2,11 +2,9 @@ package com.worth.ifs.assessment.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.CompetitionParticipantController;
-import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -14,10 +12,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.CompetitionParticipantResourceDocs.competitionParticipantResourceBuilder;
-import static com.worth.ifs.documentation.CompetitionParticipantResourceDocs.competitionParticipantResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;

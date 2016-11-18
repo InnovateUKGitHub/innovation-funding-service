@@ -84,9 +84,12 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         assertSame(expected, found.get(0));
         assertEquals(1L, found.get(0).getSubmittedAssessments());
         assertEquals(2L, found.get(0).getTotalAssessments());
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, competitionParticipantMapperMock, participantStatusMapperMock);
+        InOrder inOrder = inOrder(competitionParticipantRoleMapperMock, participantStatusMapperMock, competitionParticipantRepositoryMock, competitionParticipantMapperMock, assessmentRepositoryMock);
+        inOrder.verify(competitionParticipantRoleMapperMock, calls(1)).mapToDomain(any(CompetitionParticipantRoleResource.class));
+        inOrder.verify(participantStatusMapperMock, calls(1)).mapToDomain(any(ParticipantStatusResource.class));
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByUserIdAndRoleAndStatus(1L, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.ACCEPTED);
         inOrder.verify(competitionParticipantMapperMock, calls(1)).mapToResource(any(CompetitionParticipant.class));
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId,competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
+import com.google.common.collect.Sets;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentStates;
@@ -18,6 +19,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -71,7 +73,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments) {
-        List<AssessmentStates> allowedAssessmentStates = asList(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        Set<AssessmentStates> allowedAssessmentStates = Sets.newHashSet(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getActivityState())).count();
     }
 }
