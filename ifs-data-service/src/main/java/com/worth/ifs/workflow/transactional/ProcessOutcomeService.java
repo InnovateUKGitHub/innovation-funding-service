@@ -11,8 +11,8 @@ public interface ProcessOutcomeService {
     ServiceResult<ProcessOutcomeResource> findOne(Long id);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ProcessOutcomeResource> findLatestByProcess(Long assessmentId);
+    ServiceResult<ProcessOutcomeResource> findLatestByProcess(Long processId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ProcessOutcomeResource> findLatestByProcessAndOutcomeType(Long assessmentId, String outcomeType);
+    ServiceResult<ProcessOutcomeResource> findLatestByProcessAndOutcomeType(Long processId, String outcomeType);
 }

@@ -27,12 +27,12 @@ public class ProcessOutcomeServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<ProcessOutcomeResource> findLatestByProcess(Long assessmentId) {
-        return find(repository.findTopByProcessIdOrderByIdDesc(assessmentId), notFoundError(ProcessOutcome.class, assessmentId)).andOnSuccessReturn(processOutcomeMapper::mapToResource);
+    public ServiceResult<ProcessOutcomeResource> findLatestByProcess(Long processId) {
+        return find(repository.findTopByProcessIdOrderByIdDesc(processId), notFoundError(ProcessOutcome.class, processId)).andOnSuccessReturn(processOutcomeMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<ProcessOutcomeResource> findLatestByProcessAndOutcomeType(Long assessmentId, String outcomeType) {
-        return find(repository.findTopByProcessIdAndOutcomeTypeOrderByIdDesc(assessmentId, outcomeType), notFoundError(ProcessOutcome.class, assessmentId)).andOnSuccessReturn(processOutcomeMapper::mapToResource);
+    public ServiceResult<ProcessOutcomeResource> findLatestByProcessAndOutcomeType(Long processId, String outcomeType) {
+        return find(repository.findTopByProcessIdAndOutcomeTypeOrderByIdDesc(processId, outcomeType), notFoundError(ProcessOutcome.class, processId)).andOnSuccessReturn(processOutcomeMapper::mapToResource);
     }
 }

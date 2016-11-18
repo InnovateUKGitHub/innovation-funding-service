@@ -88,7 +88,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         ApplicationResource application = applicationService.getById(assessment.getApplication());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        Boolean recommended = getRecommended(assessment);
+        boolean recommended = getRecommended(assessment);
         return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
                 assessment.getId(),
                 application.getApplicationDisplayName(),
@@ -104,14 +104,14 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .findFirst();
     }
 
-    private Boolean getRecommended(AssessmentResource assessmentResource) {
+    private boolean getRecommended(AssessmentResource assessmentResource) {
         switch (assessmentResource.getAssessmentState()) {
             case READY_TO_SUBMIT:
             case SUBMITTED:
                 ProcessOutcomeResource outcome = processOutcomeService.getByProcessIdAndOutcomeType(assessmentResource.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
-                return Optional.ofNullable(outcome.getOutcome()).map(BooleanUtils::toBoolean).orElse(null);
+                return BooleanUtils.toBoolean(outcome.getOutcome());
             default:
-                return null;
+                return false;
         }
     }
 

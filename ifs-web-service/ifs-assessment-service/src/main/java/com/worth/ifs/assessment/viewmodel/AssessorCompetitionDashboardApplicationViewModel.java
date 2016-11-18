@@ -16,9 +16,9 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private String displayLabel;
     private String leadOrganisation;
     private AssessmentStates state;
-    private Boolean recommended;
+    private boolean recommended;
 
-    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, Boolean recommended) {
+    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.displayLabel = displayLabel;
@@ -91,11 +91,11 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return state == this.state;
     }
 
-    public Boolean getRecommended() {
+    public boolean getRecommended() {
         return recommended;
     }
 
-    public void setRecommended(Boolean recommended) {
+    public void setRecommended(boolean recommended) {
         this.recommended = recommended;
     }
 
