@@ -64,6 +64,10 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
+ */
+//@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 public class GenerateTestData extends BaseIntegrationTest {
 

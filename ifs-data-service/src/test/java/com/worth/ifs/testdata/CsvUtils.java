@@ -29,7 +29,8 @@ import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * TODO DW - document this class
+ * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
+ * test data from it
  */
 class CsvUtils {
 

@@ -69,7 +69,7 @@ ${PROJECT_SETUP_APPLICATION_1_PROJECT}    3
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    steve.smith@empire.com
-${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    worth.email.test+changepsw@gmail.com
+${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    worth.email.test+projectsetuppm@gmail.com
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    jessica.doe@ludlow.co.uk
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}    pete.tom@egg.com
 
@@ -147,7 +147,7 @@ ${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SE
 ${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${internal_spend_profile_approval}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/spend-profile/approval
+${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request

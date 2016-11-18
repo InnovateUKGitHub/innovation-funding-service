@@ -19,7 +19,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-
+/**
+ * Generates data for an Assessor on the platform
+ */
 public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorDataBuilder> {
 
     public AssessorDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, String ethnicity, Gender gender, Disability disability, String hash) {

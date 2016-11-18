@@ -22,7 +22,9 @@ import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates Indisutrial Finances for an Organisation on an Application
+ */
 public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostData, IndustrialCostDataBuilder> {
 
     public IndustrialCostDataBuilder withApplicationFinance(ApplicationFinanceResource applicationFinance) {

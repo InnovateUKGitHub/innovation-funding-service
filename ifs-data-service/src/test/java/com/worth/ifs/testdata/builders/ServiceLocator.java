@@ -3,7 +3,7 @@ package com.worth.ifs.testdata.builders;
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
- * TODO DW - document this class
+ * A helper class to provide a one-stop lookup of services for components not built by Spring
  */
 public class ServiceLocator {
 

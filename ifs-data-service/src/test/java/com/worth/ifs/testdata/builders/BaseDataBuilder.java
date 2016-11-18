@@ -58,7 +58,8 @@ import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * TODO DW - document this class
+ * Base Builder for persistent data builders.  Wraps each build step in a transaction.  Provides a location for
+ * service lookup.
  */
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 

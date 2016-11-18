@@ -16,7 +16,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates Assessments for Applications so that Assessors may start assessing them
+ */
 public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataBuilder> {
 
     public AssessmentDataBuilder withAssessmentData(String assessorEmail, String applicationName, AssessmentStates state) {

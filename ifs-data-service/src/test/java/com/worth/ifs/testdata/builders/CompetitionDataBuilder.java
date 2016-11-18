@@ -30,7 +30,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-
+/**
+ * Generates data from Competitions, including any Applications taking part in this Competition
+ */
 public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, CompetitionDataBuilder> {
 
     public CompetitionDataBuilder createCompetition() {
@@ -101,23 +103,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
                     getSuccessObjectOrThrowException();
 
-//            // TODO DW - temporary fix for pulling over section priorities and assessment display flags
-//            testService.doWithinTransaction(() -> {
-//                List<Section> newSections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
-//                newSections.forEach(s -> {
-//                    Section originalSection = sectionRepository.findByNameAndCompetitionId(s.getName(), 1L);
-//                    s.setPriority(originalSection.getPriority());
-//                    s.setDisplayInAssessmentApplicationSummary(originalSection.isDisplayInAssessmentApplicationSummary());
-//                    sectionRepository.save(s);
-//                });
-//            });
-//
-//          // TODO DW - temporary fix for pulling over question assessment details
+//          // TODO DW - temporary fix for copying over Assessor Form Inputs (currently not supported in Comp Setup services)
             {
                 List<Question> newQuestions = questionRepository.findByCompetitionId(competition.getId());
                 newQuestions.forEach(q -> {
                     Question originalQuestion = questionRepository.findByNameAndCompetitionIdAndSectionName(q.getName(), 1L, q.getSection().getName());
-//                    q.setAssessorMaximumScore(originalQuestion.getAssessorMaximumScore());
                     originalQuestion.getFormInputs().forEach(fi -> {
                         if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
                             FormInput newFormInput = new FormInput();
@@ -138,7 +128,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     });
                     q.setMultipleStatuses(originalQuestion.getMultipleStatuses());
                     q.setType(originalQuestion.getType());
-//                    q.setPriority(originalQuestion.getPriority());
                     questionRepository.save(q);
                 });
             }

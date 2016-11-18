@@ -22,7 +22,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
 /**
- * TODO DW - document this class
+ * Base builder for generating data for non-active and active registered users
  */
 public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends BaseDataBuilder<T, S> {
 

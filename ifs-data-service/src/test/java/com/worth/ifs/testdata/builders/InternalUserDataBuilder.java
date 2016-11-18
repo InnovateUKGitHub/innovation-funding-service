@@ -13,6 +13,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Generates internal users (Comp Admins, Project Finance, Comp Execs and Comp Technologists)
+ */
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
     @Override

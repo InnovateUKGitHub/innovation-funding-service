@@ -4,7 +4,8 @@ import javax.transaction.Transactional;
 import java.util.function.Supplier;
 
 /**
- * TODO DW - document this class
+ * A helper service to open up transaction boundaries for the purposes of code that relies on a single transaction in
+ * order to work
  */
 public interface TestService {
 

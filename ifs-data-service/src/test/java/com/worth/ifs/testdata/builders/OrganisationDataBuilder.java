@@ -13,7 +13,9 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Creates Organisations
+ */
 public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, OrganisationDataBuilder> {
 
     public OrganisationDataBuilder createOrganisation(String organisationName,

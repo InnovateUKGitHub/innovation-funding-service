@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import java.util.function.Supplier;
 
-/**
- * TODO DW - document this class
- */
 @Service
 public class TestServiceImpl implements TestService {
 

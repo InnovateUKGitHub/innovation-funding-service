@@ -28,7 +28,9 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates an Application for a Competition.  Additionally generates finances for each Organisationn on the Application
+ */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
 
     public ApplicationDataBuilder withCompetition(CompetitionResource competition) {

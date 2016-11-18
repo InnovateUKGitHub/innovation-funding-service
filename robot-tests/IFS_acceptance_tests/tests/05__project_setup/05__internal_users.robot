@@ -104,7 +104,7 @@ Project Finance can see the progress of partners bank details
     When the user clicks the button/link            link=Empire Ltd
     Then the user should see the text in the page   Empire Ltd - Account details
     And the user should see the text in the page    Elmo Chenault
-    And the user should see the element             jQuery=a:contains("${test_mailbox_one}+changepsw@gmail.com")
+    And the user should see the element             jQuery=a:contains("${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}")
     And the user should see the text in the page    7789123456
     #TODO for Jessica and Pete
 

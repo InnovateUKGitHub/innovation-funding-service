@@ -1,2 +1,10 @@
-update question set priority = 9 where name = 'What will your project cost?';
-update question set priority = 10 where name = 'How does financial support from Innovate UK and its funding partners add value?';
+update question set priority = 5 where question_number = '1';
+update question set priority = 6 where question_number = '2';
+update question set priority = 7 where question_number = '3';
+update question set priority = 8 where question_number = '4';
+update question set priority = 9 where question_number = '5';
+update question set priority = 10 where question_number = '6';
+update question set priority = 11 where question_number = '7';
+update question set priority = 12 where question_number = '8';
+update question set priority = 13 where question_number = '9';
+update question set priority = 14 where question_number = '10';

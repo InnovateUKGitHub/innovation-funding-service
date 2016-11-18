@@ -17,6 +17,9 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.emptyList;
 
+/**
+ * Handles applicant responses to Questions
+ */
 public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResponseData, ResponseDataBuilder> {
 
     public ResponseDataBuilder withApplication(ApplicationResource application) {

@@ -17,7 +17,9 @@ import static com.worth.ifs.testdata.builders.AcademicCostDataBuilder.newAcademi
 import static com.worth.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates Application Finance data for an Organisation on an Application
+ */
 public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFinanceData, ApplicationFinanceDataBuilder> {
 
     public ApplicationFinanceDataBuilder withApplication(ApplicationResource application) {

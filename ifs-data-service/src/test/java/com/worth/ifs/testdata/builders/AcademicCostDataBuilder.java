@@ -14,7 +14,9 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates Academic Finances for an Organisation on an Application
+ */
 public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, AcademicCostDataBuilder> {
 
     public AcademicCostDataBuilder withApplicationFinance(ApplicationFinanceResource applicationFinance) {

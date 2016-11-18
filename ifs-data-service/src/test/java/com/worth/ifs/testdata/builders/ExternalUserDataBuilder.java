@@ -8,6 +8,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Generates applicant users via registration
+ */
 public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserData, ExternalUserDataBuilder> {
 
     public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {

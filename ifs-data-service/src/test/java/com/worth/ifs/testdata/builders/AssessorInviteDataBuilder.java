@@ -12,7 +12,9 @@ import java.util.function.BiConsumer;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static java.util.Collections.emptyList;
 
-
+/**
+ * Generates assessor invites and gives the ability to accept them
+ */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
 
     public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash) {
