@@ -6,8 +6,8 @@ import com.worth.ifs.competition.resource.AssessorCountOptionResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class AssessorCountOptionResourceBuilder extends BaseBuilder<AssessorCountOptionResource, AssessorCountOptionResourceBuilder> {
@@ -31,22 +31,22 @@ public class AssessorCountOptionResourceBuilder extends BaseBuilder<AssessorCoun
     }
 
     public AssessorCountOptionResourceBuilder withId(Long... ids) {
-        return withArray((id, object) -> setField("id", id, object), ids);
+        return withArray((id, object) ->setField("id", id, object), ids);
     }
 
     public AssessorCountOptionResourceBuilder withAssessorOptionName(String... optionNames) {
-        return withArray((streamName, object) -> setField("optionName", streamName, object), optionNames);
+        return withArray((streamName, object) ->setField("optionName", streamName, object), optionNames);
     }
 
     public AssessorCountOptionResourceBuilder withCompetitionType(Long... competitionType) {
-        return withArray((streamName, object) -> setField("competitionType", streamName, object), competitionType);
+        return withArray((streamName, object) ->setField("competitionType", streamName, object), competitionType);
     }
 
     public AssessorCountOptionResourceBuilder withAssessorOptionValue(Integer... optionValues) {
-        return withArray((streamName, object) -> setField("optionValue", streamName, object), optionValues);
+        return withArray((streamName, object) ->setField("optionValue", streamName, object), optionValues);
     }
 
     public AssessorCountOptionResourceBuilder withDefaultOption(Boolean... defaultOptions) {
-        return withArray((streamName, object) -> setField("defaultOption", streamName, object), defaultOptions);
+        return withArray((streamName, object) ->setField("defaultOption", streamName, object), defaultOptions);
     }
 }
