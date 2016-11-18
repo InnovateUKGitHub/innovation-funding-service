@@ -117,7 +117,8 @@
                                      th:id="${'row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+'-'+status.index}"
                                      th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                      type="number"
-                                     min="0" />
+                                     min="0"
+                                     required="required" />
                             </td>
                             <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                 <input th:value="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"
@@ -167,7 +168,8 @@
                                        th:id="${'row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+'-'+status.index}"
                                        th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                        type="number"
-                                       min="0" />
+                                       min="0"
+                                       required="required" />
                               </td>
                               <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                   <input readonly="readonly"
