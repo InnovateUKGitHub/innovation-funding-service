@@ -4,7 +4,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Academic costs
  */
 public class AcademicCostData {
     private ApplicationFinanceResource applicationFinance;

@@ -5,7 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.UserResource;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Applications
  */
 public class ApplicationData {
 

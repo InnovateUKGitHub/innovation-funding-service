@@ -3,7 +3,7 @@ package com.worth.ifs.testdata.builders.data;
 import com.worth.ifs.user.resource.UserRoleType;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Internal Users (e.g. comp admins)
  */
 public class InternalUserData extends BaseUserData {
 

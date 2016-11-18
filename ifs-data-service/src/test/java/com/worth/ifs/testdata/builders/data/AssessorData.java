@@ -1,7 +1,7 @@
 package com.worth.ifs.testdata.builders.data;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Assessor Users
  */
 public class AssessorData extends BaseUserData {
 
