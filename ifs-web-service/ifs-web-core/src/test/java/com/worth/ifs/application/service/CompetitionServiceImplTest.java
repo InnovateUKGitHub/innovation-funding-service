@@ -2,7 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.competition.builder.AssessorCountOptionBuilder;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.AssessorCountOptionsRestService;
 import com.worth.ifs.competition.service.AssessorCountOptionsRestService;
