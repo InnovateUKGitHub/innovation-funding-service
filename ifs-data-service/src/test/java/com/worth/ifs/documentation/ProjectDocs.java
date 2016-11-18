@@ -6,7 +6,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;

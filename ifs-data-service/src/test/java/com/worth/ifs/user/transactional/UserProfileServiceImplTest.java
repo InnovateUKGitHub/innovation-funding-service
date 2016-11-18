@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;

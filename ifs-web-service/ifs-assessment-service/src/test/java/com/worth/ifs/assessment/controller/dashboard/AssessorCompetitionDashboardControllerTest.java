@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.form.dashboard.AssessorCompetitionDashboardAssessmentForm;
 import com.worth.ifs.assessment.model.AssessorCompetitionDashboardModelPopulator;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
@@ -11,6 +12,7 @@ import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.*;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -27,6 +29,7 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -35,9 +38,9 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -66,8 +69,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
         List<AssessmentResource> assessments = newAssessmentResource()
@@ -77,6 +79,11 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withActivityState(PENDING, ACCEPTED, READY_TO_SUBMIT, SUBMITTED)
                 .build(4);
 
+        List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
+                .withId(1L, 2L)
+                .withOutcome(null, Boolean.toString(false))
+                .build(2);
+
         RoleResource role = buildLeadApplicantRole();
         List<OrganisationResource> organisations = buildTestOrganisations();
         List<ProcessRoleResource> participants = newProcessRoleResource()
@@ -85,13 +92,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(2).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(0));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(3).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(1));
+
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -100,27 +109,31 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
             inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
+                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            } else {
+                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            }
         });
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState())
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState(), false)
         );
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedOutstanding = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState()),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState()),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState())
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState(), false)
         );
 
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
@@ -139,8 +152,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard_submitNotVisible() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
         List<AssessmentResource> assessments = newAssessmentResource()
@@ -148,7 +160,13 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())
                 .withActivityState(PENDING, ACCEPTED, OPEN, SUBMITTED)
+                .withProcessOutcome(null, emptyList(), asList(0L, 1L), singletonList(2L))
                 .build(4);
+
+        List<ProcessOutcomeResource> processOutcomes = newProcessOutcomeResource()
+                .withId(1L, 2L)
+                .withOutcome(null, Boolean.toString(true))
+                .build(2);
 
         RoleResource role = buildLeadApplicantRole();
         List<OrganisationResource> organisations = buildTestOrganisations();
@@ -158,13 +176,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(2).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(0));
+        when(processOutcomeService.getByProcessIdAndOutcomeType(assessments.get(3).getId(), AssessmentOutcomes.FUNDING_DECISION.getType())).thenReturn(processOutcomes.get(1));
+
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -173,27 +193,31 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
             inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
+                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            } else {
+                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            }
         });
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState())
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState(), true)
         );
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedOutstanding = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState()),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState()),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState())
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState(), false)
         );
 
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
@@ -212,11 +236,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard_empty() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(emptyList());
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -225,9 +247,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, userService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(userService).findById(leadTechnologist.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -250,11 +271,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     @Test
     public void submitAssessments() throws Exception {
         List<Long> assessmentIds = asList(1L, 2L);
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
@@ -276,11 +295,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
     @Test
     public void submitAssessments_invalid() throws Exception {
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.submitAssessments(emptyList())).thenReturn(serviceFailure(new Error("TEST", null)));
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
@@ -305,11 +322,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     @Test
     public void submitAssessments_serviceFailure() throws Exception {
         List<Long> assessmentIds = asList(1L, 2L);
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(userService.findById(leadTechnologist.getId())).thenReturn(leadTechnologist);
         when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceFailure(new Error("Test Error", null)));
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
@@ -334,21 +349,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertEquals("Test Error", bindingResult.getGlobalError().getCode());
     }
 
-    private UserResource buildTestLeadTechnologist() {
-        return newUserResource()
-                .withFirstName("Competition")
-                .withLastName("Technologist")
-                .build();
-    }
-
-    private CompetitionResource buildTestCompetition(Long leadTechnologistId) {
+    private CompetitionResource buildTestCompetition() {
         LocalDateTime assessorAcceptsDate = LocalDateTime.now().minusDays(2);
         LocalDateTime assessorDeadlineDate = LocalDateTime.now().plusDays(4);
 
         return newCompetitionResource()
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
-                .withLeadTechnologist(leadTechnologistId)
+                .withLeadTechnologist(2L)
+                .withLeadTechnologistName("Competition Technologist")
                 .withAssessorAcceptsDate(assessorAcceptsDate)
                 .withAssessorDeadlineDate(assessorDeadlineDate)
                 .build();

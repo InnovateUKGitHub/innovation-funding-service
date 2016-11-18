@@ -4,6 +4,7 @@ import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
@@ -13,7 +14,9 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.workflow.ProcessOutcomeService;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -51,24 +56,38 @@ public class AssessorCompetitionDashboardModelPopulator {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private UserService userService;
+    private ProcessOutcomeService processOutcomeService;
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        String leadTechnologist = getLeadTechnologist(competition);
         LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
 
-        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId);
+        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
+                getApplicationsPartitionedBySubmitted(userId, competitionId);
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
-        boolean submitVisible = outstanding.stream().filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit).findAny().isPresent();
 
-        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline, submitted, outstanding, submitVisible);
+        boolean submitVisible = outstanding.stream()
+                .filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit)
+                .findAny()
+                .isPresent();
+
+        return new AssessorCompetitionDashboardViewModel(
+                competition.getName(),
+                competition.getDescription(),
+                competition.getLeadTechnologistName(),
+                acceptDeadline,
+                submitDeadline,
+                submitted,
+                outstanding,
+                submitVisible
+        );
     }
 
     private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
-        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+        return assessmentService.getByUserAndCompetition(userId, competitionId).stream()
+                .collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
     }
 
     private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {
@@ -79,11 +98,13 @@ public class AssessorCompetitionDashboardModelPopulator {
         ApplicationResource application = applicationService.getById(assessment.getApplication());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        boolean recommended = getRecommended(assessment);
         return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
                 assessment.getId(),
                 application.getApplicationDisplayName(),
                 leadOrganisation.get().getName(),
-                assessment.getAssessmentState());
+                assessment.getAssessmentState(),
+                recommended);
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
@@ -93,7 +114,14 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .findFirst();
     }
 
-    private String getLeadTechnologist(CompetitionResource competition) {
-        return Optional.ofNullable(competition.getLeadTechnologist()).map(leadTechnologistId -> userService.findById(leadTechnologistId).getName()).orElse(null);
+    private boolean getRecommended(AssessmentResource assessmentResource) {
+        switch (assessmentResource.getAssessmentState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                ProcessOutcomeResource outcome = processOutcomeService.getByProcessIdAndOutcomeType(assessmentResource.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                return BooleanUtils.toBoolean(outcome.getOutcome());
+            default:
+                return false;
+        }
     }
 }

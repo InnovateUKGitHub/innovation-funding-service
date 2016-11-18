@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +57,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/assessment/{id}", assessmentId))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
@@ -73,6 +75,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
