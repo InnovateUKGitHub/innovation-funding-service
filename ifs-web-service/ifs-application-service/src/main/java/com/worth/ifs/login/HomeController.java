@@ -3,30 +3,28 @@ package com.worth.ifs.login;
 import com.google.common.collect.Sets;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.login.form.RoleSelectionForm;
+import com.worth.ifs.login.model.RoleSelectionModelPopulator;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
-
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -46,19 +44,18 @@ public class HomeController {
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
+    @Autowired
+    RoleSelectionModelPopulator roleSelectionModelPopulator;
+
     public static String getRedirectUrlForUser(UserResource user) {
 
-        String roleUrl = "";
-
-        if (!user.getRoles().isEmpty()) {
-            roleUrl = user.getRoles().get(0).getUrl();
-        }
+        String roleUrl = !user.getRoles().isEmpty() ? user.getRoles().get(0).getUrl() : "";
 
         return format("redirect:/%s", hasText(roleUrl) ? roleUrl : "dashboard");
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (unauthenticated(authentication)) {
@@ -67,14 +64,15 @@ public class HomeController {
 
         UserResource user = (UserResource) authentication.getDetails();
         if (isAssessorAndApplicant(user)) {
-            return doViewRoleSelection();
+            return doViewRoleSelection(model);
         }
 
         return getRedirectUrlForUser(user);
     }
 
     @RequestMapping(value = "/role", method = RequestMethod.GET)
-    public String selectRole() {
+    public String selectRole(Model model,
+                             @ModelAttribute("form") RoleSelectionForm form) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
@@ -82,6 +80,7 @@ public class HomeController {
             return "redirect:/";
         }
 
+        //model.addAttribute("model", roleSelectionModelPopulator.populateModel());
         return "/roleSelection";
     }
 
@@ -92,7 +91,7 @@ public class HomeController {
                               BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewRoleSelection();
+        Supplier<String> failureView = () -> doViewRoleSelection(model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
@@ -101,7 +100,8 @@ public class HomeController {
         });
     }
 
-    private String doViewRoleSelection() {
+    private String doViewRoleSelection(Model model) {
+        model.addAttribute("model", roleSelectionModelPopulator.populateModel());
         return "/role";
     }
 
@@ -117,7 +117,7 @@ public class HomeController {
     }
 
     private boolean isAssessorAndApplicant(UserResource user) {
-        Set<UserRoleType> acceptedRoles = Sets.newHashSet(APPLICANT, ASSESSOR);
+        Set<UserRoleType> acceptedRoles = Sets.newHashSet(ASSESSOR, APPLICANT);
         List<UserRoleType> userRoles = user.getRoles().stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList());
         return userRoles.containsAll(acceptedRoles);
     }

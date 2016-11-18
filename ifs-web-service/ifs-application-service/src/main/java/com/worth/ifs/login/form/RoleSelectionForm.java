@@ -1,12 +1,16 @@
-package com.worth.ifs.login;
+package com.worth.ifs.login.form;
 
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotNull;
 
-public class RoleSelectionForm {
+/**
+ * Form field model for the selection of either the Assessor or Applicant roles.
+ */
+public class RoleSelectionForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.standard.role.required}")
     private UserRoleType selectedRole;
