@@ -93,7 +93,7 @@ Lead partner can view both documents
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=What's the status of each of my partners?
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -118,7 +118,7 @@ Non-lead partner can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
@@ -142,7 +142,7 @@ PM can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can remove the second document
@@ -188,13 +188,13 @@ PM can upload both documents
     When the user uploads to the exploitation plan question    ${valid_pdf}
     Then the user should not see an error in the page
 
-Status in the dashboard remains pending after uploads
+Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
     [Documentation]    INFUND-3011
