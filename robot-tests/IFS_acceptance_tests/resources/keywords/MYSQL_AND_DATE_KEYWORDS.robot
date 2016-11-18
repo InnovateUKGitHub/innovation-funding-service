@@ -12,7 +12,7 @@ Resource          User_actions.robot
 the assessment start period changes in the db in the past
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='30';
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE id IN (9, 16, 101);
     And reload page
 
 the calculation of the remaining days should be correct
