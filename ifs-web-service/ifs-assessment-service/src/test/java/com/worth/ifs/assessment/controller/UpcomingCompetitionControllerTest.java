@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.model.UpcomingCompetitionModelPopulator;
+import com.worth.ifs.assessment.viewmodel.UpcomingCompetitionViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+
+import java.time.LocalDateTime;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -36,14 +39,25 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSummary_loggedIn() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(1L)
+                .withName("name")
+                .withDescription("description")
+                .withAssessorAcceptsDate(dateTime)
+                .withAssessorDeadlineDate(dateTime)
+                .build();
+
+        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel("name", "description", dateTime, dateTime);
 
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
-        .andExpect(status().isOk());
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(status().isOk());
 
-        verify(competitionRestService, times(1)).getCompetitionById(1L);
+        verify(competitionRestService).getCompetitionById(1L);
     }
 
     @Test
@@ -54,6 +68,6 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
-        verify(competitionRestService, times(1)).getCompetitionById(1L);
+        verify(competitionRestService).getCompetitionById(1L);
     }
 }

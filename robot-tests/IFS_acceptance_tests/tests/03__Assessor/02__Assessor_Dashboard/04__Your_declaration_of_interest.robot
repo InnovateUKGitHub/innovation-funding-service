@@ -22,31 +22,31 @@ Server-side validations when No selected at yes/no
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field error    Please enter a principal employer.
-    And the user should see a field error    Please enter your role with your principal employer.
-    And the user should see a field error    You must agree that your account is accurate.
-    And the user should see a field error    Please tell us if you have any appointments, directorships or consultancies.
-    And the user should see a field error    Please tell us if you have any other financial interests.
-    And the user should see a field error    Please tell us if any of your close family members have any appointments, directorships or consultancies.
-    And the user should see a field error    Please tell us if any of your close family members have any other financial interests.
+    Then the user should see a field error    Please enter a principal employer
+    And the user should see a field error    Please enter the role at your principal employer
+    And the user should see a field error    In order to register an account you have to agree that this is an accurate account
+    And the user should see a field error    Please tell us if you have any appointments, directorships or consultancies
+    And the user should see a field error    Please tell us if you have any other financial interests
+    And the user should see a field error    Please tell us if any of your close family members have any appointments, directorships or consultancies
+    And the user should see a field error    Please tell us if any of your close family members have any other financial interests
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]
     Given the user selects the radio button    hasAppointments    yes
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field error    Please enter an organisation.
-    And the user should see a field error    Please enter a position.
+    Then the user should see a field error    Please enter an organisation
+    And the user should see a field error    Please enter a position
     And the user selects the radio button    hasAppointments    no
     When the user selects the radio button    hasFinancialInterests    Yes
     And the user selects the radio button    hasFamilyAffiliations    Yes
     And the user selects the radio button    hasFamilyFinancialInterests    Yes
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field error    Please enter a relation.
-    And the user should see a field error    Please enter an organisation.
-    And the user should see a field error    Please enter a position.
-    And the user should see a field error    Please enter your family financial interests.
-    And the user should see a field error    Please enter your financial interests.
+    Then the user should see a field error    Please enter a relation
+    And the user should see a field error    Please enter an organisation
+    And the user should see a field error    Please enter a position
+    And the user should see a field error    Please enter your family financial interests
+    And the user should see a field error    Please enter your financial interests
 
 Client-side validations
     [Documentation]    INFUND-3715
@@ -56,7 +56,7 @@ Client-side validations
     #Then the user should not see the validation error    Please enter .......
     #And the user should not see the validation error    Please enter .......
     #And the user should not see the validation error    Please enter .......
-    And the user should not see the validation error    Please enter your family financial interests.
+    And the user should not see the validation error    Please enter your family financial interests
     #And The user should not see the text in the page    Please enter .......
 
 Successful save for the Declaration form
