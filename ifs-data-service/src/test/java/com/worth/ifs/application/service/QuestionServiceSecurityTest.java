@@ -104,9 +104,9 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     }
 
     @Test
-    public void testQuestionResourceByFormInputType() {
+    public void testQuestionResourceByCompetitionIdAndFormInputType() {
         assertAccessDenied(
-                () -> classUnderTest.getQuestionResourceByByCompetitionIdAndFormInputType(null, null),
+                () -> classUnderTest.getQuestionResourceByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -219,7 +219,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<QuestionResource> getQuestionResourceByByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+        public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
             return serviceSuccess(newQuestionResource().build());
         }
 

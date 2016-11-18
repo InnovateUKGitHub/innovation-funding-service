@@ -286,7 +286,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionResourceByByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+    public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
         return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
     }
 

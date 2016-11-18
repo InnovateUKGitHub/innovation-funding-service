@@ -28,7 +28,7 @@ public enum Disability {
         return id;
     }
 
-    public static Disability fromName(String name) {
-        return simpleFindFirst(asList(values()), v -> v.displayName.equals(name)).orElse(null);
+    public static Disability fromDisplayName(String name) {
+        return simpleFindFirst(asList(values()), v -> v.getDisplayName().equals(name)).orElse(null);
     }
 }

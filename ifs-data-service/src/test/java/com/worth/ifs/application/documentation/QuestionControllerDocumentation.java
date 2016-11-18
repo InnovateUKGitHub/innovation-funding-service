@@ -241,7 +241,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         final String formInputType = "type";
         Long competitionId = 123L;
 
-        when(questionService.getQuestionResourceByByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
+        when(questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", competitionId, formInputType))
                 .andDo(this.document.snippets(

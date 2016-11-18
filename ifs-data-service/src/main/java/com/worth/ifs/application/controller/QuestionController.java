@@ -94,7 +94,7 @@ public class QuestionController {
     @RequestMapping("/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}")
     public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("competitionId") final Long competitionId,
                                                                    @PathVariable("formInputType") final String formInputType) {
-        return questionService.getQuestionResourceByByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
+        return questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
     }
     
     @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")

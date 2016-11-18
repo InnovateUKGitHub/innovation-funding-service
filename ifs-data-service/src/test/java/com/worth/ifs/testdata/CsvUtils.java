@@ -384,9 +384,9 @@ class CsvUtils {
 
             super(line);
             int i = line.size() - 6;
-            disability = Disability.fromName(line.get(i++));
+            disability = Disability.fromDisplayName(line.get(i++));
             ethnicity = line.get(i++);
-            gender = Gender.fromName(line.get(i++));
+            gender = Gender.fromDisplayName(line.get(i++));
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));

@@ -27,7 +27,7 @@ public enum Gender {
         return id;
     }
 
-    public static Gender fromName(String name) {
+    public static Gender fromDisplayName(String name) {
         return simpleFindFirst(asList(values()), v -> v.getDisplayName().equals(name)).orElse(null);
     }
 }
