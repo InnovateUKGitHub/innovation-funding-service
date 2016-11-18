@@ -25,7 +25,7 @@ import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.junit.Assert.assertTrue;
 
 

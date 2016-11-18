@@ -7,7 +7,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
