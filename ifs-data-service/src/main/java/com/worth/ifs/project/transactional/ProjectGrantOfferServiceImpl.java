@@ -3,10 +3,10 @@ package com.worth.ifs.project.transactional;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.ResourceLoaderUserAgent;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -20,8 +20,9 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -47,6 +49,8 @@ import static java.io.File.separator;
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
 
     static final String GOL_TEMPLATES_PATH = "grantoffer" + separator + "grant_offer_letter.html";
+
+    private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -58,7 +62,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private GOLTemplateRenderer renderer;
+    private GOLTemplateRenderer golTemplateRenderer;
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -159,40 +163,50 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId) {
+    public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
+
+        //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
         Map<String, Object> templateReplacements = new HashMap<>();
-        FileEntryResource fileEntryResource = new FileEntryResource(null, "grant_offer_letter", MediaType.valueOf("pdf").getType(), 1024);
         return getProject(projectId).
-                andOnSuccess(project -> renderer.renderTemplate(getTemplatePath(), templateReplacements).
-                            andOnSuccess(htmlFile -> convertHtmlToPdf(htmlFile, () -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile))).
+                andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), templateReplacements).
+                            andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile))).
                                     andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
-    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(String htmlFile, Supplier<InputStream> inputStreamSupplier) {
-        return null;
+    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier) {
+        ServiceResult<Supplier<InputStream>> pdfSupplier = null;
+        try {
+            pdfSupplier = createPDF("", inputStreamSupplier);
+        } catch (IOException e) {
+            LOG.error("An IO Exception occured" +e);
+            return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+        } catch (DocumentException e) {
+            LOG.error("A Document Exception occured" +e);
+            return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+        }
+        return pdfSupplier;
     }
 
 
-    public static Supplier<InputStream> createPDF(String url, Supplier<InputStream> inputStreamSupplier)
+    private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier)
             throws IOException, DocumentException {
 
         try(ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 
             ITextRenderer renderer = new ITextRenderer();
-            ResourceLoaderUserAgent callback = new ResourceLoaderUserAgent(renderer.getOutputDevice());
-            callback.setSharedContext(renderer.getSharedContext());
-            renderer.getSharedContext ().setUserAgentCallback(callback);
-
             Document doc = XMLResource.load(new InputSource(inputStreamSupplier.get())).getDocument();
 
-            PdfWriter writer = renderer.getWriter();;
-            writer.setPDFXConformance(PdfWriter.PDFA1A);
+            PdfWriter writer = renderer.getWriter();
+            if (writer != null) {
+                writer.setPDFXConformance(PdfWriter.PDFA1A);
+            }
+
             renderer.setDocument(doc, url);
             renderer.layout();
             renderer.createPDF(os);
 
-            return () -> new ByteArrayInputStream(os.toByteArray());
+            return ServiceResult.serviceSuccess(() -> new ByteArrayInputStream(os.toByteArray()));
         }
     }
 
@@ -250,6 +264,4 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private String getTemplatePath() {
         return GOL_TEMPLATES_PATH;
     }
-
-
 }

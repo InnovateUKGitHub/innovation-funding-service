@@ -42,7 +42,7 @@ public interface ProjectGrantOfferService {
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a grant offer letter" )
-    ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId);
+    ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a additional contract for Appendix 2 if any")
