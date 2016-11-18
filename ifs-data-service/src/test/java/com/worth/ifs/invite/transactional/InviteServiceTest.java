@@ -32,7 +32,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;

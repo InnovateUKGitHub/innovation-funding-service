@@ -16,12 +16,12 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
 
     @RequestMapping("/success-test")
     public RestResult<String> successfulMethod() {
-        return restSuccess("Success");
+        return RestResult.restSuccess("Success");
     }
 
     @RequestMapping("/failure-test")
     public RestResult<String> failingMethod() {
-        return restFailure(internalServerErrorError());
+        return RestResult.restFailure(internalServerErrorError());
     }
 
     @RequestMapping("/null-test")
