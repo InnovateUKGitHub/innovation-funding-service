@@ -1,2 +1,0 @@
-update question set priority = 9 where name = 'What will your project cost?';
-update question set priority = 10 where name = 'How does financial support from Innovate UK and its funding partners add value?';

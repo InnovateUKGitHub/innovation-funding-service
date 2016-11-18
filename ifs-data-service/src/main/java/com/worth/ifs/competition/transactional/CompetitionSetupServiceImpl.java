@@ -8,6 +8,7 @@ import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
@@ -182,9 +183,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
-        Competition template = competitionRepository.findByTemplateForType_Id(competitionTypeId);
+
+        CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
+        Competition template = competitionType.getTemplate();
+
         Competition competition = competitionRepository.findById(competitionId);
-        competition.setCompetitionType(competitionTypeRepository.findOne(competitionTypeId));
+        competition.setCompetitionType(competitionType);
         return copyFromCompetitionTemplate(competition, template);
     }
 
