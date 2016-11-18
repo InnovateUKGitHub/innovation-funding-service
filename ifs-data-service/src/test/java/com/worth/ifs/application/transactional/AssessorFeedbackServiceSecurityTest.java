@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;

@@ -30,7 +30,7 @@ public class NotificationTest {
         UserNotificationTarget target1 = new UserNotificationTarget(newUser().build());
         UserNotificationTarget target2 = new UserNotificationTarget(newUser().build());
 
-        Map<String, Object> globalTemplateReplacements = asMap("thing1", Long.valueOf(1L), "thing2", "a string");
+        Map<String, Object> globalTemplateReplacements = asMap("thing1", 1L, "thing2", "a string");
         Notification notification = new Notification(source, asList(target1, target2), DUMMY, globalTemplateReplacements);
 
         assertEquals(globalTemplateReplacements, notification.getTemplateArgumentsForRecipient(target1));

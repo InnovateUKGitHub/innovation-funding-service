@@ -7,7 +7,7 @@ import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRowCostCategory, S extends AbstractFinanceRowCostCategoryBuilder> extends BaseBuilder<T, S> {
 

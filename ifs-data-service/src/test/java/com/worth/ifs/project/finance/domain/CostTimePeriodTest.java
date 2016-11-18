@@ -1,11 +1,12 @@
 package com.worth.ifs.project.finance.domain;
 
+import com.worth.ifs.project.finance.resource.TimeUnit;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.worth.ifs.project.finance.domain.TimeUnit.*;
+import static com.worth.ifs.project.finance.resource.TimeUnit.*;
 import static org.junit.Assert.assertEquals;
 
 public class CostTimePeriodTest {
