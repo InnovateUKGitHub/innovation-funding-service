@@ -10,7 +10,7 @@ import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.config.RestTemplateAdaptorFactory;
+import com.worth.ifs.config.rest.RestTemplateAdaptorFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

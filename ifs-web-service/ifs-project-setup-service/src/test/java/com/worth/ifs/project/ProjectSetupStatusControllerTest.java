@@ -322,7 +322,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
     private final void assertPartnerStatusFlagsCorrect(ProjectSetupStatusViewModel viewModel, Pair... expectedTrueFlags) {
         for(Pair section : expectedTrueFlags) {
-            partnerStatusFlagChecks.replace(section.fst.toString(), (SectionStatus)section.snd);
+            partnerStatusFlagChecks.replace(section.getLeft().toString(), (SectionStatus)section.getRight());
         }
         assertStatuses(viewModel);
     }
