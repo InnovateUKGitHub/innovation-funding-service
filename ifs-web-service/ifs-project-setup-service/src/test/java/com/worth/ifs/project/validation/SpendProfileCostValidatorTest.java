@@ -146,9 +146,9 @@ public class SpendProfileCostValidatorTest {
 
         List<ObjectError> errors = bindingResult.getAllErrors();
 
-        assertExpectedErrors(errors, "Cost cannot be null. Category: 1, Month#: 3");
-        assertExpectedErrors(errors, "Cost cannot be null. Category: 2, Month#: 2");
-        assertExpectedErrors(errors, "Cost cannot be null. Category: 3, Month#: 3");
+        for (int i = 0; i < 3; i++) {
+            assertExpectedErrors(errors, "validation.spend.profile.field.must.not.be.null");
+        }
     }
 
 

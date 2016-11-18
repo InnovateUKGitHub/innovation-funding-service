@@ -1,5 +1,6 @@
 package com.worth.ifs.project.validation;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -47,11 +48,9 @@ public class SpendProfileCostValidator implements Validator {
     }
 
     private void checkNullCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-
-        String errorKey = "COST_NULL: " + partialErrorKey;
+        String errorKey = "validation.spend.profile.field.must.not.be.null";
         if (null == cost) {
-            String errorMessage = String.format("Cost cannot be null. Category: %s, Month#: %d", category, index + 1);
-            errors.reject(errorKey, errorMessage);
+            ValidationMessages.reject(errors, errorKey, category, index + 1);
         }
     }
 
