@@ -63,10 +63,10 @@ public interface QuestionService {
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle);
+    ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
+    ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle);
     
     @PostFilter("hasPermission(filterObject, 'READ')")
 	ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId);

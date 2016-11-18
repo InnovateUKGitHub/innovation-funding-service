@@ -20,43 +20,43 @@ Project Finance can see Bank Details
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
     When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
-    Then the user navigates to the page           ${server}/project-setup-management/project/1/review-all-bank-details
+    Then the user navigates to the page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
     Then the user should see the element          jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Vitruvius Stonework Limited")
+    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Empire Ltd")
     # And the user should see the element         jQuery=tr:nth-child(2) td:nth-child(2):contains("Pending")  TODO INFUND-5966
     # And the user should see the element         jQuery=tr:nth-child(3) td:nth-child(2):contains("Pending")  TODO Upcoming functionality covering Academic user
-    When the user clicks the button/link          link=Vitruvius Stonework Limited
+    When the user clicks the button/link          link=Empire Ltd
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
 The user can see the company name with score
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/1/review-all-bank-details
-    And the user clicks the button/link     link=Vitruvius Stonework Limited
-    Then the user navigates to the page     ${server}/project-setup-management/project/1/organisation/31/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
-    And the user should see the text in the page    Vitruvius Stonework Limited
-    And the user should see the element    css = tr:nth-child(1) .yes
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
+    And the user clicks the button/link     link=Empire Ltd
+    Then the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
+    And the user should see the text in the page    Empire Ltd
+    And the user should see the element    css = tr:nth-child(1) .no
 
 The user can see the company number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Company Number
     And the user should see the text in the page    60674010
-    And the user should see the element    css = tr:nth-child(2) .yes
+    And the user should see the element    css = tr:nth-child(2) .no
 
 The user can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
     And the user should see the text in the page    51406795 / 404745
-    And the user should see the element    css = tr:nth-child(3) .yes
+    And the user should see the element    css = tr:nth-child(3) .no
 
 The user can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the element    css = tr:nth-child(4) .no
+    And the user should see the element    css = tr:nth-child(4) .yes
 
 The user has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763
@@ -68,10 +68,10 @@ The user can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     Given the user clicks the button/link        link=Change bank account details
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/1/organisation/31/review-bank-details/change
+    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/change
     And the text box should be editable          id=company-name
-    When the user enters text to a text field    id=street    Montrose House 2
-    And the user enters text to a text field     id=company-name    Vitruvius Stonework not Limited
+    When the user enters text to a text field    id=street    Empire Road
+    And the user enters text to a text field     id=company-name    Empire Ltd
     And the user enters text to a text field     id=companies-house-number    60674011
 
 Bank account number and sort code validations client side
@@ -103,7 +103,7 @@ The user cancels bank details changes
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
-    Then the user should be redirected to the correct page           ${server}/project-setup-management/project/1/organisation/31/review-bank-details
+    Then the user should be redirected to the correct page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details
     When the user clicks the button/link          link=Change bank account details
     Then the text box should be editable          id=company-name
     And the user moves focus to the element       id=street
@@ -118,7 +118,7 @@ The user updates bank account details
     When the user enters text to a text field     id=street    Montrose House 2
     And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
-    Then the user should see the text in the page  Vitruvius Stonework Limited - Account details
+    Then the user should see the text in the page  Empire Ltd - Account details
     When the user clicks the button/link          link=Change bank account details
     Then the user sees the text in the text field    id=street    Montrose House 2
     When the user clicks the button/link    jQuery=.column-half.alignright button:contains("Update bank account details")
@@ -127,8 +127,8 @@ The user updates bank account details
 The user approves the bank details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/1/organisation/31/review-bank-details/
-    And the user should see the text in the page  Vitruvius Stonework Limited - Account details
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/
+    And the user should see the text in the page  Empire Ltd - Account details
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
@@ -142,7 +142,7 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
 
 
 Project partners cannot access this page
@@ -150,7 +150,7 @@ Project partners cannot access this page
     [Tags]    Pending
     #TODO  Pending due to INFUND-4680
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
 
 
 
