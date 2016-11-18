@@ -23,6 +23,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.ui.Model;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
@@ -75,6 +78,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     private Long questionId;
     private Long formInputId;
     private Long costId;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     @Before
     public void setUp(){
@@ -124,7 +128,6 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("leadApplicant", users.get(0)))
                 .andExpect(model().attribute("currentSectionId", currentSectionId));
-
     }
 
     @Test
@@ -222,15 +225,14 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     @Test
     public void testApplicationFormSubmit() throws Exception {
 
+        LocalDate futureDate = LocalDate.now().plusDays(1);
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("formInput[1]", "Question 1 Response")
-                        .param("formInput[2]", "Question 2 Response")
-                        .param("formInput[3]", "Question 3 Response")
-                        .param("application.startDate", "10/10/2015")
-                        .param("application.startDate.year", "2015")
-                        .param("application.startDate.dayOfMonth", "15")
-                        .param("application.startDate.monthValue", "11")
+                        .param("application.startDate", futureDate.format(FORMATTER))
+                        .param("application.startDate.year", Integer.toString(futureDate.getYear()))
+                        .param("application.startDate.dayOfMonth", Integer.toString(futureDate.getDayOfMonth()))
+                        .param("application.startDate.monthValue", Integer.toString(futureDate.getMonthValue()))
                         .param("application.name", "New Application Title")
                         .param("application.durationInMonths", "12")
                         .param("submit-section", "Save")
