@@ -50,6 +50,10 @@ public abstract class BaseIntegrationTest extends BaseTest {
             return null;
         }
 
+        if (!(context.getAuthentication() instanceof UserAuthentication)) {
+            return null;
+        }
+
         UserAuthentication authentication = (UserAuthentication) context.getAuthentication();
 
         if (authentication == null) {

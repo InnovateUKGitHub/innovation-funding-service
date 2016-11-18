@@ -1,10 +1,11 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.application.builder.QuestionBuilder;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.builder.ApplicationFinanceBuilder;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.builder.FinanceRowBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
@@ -25,6 +26,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
@@ -149,11 +153,13 @@ public class OtherFundingValidatorTest {
     }
 
     private void mockWithRadio(String value){
-        ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
         FinanceRow cost = FinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(123L, FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<FinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
         when(financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);

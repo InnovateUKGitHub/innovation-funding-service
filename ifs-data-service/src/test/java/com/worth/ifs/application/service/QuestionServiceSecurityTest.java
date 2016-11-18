@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Set;
 
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.QuestionServiceSecurityTest.TestQuestionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -111,7 +112,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     }
 
     @Test
-    public void testGetQuestionByFormInputType() {
+    public void testGetQuestionByCompetitionIdAndFormInputType() {
         assertAccessDenied(
                 () -> classUnderTest.getQuestionByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
@@ -219,12 +220,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
         @Override
         public ServiceResult<QuestionResource> getQuestionResourceByByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-            return null;
+            return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
         public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-            return null;
+            return serviceSuccess(newQuestion().build());
         }
 
         @Override

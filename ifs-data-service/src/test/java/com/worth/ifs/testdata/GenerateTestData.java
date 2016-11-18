@@ -24,12 +24,14 @@ import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -67,8 +69,9 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-//@Ignore("Manual web test data generation")
+@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
+@DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
