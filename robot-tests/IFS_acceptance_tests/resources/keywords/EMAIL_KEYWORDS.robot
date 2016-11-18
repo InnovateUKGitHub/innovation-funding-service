@@ -139,7 +139,7 @@ the user reads the email and clicks the link
 
 Delete the emails from both test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
+    run keyword if    ${docker}!=1 and '${testMailboxOne}' == 'asdf'    delete the emails from both remote test mailboxes
 
 
 delete the emails from both remote test mailboxes

@@ -1,16 +1,12 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.GuidanceRowRepository;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.repository.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.commons.service.*;
+import com.worth.ifs.competition.domain.*;
+import com.worth.ifs.competition.repository.*;
+import com.worth.ifs.form.repository.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +17,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.*;
+import static com.worth.ifs.application.builder.QuestionBuilder.*;
+import static com.worth.ifs.application.builder.SectionBuilder.*;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.*;
+import static com.worth.ifs.form.builder.FormInputBuilder.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -74,10 +70,11 @@ public class CompetitionSetupServiceImplTest {
 					).build(2)
 			).build();
 
+		competitionType.setTemplate(competitionTemplate);
+
 		long typeId = 4L;
 		long competitionId = 2L;
     	when(competitionRepository.findById(competitionId)).thenReturn(competition);
-    	when(competitionRepository.findByTemplateForType_Id(typeId)).thenReturn(competitionTemplate);
 		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
 
     	ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
@@ -104,15 +101,17 @@ public class CompetitionSetupServiceImplTest {
 				.build();
     	parent.setChildSections(new ArrayList<>(asList(child1, child2)));
 
-    	Competition competition = newCompetition().build();
+		CompetitionType competitionType = new CompetitionType();
+		Competition competition = newCompetition().build();
     	Competition competitionTemplate = newCompetition()
     			.withSections(asList(
     					parent, child1, child2
 				))
     			.build();
 
+		competitionType.setTemplate(competitionTemplate);
     	when(competitionRepository.findById(123L)).thenReturn(competition);
-    	when(competitionRepository.findByTemplateForType_Id(4L)).thenReturn(competitionTemplate);
+    	when(competitionTypeRepository.findOne(4L)).thenReturn(competitionType);
 
     	ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(123L, 4L);
 
