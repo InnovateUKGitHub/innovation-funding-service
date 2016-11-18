@@ -152,21 +152,27 @@ public class CompetitionSetupApplicationController {
         }
     }
 
-
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public String getApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
-        return getDetailsPage(model, competitionId);
+    public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                        Model model) {
+        String detailsPage = getDetailsPage(model, competitionId, false);
+        return detailsPage;
     }
 
-    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
+    public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        return getDetailsPage(model, competitionId, true);
+    }
+
+    @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
     public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        Supplier<String> failureView = () -> getDetailsPage(model, competitionId);
+        Supplier<String> failureView = () -> getDetailsPage(model, competitionId, true);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         CompetitionResource resource = competitionService.getById(competitionId);
@@ -179,9 +185,11 @@ public class CompetitionSetupApplicationController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private String getDetailsPage(Model model, Long competitionId) {
+    private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
                 CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.empty());
+
+        model.addAttribute("editable", isEditable);
         return "competition/application-details";
     }
 

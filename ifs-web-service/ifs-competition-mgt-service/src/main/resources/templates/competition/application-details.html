@@ -15,12 +15,17 @@
 
     <div class="page-title">
         <p class="subtitle" th:text="${competitionName}"></p>
-        <h1 class="heading-xlarge no-margin">Application details</h1>
+        <h1 class="heading-xlarge" th:if="${editable}">Edit 'Application details'</h1>
+        <h1 class="heading-xlarge" th:unless="${editable}"> Application details</h1>
     </div>
     <p>These are the default questions included in the Application details section.</p>
 
-    <form data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
-          data-th-attr="data-competition=${competitionId}" data-section="application" data-subsection="detail">
+    <form th:if="${editable}"
+          data-autosave="compSetup"
+          th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+          th:object="${competitionSetupForm}" method="post"
+          data-th-attr="data-competition=${competitionId}"
+          data-section="application" data-subsection="detail">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
@@ -35,25 +40,7 @@
         <fieldset>
             <legend class="visuallyhidden">To be included:</legend>
             <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
-            <div th:class="${#fields.hasErrors('useProjectTitleQuestion')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
 
-                    <legend>
-                        <span class="form-label-bold">Project title</span>
-                        <span th:if="${#fields.hasErrors('useProjectTitleQuestion')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('useProjectTitleQuestion')}" th:text="${err}" />
-                            </span>
-                    </legend>
-                    <label class="block-label" for="use-project-title-question-yes">
-                        <input id="use-project-title-question-yes" value="true" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="use-project-title-question-no">
-                        <input id="use-project-title-question-no" value="false" type="radio" th:field="*{useProjectTitleQuestion}" required="required" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
 
             <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
@@ -74,50 +61,30 @@
                 </fieldset>
             </div>
 
-            <div th:class="${#fields.hasErrors('useEstimatedStartDateQuestion')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="form-label-bold">Estimated start date</span>
-                        <span th:if="${#fields.hasErrors('useEstimatedStartDateQuestion')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('useEstimatedStartDateQuestion')}" th:text="${err}" />
-                            </span>
-                    </legend>
-                    <label class="block-label" for="use-estimated-start-date-question-yes">
-                        <input id="use-estimated-start-date-question-yes" value="true" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="use-estimated-start-date-question-no">
-                        <input id="use-estimated-start-date-question-no" value="false" type="radio" th:field="*{useEstimatedStartDateQuestion}" required="required" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
-
-            <div th:class="${#fields.hasErrors('useDurationQuestion')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="form-label-bold">Duration</span>
-                        <span th:if="${#fields.hasErrors('useDurationQuestion')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('useDurationQuestion')}" th:text="${err}" />
-                            </span>
-                    </legend>
-                    <label class="block-label" for="use-duration-question-yes">
-                        <input id="use-duration-question-yes" value="true" type="radio" th:field="*{useDurationQuestion}" required="required" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="use-duration-question-no">
-                        <input id="use-duration-question-no" value="false" type="radio" th:field="*{useDurationQuestion}" required="required" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
-
-
-            <button type="submit" class="button">Done</button>
-
-            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
+            <button type="submit" class="button">Save and close</button>
         </fieldset>
     </form>
+
+    <th:block th:unless="${editable}">
+
+        <legend class="visuallyhidden">To be included:</legend>
+        <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
+
+        <th:block th:unless="${editable}">
+            <dl class="application-question-list grid-row">
+                <dt class="column-third">Resubmission question</dt>
+                <dd class="column-two-thirds" th:text="${competitionSetupForm.useResubmissionQuestion ? 'yes' : 'no'}" />
+                <!-- <dd class="column-two-thirds" th:text="${useResubmissionQuestion}"></dd> -->
+            </dl>
+        </th:block>
+
+        <div class="extra-margin">
+            <a class="button" th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${competition.id})}">Edit this question</a>
+        </div>
+        <div class="extra-margin">
+            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
+        </div>
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

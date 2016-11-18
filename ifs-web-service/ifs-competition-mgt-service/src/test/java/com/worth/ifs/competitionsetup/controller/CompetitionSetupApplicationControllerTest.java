@@ -149,14 +149,29 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetCompetitionApplicationDetails() throws Exception {
+    public void testGetEditCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/application-details"))
+                .andExpect(model().attribute("editable", true));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testViewCompetitionApplicationDetails() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/detail"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/application-details"));
+                .andExpect(view().name("competition/application-details"))
+                .andExpect(model().attribute("editable", false));
 
         verify(competitionService, never()).update(competition);
     }
