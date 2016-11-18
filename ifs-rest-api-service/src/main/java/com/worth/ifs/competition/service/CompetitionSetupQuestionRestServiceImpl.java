@@ -17,7 +17,7 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionRestServiceImpl.class);
-    private String competitionsSetupRestURL = "/competitionSetupQuestion";
+    private String competitionsSetupRestURL = "/competition-setup-question";
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {

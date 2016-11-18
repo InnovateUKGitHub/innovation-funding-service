@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the CompetitionServiceImpl with mocked repositories/mappers.
+ * Tests the CompetitionSetupQuestionServiceImpl with mocked repositories/mappers.
  */
 public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest<CompetitionSetupQuestionServiceImpl> {
 
@@ -146,8 +146,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
 
-        when(formInputRepository.findByQuestionIdAndScopeAndFormInputType_Title(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle())).thenReturn(questionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndFormInputType_Title(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle())).thenReturn(appendixFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle())).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle())).thenReturn(appendixFormInput);
         when(questionRepository.findOne(questionId)).thenReturn(question);
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.save(resource);

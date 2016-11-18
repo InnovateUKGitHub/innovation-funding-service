@@ -24,6 +24,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     
 	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
 
+    //TODO INFUND-6283 Remove this hard coded strings and expose to UI.
     private static String APPENDIX_GUIDANCE_QUESTION = "What should I include in the appendix?";
     private static String APPENDIX_GUIDANCE_ANSWER = "<p>You may include an appendix of additional information to support the question.</p>" +
                                                      "<p>You may include, for example, a Gantt chart or project management structure.</p>" +
@@ -110,7 +111,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
 
-        FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputType_Title(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle());
+        FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle());
         questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
@@ -124,7 +125,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
 
     private void createOrDeleteAppendixFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
-        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputType_Title(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle());
+        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle());
         if (competitionSetupQuestionResource.getAppendix()) {
             if (appendixFormInput == null) {
                 appendixFormInput = new FormInput();

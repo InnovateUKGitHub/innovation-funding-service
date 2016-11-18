@@ -6,7 +6,6 @@ import com.worth.ifs.commons.rest.*;
 import com.worth.ifs.competition.resource.*;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
 
 import static org.junit.Assert.*;
 
@@ -40,8 +39,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
 
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" +questionId, toSave, HttpStatus.OK);
-
+        setupPutWithRestResultVerifications(competitionsRestURL + "/" + questionId, CompetitionSetupQuestionResource.class, toSave);
         RestResult<Void> response = service.save(toSave);
         assertTrue(response.isSuccess());
     }

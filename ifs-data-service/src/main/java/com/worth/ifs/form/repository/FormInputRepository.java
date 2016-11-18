@@ -18,5 +18,5 @@ public interface FormInputRepository extends PagingAndSortingRepository<FormInpu
     List<FormInput> findByCompetitionIdAndScopeOrderByPriorityAsc(Long competitionId, FormInputScope scope);
     List<FormInput> findByQuestionIdOrderByPriorityAsc(Long questionId);
     List<FormInput> findByQuestionIdAndScopeOrderByPriorityAsc(Long questionId, FormInputScope scope);
-    FormInput findByQuestionIdAndScopeAndFormInputType_Title(Long questionId, FormInputScope scope, String title);
+    FormInput findByQuestionIdAndScopeAndFormInputTypeTitle(Long questionId, FormInputScope scope, String title);
 }

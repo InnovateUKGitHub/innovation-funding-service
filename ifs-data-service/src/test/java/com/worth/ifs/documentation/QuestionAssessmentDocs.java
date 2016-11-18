@@ -1,6 +1,5 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.application.builder.AssessmentScoreRowResourceBuilder;
 import com.worth.ifs.application.builder.QuestionAssessmentResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 

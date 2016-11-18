@@ -4,11 +4,9 @@ import com.worth.ifs.*;
 import com.worth.ifs.commons.service.*;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.transactional.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
@@ -16,11 +14,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * within those rules
  */
 public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupQuestionService> {
-
-    @Before
-    public void lookupPermissionRules() {
-        initMocks(this);
-    }
 
     @Override
     protected Class<? extends CompetitionSetupQuestionService> getClassUnderTest() {

@@ -5,7 +5,7 @@ import com.worth.ifs.form.domain.FormInput;
 import javax.persistence.*;
 
 /**
- * GuidanceRow defines database relations and a model to use client side and server side.
+ * GuidanceRow defines database relations and columns for a row of guidance displayed next to a form input.
  */
 @Entity
 public class GuidanceRow {

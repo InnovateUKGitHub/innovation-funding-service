@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * QuestionController exposes question data and operations through a REST API.
+ * CompetitionSetupQuestionController exposes competition setup application questions data and operations through a REST API.
  */
 @RestController
-@RequestMapping("/competitionSetupQuestion")
+@RequestMapping("/competition-setup-question")
 public class CompetitionSetupQuestionController {
 
     @Autowired

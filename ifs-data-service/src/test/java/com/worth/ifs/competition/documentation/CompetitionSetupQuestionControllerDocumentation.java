@@ -29,7 +29,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
     @Mock
     CompetitionSetupQuestionService competitionSetupQuestionService;
     private RestDocumentationResultHandler document;
-    private static String baseUrl = "/competitionSetupQuestion";
+    private static String baseUrl = "/competition-setup-question";
 
     @Override
     protected CompetitionSetupQuestionController supplyControllerUnderTest() {
@@ -38,7 +38,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
 
     @Before
     public void setup() {
-        this.document = document("competitionSetupQuestion/{method-name}",
+        this.document = document("competition-setup-question/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
 

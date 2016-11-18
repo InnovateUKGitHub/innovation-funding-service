@@ -12,6 +12,6 @@ import java.util.List;
  */
 public interface GuidanceRowRepository extends CrudRepository<GuidanceRow, Long> {
 
-    List<GuidanceRow> findByFormInput_Question_CompetitionId(Long competitionId);
+    List<GuidanceRow> findByFormInputQuestionCompetitionId(Long competitionId);
 
 }

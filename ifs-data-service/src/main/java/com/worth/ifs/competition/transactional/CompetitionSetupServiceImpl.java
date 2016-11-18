@@ -42,6 +42,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPL
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 
 /**
@@ -227,7 +228,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
 	private void cleanUpCompetitionSections(Competition competition) {
-        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInput_Question_CompetitionId(competition.getId());
+        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
         guidanceRowRepository.delete(scoreRows);
 
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
@@ -276,7 +277,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	}
 	
 	private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
+        return simpleMap(questions, createQuestion(competition, section));
 	}
 
 	private Function<Question, Question> createQuestion(Competition competition, Section section) {
@@ -294,7 +295,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
 
     private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
-		return formInputTemplates.stream().map(createFormInput(competition, question)).collect(Collectors.toList());
+        return simpleMap(formInputTemplates, createFormInput(competition, question));
 	}
 	
 	private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
@@ -311,7 +312,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	}
 
     private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
-        return guidanceRows.stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
+        return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));
     }
 
     private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
