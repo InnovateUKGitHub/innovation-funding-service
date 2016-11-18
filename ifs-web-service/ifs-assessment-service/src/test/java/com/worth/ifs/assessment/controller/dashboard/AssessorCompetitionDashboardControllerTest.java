@@ -115,10 +115,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
             inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
+                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            } else {
+                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            }
         });
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
@@ -197,10 +202,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService);
+            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService,processOutcomeService);
             inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
             inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
             inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
+                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            } else {
+                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+            }
         });
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
