@@ -2,6 +2,7 @@ package com.worth.ifs.rest;
 
 import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +24,7 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
     public void testSuccessMethodReturnsSuccessNormally() {
         RestResult<String> result = applicableController.successfulMethod();
         assertTrue(result.isSuccess());
-        assertEquals("Success", result.getSuccessObject());
+        Assert.assertEquals("Success", result.getSuccessObject());
     }
 
     @Test

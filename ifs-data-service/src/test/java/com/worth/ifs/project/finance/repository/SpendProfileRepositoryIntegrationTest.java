@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.worth.ifs.project.finance.domain.TimeUnit.DAY;
-import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.resource.TimeUnit.DAY;
+import static com.worth.ifs.project.finance.resource.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;

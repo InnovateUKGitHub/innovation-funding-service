@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;

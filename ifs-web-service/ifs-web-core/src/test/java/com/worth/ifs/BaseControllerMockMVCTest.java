@@ -1,6 +1,6 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.controller.ControllerModelAttributeAdvice;
 import com.worth.ifs.controller.CustomFormBindingControllerAdvice;

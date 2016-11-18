@@ -24,7 +24,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;

@@ -1,6 +1,6 @@
 package com.worth.ifs.security;
 
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.security.CsrfTokenService.CsrfUidToken;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
