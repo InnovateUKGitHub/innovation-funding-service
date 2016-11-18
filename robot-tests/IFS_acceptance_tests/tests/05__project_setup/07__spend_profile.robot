@@ -291,7 +291,7 @@ Project Manager can view combined spend profile
     Given the user navigates to the page    ${external_spendprofile_summary}
     When the user clicks the button/link    jQuery=.button:contains("Review and submit total project profile")
     Then the user should see the text in the page    This is the proposed spend profile for your project.
-    And the user should see the text in the page    The spend profile that you submit will be used as the base for your project spend over the following financial years.
+    And the user should see the text in the page    Your submitted spend profile will be used as the base for your project spend over the following financial years.
 
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
