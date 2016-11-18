@@ -14,7 +14,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.lang3.BooleanUtils;
@@ -59,25 +58,36 @@ public class AssessorCompetitionDashboardModelPopulator {
     @Autowired
     private ProcessOutcomeService processOutcomeService;
 
-    @Autowired
-    private UserService userService;
-
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        String leadTechnologist = getLeadTechnologist(competition);
         LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
 
-        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId);
+        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
+                getApplicationsPartitionedBySubmitted(userId, competitionId);
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
-        boolean submitVisible = outstanding.stream().filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit).findAny().isPresent();
 
-        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), leadTechnologist, acceptDeadline, submitDeadline, submitted, outstanding, submitVisible);
+        boolean submitVisible = outstanding.stream()
+                .filter(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit)
+                .findAny()
+                .isPresent();
+
+        return new AssessorCompetitionDashboardViewModel(
+                competition.getName(),
+                competition.getDescription(),
+                competition.getLeadTechnologistName(),
+                acceptDeadline,
+                submitDeadline,
+                submitted,
+                outstanding,
+                submitVisible
+        );
     }
 
     private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
-        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+        return assessmentService.getByUserAndCompetition(userId, competitionId).stream()
+                .collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
     }
 
     private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {
@@ -113,9 +123,5 @@ public class AssessorCompetitionDashboardModelPopulator {
             default:
                 return false;
         }
-    }
-
-    private String getLeadTechnologist(CompetitionResource competition) {
-        return Optional.ofNullable(competition.getLeadTechnologist()).map(leadTechnologistId -> userService.findById(leadTechnologistId).getName()).orElse(null);
     }
 }
