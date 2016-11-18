@@ -218,9 +218,9 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     public void testGetQuestionByFormInputType() throws Exception {
         String formInputType = "formInputType";
         QuestionResource question = new QuestionResource();
-        when(questionRestService.getQuestionByFormInputType(formInputType)).thenReturn(restSuccess(question));
+        when(questionRestService.getQuestionByCompetitionIdAndFormInputType(123L, formInputType)).thenReturn(restSuccess(question));
 
-        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(formInputType);
+        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(123L, formInputType);
 
         assertTrue(result.isSuccess());
         assertEquals(question, result.getSuccessObject());

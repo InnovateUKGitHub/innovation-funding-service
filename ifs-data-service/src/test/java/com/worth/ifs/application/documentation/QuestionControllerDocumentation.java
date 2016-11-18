@@ -237,7 +237,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void getQuestionByFormInputType() throws Exception {
+    public void getQuestionByCompetitionIdAndFormInputType() throws Exception {
         final String formInputType = "type";
         Long competitionId = 123L;
 
@@ -246,6 +246,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         mockMvc.perform(get("/question/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", competitionId, formInputType))
                 .andDo(this.document.snippets(
                         pathParameters(
+                                parameterWithName("competitionId").description("The id of the competition to which the returned Question will belong"),
                                 parameterWithName("formInputType").description("form input type")
                         ),
                         responseFields(questionFields)
