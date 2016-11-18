@@ -157,6 +157,24 @@ dl.standard-definition-list{
     & + dt{
       clear: both;
     }
+
+    & + dd{
+      clear: both;
+      margin-left: 250px;
+    }
+  }
+  &.column-definition-list {
+    dt {
+      width: 33%;
+      margin-right: 15px;
+      max-width: none;
+    }
+
+    dd{
+      & + dd{
+        margin-left: 330px;
+      }
+    }
   }
 }
 

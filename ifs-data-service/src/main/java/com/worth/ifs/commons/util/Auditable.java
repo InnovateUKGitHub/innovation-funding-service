@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.util;
 
+import com.worth.ifs.config.audit.AuditConfig;
 import com.worth.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  * Use @{@link AuditableEntity} for a convienience base class with JPA mapping to standard column names.
  *
  * @see AuditableEntity
- * @see com.worth.ifs.config.AuditConfig
+ * @see AuditConfig
  */
 public interface Auditable {
     User getCreatedBy();
