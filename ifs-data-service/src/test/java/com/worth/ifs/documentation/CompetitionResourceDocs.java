@@ -29,6 +29,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
+            fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
             fieldWithPath("innovationSectorName").description("the Innovation sector name this competition belongs to"),
             fieldWithPath("innovationArea").description("the Innovation area this competition belongs to"),
@@ -40,13 +41,13 @@ public class CompetitionResourceDocs {
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
             fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
-            fieldWithPath("leadApplicantType").description("permitted type of elad applicant (business, research...)"),
+            fieldWithPath("leadApplicantType").description("permitted type of lead applicant (business, research...)"),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
             fieldWithPath("funders").description("the funders for this competition"),
-            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applicantions"),
+            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applications"),
             fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess")
@@ -69,6 +70,7 @@ public class CompetitionResourceDocs {
             .withCompetitionType(1L)
             .withExecutive(1L)
             .withLeadTechnologist(1L)
+            .withLeadTechnologistName("Competition Technologist")
             .withInnovationArea(1L)
             .withInnovationAreaName("Tech")
             .withInnovationSector(2L)

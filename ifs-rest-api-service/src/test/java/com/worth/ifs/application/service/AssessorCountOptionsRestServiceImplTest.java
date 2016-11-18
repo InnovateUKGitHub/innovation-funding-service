@@ -27,11 +27,11 @@ public class AssessorCountOptionsRestServiceImplTest extends BaseRestServiceUnit
     public void testFindAllByCompetitionType() throws Exception {
         List<AssessorCountOptionResource> expectedList = new ArrayList<>();
 
-        AssessorCountOptionResource oneAssessorOption = AssessorCountOptionResourceBuilder.newAssessorCountOptionResource().withId(1L)
+        AssessorCountOptionResource oneAssessorOption = newAssessorCountOptionResource().withId(1L)
                 .withAssessorOptionName("1").withAssessorOptionValue(1).build();
-        AssessorCountOptionResource threeAssessorsOption = AssessorCountOptionResourceBuilder.newAssessorCountOptionResource().withId(2L)
+        AssessorCountOptionResource threeAssessorsOption = newAssessorCountOptionResource().withId(2L)
                 .withAssessorOptionName("3").withAssessorOptionValue(3).build();
-        AssessorCountOptionResource fiveAssessorsOption = AssessorCountOptionResourceBuilder.newAssessorCountOptionResource().withId(3L)
+        AssessorCountOptionResource fiveAssessorsOption = newAssessorCountOptionResource().withId(3L)
                 .withAssessorOptionName("5").withAssessorOptionValue(5).build();
 
         expectedList.add(oneAssessorOption);
