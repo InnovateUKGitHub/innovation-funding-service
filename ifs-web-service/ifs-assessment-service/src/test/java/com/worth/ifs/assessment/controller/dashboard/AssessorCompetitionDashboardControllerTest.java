@@ -30,7 +30,6 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
@@ -60,8 +59,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
         List<AssessmentResource> assessments = newAssessmentResource()
@@ -131,8 +129,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard_submitNotVisible() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
         List<AssessmentResource> assessments = newAssessmentResource()
@@ -202,8 +199,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void competitionDashboard_empty() throws Exception {
         Long userId = 1L;
 
-        UserResource leadTechnologist = buildTestLeadTechnologist();
-        CompetitionResource competition = buildTestCompetition(leadTechnologist.getId());
+        CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(emptyList());
@@ -235,21 +231,14 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertFalse(model.isSubmitVisible());
     }
 
-    private UserResource buildTestLeadTechnologist() {
-        return newUserResource()
-                .withFirstName("Competition")
-                .withLastName("Technologist")
-                .build();
-    }
-
-    private CompetitionResource buildTestCompetition(Long leadTechnologistId) {
+    private CompetitionResource buildTestCompetition() {
         LocalDateTime assessorAcceptsDate = LocalDateTime.now().minusDays(2);
         LocalDateTime assessorDeadlineDate = LocalDateTime.now().plusDays(4);
 
         return newCompetitionResource()
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
-                .withLeadTechnologist(leadTechnologistId)
+                .withLeadTechnologist(2L)
                 .withLeadTechnologistName("Competition Technologist")
                 .withAssessorAcceptsDate(assessorAcceptsDate)
                 .withAssessorDeadlineDate(assessorDeadlineDate)

@@ -68,7 +68,7 @@ public class CompetitionResourceDocs {
             .withCompetitionType(1L)
             .withExecutive(1L)
             .withLeadTechnologist(1L)
-            .withLeadTechnologistName("Joe Bloggs")
+            .withLeadTechnologistName("Competition Technologist")
             .withInnovationArea(1L)
             .withInnovationAreaName("Tech")
             .withInnovationSector(2L)
