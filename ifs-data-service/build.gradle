@@ -4,22 +4,26 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+def targetBuild = hasProperty('profile') ? profile : 'dev';
+apply from: targetBuild+"-build.gradle";
+
+
 apply plugin: 'war'
+apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
 
 war {
     baseName = 'ifs-data-service'
-    version = '0.0.1-SNAPSHOT'
 }
 
 configurations {
     providedRuntime
-    clientCompile
 }
 
 bootRepackage {
     mainClass = 'com.worth.ifs.Application'
+    withJarTask = war
 }
 
 ext {
@@ -28,13 +32,10 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
 }
 
-sourceCompatibility = 1.8
-
 sourceSets {
     client {
         java {
             srcDir 'src/main/java'
-            include 'com/worth/ifs/domain'
         }
         main {
             ext.originalJavaSrcDirs = java.srcDirs
@@ -65,7 +66,6 @@ configurations {
     mapstruct
 }
 
-
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.hibernate:hibernate-validator:5.2.4.Final"
@@ -95,8 +95,8 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
 
-    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile fileTree(dir: "libs", include: "*.jar")
+    compile project(":ifs-commons")
+    testCompile project(':ifs-commons').sourceSets.test.output
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -149,73 +149,17 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
-task client(type: Jar) {
-    baseName += '-api'
-    from(sourceSets.main.output) {
-        // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/**/service/**"
-        include "com/worth/ifs/**/constant/**"
-        include "com/worth/ifs/**/resource/**"
-        include "com/worth/ifs/util/**"
-        include "com/worth/ifs/commons/security/**"
-        include "com/worth/ifs/commons/rest/**"
-        include "com/worth/ifs/commons/error/**"
-        include "com/worth/ifs/commons/validation/**"
-        include "com/worth/ifs/mappers/**"
-        exclude "com/worth/ifs/**/transactional/**"
-        exclude "com/worth/ifs/notifications/**"
-        exclude "com/worth/ifs/authentication/**"
-        exclude "com/worth/ifs/sil/**"
-        exclude "com/worth/ifs/email/**"
-    }
-}
-task clientCopy(type: Copy){
-    into "../ifs-web-service/libs"
-    from "build/libs/"
-    include "ifs-data-service-api*"
-}
-
-task clientLib {
-    clientCopy.mustRunAfter client
-    dependsOn client
-    dependsOn clientCopy
-}
-
-task testCommonCode(type: Jar) {
-    baseName += '-tests'
-    from(sourceSets.test.output) {
-        // filter to only include certain class files (Ant glob pattern)
-        include "com/worth/ifs/Builder.class"
-        include "com/worth/ifs/BaseBuilder.class"
-        include "com/worth/ifs/**/*Builder.class"
-        include "com/worth/ifs/**/*BuilderAmendFunctions.class"
-        include "**/application-web-integration-test.properties"
-        include "com/worth/ifs/commons/**/*.class"
-    }
-}
-task testCommonCodeCopy(type: Copy){
-    into "../ifs-web-service/libs"
-    from "build/libs/"
-    include("ifs-data-service-tests*")
-}
-
-artifacts {
-    archives client
-}
-
 task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'ROOT.war'
 }
 
-
 watch {
     java {
         files files('src/main/java')
-        tasks 'client', 'clientCopy', 'deployToTomcat'
+        tasks 'deployToTomcat'
     }
-
     resources {
         files files('src/main/resources')
         tasks 'deployToTomcat'
@@ -241,14 +185,8 @@ flywayClean.dependsOn processResources
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    clientCopy.mustRunAfter client
-    testCommonCode.mustRunAfter build
-    testCommonCodeCopy.mustRunAfter testCommonCode
     deployToTomcat.mustRunAfter build
     dependsOn clean
     dependsOn build
-    dependsOn clientCopy
-    dependsOn testCommonCode
-    dependsOn testCommonCodeCopy
     dependsOn deployToTomcat
 }

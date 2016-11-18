@@ -100,6 +100,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((id, object) -> setField("leadTechnologist", id, object), userIds);
     }
 
+    public CompetitionResourceBuilder withLeadTechnologistName(String... names) {
+        return withArray((name, object) -> setField("leadTechnologistName", name, object), names);
+    }
+
     public CompetitionResourceBuilder withExecutive(Long... userIds) {
         return withArray((id, object) -> setField("executive", id, object), userIds);
     }
