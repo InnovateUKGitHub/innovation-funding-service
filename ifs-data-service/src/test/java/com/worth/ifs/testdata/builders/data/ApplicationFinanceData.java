@@ -6,7 +6,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Application Finances (either academic or industrial)
  */
 public class ApplicationFinanceData {
     private ApplicationResource application;

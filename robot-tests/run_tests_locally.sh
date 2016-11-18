@@ -369,18 +369,18 @@ done
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
-    ## resetDB
+    resetDB
     resetLDAP
     clearDownFileRepository
-    ##addTestFiles
+    addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
     stopServers
-   ## resetDB
+    resetDB
     clearDownFileRepository
-   ## addTestFiles
+    addTestFiles
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]

@@ -3,7 +3,7 @@ package com.worth.ifs.testdata.builders.data;
 import com.worth.ifs.user.resource.UserResource;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Users
  */
 public class BaseUserData {
 

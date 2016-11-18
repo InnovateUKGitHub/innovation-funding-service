@@ -3,7 +3,7 @@ package com.worth.ifs.testdata.builders.data;
 import com.worth.ifs.application.resource.ApplicationResource;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating responses to application form questions
  */
 public class ApplicationQuestionResponseData {
 

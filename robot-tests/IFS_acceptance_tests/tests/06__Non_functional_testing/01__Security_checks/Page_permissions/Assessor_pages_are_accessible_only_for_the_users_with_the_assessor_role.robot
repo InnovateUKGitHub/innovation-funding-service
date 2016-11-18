@@ -97,7 +97,7 @@ Second assessor shouldn't be able to see first assessor's assessments
 Second assessor shouldn't be able to access first assessor's application questions
     [Documentation]    INFUND-4569
     [Tags]
-    When the user navigates to the assessor page    ${Application_question_url}
+    When the user navigates to the assessor page    ${Application_question_url_2}
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
 

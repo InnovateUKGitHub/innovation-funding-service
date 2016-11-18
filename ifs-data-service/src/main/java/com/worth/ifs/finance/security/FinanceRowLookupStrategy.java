@@ -20,11 +20,6 @@ public class FinanceRowLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public FinanceRow getFinanceRow(final Long costId) {
-        FinanceRow financeRow = financeRowRepository.findOne(costId);
-
-        // TODO INFUND-5955 - having to explicitly initialise here
-        financeRow.getApplicationFinance().getApplication().getId();
-        financeRow.getApplicationFinance().getOrganisation().getId();
-        return financeRow;
+        return financeRowRepository.findOne(costId);
     }
 }

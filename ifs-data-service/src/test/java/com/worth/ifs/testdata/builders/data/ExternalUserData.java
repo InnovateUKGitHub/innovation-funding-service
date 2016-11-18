@@ -1,10 +1,9 @@
 package com.worth.ifs.testdata.builders.data;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Applicants
  */
 public class ExternalUserData extends BaseUserData {
-
 
     private String firstName;
     private String lastName;

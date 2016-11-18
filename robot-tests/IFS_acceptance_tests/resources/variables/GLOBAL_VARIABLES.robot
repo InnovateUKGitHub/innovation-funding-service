@@ -208,6 +208,7 @@ ${Assessment_summary_Pending_12}    ${server}/assessment/${IN_ASSESSMENT_APPLICA
 ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
 ${assessment_skills}    ${server}/assessment/profile/declaration
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
+${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
 
 # Database variables
 ${database_name}    ifs

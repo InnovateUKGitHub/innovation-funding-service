@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO DW - document this class
+ * Running data context for generating Competitions
  */
 public class CompetitionData {
 
