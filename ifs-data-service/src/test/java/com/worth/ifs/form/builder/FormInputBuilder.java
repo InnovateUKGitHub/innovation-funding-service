@@ -4,10 +4,12 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
@@ -61,5 +63,25 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withScope(FormInputScope... scopes) {
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
+    }
+
+    public FormInputBuilder withDescription(String description) {
+        return with(formInput -> formInput.setDescription(description));
+    }
+
+    public FormInputBuilder withGuidanceAnswer(String guidanceAnswer) {
+        return with(formInput -> formInput.setGuidanceAnswer(guidanceAnswer));
+    }
+
+    public FormInputBuilder withGuidanceQuestion(String guidanceQuestion) {
+        return with(formInput -> formInput.setGuidanceQuestion(guidanceQuestion));
+    }
+
+    public FormInputBuilder withIncludedInApplicationSummary(boolean includedInApplicationSummary) {
+        return with(formInput -> formInput.setIncludedInApplicationSummary(includedInApplicationSummary));
+    }
+
+    public FormInputBuilder withInputValidators(Set<FormValidator> inputValidators) {
+        return with(formInput -> formInput.setInputValidators(inputValidators));
     }
 }
