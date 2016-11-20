@@ -167,7 +167,7 @@ Bank details for non-lead partner
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966
     [Tags]    HappyPath
-    [Setup]  log in as a different user             project.finance1@innovateuk.test    Passw0rd
+    [Setup]  log in as a different user             lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details

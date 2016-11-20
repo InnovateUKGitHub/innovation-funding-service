@@ -53,7 +53,7 @@ Comp admin can view the Supporting information details on MO page
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666
     [Tags]    HappyPath
-    Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    Given log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information

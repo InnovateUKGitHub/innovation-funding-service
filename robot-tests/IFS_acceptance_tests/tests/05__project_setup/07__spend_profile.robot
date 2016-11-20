@@ -33,7 +33,7 @@ ${external_spendprofile_summary}    ${la_fromage_overview}/partner-organisation/
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
-    [Setup]  log in as user                 project.finance1@innovateuk.test    Passw0rd
+    [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves La Fromage into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
@@ -347,7 +347,7 @@ Status updates correctly for internal user's table
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
     [Tags]    HappyPath
-    [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user                     lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page                    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
@@ -404,7 +404,7 @@ Comp Admin can download the Spend Profile csv
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
-    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user            lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
@@ -439,7 +439,7 @@ Project finance user cannot access internal users' spend profile page
 
 *** Keywords ***
 the project finance user moves La Fromage into project setup if it isn't already
-    log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
     ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  La Fromage
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
