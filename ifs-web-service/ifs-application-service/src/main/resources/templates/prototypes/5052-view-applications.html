@@ -14,13 +14,13 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '?status=Open')})" th:remove="tag" />
 
 
   	<!-- HARDCODED PROTOTYPE HTML -->
 
     <th:block th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications'}, ${null})" />
-    
+
     <div class="no-constrain-width justify-left">
 
       <h2 class="heading-medium">Key statistics</h2>
@@ -47,7 +47,7 @@
 
         <li class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-large">0</span><br /><small>Applications removed</small>
+            <span class="heading-large">0</span><br /><small>Ineligible applications</small>
           </div>
         </li>
 
@@ -58,19 +58,19 @@
       <ul class="grid-row">
 
         <li class="column-quarter dashboard-actions">
-          <a class="button" href="/prototypes/5062-open-applications?comp=Open">All applications</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5062-open-applications?comp=' + param.comp[0] : '/prototypes/5062-open-applications?comp=Open')}">All applications</a>
         </li>
 
         <li class="column-quarter dashboard-actions">
-          <a class="button" href="#">Submitted applications</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5062-submitted-applications?comp=' + param.comp[0] : '/prototypes/5062-submitted-applications?comp=Open')}">Submitted applications</a>
         </li>
 
         <li class="column-quarter dashboard-actions">
-          <a class="button" href="#">Non submitted applications</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5062-not-submitted-applications?comp=' + param.comp[0] : '/prototypes/5062-not-submitted-applications?comp=Open')}">Non submitted applications</a>
         </li>
 
         <li class="column-quarter dashboard-actions">
-          <a class="button" href="#">Applications removed</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5698-removed-applications?comp=' + param.comp[0] : '/prototypes/5698-removed-applications?comp=Open')}">Ineligible applications</a>
         </li>
 
       </ul>

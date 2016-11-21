@@ -11,7 +11,6 @@
 .spend-profile-table th[scope="col"],
 .spend-profile-table td{
   text-align:right;
-  white-space: nowrap;
 }
 .spend-profile-table .year {
   border-right: 1px solid $border-colour;
@@ -22,7 +21,6 @@
     max-width:100%;
 }
 
-//todo: clean up specifity
 .spend-profile-table .form-group-row.error .fix-right,
 .spend-profile-table .fix-right {
   background: $grey-3;
@@ -41,8 +39,12 @@
 
 
 .spend-profile-table tfoot .fix-right,
-.spend-profile-table tfoot  th[scope="row"]{
-  margin-top:-2px;
+.spend-profile-table tfoot th[scope="row"],
+.spend-profile-table tfoot tr.form-group-row.error th[scope="row"]{
+  margin-top:-1px;
+}
+.spend-profile-table tbody tr.form-group-row.error th:first-of-type {
+  margin-top:1px;
 }
 .spend-profile-table input[readonly]{
   background: transparent;
@@ -54,13 +56,15 @@
   padding:20px 0;
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 1150px) {
   .spend-profile-table td,
-  .spend-profile-table th,{
+  .spend-profile-table th{
     box-sizing: border-box;
     height: 60px;
     padding: 0.6em;
+    margin-top:1px;
   }
+
 
   .spend-profile-table th[scope="row"] {
     left: 0;
@@ -76,15 +80,15 @@
   }
 
   .spend-profile-table.academic th[scope="row"]{
-    width:155px;
+    width:175px;
     font-weight: normal;
     border-right:none;
     + th[scope="row"] {
-      left:155px;
+      left:175px;
       border-right: 1px solid $border-colour;
     }
     &[colspan="2"]{
-      width:310px;
+      width:350px;
       border-right:1px solid $border-colour;
     }
   }

@@ -164,7 +164,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(page, response.getNumber());
         assertEquals(size, response.getSize());
 
-        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(), competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type");
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
+                competition.getName(), null, 0, "", CompetitionResource.Status.COMPETITION_SETUP, "Comp Type",0);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 

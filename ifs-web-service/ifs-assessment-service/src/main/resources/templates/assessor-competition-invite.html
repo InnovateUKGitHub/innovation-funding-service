@@ -19,12 +19,14 @@
 
             <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
 
-            <!--/*section class="boxed">
-                <h2 class="heading-medium no-margin">15 - 25 April - assessment period</h2>
-                <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
+            <section class="boxed">
+                <h2 class="heading-medium no-margin" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
+                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remove="tag"/>
+                </h2>
+                <!--/*p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
 
-                <p>The assessor webinar briefing is mandatory and will last one hour, taking place on 21 March.</p>
-            </section/*/-->
+                <p>The assessor webinar briefing is mandatory and will last one hour, taking place on 21 March.</p*/-->
+            </section>
 
             <section>
                 <!--/*h2 class="heading-medium">Competition details - Technology Inspired</h2>

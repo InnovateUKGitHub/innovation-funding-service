@@ -99,7 +99,7 @@ function buildAndDeploy() {
     cd ${dockerDir}
     ./deploy.sh all
     wait
-    sleep 5
+    sleep 20
 
     ## Replace the webtest build environment with the one we had before.
     echo "=> Swapping back original build properties..."

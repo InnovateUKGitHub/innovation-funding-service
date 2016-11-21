@@ -84,7 +84,7 @@ function buildAndDeploy {
     sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/setup,db\/webtest"/' dev-build.gradle > webtest.gradle.tmp
     mv dev-build.gradle dev-build.gradle.tmp
     mv webtest.gradle.tmp dev-build.gradle
-    ./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
+    ./gradlew clean deployToTomcat
     ./gradlew flywayMigrate
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"

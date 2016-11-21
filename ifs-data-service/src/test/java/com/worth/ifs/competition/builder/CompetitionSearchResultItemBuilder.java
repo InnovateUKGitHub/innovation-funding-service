@@ -7,8 +7,8 @@ import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionSearchResultItem, CompetitionSearchResultItemBuilder> {
@@ -47,6 +47,10 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
 
     public CompetitionSearchResultItemBuilder withCompetitionTypeName(String... competitionTypeName) {
         return withArray((name, competition) -> competition.setCompetitionTypeName(name), competitionTypeName);
+    }
+
+    public CompetitionSearchResultItemBuilder withProjectsCount(Integer... projectsCount) {
+        return withArray((number, competition) -> competition.setProjectsCount(number), projectsCount);
     }
 
     @Override

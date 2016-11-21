@@ -16,7 +16,7 @@ IFS.core.finance = (function() {
     },
     init : function() {
       IFS.core.finance.bindCalculationActionToFields(); // Bind calculations
-      // Used for calculations
+      //jQuery('body').trigger('recalculateAllFinances');
     },
     bindCalculationActionToFields : function() {
       //we watch for changes in inputs as a calculation always starts with an input

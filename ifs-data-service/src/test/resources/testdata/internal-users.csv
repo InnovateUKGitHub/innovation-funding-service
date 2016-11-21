@@ -1,0 +1,11 @@
+Email,First name,Last name,Status,Organisation name,Phone number,Role
+john.doe@innovateuk.test,Firstname15,Lastname15,ACTIVE,Innovate UK,,comp_admin
+robert.johnson@innovateuk.test,Firstname16,Lastname16,ACTIVE,Innovate UK,,comp_admin
+project.finance1@innovateuk.test,Firstname33,Lastname33,ACTIVE,Innovate UK,,project_finance
+project.finance2@innovateuk.test,Firstname34,Lastname34,ACTIVE,Innovate UK,,project_finance
+comp_technologist1@innovateuk.test,Competition,Technologist One,ACTIVE,Innovate UK,,competition_technologist
+comp_technologist2@innovateuk.test,Competition,Technologist Two,ACTIVE,Innovate UK,,competition_technologist
+comp_exec1@innovateuk.test,Competition,Executive One,ACTIVE,Innovate UK,,competition_executive
+comp_exec2@innovateuk.test,Competition,Executive Two,ACTIVE,Innovate UK,,competition_executive
+worth.email.test+project.finance1@gmail.com,,,INACTIVE,,,project_finance
+worth.email.test+admin1@gmail.com,,,INACTIVE,,,comp_admin

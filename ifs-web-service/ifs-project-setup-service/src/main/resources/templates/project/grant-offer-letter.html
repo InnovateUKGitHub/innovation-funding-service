@@ -35,19 +35,19 @@
               <h3 class="heading-small no-margin-top">We are unable to approve the grant offer letter. We will return this to you. A member of Innovate UK will be in contact to discuss our requirements with you.</h3>
           </div>
           <div th:if="${model.offerAccepted}" class="success-alert extra-margin-bottom">
-                    <p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
+                    <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
             </div>
         </th:block>
 
         <th:block th:if="${model.leadPartner}">
-            <p>The grant offer letter is provided by innovate UK. It has been created using the information provided by your organisation and partner during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
+            <p>The grant offer letter is provided by innovate UK. It has been created using the information provided by your organisation and partners during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
 
               <h2 class="heading-medium">Grant offer letter</h2>
-              <p>The grant offer should be read and approved by all project member. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
+              <p>The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
               <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
-              <h2 class="heading-medium">Annex 2</h2>
-              <p>Annex 2 contains any additional contracts that were agreed upon during the application. By signing the grant offer letter you also agree to the condition stated in Annex 2.</p>
+              <h2 class="heading-medium">Annex</h2>
+              <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
               <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
             <div th:unless="${model.submitted}" class="upload-section">
