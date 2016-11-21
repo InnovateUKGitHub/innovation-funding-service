@@ -15,28 +15,30 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to all competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<p class="subtitle">Funding competition</p>
 	<h1 class="heading-large no-margin">Emerging and enabling technologies round 1</h1>
 
-	<p>Funding up to £50,000 is available to any consortium's for research and development projects to stimulate future products, services and industries.</p>
+	<p>Funding up to £50,000 is available to any consortiums for research and development projects to stimulate future products, services and industries.</p>
+
+	<ul class="list">
+		<li><strong>Competition opens:</strong> Monday 16 January 2017</li>
+		<li><strong>Competition closes:</strong> 12:00pm, Monday 25 March 2017</li>
+	</ul>
 
 	<p>
-		Competition opens: <strong>12pm, Monday 16 January 2017</strong><br />
-		Competition closes: <strong>12pm, Monday 25 March 2017</strong><br />
-
 		<a href="#" class="button extra-margin">Start or continue your application</a>
 	</p>
-	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'summary' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=summary'}"><strong>Summary</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'eligibility' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=eligibility'}"><strong>Eligibility</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'scope' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=scope'}"><strong>Scope</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'dates' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=dates'}"><strong>Dates</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'howToApply' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=howToApply'}"><strong>How to apply</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'supportingInformation' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=supportingInformation'}"><strong>Supporting information</strong></a></li>
+	<ul class="inline-nav hide-mobile">
+		<li th:class="${(param.tab == null or param.tab[0] == 'summary' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=summary'}"><strong>Summary</strong></a></h2></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'eligibility' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=eligibility'}"><strong>Eligibility</strong></a></h2></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'scope' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=scope'}"><strong>Scope</strong></a></h2></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'dates' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=dates'}"><strong>Dates</strong></a></h2></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'howToApply' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=howToApply'}"><strong>How to apply</strong></a></h2></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'supportingInformation' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=supportingInformation'}"><strong>Supporting information</strong></a></h2></li>
 	</ul>
 
 

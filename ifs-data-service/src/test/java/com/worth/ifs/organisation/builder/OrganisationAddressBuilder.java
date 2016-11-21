@@ -9,8 +9,8 @@ import com.worth.ifs.user.domain.Organisation;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class OrganisationAddressBuilder extends BaseBuilder<OrganisationAddress, OrganisationAddressBuilder> {

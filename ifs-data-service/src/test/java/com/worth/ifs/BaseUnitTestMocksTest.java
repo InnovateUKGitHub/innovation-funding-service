@@ -21,10 +21,8 @@ import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import com.worth.ifs.assessment.transactional.AssessmentService;
-import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
-import com.worth.ifs.assessment.transactional.AssessorService;
-import com.worth.ifs.assessment.transactional.CompetitionInviteService;
+import com.worth.ifs.assessment.transactional.*;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
@@ -35,7 +33,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
-import com.worth.ifs.commons.BaseTest;
+import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -127,6 +125,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentService assessmentServiceMock;
 
     @Mock
+    protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
     protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
 
     @Mock
@@ -215,6 +216,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
+
+    @Mock
+    protected CompetitionParticipantService competitionParticipantServiceMock;
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;

@@ -4,6 +4,7 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.actions.FundingDecisionAction;
 import com.worth.ifs.assessment.workflow.actions.RejectAction;
+import com.worth.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
 import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +38,20 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     @Autowired
     private ProcessOutcomeGuard processOutcomeExistsGuard;
 
+    @Autowired
+    private AssessmentCompleteGuard assessmentCompleteGuard;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
-
     }
 
     @Override
     public void configure(StateMachineStateConfigurer<AssessmentStates, AssessmentOutcomes> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(new LinkedHashSet<>(asList(AssessmentStates.values())));
+                .states(new LinkedHashSet<>(asList(AssessmentStates.values())))
+                .choice(DECIDE_IF_READY_TO_SUBMIT);
     }
 
     @Override
@@ -70,11 +74,11 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
-                    .source(ACCEPTED).target(OPEN)
+                    .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FEEDBACK)
                     .and()
                 .withExternal()
-                    .source(ACCEPTED).target(OPEN)
+                    .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FUNDING_DECISION)
                     .action(fundingDecisionAction)
                     .guard(processOutcomeExistsGuard)
@@ -86,11 +90,11 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
-                    .source(OPEN).target(OPEN)
+                    .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FEEDBACK)
                     .and()
                 .withExternal()
-                    .source(OPEN).target(OPEN)
+                    .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FUNDING_DECISION)
                     .action(fundingDecisionAction)
                     .guard(processOutcomeExistsGuard)
@@ -102,14 +106,19 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                      .guard(processOutcomeExistsGuard)
                      .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(OPEN)
+                    .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FEEDBACK)
                     .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(OPEN)
+                    .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FUNDING_DECISION)
                     .action(fundingDecisionAction)
                     .guard(processOutcomeExistsGuard)
+                    .and()
+                .withChoice()
+                    .source(DECIDE_IF_READY_TO_SUBMIT)
+                    .first(READY_TO_SUBMIT, assessmentCompleteGuard)
+                    .last(OPEN)
                     .and()
                 .withExternal()
                     .source(READY_TO_SUBMIT).target(SUBMITTED)

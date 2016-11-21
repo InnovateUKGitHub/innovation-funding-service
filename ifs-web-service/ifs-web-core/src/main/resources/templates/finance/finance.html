@@ -1079,6 +1079,8 @@
 	                       class="form-control width-medium"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-date'}"
 	                       placeholder="MM-YYYY"
+                         pattern="(0[1-9]|1[012])-[0-9]{4}"
+                         data-pattern-errormessage="Invalid secured date.  Please use MM-YYYY format."
 	                       maxlength="7"
 	                       th:value="${cost.securedDate}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"

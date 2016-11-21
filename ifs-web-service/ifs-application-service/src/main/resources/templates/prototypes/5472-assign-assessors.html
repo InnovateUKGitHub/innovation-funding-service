@@ -15,13 +15,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessments'}, ${'/prototypes/5052-manage-assessments?status=Closed'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
   <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate assessors'}, ${'competition closed'})" th:remove="tag" />
 
-	<p>Assign assessors to applications. Assessors will not be informed of any assignments until they are notified.</p>
+	<p>Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=true,sortByType=2" th:remove="tag" />
 

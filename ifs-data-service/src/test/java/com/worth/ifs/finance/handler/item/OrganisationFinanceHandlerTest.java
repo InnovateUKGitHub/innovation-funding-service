@@ -3,7 +3,6 @@ package com.worth.ifs.finance.handler.item;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
@@ -30,6 +29,7 @@ import java.util.*;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -71,7 +71,7 @@ public class OrganisationFinanceHandlerTest {
         costTypeQuestion = new HashMap<FinanceRowType, Question>();
 
         for (FinanceRowType costType : FinanceRowType.values()) {
-            setUpCostTypeQuestions(costType);
+            setUpCostTypeQuestions(competition, costType);
         }
 
         List<FinanceRow> costs = new ArrayList<>();
@@ -125,17 +125,16 @@ public class OrganisationFinanceHandlerTest {
 
         when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinance.getId())).thenReturn(costs);
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<FinanceRowMetaField>());
-
     }
 
-    private void setUpCostTypeQuestions(FinanceRowType costType) {
+    private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
         FormInputType formInputType = new FormInputType(null, costType.getType());
         FormInput formInput = newFormInput().build();
         formInput.setFormInputType(formInputType);
         Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByFormInputType(eq(costType.getType()))).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getType()))).thenReturn(serviceSuccess(question));
     }
 
     @Test

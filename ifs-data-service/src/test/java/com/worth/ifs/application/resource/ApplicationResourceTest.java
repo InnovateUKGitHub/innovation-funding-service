@@ -25,7 +25,7 @@ public class ApplicationResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        id =0L;
+        id = 0L;
         name = "testApplicationName";
         applicationStatus = ApplicationStatusConstants.OPEN;
         competition = new Competition();
@@ -37,16 +37,16 @@ public class ApplicationResourceTest {
         applicationFinances.add(new ApplicationFinance(3L, null, null));
 
         processRoles = new ArrayList<>();
-        processRoles.add(new ProcessRole(1L,null,null,null,null));
-        processRoles.add(new ProcessRole(2L,null,null,null,null));
-        processRoles.add(new ProcessRole(3L,null,null,null,null));
+        processRoles.add(new ProcessRole(1L, null, null, null, null));
+        processRoles.add(new ProcessRole(2L, null, null, null, null));
+        processRoles.add(new ProcessRole(3L, null, null, null, null));
 
         applicationResource = newApplicationResource()
-            .withCompetition(competition.getId())
-            .withName(name)
-            .withApplicationStatus(applicationStatus)
-            .withId(id)
-            .build();
+                .withCompetition(competition.getId())
+                .withName(name)
+                .withApplicationStatus(applicationStatus)
+                .withId(id)
+                .build();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ApplicationResourceTest {
     }
 
     @Test
-    public void equalsShouldReturnFalseOnNull() throws Exception{
+    public void equalsShouldReturnFalseOnNull() throws Exception {
         Assert.assertFalse(applicationResource.equals(null));
     }
 }
