@@ -162,10 +162,9 @@
                             </div>
                         </fieldset>
                         <div id="resubmission-details">
-                            <div class="form-group" >
-                                <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
-                            </div>
-                            <div class="form-group">
+                            <h2 class="heading-medium">Please provide the details of this previous application</h2>
+
+                            <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationnumber">
                                     <span>Previous application number</span>
                                     <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationnumber')" th:remove="tag" />
@@ -179,7 +178,7 @@
                                        th:errorclass="field-error"
                                 />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationtitle">
                                     <span>Previous application title</span>
                                     <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationtitle')" th:remove="tag" />
@@ -222,12 +221,33 @@
                               </div>
                           </fieldset>
                       </div>
-                        <div class="form-group">
-                            <h2 class="heading-medium no-margin">Lead organisation</h2>
-                            <div th:text="${leadOrganisation.name}" />
+                        <h2 class="heading-medium no-margin">Lead organisation</h2>
+                        <div th:text="${leadOrganisation.name}" />
+                        <h2 class="heading-medium no-margin-bottom extra-margin">Partners</h2>
+                        <ul class="list-bullet">
+                            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
+                                <span th:text="${organisation.getName()}"></span>
+                            </li>
+                            <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                                <span th:text="${pendingOrganisationName}"></span>
+                                <small>(pending)</small>
+                            </li>
+                        </ul>
+                        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
+                            <p>
+                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
+                                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                            </p>
                         </div>
-                        <div class="form-group">
-                            <h2 class="heading-medium no-margin">Partners</h2>
+                        </div>
+                        <div class="grid-row" th:if="${appIsClosed}">
+                          <div class="column-half">
+                            <h3 class="heading-small">Project title</h3>
+                            <p th:text="${currentApplication.name}" />
+                            <h3 class="heading-small">Lead organisation</h3>
+                            <p th:text="${leadOrganisation.name}" />
+                            <h3 class="heading-small">Partners</h3>
                             <ul class="list-bullet">
                                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                     <span th:text="${organisation.getName()}"></span>
@@ -237,42 +257,14 @@
                                     <small>(pending)</small>
                                 </li>
                             </ul>
-                        </div>
-                        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
-                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
-                            <p>
-                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
-                                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-                            </p>
-                        </div>
-                        </div>
-                        <div th:if="${appIsClosed}" th:remove="tag">
-                            <div class="grid-row">
-                              <div class="column-half">
-                                <h3 class="heading-small">Project title</h3>
-                                <p th:text="${currentApplication.name}" />
-                                <h3 class="heading-small">Lead organisation</h3>
-                                <p th:text="${leadOrganisation.name}" />
-                                <h3 class="heading-small">Partners</h3>
-                                <ul class="list-bullet">
-                                    <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
-                                        <span th:text="${organisation.getName()}"></span>
-                                    </li>
-                                    <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
-                                        <span th:text="${pendingOrganisationName}"></span>
-                                        <small>(pending)</small>
-                                    </li>
-                                </ul>
-                              </div>
-                              <div class="column-half">
-                                  <h3 class="heading-small">Project timescales</h3>
-                                  <p>Project start date:<br/>
-                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
-                                  </p>
-                                  <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
-                              </div>
-                            </div>
-
+                          </div>
+                          <div class="column-half">
+                              <h3 class="heading-small">Project timescales</h3>
+                              <p>Project start date:<br/>
+                                <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
+                              </p>
+                              <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+                          </div>
                         </div>
                     </div>
                     <!-- ===========================Form: empty / no question =========================== -->
