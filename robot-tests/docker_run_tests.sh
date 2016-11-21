@@ -43,13 +43,29 @@ function clearDownFileRepository() {
     docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
 }
 
-function addTestFiles() {
+function addTestFiles() { 
+
     clearDownFileRepository
     echo "***********Adding test files***************"
+    docker cp ../../../robot_tests/upload_files/testing.pdf ifs_data_1:/tmp/testing.pdf
+
     echo "***********Making the quarantined directory ***************"
     docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec ifs_data_1 cp /tmp/ifs-local/8 ${virusScanQuarantinedFolder}/8
+    docker exec ifs_data_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+
+    echo "***********Adding standard file upload location ***********"
+    docker exec ifs_data_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+
+    echo "***********Creating file entry for each db entry***********" 
+    max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
+    for i in `seq 1 ${max_file_entry_id}`;
+    do 
+      if [ "${i}" != "8" ]
+      then
+        docker exec ifs_data_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+      fi
+    done
 }
 
 function resetLDAP() {

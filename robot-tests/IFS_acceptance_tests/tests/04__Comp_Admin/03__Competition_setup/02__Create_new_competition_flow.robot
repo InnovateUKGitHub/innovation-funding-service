@@ -106,9 +106,9 @@ Initial details: User enters valid values and marks as done
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    Competition Executive Two
+    Then the user should see the text in the page    Toby Reader
     And the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -129,7 +129,7 @@ Initial details: Comp Type and Date should not be editable
     And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -471,8 +471,8 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
