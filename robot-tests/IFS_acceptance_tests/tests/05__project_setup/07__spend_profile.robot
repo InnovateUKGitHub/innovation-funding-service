@@ -20,6 +20,13 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5911 Internal users should not have access to external users' pages
 ...
 ...               INFUND-3973 As a Project Finance team member I want to be able to export submitted spend profile tables so that these may be distributed offline to Lead Technologists and Monitoring Officers
+...
+...               INFUND-5846 As a partner in an acedemic organisation I want to be able to edit my Spend profile so I can prepare an updated profile for my organisation before submission to the Project Manager
+...
+...               INFUND-5441 As a Project Finance team member I want to be able to export submitted spend profile tables from academic organisations so that these may be distributed offline to Lead Technologists and Monitoring Officers
+...
+...               INFUND-6046 Spend Profile should have a link when Done
+
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -47,15 +54,15 @@ Project Finance cancels the generation of the Spend Profile
     When the user clicks the button/link           jQuery=.button:contains("Generate Spend Profile")
     Then the user should see the text in the page  This will generate a flat profile spend for all project partners.
     When the user clicks the button/link           jQuery=.button:contains("Cancel")
-    Then the user should not see an error in the page
 
 Project Finance generates the Spend Profile
-    [Documentation]  INFUND-5194
+    [Documentation]  INFUND-5194, INFUND-5987
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
     And the user clicks the button/link     jQuery=.button:contains("Generate spend profile")
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-
+    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -239,6 +246,35 @@ Academic partner can see the alternative academic view of the spend profile
     And the user should see the text in the page    Investigations
     And the user should see the text in the page    Estates costs
 
+Academic partner spend profile server side validations
+    [Documentation]    INFUND-5846
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    -1
+    And the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3306
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the text in the page    Your total costs are higher than your eligible costs
+    And the user should see the text in the page    This field should be 0 or higher
+
+Academic partner spend profile client side validations
+    [Documentation]    INFUND-5846
+    [Tags]
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    3
+    And the user moves focus to the element    link=Project setup status
+    Then the user should not see the text in the page    This field should be 0 or higher
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3
+    And the user moves focus to the element    link=Project setup status
+    Then the user should not see the text in the page    Your total costs are higher than your eligible costs
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+
+
+Academic partner edits spend profile and this updates on the table
+    [Documentation]    INFUND-5846
+    [Tags]    Pending
+    # Pending due to ongoing work (Ewan Cormack)
+    When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    And the user sees the text in the text field
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
@@ -335,7 +371,7 @@ Partners can see the Spend Profile section completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
-    [Tags]    Experian    #HappyPath
+    [Tags]    Experian
     [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
@@ -355,7 +391,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element                 jQuery=h2:contains("The spend profile has been rejected")
     # TODO - Set up test data with Innovate lead and check for the lead.
-    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed. See INFUND-6046.
+    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed, Pending due to INFUND-5942
     When the user should see the text in the page           Project spend profile
     Then the user clicks the button/link                    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}-spend-profile.csv
     And the user clicks the button/link                     link=Ludlow-spend-profile.csv
@@ -387,7 +423,7 @@ Comp Admin is able to see Spend Profile approval page
     Then the user should not see an error in the page
 
 Comp Admin can download the Spend Profile csv
-    [Documentation]  INFUND-3973
+    [Documentation]  INFUND-3973, INFUND-5875
     [Tags]
     Given the user navigates to the page       ${internal_spend_profile_approval}
     And the user should see the element        jQuery=h2:contains("Spend profile")
@@ -400,6 +436,7 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
     When the user clicks the button/link       link=EGGS-spend-profile.csv
     Then the user should not see an error in the page
+    #TODO update ticket along with INFND-6187
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -417,7 +454,7 @@ Project Finance is able to Reject Spend Profile
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
 Project Finance is able to Approve Spend Profile
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page             ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
     When the user selects the checkbox               jQuery=#approvedByLeadTechnologist
@@ -431,6 +468,18 @@ Project Finance is able to Approve Spend Profile
     Then the user should not see the element         jQuery=h3:contains("The spend profile has been approved")
     When the user navigates to the page              ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     Then the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok
+
+
+Project Finance still has a link to the spend profile after approval
+    [Documentation]    INFUND-6046
+    [Tags]
+    When the user clicks the button/link                     jQuery=td:nth-child(6) a
+    Then the user should see the text in the page           Project spend profile
+    And the user clicks the button/link                    link=Empire Ltd-spend-profile.csv
+    And the user clicks the button/link                     link=Ludlow-spend-profile.csv
+    And the user clicks the button/link                     link=EGGS-spend-profile.csv
+    And the user should see the text in the page    The spend profile has been approved
+
 
 Project finance user cannot access internal users' spend profile page
     [Documentation]    INFUND-5911
