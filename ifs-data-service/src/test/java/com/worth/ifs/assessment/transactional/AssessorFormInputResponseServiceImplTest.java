@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -10,12 +11,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -48,7 +48,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponses() throws Exception {
+    public void getAllAssessorFormInputResponses() throws Exception {
         List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse().build(2);
 
         List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().build(2);
@@ -66,7 +66,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse().build(2);
 
         List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().build(2);
@@ -85,7 +85,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse() throws Exception {
+    public void updateFormInputResponse() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "New feedback";
@@ -107,7 +107,9 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+
+        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
+        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
@@ -116,14 +118,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(updatedAssessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToResource(same(existingAssessorFormInputResponse));
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(same(existingAssessorFormInputResponseResource));
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(same(existingAssessorFormInputResponse));
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(same(existingAssessorFormInputResponseResource));
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
         inOrder.verifyNoMoreInteractions();
 
-        AssessorFormInputResponse saved = argument.getValue();
+        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
+        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
         assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
         assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
         assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());
@@ -132,12 +136,11 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_notExists() throws Exception {
+    public void updateFormInputResponse_notExists() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "New feedback";
 
-        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -147,18 +150,24 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
+
+        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
+        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
         inOrder.verifyNoMoreInteractions();
 
-        AssessorFormInputResponse saved = argument.getValue();
+        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
+        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
         assertNull(saved.getId());
         assertEquals(assessmentId, saved.getAssessment().getId());
         assertEquals(formInputId, saved.getFormInput().getId());
@@ -167,12 +176,11 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_nullValue() throws Exception {
+    public void updateFormInputResponse_nullValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = null;
 
-        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -182,18 +190,24 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
+
+        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
+        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
         inOrder.verifyNoMoreInteractions();
 
-        AssessorFormInputResponse saved = argument.getValue();
+        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
+        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
         assertNull(saved.getId());
         assertEquals(assessmentId, saved.getAssessment().getId());
         assertEquals(formInputId, saved.getFormInput().getId());
@@ -202,12 +216,11 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_emptyValue() throws Exception {
+    public void updateFormInputResponse_emptyValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "";
 
-        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -217,18 +230,24 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
+
+        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
+        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
         inOrder.verifyNoMoreInteractions();
 
-        AssessorFormInputResponse saved = argument.getValue();
+        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
+        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
         assertNull(saved.getId());
         assertEquals(assessmentId, saved.getAssessment().getId());
         assertEquals(formInputId, saved.getFormInput().getId());
@@ -238,7 +257,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_exceedsWordLimit() throws Exception {
+    public void updateFormInputResponse_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = String.join(" ", nCopies(101, "response"));
@@ -260,7 +279,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_noWordLimit() throws Exception {
+    public void updateFormInputResponse_noWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "This is the feedback text";
@@ -280,7 +299,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_sameAsExistingValue() throws Exception {
+    public void updateFormInputResponse_sameAsExistingValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "Value that won't be touched";
@@ -303,9 +322,11 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
-        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
+        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
@@ -313,14 +334,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToResource(same(existingAssessorFormInputResponse));
-        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(same(existingAssessorFormInputResponseResource));
-        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(same(existingAssessorFormInputResponse));
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(same(existingAssessorFormInputResponseResource));
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
         inOrder.verifyNoMoreInteractions();
 
-        AssessorFormInputResponse saved = argument.getValue();
+        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
+        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
         assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
         assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
         assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());

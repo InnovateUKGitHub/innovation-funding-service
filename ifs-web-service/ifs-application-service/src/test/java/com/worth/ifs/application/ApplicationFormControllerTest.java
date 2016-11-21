@@ -25,8 +25,7 @@ import org.springframework.ui.Model;
 
 import java.util.HashSet;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -376,7 +375,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "Form Input "+formInputId+" Response";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput["+formInputId+"]")
                         .param("value", value)
@@ -391,7 +390,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -407,7 +406,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -426,7 +425,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application/"+application.getId().toString()+"/form/saveFormElement")
+                post("/application/"+application.getId().toString()+"/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -445,7 +444,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -465,7 +464,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -484,7 +483,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String questionId = "cost-subcontracting-13-subcontractingCost";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "subcontracting_costs-cost-13")
                         .param("value", value)
@@ -504,7 +503,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.startDate.dayOfMonth";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -527,7 +526,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "35";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -544,7 +543,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "13";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -568,7 +567,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         when(sectionService.getById(anyLong())).thenReturn(null);
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "question[" + questionId + "]")
                         .param("value", value)
