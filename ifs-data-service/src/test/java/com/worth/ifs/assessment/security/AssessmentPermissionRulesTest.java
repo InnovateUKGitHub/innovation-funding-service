@@ -167,7 +167,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void otherUsersCannotSubmitAssessments() throws Exception {
+    public void otherUsersCannotPartiallySubmitAssessments() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -175,6 +175,31 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withParticipant(
                         newProcessRole()
                                 .withUser(newUser().with(id(assessorUser.getId())).build())
+                                .build()
+                )
+                .build();
+        Assessment assessment2 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(10L)).build())
+                                .build()
+                )
+                .build();
+
+        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+
+        assertFalse("other users cannot partially submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
+    }
+
+    @Test
+    public void otherUsersCannotSubmitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+        Assessment assessment1 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(10L)).build())
                                 .build()
                 )
                 .build();

@@ -42,10 +42,8 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "SUBMIT", description = "Only owners can submit Assessments")
     public boolean userCanSubmitAssessments(AssessmentSubmissionsResource submissions, UserResource user) {
-        List<Assessment> assessments = assessmentRepository.findAll(submissions.getAssessmentIds());
-
-        return assessments.stream().allMatch(assessment ->
-                assessment.getParticipant().getUser().getId().equals(user.getId()));
+        return assessmentRepository.findAll(submissions.getAssessmentIds()).stream()
+                .allMatch(assessment -> assessment.getParticipant().getUser().getId().equals(user.getId()));
     }
 
     private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user, List<AssessmentStates> allowedStates) {
