@@ -351,7 +351,7 @@ Project Finance user can clik the link and go back to the Competition Dashboard 
 
 
 CompAdmin approves other documents
-    [Documentation]    INFUND-4621
+    [Documentation]    INFUND-4621, INFUND-5507
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
@@ -368,6 +368,7 @@ CompAdmin approves other documents
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
     And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
     Then the user should see the text in the page    The documents provided have been approved.
+    [Teardown]  the user clicks the button/link      link=Competition dashboard
 
 
 Partners can see the documents approved

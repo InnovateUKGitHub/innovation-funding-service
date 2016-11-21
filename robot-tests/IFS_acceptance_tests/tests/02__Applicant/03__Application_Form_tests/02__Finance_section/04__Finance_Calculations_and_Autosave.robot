@@ -72,6 +72,14 @@ Capital usage
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
+Capital usage - negative total
+    [Documentation]    INFUND-4879
+    [Tags]
+    When the applicant fills the 'capital usage' field to a negative value
+    Then Totals should be correct    css=#section-total-12    £ 0    css=[data-mirror="#section-total-12"]    £ 0
+    And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
+
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
@@ -197,6 +205,17 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing) input
+    the user moves focus to the element    css=.app-submit-btn
+
+the applicant fills the 'capital usage' field to a negative value
+    the user clicks the button/link    jQuery=button:contains("Capital usage")
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    9000
+    the user enters text to a text field    css=.form-finances-capital-usage-utilisation    100
+    the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
+    the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
+    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
     the user moves focus to the element    css=.app-submit-btn
 
 the Applicant fills the Travel fields
