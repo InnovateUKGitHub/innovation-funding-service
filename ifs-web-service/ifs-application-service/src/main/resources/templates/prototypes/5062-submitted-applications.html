@@ -31,15 +31,22 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}" th:remove="tag" />
+
+    <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
+      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+    </th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications submitted'}, ${null})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Applications submitted'}, ${null})" th:unless="${param.comp != null and param.comp[0] == 'panel' or param.comp != null and param.comp[0] == 'Inform'}" th:remove="tag" />
+
+  <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.comp != null and param.comp[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Funding decision'}, ${null})" />
 
       <h2 class="heading-medium">Key statistics</h2>
 
-			<div class="grid-row" th:unless="${param.comp != null and param.comp[0] == 'panel'}">
+			<div class="grid-row" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
 				<div class="column-quarter">
           <div class="highlight-panel">
             <span class="heading-medium">17 November 2016</span><br />
@@ -52,12 +59,12 @@
             <small>applications submitted</small>
           </div>
 				</div>
-        <div class="column-quarter">
+        <!-- <div class="column-quarter">
           <a href="/prototypes/1969-export-example" class="button">Export application data (.csv)</a>
-				</div>
+				</div> -->
 			</div>
 
-      <th:block th:if="${param.comp != null and param.comp[0] == 'panel'}">
+      <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
         <div class="grid-row extra-margin-bottom">
           <div class="column-quarter">
             <div class="highlight-panel">
@@ -92,7 +99,7 @@
 
 			<div th:if="${param.comp != null} and ${param.comp[0] == 'panel'}" th:remove="tag">
 
-				<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+				<!-- <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a> -->
 
 				<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 			        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -138,7 +145,12 @@
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
 							<th scope="col" class="alignright">Duration (months)</th>
-							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.comp == null} or ${param.comp[0] != 'panel'}" style="width: 120px">Fund project?</th>
+							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'decision'}" style="width: 120px">Fund project?</th>
+
+              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                <th scope="col" class="alignright">Funded</th>
+              </th:block>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -151,13 +163,16 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">324,000</td>
 							<td class="alignright">12</td>
-							<td th:unless="${param.comp == null} or ${param.comp[0] != 'panel'}" class="alignright">
+							<td th:unless="${param.comp == null} or ${param.status[0] != 'decision'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
 							</td>
+              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                <td class="alignright">Yes</td>
+              </th:block>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
@@ -168,13 +183,16 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">300,000</td>
 							<td class="alignright">12</td>
-							<td th:unless="${param.comp == null} or ${param.comp[0] != 'panel'}" class="alignright">
+							<td th:unless="${param.comp == null} or ${param.status[0] != 'decision'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
 							</td>
+              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                <td class="alignright">Yes</td>
+              </th:block>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
@@ -185,13 +203,16 @@
 							<td class="alignright">67,000</td>
 							<td class="alignright">97,500</td>
 							<td class="alignright">13</td>
-							<td th:unless="${param.comp == null} or ${param.comp[0] != 'panel'}" class="alignright">
+							<td th:unless="${param.comp == null} or ${param.status[0] != 'decision'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
 							</td>
+              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                <td class="alignright">Yes</td>
+              </th:block>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
@@ -202,13 +223,16 @@
 							<td class="alignright">100,000</td>
 							<td class="alignright">125,000</td>
 							<td class="alignright">14</td>
-							<td th:unless="${param.comp == null} or ${param.comp[0] != 'panel'}" class="alignright">
+							<td th:unless="${param.comp == null} or ${param.status[0] != 'decision'}" class="alignright">
 								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
 									<option value="-">-</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
 							</td>
+              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                <td class="alignright">No</td>
+              </th:block>
 						</tr>
 
 
