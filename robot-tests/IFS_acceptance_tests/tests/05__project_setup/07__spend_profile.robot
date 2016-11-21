@@ -250,20 +250,19 @@ Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[9][0]    -1
-    And the user enters text to a text field    table.monthlyCostsPerCategoryMap[10][2]    3306
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    -1
+    And the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3306
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs
     And the user should see the text in the page    This field should be 0 or higher
 
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
-    When the user moves focus to the element    table.monthlyCostsPerCategoryMap[8][2]
-    Then the user should not see the text in the page    This field should be a number
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[9][0]    330
+    [Tags]
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    3
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    This field should be 0 or higher
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[10][2]    330
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
