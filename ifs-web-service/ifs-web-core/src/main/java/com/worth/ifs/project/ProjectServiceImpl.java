@@ -46,6 +46,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    //@Autowired
+    //private GOLWorkflowHandler golWorkflowHandler;
+
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccessObjectOrThrowException();
@@ -298,7 +301,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-        return projectRestService.sendGrantOfferLetter(projectId).toServiceResult();
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId) {
+        return projectRestService.sendGrantOfferLetter(projectId, userId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+        return projectRestService.isSendGrantOfferLetterAllowed(projectId).toServiceResult();
     }
 }
