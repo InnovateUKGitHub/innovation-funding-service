@@ -5,10 +5,13 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.assessment.resource.AssessmentStates.*;
@@ -31,6 +34,13 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
         List<AssessmentStates> allowedNonDashboardReadStates = asList(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedNonDashboardReadStates);
+    }
+
+    @PermissionRule(value = "ASSIGN", description = "Assessors can only accept or reject assessments that are pending and the accept date hasn't passed")
+    public boolean userCanAssignAssessment(AssessmentResource assessment, UserResource user) {
+        Competition competition = competitionRepository.findById(assessment.getCompetition());
+        List<AssessmentStates> allowedAssignStates = Collections.singletonList(PENDING);
+        return competition.getAssessorAcceptsDate().isAfter(LocalDateTime.now()) && isAssessorForAssessment(assessment, user, allowedAssignStates);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")

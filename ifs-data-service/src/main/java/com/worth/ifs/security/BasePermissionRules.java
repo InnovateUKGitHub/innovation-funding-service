@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -54,6 +55,9 @@ public abstract class BasePermissionRules {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
+
+    @Autowired
+    protected CompetitionRepository competitionRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
         return isLeadApplicant(applicationId, user) || isCollaborator(applicationId, user);

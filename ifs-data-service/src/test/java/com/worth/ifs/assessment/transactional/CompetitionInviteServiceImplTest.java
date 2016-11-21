@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -48,7 +49,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setUp() {
-        Competition competition = newCompetition().withName("my competition").build();
+        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().plusDays(1)).build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
         competitionParticipant = new CompetitionParticipant(competition, competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
@@ -163,6 +164,22 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashNotExists");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void openInvite_inviteExpired() throws Exception {
+        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().minusDays(1)).build();
+        CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
+        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(competitionInvite);
+
+        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.openInvite("inviteHashExpired");
+
+        assertTrue(inviteServiceResult.isFailure());
+        assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_EXPIRED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashExpired");
         inOrder.verifyNoMoreInteractions();
     }
 

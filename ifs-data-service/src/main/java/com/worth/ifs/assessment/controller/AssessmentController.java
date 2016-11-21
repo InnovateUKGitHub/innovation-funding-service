@@ -32,6 +32,11 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
+    @RequestMapping(value= "/{id}/assign", method = GET)
+    public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") Long id) {
+        return assessmentService.findAssignableById(id).toGetResponse();
+    }
+
     @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
     public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") Long userId, @PathVariable("competitionId") Long competitionId ) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();

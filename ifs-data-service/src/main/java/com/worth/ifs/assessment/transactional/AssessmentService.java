@@ -18,6 +18,9 @@ public interface AssessmentService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findById(Long id);
 
+    @PostAuthorize("hasPermission(returnObject, 'ASSIGN')")
+    ServiceResult<AssessmentResource> findAssignableById(Long id);
+
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId);
 

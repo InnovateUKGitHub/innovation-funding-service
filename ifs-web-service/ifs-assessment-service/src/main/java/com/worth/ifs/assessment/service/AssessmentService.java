@@ -12,6 +12,8 @@ public interface AssessmentService {
 
     AssessmentResource getById(Long id);
 
+    AssessmentResource getAssignableById(Long id);
+
     List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
 
     ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
