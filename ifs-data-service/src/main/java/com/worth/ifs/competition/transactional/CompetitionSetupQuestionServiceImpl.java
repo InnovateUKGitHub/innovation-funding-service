@@ -164,7 +164,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 }
                 formInputRepository.save(appendixFormInput);
             }
-        } else {
+        } else if (appendixFormInput != null) {
             formInputRepository.delete(appendixFormInput);
         }
     }
