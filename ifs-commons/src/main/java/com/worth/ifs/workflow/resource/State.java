@@ -9,6 +9,7 @@ public enum State {
     REJECTED,
     ACCEPTED,
     OPEN,
+    DECIDE_IF_READY_TO_SUBMIT,
     READY_TO_SUBMIT,
     SUBMITTED,
     VERIFIED,
