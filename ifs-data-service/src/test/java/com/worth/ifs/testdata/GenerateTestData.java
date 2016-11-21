@@ -315,13 +315,18 @@ public class GenerateTestData extends BaseIntegrationTest {
             return currentBuilder;
         };
 
+        UnaryOperator<ProjectDataBuilder> approveFinanceChecksIfNecessary =
+                builder -> !line.organisationsWithApprovedFinanceChecks.isEmpty() ?
+                        builder.withApprovedFinanceChecks(line.organisationsWithApprovedFinanceChecks) : builder;
+
         assignProjectManagerIfNecessary.
             andThen(setProjectAddressIfNecessary).
             andThen(submitProjectDetailsIfNecessary).
             andThen(setMonitoringOfficerIfNecessary).
             andThen(selectFinanceContactsIfNecessary).
             andThen(submitBankDetailsIfNecessary).
-            apply(baseBuilder).
+            andThen(approveFinanceChecksIfNecessary).
+                apply(baseBuilder).
                 build();
 
     }

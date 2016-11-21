@@ -1,14 +1,16 @@
-Project name,Start date,Project manager,Project address added?,Project details submitted?,Finance contacts,Monitoring Officer first name,Monitoring Officer last name,Monitoring Officer email,Monitoring Officer phone number,Bank details
-Material Logistics Planning in a railway project,2020-10-01,,,,,,,,,
-Performance of Grade Crossing Surface Materials,2018-03-01,diane.scott@eadel.example.com,Yes,Yes,,,,,,
-Balise and Train Control System Market Study,2017-06-01,phillip.ramos@katz.example.com,Yes,Yes,,Rachel,Henning,rachel.henning@umon.example.com,01476 987654,
+Project name,Start date,Project manager,Project address added?,Project details submitted?,Finance contacts,Monitoring Officer first name,Monitoring Officer last name,Monitoring Officer email,Monitoring Officer phone number,Bank details,Finance checks submitted?
+Material Logistics Planning in a railway project,2020-10-01,,,,,,,,,,
+Performance of Grade Crossing Surface Materials,2018-03-01,diane.scott@eadel.example.com,Yes,Yes,,,,,,,
+Balise and Train Control System Market Study,2017-06-01,phillip.ramos@katz.example.com,Yes,Yes,,Rachel,Henning,rachel.henning@umon.example.com,01476 987654,,
 Introducing Aerospace Materials to Rail,2018-01-01,ralph.young@ooba.example.com,Yes,Yes,"Ooba: ralph.young@ooba.example.com
 Wordpedia: tina.taylor@wordpedia.example.com
 Jabbertype: antonio.jenkins@jabbertype.example.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Ooba: 12345678 / 123456
 Wordpedia: 12345678 / 123456
-Jabbertype: 12345678 / 123456"
+Jabbertype: 12345678 / 123456",
 The Optimisation of Automatic Train Regulation on the London UndergroundProject Partner: London Underground,2019-04-01,amy.ortiz@gabtype.example.com,Yes,Yes,"Gabtype: amy.ortiz@gabtype.example.com
 Kazio: karen.ramos@kazio.example.com
 Cogilith: juan.campbell@cogilith.example.com",Andrew,Chan,andrew.chan@optimo.example.com,03527 283647,"Gabtype: 12345678 / 123456
 Kazio: 12345678 / 123456
-Cogilith: 12345678 / 123456"
+Cogilith: 12345678 / 123456","Gabtype
+Kazio
+Cogilith"

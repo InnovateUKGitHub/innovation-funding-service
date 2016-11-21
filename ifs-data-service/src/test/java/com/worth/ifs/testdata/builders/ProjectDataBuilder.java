@@ -2,9 +2,13 @@ package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.resource.CostResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.testdata.builders.data.ProjectData;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -12,11 +16,14 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.emptyList;
 
 /**
@@ -81,15 +88,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
-        return with(data -> {
-            List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
-            UserResource projectFinanceUser = retrieveUserById(projectFinanceUsers.get(0).getId());
-
-            doAs(projectFinanceUser, () -> {
-                MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
-                projectService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
-            });
-        });
+        return with(data -> doAs(anyProjectFinanceUser(), () -> {
+            MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
+            projectService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
+        }));
     }
 
     public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode) {
@@ -114,6 +116,42 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetailsService.submitBankDetails(bankDetails).getSuccessObjectOrThrowException();
             });
         });
+    }
+
+    public ProjectDataBuilder withApprovedFinanceChecks(List<String> organisationNames) {
+        return with(data -> doAs(anyProjectFinanceUser(), () ->
+            organisationNames.forEach(org -> {
+
+                Organisation organisation = retrieveOrganisationByName(org);
+
+                List<ApplicationFinanceResource> financeTotals = financeRowService.financeTotals(data.getApplication().getId()).getSuccessObjectOrThrowException();
+                ApplicationFinanceResource finances = simpleFindFirst(financeTotals, t -> t.getOrganisation().equals(organisation.getId())).get();
+
+                BigDecimal eligibleCosts = finances.getTotal();
+                BigDecimal halfCosts = eligibleCosts.divide(BigDecimal.valueOf(2), 0, BigDecimal.ROUND_DOWN);
+                BigDecimal quarterCosts = eligibleCosts.divide(BigDecimal.valueOf(4), 0, BigDecimal.ROUND_DOWN);
+                BigDecimal remaining = eligibleCosts.subtract(halfCosts).subtract(quarterCosts);
+
+                ProjectOrganisationCompositeId financeCheckKey = new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId());
+                FinanceCheckResource financeCheckFigures = financeCheckService.getByProjectAndOrganisation(financeCheckKey).getSuccessObjectOrThrowException();
+                List<CostResource> costsPerCategory = financeCheckFigures.getCostGroup().getCosts();
+
+                costsPerCategory.get(0).setValue(halfCosts);
+                costsPerCategory.get(1).setValue(quarterCosts);
+
+                BigDecimal remainingCostPerCategory = remaining.divide(BigDecimal.valueOf(costsPerCategory.size() - 2), 0, BigDecimal.ROUND_DOWN);
+
+                IntStream.range(2, costsPerCategory.size()).forEach(i -> costsPerCategory.get(i).setValue(remainingCostPerCategory));
+
+                financeCheckService.save(financeCheckFigures).getSuccessObjectOrThrowException();
+                financeCheckService.approve(data.getProject().getId(), organisation.getId()).getSuccessObjectOrThrowException();
+            })
+        ));
+    }
+
+    private UserResource anyProjectFinanceUser() {
+        List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
+        return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
     private UserResource findAnyPartnerForOrganisation(ProjectData data, Long organisationId) {

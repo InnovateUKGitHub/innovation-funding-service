@@ -8,7 +8,6 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -91,6 +90,7 @@ class CsvUtils {
         String moEmail;
         String moPhoneNumber;
         List<Triple<String, String, String>> bankDetailsForOrganisations;
+        List<String> organisationsWithApprovedFinanceChecks;
 
         private ProjectLine(List<String> line) {
             int i = 0;
@@ -107,8 +107,8 @@ class CsvUtils {
 
                 financeContactsForOrganisations = simpleMap(financeContactLines, fcLine -> {
                     String[] split = fcLine.split(":");
-                    String organisationName = StringUtils.trim(split[0]);
-                    String financeContactEmail = StringUtils.trim(split[1]);
+                    String organisationName = split[0].trim();
+                    String financeContactEmail = split[1].trim();
                     return Pair.of(organisationName, financeContactEmail);
                 });
             } else {
@@ -125,15 +125,23 @@ class CsvUtils {
             if (!isBlank(bankDetailsLine)) {
                 bankDetailsForOrganisations = simpleMap(bankDetailsLine.split("\n"), bdLine -> {
                     String[] split = bdLine.split(":");
-                    String organisationName = StringUtils.trim(split[0]);
-                    String bankDetailsPart = StringUtils.trim(split[1]);
+                    String organisationName = split[0].trim();
+                    String bankDetailsPart = split[1].trim();
                     String[] bankDetailsParts = bankDetailsPart.split("/");
-                    String accountNumber = StringUtils.trim(bankDetailsParts[0]);
-                    String sortCode = StringUtils.trim(bankDetailsParts[1]);
+                    String accountNumber = bankDetailsParts[0].trim();
+                    String sortCode = bankDetailsParts[1].trim();
                     return Triple.of(organisationName, accountNumber, sortCode);
                 });
             } else {
                 bankDetailsForOrganisations = emptyList() ;
+            }
+
+            String financeChecksLine = line.get(i++);
+
+            if (!isBlank(financeChecksLine)) {
+                organisationsWithApprovedFinanceChecks = simpleMap(asList(financeChecksLine.split("\n")), String::trim);
+            } else {
+                organisationsWithApprovedFinanceChecks = emptyList();
             }
         }
     }
