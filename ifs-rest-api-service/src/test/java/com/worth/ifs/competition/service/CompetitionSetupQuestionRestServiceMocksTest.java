@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupQuestionRestServiceImpl> {
 
-    private static final String competitionsRestURL = "/competitionSetupQuestion";
+    private static final String competitionsRestURL = "/competition-setup-question";
 
     @Override
     protected CompetitionSetupQuestionRestServiceImpl registerRestServiceUnderTest() {
@@ -26,7 +26,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/" +questionId, CompetitionSetupQuestionResource.class, expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/" + questionId, CompetitionSetupQuestionResource.class, expected);
 
         CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccessObject();
         assertNotNull(response);
@@ -38,9 +38,11 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long questionId = 1L;
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + questionId, toSave);
 
-        setupPutWithRestResultVerifications(competitionsRestURL + "/" + questionId, CompetitionSetupQuestionResource.class, toSave);
         RestResult<Void> response = service.save(toSave);
+
+        setupPutWithRestResultVerifications(competitionsRestURL + "/" + questionId, Void.class, toSave);
         assertTrue(response.isSuccess());
     }
 }
