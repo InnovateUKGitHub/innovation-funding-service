@@ -20,7 +20,7 @@
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
                 th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate">
             <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-            <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+            <div class="error-summary" th:if="${#fields}" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
                 <h1 class="heading-medium error-summary-heading">
                     Invalid input provided
                 </h1>
