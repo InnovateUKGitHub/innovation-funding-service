@@ -1,0 +1,87 @@
+<#macro css>
+<style>
+      @page {
+        size: A4 portrait;
+        margin: 1.5cm;
+        font-family: arial, helvetica, sans-serif;
+        font-size:10pt;
+        line-height:1.1;
+        @top-center {
+          content: "OFFICIAL"
+        }
+        @bottom-center {
+          content: "Page " counter(page) " of " counter(pages);
+        }
+      }
+      @page land { size:landscape; }
+
+      .landscape { page:land; }
+
+      .page {
+        page-break-after: always;
+      }
+
+      .textcenter {
+        text-align:center;
+      }
+
+      .bold,
+      em {
+        font-weight:bold;
+        font-style:normal;
+      }
+      h1,h2,h3 {
+        margin: 0;
+      }
+      h1 {
+        text-transform: uppercase;
+        font-size:10pt;
+        padding: 10pt 0;
+      }
+      h2 {
+        text-decoration:underline;
+        font-size:10pt;
+        padding: 10pt 0;
+      }
+      p {
+        margin:0;
+        padding:0;
+      }
+      p + p {
+        padding-top:10pt;
+      }
+      ul {
+        list-style:disc;
+        margin: 0;
+        padding:0 10pt 0 20pt;
+      }
+      ol {
+        list-style:lower-alpha;
+      }
+      ol ol {
+        list-style: lower-roman;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width:100%;
+        margin:5pt;
+      }
+      thead {
+        font-weight:bold;
+      }
+      th,
+      td {
+        padding: 0.1cm 0.25cm;
+        text-align: left;
+        border: 1px solid #000;
+      }
+      th.no-border,
+      td.no-border{
+        border:none;
+      }
+      .signature {
+        margin-top:45pt;
+      }
+</style>
+</#macro>

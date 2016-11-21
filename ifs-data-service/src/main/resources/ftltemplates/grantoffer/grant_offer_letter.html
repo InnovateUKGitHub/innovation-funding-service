@@ -1,12 +1,21 @@
-<#import "layout/default.html" as layout>
-<@layout.default>
-  <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;">Thank you for submitting your application <b>${applicationName}</b> for funding to Innovate UK for the <b>${competitionName}</b> competition.</p>
-  <p style="margin: 0 0 1em 0;">We are pleased to inform you that your application has been successful.</p>
-  <p style="margin: 0 0 1em 0;">Before this project can begin we will need additional details and documents, and for you to undergo financial checks. This process will be managed through your Innovate UK dashboard which will provide full details. This will be available to you from <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["EEEE dd MMMM yyyy"]}.</p>
-  <p style="margin: 0 0 1em 0;">This offer is conditional and subject to the satisfactory completion of a finance review by Innovate UK. You must not start your project until we have confirmed that all pre-start work has been completed.</p>
-  <p style="margin: 0 0 1em 0;">Feedback on your application will be available on <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["dd MMMM yyyy"]} and will be accessible from your Innovate UK dashboard. We will send you a further email notification when your feedback is ready for you to view.</p>
-  <p style="margin: 0 0 1em 0;">Once again, congratulations on the successful outcome of your application.</p>
-  <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
-  <@layout.senderHTML />
-</@layout.default>
+<#import "include/css.html" as css>
+<#import "include/pages.html" as pages>
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grant Offer Letter</title>
+  <@css />
+</head>
+<body>
+  <section class="page">
+      <@pages.page1 />
+  </section>
+  <section class="page landscape">
+      <@pages.page2 />
+  </section>
+  <section class="page">
+      <@pages.page3 />
+  </section>
+</body>
+</html>
