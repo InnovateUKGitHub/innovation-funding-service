@@ -31,22 +31,35 @@
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Scored</dt>
                 <dd class="column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
-                <dt class="column-third">Out of</dt>
-                <dd class="column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                <th:block th:if="${question.scored}">
+                    <dt class="column-third">Out of</dt>
+                    <dd class="column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                </th:block>
+
                 <dt class="column-third">Written feedback</dt>
                 <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
-                <dt class="column-third">Guidance</dt>
-                <dd class="column-two-thirds">
-                    <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
-                    <dl class="grid-row extra-margin">
-                        <th:block th:each="score : ${question.guidanceRows}">
-                            <dt class="column-quarter" th:text="${score.subject.replace(',', '-')}"></dt>
-                            <dd class="column-three-quarters" th:text="${score.justification}"></dd>
-                        </th:block>
-                    </dl>
-                </dd>
-                <dt class="column-third">Words</dt>
-                <dd class="column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                <th:block th:if="${question.writtenFeedback}">
+                    <dt class="column-third">Guidance</dt>
+                    <dd class="column-two-thirds">
+                        <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
+                        <dl class="grid-row extra-margin">
+                            <th:block th:each="score : ${question.guidanceRows}">
+                                <dt class="column-quarter" th:text="${score.subject.replace(',', '-')}"></dt>
+                                <dd class="column-three-quarters" th:text="${score.justification}"></dd>
+                            </th:block>
+                        </dl>
+                    </dd>
+                    <dt class="column-third">Words</dt>
+                    <dd class="column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                </th:block>
+
+                <!-- TODO INFUND 6282 Replace this with is active check, if column is null then don't display toggle for form_input -->
+                <th:block th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                    <dt class="column-third">Research category question</dt>
+                    <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                    <dt class="column-third">Scope 'Y/N' question</dt>
+                    <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                </th:block>
             </dl>
         </fieldset>
     </th:block>
