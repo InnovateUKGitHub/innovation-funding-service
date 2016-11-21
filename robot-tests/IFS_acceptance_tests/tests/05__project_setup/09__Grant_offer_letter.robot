@@ -6,7 +6,7 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Partners should not be able to submit the Grant Offer
-    [Documentation]    INFUND-4851
+    [Documentation]    INFUND-4851, INFUND-4428
     [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=00000026: best riffs

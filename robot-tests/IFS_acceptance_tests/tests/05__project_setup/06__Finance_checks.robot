@@ -103,10 +103,10 @@ Project Finance user can export bank details 
     And The user clicks the button/link          link = Export all bank details
     And the Project finance user downloads the excel
 
-#TODO :Please note this test needs test data to be created [INFUND-5879]
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
+    #TODO Pending due to INFUND-5879
     Given the user navigates to the page          ${server}/project-setup-management/project/4/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3

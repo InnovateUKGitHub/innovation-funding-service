@@ -104,7 +104,7 @@ Lead partner does not have the option to submit the mandatory documents
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
-    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806
+    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
     [Tags]
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
@@ -264,7 +264,7 @@ Non-lead partner cannot remove the documents after submission by PM
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Non-lead partner can still view both documents after submitting
-    [Documentation]    INFUND-3012
+    [Documentation]    INFUND-3012 , INFUND-4428
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page

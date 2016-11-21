@@ -17,6 +17,7 @@ Resource          ../../resources/defaultResources.robot
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
 
 *** Test Cases ***
+
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
@@ -187,6 +188,15 @@ MO details accessible/seen by all partners
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+
+Partner can access MO link once MO is assigned
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]    Log in as a different user    &{collaborator1_credentials}
+    Given the user navigates to the page        PS setup page
+    then the user clicks the button/link        Monitoring Officer
+    [Teardown]    logout as user
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049

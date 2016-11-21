@@ -189,10 +189,11 @@ Lead partner marks spend profile as complete
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
 
 Non-lead partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970 , INFUND-4428
     [Tags]    HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=00000016: Cheese is good
+    And The user should see the element      link=Project details
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
