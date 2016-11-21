@@ -79,10 +79,12 @@
                         th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" />
 
 
-              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
-              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" />
+              <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}">
+                <th:block th:include="project/fragments :: project-status-table(${model.projectStatusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
+              </th:block>
+              <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}" />
+                  <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" />
+              </th:block>
 
           </tr>
         </tbody>

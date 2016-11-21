@@ -137,4 +137,11 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
+    @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
+    ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId);
+
+    @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
+    ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
+
 }

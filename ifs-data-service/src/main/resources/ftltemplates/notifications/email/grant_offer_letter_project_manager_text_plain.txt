@@ -1,0 +1,10 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+Following completion of the project setup by you and your partners the Grant offer letter has become available for you to sign to complete the project setup stage. It is available through your Innovate UK Dashboard ${dashboardUrl}. Your project will not be able to start until this document is signed, and accepted by Innovate UK.
+
+If you have any other questions around these documents please contact the competitions team using the details below.
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

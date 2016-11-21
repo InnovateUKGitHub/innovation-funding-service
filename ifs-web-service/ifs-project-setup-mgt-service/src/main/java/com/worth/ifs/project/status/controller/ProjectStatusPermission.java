@@ -1,5 +1,7 @@
 package com.worth.ifs.project.status.controller;
 
+import com.worth.ifs.project.constant.ProjectActivityStates;
+
 /**
  * Class for checking the access permissions
  */
@@ -13,11 +15,13 @@ public class ProjectStatusPermission {
     private Boolean canAccessOtherDocuments;
     private Boolean canAccessGrantOfferLetter;
     private Boolean canAccessGrantOfferLetterSend;
+    private ProjectActivityStates grantOfferLetterActivityState;
 
     public ProjectStatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
                                    Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
-                                   Boolean canAccessOtherDocuments, Boolean canAccessGrantOfferLetter, Boolean canAccessGrantOfferLetterSend) {
+                                   Boolean canAccessOtherDocuments, Boolean canAccessGrantOfferLetter,
+                                   Boolean canAccessGrantOfferLetterSend, ProjectActivityStates grantOfferLetterActivityState) {
         this.canAccessCompaniesHouse = canAccessCompaniesHouse;
         this.canAccessProjectDetails = canAccessProjectDetails;
         this.canAccessMonitoringOfficer = canAccessMonitoringOfficer;
@@ -27,6 +31,7 @@ public class ProjectStatusPermission {
         this.canAccessOtherDocuments = canAccessOtherDocuments;
         this.canAccessGrantOfferLetter = canAccessGrantOfferLetter;
         this.canAccessGrantOfferLetterSend = canAccessGrantOfferLetterSend;
+        this.grantOfferLetterActivityState = grantOfferLetterActivityState;
     }
 
     public Boolean getCanAccessCompaniesHouse() {
@@ -60,4 +65,6 @@ public class ProjectStatusPermission {
     public Boolean getCanAccessGrantOfferLetter() { return canAccessGrantOfferLetter; }
 
     public Boolean getCanAccessGrantOfferLetterSend() { return canAccessGrantOfferLetterSend; }
+
+    public ProjectActivityStates getGrantOfferLetterActivityStatus() { return grantOfferLetterActivityState; }
 }

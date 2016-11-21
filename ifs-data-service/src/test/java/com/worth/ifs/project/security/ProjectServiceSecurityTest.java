@@ -18,6 +18,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.util.BooleanFunctions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -591,6 +592,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
+        @Override
+        public ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long UserId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
     }
 }
 

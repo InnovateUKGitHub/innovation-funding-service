@@ -60,11 +60,18 @@ class ProjectSetupProgressChecker {
         return COMPLETE.equals(projectStatus.getFinanceChecksStatus());
     }
 
-    public boolean isGrantOfferLetterSubmitted() {
-        return ACTION_REQUIRED.equals(projectStatus.getGrantOfferLetterStatus());
-    }
-
     public boolean isGrantOfferLetterSent() {
         return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
+        //return SENT.equals(projectStatus.getGrantOfferLetterStatus());
+    }
+
+    public boolean isGrantOfferLetterReadyToApprove() {
+        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
+        //return READY_TO_APPROVE.equals(projectStatus.getGrantOfferLetterStatus());
+    }
+
+    public boolean isGrantOfferLetterApproved() {
+        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
+        //return APPROVED.equals(projectStatus.getGrantOfferLetterStatus());
     }
 }

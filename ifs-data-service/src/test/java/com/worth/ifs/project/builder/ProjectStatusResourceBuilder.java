@@ -73,4 +73,5 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
     public ProjectStatusResourceBuilder withGrantOfferLetterStatus(ProjectActivityStates... grantOfferLetterStatuses) {
         return withArray((grantOfferLetterStatus, psr) -> setField("grantOfferLetterStatus", grantOfferLetterStatus, psr), grantOfferLetterStatuses);
     }
+
 }

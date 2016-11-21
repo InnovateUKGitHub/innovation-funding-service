@@ -277,4 +277,14 @@ public class ProjectController {
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId){
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
+
+    @RequestMapping(value = "/{projectId}/isSendGrantOfferLetterAllowed", method = GET)
+    public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId){
+        return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
+    }
+    @RequestMapping(value = "/{projectId}/grant-offer/send/{userId}", method = POST)
+    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") Long projectId,
+                                                 @PathVariable("userId") Long userId) {
+        return projectService.sendGrantOfferLetter(projectId, userId).toPostResponse();
+    }
 }

@@ -9,6 +9,8 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -29,10 +31,6 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -60,11 +58,14 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.user.transactional.UserServiceImpl;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -172,6 +173,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
 
+    //@Autowired
+    //private GOLWorkflowHandler golWorkflowHandler;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -179,7 +183,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         MONITORING_OFFICER_ASSIGNED,
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER
+        INVITE_PROJECT_MANAGER,
+        GRANT_OFFER_LETTER_PROJECT_MANAGER
     }
 
     @Override
@@ -1048,4 +1053,48 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return new ArrayList<>(organisationSet);
     }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId) {
+
+        Project project = projectRepository.findOne(projectId);
+        if(project == null) {
+            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        }
+        User user = getUser(userId).getSuccessObject();
+        if(user == null) {
+            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        }
+        if (project.getGrantOfferLetter() == null) {
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SUBMIT);
+        }
+        if (!user.hasRole(UserRoleType.COMP_ADMIN)) {
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+        // TODO do actual send
+
+        NotificationSource from = systemNotificationSource;
+        User projectManager = getExistingProjectManager(project).get().getUser();
+        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("dashboardUrl", webBaseUrl);
+
+        Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+        ServiceResult<Void> sendResult = notificationService.sendNotification(notification, EMAIL);
+        //return processAnyFailuresOrSucceed(sendResult).andOnSuccess(() -> golWorkflowHandler.);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(this::doIsSendAllowed);
+    }
+
+    private boolean doIsSendAllowed(Project project) {
+        //TODO return golWorkFlowHandler.isSendAllowed(project);
+        return true;
+    }
+
 }

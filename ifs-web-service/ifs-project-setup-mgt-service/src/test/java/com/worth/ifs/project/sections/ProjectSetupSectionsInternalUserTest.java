@@ -1,6 +1,7 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.user.builder.RoleResourceBuilder;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -15,6 +16,7 @@ import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -148,16 +150,37 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
+
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
 
-        verifyInteractions(mock -> mock.isGrantOfferLetterSubmitted());
+        verifyInteractions(mock -> mock.isGrantOfferLetterSent());
     }
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionButOtherSectionsAreIncomplete() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
+    }
+    @Test
+    public void testCheckAccessToGrantOfferLetterSendSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
+
+        verifyInteractions(mock -> mock.isOtherDocumentsApproved(),
+                           mock -> mock.isSpendProfileApproved());
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionSendButOtherSectionsAreIncomplete() {
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
     }
 
     @SafeVarargs

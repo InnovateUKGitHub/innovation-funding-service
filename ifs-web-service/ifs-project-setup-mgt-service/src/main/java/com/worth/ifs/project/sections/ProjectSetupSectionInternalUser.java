@@ -1,5 +1,6 @@
 package com.worth.ifs.project.sections;
 
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -74,7 +75,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isGrantOfferLetterSubmitted()) {
+        if(!projectSetupProgressChecker.isGrantOfferLetterSent()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -82,7 +83,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if((userResource.hasRole(COMP_ADMIN) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved() && !projectSetupProgressChecker.isGrantOfferLetterSent())) {
+        if(userResource.hasRole(COMP_ADMIN) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
         }
 
@@ -91,6 +92,28 @@ public class ProjectSetupSectionInternalUser {
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;
+    }
+
+    public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
+        if(userResource.hasRole(COMP_ADMIN)) {
+            if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+                if(projectSetupProgressChecker.isGrantOfferLetterApproved()) {
+                    return ProjectActivityStates.COMPLETE;
+                } else {
+                    if(projectSetupProgressChecker.isGrantOfferLetterReadyToApprove()) {
+                        return ProjectActivityStates.ACTION_REQUIRED;
+                    } else {
+                        if(projectSetupProgressChecker.isGrantOfferLetterSent()) {
+                            return ProjectActivityStates.PENDING;
+                        } else {
+                            return ProjectActivityStates.ACTION_REQUIRED;
+                        }
+                    }
+                }
+            }
+            return ProjectActivityStates.NOT_REQUIRED;
+        }
+        return ProjectActivityStates.NOT_REQUIRED;
     }
 
 

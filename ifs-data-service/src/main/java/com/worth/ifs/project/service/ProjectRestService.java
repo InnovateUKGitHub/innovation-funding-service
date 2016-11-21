@@ -95,5 +95,7 @@ public interface ProjectRestService {
 
     RestResult<ProjectStatusResource> getProjectStatus(Long projectId);
 
-    RestResult<Void> sendGrantOfferLetter(Long projectId);
+    RestResult<Void> sendGrantOfferLetter(Long projectId, Long userId);
+
+    RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 }

@@ -168,6 +168,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Offer letter
      */
     GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT(BAD_REQUEST),
+    GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SUBMIT(BAD_REQUEST),
 
     /**
      * Other documents

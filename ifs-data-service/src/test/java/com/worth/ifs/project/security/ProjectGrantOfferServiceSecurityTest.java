@@ -205,5 +205,6 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
             return null;
         }
+
     }
 }
