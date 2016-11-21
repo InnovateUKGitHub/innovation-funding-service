@@ -597,6 +597,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
     }
 }
 

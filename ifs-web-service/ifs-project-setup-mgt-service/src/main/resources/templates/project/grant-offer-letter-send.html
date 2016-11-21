@@ -36,39 +36,50 @@
     <h2 th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
 
     <h2 class="heading-medium">Grant offer letter</h2>
-    <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+    <p><a th:href="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
-    <div class="upload-section unstyled-view">
-        <h2 class="heading-medium no-margin">Annex</h2>
+    <h2 class="heading-medium no-margin">Annex</h2>
+    <th:block th:if="${!model.isSentToProjectTeam()}">
 
-        <th:block th:if="${!model.additionalContractFile}">
-            <form th:action="@{/project/{id}/grant-offer-letter(id=${model.projectId})}"
-                  th:object="${form}" method="post" enctype="multipart/form-data">
-                <p>Any additional supporting materials should be uploaded to the Annex.</p>
-
-                <input type="file" name="file-annex" id="file-annex" class="inputfile" />
-                <label for="file-annex" class="button-secondary extra-margin">+ Upload</label>
-
-                <div th:classappend="${#fields.hasErrors('annex') ? 'error' : ''}">
-                    <th:block th:if="${#fields.hasErrors('collaborationAgreement')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('annex')}"
-                          th:text="${err}"/>
-                    </th:block>
-                    <input th:field="*{annex}" type="file" id="annex" class="inputfile"/>
-                    <label for="annex" class="button-secondary extra-margin">+ Upload</label>
-                    <button name="uploadAnnexClicked" class="button-secondary" type="submit"
-                        data-for-file-upload="annex">Save
-                    </button>
-                </div>
-            </form>
-        </th:block>
-
-        <th:block th:unless="${model.additionalContractFile}">
+       <th:block th:if="${model.additionalContractFile}">
             <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-            <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
         </th:block>
+        <th:block th:unless="${model.additionalContractFile}">
+            <div class="upload-section unstyled-view">
+                <form th:action="@{/project/{id}/grant-offer-letter(id=${model.projectId})}"
+                      th:object="${form}" method="post" enctype="multipart/form-data">
+                    <p>Any additional supporting materials should be uploaded to the Annex.</p>
 
-    </div>
+                    <div th:classappend="${#fields.hasErrors('annex') ? 'error' : ''}">
+                        <th:block th:if="${#fields.hasErrors('annex')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('annex')}"
+                                  th:text="${err}"/>
+                        </th:block>
+                        <input th:field="*{annex}" type="file" id="annex" class="inputfile"/>
+                        <label for="annex" class="button-secondary extra-margin">+ Upload</label>
+                        <button name="uploadAnnexClicked" class="button-secondary" type="submit"
+                                data-for-file-upload="annex">Save
+                        </button>
+                        <p>The Annex should:</p>
+                        <ul class="list-bullet">
+                            <li>be in a portable document format (.pdf)</li>
+                            <li>be less than 1mb in size</li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${!model.isSentToProjectTeam()}">
+        <th:block th:if="${model.additionalContractFile != null}">
+            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        </th:block>
+        <th:block th:unless="${model.additionalContractFile != null}">
+            No Annex is specified.
+        </th:block>
+    </th:block>
 
     <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
         <button data-js-modal="modal-accept-send-gol" id="accept-send-gol" class="button large">

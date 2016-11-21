@@ -98,4 +98,6 @@ public interface ProjectRestService {
     RestResult<Void> sendGrantOfferLetter(Long projectId, Long userId);
 
     RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
+
+    RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
 }

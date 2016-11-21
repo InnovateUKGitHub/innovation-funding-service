@@ -144,4 +144,7 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
     ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 
+    @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
+    ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
+
 }

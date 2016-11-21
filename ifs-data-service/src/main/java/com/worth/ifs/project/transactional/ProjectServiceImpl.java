@@ -1092,9 +1092,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).andOnSuccessReturn(this::doIsSendAllowed);
     }
 
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(this::doIsAlreadySent);
+    }
+
     private boolean doIsSendAllowed(Project project) {
         //TODO return golWorkFlowHandler.isSendAllowed(project);
         return true;
+    }
+
+    private boolean doIsAlreadySent(Project project) {
+        //TODO return golWorkflowHandler.isAlreadySent(project);
+        return false;
     }
 
 }
