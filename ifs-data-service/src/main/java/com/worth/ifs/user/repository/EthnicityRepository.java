@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface EthnicityRepository extends CrudRepository<Ethnicity, Long> {
     List<Ethnicity> findByActiveTrueOrderByPriorityAsc();
+
+    Ethnicity findOneByDescription(String description);
 }

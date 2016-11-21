@@ -16,7 +16,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 /**
  * Helper for Spring REST Docs, specifically for user registration.
  */
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 public class UserRegistrationResourceDocs {
 
     public static final FieldDescriptor[] userRegistrationResourceFields = {

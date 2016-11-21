@@ -32,7 +32,7 @@
                     </div>
                     <div class="column-half">
                         <div class="form-group">
-                            <label class="form-label" for="filterSearch">Skills area</label>
+                            <label class="form-label" for="filterSearch">Skill areas</label>
                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                         </div>
                         <div class="column-half extra-margin">
@@ -152,7 +152,7 @@
 
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td>
+                        <td class="alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
@@ -170,7 +170,7 @@
 
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td>
+                        <td class="alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
@@ -187,7 +187,7 @@
                     <td>Horizon Ltd</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">0</td>
-                        <td>
+                        <td class="alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
@@ -203,7 +203,7 @@
                     <td>Zodiac Industries Ltd</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">5</td>
-                        <td>
+                        <td class="alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
@@ -219,7 +219,7 @@
                     <td>Durham University</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td>
+                        <td class="alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
@@ -258,7 +258,7 @@
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
@@ -270,7 +270,7 @@
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
@@ -282,7 +282,7 @@
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
@@ -294,7 +294,7 @@
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
@@ -306,7 +306,7 @@
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary">View progress</a>
                 </td>
             </tr>
@@ -340,8 +340,8 @@
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td>
-                        <a href="#">Review</a>
+                    <td class="alignright">
+                        <a href="/prototypes/545-application-feedback?internal">Review</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-one">
@@ -352,7 +352,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-assiged-row-one-remove">Remove</a>
                     </td>
                 </tr>
@@ -364,7 +364,7 @@
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" data-js-modal="remove-assigned-application">Remove</a>
                     </td>
                 </tr>
@@ -376,7 +376,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-assiged-row-three-remove">Remove</a>
                     </td>
                 </tr>
@@ -388,7 +388,7 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-assiged-row-four-remove">Remove</a>
                     </td>
                 </tr>
@@ -450,7 +450,7 @@
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -462,7 +462,7 @@
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -474,7 +474,7 @@
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -486,7 +486,7 @@
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -498,7 +498,7 @@
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -527,7 +527,7 @@
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Wessex University</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
@@ -536,7 +536,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Remove</a>
                     </td>
                 </tr>
@@ -565,7 +565,7 @@
                 <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                 <td>Wessex University</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a href="#" class="button-secondary">Assign</a>
                 </td>
             </tr>
@@ -574,7 +574,7 @@
                 <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                 <td>Plymouth University</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a href="#" class="button-secondary">Assign</a>
                 </td>
             </tr>
@@ -583,7 +583,7 @@
                 <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                 <td>Horizon Ltd</td>
                 <td class="aligncentre">0</td>
-                <td>
+                <td class="alignright">
                     <a href="#" class="button-secondary">Assign</a>
                 </td>
             </tr>
@@ -592,7 +592,7 @@
                 <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                 <td>Zodiac Industries Ltd</td>
                 <td class="aligncentre">5</td>
-                <td>
+                <td class="alignright">
                     <a href="#" class="button-secondary">Assign</a>
                 </td>
             </tr>
@@ -601,7 +601,7 @@
                 <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                 <td>Durham University</td>
                 <td class="aligncentre">1</td>
-                <td>
+                <td class="alignright">
                     <a href="#" class="button-secondary">Assign</a>
                 </td>
             </tr>
@@ -633,7 +633,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
                     <td>Zodiac Industries Ltd</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-one-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -642,7 +642,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-two-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -651,7 +651,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-three-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -660,7 +660,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-four-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -685,35 +685,35 @@
                 <tr>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td class="aligncentre">0</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td class="aligncentre">2</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td class="aligncentre">3</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -747,7 +747,7 @@
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">2</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" id="remove-assessor" class="button-secondary">Remove</a>
                     </td>
                 </tr>
@@ -759,7 +759,7 @@
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" id="assign-assessor" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -769,7 +769,7 @@
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -779,7 +779,7 @@
                     <td>Analytical science</td>
                     <td class="aligncentre">20</td>
                     <td class="aligncentre">0</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -789,7 +789,7 @@
                     <td>Architectures and operating system</td>
                     <td class="aligncentre">15</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -799,7 +799,7 @@
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -809,7 +809,7 @@
                     <td>Biophysics and soft matter physics</td>
                     <td class="aligncentre">10</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -826,7 +826,7 @@
                 <tr>
                     <th scope="col">Assessor</th>
                     <!--<th scope="col">Type</th>-->
-                    <th scope="col">Skills Areas</th>
+                    <th scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <!--<th class="aligncentre" scope="col">Accepted</th>-->
@@ -846,7 +846,7 @@
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -860,7 +860,7 @@
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -874,7 +874,7 @@
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">0</td>-->
                     <td class="aligncentre">0</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -888,7 +888,7 @@
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -902,7 +902,7 @@
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -916,7 +916,7 @@
                     <!--<td class="aligncentre">3</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -936,6 +936,7 @@
                     <th scope="col">Innovation Area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Notified</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
@@ -949,11 +950,12 @@
                     <td>Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td>
-                        <a href="#">Review</a>
+                    <td class="alignright">
+                        <a href="/prototypes/545-application-feedback?internal">Review</a>
                     </td>
                 </tr>
                 <tr id="prototype-started-removable">
@@ -962,10 +964,11 @@
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" data-js-modal="remove-assigned-assessor">Remove</a>
                     </td>
                 </tr>
@@ -975,10 +978,11 @@
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-remove-row-three">Remove</a>
                     </td>
                 </tr>
@@ -991,7 +995,8 @@
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td>
+                    <td class="aligncentre">-</td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-remove-row-four">Remove</a>
                     </td>
                 </tr>
@@ -1037,7 +1042,7 @@
                     <th scope="col">Assessor</th>
                     <!--<th scope="col">Type</th>-->
                     <!--<th scope="col">Innovation Area</th>-->
-                    <th scope="col">Skills areas</th>
+                    <th scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Accepted</th>
@@ -1057,7 +1062,7 @@
                     <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
                     </td>
                 </tr>
@@ -1071,7 +1076,7 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
                     </td>
                 </tr>
@@ -1085,7 +1090,7 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
                     </td>
                 </tr>
@@ -1099,7 +1104,7 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
                     </td>
                 </tr>
@@ -1113,7 +1118,7 @@
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <td class="aligncentre">1</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary">View progress</a>
                     </td>
                 </tr>
@@ -1131,7 +1136,7 @@
                     <th scope="col">Assessor</th>
                     <!--<th scope="col">Type</th>-->
                     <!--<th scope="col">Innovation Area</th>-->
-                    <th scope="col">Skills areas</th>
+                    <th scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
@@ -1145,7 +1150,7 @@
                     <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">4</td>
-                    <td>
+                    <td class="alignright">
                         <a th:href="${'/prototypes/5473-assign-assessors-progress'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -1156,7 +1161,7 @@
                     <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -1167,7 +1172,7 @@
                     <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -1178,7 +1183,7 @@
                     <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -1189,7 +1194,7 @@
                     <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td>
+                    <td class="alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary">Assign</a>
                     </td>
                 </tr>
@@ -1210,6 +1215,7 @@
                     <th scope="col">Innovation Area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
+                    <th class="aligncentre" scope="col">Notified</th>
                     <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
                 </tr>
             </thead>
@@ -1222,7 +1228,9 @@
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
-                    <td>
+                    <td class="aligncentre">6</td>
+                    <td class="aligncentre">-</td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-one-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -1231,7 +1239,9 @@
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
-                    <td>
+                    <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-two-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -1240,7 +1250,9 @@
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
-                    <td>
+                    <td class="aligncentre">3</td>
+                    <td class="aligncentre">-</td>
+                    <td class="alignright">
                         <a href="#" class="button-secondary" id="prototype-row-three-reassign">Re-assign</a>
                     </td>
                 </tr>

@@ -15,11 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessments'}, ${'/prototypes/5052-manage-assessments'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Manage applications'}, ${null})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate applications'}, ${null})" th:remove="tag" />
 
 	<p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
 

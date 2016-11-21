@@ -1,0 +1,6 @@
+Email,Hash,Name,Status,Type,Target,Owner
+worth.email.test+invite2@gmail.com,1d92a6ace9030f2d992f47ea60529028fd49542dffd6b179f68fae072b4f1cc61f12a419b79a5267,John,SENT,APPLICATION,A novel solution to an old problem,Nomensa
+worth.email.test+invite1@gmail.com,4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a,Rogier,SENT,APPLICATION,A novel solution to an old problem,Worth Internet Systems
+worth.email.test+assessor2@gmail.com,2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720,Assessor Two,SENT,COMPETITION,Juggling Craziness,Mo Juggling Mo Problems Ltd
+worth.email.test+assessor3@gmail.com,1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932,Assessor Two,SENT,COMPETITION,Juggling Craziness,Mo Juggling Mo Problems Ltd
+worth.email.test+assessor1@gmail.com,469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471,Assessor One,SENT,COMPETITION,Sarcasm Stupendousness,Mo Juggling Mo Problems Ltd

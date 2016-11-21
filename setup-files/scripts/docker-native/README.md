@@ -34,10 +34,17 @@ application stack. You should kill the process beforehand e.g. `sudo service sto
     copy the contents into a `.env` file and then modify the ports. However, the important ports necessary for the
     infrastructure to function properly cannot be changed.
 
-2. Run the `setup.sh` script:
+
+2. Copy (or move) the shib image to the correct location - from the same folder as this readme file the command would be mkdir shib-images && cp ../docker/shibImages/g2g3-ifs-local-dev_0-15-1.tar shib-images/
+
+3. Run the `setup.sh` script:
 
         ./setup.sh
-        
+Don't worry if you see an error like:
+ERROR: No such service: ifs-local-dev
+
+This is normal and you will see this if you haven't run setup.sh before (or have run teardown.sh in the meantime)
+
 ## Optional Configuration
 
 You can perform some additional configuration in the `.env` file that is used during the running of `setup.sh`. The default values are retrieved from `.env-defaults`. If you wish to configure the setup, copy the `.env-defaults` into a `.env` file and make your changes before running `setup.sh`. 

@@ -6,7 +6,7 @@ import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;

@@ -3,7 +3,7 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.user.builder.ContractResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static java.lang.Boolean.TRUE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
