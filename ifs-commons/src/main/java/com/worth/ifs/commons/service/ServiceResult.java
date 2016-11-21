@@ -86,7 +86,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      */
     @Override
     public T findAndThrowException(ServiceFailure serviceFailure) {
-        throw new UnsupportedOperationException();
+        throw new RuntimeException("Was expecting a success object but got a failure.  " + serviceFailure.getErrors());
     }
 
     @Override

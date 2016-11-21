@@ -25,7 +25,7 @@ Comp admin can open the view mode of the application
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     Then the user should see the element    id=sort-by
     And the user selects the option from the drop-down menu    id    id=sort-by
-    When the user clicks the button/link    link=00000001
+    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
     And the user should see the text in the page    A novel solution to an old problem
@@ -73,23 +73,34 @@ the user cannot see this file but gets a quarantined message
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £127,059
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £9,000
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £88,941
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £9,000
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £38,118
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(2)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(3)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(5)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
 
 the finance Project cost breakdown calculations should be correct
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £127,059
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(1) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(2) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
     the user should see the text in the page    Subcontractor name
-    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    2000
+    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
@@ -97,6 +108,6 @@ the applicant edits the Subcontracting costs section
     focus    css=.app-submit-btn
 
 the user should see the correct finances change
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(1)    £129,059
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £129,059
-    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £2,000
+    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
