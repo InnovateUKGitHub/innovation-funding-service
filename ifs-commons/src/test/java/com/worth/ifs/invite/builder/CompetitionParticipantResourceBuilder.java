@@ -89,6 +89,10 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((totalAssessments, competitionParticipantResource) -> setField("totalAssessments", totalAssessments, competitionParticipantResource), totalAssessmentCounts);
     }
 
+    public CompetitionParticipantResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatuses) {
+        return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
+    }
+
     @Override
     protected void postProcess(int index, CompetitionParticipantResource instance) {
         super.postProcess(index, instance);
