@@ -199,9 +199,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
-    // in assessment ended yesterday
-
-
     @Test
     public void dashboard_fundersPanel() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()

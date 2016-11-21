@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.competition.resource.CompetitionStatus.*;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -147,8 +148,8 @@ public class CompetitionTest {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
-        competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
-        assertTrue(competitionResource.isClosingSoon());
+        competitionResource.setEndDate(LocalDateTime.now().plusHours(3));
+        assertFalse(competitionResource.isClosingSoon());
     }
 
     @Test

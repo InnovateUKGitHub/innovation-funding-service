@@ -21,6 +21,7 @@ public class CompetitionParticipantResourceTest {
     private CompetitionParticipantResource competitionParticipantCompetitionSetup;
     private CompetitionParticipantResource competitionParticipantReadyToOpen;
     private CompetitionParticipantResource competitionParticipantOpen;
+    private CompetitionParticipantResource competitionParticipantClosed;
     private CompetitionParticipantResource competitionParticipantInAssessment;
     private CompetitionParticipantResource competitionParticipantAssessmentClosed;
     private CompetitionParticipantResource competitionParticipantAssessorFeedback;
@@ -62,6 +63,7 @@ public class CompetitionParticipantResourceTest {
         competitionParticipantCompetitionSetup = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         competitionParticipantReadyToOpen = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         competitionParticipantOpen = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        competitionParticipantClosed = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.CLOSED).build();
         competitionParticipantInAssessment = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
         competitionParticipantAssessmentClosed = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).build();
         competitionParticipantAssessorFeedback = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).build();
@@ -90,16 +92,10 @@ public class CompetitionParticipantResourceTest {
 
     @Test
     public void isInAssessment() throws Exception {
-        assertFalse(competitionParticipant.isInAssessment());
-        assertFalse(competitionParticipantEndingToday.isInAssessment());
-        assertFalse(competitionParticipantEndingTommorrow.isInAssessment());
-        assertFalse(competitionParticipantEndedYesterday.isInAssessment());
-        assertFalse(competitionParticipantStartedToday.isInAssessment());
-        assertFalse(competitionParticipantStartingTommorrow.isInAssessment());
-
         assertFalse(competitionParticipantCompetitionSetup.isInAssessment());
         assertFalse(competitionParticipantReadyToOpen.isInAssessment());
         assertFalse(competitionParticipantOpen.isInAssessment());
+        assertFalse(competitionParticipantAssessmentClosed.isAnUpcomingAssessment());
         assertTrue(competitionParticipantInAssessment.isInAssessment());
         assertFalse(competitionParticipantAssessmentClosed.isInAssessment());
         assertFalse(competitionParticipantAssessorFeedback.isInAssessment());
@@ -108,16 +104,10 @@ public class CompetitionParticipantResourceTest {
 
     @Test
     public void isAnUpcomingAssessment() throws Exception {
-        assertTrue(competitionParticipant.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantEndingToday.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantEndingTommorrow.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantEndedYesterday.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantStartedToday.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantStartingTommorrow.isAnUpcomingAssessment());
-
         assertFalse(competitionParticipantCompetitionSetup.isAnUpcomingAssessment());
         assertTrue(competitionParticipantReadyToOpen.isAnUpcomingAssessment());
         assertTrue(competitionParticipantOpen.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantClosed.isInAssessment());
         assertFalse(competitionParticipantInAssessment.isAnUpcomingAssessment());
         assertFalse(competitionParticipantAssessmentClosed.isAnUpcomingAssessment());
         assertFalse(competitionParticipantAssessorFeedback.isAnUpcomingAssessment());

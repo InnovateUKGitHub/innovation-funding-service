@@ -11,9 +11,9 @@ public enum MilestoneType {
     SUBMISSION_DATE("3. Submission date"),
     ALLOCATE_ASSESSORS("4. Allocate accessors"),
     ASSESSOR_BRIEFING("5. Assessor briefing"),
+    ASSESSORS_NOTIFIED("Assessors notified", false),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),
     ASSESSOR_DEADLINE("7. Assessor deadline"),
-    ASSESSORS_NOTIFIED("Assessors Notified", false), // terminology varies, but this corresponds to the button in Assessor Management
     ASSESSMENT_CLOSED("Assessment closed", false),
     LINE_DRAW("8. Line draw"),
     ASSESSMENT_PANEL("9. Assessment panel"),
@@ -22,8 +22,8 @@ public enum MilestoneType {
     NOTIFICATIONS("12. Notifications"),
     RELEASE_FEEDBACK("13. Release feedback");
 
-    private final String milestoneDescription;
-    private final boolean presetDate;
+    private String milestoneDescription;
+    private boolean presetDate;
 
     MilestoneType(String milestoneDescription) {
         this(milestoneDescription, true);

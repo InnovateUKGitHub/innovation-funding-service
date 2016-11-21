@@ -76,7 +76,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Test
     public void testCreateSingleMilestone() throws Exception {
-        Competition newCompetition  = competitionRepository.save(newCompetition().withId(null).build());
+        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
         assertNotNull(milestones);
@@ -91,7 +91,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Test
     public void testCreateMilestones() throws Exception {
-        Competition newCompetition  = competitionRepository.save(newCompetition().withId(null).build());
+        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
 

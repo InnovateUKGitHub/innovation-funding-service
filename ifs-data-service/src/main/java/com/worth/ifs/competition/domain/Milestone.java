@@ -28,18 +28,18 @@ public class Milestone {
     }
 
     public Milestone(MilestoneType type, Competition competition) {
-        if (type == null) throw new NullPointerException("type cannot be null");
-        if (competition == null) throw new NullPointerException("competition cannot be null");
-        if (type.isPresetDate()) throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' must have a date");
+        if (type == null) { throw new NullPointerException("type cannot be null"); }
+        if (competition == null) { throw new NullPointerException("competition cannot be null"); }
+        if (type.isPresetDate()) { throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' must have a date"); }
 
         this.type = type;
         this.competition = competition;
     }
 
     public Milestone(MilestoneType type, LocalDateTime date, Competition competition) {
-        if (type == null) throw new NullPointerException("type cannot be null");
-        if (competition == null) throw new NullPointerException("competition cannot be null");
-        if (date == null) throw new NullPointerException("date cannot be null");
+        if (type == null) { throw new NullPointerException("type cannot be null"); }
+        if (competition == null) { throw new NullPointerException("competition cannot be null"); }
+        if (date == null) { throw new NullPointerException("date cannot be null"); }
 
         this.type = type;
         this.date = date;

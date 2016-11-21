@@ -504,6 +504,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                                                 LocalDateTime assessmentClosedDate) {
 
         return EnumSet.allOf(MilestoneType.class).stream().map(milestoneType -> {
+            Competition competition = assignCompetitionId(comp);
             final LocalDateTime milestoneDate;
             switch (milestoneType) {
                 case OPEN_DATE: milestoneDate = startDate; break;
@@ -516,7 +517,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 case NOTIFICATIONS: milestoneDate = fundersPanelEndDate; break;
                 default: milestoneDate = LocalDateTime.now();
             }
-            return new Milestone(milestoneType, milestoneDate, assignCompetitionId(comp));
+            return new Milestone(milestoneType, milestoneDate, competition);
         }).collect(Collectors.toList());
     }
 

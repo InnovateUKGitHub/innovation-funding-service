@@ -146,6 +146,7 @@ public class Competition implements ProcessActivity {
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
             } else if (!isMilestoneReached(MilestoneType.ASSESSOR_DEADLINE)) {
+                // TODO INFUND-6304 change to use the RELEASE_FEEDBACK Milestone
                 return ASSESSOR_FEEDBACK;
             } else {
                 return PROJECT_SETUP;
@@ -287,7 +288,7 @@ public class Competition implements ProcessActivity {
 	}
 
     private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
-        Milestone milestone = milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny().orElseGet(() -> {
+        Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
             Milestone m = new Milestone();
             m.setType(milestoneType);
             m.setCompetition(this);
@@ -298,7 +299,7 @@ public class Competition implements ProcessActivity {
 	}
 
 	private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
-        return milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny();
+        return milestones.stream().filter(m -> m.getType() == milestoneType).findAny();
     }
 
     private boolean isMilestoneReached(MilestoneType milestoneType) {

@@ -1,59 +1,29 @@
 package com.worth.ifs.competition.domain;
 
 import com.worth.ifs.competition.resource.MilestoneType;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MilestoneTest {
 
-    private Milestone milestone;
-    private Competition competition;
-    private List<String> milestoneTypes;
-
-    private Long id;
-    private MilestoneType type;
-    private LocalDateTime date;
-    private Long competitionId;
-
-    private String openDate = "OPEN_DATE";
-    private String briefingEvent = "BRIEFING_EVENT";
-    private String submissionDate = "SUBMISSION_DATE";
-    private String allocateAssessors = "ALLOCATE_ASSESSORS";
-    private String assessorBriefing = "ASSESSOR_BRIEFING";
-    private String assessorAccepts = "ASSESSOR_ACCEPTS";
-    private String assessorDeadline = "ASSESSOR_DEADLINE";
-    private String lineDraw = "LINE_DRAW";
-    private String assessmentPanel = "ASSESSMENT_PANEL";
-    private String panelDate = "PANEL_DATE";
-    private String fundersPanel = "FUNDERS_PANEL";
-    private String notifications = "NOTIFICATIONS";
-    private String releaseFeedback = "RELEASE_FEEDBACK";
-
-    @Before
-    public void setUp() throws Exception {
-        id = 0L;
-        type = MilestoneType.OPEN_DATE;
-        date = LocalDateTime.now().plusDays(7);
-        competitionId = 1L;
-
-        competition = new Competition();
-        competition.setId(competitionId);
-
-        milestone = new Milestone(type, date, competition);
-        populateMilestoneTypes();
-    }
-
     @Test
     public void getMilestone() {
+        MilestoneType type = MilestoneType.OPEN_DATE;
+        LocalDateTime date = LocalDateTime.now().plusDays(7);
+        Long competitionId = 1L;
+
+        Competition competition = newCompetition().withId(competitionId).build();
+        competition.setId(competitionId);
+
+        Milestone milestone = new Milestone(type, date, competition);
+
         assertEquals(milestone.getType(), type);
         assertEquals(milestone.getDate(), date);
         assertEquals(milestone.getCompetition().getId(), competitionId);
@@ -61,30 +31,50 @@ public class MilestoneTest {
 
     @Test
     public void milestoneTypeSize() {
-        assertTrue(MilestoneType.values().length == 15);
-
-        List<String> milestoneEnum = new ArrayList<>();
-
-        Stream.of(MilestoneType.values()).forEach(name -> {
-            milestoneEnum.add(name.toString());
-        });
-        assertTrue(!Collections.disjoint(milestoneTypes, milestoneEnum));
+        assertEquals(15, MilestoneType.values().length);
+        assertEquals(13, MilestoneType.presetValues().length);
     }
 
-    private void populateMilestoneTypes(){
-        milestoneTypes = new ArrayList<>();
-        milestoneTypes.add(openDate);
-        milestoneTypes.add(briefingEvent);
-        milestoneTypes.add(submissionDate);
-        milestoneTypes.add(allocateAssessors);
-        milestoneTypes.add(assessorBriefing);
-        milestoneTypes.add(assessorAccepts);
-        milestoneTypes.add(assessorDeadline);
-        milestoneTypes.add(lineDraw);
-        milestoneTypes.add(assessmentPanel);
-        milestoneTypes.add(panelDate);
-        milestoneTypes.add(fundersPanel);
-        milestoneTypes.add(notifications);
-        milestoneTypes.add(releaseFeedback);
+    @Test
+    public void create_presetMilestone() {
+        MilestoneType milestoneType = Stream.of(MilestoneType.presetValues()).findFirst().get();
+        new Milestone(milestoneType, LocalDateTime.now(), newCompetition().build());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void create_presetMilestoneWithNoDate() {
+        MilestoneType milestoneType = Stream.of(MilestoneType.presetValues()).findFirst().get();
+        new Milestone(milestoneType, newCompetition().build());
+    }
+
+    @Test
+    public void create_nonPresetMilestone() {
+        MilestoneType milestoneType = Stream.of(MilestoneType.values()).filter(t -> !t.isPresetDate()).findFirst().get();
+        new Milestone(milestoneType, LocalDateTime.now(), newCompetition().build());
+    }
+
+    @Test
+    public void create_nonPresetMilestoneWithNoDate() {
+        MilestoneType milestoneType = Stream.of(MilestoneType.values()).filter(t -> !t.isPresetDate()).findFirst().get();
+        new Milestone(milestoneType, newCompetition().build());
+    }
+
+    @Test
+    public void isSet() {
+        Milestone assessorsNotifiedMilestone = new Milestone(MilestoneType.ASSESSORS_NOTIFIED, newCompetition().build());
+        assertFalse(assessorsNotifiedMilestone.isSet());
+        assessorsNotifiedMilestone.setDate(LocalDateTime.now());
+        assertTrue(assessorsNotifiedMilestone.isSet());
+    }
+
+    @Test
+    public void isReached() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime future = now.plusNanos(1);
+        LocalDateTime past = now.minusNanos(1);
+
+        assertFalse( new Milestone(MilestoneType.ALLOCATE_ASSESSORS, future, newCompetition().build()).isReached(now) );
+        assertTrue( new Milestone(MilestoneType.ALLOCATE_ASSESSORS, now, newCompetition().build()).isReached(now) );
+        assertTrue( new Milestone(MilestoneType.ALLOCATE_ASSESSORS, past, newCompetition().build()).isReached(now) );
     }
 }

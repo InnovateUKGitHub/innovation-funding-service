@@ -122,8 +122,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     				.withEndDate(now.minusDays(4L))
                     .withAssessorsNotifiedDate(now.minusDays(3L))
                     .withAssessmentClosedDate(now.minusDays(2L))
-    				.withFundersPanelDate(now.minusDays(1L))
-    				.withFundersPanelEndDate(null); // or now, or null?
+    				.withFundersPanelDate(now.minusDays(1L));
     	} else if(ASSESSOR_FEEDBACK.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(4L))
