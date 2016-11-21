@@ -28,7 +28,7 @@ Project Finance user can see the finance check summary page
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/4/finance-check
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then The user should not see the text in the page    Viability
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
