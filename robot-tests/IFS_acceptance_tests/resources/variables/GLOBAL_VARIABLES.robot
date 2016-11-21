@@ -172,7 +172,7 @@ ${test_title}     test title
 
 # File related variables
 ${UPLOAD_FOLDER}                  uploaded_files
-${DOWNLOAD_FOLDER}                ../download_files
+#${DOWNLOAD_FOLDER}               This variable to be defined TODO INFUND-6187
 ${empty_field_warning_message}    This field cannot be left blank
 ${valid_pdf}            testing.pdf
 ${too_large_pdf}        large.pdf
