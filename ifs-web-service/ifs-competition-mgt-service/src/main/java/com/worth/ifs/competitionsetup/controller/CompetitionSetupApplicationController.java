@@ -145,14 +145,14 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
 
         if(!bindingResult.hasErrors()) {
+            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
-                    Optional.of(competitionSetupForm.getQuestion().getId()));
+                    Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }
