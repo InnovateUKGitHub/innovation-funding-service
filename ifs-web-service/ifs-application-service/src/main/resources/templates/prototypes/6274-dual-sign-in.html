@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="grid-row">
+		<section class="column-half">
+
+			<form action="/prototypes/6274-dual-user-choice">
+
+        <legend class="heading-large">Sign in</legend>
+
+        <div class="form-group">
+          <label for="username" class="form-label"><span>E-mail address</span></label>
+          <input class="form-control form-control-3-4" id="username" name="j_username" type="email" value="" required="required" data-required-errormessage="Please enter your e-mail address" data-email-errormessage="Please enter a valid e-mail address" />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input class="form-control form-control-3-4" id="password" name="j_password" type="password" value="" required="required" data-required-errormessage="Please enter your password" />
+        </div>
+
+        <div class="form-group">
+          <button class="button" type="submit">Sign in</button>
+        </div>
+
+			</form>
+
+		</section>
+		<section class="column-half">
+
+      <h1 class="heading-large">New to this service?</h1>
+      <p>If you haven't used this service before you must <a href="#">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+      <ul class="list-bullet extra-margin">
+        <li class="list-help-item"><a href="#">Forgot your password?</a></li>
+        <li class="list-help-item"><a href="#">Need Help?</a></li>
+      </ul>
+
+    </section>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
