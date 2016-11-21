@@ -1,22 +1,20 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.transactional.*;
+import com.worth.ifs.competition.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.*;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.*;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

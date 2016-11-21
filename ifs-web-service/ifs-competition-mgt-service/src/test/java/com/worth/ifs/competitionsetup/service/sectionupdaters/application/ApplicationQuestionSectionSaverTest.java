@@ -1,12 +1,10 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
-import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.application.*;
+import com.worth.ifs.competitionsetup.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,11 +14,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,10 +49,10 @@ public class ApplicationQuestionSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSection() {
-        QuestionViewModel question = new QuestionViewModel();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setTitle("TitleOld");
 
-        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(question);
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
@@ -69,10 +66,10 @@ public class ApplicationQuestionSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSectionErrors() {
-        QuestionViewModel question = new QuestionViewModel();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setMaxWords(400);
 
-        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(question);
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
@@ -87,6 +84,10 @@ public class ApplicationQuestionSectionSaverTest {
     @Test
     public void testAutoSaveCompetitionSetupSectionUnknown() {
         CompetitionResource competition = newCompetitionResource().build();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setTitle("TitleOld");
+
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
 
         List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value", Optional.of(1L));
 
@@ -97,7 +98,6 @@ public class ApplicationQuestionSectionSaverTest {
     @Test
     public void testAutoSaveCompetitionSetupSectionEmptyObjectId() {
         CompetitionResource competition = newCompetitionResource().build();
-
         List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value", Optional.empty());
 
         assertTrue(!errors.isEmpty());
