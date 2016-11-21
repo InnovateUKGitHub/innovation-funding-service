@@ -41,7 +41,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private FormInputService formInputService;
 
     @Autowired
-    AssessmentRepository assessmentRepository;
+    private AssessmentRepository assessmentRepository;
 
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;

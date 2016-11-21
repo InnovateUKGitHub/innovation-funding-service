@@ -11,8 +11,6 @@ import org.springframework.statemachine.StateContext;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.FUNDING_DECISION;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -25,7 +23,7 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
     @Test
     public void evaluate_feedbackIncompleteAndFundingDecisionAbsent() throws Exception {
         Assessment assessment = setupAssessmentWithoutFundingDecision();
-        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(FALSE);
+        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(false);
         assertFalse(assessmentCompleteGuard.evaluate(setupContext(assessment)));
         verify(assessmentRepositoryMock, only()).isFeedbackComplete(assessment.getId());
     }
@@ -33,7 +31,7 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
     @Test
     public void evaluate_feedbackIncompleteAndFundingDecisionPresent() throws Exception {
         Assessment assessment = setUpAssessmentWithFundingDecision();
-        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(FALSE);
+        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(false);
         assertFalse(assessmentCompleteGuard.evaluate(setupContext(assessment)));
         verify(assessmentRepositoryMock, only()).isFeedbackComplete(assessment.getId());
     }
@@ -41,7 +39,7 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
     @Test
     public void evaluate_feedbackCompleteAndFundingDecisionAbsent() throws Exception {
         Assessment assessment = setupAssessmentWithoutFundingDecision();
-        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(TRUE);
+        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(true);
         assertFalse(assessmentCompleteGuard.evaluate(setupContext(assessment)));
         verify(assessmentRepositoryMock, only()).isFeedbackComplete(assessment.getId());
     }
@@ -49,7 +47,7 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
     @Test
     public void evaluate_feedbackCompleteAndFundingDecisionPresent() throws Exception {
         Assessment assessment = setUpAssessmentWithFundingDecision();
-        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(TRUE);
+        when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(true);
         assertTrue(assessmentCompleteGuard.evaluate(setupContext(assessment)));
         verify(assessmentRepositoryMock, only()).isFeedbackComplete(assessment.getId());
     }

@@ -23,23 +23,28 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 
-    @Query(value = "SELECT CASE WHEN COUNT(form_input.id) = 0 " +
-            "THEN 'true' " +
-            "ELSE 'false' END AS feedback_complete " +
-            "FROM application, competition, form_input, process, question " +
+    @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
+            "  THEN 'TRUE'" +
+            "       ELSE 'FALSE' END AS feedback_complete " +
+            "FROM application a" +
+            "  INNER JOIN competition c" +
+            "    ON a.competition = c.id" +
+            "  INNER JOIN process p" +
+            "    ON a.id = p.target_id" +
+            "  INNER JOIN question q" +
+            "    ON q.competition_id = c.id" +
+            "  INNER JOIN form_input fi" +
+            "    ON fi.question_id = q.id " +
             "WHERE NOT EXISTS(" +
-            "        SELECT 1" +
-            "        FROM process, assessor_form_input_response" +
-            "                WHERE assessor_form_input_response.assessment_id = process.id" +
-            "                AND assessor_form_input_response.form_input_id = form_input.id" +
-            "                AND assessor_form_input_response.value IS NOT NULL" +
-            "                AND process.id = :id" +
-            ") " +
-            "AND application.competition = competition.id "+
-            "AND application.id = process.target_id " +
-            "AND form_input.scope = 'ASSESSMENT' " +
-            "AND form_input.question_id = question.id " +
-            "AND question.competition_id = competition.id " +
-            "AND process.id = :id", nativeQuery = true)
+            "    SELECT 1 AS response" +
+            "    FROM process p" +
+            "      INNER JOIN assessor_form_input_response afir" +
+            "        ON afir.assessment_id = p.id" +
+            "    WHERE afir.value IS NOT NULL" +
+            "          AND afir.form_input_id = fi.id" +
+            "          AND p.id = :id" +
+            ")" +
+            "      AND fi.scope = 'ASSESSMENT'" +
+            "      AND p.id = :id", nativeQuery = true)
     boolean isFeedbackComplete(@Param("id") Long id);
 }

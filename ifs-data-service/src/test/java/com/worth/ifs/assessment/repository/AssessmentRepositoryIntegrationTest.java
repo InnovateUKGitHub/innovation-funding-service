@@ -30,6 +30,7 @@ import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static java.util.EnumSet.complementOf;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -129,11 +130,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         List<Assessment> found = repository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, application.getCompetition().getId());
 
-        assertEquals(AssessmentStates.values().length * numOfAssessmentsForEachState, found.size());
+        assertEquals(getAssessmentStatesWithoutDecisions().size() * numOfAssessmentsForEachState, found.size());
 
         Map<AssessmentStates, List<Assessment>> foundByStateMap = found.stream().collect(Collectors.groupingBy(Assessment::getActivityState, LinkedHashMap::new, toList()));
 
-        assertArrayEquals("Expected the assessments to ordered by ActivityState in the natural ordering of their equivalent AssessmentStates", AssessmentStates.values(), foundByStateMap.keySet().toArray(new AssessmentStates[foundByStateMap.keySet().size()]));
+        assertEquals("Expected the assessments to ordered by ActivityState in the natural ordering of their equivalent AssessmentStates", getAssessmentStatesWithoutDecisions(), foundByStateMap.keySet());
 
         foundByStateMap.values().forEach(foundByState -> {
             List<Long> ids = getAssessmentIds(foundByState);
@@ -202,6 +203,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     private List<ActivityState> getActivityStates() {
-        return Arrays.stream(AssessmentStates.values()).map(assessmentState -> activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, assessmentState.getBackingState())).collect(toList());
+        return getAssessmentStatesWithoutDecisions().stream().map(assessmentState -> activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, assessmentState.getBackingState())).collect(toList());
+    }
+
+    private EnumSet<AssessmentStates> getAssessmentStatesWithoutDecisions() {
+        return complementOf(EnumSet.of(AssessmentStates.DECIDE_IF_READY_TO_SUBMIT));
     }
 }
