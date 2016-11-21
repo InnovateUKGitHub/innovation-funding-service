@@ -25,6 +25,12 @@
         <small>declined</small>
       </div>
     </div>
+    <div class="column-quarter">
+      <div class="highlight-panel">
+        <span class="heading-large">6</span><br />
+        <small>assessors on invite list</small>
+      </div>
+    </div>
   </div>
 
   <dl class="standard-definition-list extra-margin-top">
@@ -242,10 +248,10 @@
                        <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
                        <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
                    </div>
-                   <div class="column-quarter aligncentre">
+                   <!--<div class="column-quarter aligncentre">
                        <h3 class="heading-large no-margin">6</h3>
                        <p>Assessors on invite list</p>
-                   </div>
+                   </div> -->
             </div>
 
             <div class="search-filters">
@@ -393,10 +399,10 @@
 
                 <p>You can invite people on your list individually or as a group.</p>
             </div>
-            <div class="column-quarter aligncentre">
-                   <h3 class="heading-large no-margin">6</h3>
-                   <p>Assessors on invite list</p>
-               </div>
+            <!-- <div class="column-quarter aligncentre">
+                 <h3 class="heading-large no-margin">6</h3>
+                 <p>Assessors on invite list</p>
+             </div> -->
         </div>
 
         <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
