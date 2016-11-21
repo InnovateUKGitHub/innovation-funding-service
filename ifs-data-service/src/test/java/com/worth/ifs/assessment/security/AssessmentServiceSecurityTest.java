@@ -18,6 +18,7 @@ import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResource
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -97,6 +98,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
+            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
+        }
+
+        @Override
+        public ServiceResult<AssessmentResource> findAssignableById(Long id) {
             return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
         }
 

@@ -263,7 +263,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     }
 
     private CompetitionResource buildTestCompetition() {
-        LocalDateTime assessorAcceptsDate = LocalDateTime.now().minusDays(2);
+        LocalDateTime assessorAcceptsDate = LocalDateTime.now().plusDays(2);
         LocalDateTime assessorDeadlineDate = LocalDateTime.now().plusDays(4);
 
         return newCompetitionResource()

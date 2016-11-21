@@ -65,7 +65,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
 
-        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId, acceptDeadline);
+        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted = getApplicationsPartitionedBySubmitted(userId, competitionId);
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
 
@@ -86,9 +86,8 @@ public class AssessorCompetitionDashboardModelPopulator {
         );
     }
 
-    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId, LocalDateTime acceptDeadline) {
-        LocalDateTime now = LocalDateTime.now();
-        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().filter(x -> acceptDeadline.isAfter(now) || x.getAssessmentState() != PENDING).collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
+        return assessmentService.getByUserAndCompetition(userId, competitionId).stream().collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
     }
 
     private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {

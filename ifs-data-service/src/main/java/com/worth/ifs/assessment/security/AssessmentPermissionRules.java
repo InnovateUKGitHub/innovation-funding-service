@@ -36,11 +36,10 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         return isAssessorForAssessment(assessment, user, allowedNonDashboardReadStates);
     }
 
-    @PermissionRule(value = "ASSIGN", description = "Assessors can only accept or reject assessments that are pending and the accept date hasn't passed")
+    @PermissionRule(value = "ASSIGN", description = "Assessors can only accept or reject assessments that are pending")
     public boolean userCanAssignAssessment(AssessmentResource assessment, UserResource user) {
-        Competition competition = competitionRepository.findById(assessment.getCompetition());
         List<AssessmentStates> allowedAssignStates = Collections.singletonList(PENDING);
-        return competition.getAssessorAcceptsDate().isAfter(LocalDateTime.now()) && isAssessorForAssessment(assessment, user, allowedAssignStates);
+        return isAssessorForAssessment(assessment, user, allowedAssignStates);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")
