@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
+  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
