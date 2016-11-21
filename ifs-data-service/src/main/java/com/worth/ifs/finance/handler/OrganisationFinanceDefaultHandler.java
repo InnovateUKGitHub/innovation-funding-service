@@ -47,7 +47,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     public Iterable<FinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
     	
     	if(costTypeSupportedByHandler(costType)) {
-	        Question question = getQuestionByCostType(costType);
+            Long competitionId = applicationFinance.getApplication().getCompetition().getId();
+            Question question = getQuestionByCostType(competitionId, costType);
 	        try{
 	            List<FinanceRow> cost = getCostHandler(costType).initializeCost();
 	            cost.forEach(c -> {
@@ -69,8 +70,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
 	// TODO DW - INFUND-1555 - handle rest result
-    private Question getQuestionByCostType(FinanceRowType costType) {
-        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrThrowException();
+    private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
+        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getType()).getSuccessObjectOrThrowException();
     }
 
     @Override

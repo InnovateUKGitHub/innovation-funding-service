@@ -35,7 +35,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentMapper assessmentMapper;
 
     @Autowired
-    private AssessmentWorkflowHandler assessmentWorkflowService;
+    private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Override
     public ServiceResult<AssessmentResource> findById(Long id) {
@@ -55,7 +55,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<Void> recommend(Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowService.fundingDecision(found, assessmentFundingDecision)) {
+            if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {
                 return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
             }
             return serviceSuccess();
@@ -65,7 +65,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ApplicationRejectionResource applicationRejection) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowService.rejectInvitation(found, applicationRejection)) {
+            if (!assessmentWorkflowHandler.rejectInvitation(found, applicationRejection)) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
             }
             return serviceSuccess();
@@ -75,7 +75,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<Void> acceptInvitation(Long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowService.acceptInvitation(found)) {
+            if (!assessmentWorkflowHandler.acceptInvitation(found)) {
                 return serviceFailure(new Error(ASSESSMENT_ACCEPT_FAILED));
             }
             return serviceSuccess();

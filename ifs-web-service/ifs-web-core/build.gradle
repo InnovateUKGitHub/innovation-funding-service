@@ -22,7 +22,7 @@ dependencies {
     // inter-project dependencies
     compile project(":ifs-commons")
     compile project(':ifs-rest-api-service')
-    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
+    testCompile project(':ifs-commons').sourceSets.test.output
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
