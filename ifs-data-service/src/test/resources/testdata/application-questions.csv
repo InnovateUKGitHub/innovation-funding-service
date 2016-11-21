@@ -124,7 +124,7 @@ Academic ? the principal investigator and his team have been studying the issue 
 
 The Fabricators ? Are a leading team within complex engineering fabrication.  They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries
 
-",,steve.smith@empire.com,steve.smith@empire.com,No
+",team_makeup.pdf,steve.smith@empire.com,steve.smith@empire.com,No
 Connected digital additive manufacturing,A novel solution to an old problem,How does financial support from Innovate UK and its funding partners add value?,"Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.  
 
 
@@ -184,7 +184,7 @@ The Industry will be able to reduce wastage by a significant degree and pass tho
 Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution
 
 ",,steve.smith@empire.com,steve.smith@empire.com,No
-Connected digital additive manufacturing,A novel solution to an old problem,What is innovative about your project?,"The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.",,steve.smith@empire.com,steve.smith@empire.com,No
+Connected digital additive manufacturing,A novel solution to an old problem,What is innovative about your project?,"The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.",innovation support.pdf,steve.smith@empire.com,steve.smith@empire.com,No
 Connected digital additive manufacturing,A novel solution to an old problem,What is the business opportunity that your project addresses?,"Within the Industry one issue has caused progress in the field to be stifled.  Up until now any advancement has been made by working around this anomaly.  
 
 
@@ -209,7 +209,7 @@ Connected digital additive manufacturing,A novel solution to an old problem,What
 
 We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle. 
 
-",,steve.smith@empire.com,steve.smith@empire.com,No
+",Technical-appendix.pdf,steve.smith@empire.com,steve.smith@empire.com,No
 Connected digital additive manufacturing,A novel solution to an old problem,What will your project cost?,"The amount of money needed to complete this project is large.  
 
 
@@ -860,8 +860,8 @@ Killer Riffs,best riffs,How does your project align with the scope of this compe
 Killer Riffs,best riffs,Project summary,secondly,,jessica.doe@ludlow.co.uk,,Yes
 Killer Riffs,best riffs,Public description,thirdly,,jessica.doe@ludlow.co.uk,,Yes
 Killer Riffs,best riffs,"Does your project team have the skills, experience and facilities to deliver this project?",Our team is ready to put this in motion,team_makeup.pdf,steve.smith@empire.com,,Yes
-Killer Riffs,best riffs,What technical approach will you use and how will you manage your project?,A technical answer,Technical-appendix.pdf,,,
-Killer Riffs,best riffs,What is innovative about your project?,Some innovation text,innovation support.pdf,,,
+Killer Riffs,best riffs,What technical approach will you use and how will you manage your project?,A technical answer,Technical-appendix.pdf,steve.smith@empire.com,,Yes
+Killer Riffs,best riffs,What is innovative about your project?,Some innovation text,innovation support.pdf,steve.smith@empire.com,,Yes
 Killer Riffs,better riffs,What is innovative about your project?,fifthly,,jerry.mcdonald@example.com,,Yes
 Killer Riffs,better riffs,How does your project align with the scope of this competition?,fourthly,,jerry.mcdonald@example.com,,Yes
 Killer Riffs,better riffs,Project summary,secondly,,jerry.mcdonald@example.com,,Yes

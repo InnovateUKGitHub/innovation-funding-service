@@ -281,7 +281,8 @@ class CsvUtils {
             applicationName = line.get(i++);
             questionName = line.get(i++);
             value = nullable(line.get(i++));
-            filesUploaded = asList(line.get(i++).split(","));
+            String filesUploadedLine = line.get(i++);
+            filesUploaded = !isBlank(filesUploadedLine) ? asList(filesUploadedLine.split(",")) : emptyList();
             answeredBy = nullable(line.get(i++));
             assignedTo = nullable(line.get(i++));
             markedAsComplete = nullableBoolean(line.get(i++));

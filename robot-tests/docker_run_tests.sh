@@ -75,7 +75,7 @@ function resetLDAP() {
 
 function resetDB(){
   cd ${dataServiceCodeDir}
-  # ./gradlew -Pprofile=docker flywayClean flywayMigrate
+  ./gradlew -Pprofile=docker flywayClean flywayMigrate
   resetLDAP
 }
 
