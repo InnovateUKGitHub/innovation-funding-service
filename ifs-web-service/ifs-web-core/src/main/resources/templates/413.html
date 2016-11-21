@@ -13,28 +13,21 @@
 
     <h1 class="heading-large" th:text="${title}">Payload too large</h1>
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
-
     <p th:if="${status}">
-        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
-            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+      <b>Response Status:</b> <span th:text="${status}">status-code</span>
+     <span th:if="${error}" th:text="'('+${error}+')'">error ...</span>
     </p>
 
-    <div>
-		<span>
-            We are unable to complete your request because the size of file or request being submitted is too large. Please limit the size of file or request to sizes specified.  You can go back to the page you were previously on and try again or click <a th:href="${userDashboardLink}">here</a> to get back to the IFS application.
-        </span>
-    </div>
+    We are unable to complete your request because the size of file or request being submitted is too large.
+    Please limit the size of your file to the sizes specified. You can go back to the page you were previously on or go back to <a th:href="${userDashboardLink}">your application</a>.
 
-    <span th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+    <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
         Error message will be displayed here for developers on dev/UAT environments.
-    </span>
+    </th:block>
 
-    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
         Stack trace will be printed here...
-    </pre>
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
