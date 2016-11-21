@@ -61,7 +61,7 @@ Project Finance generates the Spend Profile
     When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
     And the user clicks the button/link     jQuery=.button:contains("Generate spend profile")
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page     ${server}/project-setup-management/competition/3/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
 
 Lead partner can view spend profile page
@@ -475,7 +475,7 @@ Project Finance still has a link to the spend profile after approval
     [Tags]
     When the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should see the text in the page           Project spend profile
-    And the user clicks the button/link                    link=Cheeseco-spend-profile.csv
+    And the user clicks the button/link                    link=Empire Ltd-spend-profile.csv
     And the user clicks the button/link                     link=Ludlow-spend-profile.csv
     And the user clicks the button/link                     link=EGGS-spend-profile.csv
     And the user should see the text in the page    The spend profile has been approved
