@@ -18,67 +18,58 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Remove application'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${(param.type != null and param.type[0] == 'multiple' ? 'Inform lead applicants' : 'Inform lead applicant')}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
 
-	<div>
+	<h2 class="heading-medium no-margin">Application:</h2>
+	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : '94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes')}"></p>
 
-		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+	<p>The following email will be sent to the lead <span th:text="${(param.type != null and param.type[0] == 'multiple' ? 'applicants' : 'applicant')}">applicant</span>, after which this application will be no longer available for assessment.</p>
 
-		<p>The following email will be sent to the lead applicant, after which this application will be no longer available for assessment.</p>
+	<h2 class="heading-medium no-margin">Recipient:</h2>
+	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : 'Dave Smith (Lead applicant)')}"></p>
 
-		<form action="/prototypes/" id="removeApp">
-			<fieldset>
-				<legend class="heading-medium">Recipient: Dave Smith (Lead applicant)</legend>
-			</fieldset>
+	<form action="/prototypes/" id="removeApp">
 
-			<div class="form-group">
-				<label class="form-label" for="remove-application-subject">Subject</label>
-				<input class="form-control width-full" id="remove-application-subject" name="remove-application-subject" type="text" required="required" />
+		<div class="form-group">
+			<label class="form-label" for="remove-application-subject">Subject</label>
+			<input class="form-control" id="remove-application-subject" name="remove-application-subject" type="text" required="required" />
+		</div>
+
+		<div class="form-group no-margin-bottom">
+			<label for="remove-application-message">Message</label>
+			<textarea name="remove-application-message" id="remove-application-message" class="width-full" cols="30" rows="10"></textarea>
+			<div class="textarea-footer">
+				<span class="count-label">
+					<span class="count-down">Words remaining: 400</span>
+				</span>
 			</div>
+		</div>
 
-			<div class="form-group no-margin-bottom">
-				<label for="remove-application-message">Message</label>
-				<textarea name="remove-application-message" id="remove-application-message" class="width-full" cols="30" rows="10">Default content to be discussed with Sarah Vodden
-				</textarea>
-				<div class="textarea-footer">
-					<span class="count-label">
-						<span class="count-down">Words remaing: 400</span>
-					</span>
-				</div>
-			</div>
+		<div class="alignright">
+			<a href="/prototypes/5698-admin-readonly-application" class="extra-margin-right">Cancel</a>
+			<a href="#" class="button no-margin-right">Send</a>
+		</div>
 
-			<div class="grid-row">
-				<div class="column-half">
-					<a href="/prototypes/5698-admin-readonly-application">Cancel</a>
-				</div>
-				<div class="column-half alignright">
-					<a href="#" class="button no-margin-right" data-js-modal="modal-inform-remove">Inform and remove</a>
-				</div>
-			</div>
+		<!--<div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">-->
+			<!--<button class="js-close close" aria-label="Close Popup">X</button>-->
+			<!--<div>-->
 
-			<div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-		        <button class="js-close close" aria-label="Close Popup">X</button>
-		        <div>
+				<!--<h2 class="heading-medium no-margin">Remove application</h2>-->
 
-					<h2 class="heading-medium no-margin">Remove application</h2>
+				<!--<p>The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed using the email dafted of the decision</p>-->
 
-					<p>The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed using the email dafted of the decision</p>
+				<!--<hr />-->
 
-					<hr />
+				<!--<div class="alignright-button">-->
 
-	            	<div class="alignright-button">
+					<!--<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>-->
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<!--<a href="#" class="button">Inform and remove</a>-->
+				<!--</div>-->
 
-	            		<a href="#" class="button">Inform and remove</a>
-	            	</div>
-
-		        </div>
-		    </div>
-		</form>
-
-	</div>
-
+			<!--</div>-->
+		<!--</div>-->
+	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
