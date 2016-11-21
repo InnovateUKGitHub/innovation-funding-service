@@ -25,6 +25,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.Assessment} data.
@@ -83,7 +84,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
-        Iterable<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
+        List<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
         List<Error> failures = new ArrayList<>();
         Set<Long> foundAssessmentIds = new HashSet<>();
 
@@ -95,12 +96,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
         });
 
-        assessmentSubmissionsResource.getAssessmentIds()
-                .forEach(assessmentId -> {
-                    if (!foundAssessmentIds.contains(assessmentId)) {
-                        failures.add(notFoundError(Assessment.class, assessmentId));
-                    }
-                });
+        failures.addAll(
+                assessmentSubmissionsResource.getAssessmentIds().stream()
+                        .filter(assessmentId -> !foundAssessmentIds.contains(assessmentId))
+                        .map(assessmentId -> notFoundError(Assessment.class, assessmentId))
+                        .collect(toList())
+        );
 
         if (!failures.isEmpty()) {
             return serviceFailure(failures);

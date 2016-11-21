@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
