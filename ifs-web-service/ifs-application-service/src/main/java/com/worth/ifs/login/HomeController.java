@@ -64,27 +64,26 @@ public class HomeController {
 
         UserResource user = (UserResource) authentication.getDetails();
         if (isAssessorAndApplicant(user)) {
-            return doViewRoleSelection(model);
+            return "redirect:/roleSelection";
         }
 
         return getRedirectUrlForUser(user);
     }
 
-    @RequestMapping(value = "/role", method = RequestMethod.GET)
+    @RequestMapping(value = "/roleSelection", method = RequestMethod.GET)
     public String selectRole(Model model,
                              @ModelAttribute("form") RoleSelectionForm form) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || user.getRoles().size() == 1) {
+        if (unauthenticated(authentication) || !isAssessorAndApplicant(user)) {
             return "redirect:/";
         }
 
-        //model.addAttribute("model", roleSelectionModelPopulator.populateModel());
-        return "/roleSelection";
+        return doViewRoleSelection(model);
     }
 
-    @RequestMapping(value = "/role", method = RequestMethod.POST)
+    @RequestMapping(value = "/roleSelection", method = RequestMethod.POST)
     public String processRole(Model model,
                               @ModelAttribute("loggedInUser") UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
@@ -102,7 +101,7 @@ public class HomeController {
 
     private String doViewRoleSelection(Model model) {
         model.addAttribute("model", roleSelectionModelPopulator.populateModel());
-        return "/role";
+        return "/login/dual-user-choice";
     }
 
     private String redirectToChosenDashboard(UserResource user, String role) {

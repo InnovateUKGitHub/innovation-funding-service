@@ -106,17 +106,17 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(assessorAndApplicant);
 
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("/role"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/roleSelection"));
     }
 
     @Test
     public void testRoleChoice() throws Exception {
         setLoggedInUser(assessorAndApplicant);
 
-        mockMvc.perform(get("/role"))
+        mockMvc.perform(get("/roleSelection"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/roleSelection"));
+                .andExpect(view().name("/login/dual-user-choice"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         userAuth.setAuthenticated(false);
         setLoggedInUserAuthentication(userAuth);
 
-        mockMvc.perform(get("/role"))
+        mockMvc.perform(get("/roleSelection"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
     }
@@ -134,7 +134,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     public void testRoleSelectionWithSingleRoleUser() throws Exception {
         setLoggedInUser(applicant);
 
-        mockMvc.perform(get("/role"))
+        mockMvc.perform(get("/roleSelection"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
     }
@@ -144,7 +144,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(assessorAndApplicant);
         UserRoleType selectedRole = UserRoleType.ASSESSOR;
 
-        mockMvc.perform(post("/role")
+        mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"))
@@ -156,7 +156,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(assessorAndApplicant);
         UserRoleType selectedRole = UserRoleType.APPLICANT;
 
-        mockMvc.perform(post("/role")
+        mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/applicant/dashboard"))
@@ -169,13 +169,13 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         RoleSelectionForm expectedForm = new RoleSelectionForm();
         expectedForm.setSelectedRole(null);
 
-        MvcResult result = mockMvc.perform(post("/role"))
+        MvcResult result = mockMvc.perform(post("/roleSelection"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "selectedRole"))
-                .andExpect(view().name("/role"))
+                .andExpect(view().name("/login/dual-user-choice"))
                 .andReturn();
 
         RoleSelectionForm form = (RoleSelectionForm) result.getModelAndView().getModel().get("form");

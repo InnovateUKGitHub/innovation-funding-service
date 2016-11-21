@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Dual user choice'" th:remove="tag" />
+</head>
+<body class="app-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+  <h1 class="heading-large">Sign in successful</h1>
+  <p>Thank you for signing into the Innovation Funding Service.</p>
+
+  <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin">
+
+    <fieldset class="inline extra-margin">
+      <legend class="heading-medium">Please choose the role you are signing in as today</legend>
+
+      <legend>
+        <span th:if="${#fields.hasErrors('selectedRole')}" th:remove="tag">
+          <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
+        </span>
+      </legend>
+
+      <div class="form-group" >
+        <fieldset class="inline">
+          <label class="block-label" th:each="role : ${model.acceptedRoles}">
+            <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" data-required-errormessage="Please select a role"/>
+            <span th:text="${role.displayName}" th:remove="tag"/>
+          </label>
+        </fieldset>
+      </div>
+
+    </fieldset>
+
+    <button type="submit" class="button" id="continue" >Continue</button>
+
+  </form>
+
+  <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+    jQuery( document ).ready(function() {
+      	jQuery("#continue").attr('disabled','disabled');
+    });
+
+
+	jQuery("input[name='selectedRole']").on('click',function(e){
+
+    if ( jQuery(this).is(':checked') ) {
+			jQuery("#continue").removeAttr('disabled');
+		}
+
+	});
+
+	// ]]>
+</script>
+</body>
+</html>

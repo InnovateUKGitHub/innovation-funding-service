@@ -10,30 +10,36 @@ import static java.util.stream.Collectors.toList;
  */
 public enum UserRoleType {
 
-    APPLICANT("applicant"),
-    COLLABORATOR("collaborator"),
-    ASSESSOR("assessor"),
-    LEADAPPLICANT("leadapplicant"),
-    COMP_ADMIN("comp_admin"),
-    COMP_EXEC("competition_executive"),
-    COMP_TECHNOLOGIST("competition_technologist"),
-    SYSTEM_MAINTAINER("system_maintainer"),
-    SYSTEM_REGISTRATION_USER("system_registrar"),
-    PROJECT_FINANCE("project_finance"),
-    FINANCE_CONTACT("finance_contact"),
-    PARTNER("partner"),
-    PROJECT_MANAGER("project_manager"),
-    IFS_ADMIN("ifs_admin")
+    APPLICANT("applicant", "Applicant"),
+    COLLABORATOR("collaborator", "Collaborator"),
+    ASSESSOR("assessor","Assessor"),
+    LEADAPPLICANT("leadapplicant", "Lead Applicant"),
+    COMP_ADMIN("comp_admin", "Competition Administrator"),
+    COMP_EXEC("competition_executive", "Competition Executive"),
+    COMP_TECHNOLOGIST("competition_technologist", "Competition Technologist"),
+    SYSTEM_MAINTAINER("system_maintainer", "System Maintainer"),
+    SYSTEM_REGISTRATION_USER("system_registrar", "System Registration User"),
+    PROJECT_FINANCE("project_finance", "Project Finance"),
+    FINANCE_CONTACT("finance_contact", "Finance Contact"),
+    PARTNER("partner", "Partner"),
+    PROJECT_MANAGER("project_manager", "Project Manager"),
+    IFS_ADMIN("ifs_admin", "IFS Administrator")
     ;
 
     private final String name;
+    private String displayName;
 
-    UserRoleType(String name) {
+    UserRoleType(String name, String displayName) {
         this.name = name;
+        this.displayName = displayName;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public static UserRoleType fromName(final String name){
