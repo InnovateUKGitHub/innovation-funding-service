@@ -165,7 +165,7 @@ Bank details for non-lead partner
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
 Project Finance can see the progress of partners bank details
-    [Documentation]  INFUND-4903, INFUND-5966
+    [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]    HappyPath
     [Setup]  log in as a different user             lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
@@ -190,6 +190,8 @@ Project Finance can see the progress of partners bank details
     Then the user should see the text in the page    EGGS - Account details
     And the user should see the text in the page    Pete Tom
     And the user should see the text in the page    pete.tom@egg.com
+    Then the user clicks the button/link            link=Bank details
+    [Teardown]  the user clicks the button/link     link=Competition Dashboard
 
 
 

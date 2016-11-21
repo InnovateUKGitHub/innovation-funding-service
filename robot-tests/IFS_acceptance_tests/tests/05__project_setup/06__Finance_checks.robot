@@ -16,18 +16,20 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821, INFUND-5476
+    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
     [Tags]  HappyPath
     [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
+    [Teardown]  the user clicks the button/link  link=Competition Dashboard
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
-    Given The user should not see the text in the page    Viability
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then The user should not see the text in the page    Viability
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=review
@@ -94,13 +96,17 @@ Approve Eligibility: Academic partner organisation
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
-Project Finance user can export bank details 
-    [Documentation]    INFUND-5852 
+Project Finance user can export bank details
+
+    [Documentation]    INFUND-5852
+
     [Tags]      Pending
-   Given The user navigates to the page   ${server}/project-setup-management/competition/3/status 
-   Then The user should see the text in the page    Export all bank details
-   And The user clicks the button/link          link = Export all bank details
-   And the Project finance user downloads the excel
+    #TODO Pending due to INFUND-6187
+    Given The user navigates to the page   ${server}/project-setup-management/competition/3/status
+
+    Then The user should see the text in the page    Export all bank details
+    And The user clicks the button/link          link = Export all bank details
+    And the Project finance user downloads the excel
 
 #TODO :Please note this test needs test data to be created [INFUND-5879]
 Project Finance user to view Je-S Download form and then approve finances

@@ -1,23 +1,18 @@
 package com.worth.ifs.competitionsetup.service.formpopulator.application;
 
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
-import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.*;
+import com.worth.ifs.commons.error.exception.*;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.*;
+import com.worth.ifs.competitionsetup.form.application.*;
+import com.worth.ifs.competitionsetup.service.*;
+import com.worth.ifs.competitionsetup.service.formpopulator.*;
+import com.worth.ifs.form.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.inputsTypeMatching;
 
 /**
  * Form populator for the application form competition setup section.
@@ -30,6 +25,9 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 
 	@Autowired
 	private FormInputService formInputService;
+
+	@Autowired
+	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
@@ -50,27 +48,8 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 		return competitionSetupForm;
 	}
 
-	private QuestionViewModel initQuestionForForm(QuestionResource questionResource) {
-        Long appendixTypeId = 4L;
-        Long scoreTypeId = 23L;
-
-		List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
-		List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
-
-		Boolean appendix = inputsTypeMatching(formInputs, appendixTypeId);
-		Boolean scored = inputsTypeMatching(formAssessmentInputs, scoreTypeId);
-
-
-		Optional<FormInputResource> foundInputs = formInputs.stream()
-				.filter(formInputResource -> formInputResource.getFormInputType() != null
-						&& !formInputResource.getFormInputType().equals(appendixTypeId)).findAny();
-
-		QuestionViewModel result = null;
-		if(foundInputs.isPresent()) {
-			result = new QuestionViewModel(questionResource, foundInputs.get(), appendix, scored);
-		}
-
-		return result;
+	private CompetitionSetupQuestionResource initQuestionForForm(QuestionResource questionResource) {
+		return competitionSetupQuestionService.getQuestion(questionResource.getId()).getSuccessObjectOrThrowException();
 	}
 
 
