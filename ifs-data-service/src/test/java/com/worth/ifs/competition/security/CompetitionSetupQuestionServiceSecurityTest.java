@@ -44,7 +44,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
     public void testGetByQuestionIdDeniedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.getByQuestionId(QUESTION_ID);
-            fail("Should not have been able to create project from application without the global Comp Admin role");
+            fail("Should not have been able to get question from id without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -62,7 +62,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 classUnderTest.getByQuestionId(QUESTION_ID);
-                fail("Should not have been able to create project from application without the global Comp Admin role");
+                fail("Should not have been able to get question from id without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -81,7 +81,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
     public void testSaveAllowedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.save(newCompetitionSetupQuestionResource().build());
-            fail("Should not have been able to create project from application without the global Comp Admin role");
+            fail("Should not have been able to save question without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -99,7 +99,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 classUnderTest.save(newCompetitionSetupQuestionResource().build());
-                fail("Should not have been able to create project from application without the global Comp Admin role");
+                fail("Should not have been able to save question without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
