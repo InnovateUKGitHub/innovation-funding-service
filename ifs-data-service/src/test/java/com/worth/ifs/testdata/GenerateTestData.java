@@ -10,6 +10,12 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.notifications.service.senders.NotificationSender;
 import com.worth.ifs.notifications.service.senders.email.EmailNotificationSender;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.SILBankDetails;
+import com.worth.ifs.sil.experian.resource.ValidationResult;
+import com.worth.ifs.sil.experian.resource.VerificationResult;
+import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.testdata.builders.*;
 import com.worth.ifs.testdata.builders.data.BaseUserData;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -54,6 +60,7 @@ import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetit
 import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
+import static com.worth.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
@@ -109,6 +116,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private NotificationSender emailNotificationSender;
 
+    @Autowired
+    private BankDetailsService bankDetailsService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
@@ -116,6 +126,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
     private AssessmentDataBuilder assessmentDataBuilder;
+    private ProjectDataBuilder projectDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -172,6 +183,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private static List<AssessmentLine> assessmentLines;
 
+    private static List<ProjectLine> projectLines;
+
     @Before
     public void setup() throws Exception {
         freshDb();
@@ -189,6 +202,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
         assessmentLines = readAssessments();
+        projectLines = readProjects();
     }
 
     @PostConstruct
@@ -196,6 +210,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         IdentityProviderService idpServiceMock = mock(IdentityProviderService.class);
         EmailService emailServiceMock = mock(EmailService.class);
+        SilExperianEndpoint silExperianEndpointMock = mock(SilExperianEndpoint.class);
 
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
@@ -203,11 +218,17 @@ public class GenerateTestData extends BaseIntegrationTest {
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
 
+        when(silExperianEndpointMock.validate(isA(SILBankDetails.class))).thenReturn(serviceSuccess(new ValidationResult(true, "", emptyList())));
+        when(silExperianEndpointMock.verify(isA(AccountDetails.class))).thenReturn(serviceSuccess(new VerificationResult("10", "10", "10", "10", emptyList())));
+
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
 
         EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
         ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
+
+        BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
+        ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
     }
 
     @PostConstruct
@@ -222,6 +243,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
+        projectDataBuilder = newProjectData(serviceLocator);
     }
 
     @Test
@@ -235,6 +257,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
+        createProjects();
 
 //        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
 //        questionResponseLines.forEach(line -> writer.writeNext(new String[] {line.competitionName, line.applicationName, line.questionName, line.value, "", line.answeredBy, line.assignedTo, line.markedAsComplete ? "Yes" : "No"}));
@@ -245,6 +268,62 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private void createProjects() {
+        projectLines.forEach(this::createProject);
+    }
+
+    private void createProject(ProjectLine line) {
+
+        ProjectDataBuilder baseBuilder = this.projectDataBuilder.
+                withExistingProject(line.name).
+                withStartDate(line.startDate);
+
+        UnaryOperator<ProjectDataBuilder> assignProjectManagerIfNecessary =
+                builder -> !isBlank(line.projectManager) ? builder.withProjectManager(line.projectManager) : builder;
+
+        UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
+                builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
+
+        UnaryOperator<ProjectDataBuilder> submitProjectDetailsIfNecessary =
+                builder -> line.projectDetailsSubmitted ? builder.submitProjectDetails() : builder;
+
+        UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
+                builder -> !isBlank(line.moFirstName) ?
+                        builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
+
+        UnaryOperator<ProjectDataBuilder> selectFinanceContactsIfNecessary = builder -> {
+
+            ProjectDataBuilder currentBuilder = builder;
+
+            for (Pair<String, String> fc : line.financeContactsForOrganisations) {
+                currentBuilder = currentBuilder.withFinanceContact(fc.getLeft(), fc.getRight());
+            }
+
+            return currentBuilder;
+        };
+
+        UnaryOperator<ProjectDataBuilder> submitBankDetailsIfNecessary = builder -> {
+
+            ProjectDataBuilder currentBuilder = builder;
+
+            for (Triple<String, String, String> bd : line.bankDetailsForOrganisations) {
+                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight());
+            }
+
+            return currentBuilder;
+        };
+
+        assignProjectManagerIfNecessary.
+            andThen(setProjectAddressIfNecessary).
+            andThen(submitProjectDetailsIfNecessary).
+            andThen(setMonitoringOfficerIfNecessary).
+            andThen(selectFinanceContactsIfNecessary).
+            andThen(submitBankDetailsIfNecessary).
+            apply(baseBuilder).
+                build();
+
     }
 
     private void createExternalUsers() {

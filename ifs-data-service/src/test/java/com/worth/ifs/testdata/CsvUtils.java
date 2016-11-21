@@ -8,6 +8,9 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserStatus;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -69,6 +72,70 @@ class CsvUtils {
 
     static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
+    }
+
+    static List<ProjectLine> readProjects() {
+        return simpleMap(readCsvLines("projects"), ProjectLine::new);
+    }
+
+    static class ProjectLine {
+
+        String name;
+        LocalDate startDate;
+        String projectManager;
+        boolean projectAddressAdded;
+        boolean projectDetailsSubmitted;
+        List<Pair<String, String>> financeContactsForOrganisations;
+        String moFirstName;
+        String moLastName;
+        String moEmail;
+        String moPhoneNumber;
+        List<Triple<String, String, String>> bankDetailsForOrganisations;
+
+        private ProjectLine(List<String> line) {
+            int i = 0;
+            name = line.get(i++);
+            startDate = nullableDate(line.get(i++));
+            projectManager = line.get(i++);
+            projectAddressAdded = nullableBoolean(line.get(i++));
+            projectDetailsSubmitted = nullableBoolean(line.get(i++));
+
+            String financeContactsLine = line.get(i++);
+
+            if (!isBlank(financeContactsLine)) {
+                List<String> financeContactLines = asList(financeContactsLine.split("\n"));
+
+                financeContactsForOrganisations = simpleMap(financeContactLines, fcLine -> {
+                    String[] split = fcLine.split(":");
+                    String organisationName = StringUtils.trim(split[0]);
+                    String financeContactEmail = StringUtils.trim(split[1]);
+                    return Pair.of(organisationName, financeContactEmail);
+                });
+            } else {
+                financeContactsForOrganisations = emptyList();
+            }
+
+            moFirstName = nullable(line.get(i++));
+            moLastName = nullable(line.get(i++));
+            moEmail = nullable(line.get(i++));
+            moPhoneNumber = nullable(line.get(i++));
+
+            String bankDetailsLine = line.get(i++);
+
+            if (!isBlank(bankDetailsLine)) {
+                bankDetailsForOrganisations = simpleMap(bankDetailsLine.split("\n"), bdLine -> {
+                    String[] split = bdLine.split(":");
+                    String organisationName = StringUtils.trim(split[0]);
+                    String bankDetailsPart = StringUtils.trim(split[1]);
+                    String[] bankDetailsParts = bankDetailsPart.split("/");
+                    String accountNumber = StringUtils.trim(bankDetailsParts[0]);
+                    String sortCode = StringUtils.trim(bankDetailsParts[1]);
+                    return Triple.of(organisationName, accountNumber, sortCode);
+                });
+            } else {
+                bankDetailsForOrganisations = emptyList() ;
+            }
+        }
     }
 
     static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
@@ -438,6 +505,10 @@ class CsvUtils {
         }
 
         if ("1".equals(s)) {
+            return true;
+        }
+
+        if ("yes".equals(s.toLowerCase())) {
             return true;
         }
 

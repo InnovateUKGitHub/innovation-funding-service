@@ -32,6 +32,8 @@ import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
@@ -112,6 +114,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected FormInputRepository formInputRepository;
     protected FileEntryRepository fileEntryRepository;
     protected ApplicationFinanceRepository applicationFinanceRepository;
+    protected ProjectUserRepository projectUserRepository;
+    protected BankDetailsService bankDetailsService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -159,6 +163,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         this.fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         this.applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
+        this.projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
+        this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
     }
 
     @Override
