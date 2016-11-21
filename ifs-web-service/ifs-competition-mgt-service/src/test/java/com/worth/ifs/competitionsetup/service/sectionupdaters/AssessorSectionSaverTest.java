@@ -97,4 +97,13 @@ public class AssessorSectionSaverTest {
 		verifyZeroInteractions(competitionService);
 	}
 
+	@Test
+	public void testAutoSaveAssessorCountInvalid_Integer() {
+		CompetitionResource competition = newCompetitionResource().build();
+		List<Error> errors = saver.autoSaveSectionField(competition, "assessorCount", "Invalid_int", null);
+		assertEquals(1, errors.size());
+		assertEquals("validation.standard.only.numbers", errors.get(0).getErrorKey());
+		verifyZeroInteractions(competitionService);
+	}
+
 }

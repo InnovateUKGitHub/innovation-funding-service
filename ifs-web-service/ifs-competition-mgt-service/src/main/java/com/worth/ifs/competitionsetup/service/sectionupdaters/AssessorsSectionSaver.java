@@ -34,6 +34,10 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		return CompetitionSetupSection.ASSESSORS;
 	}
 
+	private static final String ASSESSOR_COUNT_FIELD = "assessorCount";
+	private static final String ASSESSOR_PAY_FIELD = "assessorPay";
+	private static final String MAX_ASSESSOR_PAY = "99999999.99";
+
 	@Override
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
@@ -58,18 +62,15 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 	}
 
 	@Override
-	public List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+	public List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws NumberFormatException {
 		switch (fieldName) {
-			case "assessorCount":
+			case ASSESSOR_COUNT_FIELD:
 				competitionResource.setAssessorCount(Integer.parseInt(value));
 				break;
-			case "assessorPay":
-				if (value == null || StringUtils.isEmpty(value)) {
-					return asList(new Error("validation.assessorsform.assessorPay.required", HttpStatus.BAD_REQUEST));
-				} else if (!NumberUtils.isNumber(value)) {
-					return asList(new Error("validation.assessorsform.assessorPay.only.numbers", HttpStatus.BAD_REQUEST));
-				} else if (!assessorPayInRange(value)) {
-					return asList(new Error("validation.assessorsform.assessorPay.max.amount.invalid", HttpStatus.BAD_REQUEST));
+			case ASSESSOR_PAY_FIELD:
+				List<Error> assessorPayErrors = validateAssessorPay(value);
+				if (assessorPayErrors != null) {
+					return assessorPayErrors;
 				} else {
 					competitionResource.setAssessorPay(new BigDecimal(value));
 				}
@@ -83,7 +84,19 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	private boolean assessorPayInRange(String value) {
 		BigDecimal pay = new BigDecimal(value);
-		return (new BigDecimal("99999999.99").compareTo(pay) > 0 && pay.scale() <= 2) ? true : false;
+		return (new BigDecimal(MAX_ASSESSOR_PAY).compareTo(pay) > 0 && pay.scale() == 0) ? true : false;
+	}
+
+	private List<Error> validateAssessorPay(String value) {
+		if (value == null || StringUtils.isEmpty(value)) {
+			return asList(new Error("validation.assessorsform.assessorPay.required", HttpStatus.BAD_REQUEST));
+		} else if (!NumberUtils.isNumber(value)) {
+			return asList(new Error("validation.assessorsform.assessorPay.only.numbers", HttpStatus.BAD_REQUEST));
+		} else if (!assessorPayInRange(value)) {
+			return asList(new Error("validation.assessorsform.assessorPay.max.amount.invalid", HttpStatus.BAD_REQUEST));
+		} else {
+			return null;
+		}
 	}
 
 }
