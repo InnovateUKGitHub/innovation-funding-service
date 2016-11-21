@@ -173,8 +173,8 @@ INSERT INTO `guidance_row` (form_input_id, priority, subject, justification) VAL
     (@programme_adding_value_form_input_id, @row4_priority, @row4_subject, 'The project will increase the industrial partners\' commitment to R&D. The additionality arguments are good and justified.'),
     (@programme_adding_value_form_input_id, @row5_priority, @row5_subject, 'The project will significantly increase the industrial partners\' R&D spend during the project and afterwards. The additionality arguments are very strong and believable.'),
     -- Scope
-    (@programme_team_skills_form_input_id, @row1_priority, @scope_row1_subject, 'One or more of the above requirements have not been satisfied.'),
-    (@programme_team_skills_form_input_id, @row2_priority, @scope_row2_subject, 'The application contains the following:\nIs the consortia business led?\nAre there two or more partners to the collaboration?\nDoes it meet the scope of the competition as defined in the competition brief?'),
+    (@programme_scope_form_input_id, @row1_priority, @scope_row1_subject, 'One or more of the above requirements have not been satisfied.'),
+    (@programme_scope_form_input_id, @row2_priority, @scope_row2_subject, 'The application contains the following:\nIs the consortia business led?\nAre there two or more partners to the collaboration?\nDoes it meet the scope of the competition as defined in the competition brief?'),
     -- Sector Guidance Rows
     -- Business Opportunity
     (@sector_business_form_input_id, @row1_priority, @row1_subject, 'There is little or no business drive to the project. The results are not relevant to the target customers or no customer interests are provided.'),
@@ -237,8 +237,8 @@ INSERT INTO `guidance_row` (form_input_id, priority, subject, justification) VAL
     (@sector_adding_value_form_input_id, @row4_priority, @row4_subject, 'The project will increase the industrial partners\' commitment to R&D. The additionality arguments are good and justified.'),
     (@sector_adding_value_form_input_id, @row5_priority, @row5_subject, 'The project will significantly increase the industrial partners\' R&D spend during the project and afterwards. The additionality arguments are very strong and believable.'),
     -- Scope
-    (@sector_team_skills_form_input_id, @row1_priority, @scope_row1_subject, 'One or more of the above requirements have not been satisfied.'),
-    (@sector_team_skills_form_input_id, @row2_priority, @scope_row2_subject, 'The application contains the following:\nIs the consortia business led?\nAre there two or more partners to the collaboration?\nDoes it meet the scope of the competition as defined in the competition brief?');
+    (@sector_scope_form_input_id, @row1_priority, @scope_row1_subject, 'One or more of the above requirements have not been satisfied.'),
+    (@sector_scope_form_input_id, @row2_priority, @scope_row2_subject, 'The application contains the following:\nIs the consortia business led?\nAre there two or more partners to the collaboration?\nDoes it meet the scope of the competition as defined in the competition brief?');
 
 
 
