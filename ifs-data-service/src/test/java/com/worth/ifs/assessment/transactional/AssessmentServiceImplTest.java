@@ -28,6 +28,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -267,6 +268,24 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
         inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitAssessments_notFound() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+
+        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(emptyList());
+
+        ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, 1L), notFoundError(Assessment.class, 2L)));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
+        inOrder.verify(assessmentWorkflowHandler, never()).submit(any());
         inOrder.verifyNoMoreInteractions();
     }
 
