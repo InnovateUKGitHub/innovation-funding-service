@@ -124,7 +124,7 @@
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
-		Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
+		Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.
 	</p>
 
 	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed spend profile for your project.</p>
