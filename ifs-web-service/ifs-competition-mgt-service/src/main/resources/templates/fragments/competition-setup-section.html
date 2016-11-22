@@ -458,51 +458,54 @@
 
             <legend class="visuallyhidden">Eligibility</legend>
 
-            <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
-                    <legend>
-		                <!--<span class="form-label-bold">Stream</span>-->
-		                <span class="form-label-bold">Does the competition have multiple streams?</span>
-		                <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
-		                </span>
-                    </legend>
-	                <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
-	                    <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
-	                Yes
-	                </label>
-	                <label class="block-label" for="comp-stream-no">
-	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
-	                No
-	                </label>
-                </fieldset>
-            </div>
-
-            <div id="competition-stream-name-fields" class="form-group js-hidden"  th:classappend="${#fields.hasErrors('streamName')}? 'error':''">
-                <fieldset class="inline">
-                    <legend>
-                        <label class="form-label" for="streamName">
-                            <span class="form-label-bold">Stream name</span>
-	                        <span th:if="${#fields.hasErrors('streamName')}" th:remove="tag">
-	                              <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}" />
-	                        </span>
+            <!-- INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added -->
+            <div style="display: none">
+                <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group error':'form-group'">
+                    <fieldset class="inline">
+                        <legend>
+                            <!--<span class="form-label-bold">Stream</span>-->
+                            <span class="form-label-bold">Does the competition have multiple streams?</span>
+                            <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
+                            </span>
+                        </legend>
+                        <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
+                            <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
+                        Yes
                         </label>
-                    </legend>
+                        <label class="block-label" for="comp-stream-no">
+                            <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
+                        No
+                        </label>
+                    </fieldset>
+                </div>
 
-                    <input th:class="${#fields.hasErrors('streamName') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                           type="text"
-                           th:field="*{streamName}"
-                           maxlength="255"
-                           required="required"
-                           data-required-errormessage="A stream name is required"
-                           data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
-                </fieldset>
+                <div id="competition-stream-name-fields" class="form-group js-hidden"  th:classappend="${#fields.hasErrors('streamName')}? 'error':''">
+                    <fieldset class="inline">
+                        <legend>
+                            <label class="form-label" for="streamName">
+                                <span class="form-label-bold">Stream name</span>
+                                <span th:if="${#fields.hasErrors('streamName')}" th:remove="tag">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}" />
+                                </span>
+                            </label>
+                        </legend>
+
+                        <input th:class="${#fields.hasErrors('streamName') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               th:field="*{streamName}"
+                               maxlength="255"
+                               required="required"
+                               data-required-errormessage="A stream name is required"
+                               data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
+                    </fieldset>
+                </div>
             </div>
 
             <div th:class="${#fields.hasErrors('singleOrCollaborative')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <legend>
-                        <span class="form-label-bold">Should applications be from single partner or collaborative projects?</span>
+                        <span class="form-label-bold">Please choose the project type.</span>
                         <!--<span class="hint">Is this a single or collaborative project?</span>-->
 	                    <span th:if="${#fields.hasErrors('singleOrCollaborative')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
@@ -521,7 +524,7 @@
             <div th:class="${#fields.hasErrors('researchCategoryId')}? 'form-group error':'form-group'">
 		        <fieldset class="inline">
 		            <legend>
-			            <span class="form-label-bold">What research categories are in scope for this competition?</span>
+			            <span class="form-label-bold">Please choose the research categories.</span>
 			            <span th:if="${#fields.hasErrors('researchCategoryId')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}" />
 	                    </span>
@@ -540,7 +543,7 @@
                <fieldset class="inline">
 					<legend>
 					   <span class="form-label-bold">Lead applicant</span>
-					   <span class="hint">Select the Lead Applicant type required</span>
+					   <span class="hint">Select the lead applicant type required.</span>
 					   <span th:if="${#fields.hasErrors('leadApplicantType')}" th:remove="tag">
 			             <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantType')}" th:text="${err}" />
 					   </span>
@@ -557,7 +560,7 @@
                 <fieldset class="inline">
 	                <legend>
 	                    <span class="form-label-bold">Research participation</span>
-	                    <span class="hint">This indicates the maximum level of Research participation allowed</span>
+	                    <span class="hint">This indicates the maximum level of research participation allowed.</span>
 	                    <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}" />
 	                    </span>
@@ -571,18 +574,18 @@
             <div th:class="${#fields.hasErrors('resubmission')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <legend>
-                        <span class="form-label-bold">Are resubmissions allowed</span>
-                        <span class="hint">Please indicate whether you wish to make resubmission allowed</span>
+                        <span class="form-label-bold">Are resubmissions allowed?</span>
+                        <span class="hint">Are applicants able to resubmit an application?</span>
 		                <span th:if="${#fields.hasErrors('resubmission')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
 		                </span>
                     </legend>
                     <label class="block-label" for="comp-resubmissions-yes">
-                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         Yes
                     </label>
                     <label class="block-label" for="comp-resubmissions-no">
-                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         No
                     </label>
                 </fieldset>
@@ -594,19 +597,22 @@
         <fieldset th:if="${!editable}" id="section-3-">
 
             <dl class="standard-definition-list">
-                <dt>Multiple Stream</dt>
-                <dd th:text="${#strings.capitalize(competitionSetupForm.multipleStream)}"></dd>
+                <!-- INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added -->
+                <div style="display: none">
+                    <dt>Multiple Stream</dt>
+                    <dd th:text="${#strings.capitalize(competitionSetupForm.multipleStream)}"></dd>
 
-                <div th:if="${'yes' == competitionSetupForm.multipleStream}" th:remove="tag">
-                    <dt>Stream name</dt>
-                    <dd th:text="${competitionSetupForm.streamName}"></dd>
+                    <div th:if="${'yes' == competitionSetupForm.multipleStream}" th:remove="tag">
+                        <dt>Stream name</dt>
+                        <dd th:text="${competitionSetupForm.streamName}"></dd>
+                    </div>
                 </div>
+
+                <dt>Project type</dt>
+                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Research categories</dt>
                 <dd th:text="${researchCategoriesFormatted}"></dd>
-
-                <dt>Single or collaborative?</dt>
-                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Lead applicant</dt>
                 <dd th:each="(leadApplicantType : ${leadApplicantTypes})" th:if="${leadApplicantType.code == competitionSetupForm.leadApplicantType}" th:text="${leadApplicantType.name}">Lead applicant type</dd>
@@ -614,7 +620,7 @@
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
 
-                <dt>Are resubmissions allowed</dt>
+                <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
 
             </dl>
@@ -838,4 +844,3 @@
         </li>
     </ul>
 </th:block>
-

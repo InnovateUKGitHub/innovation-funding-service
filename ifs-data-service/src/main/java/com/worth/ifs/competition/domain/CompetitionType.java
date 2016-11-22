@@ -12,6 +12,10 @@ public class CompetitionType {
     private Boolean stateAid;
     private Boolean active;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="templateCompetitionId", referencedColumnName="id")
+    private Competition template;
+
 
     @OneToMany(mappedBy="competitionType")
     private List<Competition> competitions;
@@ -56,4 +60,8 @@ public class CompetitionType {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+    public Competition getTemplate() { return template; }
+
+    public void setTemplate(Competition template) { this.template = template; }
 }

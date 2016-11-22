@@ -63,9 +63,9 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
+    When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select a lead technologist
-    When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
@@ -141,13 +141,10 @@ Eligibility server-side validations
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link    link=Eligibility
-    And the user selects the radio button    multipleStream    yes
-    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
-    And the user should see the text in the page    A stream name is required
     And the user should see the text in the page    Please select a resubmission option
 
 Eligibility client-side validations
@@ -157,7 +154,6 @@ Eligibility client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
@@ -170,10 +166,10 @@ Eligibility client-side validations
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
-    And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus and waits for autosave
     And the user should not see the text in the page    A stream name is required
     And the user selects the radio button    resubmission    no
+    And the user moves focus and waits for autosave
     And the user should not see the text in the page    Please select a resubmission option
 
 Eligibility Autosave
@@ -211,14 +207,6 @@ the user moves focus and waits for autosave
     focus    link=Sign out
     sleep    500ms
     Wait For Autosave
-
-the user should not see the error any more
-    [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
-    Focus    jQuery=.button:contains("Done")
-    Wait for autosave
-    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    sleep    500ms
 
 the user leaves all the question field empty
     Clear Element Text    css=.editor
@@ -357,8 +345,8 @@ the user should see the correct values in the initial details form
     Should Be Equal As Strings    ${input_value}    12
     ${input_value} =    Get Value    id=openingDateYear
     Should Be Equal As Strings    ${input_value}    2017
-    Page Should Contain    Competition Technologist One
-    page should contain    Competition Executive Two
+    Page Should Contain    Ian Cooper
+    page should contain    Toby Reader
 
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
@@ -373,9 +361,6 @@ the user should see the correct details in the funding information form
     Should Be Equal As Strings    ${input_value}    4242
 
 the user should see the correct details in the eligibility form
-    Radio Button Should Be Set To    multipleStream    yes
-    ${input_value} =    Get Value    id=streamName
-    Should Be Equal    ${input_value}    Test stream name
     the user sees that the radio button is selected    singleOrCollaborative    single
     Checkbox Should Be Selected    id=research-categories-33
     Checkbox Should Be Selected    id=research-categories-34
@@ -430,9 +415,17 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
 The user navigates to the Validation competition
     The user navigates to the page    ${SERVER}/management/dashboard/upcoming
     The user clicks the button/link    link=Validations Test
+
+the user should not see the error any more
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait for autosave
+    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    sleep    500ms

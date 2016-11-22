@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
@@ -64,12 +65,23 @@ public class CompetitionSetupApplicationController {
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
-    public String getApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-       return getFinancePage(model, competitionId);
+        String view = getFinancePage(model, competitionId);
+        model.addAttribute("editable", false);
+        return view;
     }
 
-    @RequestMapping(value = "/question/finance", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
+    public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        String view = getFinancePage(model, competitionId);
+        model.addAttribute("editable", true);
+        return view;
+    }
+
+    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
     public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -135,14 +147,14 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
 
         if(!bindingResult.hasErrors()) {
+            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
-                    Optional.of(competitionSetupForm.getQuestion().getId()));
+                    Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }

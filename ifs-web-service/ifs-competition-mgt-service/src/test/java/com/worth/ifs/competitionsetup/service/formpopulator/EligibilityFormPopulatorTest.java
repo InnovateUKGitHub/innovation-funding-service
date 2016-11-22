@@ -42,8 +42,8 @@ public class EligibilityFormPopulatorTest {
 		assertTrue(result instanceof EligibilityForm);
 		EligibilityForm form = (EligibilityForm) result;
 		assertEquals(CollectionFunctions.asLinkedSet(2L, 3L), form.getResearchCategoryId());
-		assertEquals("yes", form.getMultipleStream());
-		assertEquals("streamname", form.getStreamName());
+		assertEquals("no", form.getMultipleStream());
+		assertEquals(null, form.getStreamName());
 		assertEquals("collaborative", form.getSingleOrCollaborative());
 		assertEquals("business", form.getLeadApplicantType());
 	}
