@@ -12,9 +12,6 @@ import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
  * Holder of model attributes for the selection of role by a user
  */
 public class RoleSelectionViewModel {
-    private Set<UserRoleType> acceptedRoles = Sets.newHashSet(ASSESSOR, APPLICANT);
+    private static final Set<UserRoleType> ACCEPTED_ROLES = Sets.newHashSet(ASSESSOR, APPLICANT);
 
-    public Set<UserRoleType> getAcceptedRoles() {
-        return acceptedRoles;
-    }
 }

@@ -28,7 +28,7 @@
 
       <div class="form-group" >
         <fieldset class="inline">
-          <label class="block-label" th:each="role : ${model.acceptedRoles}">
+          <label class="block-label" th:each="role : ${model.ACCEPTED_ROLES}">
             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" data-required-errormessage="Please select a role"/>
             <span th:text="${role.displayName}" th:remove="tag"/>
           </label>
@@ -51,7 +51,7 @@
 	// <![CDATA[
     jQuery( document ).ready(function() {
       	jQuery("#continue").attr('disabled','disabled');
-    });
+  });
 
 
 	jQuery("input[name='selectedRole']").on('click',function(e){
