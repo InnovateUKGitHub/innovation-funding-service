@@ -5,7 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.resource.builders.FileEntryResourceBuilder;
+import com.worth.ifs.file.builder.FileEntryResourceBuilder;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;

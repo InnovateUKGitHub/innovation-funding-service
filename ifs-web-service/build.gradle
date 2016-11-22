@@ -7,3 +7,7 @@ if (project.hasProperty("profile") && project.profile != "microservices") {
 task cleanDeployMicroservices{
 	println "interface for clean deploy Docker"
 }
+
+task deployToTomcat() {
+    println "Interface for deployToTomcat task"
+}

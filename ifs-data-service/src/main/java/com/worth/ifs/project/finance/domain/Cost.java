@@ -1,5 +1,7 @@
 package com.worth.ifs.project.finance.domain;
 
+import com.worth.ifs.project.finance.resource.TimeUnit;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 

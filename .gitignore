@@ -24,7 +24,8 @@ bin/
 **/*-build.gradle
 **/application-*.properties
 !**/application-local.properties
-!**/application-integration-test.properties
+!**/application-integration-test.propertie
+!**/application-seeding-db.properties
 !**/application-hibernate-generate-ddl.properties
 !**/docker-build.gradle
 **/docker-build.gradle.tmp
@@ -96,6 +97,7 @@ jmeter/jmeter.log
 !**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
 .gradletasknamecache
 
+
 classes/
 
 #Node modules, except styledocco as we've made changes in that one. 
@@ -108,3 +110,5 @@ ifs-web-service.iws
 
 # python bytecode nonsense
 *.pyc
+*/libs/
+ifs-libs/*

@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.project.ProjectService;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -27,6 +28,6 @@ public abstract class BaseUnitTestMocksTest{
         MockitoAnnotations.initMocks(this);
 
         // start with fresh ids when using builders
-        BuilderAmendFunctions.clearUniqueIds();
+        BaseBuilderAmendFunctions.clearUniqueIds();
     }
 }

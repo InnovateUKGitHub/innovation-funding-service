@@ -1,27 +1,22 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.transactional.*;
+import com.worth.ifs.competition.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.*;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.*;
+import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,8 +34,8 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
     @Test
     public void getNextQuestionTest() throws Exception {
-        Competition competition = newCompetition().build();
-        Section section = newSection().build();
+        CompetitionResource competition = newCompetitionResource().build();
+        SectionResource section = newSectionResource().build();
         QuestionResource nextQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 2).build();
         when(questionService.getNextQuestion(anyLong())).thenReturn(serviceSuccess(nextQuestion));
         mockMvc.perform(get("/question/getNextQuestion/" + 1L))
@@ -51,8 +46,8 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
     @Test
     public void getPreviousQuestionTest() throws Exception {
-        Competition competition = newCompetition().build();
-        Section section = newSection().build();
+        CompetitionResource competition = newCompetitionResource().build();
+        SectionResource section = newSectionResource().build();
         QuestionResource previousQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 2).build();
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
@@ -64,8 +59,8 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
     @Test
     public void getPreviousQuestionFromOtherSectionTest() throws Exception {
-        Competition competition = newCompetition().build();
-        Section section = newSection().build();
+        CompetitionResource competition = newCompetitionResource().build();
+        SectionResource section = newSectionResource().build();
         QuestionResource previousQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 1).build();
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
@@ -104,8 +99,8 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         when(questionService.save(questionResource)).thenReturn(serviceSuccess(questionResource));
 
         mockMvc.perform(put("/question/")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(new ObjectMapper().writeValueAsString(questionResource)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(questionResource)))
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(questionResource)))
                 .andExpect(status().isOk());
     }
@@ -129,11 +124,8 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     @Test
     public void getQuestionsByAssessmentId() throws Exception {
         final Long assessmentId = 1L;
-
         List<QuestionResource> questions = newQuestionResource().build(2);
-
         when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(questions));
-
         mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(questions)))
                 .andExpect(status().isOk());

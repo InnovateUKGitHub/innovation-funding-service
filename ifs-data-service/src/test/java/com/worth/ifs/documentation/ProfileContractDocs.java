@@ -5,7 +5,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDateTime;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static java.lang.Boolean.TRUE;
