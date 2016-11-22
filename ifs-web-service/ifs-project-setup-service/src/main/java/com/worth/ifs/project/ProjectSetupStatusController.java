@@ -27,9 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
@@ -82,14 +80,14 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
 
+        ProjectActivityStates spendProfileState = (ownOrganisation.getSpendProfileStatus() != null) ? ownOrganisation.getSpendProfileStatus() : ProjectActivityStates.NOT_REQUIRED;
+
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
-        boolean spendProfileGenerated = teamStatus.getLeadPartnerStatus().getSpendProfileStatus() != null;
-        boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
-        boolean spendProfileApproved = teamStatus.getLeadPartnerStatus().getSpendProfileStatus() == COMPLETE;
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
+        boolean spendProfileApproved = teamStatus.getLeadPartnerStatus().getSpendProfileStatus().equals(COMPLETE);
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -109,11 +107,6 @@ public class ProjectSetupStatusController {
             projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
         }
 
-        boolean awaitingSpendProfileFromOtherPartners = false;
-        if (leadPartner) {
-            awaitingSpendProfileFromOtherPartners = allOtherPartnersSpendProfileStatusComplete(teamStatus);
-        }
-
         ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
 
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
@@ -129,7 +122,7 @@ public class ProjectSetupStatusController {
         SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
-        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileGenerated, spendProfilesSubmitted, spendProfileApproved, awaitingSpendProfileFromOtherPartners, leadPartner);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState, spendProfileApproved);
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferAccess.equals(ACCESSIBLE), leadPartner, grantOfferLetterSubmitted);
 
@@ -167,9 +160,5 @@ public class ProjectSetupStatusController {
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
-    }
-
-    private boolean allOtherPartnersSpendProfileStatusComplete(ProjectTeamStatusResource teamStatus) {
-        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getSpendProfileStatus()));
     }
 }

@@ -14,9 +14,10 @@ public class ProjectSetupSectionStatus {
                                                      final boolean awaitingProjectDetailsActionFromPartners,
                                                      final boolean leadPartner) {
         if (!projectDetailsProcessCompleted) {
-            if (!leadPartner || awaitingProjectDetailsActionFromPartners) {
+            if (leadPartner && awaitingProjectDetailsActionFromPartners) {
                 return FLAG;
             }
+            return FLAG;
         }
         return TICK;
     }
@@ -46,25 +47,26 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus financeChecksSectionStatus(final boolean allBankDetailsApprovedOrNotRequired,
                                                     final boolean allFinanceChecksApproved) {
-        if(allBankDetailsApprovedOrNotRequired) {
-           if(allFinanceChecksApproved) {
-               return TICK;
-           }
-           return HOURGLASS;
+        if (allBankDetailsApprovedOrNotRequired) {
+            if (allFinanceChecksApproved) {
+                return TICK;
+            }
+            return HOURGLASS;
         }
         return EMPTY;
     }
 
-    public SectionStatus spendProfileSectionStatus(final boolean spendProfileGenerated,
-                                                   final boolean spendProfileSubmitted,
-                                                   final boolean spendProfileApproved,
-                                                   final boolean awaitingSpendProfileFromOtherPartners,
-                                                   final boolean leadPartner) {
-        if(spendProfileGenerated) {
-            if (!leadPartner && spendProfileSubmitted || leadPartner && spendProfileApproved && awaitingSpendProfileFromOtherPartners) {
+    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState,
+                                                   final boolean spendProfileApproved) {
+        if (spendProfileState.equals(ProjectActivityStates.PENDING)) {
+            return HOURGLASS;
+        } else if (spendProfileState.equals(ProjectActivityStates.ACTION_REQUIRED)) {
+            return FLAG;
+        } else if (spendProfileState.equals(ProjectActivityStates.COMPLETE)) {
+            if (spendProfileApproved) {
                 return TICK;
             }
-            return FLAG;
+            return HOURGLASS;
         }
         return EMPTY;
     }

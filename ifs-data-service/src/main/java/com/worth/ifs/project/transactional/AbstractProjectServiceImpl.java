@@ -144,12 +144,14 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createLeadSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
-        ProjectActivityStates state = createSpendProfileStatus(financeCheckStatus, spendProfile);
+    protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus,  final Optional<SpendProfile> spendProfile) {
+        ProjectActivityStates state = spendProfileStatus;
 
-        if(state == COMPLETE) {
-            if(spendProfile.get().getApproval() != ApprovalType.APPROVED) {
-                return ACTION_REQUIRED;
+        if(spendProfileStatus == COMPLETE) {
+            if(project.getSpendProfileSubmittedDate() == null) {
+                state = ACTION_REQUIRED;
+            } else if (project.getSpendProfileSubmittedDate() != null && !spendProfile.get().getApproval().equals(ApprovalType.APPROVED)) {
+                state = PENDING;
             }
         }
         return state;
@@ -157,20 +159,19 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         //TODO - Implement REJECT status when internal spend profile action story is completed
-
-        if (spendProfile.isPresent()) {
+        if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
             if (spendProfile.get().isMarkedAsComplete()) {
+                    if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
+                        return ACTION_REQUIRED;
+                }
                 return COMPLETE;
             } else {
                 return ACTION_REQUIRED;
             }
-        } else {
-            if(financeCheckStatus.equals(COMPLETE)){
-                return PENDING;
-            } else {
-                return NOT_STARTED;
-            }
+        } else if (financeCheckStatus.equals(COMPLETE)) {
+            return PENDING;
         }
+        return NOT_STARTED;
     }
 
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {
