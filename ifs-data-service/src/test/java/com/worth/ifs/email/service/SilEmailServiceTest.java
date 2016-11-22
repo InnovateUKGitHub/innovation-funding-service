@@ -12,8 +12,8 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
-import static com.worth.ifs.BuilderAmendFunctions.names;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.names;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;

@@ -8,7 +8,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;

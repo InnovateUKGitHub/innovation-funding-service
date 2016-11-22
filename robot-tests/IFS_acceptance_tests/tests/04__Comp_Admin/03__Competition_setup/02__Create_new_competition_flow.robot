@@ -32,6 +32,15 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5640 As a Competitions team member I want to be able to edit the Finances questions in Competition Setup so that I can include the appropriate sections required for the competition
 ...
 ...               INFUND-5632 As a Competitions team member I want to be able to view application questions separately in Competition Setup so that I can more easily manage all sections required for each question in one place
+...
+...               INFUND-5634 As a Competitions team member I want to be able to view setup questions in the Scope section of Competition Setup so that I can review the questions and guidance to be shown to the applicants
+...
+...               INFUND-5636 As a Competitions team member I want to be able to view setup questions in the Project Summary section of Competition Setup so that I can review the questions and guidance to be shown to the applicants
+...
+...
+...               INFUND-5637 As a Competitions team member I want to be able to edit setup questions in the Project Summary section of Competition Setup so that I can amend the defaults if required for the competition
+...
+...               INFUND-5635 As a Competitions team member I want to be able to edit questions in the Scope section of Competition Setup so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -106,9 +115,9 @@ Initial details: User enters valid values and marks as done
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    Competition Executive Two
+    Then the user should see the text in the page    Toby Reader
     And the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -129,7 +138,7 @@ Initial details: Comp Type and Date should not be editable
     And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -217,7 +226,7 @@ Eligibility: Contain the correct options
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Should applications be from single partner or collaborative projects?
+    And the user should see the text in the page    Please choose the project type.
     Then the user should see the element    jQuery=label:contains(Single or Collaborative)
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
@@ -326,13 +335,47 @@ Application: Business opportunity
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
+Application: Scope
+    [Documentation]    INFUND-5634
+    ...
+    ...    INFUND-5635
+    Given the user clicks the button/link    link=Scope
+    And the user should see the element    jQuery=h1:contains("Scope")
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And The user fills the empty question fields
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then The user should see the text in the page    Scope
+    And the user checks the question fields
+    [Teardown]    The user clicks the button/link    link=Application
+
+Application: Project Summary
+    [Documentation]    INFUND-5636
+    ...
+    ...    INFUND-5637
+    Given the user clicks the button/link    link=Project summary
+    And the user should see the element    jQuery=h1:contains("Project summary")
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And The user fills the empty question fields
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Project summary
+    Then The user should see the text in the page    Project summary
+    And the user checks the question fields
+    [Teardown]    The user clicks the button/link    link=Application
+
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
-    When The user clicks the button/link    jQuery=label:contains("Light finances")
+    And the user should see the element       jQuery=h1:contains("Application finances")
+    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    When The user clicks the button/link    jQuery=a:contains("Edit this question")
+    And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
-    And The user clicks the button/link    jQuery=button:contains("Done")
+    And The user clicks the button/link    jQuery=button:contains("Save and close")
     And the user clicks the button/link    link=Finances
+    And The user clicks the button/link    jQuery=a:contains("Edit this question")
     Then the Radio Button selections should be correct
     [Teardown]    The user clicks the button/link    link=Application
 
@@ -471,8 +514,8 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
