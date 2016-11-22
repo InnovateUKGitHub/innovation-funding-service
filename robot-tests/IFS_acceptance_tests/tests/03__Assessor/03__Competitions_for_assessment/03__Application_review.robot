@@ -19,7 +19,8 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_10}
+    Given The user clicks the button/link    link=Juggling Craziness
+    And the user clicks the button/link    link=Juggling is not fun
     When the user clicks the button/link    link=Application details
     Then the user should see the text in the page    Application details
     And the user clicks next and goes to the page    Project summary
@@ -40,7 +41,8 @@ Navigation using next button
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_10}
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given the user clicks the button/link    link=Juggling is not fun
     When the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    Economic benefit
     And the user clicks previous and goes to the page    Project exploitation
@@ -60,65 +62,67 @@ Project details sections should not be scorable
     And the user should see the text in the page    Project title
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response for project summary.
+    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
     Then the user should not see the text in the page    Question score
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response for public description.
+    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
     Then the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response for scope.
+    And the user should see the text in the page    This is the applicant response from Test One for Scope.
     Then the user should not see the text in the page    Question score
 
 Application questions should be scorable
     [Documentation]    INFUND-3400
     [Tags]
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for business opportunity.
+    And The user should see the text in the page    What is the business opportunity that your project addresses?
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for potential market.
+    And The user should see the text in the page    What is the size of the potential market for your project
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for project exploitation.
+    And The user should see the text in the page    How will you exploit and market your project?
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for economic benefits.
+    And The user should see the text in the page    What economic, social and environmental benefits do you expect
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for technical approach.
+    And The user should see the text in the page    What technical approach will you use and how will you manage your project?
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for innovation.
+    And The user should see the text in the page    What is innovative about your project
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for risks.
+    And The user should see the text in the page    What are the risks
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for project team.
+    And The user should see the text in the page    oes your project team have the skills,
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for project cost.
+    And The user should see the text in the page    What will your project cost
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
-    And The user should see the text in the page    This is the applicant response for adding value.
+    And The user should see the text in the page    How does financial support from Innovate UK
     Then The user should see the element    jQuery=label:contains(Question score)
 
 Choosing 'not in scope' should update on the overview page
     [Documentation]    INFUND-1483
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_10}
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given the user clicks the button/link    link=Juggling is not fun
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And the user clicks the button/link    link=Back to your assessment overview
-    And the user should see the text in the page    In scope? No
+    Then the user should see the text in the page    In scope? No
 
 Scope: Autosave
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3780
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_10}
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given the user clicks the button/link    link=Juggling is not fun
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
@@ -168,7 +172,8 @@ Feedback: word count
 Question 1: Autosave
     [Documentation]    INFUND-3780
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_10}
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given the user clicks the button/link    link=Juggling is not fun
     And the user clicks the button/link    link=1. Business opportunity
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
     And the user enters text to a text field    css=.editor    This is to test the feedback entry.
@@ -187,14 +192,15 @@ Question 1: Word count
 Finance overview
     [Documentation]    INFUND-3394
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Assessment_overview_10}
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given the user clicks the button/link    link=Juggling is not fun
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
     And the user should not see the element    css=input
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     And the user clicks the button/link    link=Back to your assessment overview
-    And the user should be redirected to the correct page    ${Assessment_overview_10}
+    And the user should see the element    link=Back to your competition dashboard
 
 *** Keywords ***
 the user clicks next and goes to the page
@@ -232,27 +238,18 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £${DEFAULT_INDUSTRIAL_OTHER_FUNDING_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(3)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £${DEFAULT_ACADEMIC_OTHER_FUNDING_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
-
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(2)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(3)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(4)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(5)    £${DEFAULT_ACADEMIC_OTHER_FUNDING_WITH_COMMAS}
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(3) td:nth-child(6)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £100,837
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £29,017
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £1,234
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £70,586
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £100,837
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £29,017
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £1,234
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £70,586
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,837
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £385
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
