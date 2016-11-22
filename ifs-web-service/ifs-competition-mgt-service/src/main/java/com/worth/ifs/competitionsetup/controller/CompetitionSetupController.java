@@ -300,6 +300,16 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
 
+
+    @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
+    public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
+    }
+
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
     public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
