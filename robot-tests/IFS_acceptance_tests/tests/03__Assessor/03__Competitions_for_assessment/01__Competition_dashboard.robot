@@ -5,7 +5,9 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-1180 As an Assessor I want to accept or decline an assignment of an application to assess so that the competitions team can manage the assessment process.
 ...
-...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to.
+...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to
+...
+...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way.
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -64,6 +66,10 @@ Assessor can only make selection once
     [Documentation]    INFUND-1180
     [Tags]
     Then The user should not see the element    jQuery=a:contains("accept / reject assessment")
+
+Applications should not have a check-box when the status is Open
+    [Documentation]    INFUND-3726
+    Then The user should not see the element    css=.assessment-submit-checkbox
 
 *** Keywords ***
 the status should update as Open
