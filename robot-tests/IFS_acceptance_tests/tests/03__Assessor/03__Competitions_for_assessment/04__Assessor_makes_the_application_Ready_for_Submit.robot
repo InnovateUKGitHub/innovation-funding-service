@@ -9,9 +9,10 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...
 ...               INFUND-5179 Introduce new resource DTO classes for recommending and rejecting assessments
 ...
-...               INFUND-5765 As an assessor I need to be able to progress an assessment to the state of Assessed so that I am able to select it to submit.
-Suite Setup       Run keywords    guest user log-in    felix.wilson@gmail.com    Passw0rd
-...               AND    The user accepts the juggling is word that sound funny application
+...               INFUND-5765 As an assessor I need to be able to progress an assessment to the state of Assessed so that I am able to select it to submit
+...
+...               INFUND-5712 As an Assessor I can review the recommended for funding status of applications that I have assessed so that I can track my work
+Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -20,7 +21,9 @@ Resource          ../../../resources/defaultResources.robot
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
-    When The user navigates to the assessor page    ${Assessment_summary_Pending_12}
+    When The user clicks the button/link    link=Juggling Craziness
+    and The user clicks the button/link    link=Juggling is very fun
+    and The user clicks the button/link     jQuery=.button:contains("Review assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
@@ -59,6 +62,7 @@ Summary: Questions should show without score
     And the collapsible button should contain    jQuery=button:contains(8. Project team)    N/A
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    N/A
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
+    [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
@@ -128,7 +132,7 @@ Summary:Feedback should show in each section
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
-    and The user should see the text in the page    This is the applicant response for business opportunity.
+    and The user should see the text in the page    What is the business opportunity that your project addresses?
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=.editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
@@ -166,7 +170,8 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
-    Given The user navigates to the assessor page    ${Assessment_summary_Pending_12}
+    Given The user clicks the button/link    link=Juggling is very fun
+    and The user clicks the button/link     jQuery=.button:contains("Review assessment")
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
@@ -197,7 +202,7 @@ Summary:Word count check(Comments for InnovateUK)
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-User Saves the assessment
+User Saves the Assessment as Recomended
     [Documentation]    INFUND-4996
     ...
     ...    INFUND-5765
@@ -207,7 +212,18 @@ User Saves the assessment
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
-    And The user should see the element    css=li:nth-child(4) .recommend
+    And the user should see the element    css=.recommend.yes
+    And the user should see the element    css=.assessment-submit-checkbox
+
+User Saves the Assessment as Not Recomended
+    [Documentation]    INFUND-5712
+    Given The user clicks the button/link    link=Juggling is not fun
+    And the user adds score and feedback for every question
+    And the user clicks the button/link     jQuery=.button:contains("Review assessment")
+    When the user selects the radio button    fundingConfirmation    false
+    And the user enters text to a text field    id=feedback    Negative feedback
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    And The user should see the element    css=.recommend.no
 
 *** Keywords ***
 the collapsible button should contain
@@ -215,64 +231,63 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
-    Given the user clicks the button/link    link=Back to your assessment overview
-    And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
-    And the user clicks the button/link    jQuery=label:contains(Yes)
-    And The user enters text to a text field    css=.editor    Testing scope feedback text
+    The user clicks the button/link    link=Scope
+    The user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    The user clicks the button/link    jQuery=label:contains(Yes)
+    The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Business opportunity feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Potential market feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Project exploitation feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Economic benefit feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Technical approach feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Technical approach feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Innovation feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Innovation feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Risks feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Risks feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Project team feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Project team feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Funding feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Funding feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=.editor    Testing Adding value feedback text
+    The user clicks the button/link    css=.next
+    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user enters text to a text field    css=.editor    Testing Adding value feedback text
     Focus    jQuery=a:contains("Sign out")
     wait until page contains    Saving
-    the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
+    The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
@@ -288,45 +303,21 @@ the table should show the correct scores
 
 each question will contain links to respective questions
     The user should see the element    link=Q1
-    the user clicks the button/link    link=Q1
-    The user should be redirected to the correct page    ${Application_question_url}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q2
-    the user clicks the button/link    link=Q2
-    The user should be redirected to the correct page    ${Application_question_168}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q3
-    the user clicks the button/link    link=Q3
-    The user should be redirected to the correct page    ${Application_question_169}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q4
-    the user clicks the button/link    link=Q4
-    The user should be redirected to the correct page    ${Application_question_170}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q5
-    the user clicks the button/link    link=Q5
-    The user should be redirected to the correct page    ${Application_question_171}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q6
-    the user clicks the button/link    link=Q6
-    The user should be redirected to the correct page    ${Application_question_172}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q7
-    the user clicks the button/link    link=Q7
-    The user should be redirected to the correct page    ${Application_question_173}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q8
-    the user clicks the button/link    link=Q8
-    The user should be redirected to the correct page    ${Application_question_174}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q9
-    the user clicks the button/link    link=Q9
-    The user should be redirected to the correct page    ${Application_question_175}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q10
+    the user clicks the button/link    link=Q1
+    Then The user should see the text in the page     What is the business opportunity that your project addresses?
+    The user goes back to the previous page
     the user clicks the button/link    link=Q10
-    The user should be redirected to the correct page    ${Application_question_176}
-    The user navigates to the page    ${Assessment_summary_Pending_12}
+    Then The user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
+    The user goes back to the previous page
 
 the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
@@ -354,3 +345,7 @@ The user accepts the juggling is word that sound funny application
     The user should see the text in the page    Accept application
     The user clicks the button/link    jQuery=button:contains("Accept")
     The user should be redirected to the correct page    ${Assessor_application_dashboard}
+
+the status of the status of the application should be correct
+    [Arguments]    ${ELEMENT}    ${STATUS}
+    Element should contain    ${ELEMENT}    ${STATUS}
