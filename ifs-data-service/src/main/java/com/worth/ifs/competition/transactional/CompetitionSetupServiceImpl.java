@@ -1,7 +1,8 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
@@ -41,6 +42,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPL
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 
 /**
@@ -63,6 +65,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionFunderService competitionFunderService;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private GuidanceRowRepository guidanceRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -224,6 +228,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
 	private void cleanUpCompetitionSections(Competition competition) {
+        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
+        guidanceRowRepository.delete(scoreRows);
+
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
 
@@ -270,7 +277,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	}
 	
 	private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
+        return simpleMap(questions, createQuestion(competition, section));
 	}
 
 	private Function<Question, Question> createQuestion(Competition competition, Section section) {
@@ -285,9 +292,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			return question;
 		};
 	}
-	
-	private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
-		return formInputTemplates.stream().map(createFormInput(competition, question)).collect(Collectors.toList());
+
+
+    private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
+        return simpleMap(formInputTemplates, createFormInput(competition, question));
 	}
 	
 	private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
@@ -297,7 +305,23 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			formInput.setQuestion(question);
             formInput.setId(null);
             formInputRepository.save(formInput);
+
+            formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
 		};
 	}
+
+    private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
+        return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));
+    }
+
+    private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
+        return (GuidanceRow row) -> {
+            entityManager.detach(row);
+            row.setFormInput(formInput);
+            row.setId(null);
+            guidanceRowRepository.save(row);
+            return row;
+        };
+    }
 }

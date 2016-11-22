@@ -42,7 +42,7 @@ import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
