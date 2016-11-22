@@ -22,7 +22,8 @@ Server-side validations when No selected at yes/no
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see a field error    Please enter a principal employer.
+    Then The user should see a summary error    Please correct the errors in the form below.
+    And the user should see a field error    Please enter a principal employer.
     And the user should see a field error    Please enter your role with your principal employer.
     And the user should see a field error    You must agree that your account is accurate.
     And the user should see a field error    Please tell us if you have any appointments, directorships or consultancies.
@@ -51,13 +52,15 @@ Server-side when Yes selected at yes/no
 Client-side validations
     [Documentation]    INFUND-3715
     [Tags]
-    #TODO Pending due to INFUND-6186    # the disabled checks should be removed when this is fixed
     When the user correctly fills out the role, principle employer and accurate fields
-    #Then the user should not see the validation error    Please enter .......
-    #And the user should not see the validation error    Please enter .......
-    #And the user should not see the validation error    Please enter .......
-    And the user should not see the validation error    Please enter your family financial interests.
-    #And The user should not see the text in the page    Please enter .......
+    Then The user should not see the text in the page    Please enter a principal employer.
+    And The user should not see the text in the page    Please enter your role with your principal employer.
+    # TODO uncomment the following lines after INFUND-6315 is fixed.
+   # And The user should not see the text in the page    Please enter your financial interests.
+   # And The user should not see the text in the page    Please enter your family financial interests.
+    And The user should not see the text in the page    Please tell us if any of your close family members have any appointments, directorships or consultancies.
+    And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
+    And The user should not see the text in the page    You must agree that your account is accurate.
 
 Successful save for the Declaration form
     [Documentation]    INFUND-3715

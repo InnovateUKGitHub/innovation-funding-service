@@ -65,7 +65,22 @@
 		</form>
 	</div>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list2-table" th:remove="tag" />
+	<div class="grid-row sorting">
+		<div class="column-two-thirds">
+			<h4><span class="heading-xlarge no-margin available">20</span> <strong>Applications</strong></h4>
+		</div>
+		<div class="column-third alignright">
+			<div class="form-group">
+				<label class="form-checkbox" for="group-inform-one">
+					<input id="group-inform-one" value="group-inform-one" type="checkbox" />
+					Include all for group inform
+				</label>
+				<a href="#" class="button-secondary">Inform group</a>
+			</div>
+		</div>
+	</div>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list10-table" th:remove="tag" />
 
 	<ul class="pagination">
 
