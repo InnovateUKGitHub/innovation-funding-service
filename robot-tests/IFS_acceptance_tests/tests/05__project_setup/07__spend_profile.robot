@@ -361,7 +361,7 @@ Partners can see the Spend Profile section completed
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
     Given Log in as a different user       steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       jessica.doe@ludlow.co.uk    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element   jQuery=li.complete:nth-of-type(6)
