@@ -184,6 +184,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
