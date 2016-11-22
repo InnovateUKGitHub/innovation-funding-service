@@ -171,6 +171,167 @@
                         </label>
                     </fieldset>
                 </div>
+
+                <fieldset>
+                    <legend class="visuallyhidden">Assessment of this question</legend>
+                    <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+
+                    <div class="form-group">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Scored</legend>
+                            <label class="block-label">
+                                <input th:name="question.scored" th:checked="${question.scored}" value="1" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input th:name="question.scored" th:checked="${!question.scored}" value="0" type="radio" />
+                                No
+                            </label>
+                        </fieldset>
+                    </div>
+
+                    <div th:class="${#fields.hasErrors('question.scoreTotal')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="question.scoreTotal">
+                            <span class="form-label-bold">Out of</span>
+                            <span th:if="${#fields.hasErrors('question.scoreTotal')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.scoreTotal')}" th:text="${err}" />
+                        </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('question.scoreTotal') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                               type="number"
+                               id="question.scoreTotal"
+                               min="1"
+                               required="required"
+                               th:name="question.scoreTotal"
+                               th:value="${question.scoreTotal}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Written feedback</legend>
+                            <label class="block-label">
+                                <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
+                                No
+                            </label>
+                        </fieldset>
+                    </div>
+
+                    <div th:class="${#fields.hasErrors('question.assessmentGuidance')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="question.assessmentGuidance">
+                            <span class="form-label-bold">Guidance</span>
+                            <span th:if="${#fields.hasErrors('question.assessmentGuidance')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidance')}" th:text="${err}" />
+                        </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('question.assessmentGuidance') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               id="question.assessmentGuidance"
+                               th:name="question.assessmentGuidance"
+                               th:value="${question.assessmentGuidance}"
+                               maxlength="255"/>
+                    </div>
+
+                    <!--
+                    <dt class="column-quarter" th:text="${score.subject.replace(',', '-')}"></dt>
+                    -->
+
+                    <fieldset>
+                        <h3 class="heading-small">Guidance table</h3>
+                        <div class="grid-row">
+                            <div class="column-third">
+                                <div class="form-group">
+                                    <span class="form-label-bold">Score<span class="visuallyhidden"> from</span></span>
+                                </div>
+                            </div>
+
+                            <div class="column-third">
+                                <div class="form-group">
+                                    <span class="form-label-bold"><span class="visuallyhidden">Score to</span></span>
+                                </div>
+                            </div>
+
+                            <div class="column-third">
+                                <div class="form-group">
+                                    <span class="form-label-bold">Justification</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:each="(score, iteration : ${question.guidanceRows})" class="grid-row funder-row" th:id="'score-row-'+${iteration.index}">
+
+                            <hr/>
+
+                            <div class="column-third">
+                                <div th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="question.guidanceRows[__${iteration.index}__].subject">
+                                        <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                                        </th:block>
+                                    </label>
+                                    <input required="required" type="number" min="0"
+                                           th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')
+                                           ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                           th:id="${iteration.index}+'-subject'"
+                                           th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}" value=""
+                                           data-required-errormessage="Please enter a score from"
+                                           data-min-errormessage="Please enter a valid number"/>
+                                </div>
+                            </div>
+
+                            <div class="column-third">
+                                <div th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="question.guidanceRows[__${iteration.index}__].justification">
+                                        <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
+                                            <span class="error-message" th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                                        </th:block>
+                                    </label>
+                                    <input required="required" class="form-control width-x-large"
+                                           th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification') ?
+                                           'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                           th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
+                                           data-maxlength-errormessage="Justification has a maximum length of 255 characters"
+                                           data-required-errormessage="Please enter a justification" />
+
+                                    <button class="buttonlink alignright remove-funder" name="remove-funder" th:value="${iteration.index}"
+                                            th:id="'remove-funder-' + ${iteration.index}">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-row" id="dynamic-row-pointer">
+                            <div class="column-half">
+                                &nbsp;
+                            </div>
+                            <div class="column-half">
+                                <div class="alignright">
+                                    <button class="buttonlink" name="add-cofunder" id="add-cofunder">+ add new score group</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="question.assessmentMaxWords">
+                            <span class="form-label-bold">Max word count</span>
+                            <span th:if="${#fields.hasErrors('question.assessmentMaxWords')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentMaxWords')}" th:text="${err}" />
+                        </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('question.assessmentMaxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                               type="number"
+                               id="question.assessmentMaxWords"
+                               min="1"
+                               required="required"
+                               th:name="question.assessmentMaxWords"
+                               th:value="${question.assessmentMaxWords}"/>
+                    </div>
+
+                </fieldset>
+
             </div>
         </fieldset>
     </th:block>
