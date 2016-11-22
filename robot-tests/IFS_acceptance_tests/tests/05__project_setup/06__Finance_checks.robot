@@ -37,7 +37,7 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
@@ -62,6 +62,8 @@ Finance checks client-side validations
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
+    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")

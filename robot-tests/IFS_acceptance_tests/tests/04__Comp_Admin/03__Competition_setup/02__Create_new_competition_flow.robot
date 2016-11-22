@@ -226,7 +226,7 @@ Eligibility: Contain the correct options
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Should applications be from single partner or collaborative projects?
+    And the user should see the text in the page    Please choose the project type.
     Then the user should see the element    jQuery=label:contains(Single or Collaborative)
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
@@ -368,6 +368,8 @@ Application: Project Summary
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
+    And the user should see the element       jQuery=h1:contains("Application finances")
+    And the user should see the text in the page  Each partner is required to complete the following finance sections
     When The user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
