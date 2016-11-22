@@ -51,7 +51,7 @@ Comp admin can view the Supporting information details on MO page
 
 
 Project finance user can view MO page, and go on to assign MO
-    [Documentation]    INFUND-5666
+    [Documentation]    INFUND-5666, INFUND-5507
     [Tags]    HappyPath
     Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
@@ -67,11 +67,13 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
+    [Teardown]  the user clicks the button/link     link=Competition dashboard
 
 
 MO server-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
