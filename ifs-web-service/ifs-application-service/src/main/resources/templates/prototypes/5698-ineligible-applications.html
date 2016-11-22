@@ -15,15 +15,55 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessments'}, ${'/prototypes/5052-manage-assessments'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
+  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate applications'}, ${null})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ineligible applications'}, ${null})" th:remove="tag" />
 
-	<p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
+	<p class="extra-margin">The following applications have been marked as ineligible for assessment and have been removed from the list of applications for assessment. Unless otherwise stated the lead applicant has not been informed.</p>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=3" th:remove="tag" />
+	<div class="search-filters extra-margin">
+
+		<form action="#" method="GET">
+			<fieldset>
+
+				<div class="grid-row">
+					<div class="column-half">
+						<div class="form-group">
+							<label class="form-label" for="filterSearch">Keywords</label>
+							<input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+						</div>
+
+
+					</div>
+					<div class="column-half">
+						<div class="grid-row">
+							<div class="form-group">
+								<label class="form-label" for="filterInformed">Informed</label>
+								<select class="form-control" id="filterInformed" name="filterInformed">
+									<option value="All">All</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+						</div>
+						<div class="grid-row">
+							<div class="column-half extra-margin">
+								<a href="#">Clear all filters</a>
+							</div>
+							<div class="column-half">
+								<div class="alignright">
+									<button class="button no-margin">Filter</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</fieldset>
+		</form>
+	</div>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list2-table" th:remove="tag" />
 
