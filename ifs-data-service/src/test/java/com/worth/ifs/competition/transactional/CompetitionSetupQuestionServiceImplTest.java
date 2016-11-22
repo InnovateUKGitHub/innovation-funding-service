@@ -152,8 +152,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.save(resource);
 
-        verify(formInputRepository).delete(appendixFormInput);
-
+        assertTrue(result.isSuccess());
         assertNotEquals(question.getQuestionNumber(), number);
         assertEquals(question.getDescription(), subTitle);
         assertEquals(question.getShortName(), shortTitle);
@@ -161,5 +160,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getGuidanceQuestion(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
+        assertEquals(appendixFormInput.getActive(), false);
     }
 }

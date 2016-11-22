@@ -20,7 +20,7 @@ import java.util.Set;
  * for example, collaborative Application Forms
  */
 @Entity
-public class FormInput{
+public class FormInput {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -70,6 +70,7 @@ public class FormInput{
     @OneToMany(mappedBy = "formInput")
     private List<GuidanceRow> guidanceRows;
 
+    private Boolean active;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -204,5 +205,13 @@ public class FormInput{
 
     public void setGuidanceRows(List<GuidanceRow> guidanceRows) {
         this.guidanceRows = guidanceRows;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -24,21 +24,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     
 	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
 
-    //TODO INFUND-6283 Remove this hard coded strings and expose to UI.
-    private static String APPENDIX_GUIDANCE_QUESTION = "What should I include in the appendix?";
-    private static String APPENDIX_GUIDANCE_ANSWER = "<p>You may include an appendix of additional information to support the question.</p>" +
-                                                     "<p>You may include, for example, a Gantt chart or project management structure.</p>" +
-                                                     "<p>The appendix should:</p>" +
-                                                     "<ul class=\"list-bullet\"><li>be in a portable document format (.pdf)</li>" +
-                                                     "<li>be readable with 100% magnification</li>" +
-                                                     "<li>contain your application number and project title at the top</li>" +
-                                                     "<li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li><" +
-                                                     "li>be less than 1mb in size</li>" +
-                                                     "</ul>";
-    private static String APPENDIX_DESCRIPTION = "Appendix";
-
-
-
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -56,9 +41,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         Question question = questionRepository.findOne(questionId);
         CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
-        setupResource.setWrittenFeedback(false);
-        setupResource.setAppendix(false);
-        setupResource.setScored(false);
         question.getFormInputs().forEach(formInput -> {
             if(FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
                 mapAssessmentFormInput(formInput, setupResource);
@@ -78,7 +60,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (ApplicantFormInputType.FILE_UPLOAD.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setAppendix(true);
+            setupResource.setAppendix(formInput.getActive());
         } else if (ApplicantFormInputType.QUESTION.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setGuidanceTitle(formInput.getGuidanceQuestion());
             setupResource.setGuidance(formInput.getGuidanceAnswer());
@@ -89,12 +71,12 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void mapAssessmentFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (AssessorFormInputType.FEEDBACK.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setWrittenFeedback(true);
+            setupResource.setWrittenFeedback(formInput.getActive());
             setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
             setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
             setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setScored(true);
+            setupResource.setScored(formInput.getActive());
         } else if (AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             //TODO: INFUND-5631
         } else if (AssessorFormInputType.RESEARCH_CATEGORY.getTitle().equals(formInput.getFormInputType().getTitle())) {
@@ -116,39 +98,19 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
-        createOrDeleteAppendixFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
 
         //TODO INFUND-5685 and INFUND-5631 Save assessor form inputs for AssessorFormInputTypes
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
 
-
-    private void createOrDeleteAppendixFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle());
-        if (competitionSetupQuestionResource.getAppendix()) {
-            if (appendixFormInput == null) {
-                appendixFormInput = new FormInput();
-                appendixFormInput.setScope(FormInputScope.APPLICATION);
-                appendixFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(ApplicantFormInputType.FILE_UPLOAD.getTitle()));
-                appendixFormInput.setQuestion(question);
-                appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_QUESTION);
-                appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_ANSWER);
-                appendixFormInput.setDescription(APPENDIX_DESCRIPTION);
-                appendixFormInput.setIncludedInApplicationSummary(true);
-                appendixFormInput.setCompetition(question.getCompetition());
-                if (questionFormInput != null) {
-                    appendixFormInput.setPriority(questionFormInput.getPriority() + 1);
-                } else {
-                    appendixFormInput.setPriority(0);
-                }
-                formInputRepository.save(appendixFormInput);
-            }
-        } else if (appendixFormInput != null) {
-            formInputRepository.delete(appendixFormInput);
+        if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
+            appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
         }
     }
-
 
     private int wordCountWithDefault(Integer wordCount) {
         if (wordCount != null && wordCount > 0) {
