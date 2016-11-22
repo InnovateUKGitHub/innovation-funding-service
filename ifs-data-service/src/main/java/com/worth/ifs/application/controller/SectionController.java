@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
  * SectionController exposes Application data and operations through a REST API.
  */
@@ -41,14 +43,14 @@ public class SectionController {
         return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
-    @RequestMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    @RequestMapping(value = "/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}", method = POST)
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @RequestMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
+    @RequestMapping(value = "/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}", method = POST)
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                            @PathVariable("applicationId") final Long applicationId,
                                            @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {

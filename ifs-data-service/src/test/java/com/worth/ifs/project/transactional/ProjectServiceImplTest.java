@@ -54,8 +54,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
@@ -1249,8 +1249,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withFinanceChecksStatus(ACTION_REQUIRED, COMPLETE).
+                withBankDetailsStatus(NOT_STARTED, NOT_STARTED).
+                withFinanceChecksStatus(NOT_STARTED, COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1273,7 +1273,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED).
+                withBankDetailsStatus(NOT_STARTED).
                 withFinanceChecksStatus(COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED).

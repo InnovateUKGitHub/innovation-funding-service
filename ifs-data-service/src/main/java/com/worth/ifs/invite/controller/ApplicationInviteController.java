@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
+import static com.worth.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
+
 /**
  * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
  */
@@ -22,7 +24,7 @@ import java.util.Set;
 @RequestMapping("/invite")
 public class ApplicationInviteController {
     private static final Log LOG = LogFactory.getLog(ApplicationInviteController.class);
-    public static final String GET_USER_BY_HASH_MAPPING = "/getUser/";
+
     @Autowired
     private InviteService inviteService;
 

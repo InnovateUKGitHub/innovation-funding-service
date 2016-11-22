@@ -62,6 +62,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     private Cookie organisationForm;
     private Cookie organisationFormWithPostcodeInput;
     private Cookie organisationFormWithSelectedPostcode;
+    private Cookie organisationFormWithEmptyPostcodeInput;
     private Cookie inviteHash;
 
     @Before
@@ -90,6 +91,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         organisationForm = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
         organisationFormWithPostcodeInput = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
         organisationFormWithSelectedPostcode = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":\"0\",\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
+        organisationFormWithEmptyPostcodeInput = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSearch\":true,\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
         inviteHash = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
     }
 
@@ -188,6 +190,17 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))));
+    }
+
+    @Test
+    public void testAddressSearchShowsEmptyPostCodeValidationError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation"))
+                .cookie(organisationFormWithEmptyPostcodeInput)
+        )
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
+                .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))))
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "addressForm.postcodeInput"));;
     }
 
     @Test

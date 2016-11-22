@@ -13,10 +13,11 @@ import org.springframework.security.access.method.P;
 
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -58,7 +59,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         classUnderTest.findByUserAndCompetition(userId, competitionId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test

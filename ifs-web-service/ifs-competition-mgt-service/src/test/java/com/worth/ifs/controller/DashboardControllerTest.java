@@ -33,7 +33,7 @@ public class DashboardControllerTest {
 
     @InjectMocks
 	private DashboardController controller;
-	
+
     @Mock
     private CompetitionService competitionService;
 

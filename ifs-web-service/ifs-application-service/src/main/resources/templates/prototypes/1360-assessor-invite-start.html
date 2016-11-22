@@ -22,7 +22,9 @@
 
     <p>Welcome to Innovate UK’s assessment service.</p>
 
-    <p>Before you begin to assess you will need to create your online account.</p>
+    <p>Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
+
+    <!--<p>Before you begin to assess you will need to create your online account.</p>
 
     <p>To create an account you will need:</p>
 
@@ -30,10 +32,10 @@
         <li>your contact details</li>
         <li>any interests to declare (yours or family members)</li>
         <li>to accept Innovate UK's terms and conditions</li>
-    </ul>
+    </ul> -->
 
 	<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/1176-assessor-create-acc?version=v2': '/prototypes/1176-assessor-create-acc?version=v3')}" class="button button-large">Create account</a>
-    <a th:unless="${(param.version != null)}" href="/prototypes/1176-assessor-create-acc" class="button button-large">Create account</a>
+  <a th:unless="${(param.version != null)}" href="/prototypes/1176-assessor-create-acc" class="button button-large">Create account</a>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

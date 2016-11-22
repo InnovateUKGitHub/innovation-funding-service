@@ -14,7 +14,9 @@ public class CompetitionInviteDocs {
             fieldWithPath("id").description("Id of the competition invite"),
             fieldWithPath("competitionName").description("Name of the competition"),
             fieldWithPath("email").description("Email of the competition invitee"),
-            fieldWithPath("status").description("Status of the competition invite")
+            fieldWithPath("status").description("Status of the competition invite"),
+            fieldWithPath("acceptsDate").description("Date of assessor accepting"),
+            fieldWithPath("deadlineDate").description("Date of assessor deadline")
     };
 
     public static final FieldDescriptor[] competitionRejectionFields = {

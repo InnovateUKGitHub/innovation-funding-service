@@ -12,13 +12,13 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     private Long competitionId;
     private String displayLabel;
-    private Integer progressAssessed;
-    private Integer progressTotal;
+    private long progressAssessed;
+    private long progressTotal;
     private LocalDate submitDeadline;
     private long daysLeft;
     private long daysLeftPercentage;
 
-    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, Integer progressAssessed, Integer progressTotal, LocalDate submitDeadline, long daysLeft, long daysLeftPercentage) {
+    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, long progressAssessed, long progressTotal, LocalDate submitDeadline, long daysLeft, long daysLeftPercentage) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
@@ -44,19 +44,19 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.displayLabel = displayLabel;
     }
 
-    public Integer getProgressAssessed() {
+    public long getProgressAssessed() {
         return progressAssessed;
     }
 
-    public void setProgressAssessed(Integer progressAssessed) {
+    public void setProgressAssessed(long progressAssessed) {
         this.progressAssessed = progressAssessed;
     }
 
-    public Integer getProgressTotal() {
+    public long getProgressTotal() {
         return progressTotal;
     }
 
-    public void setProgressTotal(Integer progressTotal) {
+    public void setProgressTotal(long progressTotal) {
         this.progressTotal = progressTotal;
     }
 

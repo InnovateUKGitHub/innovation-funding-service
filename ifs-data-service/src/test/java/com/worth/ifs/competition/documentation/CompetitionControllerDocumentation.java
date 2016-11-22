@@ -1,7 +1,9 @@
 package com.worth.ifs.competition.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.controller.CompetitionController;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -184,7 +186,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void initialiseFormForCompetitionType() throws Exception {
         Long competitionId = 2L;
         Long competitionTypeId = 3L;
-        when(competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionTypeId)).thenReturn(serviceSuccess());
+        when(competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionTypeId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
                 .andExpect(status().isOk())

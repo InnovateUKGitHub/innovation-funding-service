@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ApplicationLandingModelPopulator implements CompetitionSetupSectionModelPopulator {
 
     private static final String QUESTIONS_KEY = "questions";
+    private static final String PROJECT_DETAILS_KEY = "projectDetails";
 
 	@Autowired
 	private SectionService sectionService;
@@ -42,10 +43,17 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
         List<SectionResource> generalSections = sections.stream().filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL).collect(Collectors.toList());
         List<SectionResource> parentSections = generalSections.stream().filter(sectionResource -> sectionResource.getParentSection() == null).collect(Collectors.toList());
         model.addAttribute(QUESTIONS_KEY, getSortedQuestions(questionResources, parentSections));
+        model.addAttribute(PROJECT_DETAILS_KEY, getSortedProjectDetails(questionResources, parentSections));
    }
 
 	private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
+        return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
+                : new ArrayList<>();
+    }
+
+    private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Project details")).findFirst();
         return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
                 : new ArrayList<>();
     }

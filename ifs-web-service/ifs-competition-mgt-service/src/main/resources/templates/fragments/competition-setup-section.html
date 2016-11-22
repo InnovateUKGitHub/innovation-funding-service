@@ -581,11 +581,11 @@
 		                </span>
                     </legend>
                     <label class="block-label" for="comp-resubmissions-yes">
-                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         Yes
                     </label>
                     <label class="block-label" for="comp-resubmissions-no">
-                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         No
                     </label>
                 </fieldset>
@@ -814,12 +814,9 @@
         <div class="column-half">
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Application details</h3>
-                <ul>
-                    <li><a href="#">Application details</a></li>
-                    <li><a href="#">Project summary</a></li>
-                    <li><a href="#">Public description</a></li>
-                    <li><a href="#">Scope</a></li>
-                </ul>
+                <ol class="list-number">
+                    <li th:each="question : ${projectDetails}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
+                </ol>
             </div>
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Finances</h3>
@@ -846,4 +843,3 @@
         </li>
     </ul>
 </th:block>
-
