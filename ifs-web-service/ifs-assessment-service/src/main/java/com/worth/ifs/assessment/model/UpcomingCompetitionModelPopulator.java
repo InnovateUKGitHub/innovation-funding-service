@@ -18,5 +18,5 @@ public class UpcomingCompetitionModelPopulator {
     public UpcomingCompetitionViewModel populateModel(Long competitionId) {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
         return new UpcomingCompetitionViewModel(competition);
-}
+    }
 }
