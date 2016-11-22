@@ -43,6 +43,8 @@ Existing assessor: Reject invitation
     ...
     ...    INFUND-5165
     [Tags]
+    [Setup]  The accept deadline for the Juggling Craziness changes to the future
+    [Teardown]  The accept deadline for the Juggling Craziness is reset
     Given the user navigates to the page    ${Invitation_existing_assessor1}
     and the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'
@@ -109,6 +111,8 @@ Existing assessor shouldn't be able to accept other assessor's invitation
     ...
     ...    INFUND-304
     [Tags]
+    [Setup]  The accept deadline for the Juggling Craziness changes to the future
+    [Teardown]  The accept deadline for the Juggling Craziness is reset
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     when the user clicks the button/link    jQuery=button:contains(Accept)
     Then The user should see permissions error message

@@ -12,8 +12,10 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 ...
 ...               INFUND-4895 Securing of services related to Assessor Journey changes
-Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Run Keywords  The guest user opens the browser
+...               AND           The accept deadline for the Juggling Craziness changes to the future
+Suite Teardown    Run Keywords  TestTeardown User closes the browser
+...               AND           The accept deadline for the Juggling Craziness is reset
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
