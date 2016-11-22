@@ -61,14 +61,28 @@
 
       <h2 class="heading-medium">Actions</h2>
 
-      <ul class="grid-row">
+      <th:block th:if="${param.comp != null and param.comp[0] == 'Closed'}">
+        <ul class="grid-row">
+
+          <li class="column-fifth dashboard-actions">
+            <a class="button" th:href="${(param.comp != null ? '/prototypes/5472-assign-assessors?comp=' + param.comp[0] : '/prototypes/5472-assign-assessors?comp=Open')}">Allocate assessors</a>
+          </li>
+
+          <li class="column-fifth dashboard-actions">
+            <a class="button" th:href="${(param.comp != null ? '/prototypes/5385-application-allocation?comp=' + param.comp[0] : '/prototypes/5385-application-allocation?comp=Open')}">Allocate applications</a>
+          </li>
+
+        </ul>
+      </th:block>
+
+      <ul class="grid-row" th:unless="${param.comp != null and param.comp[0] == 'Closed'}">
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Allocate assessors</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Manage assessors</a>
         </li>
 
         <li class="column-fifth dashboard-actions">
-          <a class="button" th:href="${(param.comp != null ? '/prototypes/5470-manage-applications?comp=' + param.comp[0] : '/prototypes/5470-manage-applications?comp=Open')}">Allocate applications</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5470-manage-applications?comp=' + param.comp[0] : '/prototypes/5470-manage-applications?comp=Open')}">Manage applications</a>
         </li>
 
       </ul>
