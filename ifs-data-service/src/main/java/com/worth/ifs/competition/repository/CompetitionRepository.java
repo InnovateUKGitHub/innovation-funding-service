@@ -76,5 +76,5 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     List<Competition> findByCodeLike(String code);
 
-    Competition findByTemplateForType_Id(Long id);
+    Competition findByTemplateForTypeId(Long id);
 }

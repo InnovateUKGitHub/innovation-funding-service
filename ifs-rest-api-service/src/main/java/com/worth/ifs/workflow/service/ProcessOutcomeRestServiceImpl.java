@@ -14,4 +14,14 @@ public class ProcessOutcomeRestServiceImpl extends BaseRestService implements Pr
     public RestResult<ProcessOutcomeResource> findOne(Long id) {
         return getWithRestResult(restUrl + "/" + id, ProcessOutcomeResource.class);
     }
+
+    @Override
+    public RestResult<ProcessOutcomeResource> findLatestByProcessId(Long processId) {
+        return getWithRestResult(restUrl + "/process/" + processId, ProcessOutcomeResource.class);
+    }
+
+    @Override
+    public RestResult<ProcessOutcomeResource> findLatestByProcessIdAndType(Long processId, String type) {
+        return getWithRestResult(restUrl + "/process/" + processId + "/type/" + type, ProcessOutcomeResource.class);
+    }
 }

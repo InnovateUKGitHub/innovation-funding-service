@@ -1,8 +1,11 @@
 package com.worth.ifs.assessment.transactional;
 
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -37,6 +40,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private AssessmentWorkflowHandler assessmentWorkflowHandler;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -60,7 +69,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             assessorFormInputResponse.setUpdatedDate(now());
         }
         assessorFormInputResponse.setValue(value);
-        assessorFormInputResponseRepository.save(assessorFormInputResponseMapper.mapToDomain(assessorFormInputResponse));
+        saveAndNotifyWorkflowHandler(assessorFormInputResponse);
         return serviceSuccess();
     }
 
@@ -86,5 +95,11 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             }
         }
         return serviceSuccess();
+    }
+
+    private void saveAndNotifyWorkflowHandler(AssessorFormInputResponseResource response) {
+        AssessorFormInputResponse assessorFormInputResponse = assessorFormInputResponseMapper.mapToDomain(response);
+        assessorFormInputResponseRepository.save(assessorFormInputResponse);
+        assessmentWorkflowHandler.feedback(assessorFormInputResponse.getAssessment());
     }
 }

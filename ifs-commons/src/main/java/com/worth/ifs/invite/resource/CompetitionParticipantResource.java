@@ -24,6 +24,8 @@ public class CompetitionParticipantResource {
     private String competitionName;
     private LocalDateTime assessorAcceptsDate;
     private LocalDateTime assessorDeadlineDate;
+    private long submittedAssessments;
+    private long totalAssessments;
 
     public String getCompetitionName() {
         return competitionName;
@@ -111,6 +113,22 @@ public class CompetitionParticipantResource {
 
     public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
         this.assessorDeadlineDate = assessorDeadlineDate;
+    }
+
+    public long getSubmittedAssessments() {
+        return submittedAssessments;
+    }
+
+    public void setSubmittedAssessments(long submittedAssessments) {
+        this.submittedAssessments = submittedAssessments;
+    }
+
+    public long getTotalAssessments() {
+        return totalAssessments;
+    }
+
+    public void setTotalAssessments(long totalAssessments) {
+        this.totalAssessments = totalAssessments;
     }
 
     @JsonIgnore

@@ -60,6 +60,7 @@ function data() {
     deploy data ifs-data-service "$@"
 }
 
+
 function asm() {
     deploy web ifs-web-service/ifs-assessment-service "$@"
 }

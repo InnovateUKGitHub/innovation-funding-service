@@ -10,7 +10,7 @@ Resource          ../../../../resources/defaultResources.robot
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
-${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download
+${download_link}    ${SERVER}/application/9/form/question/8/forminput/18/download
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
