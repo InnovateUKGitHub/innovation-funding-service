@@ -17,6 +17,8 @@ public class ProjectGrantOfferLetterSendViewModel {
     private Long projectId;
     private String projectName;
     private Long applicationId;
+    private Boolean grantOfferLetterFileContentAvailable;
+    private Boolean additionalContractFileContentAvailable;
 
     public ProjectGrantOfferLetterSendViewModel(CompetitionSummaryResource competitionSummary,
                                                 FileDetailsViewModel grantOfferLetterFile,
@@ -24,7 +26,9 @@ public class ProjectGrantOfferLetterSendViewModel {
                                                 Boolean sentToProjectTeam,
                                                 Long projectId,
                                                 String projectName,
-                                                Long applicationId) {
+                                                Long applicationId,
+                                                Boolean grantOfferLetterFileContentAvailable,
+                                                Boolean additionalContractFileContentAvailable) {
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
@@ -32,6 +36,8 @@ public class ProjectGrantOfferLetterSendViewModel {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
+        this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
+        this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -79,6 +85,10 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(additionalContractFile, that.additionalContractFile)
                 .append(sentToProjectTeam, that.sentToProjectTeam)
                 .append(projectId, that.projectId)
+                .append(projectName, that.projectName)
+                .append(applicationId, that.applicationId)
+                .append(grantOfferLetterFileContentAvailable, that.grantOfferLetterFileContentAvailable)
+                .append(additionalContractFileContentAvailable, that.additionalContractFileContentAvailable)
                 .isEquals();
     }
 
@@ -89,6 +99,10 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(grantOfferLetterFile)
                 .append(additionalContractFile)
                 .append(sentToProjectTeam)
+                .append(projectName)
+                .append(applicationId)
+                .append(grantOfferLetterFileContentAvailable)
+                .append(additionalContractFileContentAvailable)
                 .toHashCode();
     }
 }

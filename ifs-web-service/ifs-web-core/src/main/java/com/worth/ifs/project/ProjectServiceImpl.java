@@ -46,9 +46,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    //@Autowired
-    //private GOLWorkflowHandler golWorkflowHandler;
-
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccessObjectOrThrowException();

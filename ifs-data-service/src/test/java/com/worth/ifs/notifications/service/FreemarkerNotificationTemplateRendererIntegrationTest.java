@@ -155,6 +155,17 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_finance_contact_text_html.html", templateArguments);
     }
 
+    @Test
+    public void testSendGrantOfferLetterEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_html.html", templateArguments);
+    }
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 

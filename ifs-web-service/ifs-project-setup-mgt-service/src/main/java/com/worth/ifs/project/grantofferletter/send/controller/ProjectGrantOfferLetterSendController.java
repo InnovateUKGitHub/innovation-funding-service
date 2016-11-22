@@ -130,7 +130,7 @@ public class ProjectGrantOfferLetterSendController {
         final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getAdditionalContractFileDetails(projectId);
 
-        return returnAnnexFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails, "Annex");
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -143,7 +143,7 @@ public class ProjectGrantOfferLetterSendController {
         final Optional<ByteArrayResource> content = projectService.getGeneratedGrantOfferFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
 
-        return returnGolFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails, "Grant Offer Letter");
     }
 
     private ProjectGrantOfferLetterSendViewModel populateGrantOfferLetterSendViewModel(Long projectId) {
@@ -163,7 +163,9 @@ public class ProjectGrantOfferLetterSendController {
                                                         sendOfferLetterAllowed,
                                                         projectId,
                                                         project.getName(),
-                                                        application.getId());
+                                                        application.getId(),
+                                                        projectService.getAdditionalContractFile(projectId).isPresent(),
+                                                        projectService.getGeneratedGrantOfferFile(projectId).isPresent());
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {
@@ -174,20 +176,13 @@ public class ProjectGrantOfferLetterSendController {
         return "redirect:/competition/" + competition.getId() + "/status";
     }
 
-    private ResponseEntity<ByteArrayResource> returnGolFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
+    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails, String fileType) {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
         } else {
-            throw new ObjectNotFoundException("Could not find Grant Offer Letter for project " + projectId, singletonList(projectId));
+            throw new ObjectNotFoundException("Could not find " + fileType + " for project " + projectId, singletonList(projectId));
         }
     }
 
-    private ResponseEntity<ByteArrayResource> returnAnnexFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            throw new ObjectNotFoundException("Could not find Annex for project " + projectId, singletonList(projectId));
-        }
-    }
 
 }

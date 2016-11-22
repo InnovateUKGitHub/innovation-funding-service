@@ -1301,6 +1301,19 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+    @Test
+    public void testSendGrantOfferLetterSuccess(){
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        User user = newUser().withId(7L).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
+
+        ServiceResult<Void> result = service.setProjectManager(projectId, user.getId());
+        assertTrue(result.isSuccess());
+        ServiceResult<Void> sendGolResult = service.sendGrantOfferLetter(project.getId(), user.getId());
+        assertTrue(sendGolResult.isSuccess());
+    }
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,
                                                                    Supplier<ServiceResult<Boolean>> getConditionFn) {
