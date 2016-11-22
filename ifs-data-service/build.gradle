@@ -239,10 +239,6 @@ flywayClean.dependsOn processResources
 
 task cleanDeploy() {
     build.mustRunAfter clean
-    clientCopy.mustRunAfter client
-    testCommonCode.mustRunAfter build
-    testCommonCode.mustRunAfter flywayMigrate
-    testCommonCodeCopy.mustRunAfter testCommonCode
     deployToTomcat.mustRunAfter build
 
     dependsOn clean
@@ -253,18 +249,12 @@ task cleanDeploy() {
 
 task cleanDeployMicroservices() {
     buildDocker.mustRunAfter clean
-    clientCopy.mustRunAfter client
     flywayClean.mustRunAfter buildDocker
     flywayClean.mustRunAfter startMySql
     flywayMigrate.mustRunAfter flywayClean
-    testCommonCode.mustRunAfter flywayMigrate
-    testCommonCodeCopy.mustRunAfter testCommonCode
 
     dependsOn clean
     dependsOn buildDocker
-    dependsOn clientCopy
-    dependsOn testCommonCode
-    dependsOn testCommonCodeCopy
     dependsOn startMySql
     dependsOn flywayClean
     dependsOn flywayMigrate
