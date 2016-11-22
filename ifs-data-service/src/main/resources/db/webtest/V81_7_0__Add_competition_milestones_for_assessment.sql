@@ -2,6 +2,7 @@ SELECT @jugglingCraziness := id FROM competition WHERE name='Juggling Craziness'
 SELECT @sarcasmStupendousness := id FROM competition WHERE name='Sarcasm Stupendousness';
 SELECT @killerRiffs := id FROM competition WHERE name='Killer Riffs';
 SELECT @laFromage := id FROM competition WHERE name='La Fromage';
+SELECT @developmentOfNewTech := id FROM competition WHERE name like 'Development of new technological%';
 
 -- Add ASSESSORS_NOTIFIED and ASSESSMENT_CLOSED milestones for project setup tests
 INSERT INTO milestone (date, type, competition_id) VALUES ('2018-01-12 00:00:00', 'ASSESSORS_NOTIFIED', @sarcasmStupendousness);
@@ -19,3 +20,5 @@ INSERT INTO milestone (date, type, competition_id) VALUES ('2016-01-29 00:00:00'
 INSERT INTO milestone (date, type, competition_id) VALUES ('2016-04-12 00:00:00', 'ASSESSORS_NOTIFIED', @laFromage);
 INSERT INTO milestone (date, type, competition_id) VALUES ('2016-05-12 00:00:00', 'ASSESSMENT_CLOSED', @laFromage);
 
+INSERT INTO milestone (date, type, competition_id) VALUES ('2016-01-12 00:00:00', 'ASSESSORS_NOTIFIED', @developmentOfNewTech);
+INSERT INTO milestone (date, type, competition_id) VALUES ('2016-01-29 00:00:00', 'ASSESSMENT_CLOSED', @developmentOfNewTech);
