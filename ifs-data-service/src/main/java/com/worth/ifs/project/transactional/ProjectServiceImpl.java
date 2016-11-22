@@ -47,6 +47,7 @@ import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -153,6 +154,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
@@ -649,12 +653,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
-
         project.addProjectUser(newFinanceContact);
-
-        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
-            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
-            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        return serviceSuccess();
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -920,8 +920,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -936,6 +937,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+        }
+    }
+
+    private ServiceResult<Void> createGOLProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
+        if (golWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
