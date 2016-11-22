@@ -172,6 +172,7 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given The user clicks the button/link    link=Juggling is very fun
     and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
@@ -238,6 +239,8 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
+    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    The user clicks the button/link    link=Juggling is very fun
     The user clicks the button/link    link=Scope
     The user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     The user clicks the button/link    jQuery=label:contains(Yes)
