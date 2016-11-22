@@ -328,7 +328,7 @@ Partners can see the documents rejected
 Project Finance is able to Approve and Reject
     [Documentation]    INFUND-4621, INFUND-5440
     [Tags]
-    [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     Then the user should see the text in the page    Other documents
     And the user should see the element    jQuery=button:contains("Accept documents")
