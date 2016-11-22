@@ -87,7 +87,6 @@ shift
 case "$target" in
     all)
         data "$@"
-        api "$@"
         core "$@"
         app "$@"
         cmgt "$@"
@@ -97,9 +96,6 @@ case "$target" in
     ;;
     data)
         data "$@"
-    ;;
-    api)
-        api "$@"
     ;;
     web)
         core "$@"

@@ -18,7 +18,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
     [Tags]  HappyPath
-    [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
@@ -37,7 +37,7 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]    HappyPath
+    [Tags]
     Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
@@ -62,6 +62,8 @@ Finance checks client-side validations
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
+    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
@@ -138,7 +140,7 @@ Moving La Fromage into project setup
     the users fill out project details
 
 the project finance user moves La Fromage into project setup if it isn't already
-    guest user log-in    project.finance1@innovateuk.test    Passw0rd
+    guest user log-in    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
     ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    La Fromage
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
