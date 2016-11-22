@@ -9,7 +9,6 @@ dependencies {
     compile "org.javassist:javassist:3.18.1-GA"
 
     testCompile "net.sf.opencsv:opencsv:2.3"
-    testCompile 'org.springframework:spring-test'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
