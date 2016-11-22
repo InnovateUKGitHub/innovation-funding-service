@@ -18,7 +18,6 @@ import com.worth.ifs.workflow.ProcessOutcomeService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -27,9 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
-import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
