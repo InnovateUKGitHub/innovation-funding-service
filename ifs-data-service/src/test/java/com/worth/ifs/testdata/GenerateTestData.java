@@ -188,7 +188,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-        freshDb();
+         freshDb();
     }
 
     @BeforeClass

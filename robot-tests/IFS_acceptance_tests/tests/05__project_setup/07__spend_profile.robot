@@ -262,7 +262,7 @@ Academic partner spend profile client side validations
     When the user enters text to a text field    table.monthlyCostsPerCategoryMap[47][0]    3
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    This field should be 0 or higher
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    3
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    5
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
 
