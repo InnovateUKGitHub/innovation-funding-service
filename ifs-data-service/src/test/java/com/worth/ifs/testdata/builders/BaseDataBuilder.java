@@ -21,6 +21,8 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.competition.transactional.MilestoneService;
+import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -30,6 +32,10 @@ import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.project.finance.transactional.FinanceCheckService;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
@@ -108,6 +114,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected SectionRepository sectionRepository;
     protected QuestionRepository questionRepository;
     protected FormInputRepository formInputRepository;
+    protected FileEntryRepository fileEntryRepository;
+    protected ApplicationFinanceRepository applicationFinanceRepository;
+    protected ProjectUserRepository projectUserRepository;
+    protected BankDetailsService bankDetailsService;
+    protected ProjectFinanceService projectFinanceService;
+    protected FinanceCheckService financeCheckService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -153,6 +165,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
         this.questionRepository = serviceLocator.getBean(QuestionRepository.class);
         this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
+        this.fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
+        this.applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
+        this.projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
+        this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
+        this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
+        this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
     }
 
     @Override
