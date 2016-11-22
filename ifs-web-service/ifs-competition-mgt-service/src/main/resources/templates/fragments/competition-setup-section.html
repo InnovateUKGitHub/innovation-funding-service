@@ -876,7 +876,7 @@
                 </label>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
 
-                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 0, 'POINT')  : ''}"
+                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-required-errormessage="Please enter how much assessors will be paid"
                        data-min-errormessage="Please enter how much assessors will be paid"
                        th:errorclass="field-error"/>
@@ -891,7 +891,7 @@
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
 
                 <dt>How much do assessors receive per application?</dt>
-                <dd th:text="${#numbers.formatDecimal(competitionSetupForm.assessorPay, 0, 'COMMA', 0, 'POINT')}"></dd>
+                <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
             <button class="button">Edit</button>
