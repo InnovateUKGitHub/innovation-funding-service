@@ -4,7 +4,7 @@ RUN apk --update add curl
 EXPOSE 8009
 EXPOSE 8080
 VOLUME /tmp
-ADD project-setup-0.0.1-SNAPSHOT.war app.jar
+ADD project-setup-1.0-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx150m", "-jar", "/app.jar"]
 HEALTHCHECK --interval=10s --timeout=5s \
