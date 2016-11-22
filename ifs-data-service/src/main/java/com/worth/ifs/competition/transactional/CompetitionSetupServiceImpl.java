@@ -8,10 +8,12 @@ import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
@@ -28,10 +30,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -64,6 +68,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
+    private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
+    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
@@ -72,6 +78,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
@@ -193,6 +201,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         Competition competition = competitionRepository.findById(competitionId);
         competition.setCompetitionType(competitionType);
+        competition = setDefaultAssessorPayAndCount(competition);
         return copyFromCompetitionTemplate(competition, template);
     }
 
@@ -310,6 +319,21 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             return formInput;
 		};
 	}
+
+
+    private Competition setDefaultAssessorPayAndCount(Competition competition) {
+        if (competition.getAssessorCount() == null) {
+            Optional<AssessorCountOption> defaultAssessorOption = competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
+            if (defaultAssessorOption.isPresent()) {
+                competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
+            }
+        }
+
+        if (competition.getAssessorPay() == null) {
+            competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
+        }
+        return competition;
+    }
 
     private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
         return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));

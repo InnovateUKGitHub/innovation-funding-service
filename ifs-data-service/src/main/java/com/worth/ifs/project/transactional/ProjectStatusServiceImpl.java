@@ -155,7 +155,20 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
-        return createOtherDocumentStatus(project);
+
+        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+            return COMPLETE;
+        }
+
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
+            return PENDING;
+        }
+
+        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
+            return ACTION_REQUIRED;
+        }
+
+        return PENDING;
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
