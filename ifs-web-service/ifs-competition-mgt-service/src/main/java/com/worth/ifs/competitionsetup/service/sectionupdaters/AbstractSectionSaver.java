@@ -23,8 +23,8 @@ public abstract class AbstractSectionSaver {
         List<Error> errors = new ArrayList<>();
         try {
             errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
-        } catch (ParseException e) {
-            errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
+        } catch (ParseException|NumberFormatException e) {
+            errors.add(new Error("validation.standard.only.numbers", HttpStatus.BAD_REQUEST));
         }
 
         if(!errors.isEmpty()) {
