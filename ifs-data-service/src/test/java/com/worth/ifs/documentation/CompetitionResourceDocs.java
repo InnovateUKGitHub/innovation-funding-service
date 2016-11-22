@@ -48,8 +48,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
             fieldWithPath("funders").description("the funders for this competition"),
             fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applications"),
-            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
-            fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question")
+            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

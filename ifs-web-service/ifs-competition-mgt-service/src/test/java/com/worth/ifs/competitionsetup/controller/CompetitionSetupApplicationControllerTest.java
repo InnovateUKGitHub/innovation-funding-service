@@ -1,10 +1,14 @@
 package com.worth.ifs.competitionsetup.controller;
 
+import com.worth.ifs.*;
+import com.worth.ifs.application.service.*;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.CompetitionResource.*;
+import com.worth.ifs.competitionsetup.service.*;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -18,9 +22,9 @@ import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -194,7 +198,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         final boolean useResubmissionQuestion = true;
 
-        mockMvc.perform(post(URL_PREFIX + "/detail/edit")
+        mockMvc.perform(post(URL_PREFIX + "/detail")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("useResubmissionQuestion", String.valueOf(useResubmissionQuestion)))
                 .andExpect(status().is3xxRedirection())
