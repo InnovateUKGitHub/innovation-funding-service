@@ -15,13 +15,12 @@ import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.transactional.OrganisationTypeService;
-import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -61,8 +60,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
                                     if (!isResearch(organisation.getOrganisationType())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());
-                                    }
-                                    else {
+                                    } else {
                                         costCategoryGenerators = sort(allOf(AcademicCostCategoryGenerator.class));
                                     }
                                     return serviceSuccess(getOrCreateSupportingCostCategoryType(costCategoryGenerators));
@@ -94,7 +92,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         });
     }
 
-    private CostCategory newCostCategory(CostCategoryGenerator costCategoryGenerator){
+    private CostCategory newCostCategory(CostCategoryGenerator costCategoryGenerator) {
         CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getName());
         newCostCategory.setLabel(costCategoryGenerator.getLabel());
         return newCostCategory;
@@ -111,7 +109,6 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     private Supplier<ServiceResult<ApplicationFinanceResource>> applicationFinanceResource(Long applicationId, Long organisationId) {
         return () -> financeRowService.financeDetails(applicationId, organisationId);
     }
-
 
 
     /**

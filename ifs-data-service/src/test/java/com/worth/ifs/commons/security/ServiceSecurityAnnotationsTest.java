@@ -2,13 +2,14 @@ package com.worth.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.commons.BaseIntegrationTest;
-import com.worth.ifs.commons.service.BaseRestService;
+//import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,11 +24,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the CustomPermissionEvaluator
@@ -127,7 +128,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
             List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(SecuredBySpring.class)));
 
             return simpleMap(springSecurityAnnotatedMethods, method -> {
-                SecuredBySpring securityAnnotation = findAnnotation(method, SecuredBySpring.class);
+                SecuredBySpring securityAnnotation = AnnotationUtils.findAnnotation(method, SecuredBySpring.class);
                 String entity = securityAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(securityAnnotation.securedType());
                 String action = securityAnnotation.value();
                 String ruleDescription = securityAnnotation.description();
@@ -152,7 +153,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
             List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(NotSecured.class)));
 
             return simpleMap(springSecurityAnnotatedMethods, method -> {
-                NotSecured notSecuredAnnotation = findAnnotation(method, NotSecured.class);
+                NotSecured notSecuredAnnotation = AnnotationUtils.findAnnotation(method, NotSecured.class);
                 String entity = ""; //notSecuredAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(notSecuredAnnotation.securedType());
                 String action = ""; //notSecuredAnnotation.value();
                 String ruleDescription = notSecuredAnnotation.value(); //notSecuredAnnotation.description();
@@ -166,8 +167,9 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         return flattenLists(nonSecuredMethodRowsByService);
     }
 
+    //TODO: weird coupling here
     private List<Object> getApplicableServices() {
-        return simpleFilter(unwrapProxies(servicesToTest()), service -> !BaseRestService.class.isAssignableFrom(service.getClass()));
+        return unwrapProxies(servicesToTest());
     }
 
     private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
