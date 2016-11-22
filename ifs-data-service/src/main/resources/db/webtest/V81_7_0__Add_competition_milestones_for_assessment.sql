@@ -3,10 +3,7 @@ SELECT @sarcasmStupendousness := id FROM competition WHERE name='Sarcasm Stupend
 SELECT @killerRiffs := id FROM competition WHERE name='Killer Riffs';
 SELECT @laFromage := id FROM competition WHERE name='La Fromage';
 
--- TODO this should copy the ASSESSOR_ACCEPTS and ASSESSOR_DEADLINE dates
-
 -- Add ASSESSORS_NOTIFIED and ASSESSMENT_CLOSED milestones for project setup tests
-
 INSERT INTO milestone (date, type, competition_id) VALUES ('2018-01-12 00:00:00', 'ASSESSORS_NOTIFIED', @sarcasmStupendousness);
 INSERT INTO milestone (date, type, competition_id) VALUES ('2018-12-31 00:00:00', 'ASSESSMENT_CLOSED', @sarcasmStupendousness);
 
