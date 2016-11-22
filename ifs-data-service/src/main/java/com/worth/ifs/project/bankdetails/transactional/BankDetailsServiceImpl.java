@@ -5,6 +5,13 @@ import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
+import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.bankdetails.domain.VerificationCondition;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -13,18 +20,9 @@ import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
 import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import com.worth.ifs.commons.error.CommonFailureKeys;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.transactional.FinanceRowService;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
-import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
-import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.users.ProjectUsersHelper;
-import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
 import com.worth.ifs.sil.experian.resource.Condition;
@@ -92,12 +90,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
-
-    @Autowired
-    private FinanceRowService financeRowService;
-
-    @Autowired
-    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
