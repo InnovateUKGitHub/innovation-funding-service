@@ -4,7 +4,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-4054 As a Project Finance team member I want to be able to review and amend unverified partner bank details to ensure they are suitable for approval
 ...
 ...               INFUND-4903: As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
-Suite Setup       Log in as user    project.finance1@innovateuk.test    Passw0rd
+Suite Setup       Log in as user    lee.bowman@innovateuk.test    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
 Resource          ../../resources/defaultResources.robot
