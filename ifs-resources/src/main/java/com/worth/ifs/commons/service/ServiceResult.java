@@ -195,21 +195,21 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * A factory method to generate a successful ServiceResult without a body.
      */
     public static ServiceResult<Void> serviceSuccess() {
-        return new ServiceResult<>(right(null));
+        return new ServiceResult<>(Either.right(null));
     }
 
     /**
      * A factory method to generate a successful ServiceResult with a body to return.
      */
     public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
-        return new ServiceResult<>(right(successfulResult));
+        return new ServiceResult<>(Either.right(successfulResult));
     }
 
     /**
      * A factory method to generate a failing ServiceResult based upon another.
      */
     public static <T> ServiceResult<T> serviceFailure(ServiceFailure failure) {
-        return new ServiceResult<>(left(failure));
+        return new ServiceResult<>(Either.left(failure));
     }
 
     /**
@@ -230,7 +230,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * A factory method to generate a failing ServiceResult based upon an Error.
      */
     public static <T> ServiceResult<T> serviceFailure(List<Error> errors) {
-        return new ServiceResult<>(left(new ServiceFailure(errors)));
+        return new ServiceResult<>(Either.left(new ServiceFailure(errors)));
     }
 
     /**

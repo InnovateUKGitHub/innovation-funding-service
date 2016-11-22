@@ -82,95 +82,95 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public T findAndThrowException(RestFailure restFailure) {
         final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
 
-        if(restFailure.has(GENERAL_NOT_FOUND)){
+        if(restFailure.has(CommonFailureKeys.GENERAL_NOT_FOUND)){
             throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(GENERAL_FORBIDDEN) || restFailure.has(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)){
+        if(restFailure.has(CommonFailureKeys.GENERAL_FORBIDDEN) || restFailure.has(CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)){
             throw new ForbiddenActionException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
             throw new UnableToRenderNotificationTemplateException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
+        if(restFailure.has(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
             throw new GeneralUnexpectedErrorException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
             throw new UnableToSendEmailsException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_DUPLICATE_FILE_CREATED)){
+        if(restFailure.has(CommonFailureKeys.FILES_DUPLICATE_FILE_CREATED)){
             throw new DuplicateFileCreatedException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
+        if(restFailure.has(CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
             throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_INCORRECTLY_REPORTED_FILESIZE)){
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_FILESIZE)){
             throw new IncorrectlyReportedFileSizeException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
             throw new IncorrectlyReportedMediaTypeException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_UNABLE_TO_CREATE_FILE)){
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE)){
             throw new UnableToCreateFileException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_UNABLE_TO_CREATE_FOLDERS)){
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS)){
             throw new UnableToCreateFoldersException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_UNABLE_TO_DELETE_FILE)){
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE)){
             throw new UnableToDeleteFileException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(FILES_UNABLE_TO_UPDATE_FILE)){
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_UPDATE_FILE)){
             throw new UnableToUpdateFileException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(GENERAL_INCORRECT_TYPE)){
+        if (restFailure.has(CommonFailureKeys.GENERAL_INCORRECT_TYPE)){
             throw new IncorrectArgumentTypeException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(FILES_FILE_AWAITING_VIRUS_SCAN)){
+        if (restFailure.has(CommonFailureKeys.FILES_FILE_AWAITING_VIRUS_SCAN)){
             throw new FileAwaitingVirusScanException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(FILES_FILE_QUARANTINED)){
+        if (restFailure.has(CommonFailureKeys.FILES_FILE_QUARANTINED)){
             throw new FileQuarantinedException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)) {
+        if (restFailure.has(CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)) {
             throw new InvalidURLException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)) {
+        if (restFailure.has(CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)) {
             throw new RegistrationTokenExpiredException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)){
+        if(restFailure.has(CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)){
             throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+        if (restFailure.has(CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
             throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+        if (restFailure.has(CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
             throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+        if (restFailure.has(CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
             throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(COMPETITION_INVITE_CLOSED)) {
+        if (restFailure.has(CommonFailureKeys.COMPETITION_INVITE_CLOSED)) {
             throw new InviteClosedException(error.getErrorKey(), error.getArguments());
         }
 
@@ -219,8 +219,8 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public ServiceResult<T> toServiceResult() {
         return handleSuccessOrFailure(
-                failure -> serviceFailure(getFailure().getErrors()),
-                success -> serviceSuccess(success));
+                failure -> ServiceResult.serviceFailure(getFailure().getErrors()),
+                success -> ServiceResult.serviceSuccess(success));
     }
 
     /**
@@ -266,11 +266,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
-        return new RestResult<>(right(result), statusCode);
+        return new RestResult<>(Either.right(result), statusCode);
     }
 
     public static <T> RestResult<T> restFailure(RestFailure failure) {
-        return new RestResult<>(left(failure), null);
+        return new RestResult<>(Either.left(failure), null);
     }
 
     public static RestResult<Void> restFailure(HttpStatus statusCode) {
@@ -286,31 +286,31 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors) {
-        return new RestResult<>(left(RestFailure.error(errors)), HttpStatus.NOT_ACCEPTABLE);
+        return new RestResult<>(Either.left(RestFailure.error(errors)), HttpStatus.NOT_ACCEPTABLE);
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
-        return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
+        return new RestResult<>(Either.left(RestFailure.error(errors, statusCode)), null);
     }
 
     public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
         if (Void.class.equals(clazz)) {
-            return right(null);
+            return Either.right(null);
         }
         if (String.class.equals(clazz)) {
             return Either.<Void, T>right((T) json);
         }
         try {
-            return right(new ObjectMapper().readValue(json, clazz));
+            return Either.right(new ObjectMapper().readValue(json, clazz));
         } catch (IOException e) {
         	LOG.error(e);
-            return left();
+            return Either.left();
         }
     }
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
         return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
+                failure -> RestResult.<T>restFailure(CommonFailureKeys.GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
                 success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
         );
     }
@@ -320,7 +320,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {
-            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
+            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(CommonFailureKeys.GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
         }
     }
 

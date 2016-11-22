@@ -9,7 +9,7 @@ import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.util.fixtures.CompetitionCoFundersResourceFixture;
+import com.worth.ifs.competition.resource.fixtures.CompetitionCoFundersResourceFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

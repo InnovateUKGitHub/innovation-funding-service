@@ -1,4 +1,4 @@
-package com.worth.ifs.util.fixtures;
+package com.worth.ifs.competition.resource.fixtures;
 
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 

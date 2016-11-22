@@ -25,7 +25,7 @@ public final class CommonErrors {
         List<Object> allArguments = new ArrayList<>();
         allArguments.add(entityClazz.getSimpleName());
         allArguments.addAll(arguments);
-        return new Error(GENERAL_NOT_FOUND, entityClazz.getSimpleName() + " not found", allArguments, NOT_FOUND);
+        return new Error(CommonFailureKeys.GENERAL_NOT_FOUND, entityClazz.getSimpleName() + " not found", allArguments, NOT_FOUND);
     }
 
     public static Error notFoundError(Class<?> entityClazz, Object... arguments) {
@@ -53,11 +53,11 @@ public final class CommonErrors {
     }
 
     public static Error internalServerErrorError() {
-        return new Error(GENERAL_UNEXPECTED_ERROR, INTERNAL_SERVER_ERROR);
+        return new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, INTERNAL_SERVER_ERROR);
     }
 
     public static Error forbiddenError() {
-        return new Error(GENERAL_FORBIDDEN, FORBIDDEN);
+        return new Error(CommonFailureKeys.GENERAL_FORBIDDEN, FORBIDDEN);
     }
 
     public static Error forbiddenError(Enum<?> key) {
@@ -74,7 +74,7 @@ public final class CommonErrors {
         allArguments.add(clazz.getSimpleName());
         allArguments.addAll(arguments);
 
-        return new Error(GENERAL_INCORRECT_TYPE.getErrorKey(), allArguments, GENERAL_INCORRECT_TYPE.getCategory());
+        return new Error(CommonFailureKeys.GENERAL_INCORRECT_TYPE.getErrorKey(), allArguments, CommonFailureKeys.GENERAL_INCORRECT_TYPE.getCategory());
     }
 
     public static Error incorrectTypeError(Class<?> clazz, Object... arguments) {

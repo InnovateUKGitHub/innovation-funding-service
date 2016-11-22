@@ -1,4 +1,4 @@
-package com.worth.ifs.commons.workflow.resource;
+package com.worth.ifs.workflow.resource;
 
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.resource.ProcessStates;

@@ -1,6 +1,6 @@
 package com.worth.ifs.project.finance.workflow.financechecks.resource;
 
-import com.worth.ifs.commons.workflow.resource.BaseProcessResource;
+import com.worth.ifs.workflow.resource.BaseProcessResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.UserResource;
