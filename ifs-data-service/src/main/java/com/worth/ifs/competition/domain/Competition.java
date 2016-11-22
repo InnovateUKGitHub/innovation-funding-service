@@ -104,7 +104,7 @@ public class Competition implements ProcessActivity {
     private boolean fullApplicationFinance = true;
     private boolean includeGrowthTable = true;
 
-    private boolean setupComplete;
+    private Boolean setupComplete;
 
     private boolean template = false;
 
