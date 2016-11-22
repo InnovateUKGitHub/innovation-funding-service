@@ -156,6 +156,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(milestonesList, (milestones, object) -> object.setMilestones(milestonesList));
     }
 
+    public CompetitionResourceBuilder withUseResubmissionQuestion(Boolean useResubmissionQuestion) {
+        return with(competition -> competition.setUseResubmissionQuestion(useResubmissionQuestion));
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);
