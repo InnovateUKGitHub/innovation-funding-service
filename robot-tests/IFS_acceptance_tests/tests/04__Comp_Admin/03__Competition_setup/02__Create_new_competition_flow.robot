@@ -368,10 +368,14 @@ Application: Project Summary
 Application: Finances Form
     [Documentation]    INFUND-5640
     Given the user clicks the button/link    link=Finances
-    When The user clicks the button/link    jQuery=label:contains("Light finances")
+    And the user should see the element       jQuery=h1:contains("Application finances")
+    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    When The user clicks the button/link    jQuery=a:contains("Edit this question")
+    And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
-    And The user clicks the button/link    jQuery=button:contains("Done")
+    And The user clicks the button/link    jQuery=button:contains("Save and close")
     And the user clicks the button/link    link=Finances
+    And The user clicks the button/link    jQuery=a:contains("Edit this question")
     Then the Radio Button selections should be correct
     [Teardown]    The user clicks the button/link    link=Application
 
