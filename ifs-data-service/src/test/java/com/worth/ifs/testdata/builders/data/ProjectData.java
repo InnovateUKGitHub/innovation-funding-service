@@ -5,7 +5,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 
 /**
- * TODO DW - document this class
+ * Provides a running data context for generating Project data
  */
 public class ProjectData {
     private ApplicationResource application;
