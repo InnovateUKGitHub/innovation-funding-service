@@ -186,7 +186,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100
@@ -307,7 +307,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100
