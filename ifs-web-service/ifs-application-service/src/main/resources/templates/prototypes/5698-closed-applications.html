@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Allocate applications'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All Competitions'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle">Technology inspired, (12345A)</p>
+	<h1 class="heading-xlarge no-margin">Closed</h1>
+
+	<div class="grid-row">
+		<div class="column-quarter">
+			<h2 class="heading-medium">Allocate assessors</h2>
+			<p>18 October 2016</p>
+		</div>
+		<div class="column-quarter">
+			<h2 class="heading-medium">Assessor accepts</h2>
+			<p>18 October 2016</p>
+		</div>
+		<div class="column-quarter">
+			<h2 class="heading-medium">Assessor deadline</h2>
+			<p>18 October 2016</p>
+		</div>
+	</div>
+
+	<hr />
+
+	<dl class="standard-definition-list">
+		<dt>Competition type</dt>
+		<dd>Study of feasibility</dd>
+		<dt>Innovation area</dt>
+		<dd>High tech manufacturing</dd>
+		<dt>Funding available</dt>
+		<dd>£250,000</dd>
+		<dt>Lead tech</dt>
+		<dd>Mike Babble</dd>
+		<dt>Comp exec</dt>
+		<dd>Jess Smith</dd>
+	</dl>
+
+	<a href="#" class="button extra-margin">Notify assessors</a>
+
+	<h2 class="heading-medium">Review progress</h2>
+
+	<ul class="list-overview">
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5472-assign-assessors?comp=Closed">Allocate assessors</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5062-manage-assessors?comp=Closed">Invite assessors</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5062-submitted-applications?comp=Closed&#38;status=assessment">Submitted applications</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5062-not-submitted-applications?comp=Closed&#38;status=assessment">Not submitted applications</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="/prototypes/5812-ineligible-applications">Ineligible applications</a></h3>
+		</li>
+		<li>
+			<h3 class="heading-small"><a href="#">Update competition details</a></h3>
+		</li>
+	</ul>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

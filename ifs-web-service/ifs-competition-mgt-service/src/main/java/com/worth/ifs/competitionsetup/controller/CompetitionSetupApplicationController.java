@@ -3,12 +3,12 @@ package com.worth.ifs.competitionsetup.controller;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
-import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.controller.ValidationHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
-import javax.validation.Valid;
-import java.util.Optional;
-
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
@@ -64,12 +63,23 @@ public class CompetitionSetupApplicationController {
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
-    public String getApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-       return getFinancePage(model, competitionId);
+        String view = getFinancePage(model, competitionId);
+        model.addAttribute("editable", false);
+        return view;
     }
 
-    @RequestMapping(value = "/question/finance", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
+    public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        String view = getFinancePage(model, competitionId);
+        model.addAttribute("editable", true);
+        return view;
+    }
+
+    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
     public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -135,14 +145,14 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
 
         if(!bindingResult.hasErrors()) {
+            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
-                    Optional.of(competitionSetupForm.getQuestion().getId()));
+                    Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }

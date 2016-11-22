@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;

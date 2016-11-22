@@ -149,11 +149,13 @@ public class OtherFundingValidatorTest {
     }
 
     private void mockWithRadio(String value){
-        ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().withApplication(application).build();
         ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
-        when(questionService.getQuestionByFormInputType(FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
         when(financeRowRepository.findByTargetIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);

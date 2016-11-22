@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.service;
 
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;

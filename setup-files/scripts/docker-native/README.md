@@ -34,24 +34,29 @@ application stack. You should kill the process beforehand e.g. `sudo service sto
     copy the contents into a `.env` file and then modify the ports. However, the important ports necessary for the
     infrastructure to function properly cannot be changed.
 
-2. Run the `setup.sh` script:
+
+2. Copy (or move) the shib image to the correct location - from the same folder as this readme file the command would be mkdir shib-images && cp ../docker/shibImages/g2g3-ifs-local-dev_0-15-1.tar shib-images/
+
+3. Run the `setup.sh` script:
 
         ./setup.sh
-        
+Don't worry if you see an error like:
+ERROR: No such service: ifs-local-dev
+
+This is normal and you will see this if you haven't run setup.sh before (or have run teardown.sh in the meantime)
+
 ## Optional Configuration
 
 You can perform some additional configuration in the `.env` file that is used during the running of `setup.sh`. The default values are retrieved from `.env-defaults`. If you wish to configure the setup, copy the `.env-defaults` into a `.env` file and make your changes before running `setup.sh`. 
 
 Some options that may be of interest:
 
-Option          | Default   | Description
---------------- | --------- | -----------
-DATA_XMX        | 512       | Sets the JVM `-Xmx` option value (in MB) for `data`
-DATA_XMS        | 256       | Sets the JVM `-Xms` option value (in MB) for `data`
-DATA_PORT_8081  | 8091      | Debugger port (on your localhost) for `data`
-WEB_XMX         | 512       | Sets the JVM `-Xmx` option value (in MB) for `web`
-WEB_XMS         | 256       | Sets the JVM `-Xms` option value (in MB) for `web`
-WEB_PORT_8081   | 8081      | Debugger port (on your localhost) for `web`
+Option          | Default           | Description
+------          | -------           | -----------
+DATA_JAVA_OPTS  | -Xms256m -Xmx512m | Sets the JVM options for the `data` container
+DATA_PORT_8081  | 8091              | Debugger port (on your localhost) for `data`
+WEB_JAVA_OPTS   | -Xms256m -Xmx512m | Sets the JVM options for the `web` container
+WEB_PORT_8081   | 8081              | Debugger port (on your localhost) for `web`
         
 ## Usage
 
@@ -73,6 +78,17 @@ You will most likely want to utilise `deploy.sh` to actually perform further dev
 
 It is pretty much the same as the current `Docker Machine` setup (although this workflow should be improved). 
 The usage of `deploy.sh` is documented below.
+
+## Running acceptance tests
+
+Included is an alternative `docker_run_tests_native.sh` in the Robot test directory that should be run instead of 
+the standard `docker_run_tests.sh` script. 
+
+This adds an additional `-n` flag which stops the application build step from occurring. It is currently not guaranteed 
+that the built WARs will be deployed properly in the web/data Tomcat containers before the Robot tests kick in.
+
+Consequently, a safer choice is to manually deploy with `deploy.sh` (like the current Docker Machine 
+setup), check that the application is deployed and then run the tests with `-n`.
 
 ## Additional information
 
