@@ -88,10 +88,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
 
         if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
-            return ACTION_REQUIRED;
+            return PENDING;
         }
 
-        return PENDING;
+        return ACTION_REQUIRED;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
