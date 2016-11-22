@@ -51,9 +51,6 @@ public abstract class BasePermissionRules {
     protected UserRepository userRepository;
 
     @Autowired
-    protected ProcessOutcomeRepository processOutcomeRepository;
-
-    @Autowired
     protected AssessmentRepository assessmentRepository;
 
     @Autowired
