@@ -305,6 +305,10 @@
                                            th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}" value=""
                                            data-required-errormessage="Please enter a to score"
                                            data-min-errormessage="Please enter a valid number"/>
+
+                                    <input required="required" type="hidden"
+                                           th:id="${iteration.index}+'-subject'"
+                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].subject}"/>
                                 </div>
                             </div>
 
