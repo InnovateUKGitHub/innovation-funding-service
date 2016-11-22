@@ -4,6 +4,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -96,17 +97,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     
     private boolean competitionOpen(ApplicationResource a) {
     	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus());
+    	return CompetitionStatus.OPEN.equals(competition.getCompetitionStatus());
     }
     
     private boolean competitionFundingNotYetComplete(ApplicationResource a) {
     	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return compStatusIn(competition, CompetitionResource.Status.OPEN, CompetitionResource.Status.IN_ASSESSMENT, CompetitionResource.Status.FUNDERS_PANEL);
+    	return compStatusIn(competition, CompetitionStatus.OPEN, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
     }
     
     private boolean competitionFundingComplete(ApplicationResource a) {
     	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return compStatusIn(competition, CompetitionResource.Status.ASSESSOR_FEEDBACK, CompetitionResource.Status.PROJECT_SETUP);
+    	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     
     private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {
@@ -118,8 +119,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     	return false;
     }
     
-    private boolean compStatusIn(CompetitionResource comp, CompetitionResource.Status... statuses) {
-    	for(CompetitionResource.Status status: statuses) {
+    private boolean compStatusIn(CompetitionResource comp, CompetitionStatus... statuses) {
+    	for(CompetitionStatus status: statuses) {
     		if(status.equals(comp.getCompetitionStatus())) {
     			return true;
     		}

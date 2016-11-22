@@ -2,7 +2,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -92,7 +92,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
     }
     
-    public CompetitionResourceBuilder withCompetitionStatus(Status... statuses) {
+    public CompetitionResourceBuilder withCompetitionStatus(CompetitionStatus... statuses) {
     	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
     }
 

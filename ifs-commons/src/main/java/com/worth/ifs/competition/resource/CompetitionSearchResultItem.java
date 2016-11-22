@@ -13,7 +13,7 @@ public class CompetitionSearchResultItem {
     private String innovationAreaName;
     private Integer numberOfApplications;
     private String startDateDisplay;
-    private CompetitionResource.Status competitionStatus;
+    private CompetitionStatus competitionStatus;
     private String competitionTypeName;
     private Integer projectsCount;
 
@@ -22,7 +22,7 @@ public class CompetitionSearchResultItem {
     }
 
     public CompetitionSearchResultItem(Long id, String name, String innovationAreaName, Integer numberOfApplications,
-                                       String startDateDisplay, CompetitionResource.Status competitionStatus,
+                                       String startDateDisplay, CompetitionStatus competitionStatus,
                                        String competitionTypeName, Integer projectsCount) {
         this.id = id;
         this.name = name;
@@ -66,11 +66,11 @@ public class CompetitionSearchResultItem {
         this.startDateDisplay = startDateDisplay;
     }
 
-    public CompetitionResource.Status getCompetitionStatus() {
+    public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
 
-    public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
     }
 
