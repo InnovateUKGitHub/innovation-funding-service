@@ -248,22 +248,18 @@
                                maxlength="255"/>
                     </div>
 
-                    <!--
-                    <dt class="column-quarter" th:text="${score.subject.replace(',', '-')}"></dt>
-                    -->
-
                     <fieldset>
                         <h3 class="heading-small">Guidance table</h3>
                         <div class="grid-row">
                             <div class="column-third">
                                 <div class="form-group">
-                                    <span class="form-label-bold">Score<span class="visuallyhidden"> from</span></span>
+                                    <span class="form-label">Score<span class="visuallyhidden"> from</span></span>
                                 </div>
                             </div>
 
                             <div class="column-third">
                                 <div class="form-group">
-                                    <span class="form-label-bold"><span class="visuallyhidden">Score to</span></span>
+                                    <span class="form-label"><span class="visuallyhidden">Score to</span></span>
                                 </div>
                             </div>
 
@@ -274,43 +270,76 @@
                             </div>
                         </div>
 
-                        <div th:each="(score, iteration : ${question.guidanceRows})" class="grid-row funder-row" th:id="'score-row-'+${iteration.index}">
+                        <div th:each="(score, iteration : ${competitionSetupForm.guidanceRows})" class="grid-row guidance-row" th:id="'guidance-row-'+${iteration.index}">
 
                             <hr/>
 
-                            <div class="column-third">
-                                <div th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}? 'form-group error':'form-group'">
-                                    <label class="form-label" th:for="question.guidanceRows[__${iteration.index}__].subject">
-                                        <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                            <div class="column-quarter" th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                                <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreFrom">
+                                        <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreFrom')}" th:text="${err}" />
                                         </th:block>
                                     </label>
                                     <input required="required" type="number" min="0"
-                                           th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')
+                                           th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')
                                            ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                           th:id="${iteration.index}+'-subject'"
-                                           th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}" value=""
-                                           data-required-errormessage="Please enter a score from"
+                                           th:id="${iteration.index}+'-scoreFrom'"
+                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}" value=""
+                                           data-required-errormessage="Please enter a from score"
                                            data-min-errormessage="Please enter a valid number"/>
                                 </div>
                             </div>
 
-                            <div class="column-third">
-                                <div th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}? 'form-group error':'form-group'">
-                                    <label class="form-label" th:for="question.guidanceRows[__${iteration.index}__].justification">
-                                        <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                            <div class="column-quarter" th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                                <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreTo">
+                                        <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreTo')}" th:text="${err}" />
+                                        </th:block>
+                                    </label>
+                                    <input required="required" type="number" min="0"
+                                           th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')
+                                           ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                           th:id="${iteration.index}+'-scoreTo'"
+                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}" value=""
+                                           data-required-errormessage="Please enter a to score"
+                                           data-min-errormessage="Please enter a valid number"/>
+                                </div>
+                            </div>
+
+                            <div class="column-half" th:unless="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                                <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="guidanceRows[__${iteration.index}__].subject">
+                                        <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')}">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                                        </th:block>
+                                    </label>
+                                    <input required="required"
+                                           th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')
+                                           ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                           th:id="${iteration.index}+'-subject'"
+                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].subject}" value=""
+                                           data-required-errormessage="Please enter a value"/>
+                                </div>
+                            </div>
+
+                            <div class="column-half">
+                                <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}? 'form-group error':'form-group'">
+                                    <label class="form-label" th:for="guidanceRows[__${iteration.index}__].justification">
+                                        <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
+                                            <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
                                         </th:block>
                                     </label>
                                     <input required="required" class="form-control width-x-large"
-                                           th:class="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification') ?
+                                           th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification') ?
                                            'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                           th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
+                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                            data-maxlength-errormessage="Justification has a maximum length of 255 characters"
                                            data-required-errormessage="Please enter a justification" />
 
-                                    <button class="buttonlink alignright remove-funder" name="remove-funder" th:value="${iteration.index}"
-                                            th:id="'remove-funder-' + ${iteration.index}">Remove</button>
+                                    <button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" th:value="${iteration.index}"
+                                            th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -321,10 +350,13 @@
                             </div>
                             <div class="column-half">
                                 <div class="alignright">
-                                    <button class="buttonlink" name="add-cofunder" id="add-cofunder">+ add new score group</button>
+                                    <input type="hidden" name="removeGuidanceRow" />
+                                    <input type="hidden" name="guidanceRowsCount" id="guidance-row-count" th:value="${competitionSetupForm.guidanceRowsCount}" />
+                                    <button class="buttonlink" name="add-guidance-row" id="add-guidance-row">+Add guidance row</button>
                                 </div>
                             </div>
                         </div>
+
                     </fieldset>
 
                     <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">

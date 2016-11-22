@@ -151,43 +151,48 @@ IFS.competitionManagement.setup = (function() {
 
     handleAddGuidanceRow: function() {
       jQuery(document).on('click', '#add-guidance-row', function() {
-        var count = parseInt(jQuery('#co-funder-count').val(), 10);
-        jQuery('<div class="grid-row funder-row" id="funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""></div></div>' +
-          '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
-          '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'+ count +'">Remove</button></div></div></div>')
+        var count = parseInt(jQuery('#guidance-row-count').val(), 10);
+        jQuery('<div class="grid-row guidance-row" id="guidance-row-'
+          + count + '"><div class="column-third"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="'
+          + count +'-funder" name="funders['+ count +'].funder" value=""></div></div>'
+          + '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="'
+          + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="'
+          + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
+          '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'
+          + count +'">Remove</button></div></div></div>')
           .insertBefore('#dynamic-row-pointer');
 
-        jQuery('#co-funder-count').val(count + 1);
+        jQuery('#guidance-row-count').val(count + 1);
         return false;
       });
     },
     handleRemoveGuidanceRow: function() {
-      jQuery(document).on('click', '.remove-funder', function() {
+      jQuery(document).on('click', '.remove-guidance-row', function() {
         var $this = jQuery(this),
           index = $this.val(),
-          funderRow = $this.closest('.funder-row'),
-          count = parseInt(jQuery('#co-funder-count').val(), 10);
+          guidanceRow = $this.closest('.guidance-row'),
+          count = parseInt(jQuery('#guidance-row-count').val(), 10);
 
-        jQuery('[name="removeFunder"]').val(index);
-        IFS.core.autoSave.fieldChanged('[name="removeFunder"]');
-        funderRow.remove();
-        jQuery('#co-funder-count').val(count - 1);
-        IFS.competitionManagement.setup.reindexFunderRows();
+        jQuery('[name="removeGuidanceRow"]').val(index);
+        IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]');
+        guidanceRow.remove();
+        jQuery('#guidance-row-count').val(count - 1);
+        IFS.competitionManagement.setup.reindexGuidanceRows();
         return false;
       });
     },
     reindexGuidanceRows: function() {
-      jQuery('[name*="funders"]').each(function() {
+      jQuery('[name*="guidanceRows"]').each(function() {
         var $this = jQuery(this),
-          thisIndex = $this.closest('.funder-row').index('.funder-row'),
+          thisIndex = $this.closest('.guidance-row').index('.guidance-row'),
           oldAttr = $this.attr('name'),
-          newAttr = oldAttr.replace(/funders\[\d\]/, 'funders[' +thisIndex+ ']');
+          newAttr = oldAttr.replace(/guidanceRows\[\d\]/, 'guidanceRows[' +thisIndex+ ']');
 
         $this.attr('name', newAttr);
       });
       jQuery('button.remove-funder').each(function() {
         var $this = jQuery(this),
-          thisIndex = $this.closest('.funder-row').index('.funder-row');
+          thisIndex = $this.closest('.guidance-row').index('.guidance-row');
 
         $this.val(thisIndex);
       });
