@@ -49,7 +49,7 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withAssessorDeadlineDate(dateTime)
                 .build();
 
-        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel("name", "description", dateTime, dateTime);
+        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource);
 
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 

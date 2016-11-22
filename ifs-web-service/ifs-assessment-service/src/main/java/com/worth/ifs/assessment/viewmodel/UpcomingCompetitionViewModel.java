@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -15,11 +16,11 @@ public class UpcomingCompetitionViewModel {
     private LocalDateTime assessmentPeriodDateFrom;
     private LocalDateTime assessmentPeriodDateTo;
 
-    public UpcomingCompetitionViewModel(String competitionName, String competitionDescription, LocalDateTime assessmentPeriodDateFrom, LocalDateTime assessmentPeriodDateTo) {
-        this.competitionName = competitionName;
-        this.competitionDescription = competitionDescription;
-        this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
-        this.assessmentPeriodDateTo = assessmentPeriodDateTo;
+    public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
+        this.competitionName = competitionResource.getName();
+        this.competitionDescription = competitionResource.getDescription();
+        this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
+        this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
     }
 
     public String getCompetitionName() {
