@@ -1,5 +1,5 @@
-include 'ifs-resources'
 include 'ifs-commons'
+include 'ifs-resources'
 include 'ifs-data-service'
 include 'ifs-rest-api-service'
 include 'ifs-web-service'

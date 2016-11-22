@@ -23,6 +23,7 @@ dependencies {
     compile project(":ifs-resources")
     compile project(':ifs-rest-api-service')
     testCompile project(':ifs-resources').sourceSets.test.output
+    compile project(":ifs-commons")
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
