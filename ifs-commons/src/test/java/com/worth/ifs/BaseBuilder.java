@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Array;
@@ -60,6 +61,10 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
             R nextValue = values != null && values.length > 0 ? values[Math.min(values.length - 1, i)] : null;
             amendFunction.accept(nextValue, t);
         });
+    }
+
+    public <R> S withArraySetFieldByReflection(String fieldName, R[] values) {
+        return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, value), values);
     }
 
     /**
