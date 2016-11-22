@@ -67,10 +67,7 @@ public class CompetitionResource {
     private String activityCode;
     private String innovateBudget;
 
-    private boolean useProjectTitleQuestion;
     private boolean useResubmissionQuestion;
-    private boolean useEstimatedStartDateQuestion;
-    private boolean useDurationQuestion;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -455,14 +452,6 @@ public class CompetitionResource {
         this.includeGrowthTable = includeGrowthTable;
     }
 
-    public boolean isUseProjectTitleQuestion() {
-        return useProjectTitleQuestion;
-    }
-
-    public void setUseProjectTitleQuestion(boolean useProjectTitleQuestion) {
-        this.useProjectTitleQuestion = useProjectTitleQuestion;
-    }
-
     public boolean isUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -471,19 +460,4 @@ public class CompetitionResource {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public boolean isUseEstimatedStartDateQuestion() {
-        return useEstimatedStartDateQuestion;
-    }
-
-    public void setUseEstimatedStartDateQuestion(boolean useEstimatedStartDateQuestion) {
-        this.useEstimatedStartDateQuestion = useEstimatedStartDateQuestion;
-    }
-
-    public boolean isUseDurationQuestion() {
-        return useDurationQuestion;
-    }
-
-    public void setUseDurationQuestion(boolean useDurationQuestion) {
-        this.useDurationQuestion = useDurationQuestion;
-    }
 }

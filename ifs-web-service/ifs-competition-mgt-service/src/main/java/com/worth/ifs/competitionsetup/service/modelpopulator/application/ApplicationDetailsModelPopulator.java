@@ -26,10 +26,7 @@ public class ApplicationDetailsModelPopulator implements CompetitionSetupSubsect
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationDetailsForm form = new ApplicationDetailsForm();
-		form.setUseProjectTitleQuestion(competitionResource.isUseProjectTitleQuestion());
 		form.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
-		form.setUseEstimatedStartDateQuestion(competitionResource.isUseEstimatedStartDateQuestion());
-		form.setUseDurationQuestion(competitionResource.isUseDurationQuestion());
 		model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
 		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
 	}

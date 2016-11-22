@@ -5,10 +5,9 @@ import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -181,26 +180,17 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        final boolean useProjectTitleQuestion = true;
-        final boolean useDurationQuestion = true;
         final boolean useResubmissionQuestion = true;
-        final boolean estimatedStartDateQuestion = false;
 
         mockMvc.perform(post(URL_PREFIX + "/detail")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("useProjectTitleQuestion", String.valueOf(useProjectTitleQuestion))
-                .param("useDurationQuestion", String.valueOf(useDurationQuestion))
-                .param("useResubmissionQuestion", String.valueOf(useResubmissionQuestion))
-                .param("estimatedStartDateQuestion", String.valueOf(estimatedStartDateQuestion)))
+                .param("useResubmissionQuestion", String.valueOf(useResubmissionQuestion)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
         ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
         verify(competitionService).update(argument.capture());
-        assertThat(argument.getValue().isUseProjectTitleQuestion(), equalTo(useProjectTitleQuestion));
-        assertThat(argument.getValue().isUseDurationQuestion(), equalTo(useDurationQuestion));
         assertThat(argument.getValue().isUseResubmissionQuestion(), equalTo(useResubmissionQuestion));
-        assertThat(argument.getValue().isUseEstimatedStartDateQuestion(), equalTo(estimatedStartDateQuestion));
     }
 
 }
