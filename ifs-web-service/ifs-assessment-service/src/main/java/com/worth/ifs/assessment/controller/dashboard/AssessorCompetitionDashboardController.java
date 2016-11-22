@@ -27,7 +27,7 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlob
 @RequestMapping(value = "/assessor")
 public class AssessorCompetitionDashboardController {
 
-    private final String FORM_ATTR_NAME = "form";
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private AssessorCompetitionDashboardModelPopulator assessorCompetitionDashboardModelPopulator;

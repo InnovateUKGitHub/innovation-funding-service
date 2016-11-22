@@ -17,10 +17,6 @@ public class AssessmentSubmissionsResource {
     }
 
     public void setAssessmentIds(List<Long> assessmentIds) {
-        if (assessmentIds == null) {
-            return;
-        }
-
         this.assessmentIds = assessmentIds;
     }
 

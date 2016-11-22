@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-
 public class AssessmentSubmissionsResourceBuilder extends BaseBuilder<AssessmentSubmissionsResource, AssessmentSubmissionsResourceBuilder> {
 
     private AssessmentSubmissionsResourceBuilder(List<BiConsumer<Integer, AssessmentSubmissionsResource>> multiActions) {
@@ -31,6 +29,6 @@ public class AssessmentSubmissionsResourceBuilder extends BaseBuilder<Assessment
 
     @SafeVarargs
     public final AssessmentSubmissionsResourceBuilder withAssessmentIds(List<Long>... assessmentIds) {
-        return withArray((ids, resource) -> setField("assessmentIds", ids, resource), assessmentIds);
+        return withArraySetFieldByReflection("assessmentIds", assessmentIds);
     }
 }

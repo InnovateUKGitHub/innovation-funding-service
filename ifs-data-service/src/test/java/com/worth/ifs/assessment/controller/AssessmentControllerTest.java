@@ -372,7 +372,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void submitAssessments_null() throws Exception {
-        Error error = fieldError("assessmentIds", emptyList(), "validation.assessmentSubmissions.assessmentIds.required", "");
+        Error error = fieldError("assessmentIds", null, "validation.assessmentSubmissions.assessmentIds.required", "");
 
         mockMvc.perform(put("/assessment/submitAssessments")
                 .contentType(APPLICATION_JSON)
