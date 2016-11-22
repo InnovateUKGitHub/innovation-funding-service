@@ -87,7 +87,7 @@ public class ProjectSetupStatusController {
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
-        boolean spendProfileApproved = teamStatus.getLeadPartnerStatus().getSpendProfileStatus().equals(COMPLETE);
+        boolean spendProfileApproved = (teamStatus.getLeadPartnerStatus().getSpendProfileStatus() != null) && teamStatus.getLeadPartnerStatus().getSpendProfileStatus().equals(COMPLETE);
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
