@@ -1,6 +1,9 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.form.domain.FormInput;
@@ -53,6 +56,13 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return with(formInput -> formInput.setFormInputType(formInputType));
     }
 
+
+    public FormInputBuilder withFormInputType(String title) {
+        FormInputType type = new FormInputType();
+        type.setTitle(title);
+        return with(formInput -> formInput.setFormInputType(type));
+    }
+
     public FormInputBuilder withQuestion(Question... questions) {
         return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
@@ -83,5 +93,9 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withInputValidators(Set<FormValidator> inputValidators) {
         return with(formInput -> formInput.setInputValidators(inputValidators));
+    }
+
+    public FormInputBuilder withFormInputGuidanceRows(List<GuidanceRow> guidanceRows) {
+        return with(formInput -> formInput.setGuidanceRows(guidanceRows));
     }
 }

@@ -8,13 +8,16 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 ...
 ...               INFUND-5179 Introduce new resource DTO classes for recommending and rejecting assessments
-Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
+...
+...               INFUND-5765 As an assessor I need to be able to progress an assessment to the state of Assessed so that I am able to select it to submit.
+Suite Setup       Run keywords    guest user log-in    felix.wilson@gmail.com    Passw0rd
+...               AND    The user accepts the juggling is word that sound funny application
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-All the sections are present in the summary
+Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user navigates to the assessor page    ${Assessment_summary_Pending_12}
@@ -24,13 +27,13 @@ All the sections are present in the summary
     And The user should see the element    id=form-input-feedback
     And The user should see the element    id=form-input-comments
 
-Number of days remaining until assessment submission
+Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2017-01-28
 
-Assessment summary shows questions as incomplete
+Summary shows questions as incomplete
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
@@ -44,7 +47,7 @@ Assessment summary shows questions as incomplete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
-Questions should show without score
+Summary: Questions should show without score
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
@@ -57,7 +60,7 @@ Questions should show without score
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    N/A
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
 
-Questions should show as complete
+Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Given the user adds score and feedback for every question
@@ -74,7 +77,7 @@ Questions should show as complete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
-Questions should show the scores
+Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
@@ -91,13 +94,13 @@ Questions should show the scores
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
 
-Overall scores section
+Summary:Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
     And the total scores should be correct
 
-Feedback should show in each section
+Summary:Feedback should show in each section
     [Documentation]    INFUND-550
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
     Then The user should see the text in the page    Testing Business opportunity feedback text
@@ -122,7 +125,7 @@ Feedback should show in each section
     When The user clicks the button/link    jQuery=button:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
-Assessor should be able to re-edit before submit
+Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
     and The user should see the text in the page    This is the applicant response for business opportunity.
@@ -134,7 +137,7 @@ Assessor should be able to re-edit before submit
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
-Feedback validations
+Summary:Feedback validations
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -154,7 +157,7 @@ Feedback validations
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
-Word count check: Your feedback
+Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -175,7 +178,7 @@ Word count check: Your feedback
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-Word count check: Comments for InnovateUK
+Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -194,13 +197,17 @@ Word count check: Comments for InnovateUK
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-Your Feedback is not mandatory when Yes is selected
+User Saves the assessment
     [Documentation]    INFUND-4996
+    ...
+    ...    INFUND-5765
     [Tags]
-    When the user enters text to a text field    id=feedback    ${EMPTY}
-    When the user selects the radio button    fundingConfirmation    true
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Given the user enters text to a text field    id=feedback    ${EMPTY}
+    And the user selects the radio button    fundingConfirmation    true
+    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
+    And The user should see the text in the page    Assessed
+    And The user should see the element    css=li:nth-child(4) .recommend
 
 *** Keywords ***
 the collapsible button should contain
@@ -340,3 +347,10 @@ the word count should be correct
 the total scores should be correct
     Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 100/100
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
+
+The user accepts the juggling is word that sound funny application
+    The user clicks the button/link    link=Juggling Craziness
+    The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    The user should see the text in the page    Accept application
+    The user clicks the button/link    jQuery=button:contains("Accept")
+    The user should be redirected to the correct page    ${Assessor_application_dashboard}
