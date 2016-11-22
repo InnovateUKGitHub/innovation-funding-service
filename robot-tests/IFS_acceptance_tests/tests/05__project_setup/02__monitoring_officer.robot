@@ -191,11 +191,10 @@ MO details accessible/seen by all partners
 
 Partner can access MO link once MO is assigned
     [Documentation]    INFUND-4428
-    [Tags]
+    [Tags]              Pending
     [Setup]    Log in as a different user    &{collaborator1_credentials}
-    Given the user navigates to the page        PS setup page
-    then the user clicks the button/link        Monitoring Officer
-    [Teardown]    logout as user
+    Given the user navigates to the page      ${project_in_setup_page}
+    then the user clicks the button/link      link= Monitoring Officer
 
 
 Status updates correctly for internal user's table
