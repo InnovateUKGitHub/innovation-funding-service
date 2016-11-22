@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -73,6 +74,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
@@ -156,16 +159,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
     	Competition competition = competitionRepository.findById(competitionId);
     	competition.getSectionSetupStatus().put(section, Boolean.TRUE);
-        if (section == CompetitionSetupSection.INITIAL_DETAILS) {
-            if (competition.getAssessorCount() == null) {
-                Optional<AssessorCountOption> defaultAssessorOption =
-                        competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-                if (defaultAssessorOption.isPresent()) {
-                    competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
-                    competitionRepository.save(competition);
-                }
-            }
-        }
         return serviceSuccess();
     }
 
@@ -204,6 +197,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         Competition competition = competitionRepository.findById(competitionId);
         competition.setCompetitionType(competitionType);
+        competition = setDefaultAssessorPayAndCount(competition);
         return copyFromCompetitionTemplate(competition, template);
     }
 
@@ -315,4 +309,19 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             return formInput;
 		};
 	}
+
+    private Competition setDefaultAssessorPayAndCount(Competition competition) {
+        if (competition.getAssessorCount() == null) {
+            Optional<AssessorCountOption> defaultAssessorOption =
+                    competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
+            if (defaultAssessorOption.isPresent()) {
+                competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
+            }
+        }
+
+        if (competition.getAssessorPay() == null) {
+            competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
+        }
+        return competition;
+    }
 }
