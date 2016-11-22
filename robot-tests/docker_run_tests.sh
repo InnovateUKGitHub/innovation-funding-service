@@ -47,7 +47,7 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp ../../../robot_tests/upload_files/testing.pdf ifs_data_1:/tmp/testing.pdf
+    docker cp ../../../robot-tests/upload_files/testing.pdf ifs_data_1:/tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
     docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}

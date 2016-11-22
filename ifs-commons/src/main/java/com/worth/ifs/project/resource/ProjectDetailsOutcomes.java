@@ -9,7 +9,6 @@ public enum ProjectDetailsOutcomes implements OutcomeType {
     PROJECT_START_DATE_ADDED("start-date-added"),
     PROJECT_ADDRESS_ADDED("address-added"),
     PROJECT_MANAGER_ADDED("project-manager-added"),
-    PROJECT_FINANCE_CONTACT_ADDED("finance-contact-added"),
     SUBMIT("submitted");
 
     String event;
