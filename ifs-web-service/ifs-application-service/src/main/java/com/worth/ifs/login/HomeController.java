@@ -7,6 +7,7 @@ import com.worth.ifs.login.form.RoleSelectionForm;
 import com.worth.ifs.login.model.RoleSelectionModelPopulator;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -82,12 +84,14 @@ public class HomeController {
                               @ModelAttribute("loggedInUser") UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
                               BindingResult bindingResult,
-                              ValidationHandler validationHandler) {
+                              ValidationHandler validationHandler,
+                              HttpServletResponse response) {
 
         Supplier<String> failureView = () -> doViewRoleSelection(model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+            CookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToChosenDashboard(user, form.getSelectedRole().getName()));
         });
@@ -99,9 +103,7 @@ public class HomeController {
     }
 
     private String redirectToChosenDashboard(UserResource user, String role) {
-        List<RoleResource> roles = user.getRoles();
-        String url = roles.stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
-
+        String url = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
         return format("redirect:/%s", url);
     }
 
