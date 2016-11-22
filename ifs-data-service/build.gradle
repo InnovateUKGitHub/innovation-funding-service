@@ -1,4 +1,4 @@
-if (project.hasProperty("profile")) {
+if (project.hasProperty("profile") && project.profile != "microservices") {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "docker-build.gradle"
@@ -7,6 +7,17 @@ if (project.hasProperty("profile")) {
 apply plugin: 'war'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
+
+task('copyFreemarkerResources', type: Copy) {
+//Copy freemarker resources to build path to support running as a jar.
+    from 'src/main/java/com/worth/ifs/notifications/templates'
+        into 'build/classes/main/com/worth/ifs/notifications/templates'
+        include '**/*'
+}
+
+compileJava.dependsOn copyFreemarkerResources
+
+
 
 war {
     baseName = 'ifs-data-service'
@@ -96,7 +107,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
 
-    //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"

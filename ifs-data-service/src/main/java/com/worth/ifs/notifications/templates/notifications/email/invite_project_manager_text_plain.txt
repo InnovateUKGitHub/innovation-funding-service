@@ -1,0 +1,16 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You have been invited to join the project ${projectName} as the project manager.
+
+You will be managing the project on behalf of ${leadOrganisation} who is the lead organisation.
+
+Sign in or create an account to accept this invitation. Please note that if you have an existing account with us you can still contribute to other competitions. If you want to contribute under a different organisation then you will need to create a new account with an alternate email address.
+
+${inviteUrl}
+
+Yours sincerely
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>
