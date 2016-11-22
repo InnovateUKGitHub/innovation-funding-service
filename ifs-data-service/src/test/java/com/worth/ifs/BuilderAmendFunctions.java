@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.application.domain.Application;

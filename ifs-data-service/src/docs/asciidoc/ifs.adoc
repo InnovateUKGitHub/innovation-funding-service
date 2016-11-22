@@ -145,6 +145,14 @@ include::competition.adoc[]
 == Competition Invite
 include::competitionInvite.adoc[]
 
+[[competitionparticipant]]
+== Competition Participant
+include::competitionParticipant.adoc[]
+
+[[competitionSetupQuestion]]
+== Competition Setup Question
+include::competitionSetupQuestion.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]
