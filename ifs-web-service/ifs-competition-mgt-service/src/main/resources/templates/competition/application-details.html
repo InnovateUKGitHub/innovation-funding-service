@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application details'" th:remove="tag" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -37,44 +37,39 @@
             </ul>
         </div>
 
-        <fieldset>
-            <legend class="visuallyhidden">To be included:</legend>
-            <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
+        <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
+        <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group error':'form-group'">
+            <fieldset class="inline">
+                <legend>
+                    <span class="form-label-bold">Resubmission question</span>
+                    <span th:if="${#fields.hasErrors('useResubmissionQuestion')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}" />
+                        </span>
+                </legend>
+                <label class="block-label" for="use-resubmission-question-yes">
+                    <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
+                    Yes
+                </label>
+                <label class="block-label" for="use-resubmission-question-no">
+                    <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
+                    No
+                </label>
+            </fieldset>
+        </div>
 
-            <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group error':'form-group'">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="form-label-bold">Resubmission question</span>
-                        <span th:if="${#fields.hasErrors('useResubmissionQuestion')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}" />
-                            </span>
-                    </legend>
-                    <label class="block-label" for="use-resubmission-question-yes">
-                        <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
-                        Yes
-                    </label>
-                    <label class="block-label" for="use-resubmission-question-no">
-                        <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
-                        No
-                    </label>
-                </fieldset>
-            </div>
+        <button type="submit" class="button">Save and close</button>
 
-            <button type="submit" class="button">Save and close</button>
-        </fieldset>
     </form>
 
     <th:block th:unless="${editable}">
 
-        <legend class="visuallyhidden">To be included:</legend>
         <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
         <th:block th:unless="${editable}">
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Resubmission question</dt>
                 <dd class="column-two-thirds" th:text="${competitionSetupForm.useResubmissionQuestion ? 'yes' : 'no'}" />
-                <!-- <dd class="column-two-thirds" th:text="${useResubmissionQuestion}"></dd> -->
             </dl>
         </th:block>
 
