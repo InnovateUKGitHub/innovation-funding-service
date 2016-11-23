@@ -1,19 +1,22 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.form.domain.FormInput;
@@ -27,10 +30,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,6 +46,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPL
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 
 /**
@@ -62,12 +68,18 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
+    private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
+    @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private GuidanceRowRepository guidanceRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
@@ -189,6 +201,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         Competition competition = competitionRepository.findById(competitionId);
         competition.setCompetitionType(competitionType);
+        competition = setDefaultAssessorPayAndCount(competition);
         return copyFromCompetitionTemplate(competition, template);
     }
 
@@ -202,7 +215,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
         cleanUpCompetitionSections(competition);
 
-        if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
+        if(competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
@@ -224,6 +237,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
 	private void cleanUpCompetitionSections(Competition competition) {
+        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
+        guidanceRowRepository.delete(scoreRows);
+
         List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
         formInputRepository.delete(formInputs);
 
@@ -270,7 +286,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	}
 	
 	private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
+        return simpleMap(questions, createQuestion(competition, section));
 	}
 
 	private Function<Question, Question> createQuestion(Competition competition, Section section) {
@@ -285,9 +301,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			return question;
 		};
 	}
-	
-	private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
-		return formInputTemplates.stream().map(createFormInput(competition, question)).collect(Collectors.toList());
+
+
+    private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
+        return simpleMap(formInputTemplates, createFormInput(competition, question));
 	}
 	
 	private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
@@ -297,7 +314,38 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			formInput.setQuestion(question);
             formInput.setId(null);
             formInputRepository.save(formInput);
+
+            formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
 		};
 	}
+
+
+    private Competition setDefaultAssessorPayAndCount(Competition competition) {
+        if (competition.getAssessorCount() == null) {
+            Optional<AssessorCountOption> defaultAssessorOption = competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
+            if (defaultAssessorOption.isPresent()) {
+                competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
+            }
+        }
+
+        if (competition.getAssessorPay() == null) {
+            competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
+        }
+        return competition;
+    }
+
+    private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
+        return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));
+    }
+
+    private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
+        return (GuidanceRow row) -> {
+            entityManager.detach(row);
+            row.setFormInput(formInput);
+            row.setId(null);
+            guidanceRowRepository.save(row);
+            return row;
+        };
+    }
 }

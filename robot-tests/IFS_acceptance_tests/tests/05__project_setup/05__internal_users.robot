@@ -36,7 +36,7 @@ Other internal users cannot see Bank details or Finance checks
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5144
     [Tags]
-    [Setup]    log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
@@ -66,7 +66,7 @@ Comp Admin user can see the internal project summary page
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
     [Tags]
-    [Setup]  Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     Then the user should see the element    link=Killer Riffs
     When the user clicks the button/link    link=Killer Riffs

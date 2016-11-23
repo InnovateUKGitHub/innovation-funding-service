@@ -47,7 +47,7 @@
 
         <li class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-large">0</span><br /><small>Applications removed</small>
+            <span class="heading-large">0</span><br /><small>Ineligible applications</small>
           </div>
         </li>
 
@@ -70,7 +70,7 @@
         </li>
 
         <li class="column-quarter dashboard-actions">
-          <a class="button" href="#">Applications removed</a>
+          <a class="button" th:href="${(param.comp != null ? '/prototypes/5698-removed-applications?comp=' + param.comp[0] : '/prototypes/5698-removed-applications?comp=Open')}">Ineligible applications</a>
         </li>
 
       </ul>
