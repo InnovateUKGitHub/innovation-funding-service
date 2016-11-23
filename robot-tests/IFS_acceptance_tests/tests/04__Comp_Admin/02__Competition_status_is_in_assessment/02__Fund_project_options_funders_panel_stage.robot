@@ -124,10 +124,10 @@ The option to notify applicants is enabled
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
 the successful application shows in the project setup section
-    Element Should Contain    css=section.projects-in-setup    Cheese is good
+    Element Should Contain    css=section.projects-in-setup    Connected batteries step change - battery management in the off-grid energy sector
 
 the successful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Cheese is good
+    Element Should Contain    css=section.previous-applications    Connected batteries step change - battery management in the off-grid energy sector
 
 the unsuccessful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Cheese is great
+    Element Should Contain    css=section.previous-applications    Wireless remote collection of data from multiple in-field sensors
