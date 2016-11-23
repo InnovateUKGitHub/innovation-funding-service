@@ -23,7 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Juggling Craziness
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     and The user clicks the button/link    link=Juggling is very fun
     and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
@@ -350,7 +350,7 @@ the total scores should be correct
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
 
 The user accepts the juggling is word that sound funny application
-    The user clicks the button/link    link=Juggling Craziness
+    The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
     The user should see the text in the page    Accept application
     The user clicks the button/link    jQuery=button:contains("Accept")

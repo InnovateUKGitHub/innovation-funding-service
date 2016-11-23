@@ -15,7 +15,7 @@
     </form>
     <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'live'}, counts=${counts})" th:remove="tag" />
 
-    <section th:with="openComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).OPEN)}">
+    <section th:with="openComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).OPEN)}">
         <h2 class="heading-medium"
             th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
         <ul class="list-overview">
@@ -30,7 +30,7 @@
         </ul>
     </section>
 
-    <section th:with="closedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).CLOSED)}">
+    <section th:with="closedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).CLOSED)}">
         <h2 class="heading-medium"
             th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
         <ul class="list-overview">
@@ -45,7 +45,7 @@
         </ul>
     </section>
 
-    <section th:with="inAssesmentComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).IN_ASSESSMENT)}">
+    <section th:with="inAssesmentComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
         <h2 class="heading-medium"
             th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
         <ul class="list-overview">
@@ -61,7 +61,7 @@
     </section>
 
 
-    <section th:with="panelComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).FUNDERS_PANEL)}">
+    <section th:with="panelComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
         <h2 class="heading-medium"
             th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
         <ul class="list-overview">
@@ -77,7 +77,7 @@
     </section>
 
 
-    <section th:with="informComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).ASSESSOR_FEEDBACK)}">
+    <section th:with="informComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)}">
         <h2 class="heading-medium"
             th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
         <ul class="list-overview">

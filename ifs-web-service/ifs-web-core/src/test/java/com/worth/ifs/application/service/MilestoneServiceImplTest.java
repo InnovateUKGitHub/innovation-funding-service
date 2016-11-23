@@ -5,7 +5,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competition.service.MilestoneRestService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 

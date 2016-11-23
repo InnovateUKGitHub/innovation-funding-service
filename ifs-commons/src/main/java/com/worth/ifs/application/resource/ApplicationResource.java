@@ -2,7 +2,7 @@ package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.*;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -24,9 +24,9 @@ public class ApplicationResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
-    private static final List<CompetitionResource.Status> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
-    private static final List<CompetitionResource.Status> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
-    private static final List<CompetitionResource.Status> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
+    private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
+    private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
+    private static final List<CompetitionStatus> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
     private static final List<Long> SUBMITTED_APPLICATION_STATES =
             simpleMap(asList(ApplicationStatusConstants.SUBMITTED, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED), ApplicationStatusConstants::getId);
 
@@ -43,7 +43,7 @@ public class ApplicationResource {
     private Long competition;
     private String competitionName;
     private Long assessorFeedbackFileEntry;
-    private CompetitionResource.Status competitionStatus;
+    private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
     private Boolean resubmission;
@@ -209,11 +209,11 @@ public class ApplicationResource {
         this.submittedDate = submittedDate;
     }
 
-    public CompetitionResource.Status getCompetitionStatus() {
+    public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
 
-    public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
     }
 

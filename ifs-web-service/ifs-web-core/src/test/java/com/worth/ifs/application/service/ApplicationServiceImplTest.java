@@ -5,6 +5,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import org.junit.Assert;
@@ -54,10 +55,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         userId = 1L;
 
-        openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
-        inAssessmentCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
-        fundersPanelCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.FUNDERS_PANEL).build();
-        closedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.ASSESSOR_FEEDBACK).build();
+        openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        inAssessmentCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
+        fundersPanelCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).build();
+        closedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).build();
 
         List<ApplicationResource> applications = newApplicationResource()
         		.withId(1L, 2L, 3L, 4L, 5L, 6L)
