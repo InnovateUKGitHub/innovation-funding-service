@@ -357,16 +357,16 @@ Partners can see the Spend Profile section completed
     [Tags]
     Given Log in as a different user       worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       jessica.doe@ludlow.co.uk    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
