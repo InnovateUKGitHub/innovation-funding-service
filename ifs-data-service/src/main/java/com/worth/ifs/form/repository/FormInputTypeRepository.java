@@ -1,6 +1,6 @@
 package com.worth.ifs.form.repository;
 
-import com.worth.ifs.form.domain.*;
+import com.worth.ifs.form.domain.FormInputType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

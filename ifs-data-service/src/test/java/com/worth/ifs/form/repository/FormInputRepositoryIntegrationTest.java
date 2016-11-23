@@ -10,6 +10,8 @@ import java.util.List;
 
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
@@ -17,6 +19,8 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
  * Repository Integration tests for Form Inputs.
  */
 public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FormInputRepository> {
+
+    private static final Long INACTIVE_FORM_INPUT_ID = 200L;
 
     @Autowired
     private FormInputRepository repository;
@@ -26,6 +30,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     protected void setRepository(FormInputRepository repository) {
         this.repository = repository;
     }
+
 
     @Test
     public void test_findOne() {
@@ -54,6 +59,10 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
         assertEquals(Long.valueOf(186), last.getId());
+
+        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        assertThat(inactive, notNullValue());
+        assertThat(competitionInputs.contains(inactive), is(false));
     }
 
     @Test
@@ -72,6 +81,10 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
         assertEquals(Long.valueOf(18), last.getId());
+
+        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        assertThat(inactive, notNullValue());
+        assertThat(competitionInputs.contains(inactive), is(false));
     }
 
     @Test
@@ -87,6 +100,10 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(1), questionInputs.get(0).getId());
         assertEquals(Long.valueOf(168), questionInputs.get(1).getId());
         assertEquals(Long.valueOf(169), questionInputs.get(2).getId());
+
+        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        assertThat(inactive, notNullValue());
+        assertThat(questionInputs.contains(inactive), is(false));
     }
 
     @Test
@@ -100,6 +117,10 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         List<FormInput> questionInputs = repository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(1L, APPLICATION);
         FormInput first = questionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
+
+        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        assertThat(inactive, notNullValue());
+        assertThat(questionInputs.contains(inactive), is(false));
     }
 
     @Test

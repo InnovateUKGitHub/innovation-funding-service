@@ -60,12 +60,15 @@
                     </th:block>
                 </th:block>
 
-                <!-- TODO INFUND 6282 Replace this with is active check, if column is null then don't display toggle for form_input -->
                 <th:block th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                    <dt class="column-third">Research category question</dt>
-                    <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
-                    <dt class="column-third">Scope 'Y/N' question</dt>
-                    <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                    <th:block th:if="${question.researchCategoryQuestion != null}">
+                        <dt class="column-third">Research category question</dt>
+                        <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                    </th:block>
+                    <th:block th:if="${question.scope != null}">
+                        <dt class="column-third">Scope 'Y/N' question</dt>
+                        <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                    </th:block>
                 </th:block>
             </dl>
         </fieldset>

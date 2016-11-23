@@ -1,16 +1,19 @@
 package com.worth.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
-import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.repository.*;
-import com.worth.ifs.assessment.resource.*;
-import com.worth.ifs.commons.service.*;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.form.domain.*;
-import com.worth.ifs.form.mapper.*;
-import com.worth.ifs.form.repository.*;
-import com.worth.ifs.form.resource.*;
-import com.worth.ifs.transactional.*;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.assessment.resource.AssessorFormInputType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.ApplicantFormInputType;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.mapper.GuidanceRowMapper;
+import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.form.repository.FormInputTypeRepository;
+import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,9 +98,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setScored(formInput.getActive());
         } else if (AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setScope(true);
+            setupResource.setScope(formInput.getActive());
         } else if (AssessorFormInputType.RESEARCH_CATEGORY.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setResearchCategoryQuestion(true);
+            setupResource.setResearchCategoryQuestion(formInput.getActive());
         }
     }
 

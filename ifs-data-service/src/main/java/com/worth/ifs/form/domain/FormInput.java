@@ -1,8 +1,8 @@
 package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
 
@@ -70,7 +70,7 @@ public class FormInput {
     @OneToMany(mappedBy = "formInput")
     private List<GuidanceRow> guidanceRows;
 
-    private Boolean active;
+    private boolean active = true;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -207,11 +207,11 @@ public class FormInput {
         this.guidanceRows = guidanceRows;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }
