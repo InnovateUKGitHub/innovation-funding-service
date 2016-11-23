@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
@@ -162,8 +163,8 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                         Model model) {
-        String detailsPage = getDetailsPage(model, competitionId, false);
-        return detailsPage;
+
+        return getDetailsPage(model, competitionId, false);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
@@ -190,9 +191,17 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
+        CompetitionResource competition = competitionService.getById(competitionId);
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition,
                 CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.empty());
 
+        ApplicationDetailsForm competitionSetupForm = (ApplicationDetailsForm) competitionSetupService.getSubsectionFormData(
+                competition,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSubsection.APPLICATION_DETAILS,
+                null);
+
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
         model.addAttribute("editable", isEditable);
         return "competition/application-details";
     }
@@ -210,7 +219,7 @@ public class CompetitionSetupApplicationController {
                         CompetitionSetupSubsection.QUESTIONS,
                         Optional.of(questionId));
 
-        model.addAttribute("competitionName", competition.getName());
+        model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
     }
 }

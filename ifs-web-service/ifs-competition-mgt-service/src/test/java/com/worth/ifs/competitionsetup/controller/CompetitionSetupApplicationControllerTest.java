@@ -2,10 +2,8 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionStatus;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.junit.Before;
@@ -176,13 +174,21 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void testViewCompetitionApplicationDetails() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        ApplicationDetailsForm form = new ApplicationDetailsForm();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.getSubsectionFormData(
+                competition,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSubsection.APPLICATION_DETAILS,
+                null)
+                ).thenReturn(form);
 
         mockMvc.perform(get(URL_PREFIX + "/detail"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/application-details"))
-                .andExpect(model().attribute("editable", false));
+                .andExpect(model().attribute("editable", false))
+                .andExpect(model().attribute("competitionSetupForm", form));
 
         verify(competitionService, never()).update(competition);
     }

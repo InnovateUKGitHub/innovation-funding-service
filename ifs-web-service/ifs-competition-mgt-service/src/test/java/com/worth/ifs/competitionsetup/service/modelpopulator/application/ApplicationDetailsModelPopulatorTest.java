@@ -4,7 +4,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -40,19 +39,16 @@ public class ApplicationDetailsModelPopulatorTest {
 	@Test
 	public void testPopulateModel() {
 
-		boolean useResubmissionQuestion = false;
-
 		Model model = new ExtendedModelMap();
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
 				.withId(8L)
-				.withUseResubmissionQuestion(useResubmissionQuestion)
 				.build();
 
 		populator.populateModel(model, competitionResource, Optional.empty());
 		assertEquals(2, model.asMap().size());
+		assertEquals("name", model.asMap().get("competitionName"));
 		assertEquals(8L, model.asMap().get("competitionId"));
-		assertEquals(useResubmissionQuestion, ((ApplicationDetailsForm)model.asMap().get("competitionSetupForm")).isUseResubmissionQuestion());
 	}
 }
