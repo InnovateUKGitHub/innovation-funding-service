@@ -135,6 +135,17 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Given 2 Lists, this method will iterate through both lists, presenting the consumer with the equivalent elements
+     * in from each list at index 0, 1, 2 etc
+     *
+     * @param consumer
+     * @param <T>
+     */
+    public static <T, S> void zip(List<T> list1, List<S> list2, BiConsumer<T, S> consumer) {
+        forEachWithIndex(list1, (i, item1) -> consumer.accept(item1, list2.get(i)));
+    }
+
+    /**
      * Provides a forEach method as per the default List.forEach() method, but with the addition of having an index
      * provided as well and the ability to return values
      *

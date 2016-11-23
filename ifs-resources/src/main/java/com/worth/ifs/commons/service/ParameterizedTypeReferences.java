@@ -10,10 +10,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.FinanceRowResource;
@@ -197,6 +194,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
         return new ParameterizedTypeReference<List<EthnicityResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessorCountOptionResource>> assessorCountOptionResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorCountOptionResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {

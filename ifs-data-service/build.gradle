@@ -1,4 +1,3 @@
-
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
