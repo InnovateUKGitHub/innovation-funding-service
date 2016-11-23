@@ -10,6 +10,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
 ...
 ...               INFUND-6040 As an assessor I want to see applications sorted by status in my competition dashboard so that I can clearly see applications that are pending, open and assessed
+...
+...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -37,6 +39,8 @@ Details of the competition are visible
 
 Applications should show with the correct order
     [Documentation]    INFUND-6040
+    ...
+    ...    INFUND-3724
     Then the order of the applications should be correct according to the status
 
 Accept an application for assessment
