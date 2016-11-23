@@ -36,10 +36,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedValues;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedValues;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -262,12 +262,12 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("false")))
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"This field cannot contain more than 5000 characters\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
     }
 
@@ -284,12 +284,12 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("false")))
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Maximum word count exceeded. Please reduce your word count to 100.\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
     }
 

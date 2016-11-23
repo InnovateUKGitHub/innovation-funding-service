@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;

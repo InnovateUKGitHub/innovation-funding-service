@@ -18,10 +18,10 @@ Assessment overview should show the expected questions
     ...
     ...    INFUND-1188
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     when the user clicks the button/link    link=Juggling is fun
-    Then The user should be redirected to the correct page    /assessment/11
-    And the user should see four sections
+    Then The user should be redirected to the correct page    /assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
+    And the user should see three sections
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
@@ -48,10 +48,10 @@ Assessor should not be able to access the rejected application
     Then The user should see permissions error message
 
 *** Keywords ***
-the user should see four sections
-    the user should see the element    css=#section-16 .bold-medium
-    the user should see the element    css=#section-71 .heading-medium
-    the user should see the element    css=#section-17 .heading-medium
+the user should see three sections
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION} .bold-medium
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION} .heading-medium
+    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION} .heading-medium
 
 the user fills in rejection details
     And the user should see the element    id=rejectReason

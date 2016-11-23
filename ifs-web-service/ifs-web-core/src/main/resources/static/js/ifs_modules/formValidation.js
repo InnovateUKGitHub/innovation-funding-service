@@ -66,6 +66,10 @@ IFS.core.formValidation = (function() {
           future : "Please enter a future date"
         }
       },
+      pattern : {
+        fields : '[pattern]',
+        messageInvalid : "Please correct this field"
+      },
       tel : {
         fields : '[type="tel"]',
         messageInvalid : "Please enter a valid phone number"
@@ -90,18 +94,19 @@ IFS.core.formValidation = (function() {
             IFS.core.formValidation.checkEqualPasswords(true);
         }
       });
-      jQuery('body').on('change', s.passwordPolicy.fields.password, function() {IFS.core.formValidation.checkPasswordPolicy(jQuery(this), true);});
-      jQuery('body').on('change', s.email.fields , function() {IFS.core.formValidation.checkEmail(jQuery(this), true);});
-      jQuery('body').on('change', s.number.fields , function() {IFS.core.formValidation.checkNumber(jQuery(this), true);});
-      jQuery('body').on('change', s.min.fields , function() {IFS.core.formValidation.checkMin(jQuery(this), true);});
-      jQuery('body').on('change', s.max.fields , function() {IFS.core.formValidation.checkMax(jQuery(this), true);});
-      jQuery('body').on('blur change', s.required.fields, function() { IFS.core.formValidation.checkRequired(jQuery(this), true); });
-      jQuery('body').on('change', s.minlength.fields, function() { IFS.core.formValidation.checkMinLength(jQuery(this), true); });
-      jQuery('body').on('change', s.maxlength.fields, function() { IFS.core.formValidation.checkMaxLength(jQuery(this), true); });
-      jQuery('body').on('change', s.minwordslength.fields, function() { IFS.core.formValidation.checkMinWordsLength(jQuery(this), true); });
-      jQuery('body').on('change', s.maxwordslength.fields, function() { IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true); });
-      jQuery('body').on('change', s.tel.fields, function() { IFS.core.formValidation.checkTel(jQuery(this), true); });
-      jQuery('body').on('change', s.date.fields, function() {  IFS.core.formValidation.checkDate(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.passwordPolicy.fields.password, function() {IFS.core.formValidation.checkPasswordPolicy(jQuery(this), true);});
+      jQuery('body').on('change ifsValidate', s.email.fields , function() {IFS.core.formValidation.checkEmail(jQuery(this), true);});
+      jQuery('body').on('change ifsValidate', s.number.fields , function() {IFS.core.formValidation.checkNumber(jQuery(this), true);});
+      jQuery('body').on('change ifsValidate', s.min.fields , function() {IFS.core.formValidation.checkMin(jQuery(this), true);});
+      jQuery('body').on('change ifsValidate', s.max.fields , function() {IFS.core.formValidation.checkMax(jQuery(this), true);});
+      jQuery('body').on('blur change ifsValidate', s.required.fields, function() { IFS.core.formValidation.checkRequired(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.minlength.fields, function() { IFS.core.formValidation.checkMinLength(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.maxlength.fields, function() { IFS.core.formValidation.checkMaxLength(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.minwordslength.fields, function() { IFS.core.formValidation.checkMinWordsLength(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function() { IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.tel.fields, function() { IFS.core.formValidation.checkTel(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.date.fields, function() {  IFS.core.formValidation.checkDate(jQuery(this), true); });
+      jQuery('body').on('change ifsValidate', s.pattern.fields, function() {  IFS.core.formValidation.checkPattern(jQuery(this), true); });
 
       //set data attribute on date fields
       //which has the combined value of the dates
@@ -498,6 +503,32 @@ IFS.core.formValidation = (function() {
         return false;
       }
     },
+    checkPattern : function(field, showMessage) {
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'pattern');
+      if(s.html5validationMode){
+        var domField = field[0];
+        if(domField.validity.patternMismatch){
+          if(showMessage){ IFS.core.formValidation.setInvalid(field, errorMessage); }
+          return false;
+        }
+        else {
+          if(showMessage){ IFS.core.formValidation.setValid(field, errorMessage); }
+          return true;
+        }
+      }
+      else {
+        var regex = field.attr('pattern');
+        var regexObj = new RegExp(regex);
+        if(!regexObj.test(field.val())){
+          if(showMessage){ IFS.core.formValidation.setInvalid(field, errorMessage); }
+          return false;
+        }
+        else {
+          if(showMessage){ IFS.core.formValidation.setValid(field, errorMessage); }
+          return true;
+        }
+      }
+    },
     getErrorMessage : function(field, type) {
       //first look if there is a custom message defined on the element
       var errorMessage = field.attr('data-'+type+'-errormessage');
@@ -550,7 +581,7 @@ IFS.core.formValidation = (function() {
         jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
       }
 
-      jQuery('.error-summary').attr('aria-hidden', false);
+      jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false);
       jQuery(window).trigger('updateWysiwygPosition');
     },
     setValid : function(field, message) {
@@ -586,7 +617,7 @@ IFS.core.formValidation = (function() {
         errorSummary.find('li:not([data-errorfield]):contains("'+message+'")').first().remove();
       }
       if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
-        jQuery('.error-summary').attr('aria-hidden', 'true');
+        jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true');
       }
       jQuery(window).trigger('updateWysiwygPosition');
     },

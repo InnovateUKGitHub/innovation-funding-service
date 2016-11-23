@@ -7,6 +7,7 @@ import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionView
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
@@ -73,8 +74,11 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(4))
+                .withSubmittedAssessments(1L)
+                .withTotalAssessments(3L)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -94,7 +98,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
                         LocalDateTime.now().plusDays(4).toLocalDate(),
                         3,
                         50
@@ -117,6 +121,9 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(0))
                 .withAssessorDeadlineDate(now().plusDays(6))
+                .withSubmittedAssessments(1L)
+                .withTotalAssessments(3L)
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -136,7 +143,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
                         LocalDateTime.now().plusDays(6).toLocalDate(),
                         5,
                         16
@@ -159,6 +166,50 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .build();
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(false)
+                .withAffliliationsComplete(false)
+                .withContractComplete(true)
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
+                        LocalDateTime.now().plusDays(0).toLocalDate(),
+                        0,
+                        100
+                )
+        );
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+
+        assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+    @Test
+    public void dashboard_fundersPanel() throws Exception {
+        CompetitionParticipantResource participant = newCompetitionParticipantResource()
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(0))
+                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -183,7 +234,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
-
     @Test
     public void dashboard_upcomingAssessments() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
@@ -194,6 +244,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().plusDays(1))
                 .withAssessorDeadlineDate(now().plusDays(7))
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -227,7 +278,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void dashboard_pastAssessments() throws Exception {
+    public void dashboard_pastAssessmentInAssessment() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ParticipantStatusResource.ACCEPTED)
@@ -236,6 +287,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .withAssessorDeadlineDate(now().minusDays(0))
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -254,9 +306,16 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
+                        LocalDateTime.now().plusDays(0).toLocalDate(),
+                        0,
+                        100
+                )
+        );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
-        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }

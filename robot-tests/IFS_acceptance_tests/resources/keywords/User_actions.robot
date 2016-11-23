@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    ../defaultResources.robot
+Resource          ../defaultResources.robot
 
 *** Keywords ***
 The user navigates to the page
@@ -63,10 +63,8 @@ The user is on the page
 the user is on the page or will navigate there
     [Arguments]    ${TARGET_URL}
     ${current_location} =    Get Location
-    ${status}    ${value} =     Run Keyword And Ignore Error     Location Should Contain    ${TARGET_URL}
-
+    ${status}    ${value} =    Run Keyword And Ignore Error    Location Should Contain    ${TARGET_URL}
     Run keyword if    '${status}' == 'FAIL'    The user navigates to the assessor page    ${TARGET_URL}
-
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
@@ -271,7 +269,7 @@ The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    wait until keyword succeeds  30s    30s    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    wait until keyword succeeds    30s    30s    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Wait for autosave
 
@@ -302,7 +300,7 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    wait until keyword succeeds  30s    30s     click element    ${BUTTON}
+    wait until keyword succeeds    30s    30s    click element    ${BUTTON}
 
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
@@ -338,7 +336,6 @@ The user should see an error
 The user should see a field error
     [Arguments]    ${ERROR_TEXT}
     wait until page contains element    jQuery=.error-message:contains('${ERROR_TEXT}')    5s
-
 
 The user should see a summary error
     [Arguments]    ${ERROR_TEXT}
@@ -422,6 +419,7 @@ the user downloads the file from the link
 Download should be done
     [Documentation]    Verifies that the directory has only one folder
     ...    Returns path to the file
+    #TODO Pednging due to INFUND-6187
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
     Length Should Be    ${files}    1    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
@@ -600,10 +598,23 @@ The user enters multiple strings into a text field
     Wait Until Element Is Visible    ${field}
     wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
 
-
 the user should see that the element is disabled
     [Arguments]    ${element}
     the user should not see an error in the page
     wait until element is visible    ${element}
     element should be disabled    ${element}
 
+The user fills the empty question fields
+    The user enters text to a text field    id=question.title    Test title
+    The user enters text to a text field    id=question.subTitle    Subtitle test
+    The user enters text to a text field    id=question.guidanceTitle    Test guidance title
+    The user enters text to a text field    css=.editor    Guidance text test
+    The user enters text to a text field    id=question.maxWords    150
+
+The user checks the question fields
+    The user should see the text in the page    Test title
+    The user should see the text in the page    Subtitle test
+    The user should see the text in the page    Test guidance title
+    The user should see the text in the page    Guidance text test
+    The user should see the text in the page    150
+    The user should see the text in the page    No

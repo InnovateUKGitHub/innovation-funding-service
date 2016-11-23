@@ -54,9 +54,11 @@
         <fieldset>
             <legend class="visuallyhidden">Are you available to assess this competition?</legend>
             <h2 class="heading-medium">Are you available to assess this competition?</h2>
+
+            <p>If you are available you will be taken through the account creation process.</p>
             <!--<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/1360-assessor-invite-start?version=v2': '/prototypes/1360-assessor-invite-start')}" class="button large" name="accept" value="accepted" type="submit">Accept</a>-->
 
-            <a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/1360-assessor-invite-start?version=v2': '/prototypes/1360-assessor-invite-start?version=v3')}" class="button large" name="accept" value="accepted" type="submit">Yes</a>
+            <a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/1360-assessor-invite-start?version=v2': '/prototypes/1176-assessor-create-acc?version=v3')}" class="button large" name="accept" value="accepted" type="submit">Yes, create account</a>
             <a th:unless="${(param.version != null)}" href="/prototypes/1360-assessor-invite-start" class="button large" name="accept" value="accepted" type="submit">Yes</a>
 
             <a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="modal-reject-assessment">No</a>

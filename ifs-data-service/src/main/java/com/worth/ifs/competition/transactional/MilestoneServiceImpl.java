@@ -78,6 +78,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
+        // TODO INFUND-6256 remove public default constructor for Milestone
         Milestone milestone = new Milestone();
         milestone.setType(type);
         milestone.setCompetition(competition);

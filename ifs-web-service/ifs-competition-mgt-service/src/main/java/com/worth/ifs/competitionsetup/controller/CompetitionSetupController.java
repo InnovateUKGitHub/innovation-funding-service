@@ -13,6 +13,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -181,11 +182,10 @@ public class CompetitionSetupController {
                     Optional.ofNullable(objectId)
                     )
             );
-
-            return this.createJsonObjectNode(errors.isEmpty(), errors);
+            return this.createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false, errors);
+            return this.createJsonObjectNode(false);
         }
     }
 
@@ -210,10 +210,10 @@ public class CompetitionSetupController {
         try {
             errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
 
-            return this.createJsonObjectNode(errors.isEmpty(), errors);
+            return this.createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false, errors);
+            return this.createJsonObjectNode(false);
         }
     }
 
@@ -300,6 +300,16 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
 
+
+    @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
+    public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
+    }
+
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
     public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
@@ -374,17 +384,10 @@ public class CompetitionSetupController {
 
         return node;
     }
-
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
 
         return node;
     }

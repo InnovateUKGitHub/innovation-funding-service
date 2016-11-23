@@ -136,9 +136,10 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isLeadPartnerOrganisation(organisation) && projectSetupProgressChecker.isSpendProfilesApproved(organisation) && projectSetupProgressChecker.isOtherDocumentsApproved(organisation)) {
+        if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()) {
             return ACCESSIBLE;
         }
+
         return NOT_ACCESSIBLE;
     }
 
