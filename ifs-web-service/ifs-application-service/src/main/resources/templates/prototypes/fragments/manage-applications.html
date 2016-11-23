@@ -153,7 +153,7 @@
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
                         <td class="alignright">
-                            <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
+                            <a th:href="${'/prototypes/5386-assign-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}" class="button-secondary">Assign</a>
                         </td>
                     </th:block>
 
