@@ -31,4 +31,8 @@
     background: $button-colour;
     color: white;
   }
+
+  &.no-margin {
+    margin: 0;
+  }
 }

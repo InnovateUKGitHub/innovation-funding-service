@@ -409,7 +409,7 @@
             <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
             <form th:action="${#httpServletRequest.requestURI}">
                 <fieldset>
-                    <legend>Enter the new assessor's details below to add them to your invite list</legend>
+                    <legend>Enter the new assessor's details below to add them to your invite list.</legend>
                 </fieldset>
 
                 <div class="table-overflow">
@@ -424,29 +424,25 @@
                         <tbody>
                             <tr>
                                 <td class="cell-align-top width-40-percent">
-                                    <div class="form-group">
-                                        <select class="form-control width-full" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
-                                            <option selected="selected">Please select an innovation sector</option>
-                                            <option value="Emerging and Enabling Technologies">Emerging and Enabling Technologies</option>
-                                            <option value="Health and Life Sciences">Health and Life Sciences</option>
-                                            <option value="Infrastructure Systems">Infrastructure Systems</option>
-                                            <option value="Manufacturing and Materials">Manufacturing and Materials</option>
-                                        </select>
-                                    </div>
+                                    <select class="form-control width-full" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
+                                        <option selected="selected">Please select an innovation sector</option>
+                                        <option value="Emerging and Enabling Technologies">Emerging and Enabling Technologies</option>
+                                        <option value="Health and Life Sciences">Health and Life Sciences</option>
+                                        <option value="Infrastructure Systems">Infrastructure Systems</option>
+                                        <option value="Manufacturing and Materials">Manufacturing and Materials</option>
+                                    </select>
                                 </td>
                                 <td class="cell-align-top width-40-percent">
-                                    <div class="form-group">
-                                        <select class="form-control width-full" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
-                                            <option selected="selected">Please select an innovation area</option>
-                                            <option value="Advanced Therapies">Advanced Therapies</option>
-                                            <option value="Precision Medicine">Precision Medicine</option>
-                                            <option value="Medicines Technology">Medicines Technology</option>
-                                            <option value="Bioscience">Bioscience</option>
-                                            <option value="Agri Productivity">Agri Productivity</option>
-                                            <option value="Enhanced Food Quality">Enhanced Food Quality</option>
-                                        </select>
-                                        <div>The innovation area you select will be for all assessors you add until you click the 'Add assessor(s) to list' button</div>
-                                    </div>
+                                    <select class="form-control width-full" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
+                                        <option selected="selected">Please select an innovation area</option>
+                                        <option value="Advanced Therapies">Advanced Therapies</option>
+                                        <option value="Precision Medicine">Precision Medicine</option>
+                                        <option value="Medicines Technology">Medicines Technology</option>
+                                        <option value="Bioscience">Bioscience</option>
+                                        <option value="Agri Productivity">Agri Productivity</option>
+                                        <option value="Enhanced Food Quality">Enhanced Food Quality</option>
+                                    </select>
+                                    <div>The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</div>
                                 </td>
                                 <td class="width-20-percent"></td>
                             </tr>
@@ -463,14 +459,10 @@
                         <tbody>
                             <tr>
                                 <td class="width-40-percent">
-                                    <div class="form-group">
-                                        <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
-                                    </div>
+                                    <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                 </td>
                                 <td class="width-40-percent">
-                                    <div class="form-group">
-                                        <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
-                                    </div>
+                                    <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                 </td>
                                 <td class="width-20-percent">
 
@@ -478,14 +470,10 @@
                             </tr>
                             <tr id="prototype-assessor-row-two">
                                 <td class="width-40-percent">
-                                    <div class="form-group">
-                                        <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
-                                    </div>
+                                    <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                 </td>
                                 <td class="width-40-percent">
-                                    <div class="form-group">
-                                        <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
-                                    </div>
+                                    <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                 </td>
                                 <td class="alignright width-20-percent">
                                     <a href="#" id="prototype-remove-two">Remove</a>
@@ -493,7 +481,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="alignright extra-margin extra-margin-right">
+                    <div class="alignright">
                         <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
                     </div>
                 </div>
@@ -501,7 +489,7 @@
                 <div class="alignright extra-margin-top">
                     <input type="hidden" name="status" value="invite-new" />
                     <input type="hidden" name="tab" value="invite" />
-                    <a class="button" id="prototype-add-assessors">Add assessor(s) to list</a>
+                    <a class="button no-margin " id="prototype-add-assessors">Add assessor(s) to list</a>
                 </div>
             </form>
         </details>
