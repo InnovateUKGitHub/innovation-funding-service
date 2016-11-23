@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.junit.Assert.assertEquals;
 
 /**
