@@ -16,7 +16,7 @@ Project Finance can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903
     [Tags]  HappyPath
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link=Killer Riffs
+    And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
     When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
