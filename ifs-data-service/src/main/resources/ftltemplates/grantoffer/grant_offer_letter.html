@@ -9,3 +9,24 @@
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
   <@layout.senderHTML />
 </@layout.default>
+<#import "include/css.html" as css> </#import>
+<#import "include/pages.html" as pages> </#import>
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grant Offer Letter</title>
+  <@css />
+</head>
+<body>
+  <section class="page">
+      <@pages.page1 />
+  </section>
+  <section class="page landscape">
+      <@pages.page2 />
+  </section>
+  <section class="page">
+      <@pages.page3 />
+  </section>
+</body>
+</html>
