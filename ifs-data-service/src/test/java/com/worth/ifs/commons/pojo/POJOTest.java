@@ -27,10 +27,7 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionFunderResource;
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competition.resource.GuidanceRowResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
@@ -142,6 +139,7 @@ public class POJOTest {
             ProfileSkillsResource.class,
             UserProfileResource.class,
             UserProfileStatusResource.class,
+            AssessorCountOptionResource.class,
             CompetitionSetupQuestionResource.class,
             GuidanceRowResource.class
     );

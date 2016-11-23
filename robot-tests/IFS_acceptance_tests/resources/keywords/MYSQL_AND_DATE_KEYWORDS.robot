@@ -12,7 +12,7 @@ Resource          User_actions.robot
 the assessment start period changes in the db in the past
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'ASSESSOR_ACCEPTS';
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
 the calculation of the remaining days should be correct
@@ -31,7 +31,7 @@ the total calculation in dashboard should be correct
     ${NO_OF_COMP_OR_APPL}=    Get Matching Xpath Count    ${Section_Xpath}
     Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
 
-The assessment deadline for the Juggling Craziness changes to the past
+The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
@@ -61,8 +61,8 @@ get yesterday
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
 
-Change the open date of the Sarcasm Stupendousness in the database to one day before
+Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
     ${yesterday} =    get yesterday
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
     And the user reloads the page
-    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+    Then element should not contain    jQuery=section:nth-child(4)    ${READY_TO_OPEN_COMPETITION_NAME}

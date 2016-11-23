@@ -1,6 +1,6 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class CompetitionSummaryResource {
     private Long competitionId;
 	private String competitionName;
-	private CompetitionResource.Status competitionStatus;
+	private CompetitionStatus competitionStatus;
 	private LocalDateTime applicationDeadline;
 	private Long totalNumberOfApplications;
 	private Long applicationsStarted;
@@ -93,11 +93,11 @@ public class CompetitionSummaryResource {
 		this.applicationsNotSubmitted = applicationsNotSubmitted;
 	}
 
-	public CompetitionResource.Status getCompetitionStatus() {
+	public CompetitionStatus getCompetitionStatus() {
 		return competitionStatus;
 	}
 
-	public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
+	public void setCompetitionStatus(CompetitionStatus competitionStatus) {
 		this.competitionStatus = competitionStatus;
 	}
 	

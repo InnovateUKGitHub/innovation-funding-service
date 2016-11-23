@@ -5,6 +5,9 @@ import com.worth.ifs.form.resource.FormInputResource;
 
 import java.util.List;
 
+import static com.worth.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static com.worth.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+
 /**
  * Utility class to keep common re-usable methods
  */
@@ -23,8 +26,8 @@ public class CompetitionUtils {
 
     public static boolean isSendToDashboard(CompetitionResource competition) {
         return competition == null ||
-                (!CompetitionResource.Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
-                        !CompetitionResource.Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
+                (!COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
+                        !READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
 
     public static boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
