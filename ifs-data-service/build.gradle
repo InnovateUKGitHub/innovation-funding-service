@@ -2,12 +2,7 @@ if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "docker-build.gradle"
-
 }
-
-def targetBuild = hasProperty('profile') ? profile : 'dev';
-apply from: targetBuild+"-build.gradle";
-
 
 apply plugin: 'war'
 apply plugin: 'base'
@@ -225,7 +220,7 @@ task startMySql(type:Exec) {
 
 task syncShib(type:Exec) {
     workingDir '../setup-files/scripts/docker'
-    commandLine './syncShibMicroservices.sh'
+    commandLine './syncShibServices.sh'
 }
 
 task upgradeShib(type:Exec) {
@@ -249,7 +244,7 @@ task cleanDeploy() {
     dependsOn deployToTomcat
 }
 
-task cleanDeployMicroservices() {
+task cleanDeployServices() {
     buildDocker.mustRunAfter clean
     flywayClean.mustRunAfter buildDocker
     flywayClean.mustRunAfter startMySql

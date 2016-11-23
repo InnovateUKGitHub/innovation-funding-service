@@ -73,7 +73,7 @@ function buildAndDeploy() {
         return
     else
         echo "=> Starting build and deploy script..."
-        ./gradlew cleanDeployMicroservices -x test
+        ./gradlew cleanDeployServices -x test
     fi
 }
 
@@ -95,9 +95,9 @@ function startSeleniumGrid() {
 
     echo "=> Suite count: ${suiteCount}"
 
-    docker-compose -f docker-compose-microservices.yml up -d --force-recreate --build
+    docker-compose -f docker-compose-services.yml up -d --force-recreate --build
     sleep 2
-    docker-compose -f docker-compose-microservices.yml scale chrome=${suiteCount}
+    docker-compose -f docker-compose-services.yml scale chrome=${suiteCount}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]

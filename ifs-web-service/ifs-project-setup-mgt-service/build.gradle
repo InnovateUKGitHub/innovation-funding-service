@@ -74,7 +74,7 @@ task buildDocker( type:Docker, dependsOn: build) {
     }
 }
 
-task cleanDeployMicroservices() {
+task cleanDeployServices() {
     build.mustRunAfter clean
     dependsOn clean
     dependsOn buildDocker
