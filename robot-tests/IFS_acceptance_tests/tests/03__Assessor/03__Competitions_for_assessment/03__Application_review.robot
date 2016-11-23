@@ -19,7 +19,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=Sustainable living models for the future
     And the user clicks the button/link    link=Juggling is not fun
     When the user clicks the button/link    link=Application details
     Then the user should see the text in the page    Application details
@@ -160,6 +160,7 @@ Scope: Status in the overview
 Feedback: word count
     [Documentation]    INFUND-3859
     [Tags]
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given I am on the assessor assessment overview page
     and I open one of the application questions    link=4. Economic benefit
     And I should see word count underneath feedback form    Words remaining: 100
@@ -226,7 +227,7 @@ I should not see validation message above the feedback form text field
     the user should not see the text in the page    ${error_message}
 
 I am on the assessor assessment overview page
-    the user navigates to the page    ${Assessment_overview_10}
+    Given the user clicks the button/link    link=Juggling is not fun
 
 I open one of the application questions
     [Arguments]    ${application_question}

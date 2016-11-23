@@ -19,9 +19,8 @@ Assessment overview should show the expected questions
     ...    INFUND-1188
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    when the user clicks the button/link    link=Juggling is fun
-    Then The user should be redirected to the correct page    /assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
-    And the user should see three sections
+    when the user clicks the button/link    link=Juggling is word that sounds funny to say
+    Then the user should see three sections
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
@@ -39,13 +38,13 @@ Reject application (Unable to assess this application)
     And the user fills in rejection details
     And the user clicks the button/link    jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the element    link=Juggling is very fun
+    And The user should not see the element    link=Juggling is word that sounds funny to say
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${SERVER}/assessment/35
-    Then The user should see the text in the page    Page Not Found
+    When the user navigates to the assessor page    ${SERVER}/assessment/59
+    Then The user should see permissions error message
 
 *** Keywords ***
 the user should see three sections
