@@ -3,10 +3,7 @@ package com.worth.ifs.controller;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.controller.DashboardController;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +51,7 @@ public class DashboardControllerTest {
     @Test
     public void liveDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getLiveCompetitions()).thenReturn(competitions);
@@ -70,7 +67,7 @@ public class DashboardControllerTest {
     @Test
     public void projectSetupDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
@@ -86,7 +83,7 @@ public class DashboardControllerTest {
     @Test
     public void upcomingDashboard() throws Exception {
 
-        Map<CompetitionResource.Status, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
         when(competitionService.getUpcomingCompetitions()).thenReturn(competitions);

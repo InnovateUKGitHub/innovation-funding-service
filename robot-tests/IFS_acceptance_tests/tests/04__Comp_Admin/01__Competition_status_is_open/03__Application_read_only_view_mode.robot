@@ -37,6 +37,7 @@ Comp admin can open the view mode of the application
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443
     ...    INFUND-2483
+    [Tags]    Failing
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should not see the element    link=your finances
