@@ -345,6 +345,8 @@ class CsvUtils {
         LocalDateTime assessorsNotifiedDate;
         LocalDateTime assessorEndDate;
         LocalDateTime assessmentClosedDate;
+        String leadTechnologist;
+        String compExecutive;
         boolean setupComplete;
 
         private CompetitionLine(List<String> line) {
@@ -364,6 +366,8 @@ class CsvUtils {
             assessorAcceptsDate = nullableDateTime(line.get(i++));
             assessorEndDate = nullableDateTime(line.get(i++));
             assessmentClosedDate = nullableDateTime(line.get(i++));
+            leadTechnologist = nullable((line.get(i++)));
+            compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
         }
     }
