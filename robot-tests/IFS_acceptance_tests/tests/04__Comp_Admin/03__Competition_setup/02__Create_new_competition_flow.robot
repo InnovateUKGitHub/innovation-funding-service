@@ -295,7 +295,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user fills the milestones with valid data
     When the user clicks the button/link    jQuery=button:contains(Done)
     Then the weekdays should be correct
