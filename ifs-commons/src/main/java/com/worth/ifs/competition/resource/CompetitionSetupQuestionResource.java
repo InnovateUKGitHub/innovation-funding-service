@@ -10,6 +10,8 @@ import java.util.List;
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
+    private CompetitionSetupQuestionType type;
+
     private String number;
     private String shortTitle;
     @NotBlank
@@ -33,6 +35,10 @@ public class CompetitionSetupQuestionResource {
     private Integer scoreTotal;
     private Boolean writtenFeedback;
     private List<GuidanceRowResource> guidanceRows;
+
+    private Boolean researchCategoryQuestion;
+    private Boolean scope;
+
 
     public Long getQuestionId() {
         return questionId;
@@ -154,6 +160,30 @@ public class CompetitionSetupQuestionResource {
         this.shortTitle = shortTitle;
     }
 
+    public CompetitionSetupQuestionType getType() {
+        return type;
+    }
+
+    public void setType(CompetitionSetupQuestionType type) {
+        this.type = type;
+    }
+
+    public Boolean getResearchCategoryQuestion() {
+        return researchCategoryQuestion;
+    }
+
+    public void setResearchCategoryQuestion(Boolean researchCategoryQuestion) {
+        this.researchCategoryQuestion = researchCategoryQuestion;
+    }
+
+    public Boolean getScope() {
+        return scope;
+    }
+
+    public void setScope(Boolean scope) {
+        this.scope = scope;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,6 +194,7 @@ public class CompetitionSetupQuestionResource {
 
         return new EqualsBuilder()
                 .append(questionId, that.questionId)
+                .append(type, that.type)
                 .append(number, that.number)
                 .append(shortTitle, that.shortTitle)
                 .append(title, that.title)
@@ -178,6 +209,8 @@ public class CompetitionSetupQuestionResource {
                 .append(scoreTotal, that.scoreTotal)
                 .append(writtenFeedback, that.writtenFeedback)
                 .append(guidanceRows, that.guidanceRows)
+                .append(researchCategoryQuestion, that.researchCategoryQuestion)
+                .append(scope, that.scope)
                 .isEquals();
     }
 
@@ -185,6 +218,7 @@ public class CompetitionSetupQuestionResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(questionId)
+                .append(type)
                 .append(number)
                 .append(shortTitle)
                 .append(title)
@@ -199,6 +233,8 @@ public class CompetitionSetupQuestionResource {
                 .append(scoreTotal)
                 .append(writtenFeedback)
                 .append(guidanceRows)
+                .append(researchCategoryQuestion)
+                .append(scope)
                 .toHashCode();
     }
 }
