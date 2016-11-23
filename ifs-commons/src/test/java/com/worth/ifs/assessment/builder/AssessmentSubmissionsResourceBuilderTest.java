@@ -19,10 +19,7 @@ public class AssessmentSubmissionsResourceBuilderTest {
                 .withAssessmentIds(assessmentIds)
                 .build();
 
-        assertEquals(3, resource.getAssessmentIds().size());
-        assertEquals(10L, resource.getAssessmentIds().get(0).longValue());
-        assertEquals(50L, resource.getAssessmentIds().get(1).longValue());
-        assertEquals(100L, resource.getAssessmentIds().get(2).longValue());
+        assertEquals(resource.getAssessmentIds(), assessmentIds);
     }
 
     @Test
