@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.competition.controller.ApplicationManagementController;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -23,8 +23,8 @@ import java.util.Map;
 
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.ASSESSOR_FEEDBACK;
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyLong;
@@ -60,7 +60,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testDisplayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackReadonly() throws Exception {
 
-        asList(CompetitionResource.Status.values()).forEach(status -> {
+        asList(CompetitionStatus.values()).forEach(status -> {
 
             this.setupCompetition();
             this.setupApplicationWithRoles();

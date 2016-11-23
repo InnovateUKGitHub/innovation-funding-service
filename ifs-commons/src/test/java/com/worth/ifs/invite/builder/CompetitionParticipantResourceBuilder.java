@@ -2,6 +2,7 @@ package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.resource.*;
 
 import java.time.LocalDateTime;
@@ -86,6 +87,10 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
 
     public CompetitionParticipantResourceBuilder withTotalAssessments(Long... totalAssessmentCounts) {
         return withArray((totalAssessments, competitionParticipantResource) -> setField("totalAssessments", totalAssessments, competitionParticipantResource), totalAssessmentCounts);
+    }
+
+    public CompetitionParticipantResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatuses) {
+        return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
     @Override

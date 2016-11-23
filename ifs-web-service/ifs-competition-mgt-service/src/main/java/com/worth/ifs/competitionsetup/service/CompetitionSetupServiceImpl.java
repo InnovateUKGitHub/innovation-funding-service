@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
@@ -50,7 +51,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     public void setCompetitionSetupSubsectionFormPopulators(Collection<CompetitionSetupSubsectionFormPopulator> populators) {
         subsectionFormPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
     }
-	
+
 	@Autowired
     public void setCompetitionSetupSectionSavers(Collection<CompetitionSetupSectionSaver> savers) {
         sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
@@ -70,7 +71,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     public void setCompetitionSetupSubsectionModelPopulators(Collection<CompetitionSetupSubsectionModelPopulator> populators) {
         subsectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
     }
-	
+
 	@Override
     public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
                                                           CompetitionSetupSection section) {
@@ -191,7 +192,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
-		if (competitionResource.getCompetitionStatus() != CompetitionResource.Status.COMPETITION_SETUP
+		if (competitionResource.getCompetitionStatus() != CompetitionStatus.COMPETITION_SETUP
 				&& competitionResource.getStartDate().isAfter(LocalDateTime.now())) {
 			return false;
 		}
@@ -205,7 +206,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public void setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
-		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
 			return;
 		}
 

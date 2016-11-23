@@ -18,7 +18,7 @@ Assessment overview should show the expected questions
     ...
     ...    INFUND-1188
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     when the user clicks the button/link    link=Juggling is fun
     Then The user should be redirected to the correct page    /assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
     And the user should see three sections
