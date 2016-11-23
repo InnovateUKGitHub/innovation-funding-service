@@ -107,7 +107,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         }
 
         FormInputType formInputType = formInputTypeService.findByTitle("assessor_research_category").stream().findFirst().orElse(null);
-        if (value != null && formInputType != null && formInputType.getId().equals(formInputResource.getFormInputType())) {
+        if (!StringUtils.isEmpty(value) && formInputType != null && formInputType.getId().equals(formInputResource.getFormInputType())) {
             List<CategoryResource> categoryResources = categoryService.getByType(CategoryType.RESEARCH_CATEGORY).getSuccessObject();
             if (categoryResources.stream().filter(category -> category.getId().equals(Long.parseLong(value))).count() == 0) {
                 return serviceFailure(fieldError("value", value, "com.worth.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value));

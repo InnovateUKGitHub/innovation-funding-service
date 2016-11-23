@@ -232,7 +232,7 @@ the collapsible button should contain
 
 the user adds score and feedback for every question
     The user clicks the button/link    link=Scope
-    The user selects the index from the drop-down menu    0    id=research-category
+    The user selects the index from the drop-down menu    1    id=research-category
     The user clicks the button/link    jQuery=label:contains(Yes)
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")

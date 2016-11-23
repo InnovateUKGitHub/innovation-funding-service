@@ -147,8 +147,8 @@ Scope: on click guidance section should expand and collapse
 
 Scope: Status in the overview
     [Documentation]    INFUND-1483
-    [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=label:contains(Yes)
+    When the user selects the index from the drop-down menu    1    id=research-category
+    And the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page    In scope? Yes
     And the user should see the element    css=.column-third > img    #green flag
