@@ -210,7 +210,7 @@
 
         <div class="grid-row dashboard-actions">
           <div class="column-third">
-            <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/5062-manage-assessors?comp=Open')}" class="button">Invite</a>
+            <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/5062-manage-assessors?comp=Open')}" class="button">Invite assesors</a>
           </div>
           <div class="column-third">
             <a th:href="${(param.status != null ? '/prototypes/5052-manage-assessments?comp=' + param.status[0] : '/prototypes/5052-manage-assessments')}" class="button" th:classappend="${(param.status == null or param.status[0] == 'Open' ? 'disabled' : '')}">Manage assessments</a>
