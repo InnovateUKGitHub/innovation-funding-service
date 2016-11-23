@@ -88,7 +88,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         assessments.forEach(assessment -> {
             foundAssessmentIds.add(assessment.getId());
 
-            if (!assessmentWorkflowHandler.submit(assessment) || assessment.isInState(AssessmentStates.SUBMITTED)) {
+            if (!assessmentWorkflowHandler.submit(assessment) || !assessment.isInState(AssessmentStates.SUBMITTED)) {
                 failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId(), assessment.getTarget().getName()));
             }
         });
