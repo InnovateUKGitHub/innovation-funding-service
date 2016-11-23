@@ -156,7 +156,7 @@ IFS.competitionManagement.setup = (function() {
       jQuery(document).on('click', '#add-guidance-row', function() {
         var count = parseInt(jQuery('#guidance-row-count').val(), 10);
         jQuery(
-          '</hr>' +
+          '<hr/>' +
           '<div class="grid-row guidance-row" id="guidance-row-' + count + '">' +
            '<div class="column-quarter">' +
            '<div class="form-group">' +

@@ -137,12 +137,13 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         createOrDeleteAppendixFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        createOrDeleteScoredFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        createOrDeleteWrittenFeedbackFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
 
         //TODO INFUND-5685 and INFUND-5631 Save assessor form inputs for AssessorFormInputTypes
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
-
 
     private void createOrDeleteAppendixFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.FILE_UPLOAD.getTitle());
@@ -169,6 +170,56 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
+    private void createOrDeleteScoredFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, AssessorFormInputType.SCORE.getTitle());
+
+        if (competitionSetupQuestionResource.getScored()) {
+            if (scoredFormInput == null) {
+                scoredFormInput = new FormInput();
+                scoredFormInput.setScope(FormInputScope.APPLICATION);
+                scoredFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.SCORE.getTitle()));
+                scoredFormInput.setQuestion(question);
+                scoredFormInput.setCompetition(question.getCompetition());
+
+                if (questionFormInput != null) {
+                    scoredFormInput.setPriority(questionFormInput.getPriority() + 1);
+                } else {
+                    scoredFormInput.setPriority(0);
+                }
+                formInputRepository.save(scoredFormInput);
+            }
+        } else if (scoredFormInput != null) {
+            formInputRepository.delete(scoredFormInput);
+        }
+    }
+
+    private void createOrDeleteWrittenFeedbackFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, AssessorFormInputType.FEEDBACK.getTitle());
+
+        if (competitionSetupQuestionResource.getWrittenFeedback()) {
+            if (writtenFeedbackFormInput == null) {
+
+                writtenFeedbackFormInput = new FormInput();
+                writtenFeedbackFormInput.setScope(FormInputScope.APPLICATION);
+                writtenFeedbackFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.FEEDBACK.getTitle()));
+                writtenFeedbackFormInput.setQuestion(question);
+                writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
+                writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+                writtenFeedbackFormInput.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows())));
+                writtenFeedbackFormInput.setCompetition(question.getCompetition());
+                if (questionFormInput != null) {
+                    writtenFeedbackFormInput.setPriority(questionFormInput.getPriority() + 1);
+                } else {
+                    writtenFeedbackFormInput.setPriority(0);
+                }
+                formInputRepository.save(writtenFeedbackFormInput);
+            }
+        } else if (writtenFeedbackFormInput != null) {
+            formInputRepository.delete(writtenFeedbackFormInput);
+        }
+    }
 
     private int wordCountWithDefault(Integer wordCount) {
         if (wordCount != null && wordCount > 0) {

@@ -129,12 +129,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
                 question.getGuidanceRows().remove(index);
                 break;
-            /*
             default:
-                errors = tryUpdateFunders(question, fieldName, value);
-                */
-            default:
-                return makeErrorList();
+                 return tryUpdateGuidanceRow(question, fieldName, value);
         }
 
         return Collections.emptyList();
@@ -152,7 +148,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
     }
 
-    private List<Error> tryUpdateFunders(CompetitionSetupQuestionResource question, String fieldName, String value) {
+    private List<Error> tryUpdateGuidanceRow(CompetitionSetupQuestionResource question, String fieldName, String value) {
         Integer index;
         GuidanceRowResource guidanceRow;
 
@@ -210,17 +206,24 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
     private String modifySubject(CompetitionSetupQuestionResource question, String subject, String value1, String value2) {
         if (question.getType().equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
 
+            // Initialise subject for newly created guidance rows as will be null
+            if (subject == null) {
+                subject = "";
+            }
+
             String[] splitSubject = subject.split(",");
 
-            if (value2.isEmpty()) {
-                return value1 + "," + (splitSubject.length > 0 ? splitSubject[1] : 0);
+            if (value2 == null) {
+                return value1 + "," + (splitSubject.length > 1 ? splitSubject[1] : 0);
             } else {
-                return (splitSubject.length > 0 ? splitSubject[0] : 0) + "," + value2;
+                return (splitSubject.length > 1 ? splitSubject[0] : 0) + "," + value2;
             }
         } else {
             return value1;
         }
     }
+
+
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
