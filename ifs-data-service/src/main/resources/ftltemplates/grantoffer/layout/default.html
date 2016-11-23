@@ -1,0 +1,119 @@
+<#macro default>
+<body style="font-family: sans-serif; padding:0; margin: 0">
+<style>
+    -webkit-text-size-adjust: none;
+
+    @media only screen and (max-width: 480px){
+        table[class="table-header"],
+        table[class="table-content"],
+        table[class="table-footer"]{
+            width: 90% !important;
+        }
+    }
+
+    p{
+        margin: 0 0 1em 0;
+    }
+
+    a{
+        color: #005ea5;
+    }
+
+    h2{
+        font-size: 24px;
+        line-height: 1.2em;
+    }
+
+    h3{
+        font-size: 19px;
+        line-height: 1.2em;
+    }
+
+    .call-out-box{
+        border: 1px solid #bfc1c3;
+        padding: 10px 20px 20px 20px;
+        margin: 1em 0;
+    }
+</style>
+<table style="width: 100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+    <th style="height: 45px; background: #000000" bgcolor="#000000" class="email content">
+        <table style="width: 500px; margin: 0 auto; font-family: arial, sans-serif;" cellpadding="0" cellspacing="0" align="center" class="table-header" bgcolor="#000000">
+            <tr bgcolor="#000000">
+                <th style="width: 30px; padding-left: 10px;" bgcolor="#000000"><img src="https://assets.digital.cabinet-office.gov.uk/static/images/gov.uk_logotype_crown-14b98db97bbd6cb1f33935d3e0d973fa68ca0c38fb5762b033423ceffe9e16f6.png" width="23" height="20" alt="" style="padding-top: 1px" /></th>
+                <th style="height: 45px; width: 370px; text-align: left;" bgcolor="#000000"><a href="https://www.gov.uk/" style="color: white; text-decoration: none; font-size: 18px">GOV.UK</a></th>
+            </tr>
+        </table>
+    </th>
+</table>
+<table style="width: 100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <table style="width: 480px; border-top: 9px solid #005ea5; font-size: 16px; line-height: 1.6em; margin: 0 auto; font-family: arial, sans-serif;" cellpadding="0" cellspacing="0" align="center" class="table-content">
+                <tr>
+                    <td style="border-bottom: 1px solid #bfc1c3; width: 50%">
+                        <#assign sendDate = .now>
+                        ${sendDate?string["dd MMMM yyyy"]}
+                    </td>
+                    <td style="padding: 18px 0; text-align: right; border-bottom: 1px solid #bfc1c3; width: 50%">
+                        <img src="https://assets.digital.cabinet-office.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" width="124" height="24" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 20px 0 40px 0">
+                      <#nested/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<table style="width: 100%" cellpadding="0" cellspacing="0" bgcolor="#dee0e2">
+    <th bgcolor="#dee0e2">
+        <table style="width: 500px; color: #454a4c; margin: 0 auto; font-family: arial, sans-serif;" cellpadding="0" cellspacing="0" align="center" bgcolor="#dee0e2" class="table-footer">
+            <tr>
+                <td style="text-align: left; font-weight: normal; width: 250px; padding: 30px 0 30px 10px;" bgcolor="#dee0e2">
+                    <p style="line-height: 1.4em">
+                        Innovate UK <br />
+                        North Star House <br />
+                        North Star Avenue <br />
+                        Swindon <br />
+                        Wiltshire <br />
+                        SN2 1JF
+                    </p>
+                </td>
+                <td style="text-align: right; width: 250px; padding: 30px 20px 30px 0;" bgcolor="#dee0e2">
+                    <img src="https://assets.digital.cabinet-office.gov.uk/static/images/govuk-crest-2x-c6548884b516041752fc4156a50f084ca387b1e37e4f4668cd109058d924b197.png" alt="" width="125" height="102" />
+                    <p style="font-weight: normal">&#169; Crown copyright</p>
+                </td>
+            </tr>
+        </table>
+    </th>
+</table>
+</body>
+</#macro>
+<#macro senderHTML>
+  <p style="margin: 1em 0 1em 0;">
+    Competitions Team<br/>
+    Innovate UK<br/>
+    Tel: 0300 321 4357<br/>
+    Email: competitions@innovateuk.gov.uk
+  </p>
+</#macro>
+
+<#macro defaultPlainText>
+  <#nested/>
+
+  North Star House
+  North Star Avenue
+  Swindon
+  Wiltshire
+  SN2 1JF
+  © Crown copyright
+</#macro>
+
+<#macro senderPlainText>
+  Competitions Team
+  Innovate UK
+  Tel: 0300 321 4357
+  Email: competitions@innovateuk.gov.uk
+</#macro>

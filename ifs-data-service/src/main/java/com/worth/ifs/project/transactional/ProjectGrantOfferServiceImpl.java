@@ -168,8 +168,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
         return getProject(projectId).
                 andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
-                            andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile))).
-                                    andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                            andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
+                                    fileEntryResource, StringUtils.getBytesUtf8(htmlFile).length).
+                                    andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
@@ -201,9 +202,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return addressLines;
     }
 
-    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier) {
+    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource, long size) {
         ServiceResult<Supplier<InputStream>> pdfSupplier = null;
         try {
+            fileEntryResource.setFilesizeBytes(size);
             pdfSupplier = createPDF("", inputStreamSupplier);
         } catch (IOException e) {
             LOG.error("An IO Exception occured" +e);
