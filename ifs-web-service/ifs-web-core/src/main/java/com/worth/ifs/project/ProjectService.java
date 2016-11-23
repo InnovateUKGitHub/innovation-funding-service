@@ -116,7 +116,7 @@ public interface ProjectService {
 
     ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 
-    ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId);
+    ServiceResult<Void> sendGrantOfferLetter(Long projectId);
 
     ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 

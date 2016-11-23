@@ -139,7 +139,7 @@ public interface ProjectService {
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
-    ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId);
+    ServiceResult<Void> sendGrantOfferLetter(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'SEND_GRANT_OFFER_LETTER')")
     ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);

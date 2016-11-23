@@ -170,7 +170,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSignedGrantOfferLetter() == null) {
-                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+                return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
             return serviceSuccess();

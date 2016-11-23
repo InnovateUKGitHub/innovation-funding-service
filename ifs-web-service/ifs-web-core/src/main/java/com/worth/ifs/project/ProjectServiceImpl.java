@@ -298,8 +298,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId) {
-        return projectRestService.sendGrantOfferLetter(projectId, userId).toServiceResult();
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+        return projectRestService.sendGrantOfferLetter(projectId).toServiceResult();
     }
 
     @Override

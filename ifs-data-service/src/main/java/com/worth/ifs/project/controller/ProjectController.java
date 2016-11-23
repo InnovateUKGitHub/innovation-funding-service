@@ -283,10 +283,9 @@ public class ProjectController {
     public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
         return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
     }
-    @RequestMapping(value = "/{projectId}/grant-offer/send/{userId}", method = POST)
-    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") Long projectId,
-                                                 @PathVariable("userId") Long userId) {
-        return projectService.sendGrantOfferLetter(projectId, userId).toPostResponse();
+    @RequestMapping(value = "/{projectId}/grant-offer/send", method = POST)
+    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") Long projectId) {
+        return projectService.sendGrantOfferLetter(projectId).toPostResponse();
     }
 
     @RequestMapping(value= "/{projectId}/isGrantOfferLetterAlreadySent", method = GET)

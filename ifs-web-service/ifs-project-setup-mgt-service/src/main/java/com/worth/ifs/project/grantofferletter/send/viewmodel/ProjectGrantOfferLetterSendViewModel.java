@@ -71,6 +71,10 @@ public class ProjectGrantOfferLetterSendViewModel {
         return projectName;
     }
 
+    public Boolean getGrantOfferLetterFileContentAvailable() { return grantOfferLetterFileContentAvailable; }
+
+    public Boolean getAdditionalContractFileContentAvailable() { return additionalContractFileContentAvailable; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

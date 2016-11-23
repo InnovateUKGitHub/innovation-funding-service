@@ -73,10 +73,9 @@ public class ProjectGrantOfferLetterSendController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
-        ServiceResult<Void> generateResult = projectService.sendGrantOfferLetter(projectId, loggedInUser.getId());
+        ServiceResult<Void> generateResult = projectService.sendGrantOfferLetter(projectId);
 
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
-                redirectToCompetitionSummaryPage(projectId)
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> {return doViewGrantOfferLetterSend(projectId, model, form);}
         );
     }
 
@@ -88,7 +87,7 @@ public class ProjectGrantOfferLetterSendController {
                                                  Model model,
                                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                                  ValidationHandler validationHandler) {
-        // TODO - DRS set to ready to approve???
+        // TODO - set to ready to approve???
         return redirectToCompetitionSummaryPage(projectId);
     }
 
@@ -115,8 +114,7 @@ public class ProjectGrantOfferLetterSendController {
         MultipartFile file = form.getAnnex();
         ServiceResult<FileEntryResource> generateResult = projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
-                redirectToCompetitionSummaryPage(projectId)
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> { return doViewGrantOfferLetterSend(projectId, model, form);}
         );
     }
 

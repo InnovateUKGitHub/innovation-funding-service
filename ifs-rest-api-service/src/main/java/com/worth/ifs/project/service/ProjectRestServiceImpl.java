@@ -230,8 +230,8 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> sendGrantOfferLetter(Long projectId, Long userId) {
-        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/submit/" + userId, Void.class);
+    public RestResult<Void> sendGrantOfferLetter(Long projectId) {
+        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
     }
 
     @Override

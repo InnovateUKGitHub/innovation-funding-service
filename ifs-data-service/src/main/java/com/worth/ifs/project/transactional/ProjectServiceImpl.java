@@ -177,9 +177,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
 
-    //@Autowired
-    //private GOLWorkflowHandler golWorkflowHandler;
-
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -1068,23 +1065,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId, Long userId) {
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
         if(project == null) {
             return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
         }
-        User user = getUser(userId).getSuccessObject();
-        if(user == null) {
-            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
-        }
         if (project.getGrantOfferLetter() == null) {
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SUBMIT);
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SEND);
         }
-        if (!user.hasRole(UserRoleType.COMP_ADMIN)) {
-            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-        }
-        // TODO do actual send
 
         NotificationSource from = systemNotificationSource;
         User projectManager = getExistingProjectManager(project).get().getUser();
@@ -1094,10 +1083,22 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         notificationArguments.put("dashboardUrl", webBaseUrl);
 
         Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
-        ServiceResult<Void> sendResult = notificationService.sendNotification(notification, EMAIL);
-        //return processAnyFailuresOrSucceed(sendResult).andOnSuccess(() -> golWorkflowHandler.);
+        ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
 
-        return serviceSuccess();
+        /*if(notificationResult.isSuccess() == serviceSuccess().isSuccess() && notificationResult.getSuccessObject() == serviceSuccess().getSuccessObject() &&
+                notificationResult.isFailure() == serviceSuccess().isFailure()) {
+            golWorkflowHandler.grantOfferLetterSent(project);
+        }*/
+        notificationResult.andOnSuccess(success -> {
+                    if(golWorkflowHandler.grantOfferLetterSent(project))
+                        return serviceSuccess();
+                    else
+                    {
+                        LOG.error(String.format("Send Grant Offer Letter failed for project %s, to project manager%s", projectId, pmTarget.getEmailAddress()));
+                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                    }
+        });
+        return notificationResult;
     }
 
     @Override
@@ -1111,13 +1112,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean doIsSendAllowed(Project project) {
-        //TODO return golWorkFlowHandler.isSendAllowed(project);
-        return true;
+        return golWorkflowHandler.isSendAllowed(project);
     }
 
     private boolean doIsAlreadySent(Project project) {
-        //TODO return golWorkflowHandler.isAlreadySent(project);
-        return false;
+        return golWorkflowHandler.isAlreadySent(project);
     }
 
 }
