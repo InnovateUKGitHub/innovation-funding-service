@@ -2,15 +2,18 @@
 
 <#macro page1>
 <div class="textcenter">
-  <img src="./innovateuk-logo.png" alt="Innovate UK" />
+  <!-- todo; figure out how we can make this a local url, relative paths don't work so would maybe sending the current environemnt url would work? -->
+  <img width="200" src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" />
+
 </div>
-<p>${LeadContact}<br/>
-  ${LeadOrgName}<br/>
-  ${Address1}<br/>
-  ${Address2}<br/>
-  ${Address3}<br/>
-  ${TownCity}<br/>
-  ${PostCode}<br/>
+<p>
+  <#if LeadContact?has_content>${LeadContact}<br/></#if>
+  <#if LeadOrgName?has_content>${LeadOrgName}<br/></#if>
+  <#if Address1?has_content>${Address1}<br/></#if>
+  <#if Address2?has_content>${Address2}<br/></#if>
+  <#if Address3?has_content>${Address3}<br/></#if>
+  <#if TownCity?has_content>${TownCity}<br/></#if>
+  <#if PostCode?has_content>${PostCode}<br/></#if>
 </p>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>

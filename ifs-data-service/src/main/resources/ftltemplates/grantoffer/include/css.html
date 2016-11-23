@@ -3,24 +3,40 @@
       @page {
         size: A4 portrait;
         margin: 1.5cm;
-        font-family: arial, helvetica, sans-serif;
-        font-size:10pt;
-        line-height:1.1;
+
         @top-center {
+          font-family: helvetica, arial, sans-serif;
+          font-size : 9pt;
           content: "OFFICIAL"
         }
         @bottom-center {
           content: "Page " counter(page) " of " counter(pages);
         }
       }
+
+      @page:first {
+        @top-center {
+          content: ""
+        }
+      }
+
       @page land { size:landscape; }
+      body {
+        font-family: arial, helvetica, sans-serif;
+        font-size:10pt;
+        line-height:1.2;
+      }
 
       .landscape { page:land; }
 
       .page {
         page-break-after: always;
+        width:100%;
+        display: block;
       }
-
+      .page:last-child {
+        page-break-after: auto;
+      }
       .textcenter {
         text-align:center;
       }
@@ -62,10 +78,10 @@
         list-style: lower-roman;
       }
       table {
+        margin:10px 0;
         border-collapse: collapse;
         border-spacing: 0;
         width:100%;
-        margin:5pt;
       }
       thead {
         font-weight:bold;
@@ -80,8 +96,12 @@
       td.no-border{
         border:none;
       }
+      .padding {
+        padding:5pt;
+      }
       .signature {
         margin-top:45pt;
       }
+
 </style>
 </#macro>
