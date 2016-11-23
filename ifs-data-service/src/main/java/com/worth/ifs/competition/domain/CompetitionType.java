@@ -16,10 +16,8 @@ public class CompetitionType {
     @JoinColumn(name="templateCompetitionId", referencedColumnName="id")
     private Competition template;
 
-
-    @OneToMany(mappedBy="competitionType")
+    @OneToMany(mappedBy="competitionType", fetch = FetchType.LAZY)
     private List<Competition> competitions;
-
 
     public String getName() {
         return name;

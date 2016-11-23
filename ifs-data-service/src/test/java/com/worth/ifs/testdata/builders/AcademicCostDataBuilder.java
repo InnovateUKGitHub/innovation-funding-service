@@ -2,6 +2,8 @@ package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
@@ -65,6 +67,17 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
     public AcademicCostDataBuilder withExceptionsOtherCosts(BigDecimal value) {
         return addCostItem("Other costs", () -> new AcademicCost(null, "exceptions_other_costs", value, null));
+    }
+
+    public AcademicCostDataBuilder withUploadedJesForm() {
+        return with(data -> {
+            FileEntry fileEntry = fileEntryRepository.save(
+                    new FileEntry(null, "jes-form" + data.getApplicationFinance().getId() + ".pdf", "application/pdf", 7945));
+
+            ApplicationFinance finance = applicationFinanceRepository.findOne(data.getApplicationFinance().getId());
+            finance.setFinanceFileEntry(fileEntry);
+            applicationFinanceRepository.save(finance);
+        });
     }
 
     private AcademicCostDataBuilder addCostItem(String financeRowName, Supplier<FinanceRowItem> cost) {

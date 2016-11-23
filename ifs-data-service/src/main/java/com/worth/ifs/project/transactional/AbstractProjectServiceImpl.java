@@ -84,7 +84,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
 
         if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
-            return PENDING;
+            return ACTION_REQUIRED;
         }
 
         if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
