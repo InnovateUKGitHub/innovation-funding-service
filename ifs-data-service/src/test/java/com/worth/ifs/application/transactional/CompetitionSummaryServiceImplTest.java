@@ -7,7 +7,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 		competition = newCompetition()
 				.withId(COMP_ID)
 				.withName("compname")
-				.withCompetitionStatus(Status.IN_ASSESSMENT)
+				.withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
 				.withEndDate(LocalDateTime.of(2016, 5, 23, 8, 30))
 				.build();
 		when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);

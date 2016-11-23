@@ -115,9 +115,9 @@ Initial details: User enters valid values and marks as done
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    Competition Executive Two
+    Then the user should see the text in the page    Toby Reader
     And the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -138,7 +138,7 @@ Initial details: Comp Type and Date should not be editable
     And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
-    And the user should see the text in the page    Competition Technologist One
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
@@ -331,7 +331,7 @@ Application: Business opportunity
     [Documentation]    INFUND-5632
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
@@ -341,7 +341,7 @@ Application: Scope
     ...    INFUND-5635
     Given the user clicks the button/link    link=Scope
     And the user should see the element    jQuery=h1:contains("Scope")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -356,7 +356,7 @@ Application: Project Summary
     ...    INFUND-5637
     Given the user clicks the button/link    link=Project summary
     And the user should see the element    jQuery=h1:contains("Project summary")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -402,8 +402,9 @@ Application: should have a green check
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]
+    [Tags]    Pending
     [Setup]
+    #TO DO Pending due to /INFUND-6068
     Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
     When The user clicks the button/link    link=Initial Details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -417,7 +418,8 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
     ...
     ...    INFUND-3002
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TO DO Pending due to /INFUND-6068
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
@@ -514,8 +516,8 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
