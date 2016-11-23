@@ -21,7 +21,7 @@ public class AssessmentTotalScoreResourceBuilder extends BaseBuilder<AssessmentT
 
     @Override
     protected AssessmentTotalScoreResource createInitial() {
-        return new AssessmentTotalScoreResource();
+        return new AssessmentTotalScoreResource(0, 0);
     }
 
     public static AssessmentTotalScoreResourceBuilder newAssessmentTotalScoreResource() {
