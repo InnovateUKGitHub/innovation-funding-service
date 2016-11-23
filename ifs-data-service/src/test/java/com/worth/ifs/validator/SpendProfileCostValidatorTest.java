@@ -31,7 +31,7 @@ public class SpendProfileCostValidatorTest {
     }
 
     @Test
-    public void testCostsAreFractionalLessThanZeroOrGreaterThanMillionOrNukk() {
+    public void testCostsAreFractionalLessThanZeroOrGreaterThanMillionOrNull() {
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
