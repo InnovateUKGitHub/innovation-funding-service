@@ -100,7 +100,7 @@ Approve Eligibility: Academic partner organisation
 
 Project Finance user can export bank details
     [Documentation]    INFUND-5852
-    [Tags]
+    [Tags]    Pending
     #TODO Pending due to INFUND-6187
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the text in the page    Export all bank details
