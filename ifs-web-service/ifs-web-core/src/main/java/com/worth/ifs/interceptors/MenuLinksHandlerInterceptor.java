@@ -62,7 +62,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 UserResource user = authentication.getDetails();
                 String role = CookieUtil.getCookieValue(request, "role");
                 if (!role.isEmpty()) {
-                    return user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
+                    return "/" + user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
                 }
                 return "/" + user.getRoles().get(0).getUrl();
             }
