@@ -74,8 +74,12 @@ public class ProjectSetupSectionStatus {
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
                                                      final boolean leadPartner) {
         if (project.isPartnerDocumentsSubmitted()) {
-            if (project.getOtherDocumentsApproved() != null) {
+            if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
                 return TICK;
+            }
+
+            if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && leadPartner) {
+                return FLAG;
             }
             return HOURGLASS;
         } else if (leadPartner) {

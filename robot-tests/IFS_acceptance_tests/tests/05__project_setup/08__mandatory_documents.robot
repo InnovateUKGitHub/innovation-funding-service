@@ -281,7 +281,7 @@ CompAdmin can see uploaded files
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=Killer Riffs
+    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
@@ -328,7 +328,7 @@ Partners can see the documents rejected
 Project Finance is able to Approve and Reject
     [Documentation]    INFUND-4621, INFUND-5440
     [Tags]
-    [Setup]    Log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     Then the user should see the text in the page    Other documents
     And the user should see the element    jQuery=button:contains("Accept documents")
@@ -393,7 +393,7 @@ CompAdmin can see Project status updated
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=Killer Riffs
+    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 

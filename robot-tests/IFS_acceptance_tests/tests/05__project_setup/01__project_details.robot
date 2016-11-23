@@ -63,7 +63,7 @@ Internal users can see Project Details not yet completed
     Then the user should see the element            jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
-    When Log in as a different user                 project.finance1@innovateuk.test    Passw0rd
+    When Log in as a different user                 lee.bowman@innovateuk.test    Passw0rd
     Then the user navigates to the page             ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -79,7 +79,7 @@ Non-lead partner can see the project setup page
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -138,7 +138,7 @@ Lead partner can see the project setup page
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details

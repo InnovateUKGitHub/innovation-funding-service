@@ -117,20 +117,6 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectFinanceContact() throws Exception {
-
-        assertAddMandatoryValue((project, projectUser) -> projectDetailsWorkflowHandler.projectFinanceContactAdded(project, projectUser),
-                PROJECT_FINANCE_CONTACT_ADDED);
-    }
-
-    @Test
-    public void testAddProjectFinanceContactAndReadyForSubmission() throws Exception {
-
-        assertAddMandatoryValueAndNowReadyForSubmissionFromPending(
-                (project, projectUser) -> projectDetailsWorkflowHandler.projectFinanceContactAdded(project, projectUser), PROJECT_FINANCE_CONTACT_ADDED);
-    }
-
-    @Test
     public void testAddProjectStartDateAndReadyForSubmissionWhenAlreadyInReadyForSubmission() throws Exception {
 
         assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
@@ -149,13 +135,6 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
 
         assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
-    }
-
-    @Test
-    public void testAddProjectFinanceContactAndReadyForSubmissionWhenAlreadyInReadyForSubmission() throws Exception {
-
-        assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
-                (project, projectUser) -> projectDetailsWorkflowHandler.projectFinanceContactAdded(project, projectUser), PROJECT_FINANCE_CONTACT_ADDED);
     }
 
     @Test
