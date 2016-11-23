@@ -18,10 +18,11 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.*;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
+import com.worth.ifs.finance.repository.ProjectFinanceRepository;
+import com.worth.ifs.finance.repository.ProjectFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -166,7 +167,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
+
+    @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -976,7 +986,37 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
-        return financeCheckRepository.save(financeCheck);
+        FinanceCheck savedFinanceCheck = financeCheckRepository.save(financeCheck);
+
+
+        ProjectFinance projectFinanceForOrganisation =
+                projectFinanceRepository.save(new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject));
+
+        ApplicationFinance applicationFinanceForOrganisation =
+                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
+
+        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
+
+        List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
+            ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
+            newRow.setApplicationRowId(original.getId());
+            newRow.setCost(original.getCost());
+            newRow.setCostValues(simpleMap(original.getCostValues(), costValue -> copyFinanceRowMetaValue(newRow, costValue)));
+            newRow.setDescription(original.getDescription());
+            newRow.setItem(original.getItem());
+            newRow.setName(original.getName());
+            newRow.setQuantity(original.getQuantity());
+            newRow.setQuestion(original.getQuestion());
+            return newRow;
+        });
+
+        copiedFinanceFigures.forEach(projectFinanceRowRepository::save);
+
+        return savedFinanceCheck;
+    }
+
+    private FinanceRowMetaValue copyFinanceRowMetaValue(ProjectFinanceRow row, FinanceRowMetaValue costValue) {
+        return new FinanceRowMetaValue(row, costValue.getFinanceRowMetaField(), costValue.getValue());
     }
 
     private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
