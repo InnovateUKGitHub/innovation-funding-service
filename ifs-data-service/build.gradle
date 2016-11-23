@@ -93,6 +93,7 @@ dependencies {
     compile project(":ifs-resources")
     testCompile project(':ifs-resources').sourceSets.test.output
     compile project(":ifs-commons")
+    testCompile project(":ifs-commons").sourceSets.test.output
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
