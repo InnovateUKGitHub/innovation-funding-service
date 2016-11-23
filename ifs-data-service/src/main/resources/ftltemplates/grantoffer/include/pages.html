@@ -7,13 +7,13 @@
 <p>${LeadContact}<br/>
   ${LeadOrgName}<br/>
   ${Address1}<br/>
-  $Address2}<br/>
+  ${Address2}<br/>
   ${Address3}<br/>
   ${TownCity}<br/>
-  ${Postcode}<br/>
+  ${PostCode}<br/>
 </p>
 <p class="bold">
-  Application number: ${applicationNumber}<br/>
+  Application number: ${ApplicationNumber}<br/>
   Date: ${Date}
 </p>
 <p class="bold">
@@ -23,7 +23,7 @@
 <h1>Award confirmation letter</h1>
 <p class="bold">
   ${CompetitionName}<br/>
-  Project Title: ${Project_Title}
+  Project Title: ${ProjectTitle}
 </p>
 <p>
   I am pleased to inform you that subject to our standard Terms and Conditions,
@@ -39,7 +39,7 @@
 <h2>Start and End Dates</h2>
 <p>
   In accordance with those submissions made as part of your application for funding,
-  we confirm that the Project shall commence on the <em>${StartDate}</em> and is expected to complete after ${projectMonths},
+  we confirm that the Project shall commence on the <em>${ProjectStartDate}</em> and is expected to complete after ${ProjectLength},
   subject to those provisions for suspension and/or withdrawal of funding outlined in our published Terms and Conditions.
   Furthermore, you may only start work on the Project once you have completed the <em>Additional Acceptance Conditions</em> listed here under;
   failure to do so may result in the Project being unable to start or,
@@ -75,10 +75,10 @@
 <#macro page2>
 <h1>Eligible cost and grant allocations</h1>
 <p class="bold">
-  Application number: ${applicationNumber}}<br/>
+  Application number: ${ApplicationNumber}<br/>
   Date: ${Date}<br/>
   ${CompetitionName}<br/>
-  Project Title: ${Project_Title}
+  Project Title: ${ProjectTitle}
 </p>
 <table>
   <thead>
@@ -93,16 +93,16 @@
     <tr>
       <th scope="col">Organisation</th>
       <th scope="col">% Grant</th>
-      <th scope="col">Eligible Cost (&pound;)</th>
-      <th scope="col">Grant available (&pound;)</th>
-      <th scope="col">Eligible Cost (&pound;)</th>
-      <th scope="col">Grant available (&pound;)</th>
-      <th scope="col">Eligible Cost (&pound;)</th>
-      <th scope="col">Grant available (&pound;)</th>
-      <th scope="col">Eligible Cost (&pound;)</th>
-      <th scope="col">Grant available (&pound;)</th>
-      <th scope="col">Eligible Cost (&pound;)</th>
-      <th scope="col">Grant available (&pound;)</th>
+      <th scope="col">Eligible Cost (&#163;)</th>
+      <th scope="col">Grant available (&#163;)</th>
+      <th scope="col">Eligible Cost (&#163;)</th>
+      <th scope="col">Grant available (&#163;)</th>
+      <th scope="col">Eligible Cost (&#163;)</th>
+      <th scope="col">Grant available (&#163;)</th>
+      <th scope="col">Eligible Cost (&#163;)</th>
+      <th scope="col">Grant available (&#163;)</th>
+      <th scope="col">Eligible Cost (&#163;)</th>
+      <th scope="col">Grant available (&#163;)</th>
     </tr>
   </thead>
   <tbody>
@@ -171,7 +171,7 @@
 <#macro page3>
 <h1>Acceptance of award</h1>
 <p class="bold">
-  Application number: ${applicationNumber}<br/>
+  Application number: ${ApplicationNumber}<br/>
   Date: ${Date}<br/>
   Innovate UK: ${CompetitionName}<br/>
   Project Title: ${ProjectTitle}
@@ -182,8 +182,8 @@
 <ol>
   <li>For the purposes of the offer:
       <ol>
-        <li>Project Start Date   ${projectStartDate}</li>
-        <li>Project Length  ${projectLength} months</li>
+        <li>Project Start Date   ${ProjectStartDate}</li>
+        <li>Project Length  ${ProjectLength} months</li>
       </ol>
   </li>
 </ol>

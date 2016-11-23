@@ -206,13 +206,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testGenerateGrantOfferLetter() {
-        assertGenerateFile(project,
-                fileEntryResource ->
-                        service.generateGrantOfferLetter(123L, fileEntryResource));
-    }
-  //  @Test
-    public void testGenerateGrantOfferLetterFails() {
-        assertGenerateFileFails(
+        assertGenerateFile(
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
     }

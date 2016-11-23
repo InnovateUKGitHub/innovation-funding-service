@@ -169,7 +169,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).
                 andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
                             andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
-                                    fileEntryResource, StringUtils.getBytesUtf8(htmlFile).length).
+                                    fileEntryResource).
                                     andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
@@ -178,14 +178,19 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
+        templateReplacements.put("LeadOrgName", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() == 0 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() == 0 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() == 0 ? "" : addresses.get(3));
         templateReplacements.put("PostCode", addresses.size() == 0 ? "" : addresses.get(4));
-        //templateReplacements.put("Date", LocalDateTime.now().toString());
+        templateReplacements.put("Date", LocalDateTime.now().toString());
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
+        templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
+                project.getTargetStartDate().toString() : "");
+        templateReplacements.put("ProjectLength", project.getDurationInMonths());
+        templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         return templateReplacements;
     }
 
@@ -202,11 +207,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return addressLines;
     }
 
-    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource, long size) {
+    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
         ServiceResult<Supplier<InputStream>> pdfSupplier = null;
         try {
-            fileEntryResource.setFilesizeBytes(size);
-            pdfSupplier = createPDF("", inputStreamSupplier);
+            pdfSupplier = createPDF("", inputStreamSupplier, fileEntryResource);
         } catch (IOException e) {
             LOG.error("An IO Exception occured" +e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
@@ -218,7 +222,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
 
-    private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier)
+    private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource)
             throws IOException, DocumentException {
 
         try(ByteArrayOutputStream os = new ByteArrayOutputStream()) {
@@ -234,7 +238,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             renderer.setDocument(doc, url);
             renderer.layout();
             renderer.createPDF(os);
-
+            fileEntryResource.setFilesizeBytes(os.toByteArray().length);
             return ServiceResult.serviceSuccess(() -> new ByteArrayInputStream(os.toByteArray()));
         }
     }
