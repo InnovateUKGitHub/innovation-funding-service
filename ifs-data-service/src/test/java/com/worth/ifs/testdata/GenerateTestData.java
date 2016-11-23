@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -635,7 +636,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorEndDate(line.assessorEndDate);
+                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                withAssessorEndDate(line.assessorEndDate).
+                withAssessmentClosedDate(line.assessmentClosedDate);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
@@ -764,8 +767,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             OrganisationDataBuilder organisation = organisationBuilder.
                     createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
 
-            if (matchingOrganisationDetails.addressType != null) {
-                organisation = organisation.withAddress(matchingOrganisationDetails.addressType,
+            for (OrganisationAddressType organisationType : matchingOrganisationDetails.addressType) {
+                organisation = organisation.withAddress(organisationType,
                         matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
                         matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,
                         matchingOrganisationDetails.postcode, matchingOrganisationDetails.county);
