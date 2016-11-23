@@ -2,6 +2,8 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplateImpl;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
@@ -15,6 +17,7 @@ import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.validator.util.ValidationUtil;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.resource.State;
 import org.junit.Assert;
@@ -64,6 +67,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    @Mock
+    private ValidationUtil validationUtil;
+
+    @Mock
+    private Error mockedError;
 
     @Test
     public void testGenerateSpendProfile() {
@@ -423,8 +432,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 
+
     @Test
-    public void saveSpendProfileWhenCostsAreFractional() {
+    public void saveSpendProfileWhenValidationFails() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -433,126 +443,17 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
+        // the validation is tested in the validator related unit tests
+        table.setMonthlyCostsPerCategoryMap(Collections.emptyMap());
+
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.setErrors(Arrays.asList(mockedError));
+
+        when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Arrays.asList(validationMessages));
 
         ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
-        assertTrue(result.isFailure());
-
-        List<Error> errors = result.getFailure().getErrors();
-
-        assertTrue(errors.size() == 3);
-
-        // Assert that the error messages are for correct categories and correct month(s) based on the input
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(1L, 1), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(2L, 2), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(3L, 3), HttpStatus.BAD_REQUEST)));
-
-    }
-
-    @Test
-    public void saveSpendProfileWhenCostsAreLessThanZero() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("0"), new BigDecimal("00"), new BigDecimal("-1")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("1"), new BigDecimal("-33"))));
-
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
-
-        assertTrue(result.isFailure());
-
-        List<Error> errors = result.getFailure().getErrors();
-
-        assertTrue(errors.size() == 3);
-
-        // Assert that the error messages are for correct categories and correct month(s) based on the input
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(1L, 3), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(2L, 2), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(3L, 3), HttpStatus.BAD_REQUEST)));
-
-    }
-
-    @Test
-    public void saveSpendProfileWhenCostsAreGreaterThanOrEqualToMillion() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
-
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
-
-        assertTrue(result.isFailure());
-
-        List<Error> errors = result.getFailure().getErrors();
-
-        assertTrue(errors.size() == 3);
-
-        // Assert that the error messages are for correct categories and correct month(s) based on the input
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(1L, 1), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(2L, 2), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(3L, 2), HttpStatus.BAD_REQUEST)));
-
-    }
-
-    @Test
-    public void saveSpendProfileWhenCostsAreFractionalLessThanZeroOrGreaterThanMillion() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
-
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
-
-        assertTrue(result.isFailure());
-
-        List<Error> errors = result.getFailure().getErrors();
-
-        assertTrue(errors.size() == 3);
-
-        // Assert that the error messages are for correct categories and correct month(s) based on the input
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(1L, 1), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(2L, 2), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(3L, 3), HttpStatus.BAD_REQUEST)));
-
+        assertFalse(result.isSuccess());
     }
 
     @Test

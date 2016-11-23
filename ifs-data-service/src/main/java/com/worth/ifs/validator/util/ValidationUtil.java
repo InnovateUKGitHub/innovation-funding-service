@@ -10,9 +10,11 @@ import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.validator.ApplicationMarkAsCompleteValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
+import com.worth.ifs.validator.SpendProfileCostValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,15 +43,18 @@ public class ValidationUtil {
     private final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
+    private SpendProfileCostValidator spendProfileCostValidator;
 
 
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
-                           MinRowCountValidator minRowCountValidator
+                           MinRowCountValidator minRowCountValidator,
+                           SpendProfileCostValidator spendProfileCostValidator
     ) {
         this.validatorService = validatorService;
         this.minRowCountValidator = minRowCountValidator;
+        this.spendProfileCostValidator = spendProfileCostValidator;
     }
 
     /**
@@ -221,7 +226,22 @@ public class ValidationUtil {
 
         return results;
     }
-    
+
+    public List<ValidationMessages> validateSpendProfileTableResource(SpendProfileTableResource tableResource) {
+
+        List<ValidationMessages> result = new ArrayList<>();
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableResource, "spendProfileTable");
+        ValidationUtils.invokeValidator(spendProfileCostValidator, tableResource, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ValidationMessages messages = new ValidationMessages(bindingResult);
+            result.add(messages);
+        }
+
+        return result;
+    }
+
     private boolean nonEmpty(ValidationMessages validationMessages) {
     	return validationMessages != null && validationMessages.hasErrors();
     }

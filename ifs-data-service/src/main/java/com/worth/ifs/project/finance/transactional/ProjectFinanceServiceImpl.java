@@ -24,8 +24,8 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.util.CollectionFunctions;
+import com.worth.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -49,7 +49,6 @@ import static com.worth.ifs.project.finance.resource.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -89,6 +88,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ValidationUtil validationUtil;
 
 
     @Autowired
@@ -301,63 +303,17 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
 
-        List<Error> incorrectCosts = checkCostsForAllCategories(table);
+        List<ValidationMessages> validationMessages = validationUtil.validateSpendProfileTableResource(table);
+
+        List<Error> incorrectCosts = validationMessages.stream()
+                .map(ValidationMessages::getErrors)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         if (incorrectCosts.isEmpty()) {
             return serviceSuccess();
         } else {
             return serviceFailure(incorrectCosts);
-        }
-    }
-
-    private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
-
-        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
-
-        List<Error> incorrectCosts = new ArrayList<>();
-
-        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            Long category = entry.getKey();
-            List<BigDecimal> monthlyCosts = entry.getValue();
-
-            int index = 0;
-            for (BigDecimal cost : monthlyCosts) {
-                isCostValid(cost, category, index, incorrectCosts);
-                index++;
-            }
-
-        }
-
-        return incorrectCosts;
-    }
-
-    private void isCostValid(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        checkFractionalCost(cost, category, index, incorrectCosts);
-
-        checkCostLessThanZero(cost, category, index, incorrectCosts);
-
-        checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
-    }
-
-    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (cost.scale() > 0) {
-            incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
-        }
-    }
-
-    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
-            incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
-        }
-    }
-
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
-            incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
