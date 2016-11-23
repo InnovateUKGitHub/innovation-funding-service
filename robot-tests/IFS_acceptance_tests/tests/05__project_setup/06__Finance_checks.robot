@@ -99,21 +99,19 @@ Approve Eligibility: Academic partner organisation
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance user can export bank details
-
     [Documentation]    INFUND-5852
-
-    [Tags]      Pending
+    [Tags]    Pending
     #TODO Pending due to INFUND-6187
-    Given The user navigates to the page   ${server}/project-setup-management/competition/3/status
-
-    Then The user should see the text in the page    Export all bank details
-    And The user clicks the button/link          link = Export all bank details
+    Given the user navigates to the page   ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+    Then the user should see the text in the page    Export all bank details
+    And the user clicks the button/link          link = Export all bank details
     And the Project finance user downloads the excel
 
-#TODO :Please note this test needs test data to be created [INFUND-5879]
+
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
+    # TODO Pending due to INFUND-5879
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
@@ -217,7 +215,7 @@ Download should be done
     [Documentation]    Verifies that the directory has only one folder
     ...    Returns path to the file
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
-    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details_*.csv   msg= "bank export success"
+    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details.csv
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
     Log    File was successfully downloaded to ${file}
     [Return]    ${file}
@@ -225,7 +223,7 @@ Download should be done
 Download File
     [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
     log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${FILENAME}
 
 the Project finance user downloads the excel
     ${ALL_COOKIES} =    Get Cookies
