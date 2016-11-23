@@ -253,7 +253,7 @@ the user enters the funding level
     focus    jQuery=.button:contains("Mark all as complete")
 
 the applicant changes the name of the application
-    Given the user clicks the button/link    link= Connected digital additive manufacturing
+    Given the user clicks the button/link    link= ${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    link= Application details
     And the user enters text to a text field    id=application_details-title    Assign test
     And The user clicks the button/link    jQuery=button:contains("Save and return")
