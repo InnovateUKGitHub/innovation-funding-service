@@ -1,7 +1,7 @@
-SELECT @jugglingCraziness := id FROM competition WHERE name='Juggling Craziness';
-SELECT @sarcasmStupendousness := id FROM competition WHERE name='Sarcasm Stupendousness';
-SELECT @killerRiffs := id FROM competition WHERE name='Killer Riffs';
-SELECT @laFromage := id FROM competition WHERE name='La Fromage';
+SELECT @jugglingCraziness := id FROM competition WHERE name='Sustainable living models for the future';
+SELECT @sarcasmStupendousness := id FROM competition WHERE name='Photonics for health';
+SELECT @killerRiffs := id FROM competition WHERE name='New designs for a circular economy';
+SELECT @laFromage := id FROM competition WHERE name='Internet of Things';
 SELECT @developmentOfNewTech := id FROM competition WHERE name like 'Development of new technological%';
 
 -- Add ASSESSORS_NOTIFIED and ASSESSMENT_CLOSED milestones for project setup tests
