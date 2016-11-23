@@ -6,6 +6,10 @@
   padding: em(10) em(15) em(5) em(15);
   vertical-align: top;
 
+  &.no-margin {
+    margin: 0;
+  }
+
   @include media (mobile) {
     width: 100%;
     text-align: center;
