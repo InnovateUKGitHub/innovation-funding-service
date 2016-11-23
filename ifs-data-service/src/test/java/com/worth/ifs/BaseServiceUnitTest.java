@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mockito.InjectMocks;
@@ -76,7 +77,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         assertEquals(createdFile, fileGetter.get());
     }
 
-    protected void assertGenerateFile(Function<FileEntryResource, ServiceResult<FileEntryResource>> generateFileFn) {
+    protected void assertGenerateFile(Project project, Function<FileEntryResource, ServiceResult<FileEntryResource>> generateFileFn) {
 
         FileEntryResource fileEntryResource = newFileEntryResource().
                 withFilesizeBytes(1024).
@@ -88,6 +89,16 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
 
         Map<String, Object> templateReplacements = new HashMap<>();
+        templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant());
+        templateReplacements.put("Address1", "test1");
+        templateReplacements.put("Address2", "test2");
+        templateReplacements.put("Address3", "");
+        templateReplacements.put("TownCity", "town");
+        templateReplacements.put("PostCode", "PST");
+        //templateReplacements.put("Date", LocalDateTime.now().toString());
+        templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
+        templateReplacements.put("ProjectTitle", project.getName());
+
 
         StringBuilder stringBuilder = new StringBuilder();
         String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")

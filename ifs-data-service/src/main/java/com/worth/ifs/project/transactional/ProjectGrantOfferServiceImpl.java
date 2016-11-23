@@ -2,6 +2,7 @@ package com.worth.ifs.project.transactional;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
@@ -34,8 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -166,12 +166,39 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
 
         //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
-        Map<String, Object> templateReplacements = new HashMap<>();
         return getProject(projectId).
-                andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), templateReplacements).
+                andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
                             andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile))).
                                     andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
+    }
+
+    private Map<String, Object> getTemplateData(Project project) {
+        Map<String, Object> templateReplacements = new HashMap<>();
+        List<String> addresses = getAddresses(project);
+        templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
+        templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
+        templateReplacements.put("Address2", addresses.size() == 0 ? "" : addresses.get(1));
+        templateReplacements.put("Address3", addresses.size() == 0 ? "" : addresses.get(2));
+        templateReplacements.put("TownCity", addresses.size() == 0 ? "" : addresses.get(3));
+        templateReplacements.put("PostCode", addresses.size() == 0 ? "" : addresses.get(4));
+        //templateReplacements.put("Date", LocalDateTime.now().toString());
+        templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
+        templateReplacements.put("ProjectTitle", project.getName());
+        return templateReplacements;
+    }
+
+    private List<String> getAddresses(Project project) {
+        List<String> addressLines = new ArrayList<>();
+        if (project.getAddress() != null ) {
+            Address address = project.getAddress();
+            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "" );
+            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "" );
+            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : "" ));
+            addressLines.add(address.getTown() != null ? address.getTown() : "");
+            addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
+        }
+        return addressLines;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier) {

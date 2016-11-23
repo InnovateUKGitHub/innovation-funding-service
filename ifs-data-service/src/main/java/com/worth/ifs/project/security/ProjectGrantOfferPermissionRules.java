@@ -7,6 +7,8 @@ import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+
 
 @PermissionRules
 @Component
@@ -20,11 +22,27 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
+            description = "Comp Admin can download grant offer documents (Unsigned grant offer, signed rant offer, Additional contract)")
+    public boolean compAdminCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+
+    @PermissionRule(
             value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed rant offer, Additional contract)")
     public boolean partnersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Comp Admin can view grant offer documents (Unsigned grant offer, signed rant offer, Additional contract)")
+    public boolean compAdminCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
 
     @PermissionRule(
             value = "UPLOAD_SIGNED_GRANT_OFFER",

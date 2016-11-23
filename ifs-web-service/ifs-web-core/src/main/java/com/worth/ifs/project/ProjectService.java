@@ -1,9 +1,5 @@
 package com.worth.ifs.project;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -15,8 +11,11 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-
 import org.springframework.core.io.ByteArrayResource;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -96,6 +95,8 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 

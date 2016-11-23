@@ -186,7 +186,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
+        String url = projectRestURL + "/" + projectId + "/grant-offer/generate?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 
