@@ -205,32 +205,36 @@ Summary:Word count check(Comments for InnovateUK)
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-User Saves the Assessment as Recomended
+User Saves the Assessment as Recommended
     [Documentation]    INFUND-4996
     ...
     ...    INFUND-5765
     ...
     ...    INFUND-3726
+    ...
+    ...    INFUND-6040
     [Tags]
     Given the user enters text to a text field    id=feedback    ${EMPTY}
     And the user selects the radio button    fundingConfirmation    true
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
-    And the user should see the element    css=.recommend.yes
-    And the user should see the element    css=.assessment-submit-checkbox
+    And the user should see the element    css=li:nth-child(4) .recommend.yes
+    And the user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
 
-User Saves the Assessment as Not Recomended
+User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712
     ...
     ...    INFUND-3726
+    ...
+    ...    INFUND-6040
     Given The user clicks the button/link    link=Juggling is not fun
     And the user adds score and feedback for every question
     And the user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see the element    css=.recommend.no
+    And The user should see the element    css=li:nth-child(4) .recommend.no
     And The user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
 
 *** Keywords ***
