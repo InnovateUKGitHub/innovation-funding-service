@@ -366,7 +366,7 @@ Application: Project Summary
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Finances Form
-    [Documentation]    INFUND-5640 INFUND-
+    [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
     And the user should see the element       jQuery=h1:contains("Application finances")
     And the user should see the text in the page  Each partner is required to complete the following finance sections
