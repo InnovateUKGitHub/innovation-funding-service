@@ -653,12 +653,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
-
         project.addProjectUser(newFinanceContact);
-
-        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
-            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
-            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        return serviceSuccess();
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -720,6 +716,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
         if (partnerOrganisation.equals(leadOrganisation)) {
+            ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
             projectPartnerStatusResource = new ProjectLeadStatusResource(
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
@@ -728,7 +725,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus,
+                    leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
                     financeContactStatus);
