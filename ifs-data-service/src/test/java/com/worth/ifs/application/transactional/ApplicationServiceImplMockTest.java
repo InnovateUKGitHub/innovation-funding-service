@@ -13,7 +13,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -108,7 +108,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
         existingFormInputResponses = singletonList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
-        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);

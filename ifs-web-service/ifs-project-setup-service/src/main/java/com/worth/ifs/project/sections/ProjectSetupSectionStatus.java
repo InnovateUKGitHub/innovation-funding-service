@@ -47,18 +47,26 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus financeChecksSectionStatus(final boolean allBankDetailsApprovedOrNotRequired,
                                                     final boolean allFinanceChecksApproved) {
-        if(allBankDetailsApprovedOrNotRequired) {
-           if(allFinanceChecksApproved) {
-               return TICK;
-           }
-           return HOURGLASS;
+        if (allBankDetailsApprovedOrNotRequired) {
+            if (allFinanceChecksApproved) {
+                return TICK;
+            }
+            return HOURGLASS;
         }
         return EMPTY;
     }
 
-    public SectionStatus spendProfileSectionStatus(final boolean spendProfileSubmitted) {
-        if(spendProfileSubmitted) {
-            return TICK;
+    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState,
+                                                   final boolean spendProfileApproved) {
+        if (spendProfileState.equals(ProjectActivityStates.PENDING)) {
+            return HOURGLASS;
+        } else if (spendProfileState.equals(ProjectActivityStates.ACTION_REQUIRED)) {
+            return FLAG;
+        } else if (spendProfileState.equals(ProjectActivityStates.COMPLETE)) {
+            if (spendProfileApproved) {
+                return TICK;
+            }
+            return HOURGLASS;
         }
         return EMPTY;
     }
@@ -66,8 +74,12 @@ public class ProjectSetupSectionStatus {
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
                                                      final boolean leadPartner) {
         if (project.isPartnerDocumentsSubmitted()) {
-            if (project.getOtherDocumentsApproved() != null) {
+            if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
                 return TICK;
+            }
+
+            if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && leadPartner) {
+                return FLAG;
             }
             return HOURGLASS;
         } else if (leadPartner) {
