@@ -89,7 +89,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
 
         Map<String, Object> templateReplacements = new HashMap<>();
-        templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant());
+        templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("Address1", "test1");
         templateReplacements.put("Address2", "test2");
         templateReplacements.put("Address3", "");
