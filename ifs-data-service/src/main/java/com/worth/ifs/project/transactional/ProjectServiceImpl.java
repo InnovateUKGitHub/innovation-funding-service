@@ -716,6 +716,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
         if (partnerOrganisation.equals(leadOrganisation)) {
+            ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
             projectPartnerStatusResource = new ProjectLeadStatusResource(
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
@@ -724,7 +725,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus,
+                    leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
                     financeContactStatus);
