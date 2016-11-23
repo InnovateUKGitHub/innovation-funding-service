@@ -12,6 +12,9 @@ IFS.competitionManagement.setup = (function() {
       IFS.competitionManagement.setup.handleAddCoFunder();
       IFS.competitionManagement.setup.handleRemoveCoFunder();
 
+      IFS.competitionManagement.setup.handleAddGuidanceRow();
+      IFS.competitionManagement.setup.handleRemoveGuidanceRow();
+
       jQuery("body.competition-management.competition-setup").on('change', '#competitionTypeId', function() {
         IFS.competitionManagement.setup.handleStateAid();
       });
@@ -152,20 +155,34 @@ IFS.competitionManagement.setup = (function() {
     handleAddGuidanceRow: function() {
       jQuery(document).on('click', '#add-guidance-row', function() {
         var count = parseInt(jQuery('#guidance-row-count').val(), 10);
-        jQuery('<div class="grid-row guidance-row" id="guidance-row-'
-          + count + '"><div class="column-third"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="'
-          + count +'-funder" name="funders['+ count +'].funder" value=""></div></div>'
-          + '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="'
-          + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="'
-          + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
-          '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'
-          + count +'">Remove</button></div></div></div>')
+        jQuery(
+          '</hr>' +
+          '<div class="grid-row guidance-row" id="guidance-row-' + count + '">' +
+           '<div class="column-quarter">' +
+           '<div class="form-group">' +
+           '<input type="number" min="0" data-required-errormessage="Please enter a from score" data-min-errormessage="Please enter a valid number" class="form-control width-x-large" id="' + count +'-scoreFrom" name="guidanceRows['+ count +'].scoreFrom" value="">' +
+           '</div>' +
+           '</div>' +
+           '<div class="column-quarter">' +
+           '<div class="form-group">' +
+           '<input type="number" min="0" data-required-errormessage="Please enter a from to" data-min-errormessage="Please enter a valid number" class="form-control width-x-large" id="' + count +'-scoreTo" name="guidanceRows['+ count +'].scoreTo" value="">' +
+           '</div>' +
+           '</div>' +
+           '<div class="column-half">' +
+           '<div class="form-group">' +
+           '<input type="text" data-required-errormessage="Please enter a value" class="form-control width-x-large" id="' + count +'-justification" name="guidanceRows['+ count +'].justification" value="">' +
+           '<button class="buttonlink remove-guidance-row" name="remove-guidance-row" value="'+ count +'" id="remove-guidance-row-' + count +'">Remove</button>' +
+           '</div>' +
+           '</div>' +
+          '</div>')
           .insertBefore('#dynamic-row-pointer');
 
         jQuery('#guidance-row-count').val(count + 1);
         return false;
       });
     },
+
+
     handleRemoveGuidanceRow: function() {
       jQuery(document).on('click', '.remove-guidance-row', function() {
         var $this = jQuery(this),
