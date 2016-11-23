@@ -22,7 +22,10 @@ import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.*;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -60,6 +63,7 @@ import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -122,6 +126,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentService assessmentServiceMock;
+
+    @Mock
+    protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
 
     @Mock
     protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
@@ -415,6 +422,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
 
     @Mock
+    protected GOLWorkflowHandler golWorkflowHandlerMock;
+
+    @Mock
     protected PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
@@ -434,6 +444,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ContractMapper contractMapperMock;
+
+    @Mock
+    protected AssessorCountOptionMapper assessorCountOptionMapperMock;
+
+    @Mock
+    protected AssessorCountOptionRepository assessorCountOptionRepositoryMock;
 
     @Before
     public void setupMockInjection() {

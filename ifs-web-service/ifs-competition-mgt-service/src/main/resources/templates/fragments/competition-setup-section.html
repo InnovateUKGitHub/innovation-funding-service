@@ -222,8 +222,6 @@
 
 </th:block>
 
-
-
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-additional">
     <div class="page-title">
@@ -505,7 +503,7 @@
             <div th:class="${#fields.hasErrors('singleOrCollaborative')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <legend>
-                        <span class="form-label-bold">Should applications be from single partner or collaborative projects?</span>
+                        <span class="form-label-bold">Please choose the project type.</span>
                         <!--<span class="hint">Is this a single or collaborative project?</span>-->
 	                    <span th:if="${#fields.hasErrors('singleOrCollaborative')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
@@ -524,7 +522,7 @@
             <div th:class="${#fields.hasErrors('researchCategoryId')}? 'form-group error':'form-group'">
 		        <fieldset class="inline">
 		            <legend>
-			            <span class="form-label-bold">What research categories are in scope for this competition?</span>
+			            <span class="form-label-bold">Please choose the research categories.</span>
 			            <span th:if="${#fields.hasErrors('researchCategoryId')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}" />
 	                    </span>
@@ -543,7 +541,7 @@
                <fieldset class="inline">
 					<legend>
 					   <span class="form-label-bold">Lead applicant</span>
-					   <span class="hint">Select the Lead Applicant type required</span>
+					   <span class="hint">Select the lead applicant type required.</span>
 					   <span th:if="${#fields.hasErrors('leadApplicantType')}" th:remove="tag">
 			             <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantType')}" th:text="${err}" />
 					   </span>
@@ -560,7 +558,7 @@
                 <fieldset class="inline">
 	                <legend>
 	                    <span class="form-label-bold">Research participation</span>
-	                    <span class="hint">This indicates the maximum level of Research participation allowed</span>
+	                    <span class="hint">This indicates the maximum level of research participation allowed.</span>
 	                    <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" th:remove="tag">
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}" />
 	                    </span>
@@ -574,8 +572,8 @@
             <div th:class="${#fields.hasErrors('resubmission')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <legend>
-                        <span class="form-label-bold">Are resubmissions allowed</span>
-                        <span class="hint">Please indicate whether you wish to make resubmission allowed</span>
+                        <span class="form-label-bold">Are resubmissions allowed?</span>
+                        <span class="hint">Are applicants able to resubmit an application?</span>
 		                <span th:if="${#fields.hasErrors('resubmission')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
 		                </span>
@@ -607,11 +605,12 @@
                         <dd th:text="${competitionSetupForm.streamName}"></dd>
                     </div>
                 </div>
+
+                <dt>Project type</dt>
+                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
+
                 <dt>Research categories</dt>
                 <dd th:text="${researchCategoriesFormatted}"></dd>
-
-                <dt>Single or collaborative?</dt>
-                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Lead applicant</dt>
                 <dd th:each="(leadApplicantType : ${leadApplicantTypes})" th:if="${leadApplicantType.code == competitionSetupForm.leadApplicantType}" th:text="${leadApplicantType.name}">Lead applicant type</dd>
@@ -619,7 +618,7 @@
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
 
-                <dt>Are resubmissions allowed</dt>
+                <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
 
             </dl>
@@ -644,10 +643,7 @@
     </ul>
 </th:block>
 
-
-
 <!-- =================Section: Milestones (4) =========================== -->
-
 <th:block th:fragment="section-milestones">
 
     <div class="page-title">
@@ -842,3 +838,75 @@
         </li>
     </ul>
 </th:block>
+
+<!-- =================== Comp setup section - Assessors (6) ============================== -->
+<th:block th:fragment="section-assessors">
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Assessment</h1>
+    </div>
+
+
+    <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
+        <th:block th:if="${editable}" id="section-assessors-edit">
+            <h2 class="heading-small">How many assessors are required for each application?</h2>
+            <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
+                    <legend>How many assessors are required for each application?</legend>
+                    <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
+                    </span>
+                    <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
+                     <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
+                            th:value="${assessorOption.optionValue}" type="radio"
+                            th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />
+                        <span th:text="${assessorOption.optionName}"></span>
+                    </label>
+
+                </fieldset>
+            </div>
+            <div th:class="${#fields.hasErrors('assessorPay')}? 'form-group error':'form-group'">
+                <label class="form-label" for="assessorPay">
+                    <span class="form-label-bold">How much do assessors receive per application?</span>
+                    <span class="form-hint">This information will be available in the assessor invites.</span>
+                     <span th:if="${#fields.hasErrors('assessorPay')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
+
+                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                       data-required-errormessage="Please enter how much assessors will be paid"
+                       data-min-errormessage="Please enter how much assessors will be paid"
+                       th:errorclass="field-error"/>
+            </div>
+
+            <button class="button">Done</button>
+        </th:block>
+
+       <th:block th:if="${!editable}" id="section-assessors-readonly">
+            <dl class="standard-definition-list">
+                <dt>How many assessors are required for each application?</dt>
+                <dd th:text="${competitionSetupForm.assessorCount}"></dd>
+
+                <dt>How much do assessors receive per application?</dt>
+                <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
+            </dl>
+
+            <button class="button">Edit</button>
+        </th:block>
+    </form>
+
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
+</th:block>
+
