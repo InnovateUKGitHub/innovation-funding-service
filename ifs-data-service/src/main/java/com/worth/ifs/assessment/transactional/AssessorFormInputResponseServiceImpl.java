@@ -6,9 +6,14 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.transactional.FormInputService;
+import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +51,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private FormInputTypeService formInputTypeService;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -58,7 +69,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
-        return validateWordCount(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
+        return validateWordCountAndSelects(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
@@ -84,7 +95,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         );
     }
 
-    private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
+    private ServiceResult<Void> validateWordCountAndSelects(AssessorFormInputResponseResource response) {
         String value = response.getValue();
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
         Integer wordLimit = formInputResource.getWordCount();
@@ -94,6 +105,15 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 return serviceFailure(fieldError("value", value, "validation.field.max.word.count", "", wordLimit));
             }
         }
+
+        FormInputType formInputType = formInputTypeService.findByTitle("assessor_research_category").stream().findFirst().orElse(null);
+        if (value != null && formInputType != null && formInputType.getId().equals(formInputResource.getFormInputType())) {
+            List<CategoryResource> categoryResources = categoryService.getByType(CategoryType.RESEARCH_CATEGORY).getSuccessObject();
+            if (categoryResources.stream().filter(category -> category.getId().equals(Long.parseLong(value))).count() == 0) {
+                return serviceFailure(fieldError("value", value, "com.worth.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value));
+            }
+        }
+
         return serviceSuccess();
     }
 

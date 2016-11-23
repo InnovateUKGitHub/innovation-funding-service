@@ -108,7 +108,7 @@ Choosing 'not in scope' should update on the overview page
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And the user clicks the button/link    link=Back to your assessment overview
     And the user should see the text in the page    In scope? No
@@ -120,13 +120,13 @@ Scope: Autosave
     [Tags]    HappyPath
     Given the user navigates to the page    ${Assessment_overview_10}
     And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And The user enters text to a text field    css=.editor    Testing feedback field when "No" is selected.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     Then the user should see the text in the page    In scope? No
     And the user clicks the button/link    link=Scope
-    And the user should see the text in the page    Technical feasibility studies
+    And the user should see the text in the page    Technical feasibility
     And the user should see the text in the page    Testing feedback field when "No" is selected.
 
 Scope: Word count
