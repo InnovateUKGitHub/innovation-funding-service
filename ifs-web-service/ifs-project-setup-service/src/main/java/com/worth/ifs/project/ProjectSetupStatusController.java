@@ -80,14 +80,14 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
 
-        ProjectActivityStates spendProfileState = (ownOrganisation.getSpendProfileStatus() != null) ? ownOrganisation.getSpendProfileStatus() : ProjectActivityStates.NOT_REQUIRED;
+        ProjectActivityStates spendProfileState = ownOrganisation.getSpendProfileStatus();
 
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
-        boolean spendProfileApproved = (teamStatus.getLeadPartnerStatus().getSpendProfileStatus() != null) && teamStatus.getLeadPartnerStatus().getSpendProfileStatus().equals(COMPLETE);
+        boolean spendProfileApproved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
