@@ -35,7 +35,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         return new CompetitionSetupQuestionServiceImpl();
     }
     private static String number = "number";
-    private static String shortTitle = "shortTitle";
+    private static String shortTitle = CompetitionSetupQuestionServiceImpl.SCOPE_IDENTIFIER;
     private static String title = "title";
     private static String subTitle = "subTitle";
     private static String guidanceTitle = "guidanceTitle";
@@ -85,7 +85,15 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                             .withFormInputType(AssessorFormInputType.SCORE.getTitle())
                             .withScope(FormInputScope.ASSESSMENT)
-                            .build()
+                            .build(),
+                        newFormInput()
+                                .withFormInputType(AssessorFormInputType.RESEARCH_CATEGORY.getTitle())
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .build(),
+                        newFormInput()
+                                .withFormInputType(AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle())
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .build()
                         )
 
                 )
@@ -110,6 +118,10 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getAppendix(), true);
         assertEquals(resource.getScored(), true);
         assertEquals(resource.getWrittenFeedback(), true);
+        assertEquals(resource.getScope(), true);
+        assertEquals(resource.getResearchCategoryQuestion(), true);
+
+
         assertEquals(resource.getAssessmentGuidance(), assessmentGuidance);
         assertEquals(resource.getAssessmentMaxWords(), assessmentMaxWords);
         assertEquals(resource.getGuidanceTitle(), guidanceTitle);
@@ -121,6 +133,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getShortTitle(), shortTitle);
         assertEquals(resource.getTitle(), title);
         assertEquals(resource.getGuidance(), guidance);
+        assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
 
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }

@@ -16,7 +16,7 @@ Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
     [Setup]
-    When The user clicks the button/link    link=Juggling Craziness
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
@@ -49,7 +49,7 @@ Reject an application for assessment
     ...    INFUND-4128
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    Pending
     When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application

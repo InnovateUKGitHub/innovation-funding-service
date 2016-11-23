@@ -24,6 +24,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     
 	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
 
+    public static String SCOPE_IDENTIFIER = "Scope";
+    private static String PROJECT_SUMMARY_IDENTIFIER = "Project summary";
+    private static String PUBLIC_DESCRIPTION_IDENTIFIER = "Public description";
+
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -55,7 +59,21 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
+        setupResource.setType(typeFromQuestion(question));
+
         return ServiceResult.serviceSuccess(setupResource);
+    }
+
+    private CompetitionSetupQuestionType typeFromQuestion(Question question) {
+        if (question.getShortName().equals(SCOPE_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.SCOPE;
+        } else if (question.getShortName().equals(PROJECT_SUMMARY_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.PROJECT_SUMMARY;
+        } else if (question.getShortName().equals(PUBLIC_DESCRIPTION_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.PUBLIC_DESCRIPTION;
+        } else {
+            return CompetitionSetupQuestionType.ASSESSED_QUESTION;
+        }
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
@@ -68,7 +86,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-
     private void mapAssessmentFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (AssessorFormInputType.FEEDBACK.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setWrittenFeedback(formInput.getActive());
@@ -78,9 +95,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setScored(formInput.getActive());
         } else if (AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            //TODO: INFUND-5631
+            setupResource.setScope(true);
         } else if (AssessorFormInputType.RESEARCH_CATEGORY.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            //TODO: INFUND-5631
+            setupResource.setResearchCategoryQuestion(true);
         }
     }
 
