@@ -2,9 +2,11 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentTotalScore;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.domain.ActivityState;
@@ -19,6 +21,7 @@ import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuild
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.assessment.resource.AssessmentStates.PENDING;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -67,6 +70,22 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(expected, found);
         verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+    }
+
+    @Test
+    public void getTotalScore() throws Exception {
+        Long assessmentId = 1L;
+
+        AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource()
+                .withTotalScoreGiven(55)
+                .withTotalScorePossible(100)
+                .build();
+
+        when(assessmentRepositoryMock.getTotalScore(assessmentId)).thenReturn(new AssessmentTotalScore(55, 100));
+
+        assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccessObject());
+
+        verify(assessmentRepositoryMock, only()).getTotalScore(assessmentId);
     }
 
     @Test

@@ -2,10 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -18,12 +15,10 @@ import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuild
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -82,6 +77,14 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
         assertEquals(4, assessmentResources.size());
+    }
+
+    @Ignore("TODO INFUND-3725")
+    @Test
+    public void getTotalScore() throws Exception {
+        AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccessObjectOrThrowException();
+        assertEquals(10, result.getTotalScoreGiven());
+        assertEquals(100, result.getTotalScorePossible());
     }
 
     @Test

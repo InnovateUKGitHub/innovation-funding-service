@@ -6,6 +6,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
@@ -26,8 +27,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -104,6 +103,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 application.getApplicationDisplayName(),
                 leadOrganisation.get().getName(),
                 assessment.getAssessmentState(),
+                getOverallScore(assessment),
                 recommended);
     }
 
@@ -112,6 +112,11 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
+    }
+
+    private int getOverallScore(AssessmentResource assessmentResource) {
+        AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getId());
+        return assessmentTotalScore.getTotalScorePercentage();
     }
 
     private boolean getRecommended(AssessmentResource assessmentResource) {

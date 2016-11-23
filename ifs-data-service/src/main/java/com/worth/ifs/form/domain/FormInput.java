@@ -2,7 +2,7 @@ package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
 
@@ -35,6 +35,9 @@ public class FormInput{
 
     @OneToMany(mappedBy = "formInput")
     private List<FormInputResponse> responses;
+
+    @OneToMany(mappedBy = "formInput")
+    private List<AssessorFormInputResponse> assessorResponses;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -98,6 +101,14 @@ public class FormInput{
 
     public void setResponses(List<FormInputResponse> responses) {
         this.responses = responses;
+    }
+
+    public List<AssessorFormInputResponse> getAssessorResponses() {
+        return assessorResponses;
+    }
+
+    public void setAssessorResponses(List<AssessorFormInputResponse> assessorResponses) {
+        this.assessorResponses = assessorResponses;
     }
 
     public FormInputType getFormInputType() {

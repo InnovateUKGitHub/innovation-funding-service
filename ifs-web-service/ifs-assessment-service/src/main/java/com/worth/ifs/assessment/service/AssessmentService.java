@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.commons.service.ServiceResult;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface AssessmentService {
     AssessmentResource getById(Long id);
 
     List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
+
+    AssessmentTotalScoreResource getTotalScore(Long assessmentId);
 
     ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
 

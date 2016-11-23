@@ -1,11 +1,13 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentTotalScore;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -45,6 +47,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+        AssessmentTotalScore assessmentTotalScore = assessmentRepository.getTotalScore(assessmentId);
+        return serviceSuccess(new AssessmentTotalScoreResource(assessmentTotalScore.getTotalScoreGiven(), assessmentTotalScore.getTotalScorePossible()));
     }
 
     @Override

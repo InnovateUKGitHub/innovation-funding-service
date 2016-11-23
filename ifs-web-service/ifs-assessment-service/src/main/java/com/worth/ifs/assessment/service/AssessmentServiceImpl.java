@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResourceBuilder;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId) {
         return assessmentRestService.getByUserAndCompetition(userId, competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public AssessmentTotalScoreResource getTotalScore(Long assessmentId) {
+        return assessmentRestService.getTotalScore(assessmentId).getSuccessObjectOrThrowException();
     }
 
     @Override

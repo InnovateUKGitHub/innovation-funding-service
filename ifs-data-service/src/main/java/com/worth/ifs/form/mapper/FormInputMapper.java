@@ -29,6 +29,7 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
     public abstract FormInputResource mapToResource(FormInput domain);
 
     @Mappings({
+            @Mapping(target = "assessorResponses", ignore = true),
             @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true)
     })
