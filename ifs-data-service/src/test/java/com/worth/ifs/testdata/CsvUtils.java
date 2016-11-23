@@ -342,7 +342,11 @@ class CsvUtils {
         LocalDateTime fundersPanelDate;
         LocalDateTime fundersPanelEndDate;
         LocalDateTime assessorAcceptsDate;
+        LocalDateTime assessorsNotifiedDate;
         LocalDateTime assessorEndDate;
+        LocalDateTime assessmentClosedDate;
+        String leadTechnologist;
+        String compExecutive;
         boolean setupComplete;
 
         private CompetitionLine(List<String> line) {
@@ -350,7 +354,6 @@ class CsvUtils {
             int i = 0;
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
-            ;
             type = line.get(i++);
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
@@ -359,8 +362,12 @@ class CsvUtils {
             submissionDate = nullableDateTime(line.get(i++));
             fundersPanelDate = nullableDateTime(line.get(i++));
             fundersPanelEndDate = nullableDateTime(line.get(i++));
+            assessorsNotifiedDate = nullableDateTime(line.get(i++));
             assessorAcceptsDate = nullableDateTime(line.get(i++));
             assessorEndDate = nullableDateTime(line.get(i++));
+            assessmentClosedDate = nullableDateTime(line.get(i++));
+            leadTechnologist = nullable((line.get(i++)));
+            compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
         }
     }
@@ -396,7 +403,7 @@ class CsvUtils {
         String town;
         String postcode;
         String county;
-        OrganisationAddressType addressType;
+        List<OrganisationAddressType> addressType;
         String companyRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
@@ -412,7 +419,8 @@ class CsvUtils {
             county = nullable(line.get(i++));
             String addressTypeLine = nullable(line.get(i++));
             addressType = addressTypeLine != null ?
-                    OrganisationAddressType.valueOf(addressTypeLine) : null;
+                    simpleMap(asList(addressTypeLine.split(",")), OrganisationAddressType::valueOf) :
+                emptyList();
             companyRegistrationNumber = nullable(line.get(i++));
         }
     }
