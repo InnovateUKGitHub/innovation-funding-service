@@ -1,5 +1,6 @@
 package com.worth.ifs.base.amend;
 
+
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Constructor;
@@ -97,7 +98,7 @@ public class BaseBuilderAmendFunctions {
     }
 
     public static <T> Long getId(T instance) {
-        return (Long) ReflectionTestUtils.getField(instance, "id");
+        return (Long) getField(instance, "id");
     }
 
     public static <T> T setId(Long value, T instance) {
@@ -139,7 +140,7 @@ public class BaseBuilderAmendFunctions {
 
     public static <T> T addToList(String fieldName, Object value, T instance) {
 
-        List<Object> existingList = (List<Object>) ReflectionTestUtils.getField(instance, fieldName);
+        List<Object> existingList = (List<Object>) getField(instance, fieldName);
         List<Object> newList = new ArrayList<>();
 
         if (existingList != null) {
@@ -153,7 +154,7 @@ public class BaseBuilderAmendFunctions {
 
     public static <T> T addListToList(String fieldName, List<?> value, T instance) {
 
-        List<Object> existingList = (List<Object>) ReflectionTestUtils.getField(instance, fieldName);
+        List<Object> existingList = (List<Object>) getField(instance, fieldName);
         List<Object> newList = new ArrayList<>();
 
         if (existingList != null) {
