@@ -1,4 +1,4 @@
-if (project.hasProperty("profile") && project.profile != "microservices") {
+if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "docker-build.gradle"

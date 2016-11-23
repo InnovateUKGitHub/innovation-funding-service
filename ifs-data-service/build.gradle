@@ -1,4 +1,4 @@
-if (project.hasProperty("profile") && project.profile != "microservices") {
+if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "docker-build.gradle"
@@ -209,7 +209,6 @@ processTestResources {
 task startMySql(type:Exec) {
     workingDir '../'
     commandLine 'docker-compose', 'up', '-d', 'mysql'
-
     doLast {
         exec {
             //wait for sql container to start.
