@@ -37,7 +37,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                                                      "</ul>";
     private static String APPENDIX_DESCRIPTION = "Appendix";
 
-
+    public static String SCOPE_IDENTIFIER = "Scope";
+    private static String PROJECT_SUMMARY_IDENTIFIER = "Project summary";
+    private static String PUBLIC_DESCRIPTION_IDENTIFIER = "Public description";
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -56,9 +58,13 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         Question question = questionRepository.findOne(questionId);
         CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
+        //Set form input toggles to false. They will be set to true if form inputs are found in db.
         setupResource.setWrittenFeedback(false);
         setupResource.setAppendix(false);
         setupResource.setScored(false);
+        setupResource.setResearchCategoryQuestion(false);
+        setupResource.setScope(false);
+
         question.getFormInputs().forEach(formInput -> {
             if(FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
                 mapAssessmentFormInput(formInput, setupResource);
@@ -73,7 +79,22 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
+        setupResource.setType(typeFromQuestion(question));
+
         return ServiceResult.serviceSuccess(setupResource);
+    }
+
+    //TODO INFUND-6282 Remove this type and replace with an active, inactive, null checks on UI.
+    private CompetitionSetupQuestionType typeFromQuestion(Question question) {
+        if (question.getShortName().equals(SCOPE_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.SCOPE;
+        } else if (question.getShortName().equals(PROJECT_SUMMARY_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.PROJECT_SUMMARY;
+        } else if (question.getShortName().equals(PUBLIC_DESCRIPTION_IDENTIFIER)) {
+            return CompetitionSetupQuestionType.PUBLIC_DESCRIPTION;
+        } else {
+            return CompetitionSetupQuestionType.ASSESSED_QUESTION;
+        }
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
@@ -86,7 +107,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-
     private void mapAssessmentFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (AssessorFormInputType.FEEDBACK.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setWrittenFeedback(true);
@@ -96,9 +116,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setScored(true);
         } else if (AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            //TODO: INFUND-5631
+            setupResource.setScope(true);
         } else if (AssessorFormInputType.RESEARCH_CATEGORY.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            //TODO: INFUND-5631
+            setupResource.setResearchCategoryQuestion(true);
         }
     }
 
