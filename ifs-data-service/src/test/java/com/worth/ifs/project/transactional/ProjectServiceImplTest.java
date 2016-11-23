@@ -184,6 +184,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
@@ -1236,8 +1237,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withMonitoringOfficerStatus(NOT_STARTED).
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(ACTION_REQUIRED).
-                withSpendProfileStatus(ACTION_REQUIRED).
-                withOtherDocumentsStatus(PENDING).
+                withSpendProfileStatus(NOT_STARTED).
+                withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_STARTED).
                 build();
 
@@ -1251,7 +1252,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withBankDetailsStatus(NOT_STARTED, NOT_STARTED).
                 withFinanceChecksStatus(NOT_STARTED, COMPLETE).
-                withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
+                withSpendProfileStatus(NOT_STARTED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
