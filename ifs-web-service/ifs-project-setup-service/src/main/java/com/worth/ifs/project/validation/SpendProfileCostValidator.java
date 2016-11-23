@@ -1,7 +1,11 @@
 package com.worth.ifs.project.validation;
 
+
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.validation.exception.SpendProfileValidationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -17,6 +21,12 @@ import java.util.Map;
 @Component
 public class SpendProfileCostValidator implements Validator {
 
+    private static final Log LOG = LogFactory.getLog(SpendProfileCostValidator.class);
+
+
+    private static final BigDecimal COST_UPPER_LIMIT = new BigDecimal("1000000");
+    private static final int COMPARE_LESS_THAN = -1;
+
     @Override
     public void validate(Object target, Errors errors) {
         SpendProfileTableResource table = (SpendProfileTableResource) target;
@@ -26,59 +36,44 @@ public class SpendProfileCostValidator implements Validator {
             Long category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
-            int index = 0;
-            for (BigDecimal cost : monthlyCosts) {
-                isValid(cost, category, index, errors);
-                index++;
+            int numberOfMonthlyCosts = monthlyCosts.size();
+            for (int index = 0; index < numberOfMonthlyCosts; index++) {
+                try {
+                    isValid(monthlyCosts.get(index), category, index);
+                } catch (SpendProfileValidationException ex) {
+
+                    ValidationMessages.reject(errors, ex.getSpendProfileValidationError().getErrorKey(), ex.getCategory(), ex.getPosition());
+
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(ex.getMessage());
+                    } // else do nothing
+                }
             }
         }
     }
 
-    private void isValid(BigDecimal cost, Long category, int index, Errors errors) {
+    private void isValid(BigDecimal cost, Long category, int index) throws SpendProfileValidationException {
 
-        String partialErrorKey = String.format("Cost for category: %s and Month#: %d", category, index + 1);
+        int positionInError = index + 1;
 
-        checkNullCost(cost, category, index, errors, partialErrorKey);
-
-        checkFractionalCost(cost, category, index, errors, partialErrorKey);
-
-        checkCostLessThanZero(cost, category, index, errors, partialErrorKey);
-
-        checkCostGreaterThanOrEqualToMillion(cost, category, index, errors, partialErrorKey);
-    }
-
-    private void checkNullCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-        String errorKey = "validation.spend.profile.cost.should.not.be.null";
+        // cost should not be null
         if (null == cost) {
-            ValidationMessages.reject(errors, errorKey, category, index + 1);
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL, category, positionInError);
         }
-    }
 
-    private void checkFractionalCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-
-        String errorKey = "COST_FRACTIONAL: " + partialErrorKey;
-        if ((null != cost) && (cost.scale() > 0)) {
-            String errorMessage = String.format("Cost cannot contain fractional part. Category: %s, Month#: %d", category, index + 1);
-            errors.reject(errorKey, errorMessage);
-
+        // cost should not be fractional
+        if (cost.scale() > 0) {
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL, category, positionInError);
         }
-    }
 
-    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-
-        String errorKey = "COST_LESS_THAN_ZERO: " + partialErrorKey;
-        if ((null != cost) && (-1 == cost.compareTo(BigDecimal.ZERO))) { // Indicates that the cost is less than zero
-            String errorMessage = String.format("Cost cannot be less than zero. Category: %s, Month#: %d", category, index + 1);
-            errors.reject(errorKey, errorMessage);
+        // cost should not be less than zero
+        if (COMPARE_LESS_THAN == cost.compareTo(BigDecimal.ZERO)) {
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO, category, positionInError);
         }
-    }
 
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-
-        String errorKey = "COST_MILLION_OR_MORE: " + partialErrorKey;
-        if ((null != cost) && (-1 != cost.compareTo(new BigDecimal("1000000")))) { // Indicates that the cost million or more
-            String errorMessage = String.format("Cost cannot be million or more. Category: %s, Month#: %d", category, index + 1);
-            errors.reject(errorKey, errorMessage);
+        // cost should be within the upper limit
+        if (COMPARE_LESS_THAN != cost.compareTo(COST_UPPER_LIMIT)) {
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT, category, positionInError);
         }
     }
 
@@ -88,3 +83,4 @@ public class SpendProfileCostValidator implements Validator {
     }
 
 }
+
