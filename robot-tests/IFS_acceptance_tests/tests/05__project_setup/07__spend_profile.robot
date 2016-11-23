@@ -41,7 +41,7 @@ Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
     [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
-    Given the project finance user moves La Fromage into project setup if it isn't already
+    Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
     And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
@@ -486,13 +486,13 @@ Project finance user cannot access internal users' spend profile page
 
 
 *** Keywords ***
-the project finance user moves La Fromage into project setup if it isn't already
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
-    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  La Fromage
-    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  ${FUNDERS_PANEL_COMPETITION_NAME}
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
-the project finance user moves La Fromage into project setup
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user selects the option from the drop-down menu    Yes    id=fund${FUNDERS_PANEL_APPLICATION_1}
     the user selects the option from the drop-down menu    No    id=fund${FUNDERS_PANEL_APPLICATION_2}

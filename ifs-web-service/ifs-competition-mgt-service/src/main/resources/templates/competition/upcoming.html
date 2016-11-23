@@ -16,7 +16,7 @@
     </form>
     <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'upcoming'}, counts=${counts})" th:remove="tag" />
 
-    <section th:with="inPrepComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)}">
+    <section th:with="inPrepComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
         <h2 class="heading-medium"
             th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
         <ul class="list-overview">
@@ -31,7 +31,7 @@
         </ul>
     </section>
 
-    <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
+    <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
         <h2 class="heading-medium"
             th:text="'Ready to open ('+${readyToOpenComps == null ? 0 : readyToOpenComps.size()}+')'"></h2>
         <ul class="list-overview">
