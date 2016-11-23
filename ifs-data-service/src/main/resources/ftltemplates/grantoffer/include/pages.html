@@ -4,27 +4,26 @@
 <div class="textcenter">
   <img src="./innovateuk-logo.png" alt="Innovate UK" />
 </div>
-<p>
-  «LeadContact»<br/>
-  «LeadOrgName»<br/>
-  «Address1»<br/>
-  «Address2»<br/>
-  «Address3»<br/>
-  «TownCity»<br/>
-  «Postcode»<br/>
+<p>${LeadContact}<br/>
+  ${LeadOrgName}<br/>
+  ${Address1}<br/>
+  $Address2}<br/>
+  ${Address3}<br/>
+  ${TownCity}<br/>
+  ${Postcode}<br/>
 </p>
 <p class="bold">
-  Application number: «Application Number»<br/>
-  Date: «Date»
+  Application number: ${applicationNumber}<br/>
+  Date: ${Date}
 </p>
 <p class="bold">
-  Dear «Salutation»,
+  Dear ${LeadContact},
 </p>
 
 <h1>Award confirmation letter</h1>
 <p class="bold">
-  «CompetitionName»<br/>
-  Project Title: «Project_Title»
+  ${CompetitionName}<br/>
+  Project Title: ${Project_Title}
 </p>
 <p>
   I am pleased to inform you that subject to our standard Terms and Conditions,
@@ -40,7 +39,7 @@
 <h2>Start and End Dates</h2>
 <p>
   In accordance with those submissions made as part of your application for funding,
-  we confirm that the Project shall commence on the <em>«Start_Date»</em> and is expected to complete after «project months»,
+  we confirm that the Project shall commence on the <em>${StartDate}</em> and is expected to complete after ${projectMonths},
   subject to those provisions for suspension and/or withdrawal of funding outlined in our published Terms and Conditions.
   Furthermore, you may only start work on the Project once you have completed the <em>Additional Acceptance Conditions</em> listed here under;
   failure to do so may result in the Project being unable to start or,
@@ -76,10 +75,10 @@
 <#macro page2>
 <h1>Eligible cost and grant allocations</h1>
 <p class="bold">
-  Application number: «xxx»<br/>
-  Date: «Date»<br/>
-  «CompetitionName»<br/>
-  Project Title: «Project_Title»
+  Application number: ${applicationNumber}}<br/>
+  Date: ${Date}<br/>
+  ${CompetitionName}<br/>
+  Project Title: ${Project_Title}
 </p>
 <table>
   <thead>
@@ -172,10 +171,10 @@
 <#macro page3>
 <h1>Acceptance of award</h1>
 <p class="bold">
-  Application number: «xxx»<br/>
-  Date: «Date»<br/>
-  Innovate UK: «CompetitionName»<br/>
-  Project Title: «Project_Title»
+  Application number: ${applicationNumber}<br/>
+  Date: ${Date}<br/>
+  Innovate UK: ${CompetitionName}<br/>
+  Project Title: ${ProjectTitle}
 </p>
 <p>
   I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. I make the following declarations:
@@ -183,8 +182,8 @@
 <ol>
   <li>For the purposes of the offer:
       <ol>
-        <li>Project Start Date   «project start date»</li>
-        <li>Project Length  «project length» months</li>
+        <li>Project Start Date   ${projectStartDate}</li>
+        <li>Project Length  ${projectLength} months</li>
       </ol>
   </li>
 </ol>
@@ -192,7 +191,7 @@
   For ease of administration, the Project Start Date should always lie on the start of a calendar month, and the Project End Date at the end of the last calendar month as defined by the Project Length.
 </p>
 <p class="signature">Signed: ………………………………………………………….</p>
-<p>Director for and on behalf of «LeadOrgName»</p>
+<p>Director for and on behalf of ${LeadOrgName}</p>
 <p class="signature">* insert name:.……………………………………......................... </p>
 <p>Date: …………………………………………………………….</p>
 </#macro>
