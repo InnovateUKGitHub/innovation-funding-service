@@ -3,7 +3,6 @@ package com.worth.ifs.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.FinanceRowService;
@@ -12,8 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
-import com.worth.ifs.application.model.ApplicationNavigationPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
@@ -314,7 +311,7 @@ public class ApplicationFormController {
 
             /* End save action */
 
-            if (validationHandler.hasErrors() || (errors.hasErrors() && isMarkQuestionRequest(params))) {
+            if ((validationHandler.hasErrors() || errors.hasErrors()) && isMarkQuestionRequest(params)) {
 
                 validationHandler.addAnyErrors(errors);
 
