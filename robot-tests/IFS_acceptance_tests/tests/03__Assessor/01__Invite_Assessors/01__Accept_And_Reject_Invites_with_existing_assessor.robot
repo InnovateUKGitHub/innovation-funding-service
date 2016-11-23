@@ -44,8 +44,8 @@ Existing assessor: Reject invitation
     ...    INFUND-5165
     [Tags]
     Given the user navigates to the page    ${Invitation_existing_assessor1}
-    and the user should see the text in the page    Invitation to assess 'Juggling Craziness'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'
+    and the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
@@ -67,11 +67,11 @@ Existing assessor: Accept invitation
     ...    INFUND-5165
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Sarcasm Stupendousness'.
-    And the user should see the text in the page    Invitation to assess 'Sarcasm Stupendousness'
+    And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
+    And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user clicks the button/link    jQuery=.button:contains("Accept")
     Then The user should see the text in the page    Assessor dashboard
-    And the user should see the element    link=Sarcasm Stupendousness
+    And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}
     And the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 
@@ -87,6 +87,8 @@ When the assessment period starts the comp moves to the comp for assessment
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720

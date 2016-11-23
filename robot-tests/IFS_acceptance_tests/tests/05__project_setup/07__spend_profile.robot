@@ -41,7 +41,7 @@ Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
     [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
-    Given the project finance user moves La Fromage into project setup if it isn't already
+    Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
     And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
@@ -120,7 +120,7 @@ Lead partner can edit his spend profile with invalid values
     Then the field has value                           css=#row-total-40    £ 8,233
     And the user should see the element                jQuery=.cell-error #row-total-40
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page      Your spend profile has total costs higher than eligible project costs,
+    Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field          css=#row-40-0    2666
     And the user should not see the element            jQuery=.cell-error #row-total-40
@@ -156,7 +156,7 @@ Lead partner can edit his spend profile with valid values
     Then the field has value                             css=#row-total-45    £ 6,667
     And the user should not see the text in the page     Unable to save spend profile
     Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
+    Then the user should not see the text in the page    You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
 
 Lead Partners Spend profile summary gets updated when edited
     [Documentation]    INFUND-3971
@@ -486,13 +486,13 @@ Project finance user cannot access internal users' spend profile page
 
 
 *** Keywords ***
-the project finance user moves La Fromage into project setup if it isn't already
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
-    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  La Fromage
-    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  ${FUNDERS_PANEL_COMPETITION_NAME}
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
-the project finance user moves La Fromage into project setup
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user selects the option from the drop-down menu    Yes    id=fund${FUNDERS_PANEL_APPLICATION_1}
     the user selects the option from the drop-down menu    No    id=fund${FUNDERS_PANEL_APPLICATION_2}

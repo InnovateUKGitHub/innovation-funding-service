@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.resource;
 
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,32 +18,56 @@ public class CompetitionParticipantResourceTest {
     private CompetitionParticipantResource competitionParticipantStartedToday;
     private CompetitionParticipantResource competitionParticipantStartingTommorrow;
 
+    private CompetitionParticipantResource competitionParticipantCompetitionSetup;
+    private CompetitionParticipantResource competitionParticipantReadyToOpen;
+    private CompetitionParticipantResource competitionParticipantOpen;
+    private CompetitionParticipantResource competitionParticipantClosed;
+    private CompetitionParticipantResource competitionParticipantInAssessment;
+    private CompetitionParticipantResource competitionParticipantAssessmentClosed;
+    private CompetitionParticipantResource competitionParticipantAssessorFeedback;
+    private CompetitionParticipantResource competitionParticipantProjectSetup;
+
     @Before
     public void setUp() throws Exception {
         competitionParticipant = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(4))
                 .build();
         competitionParticipantEndingToday = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay())
                 .build();
         competitionParticipantEndingTommorrow = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(1))
                 .build();
         competitionParticipantEndedYesterday = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().minusDays(1))
                 .build();
         competitionParticipantStartedToday = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay())
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(6))
                 .build();
         competitionParticipantStartingTommorrow = newCompetitionParticipantResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
                 .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().plusDays(1))
                 .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(7))
                 .build();
+
+        competitionParticipantCompetitionSetup = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        competitionParticipantReadyToOpen = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        competitionParticipantOpen = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        competitionParticipantClosed = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.CLOSED).build();
+        competitionParticipantInAssessment = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
+        competitionParticipantAssessmentClosed = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).build();
+        competitionParticipantAssessorFeedback = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).build();
+        competitionParticipantProjectSetup = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).build();
     }
 
     @Test
@@ -67,21 +92,26 @@ public class CompetitionParticipantResourceTest {
 
     @Test
     public void isInAssessment() throws Exception {
-        assertTrue(competitionParticipant.isInAssessment());
-        assertFalse(competitionParticipantEndingToday.isInAssessment());
-        assertTrue(competitionParticipantEndingTommorrow.isInAssessment());
-        assertFalse(competitionParticipantEndedYesterday.isInAssessment());
-        assertTrue(competitionParticipantStartedToday.isInAssessment());
-        assertFalse(competitionParticipantStartingTommorrow.isInAssessment());
+        assertFalse(competitionParticipantCompetitionSetup.isInAssessment());
+        assertFalse(competitionParticipantReadyToOpen.isInAssessment());
+        assertFalse(competitionParticipantOpen.isInAssessment());
+        assertFalse(competitionParticipantAssessmentClosed.isAnUpcomingAssessment());
+        assertTrue(competitionParticipantInAssessment.isInAssessment());
+        assertFalse(competitionParticipantAssessmentClosed.isInAssessment());
+        assertFalse(competitionParticipantAssessorFeedback.isInAssessment());
+        assertFalse(competitionParticipantProjectSetup.isInAssessment());
     }
 
     @Test
     public void isAnUpcomingAssessment() throws Exception {
-        assertFalse(competitionParticipant.isAnUpcomingAssessment());
-        assertFalse(competitionParticipantEndingToday.isAnUpcomingAssessment());
-        assertFalse(competitionParticipantEndingTommorrow.isAnUpcomingAssessment());
-        assertFalse(competitionParticipantEndedYesterday.isAnUpcomingAssessment());
-        assertFalse(competitionParticipantStartedToday.isAnUpcomingAssessment());
-        assertTrue(competitionParticipantStartingTommorrow.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantCompetitionSetup.isAnUpcomingAssessment());
+        assertTrue(competitionParticipantReadyToOpen.isAnUpcomingAssessment());
+        assertTrue(competitionParticipantOpen.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantClosed.isInAssessment());
+        assertFalse(competitionParticipantInAssessment.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantAssessmentClosed.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantAssessorFeedback.isAnUpcomingAssessment());
+        assertFalse(competitionParticipantProjectSetup.isAnUpcomingAssessment());
+
     }
 }

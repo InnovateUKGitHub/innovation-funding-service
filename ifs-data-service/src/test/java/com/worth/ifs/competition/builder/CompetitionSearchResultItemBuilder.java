@@ -1,8 +1,8 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -41,7 +41,7 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
         return withArray((number, competition) -> competition.setNumberOfApplications(number), numberOfApplications);
     }
 
-    public CompetitionSearchResultItemBuilder withCompetitionStatus(CompetitionResource.Status... competitionStatus) {
+    public CompetitionSearchResultItemBuilder withCompetitionStatus(CompetitionStatus... competitionStatus) {
         return withArray((status, competition) -> competition.setCompetitionStatus(status), competitionStatus);
     }
 
