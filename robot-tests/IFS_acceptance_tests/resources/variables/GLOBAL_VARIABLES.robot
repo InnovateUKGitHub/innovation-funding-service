@@ -88,7 +88,7 @@ ${IN_ASSESSMENT_APPLICATION_3}    20
 ${IN_ASSESSMENT_APPLICATION_3_NUMBER}    00000020
 
 ${INFORM_COMPETITION}    7
-${INFORM_COMPETITION_NAME}    Integrated delivery programme – low carbon vehicles
+${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
 
 ${STEVE_SMITH_ID}    55
