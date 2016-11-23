@@ -366,7 +366,7 @@ Application: Project Summary
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Finances Form
-    [Documentation]    INFUND-5640
+    [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
     And the user should see the element       jQuery=h1:contains("Application finances")
     And the user should see the text in the page  Each partner is required to complete the following finance sections
@@ -375,8 +375,7 @@ Application: Finances Form
     And The user clicks the button/link    jQuery=label:contains("No")
     And The user clicks the button/link    jQuery=button:contains("Save and close")
     And the user clicks the button/link    link=Finances
-    And The user clicks the button/link    jQuery=a:contains("Edit this question")
-    Then the Radio Button selections should be correct
+    Then the finance information should be correct
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Mark as done and the Edit again
@@ -523,6 +522,6 @@ The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
 
-The Radio Button selections should be correct
-    Radio Button Should Be Set To    fullApplicationFinance    false
-    Radio Button Should Be Set To    includeGrowthTable    false
+The finance information should be correct
+    the user should see the text in the page    Light finances
+    the user should see the text in the page    No
