@@ -17,7 +17,9 @@
 </p>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}
+
+  <#assign sendDate = .now>
+  Date: ${sendDate?string["MM/dd/yyyy"]}
 </p>
 <p class="bold">
   Dear ${LeadContact},
@@ -70,7 +72,12 @@
   Head of Post-Award<br/>
   On behalf of Innovate UK
 </p>
-<p>
+<p class="textcenter"><br/>
+  Innovate UK is the trading name of the Technology Strategy Board <br/>
+  Innovate UK, North Star House, North Star Avenue, Swindon SN2 1UE <br/>
+  Tel:+44 (0)1793 442 700 <br/>
+  Email: support@innovateuk.org <br/>
+  www.innovateuk.gov.uk <br/>
 </p>
 </#macro>
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
@@ -79,7 +86,7 @@
 <h1>Eligible cost and grant allocations</h1>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}<br/>
+  Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
   ${CompetitionName}<br/>
   Project Title: ${ProjectTitle}
 </p>
@@ -175,7 +182,7 @@
 <h1>Acceptance of award</h1>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}<br/>
+  Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
   Innovate UK: ${CompetitionName}<br/>
   Project Title: ${ProjectTitle}
 </p>
@@ -185,7 +192,7 @@
 <ol>
   <li>For the purposes of the offer:
       <ol>
-        <li>Project Start Date   ${ProjectStartDate}</li>
+        <li>Project Start Date ${ProjectStartDate}</li>
         <li>Project Length  ${ProjectLength} months</li>
       </ol>
   </li>
