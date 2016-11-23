@@ -49,6 +49,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "      AND p.id = :id", nativeQuery = true)
     boolean isFeedbackComplete(@Param("id") Long id);
 
+    /*
+    //TODO INFUND-3725 Remove me
     @Query(value = "SELECT" +
             "  SUM(afir.value)                                                 AS total_score_given," +
             "  SUM(q.assessor_maximum_score)                                   AS total_score_possible," +
@@ -68,15 +70,11 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "                               FROM form_input_type fit" +
             "                               WHERE fit.title = 'assessor_score')" +
             "      AND p.id = :id", nativeQuery = true)
-    //TODO INFUND-3725 Remove me
-    List<AssessmentTotalScore> getTotalScoreNative(@Param("id") Long id);
+    AssessmentTotalScore getTotalScoreNative(@Param("id") Long id);*/
 
-    @Query(value = "SELECT new com.worth.ifs.assessment.domain.AssessmentTotalScore('foo') " +
-            //"  CAST(SUM(afir.value) AS int)," +
-            //"1, " +
-            //"1" +
-            //"  CAST(SUM(q.assessorMaximumScore) AS int)" +
-            //") " +
+    @Query(value = "SELECT new com.worth.ifs.assessment.domain.AssessmentTotalScore(" +
+            "  CAST(SUM(afir.value) AS int)," +
+            "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
             "FROM Process p" +
             "  JOIN p.target.competition.questions q" +
             "  JOIN q.formInputs fi" +

@@ -18,13 +18,13 @@ import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.LongAccumulator;
-
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -185,6 +185,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertFalse(repository.isFeedbackComplete(assessment.getId()));
     }
 
+    @Ignore("TODO INFUND-3725")
     @Test
     public void getTotalScore() {
         Application application = applicationRepository.findOne(1L);
@@ -210,7 +211,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreBefore.getTotalScorePossible());
 
         // Create form input responses for each of the score form inputs, tracking the total score given
-        LongAccumulator scoreGivenAccumulator = new LongAccumulator((x, y) -> x+ y, 0);
+        LongAccumulator scoreGivenAccumulator = new LongAccumulator((x, y) -> x + y, 0);
         assessorFormInputResponseRepository.save(competition.getQuestions().stream().flatMap(question -> question.getFormInputs().stream().filter(formInput -> scoreType.equals(formInput.getFormInputType())).map(formInput -> {
             int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
             scoreGivenAccumulator.accumulate(randomScore);

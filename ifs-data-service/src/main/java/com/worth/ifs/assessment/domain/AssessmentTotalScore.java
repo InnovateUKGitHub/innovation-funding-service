@@ -25,8 +25,4 @@ public class AssessmentTotalScore {
     public void setTotalScorePossible(int totalScorePossible) {
         this.totalScorePossible = totalScorePossible;
     }
-
-    public int getTotalScorePercentage() {
-        return totalScorePossible == 0 ? 0 : Math.round(totalScoreGiven * 100.0f / totalScorePossible);
-    }
 }

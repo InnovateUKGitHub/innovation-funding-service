@@ -117,24 +117,23 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService, applicationService, processRoleService, organisationRestService, processOutcomeService);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
-        inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService, assessmentService);
-            inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
-            inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
-            inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            inOrder.verify(applicationService).getById(assessment.getApplication());
+            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
+            inOrder.verify(organisationRestService).getOrganisationById(isA(Long.class));
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
-                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                inOrder.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
             } else {
-                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                inOrder.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
             }
-            inOrderByAssessment.verify(assessmentService).getTotalScore(assessment.getId());
-            inOrderByAssessment.verifyNoMoreInteractions();
+            inOrder.verify(assessmentService).getTotalScore(assessment.getId());
         });
+
+        inOrder.verifyNoMoreInteractions();
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
                 new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState(), totalScores.get(3).getTotalScorePercentage(), false)
@@ -212,33 +211,32 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentService);
+        InOrder inOrder = inOrder(competitionService, assessmentService, applicationService, processRoleService, organisationRestService, processOutcomeService);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
-        inOrder.verifyNoMoreInteractions();
 
         assessments.forEach(assessment -> {
-            InOrder inOrderByAssessment = inOrder(applicationService, processRoleService, organisationRestService, processOutcomeService, assessmentService);
-            inOrderByAssessment.verify(applicationService).getById(assessment.getApplication());
-            inOrderByAssessment.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
-            inOrderByAssessment.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            inOrder.verify(applicationService).getById(assessment.getApplication());
+            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
+            inOrder.verify(organisationRestService).getOrganisationById(isA(Long.class));
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
-                inOrderByAssessment.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                inOrder.verify(processOutcomeService).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
             } else {
-                inOrderByAssessment.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
+                inOrder.verify(processOutcomeService, never()).getByProcessIdAndOutcomeType(assessment.getId(), AssessmentOutcomes.FUNDING_DECISION.getType());
             }
-            inOrderByAssessment.verify(assessmentService).getTotalScore(assessment.getId());
-            inOrderByAssessment.verifyNoMoreInteractions();
+            inOrder.verify(assessmentService).getTotalScore(assessment.getId());
         });
 
+        inOrder.verifyNoMoreInteractions();
+
         List<AssessorCompetitionDashboardApplicationViewModel> expectedSubmitted = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState(), totalScores.get(0).getTotalScorePercentage(), true)
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(3).getId(), assessments.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessments.get(3).getAssessmentState(), totalScores.get(3).getTotalScorePercentage(), true)
         );
 
         List<AssessorCompetitionDashboardApplicationViewModel> expectedOutstanding = asList(
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState(), totalScores.get(1).getTotalScorePercentage(), false),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState(), totalScores.get(2).getTotalScorePercentage(), false),
-                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState(), totalScores.get(3).getTotalScorePercentage(), false)
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(0).getId(), assessments.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessments.get(0).getAssessmentState(), totalScores.get(0).getTotalScorePercentage(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(1).getId(), assessments.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessments.get(1).getAssessmentState(), totalScores.get(1).getTotalScorePercentage(), false),
+                new AssessorCompetitionDashboardApplicationViewModel(applications.get(2).getId(), assessments.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessments.get(2).getAssessmentState(), totalScores.get(2).getTotalScorePercentage(), false)
         );
 
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
