@@ -29,6 +29,8 @@ import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.GuidanceRowResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
@@ -87,11 +89,9 @@ public class POJOTest {
             Application.class,
             ApplicationStatus.class,
             FileEntry.class,
-            FinanceRowMetaField.class,
             FormValidator.class,
             FormInputType.class,
             OrganisationAddress.class,
-            FinanceRowMetaValue.class,
             Token.class,
             InviteOrganisation.class,
             Section.class,
@@ -189,6 +189,8 @@ public class POJOTest {
         public boolean include(PojoClass pojoClass) {
             return !pojoClass.getClazz().equals(ProcessOutcomeResource.class)
                     && !pojoClass.getClazz().equals(Token.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaField.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaValue.class)
                     && !pojoClass.getClazz().equals(TokenResource.class)
                     && !pojoClass.getClazz().equals(PageResource.class)
                     && !pojoClass.getClazz().equals(Competition.class)

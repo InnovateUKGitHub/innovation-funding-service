@@ -1,1 +1,0 @@
-UPDATE finance_row SET row_type = 'ApplicationFinance' WHERE application_row_id IS NULL;

@@ -1,9 +1,11 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.application.builder.QuestionBuilder;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.builder.ApplicationFinanceBuilder;
 import com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -25,6 +27,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
