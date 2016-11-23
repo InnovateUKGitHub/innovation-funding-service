@@ -19,6 +19,7 @@ import com.worth.ifs.application.service.QuestionStatusRestService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -136,7 +137,7 @@ public class QuestionModelPopulator {
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
-        if(competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN)) {
+        if(competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
             Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
             return questionStatuses.size() > 0 &&
                     (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));

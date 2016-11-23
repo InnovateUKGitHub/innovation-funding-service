@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.builder;
 
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -28,6 +29,7 @@ public class CompetitionParticipantResourceBuilderTest {
         LocalDateTime expectedAssessorDeadlineDate = LocalDateTime.now().plusDays(2);
         long expectedTotalAssessments = 4L;
         long expectedSubmittedAssessments = 1L;
+        CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
 
         CompetitionParticipantResource competitionParticipant = newCompetitionParticipantResource()
                 .withId(expectedId)
@@ -43,6 +45,7 @@ public class CompetitionParticipantResourceBuilderTest {
                 .withAssessorDeadlineDate(expectedAssessorDeadlineDate)
                 .withTotalAssessments(expectedTotalAssessments)
                 .withSubmittedAssessments(expectedSubmittedAssessments)
+                .withCompetitionStatus(expectedCompetitionStatus)
                 .build();
 
         assertEquals(expectedId, competitionParticipant.getId());
@@ -58,6 +61,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedAssessorDeadlineDate, competitionParticipant.getAssessorDeadlineDate());
         assertEquals(expectedTotalAssessments, competitionParticipant.getTotalAssessments());
         assertEquals(expectedSubmittedAssessments, competitionParticipant.getSubmittedAssessments());
+        assertEquals(expectedCompetitionStatus, competitionParticipant.getCompetitionStatus());
     }
 
     @Test
@@ -76,6 +80,7 @@ public class CompetitionParticipantResourceBuilderTest {
         LocalDateTime[] expectedAssessorDeadlineDates = {LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(5)};
         Long[] expectedTotalAssessments = {4L, 5L};
         Long[] expectedSubmittedAssessments = {1L, 2L};
+        CompetitionStatus[] expectedCompetitionStatuses = {CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL};
 
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
                 .withId(expectedIds)
@@ -91,6 +96,7 @@ public class CompetitionParticipantResourceBuilderTest {
                 .withAssessorDeadlineDate(expectedAssessorDeadlineDates)
                 .withTotalAssessments(expectedTotalAssessments)
                 .withSubmittedAssessments(expectedSubmittedAssessments)
+                .withCompetitionStatus(expectedCompetitionStatuses)
                 .build(2);
 
         CompetitionParticipantResource first = competitionParticipants.get(0);
@@ -107,6 +113,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedAssessorDeadlineDates[0], first.getAssessorDeadlineDate());
         assertEquals(expectedTotalAssessments[0].longValue(), first.getTotalAssessments());
         assertEquals(expectedSubmittedAssessments[0].longValue(), first.getSubmittedAssessments());
+        assertEquals(expectedCompetitionStatuses[0], first.getCompetitionStatus());
 
         CompetitionParticipantResource second = competitionParticipants.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -122,5 +129,6 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedAssessorDeadlineDates[1], second.getAssessorDeadlineDate());
         assertEquals(expectedTotalAssessments[1].longValue(), second.getTotalAssessments());
         assertEquals(expectedSubmittedAssessments[1].longValue(), second.getSubmittedAssessments());
+        assertEquals(expectedCompetitionStatuses[1], second.getCompetitionStatus());
     }
 }

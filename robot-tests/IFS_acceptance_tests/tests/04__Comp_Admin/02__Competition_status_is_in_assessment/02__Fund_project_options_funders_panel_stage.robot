@@ -77,12 +77,12 @@ Once applicants are notified, the whole state of the competition changes to Asse
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user reads his email from the default mailbox    worth.email.test+fundsuccess@gmail.com    Your application into the competition La Fromage    pleased to inform you
+    Then the user reads his email from the default mailbox    worth.email.test+fundsuccess@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    pleased to inform you
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user reads his email from the second default mailbox   worth.email.test.two+fundfailure@gmail.com    Your application into the competition La Fromage    unable to fund your application
+    Then the user reads his email from the second default mailbox   worth.email.test.two+fundfailure@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    unable to fund your application
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
@@ -124,10 +124,10 @@ The option to notify applicants is enabled
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
 the successful application shows in the project setup section
-    Element Should Contain    css=section.projects-in-setup    Cheese is good
+    Element Should Contain    css=section.projects-in-setup    Connected batteries step change - battery management in the off-grid energy sector
 
 the successful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Cheese is good
+    Element Should Contain    css=section.previous-applications    Connected batteries step change - battery management in the off-grid energy sector
 
 the unsuccessful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Cheese is great
+    Element Should Contain    css=section.previous-applications    Wireless remote collection of data from multiple in-field sensors

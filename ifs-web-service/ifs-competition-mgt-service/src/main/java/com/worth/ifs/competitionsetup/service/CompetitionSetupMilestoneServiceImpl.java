@@ -23,12 +23,12 @@ import java.util.stream.Stream;
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
 
     @Autowired
-    MilestoneService milestoneService;
+    private MilestoneService milestoneService;
 
     @Override
     public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.values()).forEach(type -> {
+        Stream.of(MilestoneType.presetValues()).forEach(type -> {
             MilestoneResource newMilestone = milestoneService.create(type, competitionId);
             newMilestones.add(newMilestone);
         });

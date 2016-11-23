@@ -9,7 +9,7 @@ Resource          ../../../resources/defaultResources.robot
 Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("Your details")
+    Given the user clicks the button/link    jQuery=a:contains("your details")
     And the user clicks the button/link    jQuery=a:contains("Edit your details")
     And the user should see the text in the page    Edit your details
     When The user enters text to a text field    id=firstName    Joy12
@@ -33,7 +33,7 @@ Update profile
     [Documentation]    INFUND-1480
     [Tags]
     When the assessor updates profile details
-    And the user clicks the button/link    jQuery=a:contains("Your details")
+    And the user clicks the button/link    jQuery=a:contains("your details")
     Then the saved changes are visible
 
 *** Keywords ***
