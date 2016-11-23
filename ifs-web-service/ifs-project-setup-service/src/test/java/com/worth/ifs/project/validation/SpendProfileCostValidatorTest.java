@@ -147,7 +147,7 @@ public class SpendProfileCostValidatorTest {
         List<ObjectError> errors = bindingResult.getAllErrors();
 
         for (int i = 0; i < 3; i++) {
-            assertExpectedErrors(errors, "validation.spend.profile.field.must.not.be.null");
+            assertExpectedErrors(errors, "validation.spend.profile.cost.should.not.be.null");
         }
     }
 

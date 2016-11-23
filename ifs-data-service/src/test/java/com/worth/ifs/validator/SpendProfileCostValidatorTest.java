@@ -31,22 +31,23 @@ public class SpendProfileCostValidatorTest {
     }
 
     @Test
-    public void testCostsAreFractionalLessThanZeroOrGreaterThanMillion() {
+    public void testCostsAreFractionalLessThanZeroOrGreaterThanMillionOrNukk() {
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("-30"), null),
                 3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
 
         validator.validate(table, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        Assert.assertEquals(3, bindingResult.getErrorCount());
+        Assert.assertEquals(4, bindingResult.getErrorCount());
 
         ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, 1L, 1);
         ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, 2L, 2);
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_MORE_THAN_ALLOWED_MAX.getErrorKey(), 2, 3L, 3);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 2L, 3);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, 3L, 3);
     }
 
     @Test
@@ -100,9 +101,9 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_MORE_THAN_ALLOWED_MAX.getErrorKey(), 0, 1L, 1);
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_MORE_THAN_ALLOWED_MAX.getErrorKey(), 1, 2L, 2);
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_MORE_THAN_ALLOWED_MAX.getErrorKey(), 2, 3L, 2);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, 1L, 1);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, 2L, 2);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, 3L, 2);
     }
 
     @Test
@@ -119,8 +120,8 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.FIELD_MUST_NOT_BE_NULL.getErrorKey(), 0, 1L, 2);
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.FIELD_MUST_NOT_BE_NULL.getErrorKey(), 1, 2L, 1);
-        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.FIELD_MUST_NOT_BE_NULL.getErrorKey(), 2, 3L, 3);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 0, 1L, 2);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 1, 2L, 1);
+        ValidatorTestUtil.verifyError(bindingResult, SpendProfileValidationErrorKey.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 3L, 3);
     }
 }

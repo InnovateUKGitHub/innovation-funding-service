@@ -48,7 +48,7 @@ public class SpendProfileCostValidator implements Validator {
     }
 
     private void checkNullCost(BigDecimal cost, Long category, int index, Errors errors, String partialErrorKey) {
-        String errorKey = "validation.spend.profile.field.must.not.be.null";
+        String errorKey = "validation.spend.profile.cost.should.not.be.null";
         if (null == cost) {
             ValidationMessages.reject(errors, errorKey, category, index + 1);
         }
