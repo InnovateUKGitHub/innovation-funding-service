@@ -18,6 +18,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
@@ -29,6 +30,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -228,8 +230,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
 
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(assessments);
-        when(assessmentWorkflowHandler.submit(assessments.get(0))).thenReturn(true);
-        when(assessmentWorkflowHandler.submit(assessments.get(1))).thenReturn(true);
+
+        when(assessmentWorkflowHandler.submit(assessments.get(0))).thenAnswer(invocation -> {
+            assessments.get(0).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
+            return Boolean.TRUE;
+        });
+        when(assessmentWorkflowHandler.submit(assessments.get(1))).thenAnswer(invocation -> {
+            assessments.get(1).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
+            return Boolean.TRUE;
+        });
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isSuccess());
@@ -258,7 +267,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(1, assessmentSubmissions.getAssessmentIds().size());
 
-        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(asList(assessment));
+        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(singletonList(assessment));
         when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
@@ -295,8 +304,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
 
-        Application application = new Application();
-        application.setName("Test Application");
+        Application application = newApplication()
+                .withName("Test Application")
+                .build();
 
         Assessment assessment = newAssessment()
                 .withId(1L)
