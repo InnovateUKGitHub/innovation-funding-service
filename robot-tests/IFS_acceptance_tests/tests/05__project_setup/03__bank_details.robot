@@ -136,7 +136,7 @@ Status updates correctly for internal user's table
 
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010 , INFUND-4428
     [Tags]    HappyPath
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
