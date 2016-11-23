@@ -307,7 +307,7 @@ public class Competition implements ProcessActivity {
         return milestones.stream().filter(m -> m.getType() == milestoneType).findAny();
     }
 
-    private boolean isMilestoneReached(MilestoneType milestoneType) {
+    public boolean isMilestoneReached(MilestoneType milestoneType) {
         LocalDateTime today = dateProvider.provideDate();
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
     }

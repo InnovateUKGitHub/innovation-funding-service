@@ -3,10 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -91,7 +88,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         assessments.forEach(assessment -> {
             foundAssessmentIds.add(assessment.getId());
 
-            if (!assessmentWorkflowHandler.submit(assessment)) {
+            if (!assessmentWorkflowHandler.submit(assessment) || assessment.isInState(AssessmentStates.SUBMITTED)) {
                 failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId(), assessment.getTarget().getName()));
             }
         });
