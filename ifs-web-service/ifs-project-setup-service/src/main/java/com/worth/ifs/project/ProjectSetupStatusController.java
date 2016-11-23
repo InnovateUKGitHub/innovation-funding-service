@@ -80,7 +80,7 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
 
-        ProjectActivityStates spendProfileState = ownOrganisation.getSpendProfileStatus();
+        ProjectActivityStates spendProfileState = (ownOrganisation.getSpendProfileStatus() != null) ? ownOrganisation.getSpendProfileStatus() : ProjectActivityStates.NOT_REQUIRED;
 
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
