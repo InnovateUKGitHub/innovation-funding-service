@@ -7,7 +7,7 @@ Documentation     INFUND-3303: As an Assessor I want the ability to reject the a
 ...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 ...
 ...               INFUND-5379 The Applications for assessment dashboard shouldn't show the rejected applications
-Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
+Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -18,7 +18,7 @@ Assessment overview should show the expected questions
     ...
     ...    INFUND-1188
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     when the user clicks the button/link    link=Juggling is fun
     Then The user should be redirected to the correct page    /assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
     And the user should see three sections
@@ -39,13 +39,13 @@ Reject application (Unable to assess this application)
     And the user fills in rejection details
     And the user clicks the button/link    jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the element    link=Juggling is fun
+    And The user should not see the element    link=Juggling is very fun
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${Assessment_overview_11}
-    Then The user should see permissions error message
+    When the user navigates to the assessor page    ${SERVER}/assessment/35
+    Then The user should see the text in the page    Page Not Found
 
 *** Keywords ***
 the user should see three sections

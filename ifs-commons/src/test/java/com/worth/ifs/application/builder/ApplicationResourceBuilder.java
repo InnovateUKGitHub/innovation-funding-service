@@ -3,7 +3,7 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((competition, application) -> setField("competition", competition, application), competitionIds);
     }
 
-    public ApplicationResourceBuilder withCompetitionStatus(CompetitionResource.Status... competitionStatus) {
+    public ApplicationResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatus) {
         return withArray((status, application) -> application.setCompetitionStatus(status), competitionStatus);
     }
 

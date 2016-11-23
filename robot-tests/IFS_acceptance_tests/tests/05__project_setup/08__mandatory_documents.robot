@@ -104,7 +104,7 @@ Lead partner does not have the option to submit the mandatory documents
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
-    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806
+    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
     [Tags]
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
@@ -264,7 +264,7 @@ Non-lead partner cannot remove the documents after submission by PM
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Non-lead partner can still view both documents after submitting
-    [Documentation]    INFUND-3012
+    [Documentation]    INFUND-3012 , INFUND-4428
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -281,7 +281,7 @@ CompAdmin can see uploaded files
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=Killer Riffs
+    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
@@ -393,7 +393,7 @@ CompAdmin can see Project status updated
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=Killer Riffs
+    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 

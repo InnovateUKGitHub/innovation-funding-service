@@ -12,6 +12,8 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-5765 As an assessor I need to be able to progress an assessment to the state of Assessed so that I am able to select it to submit
 ...
 ...               INFUND-5712 As an Assessor I can review the recommended for funding status of applications that I have assessed so that I can track my work
+...
+...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -21,9 +23,9 @@ Resource          ../../../resources/defaultResources.robot
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Juggling Craziness
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     and The user clicks the button/link    link=Juggling is very fun
-    and The user clicks the button/link     jQuery=.button:contains("Review assessment")
+    and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
@@ -170,8 +172,9 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given The user clicks the button/link    link=Juggling is very fun
-    and The user clicks the button/link     jQuery=.button:contains("Review assessment")
+    and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
@@ -206,6 +209,8 @@ User Saves the Assessment as Recomended
     [Documentation]    INFUND-4996
     ...
     ...    INFUND-5765
+    ...
+    ...    INFUND-3726
     [Tags]
     Given the user enters text to a text field    id=feedback    ${EMPTY}
     And the user selects the radio button    fundingConfirmation    true
@@ -217,13 +222,16 @@ User Saves the Assessment as Recomended
 
 User Saves the Assessment as Not Recomended
     [Documentation]    INFUND-5712
+    ...
+    ...    INFUND-3726
     Given The user clicks the button/link    link=Juggling is not fun
     And the user adds score and feedback for every question
-    And the user clicks the button/link     jQuery=.button:contains("Review assessment")
+    And the user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     And The user should see the element    css=.recommend.no
+    And The user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
 
 *** Keywords ***
 the collapsible button should contain
@@ -231,6 +239,8 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
+    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    The user clicks the button/link    link=Juggling is very fun
     The user clicks the button/link    link=Scope
     The user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     The user clicks the button/link    jQuery=label:contains(Yes)
@@ -313,7 +323,7 @@ each question will contain links to respective questions
     The user should see the element    link=Q9
     The user should see the element    link=Q10
     the user clicks the button/link    link=Q1
-    Then The user should see the text in the page     What is the business opportunity that your project addresses?
+    Then The user should see the text in the page    What is the business opportunity that your project addresses?
     The user goes back to the previous page
     the user clicks the button/link    link=Q10
     Then The user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
@@ -340,7 +350,7 @@ the total scores should be correct
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
 
 The user accepts the juggling is word that sound funny application
-    The user clicks the button/link    link=Juggling Craziness
+    The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
     The user should see the text in the page    Accept application
     The user clicks the button/link    jQuery=button:contains("Accept")

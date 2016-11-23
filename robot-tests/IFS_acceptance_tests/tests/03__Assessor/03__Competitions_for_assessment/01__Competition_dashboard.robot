@@ -5,7 +5,9 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-1180 As an Assessor I want to accept or decline an assignment of an application to assess so that the competitions team can manage the assessment process.
 ...
-...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to.
+...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to
+...
+...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way.
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -16,7 +18,7 @@ Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
     [Setup]
-    When The user clicks the button/link    link=Juggling Craziness
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
@@ -49,7 +51,7 @@ Reject an application for assessment
     ...    INFUND-4128
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
-    Given The user clicks the button/link    link=Juggling Craziness
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    Pending
     When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
@@ -64,6 +66,10 @@ Assessor can only make selection once
     [Documentation]    INFUND-1180
     [Tags]
     Then The user should not see the element    jQuery=a:contains("accept / reject assessment")
+
+Applications should not have a check-box when the status is Open
+    [Documentation]    INFUND-3726
+    Then The user should not see the element    css=.assessment-submit-checkbox
 
 *** Keywords ***
 the status should update as Open

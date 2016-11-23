@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -31,7 +32,7 @@ public class CompetitionResource {
     private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
-    private Status competitionStatus;
+    private CompetitionStatus competitionStatus;
     @Min(0)
     @Max(100)
     private Integer maxResearchRatio;
@@ -62,6 +63,9 @@ public class CompetitionResource {
     private boolean fullApplicationFinance;
     private boolean includeGrowthTable;
 
+    private Integer assessorCount;
+    private BigDecimal assessorPay;
+
 
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
@@ -90,14 +94,14 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isOpen() {
-        return Status.OPEN.equals(competitionStatus);
+        return CompetitionStatus.OPEN.equals(competitionStatus);
     }
 
-    public Status getCompetitionStatus() {
+    public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
 
-    public void setCompetitionStatus(Status competitionStatus) {
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
     }
 
@@ -415,10 +419,6 @@ public class CompetitionResource {
         this.sectionSetupStatus = sectionSetupStatus;
     }
 
-    public enum Status {
-        COMPETITION_SETUP,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
-    }
-
     public String getActivityCode() {
         return activityCode;
     }
@@ -457,5 +457,21 @@ public class CompetitionResource {
 
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    public Integer getAssessorCount() {
+        return assessorCount;
+    }
+
+    public void setAssessorCount(Integer assessorCount) {
+        this.assessorCount = assessorCount;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
     }
 }
