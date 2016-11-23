@@ -299,12 +299,9 @@ public class ApplicationFormController {
             new ApplicationStartDateValidator().validate(request, bindingResult);
 
             // First check if any errors already exist in bindingResult
-            if (!validationHandler.hasErrors()) {
-
-                if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                    /* Start save action */
-                    errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
-                }
+            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
             }
 
             model.addAttribute("form", form);
