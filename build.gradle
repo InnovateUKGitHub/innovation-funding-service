@@ -108,7 +108,7 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose-microservices.yml']
+    useComposeFiles = ['docker-compose-services.yml']
     stopContainers = false
     removeContainers = false
     removeImages = "None" // Other accepted values are: "All" and "Local"
@@ -119,14 +119,14 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
-task cleanDeployMicroservices {
-    println "Starting clean deploy docker"
+task cleanDeployServices {
+    println "Starting clean deploy services"
 }
 
-//make sure that top level clean deploy docker is run last
+//make sure that top level clean deploy services is run last
 rootProject.subprojects.each { subproject ->
-    subproject.tasks.matching { it.name == "cleanDeployMicroservices" }.all { task ->
-        rootProject.tasks.findByName("cleanDeployMicroservices").mustRunAfter task
+    subproject.tasks.matching { it.name == "cleanDeployServices" }.all { task ->
+        rootProject.tasks.findByName("cleanDeployServices").mustRunAfter task
     }
 }
 
