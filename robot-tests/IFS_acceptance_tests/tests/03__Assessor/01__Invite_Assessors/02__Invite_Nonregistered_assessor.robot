@@ -13,9 +13,9 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...
 ...               INFUND-4895 Securing of services related to Assessor Journey changes
 Suite Setup       Run Keywords  The guest user opens the browser
-...               AND           The accept deadline for the Juggling Craziness changes to the future
+...               AND           The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the future
 Suite Teardown    Run Keywords  TestTeardown User closes the browser
-...               AND           The accept deadline for the Juggling Craziness is reset
+...               AND           The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} is reset
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
