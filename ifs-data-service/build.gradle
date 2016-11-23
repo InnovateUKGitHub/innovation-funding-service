@@ -2,7 +2,11 @@ if (project.hasProperty("profile")) {
     apply from: "${project.profile}-build.gradle"
 } else {
     apply from: "docker-build.gradle"
+
 }
+
+def targetBuild = hasProperty('profile') ? profile : 'dev';
+apply from: targetBuild+"-build.gradle";
 
 
 apply plugin: 'war'

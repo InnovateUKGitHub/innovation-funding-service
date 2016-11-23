@@ -6,7 +6,7 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
 ...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
-Suite Setup       Moving La Fromage into project setup
+Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -135,17 +135,17 @@ the table row has expected values
     the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 3,702
     the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
 
-Moving La Fromage into project setup
-    the project finance user moves La Fromage into project setup if it isn't already
+Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     the users fill out project details
 
-the project finance user moves La Fromage into project setup if it isn't already
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
-    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    La Fromage
-    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
-the project finance user moves La Fromage into project setup
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user selects the option from the drop-down menu    Yes    id=fund24
     the user selects the option from the drop-down menu    No    id=fund25
