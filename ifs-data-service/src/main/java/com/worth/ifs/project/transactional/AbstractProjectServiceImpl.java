@@ -168,8 +168,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
             } else {
                 return ACTION_REQUIRED;
             }
-        } else if (financeCheckStatus.equals(COMPLETE)) {
-            return PENDING;
         }
         return NOT_STARTED;
     }
