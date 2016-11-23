@@ -36,9 +36,6 @@ public class FormInput{
     @OneToMany(mappedBy = "formInput")
     private List<FormInputResponse> responses;
 
-    @OneToMany(mappedBy = "formInput")
-    private List<AssessorFormInputResponse> assessorResponses;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
@@ -101,14 +98,6 @@ public class FormInput{
 
     public void setResponses(List<FormInputResponse> responses) {
         this.responses = responses;
-    }
-
-    public List<AssessorFormInputResponse> getAssessorResponses() {
-        return assessorResponses;
-    }
-
-    public void setAssessorResponses(List<AssessorFormInputResponse> assessorResponses) {
-        this.assessorResponses = assessorResponses;
     }
 
     public FormInputType getFormInputType() {

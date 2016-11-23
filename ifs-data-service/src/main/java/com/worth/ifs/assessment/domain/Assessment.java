@@ -6,9 +6,9 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.OutcomeType;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -21,6 +21,9 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Application target;
+
+    @OneToMany(mappedBy = "assessment")
+    private List<AssessorFormInputResponse> responses;
 
     public Assessment() {
         super();
@@ -47,6 +50,14 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @Override
     public void setParticipant(ProcessRole participant) {
         this.participant = participant;
+    }
+
+    public List<AssessorFormInputResponse> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<AssessorFormInputResponse> responses) {
+        this.responses = responses;
     }
 
     @Override
