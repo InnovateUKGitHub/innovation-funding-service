@@ -55,9 +55,8 @@ Client-side validations
     When the user correctly fills out the role, principle employer and accurate fields
     Then The user should not see the text in the page    Please enter a principal employer.
     And The user should not see the text in the page    Please enter your role with your principal employer.
-    # TODO uncomment the following lines after INFUND-6315 is fixed.
-    # And The user should not see the text in the page    Please enter your financial interests.
-    # And The user should not see the text in the page    Please enter your family financial interests.
+    And The user should not see the text in the page    Please enter your financial interests.
+    And The user should not see the text in the page    Please enter your family financial interests.
     And The user should not see the text in the page    Please tell us if any of your close family members have any appointments, directorships or consultancies.
     And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
@@ -83,7 +82,8 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
     the user enters text to a text field    id=familyAffiliations0.position    Director
     the user enters text to a text field    id=familyFinancialInterests    My interests
-    When the user selects the checkbox    id=accurateAccount1
+    the user moves focus to the element    id=accurateAccount1
+    Click Element    id=accurateAccount1
     focus    jQuery=button:contains("Save and continue")
     sleep    500ms
     Wait For Autosave
