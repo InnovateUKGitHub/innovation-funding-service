@@ -343,7 +343,7 @@
                       <label class="block-label">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required"
                                  data-required-errormessage="You must agree that your account is accurate." />
-                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                          <span th:text="|I confirm that for the financial year ending ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
                 </div>

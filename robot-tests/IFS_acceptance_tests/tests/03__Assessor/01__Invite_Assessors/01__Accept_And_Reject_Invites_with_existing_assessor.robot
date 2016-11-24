@@ -12,6 +12,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-3718 As an Assessor I can see all the upcoming competitions that I have accepted to assess so that I can make informed decisions about other invitations
 ...
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
+...
+...               INFUND-5001 As an assessor I want to see information about competitions that I have accepted to assess so that I can remind myself of the subject matter.
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -77,9 +79,14 @@ Existing assessor: Accept invitation
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
+    ...
+    ...             INFUND-5001
+    [Tags]
+    # Development work is not complete
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
     Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
+   # And the user should see the text in the page    Photonics for health
     And The user should see the text in the page    Assessment period:
 
 When the assessment period starts the comp moves to the comp for assessment

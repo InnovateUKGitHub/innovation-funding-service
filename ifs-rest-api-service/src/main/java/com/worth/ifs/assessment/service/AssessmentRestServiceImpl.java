@@ -1,18 +1,13 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static java.lang.String.format;
 
 /**
@@ -37,6 +32,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
+    }
+
+    @Override
+    public RestResult<AssessmentTotalScoreResource> getTotalScore(Long id) {
+        return getWithRestResult(format("%s/%s/score", assessmentRestURL, id), AssessmentTotalScoreResource.class);
     }
 
     @Override
