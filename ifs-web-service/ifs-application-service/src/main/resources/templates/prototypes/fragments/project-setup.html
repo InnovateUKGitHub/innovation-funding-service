@@ -320,7 +320,7 @@
 
 <div th:fragment="prototype-spend-academic-row">
     <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th th:text="${section}" class="fix-left1">Directly Incurred</th>
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -371,7 +371,7 @@
 
 <div th:fragment="prototype-spend-academic-row-edit">
     <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th th:text="${section}" class="fix-left1">Directly Incurred</th>
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
         <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
         <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
