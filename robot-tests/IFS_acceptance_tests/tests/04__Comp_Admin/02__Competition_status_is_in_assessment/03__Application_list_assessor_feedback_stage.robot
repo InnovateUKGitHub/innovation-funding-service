@@ -3,11 +3,7 @@ Documentation     INFUND-2606 - As a competition administrator I want a view of 
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -15,10 +11,10 @@ Resource          ../../../resources/keywords/User_actions.robot
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/3
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     Then the user should see the text in the page    Assessor Feedback
-    And the user should see the text in the page    Cheese is great
-    And the user should see the text in the page    Cheese is good
+    And the user should see the text in the page    Wireless remote collection of data from multiple in-field sensors
+    And the user should see the text in the page    Connected batteries step change - battery management in the off-grid energy sector
 
 Number of submitted and funded applications is correct
     When the user should see the text in the page    2 Applications submitted
@@ -29,8 +25,8 @@ The 'Fund project?' column title is now 'Funded' and isn't editable
     [Tags]
     When the user should see the text in the page    Funded
     And the user should not see the text in the page    Fund project?
-    Then the user should not see the element    id=fund16
-    And the user should not see the element    id=fund17
+    Then the user should not see the element    id=fund24
+    And the user should not see the element    id=fund25
 
 Publish assessor feedback button is now visible
     [Documentation]    INFUND-2606

@@ -1,5 +1,7 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
+
 import java.util.List;
 
 /**
@@ -9,8 +11,11 @@ public class AssessorDashboardViewModel {
 
     private List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions;
     private List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions;
+    private AssessorProfileStatusViewModel profileStatus;
 
-    public AssessorDashboardViewModel(List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions, List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
+
+    public AssessorDashboardViewModel(AssessorProfileStatusViewModel profileStatus, List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions, List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
+        this.profileStatus = profileStatus;
         this.activeCompetitions = activeCompetitions;
         this.upcomingCompetitions = upcomingCompetitions;
     }
@@ -29,5 +34,9 @@ public class AssessorDashboardViewModel {
 
     public void setUpcomingCompetitions(List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
         this.upcomingCompetitions = upcomingCompetitions;
+    }
+
+    public AssessorProfileStatusViewModel getProfileStatus() {
+        return profileStatus;
     }
 }

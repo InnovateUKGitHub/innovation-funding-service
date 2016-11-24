@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle='Edit your details'" th:remove="tag"></div>
     </head>
@@ -10,13 +10,13 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your profile',linkClass='link-back',linkUrl=linkUrl=@{/profile/details}" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your details',linkClass='link-back',linkUrl=@{/profile/details}" th:remove="tag"/>
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your details</h1>
             </div>
 
-            <form action="" method="post" novalidate="novalidate">
+            <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to update your account
@@ -127,7 +127,63 @@
                     </fieldset>
                 </div>
 
-                <div th:include="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" th:remove="tag"></div>
+                <fieldset class="extra-margin">
+                    <legend class="visuallyhidden">Address details</legend>
+                    <div th:class="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group extra-margin error' : 'form-group extra-margin'">
+                        <label class="form-label" for="addressForm.addressLine1">
+                            <span class="form-label-bold">Street</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}"  th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group error' : 'form-group'">
+                        <label class="form-label visuallyhidden" for="addressForm.addressLine2">
+                            <span class="form-label-bold">Street line 2</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.addressLine2}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'field-error' : ''"   type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.addressLine3">
+                            <span class="form-label-bold visuallyhidden">Street line 3</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.addressLine3}"  th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.town}')} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.town">
+                            <span class="form-label-bold">Town</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.town}')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.county">
+                            <span class="form-label-bold">County</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.county}')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.county}" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'field-error' : ''"  type="text" />
+                    </div>
+                    <div th:class="${#fields.hasErrors('*{addressForm.postcode}')} ? 'form-group error' : 'form-group'">
+                        <label class="form-label" for="addressForm.postcode" >
+                            <span class="form-label-bold">Postcode</span>
+                            <span th:if="${#fields.hasErrors('*{addressForm.postcode}')}"  th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input class="form-control" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
+                    </div>
+                </fieldset>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
@@ -151,7 +207,7 @@
 
                 <div class="form-group">
                     <h3 class="heading-small">Email</h3>
-                    <p class="form-hint">Your email address cannot be changed in the system<br><strong>jsmith@assessor.co.uk</strong></p>
+                    <p class="form-hint">Your email address cannot be changed in the system<br><strong>jsmith@assessor.co.uk</strong></br></p>
                 </div>
 
                 <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>

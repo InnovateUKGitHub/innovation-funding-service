@@ -16,8 +16,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
-            fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
-            fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
+            fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
+            fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback"),
+            fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
@@ -28,6 +29,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
+            fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
             fieldWithPath("innovationSectorName").description("the Innovation sector name this competition belongs to"),
             fieldWithPath("innovationArea").description("the Innovation area this competition belongs to"),
@@ -39,12 +41,17 @@ public class CompetitionResourceDocs {
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
             fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
-            fieldWithPath("leadApplicantType").description("permitted type of elad applicant (business, research...)"),
+            fieldWithPath("leadApplicantType").description("permitted type of lead applicant (business, research...)"),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("funders").description("the funders for this competition")
+            fieldWithPath("funders").description("the funders for this competition"),
+            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applications"),
+            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
+            fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
+            fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
+            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -53,8 +60,10 @@ public class CompetitionResourceDocs {
             .withDescription("competition description")
             .withStartDate(LocalDateTime.now())
             .withEndDate(LocalDateTime.now().plusDays(30))
-            .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
-            .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
+            .withAssessorAcceptsDate(LocalDateTime.now().plusDays(35))
+            .withAssessorDeadlineDate(LocalDateTime.now().plusDays(40))
+            .withFundersPanelDate(LocalDateTime.now().plusDays(42))
+            .withFundersPanelEndDate(LocalDateTime.now().plusDays(44))
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)
@@ -62,6 +71,7 @@ public class CompetitionResourceDocs {
             .withCompetitionType(1L)
             .withExecutive(1L)
             .withLeadTechnologist(1L)
+            .withLeadTechnologistName("Competition Technologist")
             .withInnovationArea(1L)
             .withInnovationAreaName("Tech")
             .withInnovationSector(2L)

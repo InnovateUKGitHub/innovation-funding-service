@@ -3,32 +3,25 @@ Documentation     INFUND-406: As an applicant, and on the application form I hav
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 
 *** Test Cases ***
 Mark as complete is impossible for empty questions
     [Documentation]    -INFUND-406
-    [Tags]    HappyPath    Pending
-    # Pending due to INFUND-4094
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Project summary
+    And the user clicks the button/link    link=Public description
     When the "Project Summary" question is empty
-    And The user clicks the button/link    css=#form-input-11 .buttonlink[name="mark_as_complete"]
-    Then the user should see the element    css=#form-input-11 .error-message
+    And The user clicks the button/link    css=#form-input-12 .buttonlink[name="mark_as_complete"]
+    Then the user should see the element    css=#form-input-12 .error-message
     And the user should see the element    css=.error-summary li
 
 Error should not be visible when the text area is not empty
     [Documentation]    -INFUND-406
-    [Tags]    HappyPath    Pending
-    # Pending due to INFUND-4094
+    [Tags]
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
@@ -36,21 +29,20 @@ Error should not be visible when the text area is not empty
 
 *** Keywords ***
 the "Project Summary" question is empty
-    the user enters text to a text field    css=#form-input-11 .editor    ${empty}
-    mouse out    css=#form-input-11 .editor
-    focus    name=mark_as_complete
-    sleep    2s
-    capture page screenshot
+    the user enters text to a text field    css=#form-input-12 .editor    ${empty}
+    mouse out    css=#form-input-12 .editor
+    sleep    300ms
+    the user moves focus to the element    link=Contact us
     the user reloads the page
 
 the applicant inserts some text again in the "Project Summary" question
-    The user enters text to a text field    css=#form-input-11 .editor    test if the applicant can mark the question as complete
-    mouse out    css=#form-input-11 .editor
+    The user enters text to a text field    css=#form-input-12 .editor    test if the applicant can mark the question as complete
+    mouse out    css=#form-input-12 .editor
     Sleep    300ms
 
 applicant should be able to mark the question as complete
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element    css=#form-input-11 .error-message
+    the user should not see the element    css=#form-input-12 .error-message
     the user should not see the element    css=.error-summary li
 
 the applicant can click edit to make the section editable again

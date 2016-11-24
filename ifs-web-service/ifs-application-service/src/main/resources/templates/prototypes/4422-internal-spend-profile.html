@@ -15,17 +15,17 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Projects in setup'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Spend profile'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Spend profile'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
+
+	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="success-alert extra-margin-bottom">
@@ -48,7 +48,7 @@
 	<p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
 
 	<h2 class="heading-medium">Innovation Lead</h2>
-	
+
 	<p>
 		Paul Davidson
 	</p>
@@ -56,7 +56,7 @@
 	<h2 class="heading-medium">Project spend profile</h2>
 	<a href="#">Competition-soend-profile.csv</a>
 
-	
+
 	<div th:if="${param.status == null}" th:remove="tag">
 
 		<h2 class="heading-medium">Approved by Innovation Lead</h2>
@@ -80,9 +80,9 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="heading-medium no-margin">Approved by Innovate Lead</h2>
+			<h2 class="heading-medium no-margin">Approved by Innovation Lead</h2>
 
-			<p>The project spend profile has been appoved and accepted by the Innovate Lead, by confirming the project manager will be notified of this decision via email.</p>
+			<p>The project spend profile has been appoved and accepted by the Innovation Lead, by confirming the project manager will be notified of this decision via email.</p>
 
 			<hr />
 
@@ -112,8 +112,8 @@
 				<hr />
 
 	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	        		<a th:href="@{'?status=reject'}" class="button button-warning">Reject spend profile</a>
 	        	</div>
@@ -124,7 +124,7 @@
     </div>
 
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -138,7 +138,7 @@
 <script type="text/javascript">
 	// <![CDATA[
 
-	jQuery('input#profile-reviewed').on('click',function(e){ 
+	jQuery('input#profile-reviewed').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#accept-profile").removeAttr('disabled');
 		}else{

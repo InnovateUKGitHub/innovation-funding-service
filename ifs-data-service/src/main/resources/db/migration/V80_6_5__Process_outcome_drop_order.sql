@@ -1,0 +1,1 @@
+ALTER TABLE process_outcome DROP process_index;

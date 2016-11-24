@@ -43,7 +43,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -52,7 +52,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -127,8 +127,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
-                .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
-                .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(LocalDateTime.now().minusDays(2))
+                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
                 .build();
 
         List<AssessorFormInputResponseResource> assessorResponses = newAssessorFormInputResponseResource()
@@ -181,8 +181,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
-                .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
-                .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(LocalDateTime.now().minusDays(2))
+                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
                 .build();
         ApplicationResource app = applications.get(0);
         when(competitionService.getById(app.getCompetition())).thenReturn(competition);

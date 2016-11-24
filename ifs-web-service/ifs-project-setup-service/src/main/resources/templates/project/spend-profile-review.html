@@ -14,7 +14,7 @@
 
 
     <div class="page-title">
-            <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
+            <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
              th:remove="tag"/>
         <h1 class="heading-xlarge">Spend Profile</h1>
     </div>
@@ -56,15 +56,15 @@
                 <td>
                     <div th:each="partner : ${model.partnerOrganisations}"
                          th:if="${partner.name.equals(partnerProgress.key) }">
-                        <div th:if="${model.markAsComplete}">
-                            <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
-                               th:text="${partnerProgress.key}"/>
-                        </div>
-                        <div th:if="${!model.markAsComplete}">
+
+                        <div th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
                             <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
                                th:text="${partnerProgress.key}"/>
                         </div>
 
+                        <div th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
+                            <span th:text="${partnerProgress.key}"></span>
+                        </div>
                     </div>
                 </td>
 

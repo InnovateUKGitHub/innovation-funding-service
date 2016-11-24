@@ -11,7 +11,7 @@
 
 <main id="content">
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${projectId})}"  th:remove="tag"></div>
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${applicationId})}"  th:remove="tag"></div>
 
 
     <form th:if="${isSubmissionAllowed}" th:action="@{/project/{id}/details/submit(id=${projectId})}" method="post">

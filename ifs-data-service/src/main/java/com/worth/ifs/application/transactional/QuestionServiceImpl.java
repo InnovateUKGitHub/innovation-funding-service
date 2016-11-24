@@ -14,13 +14,12 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.validator.util.ValidationUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +36,10 @@ import java.util.stream.Stream;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -49,7 +49,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Service
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
-    private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
+
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
@@ -277,13 +277,24 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
-        return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> inputType.getFormInput().get(0).getQuestion());
+    public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+        return getFormInputTypeByTitle(formInputTypeTitle).andOnSuccess(inputType -> {
+            List<Question> questions = questionRepository.findByCompetitionId(competitionId);
+            Optional<Question> question = simpleFindFirst(questions, q -> {
+                List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
+                return !activeFormInputs.isEmpty() && inputType.getId().equals(activeFormInputs.get(0).getFormInputType().getId());
+            });
+            if (question.isPresent()) {
+                return serviceSuccess(question.get());
+            } else {
+                return serviceFailure(notFoundError(Question.class, competitionId, formInputTypeTitle));
+            }
+        });
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
-        return getQuestionByFormInputType(formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
+    public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override
@@ -303,12 +314,21 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionMapper.mapToResource(questionUpdated));
     }
 
-
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
-        return getAssessment(assessmentId).andOnSuccess(assessment ->
+        return find(getAssessment(assessmentId)).andOnSuccess(assessment ->
                 sectionService.getByCompetitionIdVisibleForAssessment(assessment.getParticipant().getApplication().getCompetition().getId())
                         .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
+    }
+
+    @Override
+    public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
+        return find(getAssessment(assessmentId), getQuestion(questionId)).andOnSuccess((assessment, question) -> {
+            if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId())) {
+                return serviceSuccess(questionMapper.mapToResource(question));
+            }
+            return serviceFailure(notFoundError(Question.class, questionId, assessmentId));
+        });
     }
 
     private List<QuestionResource> questionsOfType(Section section, QuestionType type) {
@@ -399,10 +419,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
-    private ServiceResult<FormInputType> getOnlyFormInputTypeByTitle(String formInputTypeTitle) {
-        return getFormInputTypesByTitle(formInputTypeTitle).andOnSuccess(types -> getOnlyElementOrFail(types));
-    }
-
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
 
@@ -441,7 +457,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return Optional.ofNullable(markedAsComplete);
     }
 
-    private ServiceResult<List<FormInputType>> getFormInputTypesByTitle(String formInputTypeTitle) {
+    private ServiceResult<FormInputType> getFormInputTypeByTitle(String formInputTypeTitle) {
         return find(formInputTypeService.findByTitle(formInputTypeTitle), notFoundError(Question.class, formInputTypeTitle));
     }
 
@@ -451,8 +467,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 .collect(Collectors.toList());
     }
 
-    private ServiceResult<Assessment> getAssessment(Long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
+    private Supplier<ServiceResult<Assessment>> getAssessment(Long assessmentId) {
+        return () -> find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
     private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {

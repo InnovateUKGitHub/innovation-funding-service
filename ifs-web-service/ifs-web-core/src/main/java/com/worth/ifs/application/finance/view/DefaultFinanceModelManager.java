@@ -57,15 +57,19 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
+
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId);
-        OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
-        model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
-        model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
-        model.addAttribute("organisationType", organisationType);
-        model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
-        model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-        model.addAttribute("financeView", "finance");
-        addGrantClaim(model, form, applicationFinanceResource);
+
+        if (applicationFinanceResource != null) {
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
+            model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
+            model.addAttribute("organisationType", organisationType);
+            model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
+            model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+            model.addAttribute("financeView", "finance");
+            addGrantClaim(model, form, applicationFinanceResource);
+        }
     }
 
     private void addGrantClaim(Model model, Form form, ApplicationFinanceResource applicationFinanceResource) {

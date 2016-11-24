@@ -7,13 +7,9 @@ import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.OutcomeType;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import static com.worth.ifs.assessment.resource.AssessmentStates.ASSESSED;
-import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
@@ -26,47 +22,24 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Application target;
 
+    @OneToMany(mappedBy = "assessment")
+    private List<AssessorFormInputResponse> responses;
+
     public Assessment() {
         super();
     }
 
-    public Assessment(ProcessRole processRole) {
-        this.participant = processRole;
-    }
-
     public Assessment(Application application, ProcessRole processRole) {
-        this(processRole);
+        this.participant = processRole;
         this.target = application;
     }
 
-    public Boolean isStarted() {
-        if(getActivityState()!=null) {
-            return isInState(ASSESSED);
-        } else {
-            return Boolean.FALSE;
-        }
+    public Optional<ProcessOutcome> getLastOutcome() {
+        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().reduce((outcome1, outcome2) -> outcome2));
     }
 
-    public Boolean isSubmitted() {
-        if(getActivityState()!=null) {
-            return isInState(SUBMITTED);
-        } else {
-            return Boolean.FALSE;
-        }
-    }
-
-    public ProcessOutcome getLastOutcome() {
-        if(this.processOutcomes != null) {
-            return this.processOutcomes.stream().findFirst().orElse(null);
-        }
-        return null;
-    }
-
-    public ProcessOutcome getLastOutcome(OutcomeType outcomeType) {
-        if(this.processOutcomes != null) {
-            return processOutcomes.stream().filter(po -> outcomeType.getType().equals(po.getOutcomeType())).findFirst().orElse(null);
-        }
-        return null;
+    public Optional<ProcessOutcome> getLastOutcome(OutcomeType outcomeType) {
+        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().filter(outcome -> outcomeType.getType().equals(outcome.getOutcomeType())).reduce((outcome1, outcome2) -> outcome2));
     }
 
     @Override
@@ -77,6 +50,14 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @Override
     public void setParticipant(ProcessRole participant) {
         this.participant = participant;
+    }
+
+    public List<AssessorFormInputResponse> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<AssessorFormInputResponse> responses) {
+        this.responses = responses;
     }
 
     @Override

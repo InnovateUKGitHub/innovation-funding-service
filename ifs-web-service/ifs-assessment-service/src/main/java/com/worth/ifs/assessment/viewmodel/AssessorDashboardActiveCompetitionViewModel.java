@@ -12,18 +12,18 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     private Long competitionId;
     private String displayLabel;
-    private Integer progressAssessed;
-    private Integer progressTotal;
-    private LocalDate deadline;
+    private long progressAssessed;
+    private long progressTotal;
+    private LocalDate submitDeadline;
     private long daysLeft;
     private long daysLeftPercentage;
 
-    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, Integer progressAssessed, Integer progressTotal, LocalDate deadline, long daysLeft, long daysLeftPercentage) {
+    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, long progressAssessed, long progressTotal, LocalDate submitDeadline, long daysLeft, long daysLeftPercentage) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
         this.progressTotal = progressTotal;
-        this.deadline = deadline;
+        this.submitDeadline = submitDeadline;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
     }
@@ -44,28 +44,28 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.displayLabel = displayLabel;
     }
 
-    public Integer getProgressAssessed() {
+    public long getProgressAssessed() {
         return progressAssessed;
     }
 
-    public void setProgressAssessed(Integer progressAssessed) {
+    public void setProgressAssessed(long progressAssessed) {
         this.progressAssessed = progressAssessed;
     }
 
-    public Integer getProgressTotal() {
+    public long getProgressTotal() {
         return progressTotal;
     }
 
-    public void setProgressTotal(Integer progressTotal) {
+    public void setProgressTotal(long progressTotal) {
         this.progressTotal = progressTotal;
     }
 
-    public LocalDate getDeadline() {
-        return deadline;
+    public LocalDate getSubmitDeadline() {
+        return submitDeadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
+    public void setSubmitDeadline(LocalDate submitDeadline) {
+        this.submitDeadline = submitDeadline;
     }
 
     public long getDaysLeft() {
@@ -103,7 +103,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
                 .append(displayLabel, that.displayLabel)
                 .append(progressAssessed, that.progressAssessed)
                 .append(progressTotal, that.progressTotal)
-                .append(deadline, that.deadline)
+                .append(submitDeadline, that.submitDeadline)
                 .isEquals();
     }
 
@@ -114,7 +114,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
                 .append(displayLabel)
                 .append(progressAssessed)
                 .append(progressTotal)
-                .append(deadline)
+                .append(submitDeadline)
                 .append(daysLeft)
                 .append(daysLeftPercentage)
                 .toHashCode();

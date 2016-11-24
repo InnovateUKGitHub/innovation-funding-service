@@ -1,7 +1,7 @@
 package com.worth.ifs.project.transactional;
 
-import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -19,6 +19,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -78,15 +79,20 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            if (project.getDocumentsSubmittedDate() != null) {
-                return COMPLETE;
-            } else {
-                return PENDING;
-            }
-        } else {
+
+        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+            return COMPLETE;
+        }
+
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
             return ACTION_REQUIRED;
         }
+
+        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
+            return PENDING;
+        }
+
+        return ACTION_REQUIRED;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -104,22 +110,21 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
+            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
         } else {
             return NOT_STARTED;
         }
 
     }
 
-    protected ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
+    protected ProjectActivityStates createBankDetailStatus(final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
-            Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
-            if (!isSeekingFunding) {
-                return NOT_REQUIRED;
-            } else {
+            if (COMPLETE.equals(financeContactStatus)) {
                 return ACTION_REQUIRED;
+            } else {
+                return NOT_STARTED;
             }
         }
     }
@@ -139,21 +144,32 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
+    protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus,  final Optional<SpendProfile> spendProfile) {
+        ProjectActivityStates state = spendProfileStatus;
+
+        if(spendProfileStatus == COMPLETE) {
+            if(project.getSpendProfileSubmittedDate() == null) {
+                state = ACTION_REQUIRED;
+            } else if (project.getSpendProfileSubmittedDate() != null && !spendProfile.get().getApproval().equals(ApprovalType.APPROVED)) {
+                state = PENDING;
+            }
+        }
+        return state;
+    }
+
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         //TODO - Implement REJECT status when internal spend profile action story is completed
-        if (spendProfile.isPresent()) {
+        if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
             if (spendProfile.get().isMarkedAsComplete()) {
+                    if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
+                        return ACTION_REQUIRED;
+                }
                 return COMPLETE;
             } else {
                 return ACTION_REQUIRED;
             }
-        } else {
-            if(financeCheckStatus.equals(COMPLETE)){
-                return PENDING;
-            } else {
-                return NOT_STARTED;
-            }
         }
+        return NOT_STARTED;
     }
 
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {

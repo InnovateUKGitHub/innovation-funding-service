@@ -1,11 +1,16 @@
 package com.worth.ifs.assessment.controller.profile;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter;
 import com.worth.ifs.assessment.form.profile.AssessorProfileTermsForm;
+import com.worth.ifs.assessment.model.profile.AssessorProfileTermsAnnexModelPopulator;
 import com.worth.ifs.assessment.model.profile.AssessorProfileTermsModelPopulator;
+import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileTermsAnnexViewModel;
 import com.worth.ifs.assessment.viewmodel.profile.AssessorProfileTermsViewModel;
+import com.worth.ifs.user.resource.ContractResource;
 import com.worth.ifs.user.resource.ProfileContractResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -13,11 +18,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static com.worth.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.util.CollectionFunctions.asListOfPairs;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +42,10 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
     @InjectMocks
     private AssessorProfileTermsModelPopulator assessorProfileTermsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private AssessorProfileTermsAnnexModelPopulator assessorProfileTermsAnnexModelPopulator;
+
     @Override
     protected AssessorProfileTermsController supplyControllerUnderTest() {
         return new AssessorProfileTermsController();
@@ -46,18 +58,12 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
 
         LocalDateTime expectedContractSignedDate = LocalDateTime.now();
         String expectedText = "Contract text...";
-        String expectedAnnexOne = "Annex one...";
-        String expectedAnnexTwo = "Annex two...";
-        String expectedAnnexThree = "Annex three...";
 
         ProfileContractResource profileContract = newProfileContractResource()
                 .withContractSignedDate(expectedContractSignedDate)
                 .withCurrentAgreement(true)
                 .withContract(newContractResource()
                         .withText(expectedText)
-                        .withAnnexOne(expectedAnnexOne)
-                        .withAnnexTwo(expectedAnnexTwo)
-                        .withAnnexThree(expectedAnnexThree)
                         .build())
                 .build();
 
@@ -67,9 +73,6 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
-        expectedViewModel.setAnnexOne(expectedAnnexOne);
-        expectedViewModel.setAnnexTwo(expectedAnnexTwo);
-        expectedViewModel.setAnnexThree(expectedAnnexThree);
 
         AssessorProfileTermsForm expectedForm = new AssessorProfileTermsForm();
         expectedForm.setAgreesToTerms(TRUE);
@@ -80,6 +83,38 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/terms"));
+
+        verify(userService, only()).getProfileContract(user.getId());
+    }
+
+    @Test
+    public void getAnnex() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        String expectedAnnexA = "Annex A...";
+        String expectedAnnexB = "Annex B...";
+        String expectedAnnexC = "Annex C...";
+
+        ContractResource contract = newContractResource()
+                .withAnnexA(expectedAnnexA)
+                .withAnnexB(expectedAnnexB)
+                .withAnnexC(expectedAnnexC)
+                .build();
+
+        when(contractService.getCurrentContract()).thenReturn(contract);
+
+        // Check that each of the possible params returns the correct annex text
+        List<Pair<ContractAnnexParameter, String>> params = asListOfPairs(A, expectedAnnexA, B, expectedAnnexB, C, expectedAnnexC);
+        params.stream().forEach(paramAndExpected -> {
+            try {
+                assertProfileTermsAnnexView(paramAndExpected.getLeft(), paramAndExpected.getRight());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        verify(contractService, times(params.size())).getCurrentContract();
     }
 
     @Test
@@ -105,18 +140,12 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
 
         LocalDateTime expectedContractSignedDate = LocalDateTime.now();
         String expectedText = "Contract text...";
-        String expectedAnnexOne = "Annex one...";
-        String expectedAnnexTwo = "Annex two...";
-        String expectedAnnexThree = "Annex three...";
 
         ProfileContractResource profileContract = newProfileContractResource()
                 .withContractSignedDate(expectedContractSignedDate)
                 .withCurrentAgreement(true)
                 .withContract(newContractResource()
                         .withText(expectedText)
-                        .withAnnexOne(expectedAnnexOne)
-                        .withAnnexTwo(expectedAnnexTwo)
-                        .withAnnexThree(expectedAnnexThree)
                         .build())
                 .build();
 
@@ -126,9 +155,6 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
-        expectedViewModel.setAnnexOne(expectedAnnexOne);
-        expectedViewModel.setAnnexTwo(expectedAnnexTwo);
-        expectedViewModel.setAnnexThree(expectedAnnexThree);
 
         MvcResult result = mockMvc.perform(post("/profile/terms")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -154,7 +180,15 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("agreesToTerms"));
         assertEquals("Please agree to the terms and conditions", bindingResult.getFieldError("agreesToTerms").getDefaultMessage());
 
-        verify(userService).getProfileContract(user.getId());
-        verifyZeroInteractions(userService);
+        verify(userService, only()).getProfileContract(user.getId());
+    }
+
+    private void assertProfileTermsAnnexView(ContractAnnexParameter annexParameter, String expectedText) throws Exception {
+        AssessorProfileTermsAnnexViewModel expectedViewModel = new AssessorProfileTermsAnnexViewModel(annexParameter, expectedText);
+        mockMvc.perform(get("/profile/terms/annex/{annex}", annexParameter))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("profile/annex"));
     }
 }

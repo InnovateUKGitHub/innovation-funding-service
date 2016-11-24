@@ -1,8 +1,9 @@
 package com.worth.ifs.interceptors;
 
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 
 /**
  * Have the menu links globally available for each controller.
@@ -55,10 +59,19 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         if(authentication!=null) {
             Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
             if(simpleGrantedAuthority.isPresent()) {
-                UserResource details = authentication.getDetails();
-                return "/" + details.getRoles().get(0).getUrl();
+                UserResource user = authentication.getDetails();
+                if (user.hasRoles(ASSESSOR, APPLICANT)) {
+                    String role = CookieUtil.getCookieValue(request, "role");
+                    if (!role.isEmpty()) {
+                        return "/" + user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
+                    }
+                }
+
+                return "/" + user.getRoles().get(0).getUrl();
             }
         }
         return "/";
     }
+
+
 }

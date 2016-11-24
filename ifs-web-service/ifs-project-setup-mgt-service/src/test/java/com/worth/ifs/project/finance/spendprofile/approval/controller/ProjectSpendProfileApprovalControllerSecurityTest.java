@@ -1,6 +1,5 @@
 package com.worth.ifs.project.finance.spendprofile.approval.controller;
 
-import com.worth.ifs.finance.spendprofile.approval.controller.ProjectSpendProfileApprovalController;
 import com.worth.ifs.project.BaseProjectSetupControllerSecurityTest;
 import com.worth.ifs.project.ProjectSetupSectionsPermissionRules;
 import com.worth.ifs.user.resource.UserResource;

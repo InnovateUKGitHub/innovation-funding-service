@@ -22,10 +22,23 @@ include::{snippets}/assessment/find-by-user-and-competition/response-fields.adoc
 ==== Curl Example
 include::{snippets}/assessment/find-by-user-and-competition/curl-request.adoc[]
 
+=== Get score details ===
+==== Request
+include::{snippets}/assessment/get-total-score/http-request.adoc[]
+include::{snippets}/assessment/get-total-score/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/get-total-score/http-response.adoc[]
+include::{snippets}/assessment/get-total-score/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/get-total-score/curl-request.adoc[]
+
 === Recommend an assessment
 ==== Request
 include::{snippets}/assessment/recommend/http-request.adoc[]
 include::{snippets}/assessment/recommend/path-parameters.adoc[]
+include::{snippets}/assessment/recommend/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/assessment/recommend/http-response.adoc[]
@@ -37,9 +50,32 @@ include::{snippets}/assessment/recommend/curl-request.adoc[]
 ==== Request
 include::{snippets}/assessment/reject/http-request.adoc[]
 include::{snippets}/assessment/reject/path-parameters.adoc[]
+include::{snippets}/assessment/reject/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/assessment/reject/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessment/reject/curl-request.adoc[]
+
+=== Accept an invitation for an assessment
+==== Request
+include::{snippets}/assessment/accept/http-request.adoc[]
+include::{snippets}/assessment/accept/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/accept/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/accept/curl-request.adoc[]
+
+=== Submit assessments
+==== Request
+include::{snippets}/assessment/submit-assessments/http-request.adoc[]
+include::{snippets}/assessment/submit-assessments/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessment/submit-assessments/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/submit-assessments/curl-request.adoc[]

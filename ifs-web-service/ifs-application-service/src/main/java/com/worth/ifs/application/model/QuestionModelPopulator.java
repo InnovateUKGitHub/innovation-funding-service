@@ -3,6 +3,7 @@ package com.worth.ifs.application.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
@@ -18,6 +19,7 @@ import com.worth.ifs.application.service.QuestionStatusRestService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -37,12 +39,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
-import static com.worth.ifs.application.AbstractApplicationController.APPLICATION_BASE_URL;
-import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
-import static com.worth.ifs.application.AbstractApplicationController.QUESTION_URL;
-import static com.worth.ifs.application.AbstractApplicationController.SECTION_URL;
+import static com.worth.ifs.application.ApplicationFormController.*;
 
 /**
  * View model for the single question pages
@@ -132,14 +130,14 @@ public class QuestionModelPopulator {
             model.addAttribute("leadOrganisation", org)
         );
 
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation);
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
-        if(competition.getCompetitionStatus().equals(CompetitionResource.Status.OPEN)) {
+        if(competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
             Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
             return questionStatuses.size() > 0 &&
                     (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
@@ -157,7 +155,7 @@ public class QuestionModelPopulator {
             values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
-        model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
     private void addUserDetails(Model model, ApplicationResource application, Long userId) {

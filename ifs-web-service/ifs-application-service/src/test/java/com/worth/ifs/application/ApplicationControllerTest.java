@@ -2,13 +2,14 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
+import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatus;
@@ -39,7 +40,9 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -62,6 +65,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Spy
     @InjectMocks
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -110,7 +121,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         LOG.debug("Show dashboard for application: " + app.getId());
-        mockMvc.perform(post("/application/" + app.getId()).param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
+        mockMvc.perform(post("/application/" + app.getId()).param(ApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/"+app.getId()));
     }
@@ -266,11 +277,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
+                .param(ApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
 
-        verify(questionService, times(1)).assign(question.getId(), app.getId(), user.getId(), processRole.getId());
+        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(), any());
     }
 
     @Test
@@ -283,7 +294,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(AbstractApplicationController.MARK_AS_COMPLETE, question.getId().toString())
+                .param(ApplicationController.MARK_AS_COMPLETE, question.getId().toString())
                 .param("formInput[" + question.getId().toString() + "]", "Test value"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
@@ -357,7 +368,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.OPEN).build();
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
@@ -376,7 +387,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     
     @Test
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.FUNDERS_PANEL).build();
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 

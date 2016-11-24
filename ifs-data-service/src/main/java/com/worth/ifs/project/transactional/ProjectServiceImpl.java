@@ -9,7 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -47,6 +47,7 @@ import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -66,7 +67,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -154,6 +154,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
@@ -646,13 +649,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        project.addProjectUser(financeContact);
-
-        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
-            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
-            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
+        project.addProjectUser(newFinanceContact);
+        return serviceSuccess();
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -700,18 +702,21 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+
+        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
         if (partnerOrganisation.equals(leadOrganisation)) {
+            ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
             projectPartnerStatusResource = new ProjectLeadStatusResource(
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
@@ -720,7 +725,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus,
+                    leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
                     financeContactStatus);
@@ -729,7 +734,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
-                    leadProjectDetailsSubmitted,
+                    partnerProjectDetailsSubmittedStatus,
                     NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,
@@ -790,7 +795,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }
@@ -828,12 +833,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         if (result.isFailure()) {
             return result;
-        }
-
-        ProjectUser existingUser = result.getSuccessObject();
-
-        if (existingUser != null) {
-            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION);
         }
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
@@ -922,8 +921,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -938,6 +938,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+        }
+    }
+
+    private ServiceResult<Void> createGOLProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
+        if (golWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
@@ -1049,34 +1057,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    /**
-     * A temporary method for generating finance checks for existing projects.
-     * See INFUND-5591 for an explanation.
-     * This is required temporarily and will be removed in near future.
-     * TODO: Remove with INFUND-5596 - temporarily added to allow system maintenance user apply a patch to generate FC
-     * @return result of attempting to generate finance checks for all projects
-     */
-    @Override
-    public ServiceResult<Void> generateFinanceChecksForAllProjects() {
-        return find(projectRepository.findAll(), notFoundError(Project.class, emptyList())).
-                andOnSuccess(projects -> {
-                    List<ServiceResult> results = projects.stream().filter(p -> find(financeCheckRepository.findByProjectId(p.getId()), notFoundError(FinanceCheck.class, emptyList())).isFailure()).
-                            map(project -> generateFinanceCheckEntitiesForNewProject(project).
-                                    handleSuccessOrFailure(
-                                            failure -> {
-                                                LOG.error("Could not generate finance checks manually for project no. " + project.getId());
-                                                return serviceFailure(new Error(FINANCE_CHECKS_CANNOT_GENERATE_FOR_PROJECT, project.getId()));
-                                            },
-                                            success -> {
-                                                LOG.debug("Finance check entries generated for project no. " + project.getId());
-                                                return serviceSuccess();
-                                            }
-                                    )
-                            ).collect(toList());
-
-                    return results.stream().filter(result -> result.isFailure()).findFirst().orElse(serviceSuccess());
-                });
     }
 }

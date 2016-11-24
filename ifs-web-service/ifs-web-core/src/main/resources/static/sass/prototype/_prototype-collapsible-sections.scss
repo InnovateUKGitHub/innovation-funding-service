@@ -1,97 +1,98 @@
 
 .collapsible {
 
-	h2{
-		border-top: 1px solid $border-colour; 
+  h2{
+    border-top: 1px solid $border-colour;
 
-		&:last-child{
-           border-top: 1px solid $border-colour; 
-        }
-	}
-
-	div{
-		h2,h3{
-			border: none;
-		}
-	}
-
-	h2 button {
-		background: white;
-		margin-bottom: 0;
-		padding-top: 10px;
-		padding-bottom: 10px;
-		padding-left: 0;
-		
-		&[aria-expanded] {
-			&:after{
-				top: 15px;
-			}
-		}
-	}
-
-	h2 + [aria-hidden="false"] {
- 		padding: 0 0 15px 0;
-	}
-	
-	.collapsible-content{
-		margin-bottom: 3em;
-	}
-
-	.question{
-		margin: 0 20px 20px 20px;
-	}
-
-	.form-block{
-		margin: 0 20px 20px 20px;
-	}
-
-	.textarea-wrapped .readonly{
-		border-top: 1px solid $border-colour;
-	}
-
-    .section-score{
-		float: right;
-		margin-right: 30px;
-		font-weight: normal;
-	}
-
-    .section-status{
-     	width: 90px;
-     	text-align: right;
+    &:last-child{
+      border-top: 1px solid $border-colour;
     }
+  }
 
-    .section-percentage{
-    	float: right;
-
-    	@include media-down(mobile) {
-			float: none;
-    	}
+  div{
+    h2,
+    h3{
+      border: none;
     }
+  }
 
-    span[data-mirror]{
-		width: 180px;
-		text-align: right;
-	}
+  h2 button {
+    background: white;
+    margin-bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0;
+
+    &[aria-expanded] {
+      &:after{
+        top: 15px;
+      }
+    }
+  }
+
+  h2 + [aria-hidden="false"] {
+    padding: 0 0 15px 0;
+  }
+
+  .collapsible-content{
+    margin-bottom: 3em;
+  }
+
+  .question{
+    margin: 0 20px 20px 20px;
+  }
+
+  .form-block{
+    margin: 0 20px 20px 20px;
+  }
+
+  .textarea-wrapped .readonly{
+    border-top: 1px solid $border-colour;
+  }
+
+  .section-score{
+    float: right;
+    margin-right: 30px;
+    font-weight: normal;
+  }
+
+  .section-status{
+    width: 90px;
+    text-align: right;
+  }
+
+  .section-percentage{
+    float: right;
 
     @include media-down(mobile) {
-		span{
-			display: block;
-		}
-
-    	.section-score{
-	    	float: left;
-	    	margin: 0;
-	    }
-
-	    .section-status{
-			float: right;
-	    }
+      float: none;
     }
+  }
+
+   span[data-mirror]{
+    width: 180px;
+    text-align: right;
+   }
+
+   @include media-down(mobile) {
+    span{
+      display: block;
+    }
+
+    .section-score{
+      float: left;
+      margin: 0;
+    }
+
+    .section-status{
+      float: right;
+    }
+  }
 }
 
 .no-js .collapsible > h2 {
-	background: white;
-	margin-bottom: 0;
-	padding-top: 10px;
-	padding-bottom: 10px;
+  background: white;
+  margin-bottom: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

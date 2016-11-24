@@ -27,14 +27,10 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private QuestionService questionService;
-
-    public AssessmentFeedbackApplicationDetailsViewModel populateModel(Long assessmentId, Long questionId) {
+    public AssessmentFeedbackApplicationDetailsViewModel populateModel(Long assessmentId, QuestionResource question) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         ApplicationResource application = applicationService.getById(assessment.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        QuestionResource question = questionService.getById(questionId);
+        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
         return new AssessmentFeedbackApplicationDetailsViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getShortName());
     }
 

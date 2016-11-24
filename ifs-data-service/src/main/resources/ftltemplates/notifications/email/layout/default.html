@@ -91,13 +91,29 @@
 </table>
 </body>
 </#macro>
-<#macro defaultPlainText>
-<#nested/>
+<#macro senderHTML>
+  <p style="margin: 1em 0 1em 0;">
+    Competitions Team<br/>
+    Innovate UK<br/>
+    Tel: 0300 321 4357<br/>
+    Email: competitions@innovateuk.gov.uk
+  </p>
+</#macro>
 
-North Star House
-North Star Avenue
-Swindon
-Wiltshire
-SN2 1JF
-© Crown copyright
+<#macro defaultPlainText>
+  <#nested/>
+
+  North Star House
+  North Star Avenue
+  Swindon
+  Wiltshire
+  SN2 1JF
+  © Crown copyright
+</#macro>
+
+<#macro senderPlainText>
+  Competitions Team
+  Innovate UK
+  Tel: 0300 321 4357
+  Email: competitions@innovateuk.gov.uk
 </#macro>

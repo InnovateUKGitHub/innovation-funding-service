@@ -86,8 +86,7 @@
       <div th:case="'OPEN'"  class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
@@ -99,8 +98,7 @@
       <div th:case="'IN_ASSESSMENT'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -111,8 +109,7 @@
       <div th:case="'FUNDERS_PANEL'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Assessment deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -126,8 +123,7 @@
       <div th:case="'ASSESSOR_FEEDBACK'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Assessment deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
@@ -145,8 +141,7 @@
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
           <p>
           <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'dd MMMM yyyy')}" />
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
@@ -165,7 +160,7 @@
    <table th:if="${competition.competitionStatus.name() == 'OPEN'}">
      <thead>
        <tr>
-         <th scope="col">Application no</th>
+         <th scope="col">Application number</th>
          <th scope="col">Project title</th>
          <th scope="col">Lead name</th>
          <th scope="col">Lead</th>
@@ -189,7 +184,7 @@
 	    <table th:if="${activeTab == 'submitted'}">
 	       <thead>
 	         <tr>
-	           <th scope="col">Application no</th>
+	           <th scope="col">Application number</th>
 	           <th scope="col">Project title</th>
 	           <th scope="col">Lead</th>
 	           <th scope="col">No. of partners</th>
@@ -229,7 +224,7 @@
 	     <table th:if="${activeTab == 'notSubmitted'}">
 	       <thead>
 	         <tr>
-	           <th scope="col">Application no</th>
+	           <th scope="col">Application number</th>
 	           <th scope="col">Project title</th>
 	           <th scope="col">Lead</th>
 	           <th scope="col">Percentage complete</th>

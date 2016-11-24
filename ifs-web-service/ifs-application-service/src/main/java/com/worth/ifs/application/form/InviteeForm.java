@@ -12,7 +12,7 @@ public class InviteeForm implements Serializable {
     private static final long serialVersionUID = 8494848676778443648L;
 
     private Long userId;
-    @NotEmpty (message="{validation.standard.personname.required}")
+    @NotEmpty (message="{validation.field.must.not.be.blank}")
     private String personName;
     @NotEmpty (message="{validation.invite.email.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message="{validation.standard.email.format}")

@@ -1,16 +1,11 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * This class contains methods to retrieve and store {@link com.worth.ifs.assessment.resource.AssessmentResource} related data,
@@ -33,23 +28,38 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.RECOMMEND.getType());
-        processOutcome.setOutcome(ofNullable(fundingConfirmation).map(BooleanUtils::toStringYesNo).orElse(null));
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(feedback);
+    public AssessmentTotalScoreResource getTotalScore(Long assessmentId) {
+        return assessmentRestService.getTotalScore(assessmentId).getSuccessObjectOrThrowException();
+    }
 
-        return assessmentRestService.recommend(assessmentId, processOutcome).toServiceResult();
+    @Override
+    public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
+        return assessmentRestService.recommend(assessmentId, new AssessmentFundingDecisionResourceBuilder()
+                .setFundingConfirmation(fundingConfirmation)
+                .setFeedback(feedback)
+                .setComment(comment)
+                .createAssessmentFundingDecisionResource()).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment) {
-        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
-        processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
-        processOutcome.setComment(comment);
-        processOutcome.setDescription(reason);
+        ApplicationRejectionResource applicationRejection = new ApplicationRejectionResource();
+        applicationRejection.setRejectReason(reason);
+        applicationRejection.setRejectComment(comment);
 
-        return assessmentRestService.rejectInvitation(assessmentId, processOutcome).toServiceResult();
+        return assessmentRestService.rejectInvitation(assessmentId, applicationRejection).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> acceptInvitation(Long assessmentId) {
+        return assessmentRestService.acceptInvitation(assessmentId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> submitAssessments(List<Long> assessmentIds) {
+        AssessmentSubmissionsResource assessmentSubmissions = new AssessmentSubmissionsResource();
+        assessmentSubmissions.setAssessmentIds(assessmentIds);
+
+        return assessmentRestService.submitAssessments(assessmentSubmissions).toServiceResult();
     }
 }

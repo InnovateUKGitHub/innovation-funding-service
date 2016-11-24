@@ -5,7 +5,7 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
@@ -48,14 +48,14 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
@@ -184,6 +184,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
@@ -439,21 +440,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWhenFinanceContactAlreadySet() {
+    public void testUpdateFinanceContactAllowedWhenFinanceContactAlreadySet() {
 
-        Project existingProject = newProject().withId(123L).build();
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        User anotherUser = newUser().build();
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
 
-        Organisation organisation = newOrganisation().withId(5L).build();
-        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+        Organisation organisation = newOrganisation().build();
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
 
-        newProjectUser().withOrganisation(organisation).withUser(user).withProject(existingProject).withRole(PROJECT_FINANCE_CONTACT).build();
+        newProjectUser().
+                withOrganisation(organisation).
+                withUser(user, anotherUser).
+                withProject(existingProject).
+                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 6L);
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_HAS_ALREADY_BEEN_SET_FOR_THE_ORGANISATION));
+        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
 
+        assertTrue(updateResult.isSuccess());
+
+        List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
+                pu.getOrganisation().equals(organisation));
+
+        assertEquals(1, organisationFinanceContacts.size());
+        assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
     }
 
     @Test
@@ -1225,7 +1237,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withMonitoringOfficerStatus(NOT_STARTED).
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(ACTION_REQUIRED).
-                withSpendProfileStatus(ACTION_REQUIRED).
+                withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_STARTED).
                 build();
@@ -1238,9 +1250,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
-                withFinanceChecksStatus(ACTION_REQUIRED, COMPLETE).
-                withSpendProfileStatus(ACTION_REQUIRED, ACTION_REQUIRED).
+                withBankDetailsStatus(NOT_STARTED, NOT_STARTED).
+                withFinanceChecksStatus(NOT_STARTED, COMPLETE).
+                withSpendProfileStatus(NOT_STARTED, ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
@@ -1262,7 +1274,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationId(organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
-                withBankDetailsStatus(NOT_REQUIRED).
+                withBankDetailsStatus(NOT_STARTED).
                 withFinanceChecksStatus(COMPLETE).
                 withSpendProfileStatus(ACTION_REQUIRED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
@@ -1425,42 +1437,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertEquals(organisation, partnerOrganisations.get(0).getOrganisation());
             assertTrue(partnerOrganisations.get(0).isLeadOrganisation());
         });
-    }
-
-    @Test
-    public void testGenerateFinanceChecksForAllProjects() {
-
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        ProjectResource newProjectResource = newProjectResource().build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-
-        PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
-                withOrganisation(organisation).
-                withLeadOrganisation(true).
-                build();
-
-        Project savedProject = newProject().withApplication(application).
-                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
-                withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
-                build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-
-        when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-
-        when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
-
-        when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
-
-        when(projectRepositoryMock.findAll()).thenReturn(singletonList(savedProject));
-
-        when(financeCheckRepositoryMock.findByProjectId(savedProject.getId())).thenReturn(null);
-
-        ServiceResult<Void> project = service.generateFinanceChecksForAllProjects();
-
-        assertTrue(project.isSuccess());
     }
 
     @Override

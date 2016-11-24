@@ -24,7 +24,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
     @Test
     public void testViewMonitoringOfficer() throws Exception {
 
-        ProjectResource project = newProjectResource().withId(123L).build();
+        ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
@@ -38,6 +38,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
                 (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
+        assertEquals(Long.valueOf(345), viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertTrue(viewModel.isMonitoringOfficerAssigned());
         assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
@@ -48,7 +49,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
     @Test
     public void testViewMonitoringOfficerWithNoMonitoringOfficerYetAssigned() throws Exception {
 
-        ProjectResource project = newProjectResource().withId(123L).build();
+        ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
 
         when(projectService.getById(123L)).thenReturn(project);
         when(projectService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
@@ -61,6 +62,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
                 (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
+        assertEquals(Long.valueOf(345), viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertFalse(viewModel.isMonitoringOfficerAssigned());
         assertEquals("", viewModel.getMonitoringOfficerName());

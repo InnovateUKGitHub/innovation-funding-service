@@ -13,11 +13,12 @@ import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.contract.service.ContractService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.FinanceRowRestService;
@@ -64,7 +65,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
@@ -96,6 +97,7 @@ public class BaseUnitTest {
     public UserResource loggedInUser;
     public UserResource assessor;
     public UserResource applicant;
+    public UserResource assessorAndApplicant;
 
     public UserResource assessorUser;
     public UserResource applicantUser;
@@ -120,6 +122,8 @@ public class BaseUnitTest {
     public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
+    @Mock
+    public ContractService contractService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -267,7 +271,7 @@ public class BaseUnitTest {
         MockitoAnnotations.initMocks(this);
 
         // start with fresh ids when using builders
-        BuilderAmendFunctions.clearUniqueIds();
+        clearUniqueIds();
 
         applications = new ArrayList<>();
         questionResources = new HashMap<>();
@@ -297,7 +301,14 @@ public class BaseUnitTest {
                 .withLastName("Baker")
                 .withEmail("clark.baker@email.co.uk")
                 .withUID("2522-34y34ah-hrt4420").build();
-        users = asList(loggedInUser, user2);
+
+        assessorAndApplicant = newUserResource().withId(4L)
+                .withFirstName("Fred")
+                .withLastName("Smith")
+                .withEmail("fred.smith@email.co.uk")
+                .withUID("1234-abcdefgh-abc1234").build();
+
+        users = asList(loggedInUser, user2, assessorAndApplicant);
 
         applicantUser = newUserResource().withId(1L).withFirstName("James").withLastName("Watts").withEmail("james.watts@email.co.uk").withUID("6573ag-aeg32aeb-23aerr").build();
         assessorUser = newUserResource().withId(3L).withFirstName("Clark").withLastName("Baker").withEmail("clark.baker@email.co.uk").withUID("2522-34y34ah-hrt4420").build();
@@ -477,6 +488,7 @@ public class BaseUnitTest {
         applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
+        assessorAndApplicant.setRoles(asList(applicantRole,assessorRole));
     }
 
     public void setupApplicationWithRoles(){

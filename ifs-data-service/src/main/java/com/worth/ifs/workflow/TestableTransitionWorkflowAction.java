@@ -1,5 +1,6 @@
 package com.worth.ifs.workflow;
 
+import org.springframework.messaging.Message;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
@@ -9,13 +10,21 @@ import org.springframework.statemachine.action.Action;
  */
 public abstract class TestableTransitionWorkflowAction<StateType, EventType> implements Action<StateType, EventType> {
 
-    public static final String TESTING_GUARD_KEY = "com.worth.ifs.workflow__TESTING_GUARD_KEY__";
+    static final String TESTING_GUARD_KEY = "com.worth.ifs.workflow__TESTING_GUARD_KEY__";
 
     @Override
     public final void execute(StateContext<StateType, EventType> context) {
-        if (context.getMessageHeader(TESTING_GUARD_KEY) == null) {
+        if (!testingStateTransition(context)) {
             doExecute(context);
         }
+    }
+
+    static boolean testingStateTransition(StateContext<?, ?> context) {
+        return context.getMessageHeader(TESTING_GUARD_KEY) != null;
+    }
+
+    static boolean testingStateTransition(Message<?> context) {
+        return context.getHeaders().get(TESTING_GUARD_KEY) != null;
     }
 
     /**

@@ -36,8 +36,12 @@ class ProjectSetupProgressChecker {
         return ACTION_REQUIRED.equals(projectStatus.getSpendProfileStatus());
     }
 
+    public boolean isSpendProfileApproved() {
+        return COMPLETE.equals(projectStatus.getSpendProfileStatus());
+    }
+
     public boolean isOtherDocumentsSubmitted() {
-        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
+        return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
     }
 
     public boolean isOrganisationRequiringFunding() {

@@ -99,6 +99,44 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void getInvite_afterAccepted() throws Exception {
+        competitionInviteService.openInvite("inviteHash");
+        ServiceResult<Void> acceptResult = competitionInviteService.acceptInvite("inviteHash", userResource);
+        assertTrue(acceptResult.isSuccess());
+
+        ServiceResult<CompetitionInviteResource> getResult = competitionInviteService.getInvite("inviteHash");
+        assertTrue(getResult.isFailure());
+        assertTrue(getResult.getFailure().is(new Error(COMPETITION_INVITE_CLOSED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInvite_afterRejected() throws Exception {
+        RejectionReasonResource rejectionReason = RejectionReasonResourceBuilder.newRejectionReasonResource()
+                .withId(1L)
+                .build();
+
+        competitionInviteService.openInvite("inviteHash");
+        ServiceResult<Void> rejectResult = competitionInviteService.rejectInvite("inviteHash", rejectionReason, Optional.of("no time"));
+        assertTrue(rejectResult.isSuccess());
+
+        ServiceResult<CompetitionInviteResource> getResult = competitionInviteService.getInvite("inviteHash");
+        assertTrue(getResult.isFailure());
+        assertTrue(getResult.getFailure().is(new Error(COMPETITION_INVITE_CLOSED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void openInvite() throws Exception {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.openInvite("inviteHash");
 
@@ -125,6 +163,44 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashNotExists");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void openInvite_afterAccepted() throws Exception {
+        competitionInviteService.openInvite("inviteHash");
+        ServiceResult<Void> acceptResult = competitionInviteService.acceptInvite("inviteHash", userResource);
+        assertTrue(acceptResult.isSuccess());
+
+        ServiceResult<CompetitionInviteResource> getResult = competitionInviteService.openInvite("inviteHash");
+        assertTrue(getResult.isFailure());
+        assertTrue(getResult.getFailure().is(new Error(COMPETITION_INVITE_CLOSED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void openInvite_afterRejected() throws Exception {
+        RejectionReasonResource rejectionReason = RejectionReasonResourceBuilder.newRejectionReasonResource()
+                .withId(1L)
+                .build();
+
+        competitionInviteService.openInvite("inviteHash");
+        ServiceResult<Void> rejectResult = competitionInviteService.rejectInvite("inviteHash", rejectionReason, Optional.of("no time"));
+        assertTrue(rejectResult.isSuccess());
+
+        ServiceResult<CompetitionInviteResource> getResult = competitionInviteService.openInvite("inviteHash");
+        assertTrue(getResult.isFailure());
+        assertTrue(getResult.getFailure().is(new Error(COMPETITION_INVITE_CLOSED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
 

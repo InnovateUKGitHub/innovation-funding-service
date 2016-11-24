@@ -3,12 +3,13 @@ package com.worth.ifs.project;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
+import com.worth.ifs.project.sections.ProjectSetupSectionStatus;
 import com.worth.ifs.project.sections.SectionAccess;
+import com.worth.ifs.project.sections.SectionStatus;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -26,7 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -44,9 +48,6 @@ public class ProjectSetupStatusController {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private BankDetailsRestService bankDetailsRestService;
-	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -76,12 +77,17 @@ public class ProjectSetupStatusController {
 
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
 
-
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
+
+        ProjectActivityStates spendProfileState = ownOrganisation.getSpendProfileStatus();
+
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
-        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+        ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
-        boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
+        boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
+        boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
+        boolean spendProfileApproved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -89,17 +95,70 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        Optional<ProjectActivityStates> bankDetailsState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).map(ProjectPartnerStatusResource::getBankDetailsStatus);
+        boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
-                organisation.getId(), projectDetailsSubmitted, leadPartner, grantOfferLetterSubmitted, spendProfilesSubmitted,
-                statusAccessor.canAccessCompaniesHouseSection(organisation),
-                statusAccessor.canAccessProjectDetailsSection(organisation),
-                statusAccessor.canAccessMonitoringOfficerSection(organisation),
-                statusAccessor.canAccessBankDetailsSection(organisation),
-                statusAccessor.canAccessFinanceChecksSection(organisation),
-                statusAccessor.canAccessSpendProfileSection(organisation),
-                statusAccessor.canAccessOtherDocumentsSection(organisation),
-                SectionAccess.ACCESSIBLE);
+        boolean projectDetailsProcessCompleted;
+        boolean awaitingProjectDetailsActionFromOtherPartners = false;
+        if (leadPartner) {
+            projectDetailsProcessCompleted = checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
+            awaitingProjectDetailsActionFromOtherPartners = awaitingProjectDetailsActionFromOtherPartners(teamStatus);
+
+        } else {
+            projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
+        }
+
+        ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
+
+        SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
+        SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
+        SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation);
+        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
+        SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
+        SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
+        SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
+
+        SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, leadPartner);
+        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
+        SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
+        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState, spendProfileApproved);
+        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
+        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferAccess.equals(ACCESSIBLE), leadPartner, grantOfferLetterSubmitted);
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
+                companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
+                projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
+    }
+
+    private boolean checkAllFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
+    }
+
+    private boolean checkAllBankDetailsApprovedOrNotRequired(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status ->
+                asList(NOT_REQUIRED, COMPLETE).contains(status.getBankDetailsStatus()));
+    }
+
+    private boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
+    }
+
+    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
+    }
+
+    private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
     }
 }

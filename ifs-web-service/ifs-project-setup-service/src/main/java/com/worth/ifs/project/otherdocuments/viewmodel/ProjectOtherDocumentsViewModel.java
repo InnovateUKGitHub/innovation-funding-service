@@ -12,6 +12,7 @@ import java.util.List;
 public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
+    private Long applicationId;
     private String projectName;
     private FileDetailsViewModel collaborationAgreementFileDetails;
     private FileDetailsViewModel exploitationPlanFileDetails;
@@ -26,7 +27,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private LocalDateTime submitDate;
 
     public ProjectOtherDocumentsViewModel(Long projectId,
-                                          String projectName,
+                                          Long applicationId, String projectName,
                                           FileDetailsViewModel collaborationAgreementFileDetails,
                                           FileDetailsViewModel exploitationPlanFileDetails,
                                           List<String> partnerOrganisationNames,
@@ -39,6 +40,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
                                           boolean submitAllowed,
                                           LocalDateTime submitDate) {
         this.projectId = projectId;
+        this.applicationId = applicationId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
         this.exploitationPlanFileDetails = exploitationPlanFileDetails;
@@ -126,5 +128,9 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
 
     public boolean isProjectManager() {
         return projectManager;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
     }
 }

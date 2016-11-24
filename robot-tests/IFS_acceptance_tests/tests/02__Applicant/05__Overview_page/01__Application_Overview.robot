@@ -14,12 +14,7 @@ Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Default Tags
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Navigation to the Overview page
@@ -59,7 +54,7 @@ The Progress bar is visible
 User can print the application
     [Documentation]    INFUND-1162
     [Tags]    HappyPath
-    When the user navigates to the page without the usual headers    ${SERVER}/application/1/print?noprint    #This URL its only for testing purposes
+    When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application
     And the user clicks the button/link    link= Print your application

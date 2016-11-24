@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -71,10 +73,10 @@ public class User implements Serializable {
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
     private Profile profile;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
 
     public User() {
@@ -284,9 +286,6 @@ public class User implements Serializable {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-        if (profile != null) {
-            profile.setUser(this);
-        }
     }
 
     public List<Affiliation> getAffiliations() {
@@ -294,6 +293,7 @@ public class User implements Serializable {
     }
 
     public void setAffiliations(List<Affiliation> affiliations) {
-        this.affiliations = affiliations;
+        this.affiliations.clear();
+        this.affiliations.addAll(affiliations);
     }
 }

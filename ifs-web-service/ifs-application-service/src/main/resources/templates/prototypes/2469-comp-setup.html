@@ -78,7 +78,7 @@
 			compStatus = $_GET('compStatus');
 
 
-		if(compType == 'Programme' || compType == 'Managed services'){
+		if(compType == 'Programme' || compType == 'Managed services' || compType == 'Sector competition'){
 			jQuery('#stateAid').show();
 			jQuery('#stateAid .yes').show();
 			jQuery('#stateAid .no').hide();
@@ -88,6 +88,11 @@
 			jQuery('#stateAid .yes').hide();
 		}else{
 			jQuery('#stateAid').hide();
+		}
+		if(compType == 'Sector competition'){
+			jQuery('.sector-competition-innovation-area, #add-innovation-area').show();
+		} else {
+			jQuery('.sector-competition-innovation-area, #add-innovation-area').hide();
 		}
 
 
@@ -186,7 +191,7 @@
 
 			var compType = jQuery(this).val();
 
-			if(compType == 'Programme' || compType == 'Managed services'){
+			if(compType == 'Programme' || compType == 'Managed services' || compType == 'Sector competition'){
 				jQuery('#stateAid').show();
 				jQuery('#stateAid .yes').show();
 				jQuery('#stateAid .no').hide();
@@ -198,11 +203,18 @@
 				jQuery('#stateAid').hide();
 			}
 
+			if(compType == 'Sector competition'){
+				jQuery('#add-innovation-area').show();
+			} else {
+				jQuery('#innovation-area2-form-group, #add-innovation-area').hide();
+			}
+
 		});
 
 		jQuery('#compInnovationSector').on('change',function(e){ 
 
 			jQuery('#compInnovationArea').val('');
+			jQuery('#compInnovationArea2').val('');
 
 			var compSector = jQuery(this).val();
 
@@ -211,6 +223,11 @@
 				jQuery('#compInnovationArea .materials').hide();
 				jQuery('#compInnovationArea .emerging').hide();
 				jQuery('#compInnovationArea .infrastructure').hide();
+
+				jQuery('#compInnovationArea2 .health').show();
+				jQuery('#compInnovationArea2 .materials').hide();
+				jQuery('#compInnovationArea2 .emerging').hide();
+				jQuery('#compInnovationArea2 .infrastructure').hide();
 			}
 
 			if(compSector == 'materials'){
@@ -218,6 +235,11 @@
 				jQuery('#compInnovationArea .materials').show();
 				jQuery('#compInnovationArea .emerging').hide();
 				jQuery('#compInnovationArea .infrastructure').hide();
+
+				jQuery('#compInnovationArea2 .health').hide();
+				jQuery('#compInnovationArea2 .materials').show();
+				jQuery('#compInnovationArea2 .emerging').hide();
+				jQuery('#compInnovationArea2 .infrastructure').hide();
 			}
 
 			if(compSector == 'emerging'){
@@ -225,13 +247,23 @@
 				jQuery('#compInnovationArea .materials').hide();
 				jQuery('#compInnovationArea .emerging').show();
 				jQuery('#compInnovationArea .infrastructure').hide();
+
+				jQuery('#compInnovationArea2 .health').hide();
+				jQuery('#compInnovationArea2 .materials').hide();
+				jQuery('#compInnovationArea2 .emerging').show();
+				jQuery('#compInnovationArea2 .infrastructure').hide();
 			}
 
-			if(compSector == 'emerging'){
+			if(compSector == 'infrastructure'){
 				jQuery('#compInnovationArea .health').hide();
 				jQuery('#compInnovationArea .materials').hide();
 				jQuery('#compInnovationArea .emerging').hide();
 				jQuery('#compInnovationArea .infrastructure').show();
+
+				jQuery('#compInnovationArea2 .health').hide();
+				jQuery('#compInnovationArea2 .materials').hide();
+				jQuery('#compInnovationArea2 .emerging').hide();
+				jQuery('#compInnovationArea2 .infrastructure').show();
 			}
 
 		});
@@ -277,6 +309,28 @@
 
 
 			}
+
+		});
+
+		//Show the add another innovation area button for sector competitions
+		jQuery('.sector-competition-innovation-area, #add-innovation-area, #innovation-area2-form-group').hide();
+		jQuery('#compType').on('change',function(e){
+
+			if(jQuery(this).val() == 'Sector competition'){
+				jQuery('.sector-competition-innovation-area, #add-innovation-area').show();
+			}
+
+		});
+		jQuery('#add-innovation-area').on('click', 'a', function(e){
+
+			jQuery('#innovation-area2-form-group').show();
+			return false;
+
+		});
+		jQuery('#remove-innovation-area').on('click', function(e){
+
+			jQuery('#innovation-area2-form-group').hide();
+			return false;
 
 		});
 

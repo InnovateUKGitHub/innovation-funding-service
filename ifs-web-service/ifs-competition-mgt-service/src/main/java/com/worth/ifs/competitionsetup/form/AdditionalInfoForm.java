@@ -1,6 +1,6 @@
 package com.worth.ifs.competitionsetup.form;
 
-import com.worth.ifs.competitionsetup.model.Funder;
+import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -31,12 +31,12 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
 
     @Valid
     @NotEmpty(message = "Please enter a funder")
-    private List<Funder> funders = new ArrayList<>();
+    private List<FunderViewModel> funders = new ArrayList<>();
 
     public AdditionalInfoForm() {
     }
 
-    public AdditionalInfoForm(String activityCode, String innovateBudget, String budgetCode, List<Funder> funders) {
+    public AdditionalInfoForm(String activityCode, String innovateBudget, String budgetCode, List<FunderViewModel> funders) {
         this.activityCode = activityCode;
         this.innovateBudget = innovateBudget;
         this.funders = funders;
@@ -83,11 +83,11 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
         this.budgetCode = budgetCode;
     }
 
-    public List<Funder> getFunders() {
+    public List<FunderViewModel> getFunders() {
         return funders;
     }
 
-    public void setFunders(List<Funder> funders) {
+    public void setFunders(List<FunderViewModel> funders) {
         this.funders = funders;
     }
 

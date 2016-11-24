@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
@@ -58,7 +59,7 @@ public class AssessmentBuilderTest {
     public void buildMany() {
         final Long[] expectedIds = { 1L, 2L };
         final ProcessEvent[] expectedEvents = { ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE };
-        final ProcessStates[] expectedStatuss = { AssessmentStates.OPEN, AssessmentStates.ASSESSED };
+        final ProcessStates[] expectedStatuss = { AssessmentStates.OPEN, READY_TO_SUBMIT};
         final Calendar[] expectedLastModifiedDates = { GregorianCalendar.getInstance(), GregorianCalendar.getInstance() };
         final LocalDate[] expectedStartDates = { LocalDate.now().minusDays(2), LocalDate.now().minusDays(3) };
         final LocalDate[] expectedEndDates = { LocalDate.now().minusDays(1), LocalDate.now().minusDays(2) };
@@ -71,7 +72,7 @@ public class AssessmentBuilderTest {
                 .withProcessEvent(expectedEvents)
                 .withActivityState(
                         new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.ASSESSED.getBackingState()))
+                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)

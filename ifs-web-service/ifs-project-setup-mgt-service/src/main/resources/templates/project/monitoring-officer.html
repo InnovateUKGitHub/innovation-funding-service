@@ -12,6 +12,8 @@
 <main id="content">
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
+	<div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+
 	<div class="grid-row">
 		<div class="column-two-thirds">
 			<div class="page-title">

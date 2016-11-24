@@ -13,7 +13,6 @@ include::{snippets}/address/find-one/curl-request.adoc[]
 === Lookup address by postcode
 ==== Request
 include::{snippets}/address/lookup/http-request.adoc[]
-include::{snippets}/address/lookup/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/lookup/http-response.adoc[]
@@ -25,7 +24,6 @@ include::{snippets}/address/lookup/curl-request.adoc[]
 === Validate postcode
 ==== Request
 include::{snippets}/address/validate/http-request.adoc[]
-include::{snippets}/address/validate/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/validate/http-response.adoc[]

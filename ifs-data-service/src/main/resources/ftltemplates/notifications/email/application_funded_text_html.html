@@ -8,10 +8,5 @@
   <p style="margin: 0 0 1em 0;">Feedback on your application will be available on <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["dd MMMM yyyy"]} and will be accessible from your Innovate UK dashboard. We will send you a further email notification when your feedback is ready for you to view.</p>
   <p style="margin: 0 0 1em 0;">Once again, congratulations on the successful outcome of your application.</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
-  <p style="margin: 1em 0 1em 0;">
-      Competitions Team<br/>
-      Innovate UK<br/>
-      Tel: 0300 321 4357<br/>
-      Email: competitions@innovateuk.gov.uk
-  </p>
+  <@layout.senderHTML />
 </@layout.default>

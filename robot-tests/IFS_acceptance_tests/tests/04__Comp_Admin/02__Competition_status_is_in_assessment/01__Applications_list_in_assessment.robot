@@ -7,12 +7,7 @@ Documentation     INFUND-1987
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Competition status should be correct
@@ -58,8 +53,8 @@ Sort by Total project cost
 Finances are showing in the list
     [Documentation]    INFUND-2411
     [Tags]    HappyPath
-    Then the user should see the text in the page    4608.00
-    And the user should see the text in the page    7680.00
+    Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITHOUT_COMMAS}
+    And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}
 
 Excel download button should be visible
     [Documentation]    INFUND-2307
@@ -68,7 +63,7 @@ Excel download button should be visible
 
 Only applications from this competition should be visible
     [Documentation]    INFUND-2311
-    Then the user should not see the element    link=00000005
+    Then the user should not see the element    link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
 
 Columns for not submitted applications
     [Documentation]    INFUND-2307
@@ -90,11 +85,12 @@ Sorted by percentage
 
 Non submitted applications from this competition should be visible
     [Documentation]    INFUND-2311
-    Then the user should not see the element    link=00000001
+    Then the user should not see the element    link=${IN_ASSESSMENT_APPLICATION_3_NUMBER}
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
     [Tags]    HappyPath    Pending
+    #TODO Pending due to INFUND-6187
     # TODO we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
     Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
     When the admin downloads the excel
@@ -142,13 +138,13 @@ Download File
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${server}/management/competition/1/download    submitted_applications.xlsx
+    Download File    ${ALL_COOKIES}    ${server}/management/competition/${OPEN_COMPETITION}/download    submitted_applications.xlsx
     wait until keyword succeeds    300ms    1 seconds    Download should be done
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
     ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
-    Should Be Equal    ${APPLICATION_ID_1}    00000005
+    Should Be Equal    ${APPLICATION_ID_1}    ${OPEN_COMPETITION_APPLICATION_5_NUMBER}
     ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
     should be equal    ${APPLICATION_TITLE_1}    A new innovative solution
     ${LEAD_ORRGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4

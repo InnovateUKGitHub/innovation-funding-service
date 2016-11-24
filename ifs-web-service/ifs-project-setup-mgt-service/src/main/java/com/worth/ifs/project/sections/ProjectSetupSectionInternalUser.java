@@ -48,10 +48,6 @@ public class ProjectSetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if(!projectSetupProgressChecker.isBankDetailsApproved()
-                && !projectSetupProgressChecker.isBankDetailsActionRequired()) {
-            return NOT_ACCESSIBLE;
-        }
         return ACCESSIBLE;
     }
 
@@ -60,11 +56,12 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isSpendProfileSubmitted()) {
-            return NOT_ACCESSIBLE;
+
+        if (projectSetupProgressChecker.isSpendProfileApproved() || projectSetupProgressChecker.isSpendProfileSubmitted()) {
+            return ACCESSIBLE;
         }
 
-        return ACCESSIBLE;
+        return NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {

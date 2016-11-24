@@ -6,7 +6,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -54,14 +54,14 @@ public class ValidationHandlerTest {
 
         validationHandler.addAnyErrors(serviceFailure(asList(
                 new Error(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE),
-                new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS))), toField("formField"));
+                new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER))), toField("formField"));
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
         assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
         assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
         assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
-        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
+        assertEquals(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER.name(), validationHandler.getAllErrors().get(3).getCode());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(1)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(2)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(3)).getField());
@@ -77,14 +77,14 @@ public class ValidationHandlerTest {
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         validationHandler.addAnyErrors(serviceFailure(asList(
                 new Error(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE),
-                new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS))), asGlobalErrors());
+                new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER))), asGlobalErrors());
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
         assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
         assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
         assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
-        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
+        assertEquals(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER.name(), validationHandler.getAllErrors().get(3).getCode());
         assertFalse(validationHandler.getAllErrors().get(0) instanceof FieldError);
         assertTrue(validationHandler.getAllErrors().get(1) instanceof FieldError);
         assertFalse(validationHandler.getAllErrors().get(2) instanceof FieldError);
@@ -102,16 +102,16 @@ public class ValidationHandlerTest {
 
         validationHandler.addAnyErrors(serviceFailure(asList(
                 new Error(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE),
-                new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS))),
+                new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER))),
                 mappingErrorKeyToField(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE, "formField2"),
-                mappingErrorKeyToField(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS, "formField"));
+                mappingErrorKeyToField(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER, "formField"));
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
         assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
         assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
         assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
-        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
+        assertEquals(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER.name(), validationHandler.getAllErrors().get(3).getCode());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(1)).getField());
         assertEquals("formField2", ((FieldError) validationHandler.getAllErrors().get(2)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(3)).getField());

@@ -3,6 +3,7 @@ package com.worth.ifs.controller;
 
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -30,7 +31,6 @@ import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.AssessorFeedbackService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,7 +62,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForOpenCompetition() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
@@ -84,7 +84,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForOpenCompetitionProvidingPage() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
@@ -106,7 +106,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdProvidingSort() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForOpenCompetition("lead")).thenReturn("properSort");
@@ -128,7 +128,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentSubmittedIsDefault() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.IN_ASSESSMENT).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -149,7 +149,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.IN_ASSESSMENT).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -170,7 +170,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionInAssessmentNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.IN_ASSESSMENT).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -192,7 +192,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionFundersPanelNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.FUNDERS_PANEL).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -214,7 +214,7 @@ public class CompetitionManagementControllerTest  {
     
 	@Test
     public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.FUNDERS_PANEL).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -236,7 +236,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionAssessorFeedbackNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
@@ -258,7 +258,7 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionAssessorFeedbackSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
@@ -284,18 +284,20 @@ public class CompetitionManagementControllerTest  {
     
     @Test
     public void getByCompetitionIdForCompetitionAssessorFeedbackOverviewRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(Status.ASSESSOR_FEEDBACK).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
         when(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID)).thenReturn(3L);
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime assessmentStartDate = now.minusDays(7L);
-        LocalDateTime assessmentEndDate = now.plusDays(3L);
+        LocalDateTime assessorDeadlineDate = now.plusDays(2L);
+        LocalDateTime fundersPanelDate = now.plusDays(3L);
         
         CompetitionResource competition = newCompetitionResource()
-        		.withAssessmentStartDate(assessmentStartDate)
-        		.withAssessmentEndDate(assessmentEndDate)
+        		.withAssessorAcceptsDate(assessmentStartDate)
+                .withAssessorDeadlineDate(assessorDeadlineDate)
+        		.withFundersPanelDate(fundersPanelDate)
         		.build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         
@@ -305,9 +307,9 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("activeTab", "overview"))
                 .andExpect(model().attribute("applicationsRequiringFeedback", 3L))
-                .andExpect(model().attribute("assessmentEndDate", assessmentEndDate))
-                .andExpect(model().attribute("assessmentDaysLeft", 2L))
-                .andExpect(model().attribute("assessmentDaysLeftPercentage", 80L));
+                .andExpect(model().attribute("assessmentEndDate", fundersPanelDate))
+                .andExpect(model().attribute("assessmentDaysLeft", 1L))
+                .andExpect(model().attribute("assessmentDaysLeftPercentage", 88L));
     	
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }

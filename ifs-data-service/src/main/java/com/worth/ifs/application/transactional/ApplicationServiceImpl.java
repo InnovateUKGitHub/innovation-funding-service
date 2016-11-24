@@ -15,7 +15,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
@@ -382,7 +382,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
-            notificationArguments.put("assesmentEndDate", competition.getAssessmentEndDate());
+            notificationArguments.put("assesmentEndDate", competition.getFundersPanelDate());
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
@@ -502,7 +502,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private boolean applicationBelongsToOpenCompetition(Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
         if (application != null && application.getCompetition() != null) {
-            return CompetitionResource.Status.OPEN.equals(application.getCompetition().getCompetitionStatus());
+            return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
         }
         return true;
     }

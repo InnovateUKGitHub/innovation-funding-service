@@ -5,7 +5,6 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,6 @@ public class ProcessOutcomeRepositoryIntegrationTest extends BaseRepositoryInteg
     }
 
     @Test
-    @Rollback
     public void testFindAll() throws Exception {
         repository.deleteAll();
 
@@ -38,7 +36,6 @@ public class ProcessOutcomeRepositoryIntegrationTest extends BaseRepositoryInteg
     }
 
     @Test
-    @Rollback
     public void testFindOne() throws Exception {
         repository.deleteAll();
 

@@ -12,7 +12,7 @@
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
 
   <div class="page-title">
-      <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)}"/>
+      <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)}"/>
       <h1 class="heading-xlarge">Submit Bank Details</h1>
   </div>
 

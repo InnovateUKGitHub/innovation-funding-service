@@ -19,13 +19,7 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 
@@ -59,7 +53,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given guest user log-in    ${submit_test_email}    Passw0rd123
+    Given log in as a different user    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review & submit
@@ -74,7 +68,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath    SmokeTest
-    Then the user should get a confirmation email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    Congratulations, you have successfully submitted an application for funding to Innovate    Successful submission of application
+    Then the user reads his email    ${test_mailbox_one}+submittest@gmail.com    Successful submission of application    you have successfully submitted an application
 
 Submitted application is read only
     [Documentation]    INFUND-1938

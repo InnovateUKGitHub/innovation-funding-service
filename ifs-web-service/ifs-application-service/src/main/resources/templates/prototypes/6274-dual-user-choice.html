@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+    <th:block th:if="${param.userType != null and param.userType[0] == 'applicant'}">
+      <meta http-equiv="refresh" content="0;URL='/prototypes/675-dashboard'" />
+    </th:block>
+
+    <th:block th:if="${param.userType != null and param.userType[0] == 'assessor'}">
+      <meta http-equiv="refresh" content="0;URL='/prototypes/865-assessor-dashboard-invites'" />
+    </th:block>
+
+
+
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+  <h1 class="heading-large">Sign in successful</h1>
+  <p>Thank you for signing into the Innovation Funding Service.</p>
+
+  <form th:action="${#httpServletRequest.requestURI}" class="extra-margin">
+
+    <fieldset class="inline extra-margin">
+      <legend class="heading-medium">Please choose the role you are signing in as today</legend>
+
+      <div class="form-group">
+
+        <label class="block-label" for="user-assessor">
+          <input type="radio" name="userType" id="user-assessor" value="assessor" />
+          Assessor
+        </label>
+
+        <label class="block-label" for="user-applicant">
+          <input type="radio" name="userType" id="user-applicant" value="applicant" />
+          Applicant
+        </label>
+
+      </div>
+
+    </fieldset>
+
+    <button type="submit" class="button" id="continue" th:unless="${param.userType != null}" disabled="disabled">Continue</button>
+
+
+  </form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+  jQuery( document ).ready(function() {
+    if ( jQuery("input[name='userType']").is(':checked') ) {
+			jQuery("#continue").removeAttr('disabled');
+		}
+  });
+
+
+	jQuery("input[name='userType']").on('click',function(e){
+
+    if ( jQuery(this).is(':checked') ) {
+			jQuery("#continue").removeAttr('disabled');
+		}
+
+	});
+
+	// ]]>
+</script>
+</body>
+</html>

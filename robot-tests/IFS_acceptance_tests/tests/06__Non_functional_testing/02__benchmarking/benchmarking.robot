@@ -1,11 +1,7 @@
 *** Settings ***
-Documentation     -INFUND-1622: Creating a baseline test to benchmark performance
-Test Teardown     User closes the browser
-Resource          ../resources/GLOBAL_LIBRARIES.robot
-Resource          ../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../resources/variables/User_credentials.robot
-Resource          ../resources/keywords/Login_actions.robot
-Resource          ../resources/keywords/User_actions.robot
+Documentation     INFUND-1622: Creating a baseline test to benchmark performance
+Test Teardown     The user closes the browser
+Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Go through the applicant process
@@ -29,7 +25,7 @@ Go through the assessor journey
 the guest logs in as an assessor
     the guest user opens the browser
     time until page contains    New to this service?    Loading the login page
-    login as user    &{assessor_credentials}
+    Log in as user    &{assessor_credentials}
     time until element is visible    link=My dashboard    Logging in as assessor
 
 the assessor can visit the competition dashboard

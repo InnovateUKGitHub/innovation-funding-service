@@ -1,6 +1,7 @@
 package com.worth.ifs.documentation;
 
 import com.worth.ifs.assessment.builder.AssessmentResourceBuilder;
+import com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -21,8 +23,6 @@ public class AssessmentDocs {
             fieldWithPath("endDate").description("end date of the assessment"),
             fieldWithPath("processOutcomes").description("outcomes of the assessment process"),
             fieldWithPath("processRole").description("process role of the assigned assessor"),
-            fieldWithPath("submitted").description("the assessment is submitted"),
-            fieldWithPath("started").description("the assessment is started"),
             fieldWithPath("application").description("the id of the application being assessed"),
             fieldWithPath("competition").description("the competition id of the application being assessed"),
             fieldWithPath("assessmentState").description("the current workflow state of the assessment process"),
@@ -36,9 +36,15 @@ public class AssessmentDocs {
             .withProcessOutcome(asList(1L, 2L))
             .withActivityState(OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withStarted(true)
-            .withSubmitted(false)
             .withLastModifiedDate(GregorianCalendar.getInstance())
             .withProcessRole(1L)
             .withApplication(2L);
+
+    public static final FieldDescriptor[] assessmentSubmissionsFields = {
+        fieldWithPath("assessmentIds").description("List of assessment ids to submit.")
+    };
+
+    public static final AssessmentSubmissionsResourceBuilder assessmentSubmissionsResourceBuilder =
+            newAssessmentSubmissionsResource()
+                    .withAssessmentIds(asList(1L, 2L));
 }

@@ -1,0 +1,1 @@
+UPDATE process_outcome SET outcome_type = 'funding-decision' WHERE outcome_type = 'recommend';

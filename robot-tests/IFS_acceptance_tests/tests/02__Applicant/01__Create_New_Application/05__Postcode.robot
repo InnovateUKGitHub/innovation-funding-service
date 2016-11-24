@@ -3,11 +3,7 @@ Documentation     INFUND-890 : As an applicant I want to use UK postcode lookup 
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Enter Valid Postcode and see the results in the dropdown
@@ -37,9 +33,8 @@ Other Postcode values
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
-    # TODO the following two steps have been commented out as they are pending due to INFUND-4497
-    # And the user clicks the button/link    id=postcode-lookup
-    # And the user should see the element    css=.form-label .error-message
+    And the user clicks the button/link    id=postcode-lookup
+    And the user should see the element    css=.form-label .error-message
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex

@@ -2,10 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
@@ -17,6 +14,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -123,6 +122,46 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         });
     }
 
+    @Test
+    public void getUserProfileDetails() {
+        Long userId = 1L;
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.getUserProfile(userId), () -> {
+            verify(rules).usersCanViewTheirOwnProfile(isA(UserProfileResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void getUserProfileStatus() {
+        Long userId = 1L;
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.getUserProfileStatus(userId), () -> {
+            verify(rules).usersCanViewTheirOwnProfileStatus(isA(UserProfileStatusResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void updateUserDetails() {
+        Long userId = 1L;
+        UserProfileResource profile = newUserProfileResource().build();
+
+        UserResource user = newUserResource().build();
+        when(userLookupStrategies.findById(userId)).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.updateUserProfile(userId, profile), () -> {
+            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
     @Override
     protected Class<? extends UserProfileService> getClassUnderTest() {
         return TestUserProfileService.class;
@@ -163,6 +202,21 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         @Override
         public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
+            return serviceSuccess(newUserProfileResource().build());
+        }
+
+        @Override
+        public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
+            return serviceSuccess(newUserProfileStatusResource().build());
         }
     }
 }

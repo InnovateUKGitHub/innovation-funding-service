@@ -2,16 +2,13 @@ package com.worth.ifs.project.form;
 
 // this class defines the form for inviting new users to the project
 
-import java.io.Serializable;
-
 import com.worth.ifs.commons.validation.ValidationConstants;
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.invite.constant.InviteStatus;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class InviteeForm implements Serializable {
-    private static final long serialVersionUID = 8494848676778443648L;
+public class InviteeForm extends BaseBindingResultTarget {
 
     private Long userId;
     @NotEmpty
@@ -20,8 +17,6 @@ public class InviteeForm implements Serializable {
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
     private String email;
     private InviteStatus inviteStatus;
-
-    private String emailExistsError;
 
     public InviteeForm(Long userId, String name, String email) {
         this.userId = userId;
@@ -65,11 +60,5 @@ public class InviteeForm implements Serializable {
     public InviteStatus getInviteStatus() {
         return inviteStatus;
     }
-
-    public String getEmailExistsError ()  {
-        return emailExistsError;
-    }
-
-    public void setEmailExistsError (String emailExistsError)  { this.emailExistsError = emailExistsError; }
 }
 

@@ -14,6 +14,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,6 +50,7 @@ public class ProjectGrantOfferLetterController {
     @Autowired
     private ProjectService projectService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(method = GET)
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -57,12 +59,14 @@ public class ProjectGrantOfferLetterController {
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value="/confirmation", method = GET)
     public String confirmation(@PathVariable("projectId") Long projectId, Model model) {
         model.addAttribute("projectId", projectId);
         return BASE_DIR + "/grant-offer-letter-confirmation";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "confirmSubmit", method = POST)
     public String submit(@PathVariable("projectId") Long projectId,
                          @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
@@ -78,6 +82,7 @@ public class ProjectGrantOfferLetterController {
                 () -> projectService.submitGrantOfferLetter(projectId));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
     public String uploadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
@@ -96,6 +101,7 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadGeneratedOfferLetterClicked", method = POST)
     public String uploadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
@@ -114,6 +120,7 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadAdditionalContractClicked", method = POST)
     public String uploadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId,
@@ -133,6 +140,7 @@ public class ProjectGrantOfferLetterController {
     }
 
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)
     public
     @ResponseBody
@@ -145,6 +153,7 @@ public class ProjectGrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
     public
     @ResponseBody
@@ -157,6 +166,7 @@ public class ProjectGrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/additional-contract", method = GET)
     public
     @ResponseBody
@@ -194,7 +204,8 @@ public class ProjectGrantOfferLetterController {
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(), project.isOfferRejected(), false, isProjectManager);
+                project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
+                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {

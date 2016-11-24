@@ -8,7 +8,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -63,7 +63,7 @@ public class MilestoneFormPopulatorTest extends BaseUnitTestMocksTest {
         assertTrue(result instanceof MilestonesForm);
 
         MilestonesForm form = (MilestonesForm) result;
-        LinkedMap<String, MilestoneEntry> milestoneEntryLinkedMap = form.getMilestoneEntries();
+        LinkedMap<String, MilestoneViewModel> milestoneEntryLinkedMap = form.getMilestoneEntries();
 
         assertFalse(form.getMilestoneEntries().isEmpty());
         assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getMilestoneType().equals(MilestoneType.OPEN_DATE));

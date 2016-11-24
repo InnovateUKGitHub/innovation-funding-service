@@ -8,7 +8,7 @@ import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 
 /**
- * {@code AssessmentGuard} is responsible for testing if the transition can take place
+ * {@code ProcessOutcomeGuard} is responsible for testing if the transition can take place
  * to the next state. This will not happen if the evaluation is failing.
  */
 @Component
@@ -17,17 +17,7 @@ public class ProcessOutcomeGuard implements Guard<AssessmentStates, AssessmentOu
     @Override
     public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
         Object processOutcomeObject = context.getMessageHeader("processOutcome");
-        Object processRoleId = context.getMessageHeader("processRoleId");
-
-        if(isProcessOutcome(processOutcomeObject) &&
-                isTypeOfLong(processRoleId)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isTypeOfLong(Object object) {
-        return object!=null && object instanceof Long;
+        return isProcessOutcome(processOutcomeObject);
     }
 
     private boolean isProcessOutcome(Object object) {

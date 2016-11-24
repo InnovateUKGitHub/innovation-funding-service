@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been invited to join the collaborative project ${projectName} as a named finance contact.
+You have been invited to join the project ${projectName} as a named finance contact.
 
 You will be providing finance details on behalf of ${inviteOrganisationName}.
 
@@ -16,6 +16,6 @@ If you were not aware of this appointment or you have any queries, please contac
 ${inviteUrl}
 
 Yours sincerely
-Competitions Team
-Innovate UK
+
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

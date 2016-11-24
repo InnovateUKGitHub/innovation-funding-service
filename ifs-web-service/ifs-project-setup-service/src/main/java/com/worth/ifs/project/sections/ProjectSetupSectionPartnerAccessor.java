@@ -134,8 +134,21 @@ public class ProjectSetupSectionPartnerAccessor {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
     public boolean isProjectDetailsSubmitted() {
         return projectSetupProgressChecker.isProjectDetailsSubmitted();
+    }
+
+    public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
+        return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }
 
     private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {

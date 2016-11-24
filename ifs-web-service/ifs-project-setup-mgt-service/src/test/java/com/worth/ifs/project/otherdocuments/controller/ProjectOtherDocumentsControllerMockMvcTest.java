@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
 
+    long applicationId = 456L;
     long projectId = 123L;
 
     OrganisationResource leadOrganisation = newOrganisationResource().withId(1L).withName("Test Lead Organisation").build();
@@ -43,6 +44,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1", "Org2", "Org3").build(3);
 
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
+                .withId(applicationId)
                 .withCompetition(1L)
                 .build();
 
@@ -59,6 +61,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     private void assertProjectDetailsPrepopulatedOk(ProjectPartnerDocumentsViewModel model) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
+        assertEquals(Long.valueOf(456), model.getApplicationId());
         assertEquals("My Project", model.getProjectName());
         assertEquals("Test Lead Organisation", model.getLeadPartnerOrganisationName());
         assertEquals("Dave Smith", model.getProjectManagerName());
@@ -73,7 +76,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     @Test
     public void testViewOtherDocumentsPage() throws Exception {
 
-        ProjectResource project = newProjectResource().withId(projectId).withName("My Project").build();
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withName("My Project").build();
 
         setupViewOtherDocumentsTestExpectations (project);
 

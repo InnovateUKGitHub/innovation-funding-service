@@ -7,6 +7,8 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
+import static com.worth.ifs.workflow.TestableTransitionWorkflowAction.testingStateTransition;
+
 /**
  * {@code WorkflowStateMachineListener} for various state machine events.
  */
@@ -17,7 +19,10 @@ public class WorkflowStateMachineListener<StateType, EventType> extends StateMac
     @Override
     public void eventNotAccepted(Message<EventType> event) {
         super.eventNotAccepted(event);
-        LOG.warn("Workflow event not accepted with payload: " + event.getPayload());
+
+        if (!testingStateTransition(event)) {
+            LOG.warn("Workflow event not accepted with payload: " + event.getPayload());
+        }
     }
 
     @Override

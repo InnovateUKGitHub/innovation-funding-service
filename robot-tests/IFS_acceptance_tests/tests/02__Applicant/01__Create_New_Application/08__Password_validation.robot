@@ -6,14 +6,7 @@ Suite Setup       Run keywords    The guest user opens the browser
 ...               AND    The user follows the flow to register their organisation
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Password from the blacklist

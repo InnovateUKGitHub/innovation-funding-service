@@ -42,16 +42,6 @@
       <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
-    <!-- Brent : textarea wordcount only gets used in assesment as far as I could find -->
-
-    <div th:fragment="textarea-wordcount (name, id, inputName, hint, maxWords, value)"  class="form-group">
-        <label class="form-label form-label-bold" th:for="${id}">
-            <span th:if="${name}" th:text="${name}" />
-            <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag"  />
-            <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag"  />
-        </label>
-        <div th:include="question-type/form-elements :: form-textarea-wordcount (id=${id}, name=${inputName}, value=${value},readonly=false, maxWords=${maxWords})" th:remove="tag" />
-    </div>
 
     <!-- ===========================Form: Date input =========================== -->
 
@@ -202,19 +192,32 @@
                             </div>
                         </div>
                             <fieldset>
-                              <div class="form-group">
-                                   <legend>
-                                       <span class="form-label form-label-bold">Estimated timescales</span>
-                                       <span>Project start date</span>
-                                       <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
-                                       <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
-                                   </legend>
+                                <div class="form-group">
+                                     <legend>
+                                         <span class="form-label form-label-bold">Estimated timescales</span>
+                                         <span>Project start date</span>
+                                         <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
+                                         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+                                     </legend>
 
-                                <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" th:remove="tag" /><br/>
-                            </div>
-                            <div class="form-group">
-                              <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${readonly})" th:remove="tag" />
-                            </div>
+                                  <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" th:remove="tag" /><br/>
+                              </div>
+                              <div class="form-group" th:with="id='application_details-duration', field='application.durationInMonths',readonly=${readonly}">
+                                  <th:block th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
+                                  <th:block th:include="question-type/form-elements :: form-validation-messages (id=${id})"  />
+                                  <input class="form-control width-extra-small"
+                                         th:classAppend="${readonly == true ? 'js-visited':''}"
+                                         th:readonly="${readonly}"
+                                         th:id="${id}"
+                                         th:field="*{__${field}__}"
+                                         type="number"
+                                         min="1"
+                                         max="36"
+                                         required="required"
+                                         data-required-errormessage="Please enter a valid value"
+                                         data-min-errormessage="Your project should last between 1 and 36 months"
+                                         data-max-errormessage="Your project should last between 1 and 36 months " />
+                              </div>
                           </fieldset>
                       </div>
                         <div class="form-group">
@@ -262,7 +265,7 @@
                               <div class="column-half">
                                   <h3 class="heading-small">Project timescales</h3>
                                   <p>Project start date:<br/>
-                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
                                   </p>
                                   <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
                               </div>

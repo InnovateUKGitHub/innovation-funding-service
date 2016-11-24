@@ -3,16 +3,12 @@ Documentation     INFUND-1859: As an applicant I want the Eligibility (process i
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${ELIGIBILITY}    ${SERVER}/competition/1/info/eligibility
-${Before you apply}    ${SERVER}/competition/1/info/before-you-apply
-${What we ask you}    ${SERVER}/competition/1/info/what-we-ask-you
+${ELIGIBILITY}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
+${Before you apply}    ${SERVER}/competition/${OPEN_COMPETITION}/info/before-you-apply
+${What we ask you}    ${SERVER}/competition/${OPEN_COMPETITION}/info/what-we-ask-you
 
 *** Test Cases ***
 User goes to the Eligibility page

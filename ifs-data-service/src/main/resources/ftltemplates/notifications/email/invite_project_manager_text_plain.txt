@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been invited to join the collaborative project ${projectName} as the project manager.
+You have been invited to join the project ${projectName} as the project manager.
 
 You will be managing the project on behalf of ${leadOrganisation} who is the lead organisation.
 
@@ -11,6 +11,6 @@ Sign in or create an account to accept this invitation. Please note that if you 
 ${inviteUrl}
 
 Yours sincerely
-Competitions Team
-Innovate UK
+
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

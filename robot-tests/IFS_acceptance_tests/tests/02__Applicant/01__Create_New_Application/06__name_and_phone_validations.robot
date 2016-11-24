@@ -5,13 +5,7 @@ Documentation     -INFUND-885: As an applicant I want to be able to submit a use
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 First name left blank

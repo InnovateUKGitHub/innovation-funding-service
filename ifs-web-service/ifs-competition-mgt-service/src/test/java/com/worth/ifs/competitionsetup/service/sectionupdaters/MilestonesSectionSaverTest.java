@@ -7,7 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.el.parser.ParseException;
@@ -75,17 +75,10 @@ public class MilestonesSectionSaverTest {
         assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
     }
 
-    private LinkedMap<String, MilestoneEntry> populateMilestoneFormEntry() {
-        LinkedMap<String, MilestoneEntry>  milestoneList = new LinkedMap<>();
+    private LinkedMap<String, MilestoneViewModel> populateMilestoneFormEntry() {
+        LinkedMap<String, MilestoneViewModel>  milestoneList = new LinkedMap<>();
 
-        MilestoneEntry milestone = new MilestoneEntry();
-
-        milestone.setMilestoneType(MilestoneType.OPEN_DATE);
-        milestone.setDay(1);
-        milestone.setMonth(1);
-        milestone.setYear(2017);
-        milestone.setDayOfWeek("Wed");
-
+        MilestoneViewModel milestone = new MilestoneViewModel(MilestoneType.OPEN_DATE, LocalDateTime.of(2017, 1, 1, 0 ,0));
         milestoneList.put(MilestoneType.OPEN_DATE.name(), milestone);
 
         return milestoneList;

@@ -7,10 +7,7 @@ import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.ProfileContractResource;
-import com.worth.ifs.user.resource.ProfileSkillsResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -124,6 +121,16 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ", description = "A user can read their own affiliations")
     public boolean usersCanViewTheirOwnAffiliations(AffiliationResource affiliation, UserResource user) {
         return user.getId().equals(affiliation.getUser());
+    }
+
+    @PermissionRule(value = "READ_USER_PROFILE", description = "A user can read their own profile")
+    public boolean usersCanViewTheirOwnProfile(UserProfileResource profileDetails, UserResource user) {
+        return profileDetails.getUser().equals(user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "A user can read their own profile status")
+    public boolean usersCanViewTheirOwnProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
+        return profileStatus.getUser().equals(user.getId());
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

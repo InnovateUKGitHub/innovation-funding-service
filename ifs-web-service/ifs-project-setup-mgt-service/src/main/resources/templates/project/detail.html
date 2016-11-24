@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project Details'" th:remove="tag" />
+</head>
+<body th:with="context='project'" class="project-detail">
+
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<div th:include="fragments/modals :: modal-project-details" th:remove="tag" />
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.project.application}, projectName=${model.project.name})" th:remove="tag" />
+        <h1 class="heading-xlarge">Project details</h1>
+    </div>
+
+<h2 class="heading-medium">Project details</h2>
+<p>These project details were supplied by the lead partner on behalf of the project.</p>
+
+    <table id="project-details">
+        <thead>
+            <tr>
+                <th scope="col" class="larger-cols">Question</th>
+                <th scope="col" class="larger-cols">Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Target start date
+                </td>
+                <td id="start-date">
+                    <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
+                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Project address
+                </td>
+                <td id="project-address">
+                    <th:block th:if="${model.project.address.id == null}">Not yet completed</th:block>
+                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Project manager
+                </td>
+                <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
+                <td id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <h2 class="heading-medium">Partner finance contacts</h2>
+
+    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
+
+    <table id="project-details-finance">
+        <thead>
+            <tr>
+                <th scope="col" class="larger-cols">Partner</th>
+                <th scope="col" class="larger-cols">Finance contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
+
+                <td>
+                    <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
+                    <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
+                </td>
+                <td>
+                  <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                  <th:block th:if="${organisationFinanceContact.value == null}">
+                        Not yet completed
+                  </th:block>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

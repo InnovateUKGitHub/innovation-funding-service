@@ -5,7 +5,6 @@ import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class LabourCostCategoryBuilder extends AbstractFinanceRowCostCategoryBuilder<LabourCostCategory, LabourCostCategoryBuilder> {

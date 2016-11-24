@@ -10,6 +10,5 @@ To accept the invitation to collaborate please sign in or register using the lin
 
 ${inviteUrl}
 
-Competitions Team,
-Innovate UK
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

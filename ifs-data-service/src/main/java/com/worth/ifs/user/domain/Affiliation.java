@@ -17,7 +17,8 @@ public class Affiliation extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="user_id", referencedColumnName="id")
     private User user;
 
     @Enumerated(STRING)

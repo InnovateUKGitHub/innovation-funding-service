@@ -3,6 +3,8 @@ package com.worth.ifs.assessment.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * ViewModel of a CompetitionInvite.
  */
@@ -10,10 +12,14 @@ public class CompetitionInviteViewModel {
 
     private String competitionInviteHash;
     private String competitionName;
+    private LocalDateTime acceptsDate;
+    private LocalDateTime deadlineDate;
 
-    public CompetitionInviteViewModel(String competitionInviteHash, String competitionName) {
+    public CompetitionInviteViewModel(String competitionInviteHash, String competitionName, LocalDateTime acceptsDate, LocalDateTime deadlineDate) {
         this.competitionInviteHash = competitionInviteHash;
         this.competitionName = competitionName;
+        this.acceptsDate = acceptsDate;
+        this.deadlineDate = deadlineDate;
     }
 
     public String getCompetitionInviteHash() {
@@ -32,6 +38,22 @@ public class CompetitionInviteViewModel {
         this.competitionName = competitionName;
     }
 
+    public LocalDateTime getAcceptsDate() {
+        return acceptsDate;
+    }
+
+    public void setAcceptsDate(LocalDateTime acceptsDate) {
+        this.acceptsDate = acceptsDate;
+    }
+
+    public LocalDateTime getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(LocalDateTime deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -47,6 +69,8 @@ public class CompetitionInviteViewModel {
         return new EqualsBuilder()
                 .append(competitionInviteHash, that.competitionInviteHash)
                 .append(competitionName, that.competitionName)
+                .append(acceptsDate, that.acceptsDate)
+                .append(deadlineDate, that.deadlineDate)
                 .isEquals();
     }
 
@@ -55,6 +79,8 @@ public class CompetitionInviteViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(competitionInviteHash)
                 .append(competitionName)
+                .append(acceptsDate)
+                .append(deadlineDate)
                 .toHashCode();
     }
 }

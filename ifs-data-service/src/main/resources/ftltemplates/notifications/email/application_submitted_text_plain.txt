@@ -8,6 +8,5 @@ Congratulations, you have successfully submitted an application for funding to I
 
 If you have any queries with your submission please contact our customer support services at support@innovateuk.gov.uk or 0300 321 4357.
 
-Competitions Team
-Innovate UK
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

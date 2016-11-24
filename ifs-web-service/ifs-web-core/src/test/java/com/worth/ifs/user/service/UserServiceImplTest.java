@@ -18,6 +18,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static com.worth.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
@@ -168,5 +169,30 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         service.updateUserAffiliations(userId, affiliations).getSuccessObjectOrThrowException();
         verify(userRestService, only()).updateUserAffiliations(userId, affiliations);
+    }
+
+    @Test
+    public void getProfileDetails() throws Exception {
+        Long userId = 1L;
+        UserProfileResource expected = newUserProfileResource().build();
+
+        when(userRestService.getUserProfile(userId)).thenReturn(restSuccess(expected));
+
+        UserProfileResource response = service.getUserProfile(userId);
+        assertSame(expected, response);
+        verify(userRestService, only()).getUserProfile(userId);
+    }
+
+    @Test
+    public void updateProfileDetails() throws Exception {
+        Long userId = 1L;
+
+        UserProfileResource profileDetails = newUserProfileResource().build();
+        when(userRestService.updateUserProfile(userId, profileDetails)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.updateUserProfile(userId, profileDetails);
+        assertTrue(response.isSuccess());
+
+        verify(userRestService, only()).updateUserProfile(userId, profileDetails);
     }
 }

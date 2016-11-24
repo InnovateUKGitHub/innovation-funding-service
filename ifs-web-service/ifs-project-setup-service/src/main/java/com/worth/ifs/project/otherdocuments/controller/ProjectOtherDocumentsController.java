@@ -205,7 +205,7 @@ public class ProjectOtherDocumentsController {
         boolean approvalDecisionMade =  project.getOtherDocumentsApproved() != null;
         boolean otherDocumentsApproved = approvalDecisionMade && project.getOtherDocumentsApproved();
 
-        return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
+        return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,

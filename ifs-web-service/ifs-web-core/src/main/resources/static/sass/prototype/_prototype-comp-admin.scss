@@ -1,201 +1,201 @@
 /*----- Comp admin - comp status label ----*/
 
 .comp-status-label{
-	text-align: right; 
-	color: white;
+  text-align: right;
+  color: white;
 
-	span{
-		background: $govuk-blue; 
-		padding: 20px; 
-	}
+  span{
+    background: $govuk-blue;
+    padding: 20px;
+  }
 
-	@include media-down(mobile){
-		
-		text-align: center;
+  @include media-down(mobile){
 
-		span{
-			margin-top: 10px;
-			display: block;
-		}
-	}
+    text-align: center;
+
+    span{
+      margin-top: 10px;
+      display: block;
+    }
+	 }
 }
-
 
 /*----- State of submission ----*/
 
 .marked-complete-alert{
-	background: $grey-4;
-	padding: 20px 20px 10px 30px;
-	border-left: 5px solid $border-colour;
-	margin: 10px 0 30px 0;
-	clear: both;
+  background: $grey-4;
+  padding: 20px 20px 10px 30px;
+  border-left: 5px solid $border-colour;
+  margin: 10px 0 30px 0;
+  clear: both;
 }
-
 
 /*----- Comp admin - project status warnings ----*/
 
 %status-marker{
-	background: black;
-	width: 2em;
-	height: 2em;
-	color: white;
-	display: inline-block;
-	text-align: center;
-	font-weight: bold;
-	line-height: 2.2em;
-	border-radius: 50%;
-
+  background: black;
+  width: 2em;
+  height: 2em;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  line-height: 2.2em;
+  border-radius: 50%;
 }
 
 .status-project-warning{
-	@extend %status-marker;
-	background: $red
+  @extend %status-marker;
+  background: $red
 }
 
 .status-project-progress{
-	@extend %status-marker;
-	background: $yellow;
-	color: $black;
+  @extend %status-marker;
+  background: $yellow;
+  color: $black;
 }
 
 .status-project-ok{
-	@extend %status-marker;
-	background: $green;
+  @extend %status-marker;
+  background: $green;
 }
-
 
 /*----- Comp admin tables styles----*/
 
 table{
 
-	.full-view{
-		display: none; 
-	}
-	
-	.show-full-table &{
-		th.full-view{
-			display: table-cell;
-		}
+  .full-view{
+    display: none;
+  }
 
-		td.full-view{
-			display: table-cell;
-		}
-
-		tr.full-view{
-			display: table-row;
-		}
+  .show-full-table &{
+    th.full-view{
+      display: table-cell;
+    }
+    td.full-view{
+      display: table-cell;
+    }
+    tr.full-view{
+      display: table-row;
+    }
 	}
 
-	tfoot{
-		th,td{
-			border-bottom: none;
-		}
-	}
+  tfoot{
+    th,
+    td{
+      border-bottom: none;
+    }
+  }
 }
 
-
 table.project-changes{
-	tbody{
-		th{
-			font-weight: normal;
-			vertical-align: top;
-		}
-		td{
-			vertical-align: top;
-		}
+  tbody{
+    th{
+      font-weight: normal;
+      vertical-align: top;
+    }
+    td{
+      vertical-align: top;
+    }
 
-		.change-row{
-			td, th{
-				padding-bottom: 2.5em;
-			}
-		}
+    .change-row{
+      td,
+      th{
+        padding-bottom: 2.5em;
+      }
+    }
 
-		.item-changed{
+    .item-changed{
+      th,
+      td{
+        font-weight: bold;
+      }
 
-			th,td{
-				font-weight: bold;
-			}
+      td:first-child{
+        font-weight: normal;
 
-			td:first-child{
-				font-weight: normal;
-				
-				& + td{
-					font-weight: normal;
-				}
-
-			}
-		}
-	}
+        & + td{
+          font-weight: normal;
+        }
+      }
+		  }
+  }
 }
 
 .assessment-panel-start{
-	td, th{
-		border-top: 2px solid $black;
-	}
+  td,
+  th{
+    border-top: 2px solid $black;
+  }
 }
 
 .assessment-panel-end{
-	td, th{
-		border-bottom: 2px solid $black;
-	}
+  td,
+  th{
+    border-bottom: 2px solid $black;
+  }
 }
 
 .show-full-table.items-assigned{
-	.hide-assigned{
-		display: none;
-	}
+  .hide-assigned{
+    display: none;
+  }
 }
 
 .show-applications{
-	.hide-allocate-assessor{
-		display: none;
-	}
+  .hide-allocate-assessor{
+    display: none;
+  }
 }
 
 /*----- Project status table ----*/
 
 #table-project-status{
-	.status{
-		width: 70px;
-		text-align: center;
-		padding-left: 0.625em;
-		padding-right: 0.625em;
+  .status{
+    width: 70px;
+    text-align: center;
+    padding-left: 0.625em;
+    padding-right: 0.625em;
 
-		&.na{
-			background: $grey-3;
-		}
-		&.ok{
-			color: $green;
-			font-weight: bold;
-			//text-indent: 100%;
-			white-space: nowrap;
-			overflow: hidden;
-			@extend %icon-tick;
-			background-position: 50% 50%;
-		}
-		&.rejected{
-			@extend  %icon-cross;
-			background-position: 50% 50%;
-		}
-		&.action{
-			//background: $red;
-			@extend  %icon-assigned-to-me;
-			background-position: 50% 50%;
-		}
-		&.waiting{
-			@extend  %icon-timer;
-			background-position: 50% 50%;
-			background-size: 33px 30px;
-		}
+  		&.na{
+      background: $grey-3;
+  		}
 
-		a{
-			display: block;
-			height: 20px;
-		}
+    &.ok{
+      color: $green;
+      font-weight: bold;
+      //text-indent: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      @extend %icon-tick;
+      background-position: 50% 50%;
+    }
+
+    &.rejected{
+      @extend  %icon-cross;
+      background-position: 50% 50%;
+    }
+
+    &.action{
+      //background: $red;
+      @extend  %icon-assigned-to-me;
+      background-position: 50% 50%;
+    }
+
+  		&.waiting{
+      @extend  %icon-timer;
+      background-position: 50% 50%;
+      background-size: 33px 30px;
+  		}
+
+    a{
+      display: block;
+      height: 20px;
+    }
 	}
-	
+
 	tr.project-divide{
-		border-bottom: 2px solid $black;
+    border-bottom: 2px solid $black;
 	}
 
 }
@@ -203,315 +203,310 @@ table.project-changes{
 /*----- Flex table container to allow static columns on wide tables ----*/
 
 .flex-table{
-	display: flex; 
-	position: relative; 
-		
-	.flex-left{
-		flex: 0 0 310px;
-		border-right: 1px solid #bfc1c3;
-		margin-right: 5px;
-		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
-	}
-	.flex-middle{ 
-		overflow: auto;
-		flex: 1 100%;
-	}
-	.flex-right{
-		flex: 0 0 300px;
+  display: flex;
+  position: relative;
+
+  .flex-left{
+    flex: 0 0 310px;
+    border-right: 1px solid #bfc1c3;
+    margin-right: 5px;
+    -webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 
-	/* add to table cells to fix */
+  .flex-middle{
+    overflow: auto;
+    flex: 1 100%;
+  }
 
-	.fix-left{
-		position: absolute;
-		width: 310px;
-		left: 0;
-		padding: 1.3em 0;
+  .flex-right{
+    flex: 0 0 300px;
+  }
+
+  /*---- add to table cells to fix -----*/
+
+  .fix-left{
+    position: absolute;
+    width: 310px;
+    left: 0;
+    padding: 1.3em 0;
+ }
+
+  .fix-left1{
+    position: absolute;
+    width: 135px;
+    left: 0;
+    padding: 1.3em 0;
+  }
+
+  .fix-left2{
+    position: absolute;
+    width: 175px;
+    left: 135px;
+    padding: 1.3em 0;
+  }
+
+  .fix-right2{
+    position: absolute;
+    width: 150px;
+    right: 150px;
+    padding: 1.3em 0;
+    -webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
+  }
+
+  .fix-right{
+    position: absolute;
+    width: 150px;
+    right: 0;
+    padding: 1.3em 0;
+    -webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
 	}
 
-	.fix-left1{
-		position: absolute;
-		width: 135px;
-		left: 0;
-		padding: 1.3em 0;
-	}
+  @include media-down(tablet) {
+    display: block;
+    position: static;
+    width: 90%;
+    overflow: auto;
+    padding: 0;
+    margin: 0 auto;
 
-	.fix-left2{
-		position: absolute;
-		width: 175px;
-		left: 135px;
-		padding: 1.3em 0;
-	}
+    .flex-left,
+    .flex-middle,
+    .flex-right{
+      flex: none;
+    }
 
-	.fix-right2{
-		position: absolute;
-		width: 150px;
-		right: 150px;
-		padding: 1.3em 0;
-		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
-	}
-	
-	.fix-right{
-		position: absolute;
-		width: 150px;
-		right: 0;
-		padding: 1.3em 0;
-		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
-	}
-
-	@include media-down(tablet) {
-		display: block;
-		position: static;
-		width: 90%;
-		overflow: auto;
-		padding: 0;
-		margin: 0 auto;
-
-		.flex-left,
-		.flex-middle,
-		.flex-right{
-			flex: none;
-		}
-
-		.fix-left,
-		.fix-left1,
-		.fix-left2,
-		.fix-middle,
-		.fix-right,
-		.fix-right2{
-			position: static;
-			width: auto;
-			padding: .75em 1.25em .5625em 0
-		}
-	}
-
+    .fix-left,
+    .fix-left1,
+    .fix-left2,
+    .fix-middle,
+    .fix-right,
+    .fix-right2{
+      position: static;
+      width: auto;
+      padding: .75em 1.25em .5625em 0;
+    }
+  }
 }
-
 
 /*----- Forecast table ----*/
 
 #table-forecast{
-	
-	margin-bottom: 2em;
 
-	th, td{
-		box-sizing: border-box;
-		height: 60px;
+  margin-bottom: 2em;
+
+  th,
+  td{
+    box-sizing: border-box;
+    height: 60px;
+  }
+
+  th[scope='col']{
+    min-width: 7em;
+  }
+
+  input{
+    width: 100%;
+    text-align: right;
+    min-width: 4em;
+  }
+
+  tbody{
+    td{
+      text-align: right;
+      min-width: 50px;
+
+      &.aligncentre{
+        text-align: center;
+      }
+
+      &.alignleft{
+        text-align: left;
+      }
+   }
 	}
 
-	th[scope='col']{
-		min-width: 7em;
+  tfoot{
+
+    .total{
+      border-top: 3px solid black;
+    }
+
+    td{
+      text-align: right;
+
+      &.aligncentre{
+        text-align: center;
+   			}
+
+      &.alignleft{
+        text-align: left;
+      }
+		  }
+
+    .fix-left,
+    .fix-right,
+    .fix-right2{
+      border-top: 3px solid black;
+      margin-top: -2px;
+    }
 	}
 
-	input{
-		width: 100%;
-		text-align: right;
-		min-width: 4em; 
-	}
+  thead{
 
-	tbody{
-		td{
-			text-align: right;
-			min-width: 50px;
+    th{
+      text-align: right;
+      &.aligncentre{
+        text-align: center;
+      }
 
-			&.aligncentre{
-				text-align: center;
-			}
+      &.alignleft{
+        text-align: left;
+      }
 
-			&.alignleft{
-				text-align: left;
-			}
-		}
-	}
-	tfoot{
-		
-		.total{
-			border-top: 3px solid black;
-		}
+      &.header-span{
+        background: $grey-4;
+        text-align: center;
+      }
+    }
+  }
 
-		td{
-			text-align: right;
+  .separate-cell{
+    border-right: 12px solid $white;
 
-			&.aligncentre{
-				text-align: center;
-			}
+    &.year{
+      border-right: 1px solid $grey-2;
 
-			&.alignleft{
-				text-align: left;
-			}
-		}
-		.fix-left,
-		.fix-right,
-		.fix-right2{
-			border-top: 3px solid black;
-			margin-top: -2px;
-		}
+      & + th{
+        padding-left: 1.25em;
+      }
 
-	}
-	thead{
-		th{
-			text-align: right;
+      & + td{
+        padding-left: 1.25em;
+      }
+    }
 
-			&.aligncentre{
-				text-align: center;
-			}
+    &.aligncentre{
+      padding-left: 1.25em;
+    }
+ }
 
-			&.alignleft{
-				text-align: left;
-			}
+  .total{
+    background: $grey-3;
+    padding-left: 0.625em;
+    padding-right: 0.625em;
+    font-weight: bold;
 
-			&.header-span{
-				background: $grey-4;
-				text-align: center;
-			}
-		}
-	}
-	
-	.separate-cell{
-		border-right: 12px solid $white;
-		
-		&.year{
-			border-right: 1px solid $grey-2;
-			
-			& + th{
-				padding-left: 1.25em;
-			}
+    &.eligible{
+      background: $grey-4;
+    }
+  }
 
-			& + td{
-				padding-left: 1.25em;
-			}
+  tr{
+    &.error-in-row{
+      background-position: 4px 50%;
 
-		}
+      th{
+        @extend .warning-alert;
+        background-position: 10px 50%;
+        padding-left: 40px;
+        margin-top: 0;
+      }
 
-		&.aligncentre{
-			padding-left: 1.25em; 
-		}
+      td{
+        background: $highlight-colour;
 
-	}
+        &.total{
+          background: $red;
+          color: $white;
 
-	.total{
-		background: $grey-3;
-		padding-left: 0.625em;
-		padding-right: 0.625em;
-		font-weight: bold;
-		&.eligible{
-			background: $grey-4;
-		}
-	}
+          &.eligible{
+            background: $grey-4;
+            color: $text-colour;
+          }
+       }
+			  }
+		 }
+ }
 
-	tr{
-		&.error-in-row{
-
-			background-position: 4px 50%;
-
-			th{
-				@extend .warning-alert;
-				background-position: 10px 50%;
-				padding-left: 40px;
-				margin-top: 0;
-			}
-
-			td{
-				background: $highlight-colour;
-				
-				&.total{
-					background: $red;
-					color: $white;
-
-					&.eligible{
-						background: $grey-4;
-						color: $text-colour;
-					}
-				}
-
-			}
-		}
-	}
-
-	tfoot{
-		tr.error-in-row{
-			th{
-				margin-top: -2px; 
-			}
-		}
-	}
-
+  tfoot{
+    tr.error-in-row{
+      th{
+        margin-top: -2px;
+      }
+    }
+  }
 }
-
 
 /*----- Projects by stage tables styles----*/
 
 #projects-by-stage{
-	td{
-		height: 40px;
-	}
+  td{
+    height: 40px;
+  }
 }
 
-
 /*----- Remove help links for comp admin / internal pages ----*/
+
 .comp-assessors,
 .comp-dashboard,
 .comp-setup,
-.project-setup
-{
-	.user-feedback{
-		display: none;
+.project-setup{
+  .user-feedback{
+    display: none;
 
-		& + p{
-			display: none;
-		}
-	}
+    & + p{
+      display: none;
+    }
+	 }
 }
 
 /*----- Comp dashboard tables styling----*/
 
 .comp-dashboard{
-	
-	.list-overview{
 
-		display: table;
-		width: 100%;
-		min-width: $site-width;
+  .list-overview{
 
-		li {
-	    	display: table-row; 
-	    	width: 100%;
-			
-			&:first-child{
-				h3, p{
-					border-top: 1px solid $border-colour;
-				}
-			}
+    display: table;
+    width: 100%;
+    min-width: $site-width;
 
-		}
+    li {
+      display: table-row;
+      width: 100%;
 
-		li h3,
-		li p{
-	    	display: table-cell;
-	    	padding: 0.5em 0;
-	        border-bottom: 1px solid $border-colour;
-		}
+      &:first-child{
+        h3,
+        p{
+          border-top: 1px solid $border-colour;
+        }
+      }
+   }
 
+    li h3,
+    li p{
+      display: table-cell;
+      padding: 0.5em 0;
+      border-bottom: 1px solid $border-colour;
+    }
 
+    li h3{
+      width: 40%;
+    }
 
-		li h3{
-		    width: 40%;
-		}
+    li p{
+      width: 20%;
+      color: $secondary-text-colour;
+    }
 
-		li p{
-		    width: 20%;
-		    color: $secondary-text-colour;
-		}
+    li p + p{
+      width: 25%;
+    }
 
-		li p + p{
-			width: 25%;
-		}
-
-		li p + p + p{
-		    text-align: right;
-		    width: 20%;
-		}
-	}
+    li p + p + p{
+      text-align: right;
+      width: 20%;
+    }
+  }
 }
 
 
@@ -519,75 +514,73 @@ table.project-changes{
 
 
 #sticky-zone{
-	@extend .cf;
+  @extend .cf;
 }
 
 
 @include media($min-width: 1200px){
-	.full-width{
+  .full-width{
 
-		.info-area{
-			float: left;
-			width: 19%;
-			margin-right: 10px;
-			padding: 0%;
-			max-height: 90%;
-			overflow: auto;
-			box-sizing: border-box;
+    .info-area{
+      float: left;
+      width: 19%;
+      margin-right: 10px;
+      padding: 0%;
+      max-height: 90%;
+      overflow: auto;
+      box-sizing: border-box;
+      //position: fixed;
+      //font-size: 12px;
+      position: relative;
 
-			//position: fixed;
-			//font-size: 12px;
-			position: relative;
+      li{
+        padding-bottom: 10px;
+      }
 
-			li{
-				padding-bottom: 10px;
-			}
+      .boxed{
+        padding: 15px;
+        margin-bottom: 0;
+        margin-right: 0;
 
-			.boxed{
-				padding: 15px;
-				margin-bottom: 0;
-				margin-right: 0;
+        .column-half,
+        .column-third{
+          padding-left: 0;
+        }
+      }
 
-				.column-half,
-				.column-third{
-					padding-left: 0;
-				}
-			}
+      .grid-row{
+        margin: 0;
+      }
 
-			.grid-row{
-				margin: 0;
-			}
-			
-			.column-one,
-			.column-half,
-			.column-quarter,
-			.column-third{
-				width: 100%;
-				clear: both;
-				padding: 0;
-			}
-	
-		}
+      .column-one,
+      .column-half,
+      .column-quarter,
+      .column-third{
+        width: 100%;
+        clear: both;
+        padding: 0;
+      }
+		  }
 
-		.data-area{
-			float: right;
-			width: 80%;
+    .data-area{
+      float: right;
+      width: 80%;
 
-			& > .heading-large:first-child{
-				margin-top: 0;
-			}
-		}
+      & > .heading-large:first-child{
+        margin-top: 0;
+      }
+   }
 
-		.fixed .info-area{
-			position: fixed;
-			top: 0;
-			width: 18%;
-			background: white;
-			z-index: 10;
-			box-sizing: border-box;
-			float: none;
-		}
-	}
+    .fixed .info-area{
+      position: fixed;
+      top: 0;
+      width: 18%;
+      background: white;
+      z-index: 10;
+      box-sizing: border-box;
+      float: none;
+    }
+  }
 }
 
 /* @include media($min-width: 1700px){
@@ -596,7 +589,7 @@ table.project-changes{
 			.column-quarter,
 			.column-third{
 				width: 50%;
-				clear: none; 
+				clear: none;
 			}
 		}
 	}
@@ -605,10 +598,9 @@ table.project-changes{
 /*--- Marked as complete on Inline lists ---*/
 
 .inline-nav{
-	.marked-as-complete{
-		@extend %mark-done-right;
-		background-position: 100% 0%;
-		background-size: 20px;
+  .marked-as-complete{
+    @extend %mark-done-right;
+    background-position: 100% 0%;
+    background-size: 20px;
 	}
 }
-

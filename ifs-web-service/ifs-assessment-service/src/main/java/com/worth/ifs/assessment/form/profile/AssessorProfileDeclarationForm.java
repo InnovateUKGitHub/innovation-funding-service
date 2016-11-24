@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.form.profile;
 
+import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
 import com.worth.ifs.controller.BindingResultTarget;
-import com.worth.ifs.validator.constraints.FieldRequiredIf;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;

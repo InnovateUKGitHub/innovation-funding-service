@@ -8,12 +8,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        HappyPath    Applicant
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
-Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice
@@ -74,6 +69,14 @@ Capital usage
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-12    £ 100    css=[data-mirror="#section-total-12"]    £ 100
+    And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
+
+Capital usage - negative total
+    [Documentation]    INFUND-4879
+    [Tags]
+    When the applicant fills the 'capital usage' field to a negative value
+    Then Totals should be correct    css=#section-total-12    £ 0    css=[data-mirror="#section-total-12"]    £ 0
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
@@ -202,6 +205,17 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing) input
+    the user moves focus to the element    css=.app-submit-btn
+
+the applicant fills the 'capital usage' field to a negative value
+    the user clicks the button/link    jQuery=button:contains("Capital usage")
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    9000
+    the user enters text to a text field    css=.form-finances-capital-usage-utilisation    100
+    the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
+    the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
+    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
     the user moves focus to the element    css=.app-submit-btn
 
 the Applicant fills the Travel fields

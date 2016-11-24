@@ -26,7 +26,7 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NO;
 import static com.worth.ifs.user.resource.Gender.NOT_STATED;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 

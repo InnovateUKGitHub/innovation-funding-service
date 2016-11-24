@@ -41,7 +41,8 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Column(name = "rejection_comment")
     private String rejectionReasonComment;
 
-    @Column(name = "competition_role_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "competition_role")
     private CompetitionParticipantRole role;
 
     public CompetitionParticipant() {

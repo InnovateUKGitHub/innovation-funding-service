@@ -91,9 +91,10 @@ public class QuestionController {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 
-    @RequestMapping("/getQuestionByFormInputType/{formInputType}")
-    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
-        return questionService.getQuestionResourceByFormInputType(formInputType).toGetResponse();
+    @RequestMapping("/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}")
+    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("competitionId") final Long competitionId,
+                                                                   @PathVariable("formInputType") final String formInputType) {
+        return questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
     }
     
     @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")
@@ -104,6 +105,11 @@ public class QuestionController {
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
     public RestResult<QuestionResource> save(@RequestBody final QuestionResource questionResource) {
         return questionService.save(questionResource).toGetResponse();
+    }
+
+    @RequestMapping("/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}")
+    public RestResult<QuestionResource> getQuestionByIdAndAssessmentId(@PathVariable("questionId") Long questionId, @PathVariable("assessmentId") Long assessmentId) {
+        return questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).toGetResponse();
     }
 
     @RequestMapping("/getQuestionsByAssessment/{assessmentId}")

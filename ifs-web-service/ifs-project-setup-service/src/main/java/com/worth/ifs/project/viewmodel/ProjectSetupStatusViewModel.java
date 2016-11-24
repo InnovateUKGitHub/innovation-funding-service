@@ -1,11 +1,11 @@
 package com.worth.ifs.project.viewmodel;
 
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.sections.SectionAccess;
+import com.worth.ifs.project.sections.SectionStatus;
 
 import java.util.Optional;
 
@@ -18,15 +18,10 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private String projectName;
     private Long applicationId;
     private String competitionName;
-    private boolean projectDetailsSubmitted;
-    private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
-    private boolean grantOfferLetterSubmitted;
-    private boolean spendProfileSubmitted;
-    private String monitoringOfficerName;
-    private ProjectActivityStates bankDetails;
-    private Long organisationId;
     private boolean leadPartner;
+    private String monitoringOfficerName;
+    private Long organisationId;
     private SectionAccess companiesHouseSection;
     private SectionAccess projectDetailsSection;
     private SectionAccess monitoringOfficerSection;
@@ -35,27 +30,32 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private SectionAccess spendProfileSection;
     private SectionAccess otherDocumentsSection;
     private SectionAccess grantOfferLetterSection;
+    private SectionStatus projectDetailsStatus;
+    private SectionStatus monitoringOfficerStatus;
+    private SectionStatus bankDetailsStatus;
+    private SectionStatus financeChecksStatus;
+    private SectionStatus spendProfileStatus;
+    private SectionStatus otherDocumentsStatus;
+    private SectionStatus grantOfferLetterStatus;
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
-                                       Optional<MonitoringOfficerResource> monitoringOfficerResource,
-                                       Optional<ProjectActivityStates> bankDetails, Long organisationId,
-                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted, boolean spendProfileSubmitted,
+                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, Long organisationId, boolean leadPartner,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
-                                       SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection) {
+                                       SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection,
+                                       SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus,
+                                       SectionStatus bankDetailsStatus, SectionStatus financeChecksStatus,
+                                       SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus,
+                                       SectionStatus grantOfferLetterStatus) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
-        this.projectDetailsSubmitted = projectDetailsSubmitted;
-        this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
+        this.leadPartner = leadPartner;
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.bankDetails = bankDetails.orElse(ProjectActivityStates.NOT_REQUIRED);
         this.organisationId = organisationId;
-        this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
-        this.leadPartner = leadPartner;
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
         this.monitoringOfficerSection = monitoringOfficerSection;
@@ -64,7 +64,13 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.spendProfileSection = spendProfileSection;
         this.otherDocumentsSection = otherDocumentsSection;
         this.grantOfferLetterSection = grantOfferLetterSection;
-        this.spendProfileSubmitted = spendProfileSubmitted;
+        this.projectDetailsStatus = projectDetailsStatus;
+        this.monitoringOfficerStatus = monitoringOfficerStatus;
+        this.bankDetailsStatus = bankDetailsStatus;
+        this.financeChecksStatus = financeChecksStatus;
+        this.spendProfileStatus = spendProfileStatus;
+        this.otherDocumentsStatus = otherDocumentsStatus;
+        this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 
     public Long getProjectId() {
@@ -83,14 +89,6 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return competitionName;
     }
 
-    public boolean isProjectDetailsSubmitted() {
-        return projectDetailsSubmitted;
-    }
-
-    public boolean isPartnerDocumentsSubmitted() {
-        return partnerDocumentsSubmitted;
-    }
-
     public boolean isMonitoringOfficerAssigned() {
         return monitoringOfficerAssigned;
     }
@@ -99,16 +97,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return monitoringOfficerName;
     }
 
-    public ProjectActivityStates getBankDetails() {
-        return bankDetails;
-    }
-
     public Long getOrganisationId() {
         return organisationId;
-    }
-
-    public boolean isGrantOfferLetterSubmitted() {
-        return grantOfferLetterSubmitted;
     }
 
     public boolean isLeadPartner() {
@@ -151,12 +141,29 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return grantOfferLetterSection;
     }
 
-    public boolean isSpendProfileSubmitted() {
-        return spendProfileSubmitted;
+    public SectionStatus getProjectDetailsStatus() { return projectDetailsStatus; }
+
+    public SectionStatus getMonitoringOfficerStatus() {
+        return monitoringOfficerStatus;
     }
 
-    public boolean isBankDetailsActionRequired() { return ProjectActivityStates.ACTION_REQUIRED.equals(bankDetails); }
+    public SectionStatus getBankDetailsStatus() {
+        return bankDetailsStatus;
+    }
 
-    public boolean isBankDetailsComplete() { return ProjectActivityStates.COMPLETE.equals(bankDetails); }
+    public SectionStatus getFinanceChecksStatus() {
+        return financeChecksStatus;
+    }
 
+    public SectionStatus getSpendProfileStatus() {
+        return spendProfileStatus;
+    }
+
+    public SectionStatus getOtherDocumentsStatus() {
+        return otherDocumentsStatus;
+    }
+
+    public SectionStatus getGrantOfferLetterStatus() {
+        return grantOfferLetterStatus;
+    }
 }

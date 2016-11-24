@@ -1,15 +1,11 @@
 *** Settings ***
 Documentation     INFUND-1683 As a user of IFS application, if I attempt to perform an action that I am not authorised perform, I am redirected to authorisation failure page with appropriate message
 Test Teardown     TestTeardown User closes the browser
-Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../resources/variables/User_credentials.robot
-Resource          ../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
-${APPLICATION_7_OVERVIEW_PAGE}    ${SERVER}/application/7
-${APPLICATION_7_FORM}    ${SERVER}/application/7/form/question/9
+${APPLICATION_7_OVERVIEW_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_4}
+${APPLICATION_7_FORM}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_4}/form/question/9
 
 *** Test Cases ***
 Guest user can't access overview page

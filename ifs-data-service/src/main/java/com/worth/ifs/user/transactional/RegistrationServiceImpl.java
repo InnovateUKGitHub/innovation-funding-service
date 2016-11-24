@@ -116,7 +116,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
-                    user.setProfile(new Profile(user));
+                    user.setProfile(new Profile());
                     user.getProfile().setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
                     return createUserWithUid(user, userResource.getPassword());
                 });

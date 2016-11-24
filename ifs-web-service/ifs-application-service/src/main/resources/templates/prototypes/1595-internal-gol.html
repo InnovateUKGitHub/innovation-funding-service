@@ -15,16 +15,14 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Projects in setup'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Grant offer letter'}, ${'Grant offer letter'})" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Grant offer letter'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
 		<div class="success-alert extra-margin-bottom">
@@ -55,15 +53,17 @@
 		<p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
 	</th:block>
 
+  <h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+
 	<div class="upload-section unstyled-view">
 		<h2 class="heading-medium no-margin">Grant offer letter</h2>
 
 		<th:block th:if="${param.status == null}">
-		
+
 			<!--<p>The grant offer letter has been created from the information supplied by the applicants.</p>-->
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
-				<a href="#">Grant offer letter 2016-04-28a.PDF</a> 
+				<a href="#">Grant offer letter 2016-04-28a.PDF</a>
 				<!-- <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a> -->
 			</div>
 
@@ -118,7 +118,7 @@
 	<div th:if="${param.status == null}" th:remove="tag">
 
 		<a href="#" data-js-modal="modal-send" class="button large">Send to project team</a>
-		
+
 		<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
@@ -130,8 +130,8 @@
 				<hr />
 
 	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	        		<a th:href="@{'?status=GOLSent'}" class="button">Send to project team</a>
 	        	</div>
@@ -143,7 +143,7 @@
 
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-			
+
 		<h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
 		<p>If the grant offer letter has been received by post, please tick the box below.</p>
 
@@ -167,8 +167,8 @@
 				<hr />
 
 	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	        		<a th:href="@{'?status=GOLDecision'}" class="button">Confirm</a>
 	        	</div>
@@ -198,8 +198,8 @@
 				<hr />
 
 	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	        		<a th:href="@{'?status=GOLAccepted'}" class="button">Accept signed grant offer letter</a>
 	        	</div>
@@ -221,8 +221,8 @@
 				<hr />
 
 	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 	        		<a th:href="@{'?status=GOLRejected'}" class="button button-warning">Reject grant offer letter</a>
 	        	</div>
@@ -233,7 +233,7 @@
 	</div>
 
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -246,7 +246,7 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('input#gol-by-post').on('click',function(e){ 
+	jQuery('input#gol-by-post').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#gol-by-post-button").removeAttr('disabled');
 		}else{

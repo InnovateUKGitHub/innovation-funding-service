@@ -10,8 +10,5 @@ We would like to take this opportunity to remind you of the government's commitm
 
 Yours sincerely,
 
-Competitions Team
-Innovate UK
-Tel: 0300 321 4357
-Email: competitions@innovateuk.gov.uk
- </@layout.defaultPlainText>
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

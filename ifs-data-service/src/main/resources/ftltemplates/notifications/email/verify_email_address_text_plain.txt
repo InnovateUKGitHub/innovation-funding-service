@@ -9,6 +9,5 @@ Once verified you can sign into your account and start your application. From yo
 
 If you did not request an account with us, please ignore this email.
 
-Competitions Team
-Innovate UK
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

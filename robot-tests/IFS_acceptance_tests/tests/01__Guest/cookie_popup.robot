@@ -5,12 +5,8 @@ Suite Setup       Run Keywords    The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Pending
 Test Template     Email persists on invalid login
-Resource          ../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../resources/variables/User_credentials.robot
-Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/User_actions.robot
 Resource          Guest_commons.robot
+Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${cookie_popup_message}     GOV.UK uses cookies to make the site simpler

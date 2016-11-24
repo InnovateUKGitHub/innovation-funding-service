@@ -15,15 +15,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Projects in setup'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Finance checks'})" th:remove="tag" />
+
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Finance checks'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
+
+	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'financeChecksComplete'}">
 		<div class="success-alert extra-margin-bottom">
@@ -62,7 +62,7 @@
 		</tbody>
 	</table>
 
-	
+
 	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
 
 		<div class="eligibility extra-margin-top">
@@ -73,7 +73,7 @@
 				<dt>Current research participation</dt>
 				<dd>32%</dd>
 			</dl>
-			
+
 			<div class="warning-alert">
 		        <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
 		        <p>Please seek confirmation that the project is still eligible for funding.</p>
@@ -83,7 +83,7 @@
 
 	</th:block>
 
-	
+
 	<h2 class="heading-medium">Progress</h2>
 
 	<table id="table-project-status">
@@ -116,7 +116,7 @@
 				<th scope="row">
 					University of Cardiff<br />
 					<small>Partner</small>
-				</th>		
+				</th>
 				<td>
 					<a href="/prototypes/5163-academic-eligibility">Review</a>
 				</td>
@@ -175,7 +175,7 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

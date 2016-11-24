@@ -151,14 +151,16 @@ tr.form-group-row.error {
   .error-message {
     display: none;
   }
-  th{
+  th:first-of-type{
     @extend .warning-alert;
     background-position: 10px 50%;
     padding-left: 40px;
-    margin-top: 0;
+    margin: auto;
     color:#000;
+    white-space: nowrap;
   }
-  td{
+  td,
+  th {
     background: $highlight-colour;
   }
   td:first-child {

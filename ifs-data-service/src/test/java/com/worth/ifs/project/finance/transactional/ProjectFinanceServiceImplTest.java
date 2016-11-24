@@ -8,6 +8,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.resource.TimeUnit;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -27,7 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -41,7 +42,7 @@ import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartne
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
-import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.resource.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -304,6 +305,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         CostCategory testCostCategory = new CostCategory();
         testCostCategory.setId(1L);
         testCostCategory.setName("One");
+        testCostCategory.setLabel("Group Name");
 
         OrganisationType organisationType = new OrganisationType();
         organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
@@ -315,8 +317,53 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
+
         assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
+        assertTrue(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
+        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+                && !s.contains("Month") && !s.contains("TOTAL")).count(), 3);
     }
+
+    @Test
+    public void testGenerateSpendProfileCSVWithCategoryGroupLabelEmpty() {
+        Long projectId = 123L;
+        Long organisationId = 456L;
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        SpendProfile spendProfileInDB = createSpendProfile(project,
+                // eligible costs
+                asMap(
+                        1L, new BigDecimal("100"),
+                        2L, new BigDecimal("180"),
+                        3L, new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
+        CostCategory testCostCategory = new CostCategory();
+        testCostCategory.setId(1L);
+        testCostCategory.setName("One");
+
+        OrganisationType organisationType = new OrganisationType();
+        organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(costCategoryRepositoryMock.findOne(anyLong())).thenReturn(testCostCategory);
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
+
+        assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
+        assertFalse(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
+        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+                && !s.contains("Month") && !s.contains("TOTAL")).count(), 0);
+    }
+
 
     @Test
     public void getSpendProfileStatusByProjectIdApproved() {

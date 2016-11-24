@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm rejection'" th:remove="tag"/>
+    </head>
+
+    <body th:with="context='assessment'" class="assessment-reject-confirm">
+        <div th:include="fragments/layout :: body-start" th:remove="tag"/>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assigned application',linkClass='link-back',linkUrl=@{/{assessmentId}/assignment(assessmentId=${model.assessmentId})}" th:remove="tag" />
+
+            <div class="page-title">
+                <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
+                <h1 class="heading-xlarge">Confirm rejection</h1>
+            </div>
+
+            <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK.</p>
+            <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${model.assessmentId})" th:remove="tag" />
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag"/>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"/>
+    </body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -37,18 +37,16 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Projects in setup'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Assign Monitoring Officer'})" th:remove="tag" />
+
+  <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102469: Solving problems with data'}, ${'Assign monitoring officer'}, ${'project setup'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
-	<hr />
 
-		
-		
+	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
@@ -58,8 +56,8 @@
 			</div>
 
 		</th:block>
-		
-		
+
+
 		<div class="column-half">
 			<h2 class="heading-large">Monitoring Officer</h2>
 			<form>
@@ -109,17 +107,17 @@
 
 
 
-					
+
 					<div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 				        <button class="js-close close" aria-label="Close Popup">X</button>
 				        <div>
-							
+
 							<h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
 
 							<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
 
 							<hr />
-				            
+
 				            <div class="grid-row extra-margin">
 				            	<div class="column-half">
 				            		<a href="/prototypes/1576-assign-mo">Cancel</a>
@@ -137,7 +135,7 @@
 			</form>
 		</div>
 		<div class="column-half">
-			
+
 			<h2 class="heading-large">Supporting information</h2>
 
 			<h3 class="heading-medium no-margin">Project title</h3>
@@ -189,7 +187,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -197,7 +195,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }

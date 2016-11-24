@@ -4,6 +4,8 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
+import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -12,16 +14,18 @@ import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ProcessRepository;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
-import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.*;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static java.util.Optional.ofNullable;
 
 /**
  * {@code AssessmentWorkflowService} is the entry point for triggering the workflow.
@@ -30,7 +34,6 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
  */
 @Component
 public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentStates, AssessmentOutcomes, Application, ProcessRole> {
-
 
     @Autowired
     @Qualifier("assessmentStateMachine")
@@ -50,21 +53,24 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return new Assessment(target, participant);
     }
 
-    public boolean rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
-        return stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(REJECT)
-                .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", processOutcome)
-                .build(), assessment.getActivityState());
+    public boolean rejectInvitation(Assessment assessment, ApplicationRejectionResource applicationRejection) {
+        return fireEvent(assessmentEventWithOutcome(assessment, rejectInvitationOutcome(applicationRejection), REJECT), assessment);
     }
 
-    public boolean recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
-        return stateHandler.handleEventWithState(MessageBuilder
-                .withPayload(RECOMMEND)
-                .setHeader("assessment", assessment)
-                .setHeader("processRoleId", processRoleId)
-                .setHeader("processOutcome", processOutcome)
-                .build(), assessment.getActivityState());
+    public boolean acceptInvitation(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, ACCEPT), assessment);
+    }
+
+    public boolean feedback(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, FEEDBACK), assessment);
+    }
+
+    public boolean fundingDecision(Assessment assessment, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        return fireEvent(assessmentEventWithOutcome(assessment, fundingDecisionOutcome(assessmentFundingDecision), FUNDING_DECISION), assessment);
+    }
+
+    public boolean submit(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, SUBMIT), assessment);
     }
 
     @Override
@@ -90,5 +96,38 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
     @Override
     protected StateMachine<AssessmentStates, AssessmentOutcomes> getStateMachine() {
         return stateMachine;
+    }
+
+    @Override
+    protected Assessment getOrCreateProcess(Message<AssessmentOutcomes> message) {
+        return (Assessment) message.getHeaders().get("assessment");
+    }
+
+    private MessageBuilder<AssessmentOutcomes> assessmentEventWithOutcome(Assessment assessment, ProcessOutcome processOutcome, AssessmentOutcomes event) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("assessment", assessment)
+                .setHeader("processOutcome", processOutcome);
+    }
+
+    private MessageBuilder<AssessmentOutcomes> assessmentEvent(Assessment assessment, AssessmentOutcomes event) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("assessment", assessment);
+    }
+
+    private ProcessOutcome rejectInvitationOutcome(ApplicationRejectionResource applicationRejection) {
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setDescription(applicationRejection.getRejectReason());
+        processOutcome.setComment(applicationRejection.getRejectComment());
+        return processOutcome;
+    }
+
+    private ProcessOutcome fundingDecisionOutcome(AssessmentFundingDecisionResource assessmentFundingDecision) {
+        ProcessOutcome processOutcome = new ProcessOutcome();
+        processOutcome.setOutcome(ofNullable(assessmentFundingDecision.getFundingConfirmation()).map(BooleanUtils::toStringYesNo).orElse(null));
+        processOutcome.setDescription(assessmentFundingDecision.getFeedback());
+        processOutcome.setComment(assessmentFundingDecision.getComment());
+        return processOutcome;
     }
 }

@@ -31,7 +31,7 @@
         <h1 class="heading-xlarge no-margin">Application Overview</h1>
     </div>
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">
-        <div th:include="fragments/application :: application-summary" th:remove="tag"/>
+        <div th:include="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" th:remove="tag"/>
         <div class="extra-margin">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
         </div>

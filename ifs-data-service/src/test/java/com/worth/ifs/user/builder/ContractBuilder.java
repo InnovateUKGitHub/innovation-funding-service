@@ -6,9 +6,9 @@ import com.worth.ifs.user.domain.Contract;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.createDefault;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
@@ -30,7 +30,7 @@ public class ContractBuilder extends BaseBuilder<Contract, ContractBuilder> {
     }
 
     public ContractBuilder withId(Long... ids) {
-        return withArray((id, contract) -> setField("id", id, contract) , ids);
+        return withArray((id, contract) -> setField("id", id, contract), ids);
     }
 
     public ContractBuilder withCurrent(Boolean... currents) {
@@ -41,16 +41,16 @@ public class ContractBuilder extends BaseBuilder<Contract, ContractBuilder> {
         return withArray((text, contract) -> setField("text", text, contract), texts);
     }
 
-    public ContractBuilder withAnnexOne(String... annexOnes) {
-        return withArray((annexOne, contract) -> setField("annexOne", annexOne, contract), annexOnes);
+    public ContractBuilder withAnnexA(String... annexAs) {
+        return withArray((annexA, contract) -> setField("annexA", annexA, contract), annexAs);
     }
 
-    public ContractBuilder withAnnexTwo(String... annexTwos) {
-        return withArray((annexTwo, contract) -> setField("annexTwo", annexTwo, contract), annexTwos);
+    public ContractBuilder withAnnexB(String... annexBs) {
+        return withArray((annexB, contract) -> setField("annexB", annexB, contract), annexBs);
     }
 
-    public ContractBuilder withAnnexThree(String... annexThrees) {
-        return withArray((annexThree, contract) -> setField("annexThree", annexThree, contract), annexThrees);
+    public ContractBuilder withAnnexC(String... annexCs) {
+        return withArray((annexC, contract) -> setField("annexC", annexC, contract), annexCs);
     }
 
     @Override

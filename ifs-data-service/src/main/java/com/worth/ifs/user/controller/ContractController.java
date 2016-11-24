@@ -20,7 +20,7 @@ public class ContractController {
     ContractService contractService;
 
     @RequestMapping("/findCurrent")
-    public RestResult<ContractResource> findAll() {
+    public RestResult<ContractResource> findCurrent() {
         return contractService.getCurrent().toGetResponse();
     }
 }

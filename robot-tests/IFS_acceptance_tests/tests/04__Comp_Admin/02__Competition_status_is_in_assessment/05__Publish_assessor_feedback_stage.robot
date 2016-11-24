@@ -6,19 +6,14 @@ Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.te
 ...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${assessor_feedback_competition_url}    ${server}/management/competition/3
-${successful_application_overview}    ${server}/management/competition/3/application/16
-${unsuccessful_application_overview}    ${server}/management/competition/3/application/17
-${project_setup_status_view}    ${server}/project-setup-management/competition/3/status
-${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding.    # note that this will change!
+${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
+${unsuccessful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
+${project_setup_status_view}    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+${dialogue_warning_message}    This will inform applicants that assessor feedback is available. 
 
 *** Test Cases ***
 The publish feedback should be disabled
@@ -75,13 +70,13 @@ Choosing to Notify the applicants in the dialogue
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    Dear test ten    Feedback for your application into the competition La Fromage is now available
+    Then the user reads his email from the default mailbox    worth.email.test+fundsuccess@gmail.com    Feedback for your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME} is now available.    Dear Sarah Peacock
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    Dear test eleven    Feedback for your application into the competition La Fromage is now available
-    [Teardown]    Delete the emails from both test mailboxes
+    Then the user reads his email from the second default mailbox    worth.email.test.two+fundfailure@gmail.com    Feedback for your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME} is now available.    Dear Kevin Jenkins
+    [Teardown]    Delete the emails from both default test mailboxes
 
 The whole state of the competition should change to Project setup
     [Documentation]    INFUND-2646

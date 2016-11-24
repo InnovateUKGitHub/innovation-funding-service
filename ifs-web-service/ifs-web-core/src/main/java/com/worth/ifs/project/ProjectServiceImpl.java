@@ -280,7 +280,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
-        return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
+        return projectInviteRestService.saveProjectInvite(inviteProjectResource).toServiceResult();
     }
 
     @Override
