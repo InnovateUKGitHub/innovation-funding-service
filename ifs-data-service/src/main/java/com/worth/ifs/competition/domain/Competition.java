@@ -98,7 +98,7 @@ public class Competition implements ProcessActivity {
     private CollaborationLevel collaborationLevel;
     @Enumerated(EnumType.STRING)
     private LeadApplicantType leadApplicantType;
-    
+
     @ElementCollection
     @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
     @MapKeyEnumerated(EnumType.STRING)
@@ -425,11 +425,11 @@ public class Competition implements ProcessActivity {
     public void setInnovationArea(Category innovationArea) {
         this.innovationArea = innovationArea;
     }
-    
+
     public Set<Category> getResearchCategories() {
 		return researchCategories;
 	}
-    
+
     public void setResearchCategories(Set<Category> researchCategories) {
 		this.researchCategories = researchCategories;
 	}
@@ -441,11 +441,11 @@ public class Competition implements ProcessActivity {
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
     }
-    
+
     public boolean isMultiStream() {
 		return multiStream;
 	}
-    
+
     public void setMultiStream(boolean multiStream) {
 		this.multiStream = multiStream;
 	}
@@ -461,27 +461,27 @@ public class Competition implements ProcessActivity {
     public String getStreamName() {
 		return streamName;
 	}
-    
+
     public void setStreamName(String streamName) {
 		this.streamName = streamName;
 	}
-    
+
     public CollaborationLevel getCollaborationLevel() {
 		return collaborationLevel;
 	}
-    
+
     public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
 		this.collaborationLevel = collaborationLevel;
 	}
-    
+
     public LeadApplicantType getLeadApplicantType() {
 		return leadApplicantType;
 	}
-    
+
     public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
 		this.leadApplicantType = leadApplicantType;
 	}
-    
+
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;
 	}

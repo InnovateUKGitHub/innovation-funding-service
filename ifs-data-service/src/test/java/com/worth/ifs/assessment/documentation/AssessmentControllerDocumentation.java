@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.controller.AssessmentController;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -17,8 +18,7 @@ import static com.worth.ifs.assessment.documentation.ApplicationRejectionDocs.ap
 import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceBuilder;
 import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceFields;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
-import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
+import static com.worth.ifs.documentation.AssessmentDocs.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -135,5 +135,17 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("id of the assessment for which to accept")
                         )
                 ));
+    }
+
+    @Test
+    public void submitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = assessmentSubmissionsResourceBuilder.build();
+        when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/submitAssessments")
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(assessmentSubmissions)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(requestFields(assessmentSubmissionsFields)));
     }
 }
