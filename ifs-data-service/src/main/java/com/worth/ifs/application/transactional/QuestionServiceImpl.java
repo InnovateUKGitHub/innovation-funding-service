@@ -19,10 +19,7 @@ import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.util.EntityLookupCallbacks;
 import com.worth.ifs.validator.util.ValidationUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +49,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Service
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
-    private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
+
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
@@ -281,7 +278,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-        return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccess(inputType -> {
+        return getFormInputTypeByTitle(formInputTypeTitle).andOnSuccess(inputType -> {
             List<Question> questions = questionRepository.findByCompetitionId(competitionId);
             Optional<Question> question = simpleFindFirst(questions, q -> {
                 List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
@@ -422,10 +419,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
-    private ServiceResult<FormInputType> getOnlyFormInputTypeByTitle(String formInputTypeTitle) {
-        return getFormInputTypesByTitle(formInputTypeTitle).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
-    }
-
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
 
@@ -464,7 +457,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return Optional.ofNullable(markedAsComplete);
     }
 
-    private ServiceResult<List<FormInputType>> getFormInputTypesByTitle(String formInputTypeTitle) {
+    private ServiceResult<FormInputType> getFormInputTypeByTitle(String formInputTypeTitle) {
         return find(formInputTypeService.findByTitle(formInputTypeTitle), notFoundError(Question.class, formInputTypeTitle));
     }
 

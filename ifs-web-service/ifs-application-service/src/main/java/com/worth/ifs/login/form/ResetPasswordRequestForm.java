@@ -1,4 +1,4 @@
-package com.worth.ifs.login;
+package com.worth.ifs.login.form;
 
 import com.worth.ifs.commons.validation.ValidationConstants;
 import org.hibernate.validator.constraints.Email;

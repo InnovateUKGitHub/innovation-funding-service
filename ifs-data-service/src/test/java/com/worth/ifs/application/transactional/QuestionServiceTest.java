@@ -386,7 +386,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 newFormInput().withActive(false).withFormInputType(type).build())
         ).build();
 
-        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(asList(type));
+        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(type);
         when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(matchingQuestion, notMatchingQuestion));
 
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, typeTitle);
@@ -406,7 +406,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 newFormInput().withActive(false).withFormInputType(type).build())
         ).build();
 
-        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(asList(type));
+        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(type);
         when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(notMatchingQuestion));
 
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, typeTitle);
