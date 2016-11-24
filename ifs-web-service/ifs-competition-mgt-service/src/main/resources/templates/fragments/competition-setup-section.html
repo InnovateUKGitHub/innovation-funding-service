@@ -853,7 +853,7 @@
             <h2 class="heading-small">How many assessors are required for each application?</h2>
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-                    <legend>How many assessors are required for each application?</legend>
+                    <legend class="visuallyhidden">How many assessors are required for each application?</legend>
                     <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
                     </span>
