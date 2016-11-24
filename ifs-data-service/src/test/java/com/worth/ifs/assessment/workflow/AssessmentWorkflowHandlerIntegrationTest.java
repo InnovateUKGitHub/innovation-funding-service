@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
@@ -30,8 +31,11 @@ import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessO
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.FUNDING_DECISION;
 import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 import static com.worth.ifs.assessment.resource.AssessmentStates.*;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -139,7 +143,46 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void submit_readyToSubmitToSubmitted() throws Exception {
-        assertWorkflowStateChange((assessment) -> assessmentWorkflowHandler.submit(assessment), setupCompleteAssessment(READY_TO_SUBMIT), SUBMITTED);
+        Supplier<Assessment> completeAssessment = () -> {
+            Assessment assessment = setupCompleteAssessment(READY_TO_SUBMIT).get();
+            assessment.setTarget(
+                    newApplication()
+                            .withCompetition(
+                                    newCompetition()
+                                            .withCompetitionStatus(CLOSED)
+                                            .withAssessorsNotifiedDate(now().minusDays(10L))
+                                            .withAssessmentClosedDate(now().plusDays(10L))
+                                            .build()
+                            )
+                            .build()
+            );
+
+            return assessment;
+        };
+
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.submit(assessment), completeAssessment, SUBMITTED);
+    }
+
+    @Test
+    public void submit_readyToSubmitToSubmittedWhenNotInAssessmentPeriod() throws Exception {
+        Assessment assessment = setupCompleteAssessment(READY_TO_SUBMIT).get();
+        assessment.setTarget(
+                newApplication()
+                        .withCompetition(
+                                newCompetition()
+                                        .withCompetitionStatus(CLOSED)
+                                        .withAssessorsNotifiedDate(now().plusDays(10L))
+                                        .withAssessmentClosedDate(now().plusDays(20L))
+                                        .build()
+                        )
+                        .build()
+        );
+
+        // The boolean returned here is actually indicating if the transition
+        // was accepted by the StateMachine or not (rather than if
+        // it was a successful/rejected transition)
+        assertTrue(assessmentWorkflowHandler.submit(assessment));
+        assertEquals(READY_TO_SUBMIT, assessment.getActivityState());
     }
 
     private AssessmentFundingDecisionResource createFundingDecision() {
@@ -188,7 +231,8 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState, Consumer<Assessment> additionalVerifications) {
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState())).thenReturn(new ActivityState(APPLICATION_ASSESSMENT, expectedState.getBackingState()));
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState()))
+                .thenReturn(new ActivityState(APPLICATION_ASSESSMENT, expectedState.getBackingState()));
 
         Assessment assessment = assessmentSupplier.get();
 
@@ -196,7 +240,6 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         assertTrue(handlerMethod.apply(assessment));
 
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState());
-
         verify(assessmentRepositoryMock).save(createAssessmentExpectations(assessment, expectedState));
 
         if (additionalVerifications != null) {
@@ -209,6 +252,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     private Assessment createAssessmentExpectations(Assessment assessment, AssessmentStates expectedState) {
         return createLambdaMatcher(actual -> {
             assertEquals(assessment, actual);
+            // This is the only sure way of checking that your state transition happened!
             assertTrue(actual.isInState(expectedState));
         });
     }

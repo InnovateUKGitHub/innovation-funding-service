@@ -19,6 +19,10 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Set<Assessment> findAll();
 
+    @Override
+    List<Assessment> findAll(Iterable<Long> assessmentIds);
+
+    @Override
     Assessment findOneByParticipantId(Long participantId);
 
     List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);

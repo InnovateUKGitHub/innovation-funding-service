@@ -72,6 +72,8 @@ public class CompetitionResource {
     private String activityCode;
     private String innovateBudget;
 
+    private boolean useResubmissionQuestion;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -458,6 +460,15 @@ public class CompetitionResource {
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
     }
+
+    public boolean isUseResubmissionQuestion() {
+        return useResubmissionQuestion;
+    }
+
+    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+        this.useResubmissionQuestion = useResubmissionQuestion;
+    }
+
 
     public Integer getAssessorCount() {
         return assessorCount;

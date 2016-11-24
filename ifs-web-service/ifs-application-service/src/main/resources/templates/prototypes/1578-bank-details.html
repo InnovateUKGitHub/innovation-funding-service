@@ -19,24 +19,24 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
-	<p>In order for Innovate UK to fund your project we need your bank account details. We will then verify the bank account to the lead organisation.</p>
+	<p>In order for us to pay your grant we need your bank account details. We will then verify the bank account to the lead organisation.</p>
 
-	<p>The bank account must belong to the organisation below.</p>
+	<p>The bank account must belong to the organisation listed.</p>
 
 	<h3 class="heading-medium">Organisation information</h3>
 	<p class="form-hint">This information provided during the application process cannot be changed.</p>
-	
+
 	<div th:if="${param.status == null}">
 		<p class="extra-margin">
 			Aptrans Ltd <br />
 			Company no. 04214477
 		</p>
 	</div>
-	
+
 	<div th:if="${param.status != null and param.status[0] == 'nonBusiness'}">
 		<p class="extra-margin">University of Cardiff</p>
 	</div>
-	
+
 	<form action="#">
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:remove="tag" />
@@ -48,7 +48,7 @@
 		<div class="modal-bank" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
-				
+
 				<h2 class="heading-medium no-margin">Submit Bank Details</h2>
 
 				<p>Are you sure you wish to submit your bank details?</p>
@@ -56,10 +56,10 @@
 				<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
 
 				<hr />
-	            
+
             	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
             		<a href="/prototypes/1588-project-status?stage=level3" class="button">Submit</a>
 
             	</div>
@@ -69,7 +69,7 @@
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
