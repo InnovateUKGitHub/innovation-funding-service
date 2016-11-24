@@ -79,7 +79,7 @@ Non-lead partner can see the project setup page
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -138,7 +138,7 @@ Lead partner can see the project setup page
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Then the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the Killer Riffs competition
+    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user should see the element    link=View terms and conditions of grant offer
     And the user should see the text in the page    Project details
@@ -336,7 +336,7 @@ Project details can be submitted with PM, project address and start date
     Mark as complete button should be enabled
 
 Non lead partner nominates finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428
     [Tags]    HappyPath
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Then the user navigates to the page    ${project_in_setup_page}
@@ -353,6 +353,7 @@ Non lead partner nominates finance contact
     And the matching status checkbox is updated    project-details-finance    2    yes
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element     link=Bank details
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
@@ -404,6 +405,7 @@ Partner invites a finance contact
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
+
 
 Invited finance contact receives an email
     [Documentation]    INFUND-3524

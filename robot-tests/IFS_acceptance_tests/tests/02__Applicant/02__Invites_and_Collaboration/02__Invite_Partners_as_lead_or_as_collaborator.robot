@@ -92,7 +92,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -177,7 +177,7 @@ Registered partner should not create new org but should follow the create accoun
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user should see the text in the page    Your organisation
