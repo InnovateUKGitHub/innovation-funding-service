@@ -59,8 +59,12 @@
                                         <div th:if="${application.accepted or application.open}" class="application-status open empty">
                                             <p>Open</p>
                                         </div>
+
                                         <div th:if="${application.readyToSubmit}" class="application-status assessed" th:classappend="${application.recommended} ? 'yes' : 'no'">
                                             <p>Assessed</p>
+                                            <h3 class="score"><span th:text="${application.overallScore}">51.0</span> %</h3>
+                                            <small>Overall score</small>
+
                                             <div class="recommend-container">
                                                 <p class="recommend" th:classappend="${application.recommended} ? 'yes' : 'no'">
                                                     <span th:text="${application.recommended} ? 'Recommended' : 'Not recommended'"/>
@@ -98,6 +102,9 @@
                                 <div class="column-assessment-status navigation-right">
                                     <div class="application-status submitted">
                                         <p>Submitted</p>
+                                        <h3 class="score"><span th:text="${application.overallScore}">51.0</span> %</h3>
+                                        <small>Overall score</small>
+
                                         <div class="recommend-container">
                                             <p class="recommend" th:classappend="${application.recommended} ? 'yes' : 'no'">
                                                 <span th:text="${application.recommended} ? 'Recommended' : 'Not recommended'"/>

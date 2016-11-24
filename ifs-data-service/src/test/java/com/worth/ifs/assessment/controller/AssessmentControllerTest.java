@@ -2,10 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -80,6 +77,22 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessmentServiceMock, only()).findByUserAndCompetition(userId, competitionId);
+    }
+
+    @Test
+    public void getTotalScore() throws Exception {
+        Long assessmentId = 1L;
+
+        AssessmentTotalScoreResource expected = new AssessmentTotalScoreResource(74, 200);
+
+        when(assessmentServiceMock.getTotalScore(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/{id}/score", assessmentId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+
+        verify(assessmentServiceMock, only()).getTotalScore(assessmentId);
     }
 
     @Test

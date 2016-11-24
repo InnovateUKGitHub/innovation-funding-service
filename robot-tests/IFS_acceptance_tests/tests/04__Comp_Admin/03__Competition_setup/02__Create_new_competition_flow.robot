@@ -302,7 +302,7 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
-    [Tags]    Failing
+    [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")

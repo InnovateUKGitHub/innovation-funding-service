@@ -32,10 +32,6 @@ public class AssessorCompetitionDashboardViewModel {
         return competitionTitle;
     }
 
-    public void setCompetitionTitle(String competitionTitle) {
-        this.competitionTitle = competitionTitle;
-    }
-
     public String getCompetition() {
         return competition;
     }
@@ -48,47 +44,23 @@ public class AssessorCompetitionDashboardViewModel {
         return leadTechnologist;
     }
 
-    public void setLeadTechnologist(String leadTechnologist) {
-        this.leadTechnologist = leadTechnologist;
-    }
-
     public LocalDateTime getAcceptDeadline() {
         return acceptDeadline;
-    }
-
-    public void setAcceptDeadline(LocalDateTime acceptDeadline) {
-        this.acceptDeadline = acceptDeadline;
     }
 
     public LocalDateTime getSubmitDeadline() {
         return submitDeadline;
     }
 
-    public void setSubmitDeadline(LocalDateTime submitDeadline) {
-        this.submitDeadline = submitDeadline;
-    }
-
     public List<AssessorCompetitionDashboardApplicationViewModel> getSubmitted() {
         return submitted;
-    }
-
-    public void setSubmitted(List<AssessorCompetitionDashboardApplicationViewModel> submitted) {
-        this.submitted = submitted;
     }
 
     public List<AssessorCompetitionDashboardApplicationViewModel> getOutstanding() {
         return outstanding;
     }
 
-    public void setOutstanding(List<AssessorCompetitionDashboardApplicationViewModel> outstanding) {
-        this.outstanding = outstanding;
-    }
-
     public boolean isSubmitVisible() {
         return submitVisible;
-    }
-
-    public void setSubmitVisible(boolean submitVisible) {
-        this.submitVisible = submitVisible;
     }
 }

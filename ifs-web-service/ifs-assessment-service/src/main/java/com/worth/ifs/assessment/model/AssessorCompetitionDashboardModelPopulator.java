@@ -6,6 +6,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
@@ -102,6 +103,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 application.getApplicationDisplayName(),
                 leadOrganisation.get().getName(),
                 assessment.getAssessmentState(),
+                getOverallScore(assessment),
                 recommended);
     }
 
@@ -110,6 +112,17 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
+    }
+
+    private int getOverallScore(AssessmentResource assessmentResource) {
+        switch (assessmentResource.getAssessmentState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getId());
+                return assessmentTotalScore.getTotalScorePercentage();
+            default:
+                return 0;
+        }
     }
 
     private boolean getRecommended(AssessmentResource assessmentResource) {

@@ -35,7 +35,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         return new CompetitionSetupQuestionServiceImpl();
     }
     private static String number = "number";
-    private static String shortTitle = CompetitionSetupQuestionServiceImpl.SCOPE_IDENTIFIER;
+    private static String shortTitle = CompetitionSetupQuestionType.SCOPE.getName();
     private static String title = "title";
     private static String subTitle = "subTitle";
     private static String guidanceTitle = "guidanceTitle";
