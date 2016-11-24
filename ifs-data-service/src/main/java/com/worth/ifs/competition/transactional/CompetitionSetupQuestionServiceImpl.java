@@ -104,11 +104,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        createOrDeleteAppendixFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
         createOrDeleteScoredFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
         createOrDeleteWrittenFeedbackFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
-
-        //TODO INFUND-5685 and INFUND-5631 Save assessor form inputs for AssessorFormInputTypes
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
@@ -124,24 +121,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
         FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.SCORE.getTitle());
 
-        if (competitionSetupQuestionResource.getScored()) {
-            if (scoredFormInput == null) {
-                scoredFormInput = new FormInput();
-            }
-            scoredFormInput.setScope(FormInputScope.ASSESSMENT);
-            scoredFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.SCORE.getTitle()));
-            scoredFormInput.setQuestion(question);
-            scoredFormInput.setCompetition(question.getCompetition());
-
-            if (questionFormInput != null) {
-                scoredFormInput.setPriority(questionFormInput.getPriority() + 1);
-            } else {
-                scoredFormInput.setPriority(0);
-            }
-            formInputRepository.save(scoredFormInput);
-
-        } else if (scoredFormInput != null) {
-            formInputRepository.delete(scoredFormInput);
+        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
+            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
         }
     }
 
@@ -149,26 +130,12 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
         FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.FEEDBACK.getTitle());
 
-        if (competitionSetupQuestionResource.getWrittenFeedback()) {
-            if (writtenFeedbackFormInput == null) {
+        if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
+            writtenFeedbackFormInput.setActive(competitionSetupQuestionResource.getWrittenFeedback());
 
-                writtenFeedbackFormInput = new FormInput();
-            }
-            writtenFeedbackFormInput.setScope(FormInputScope.ASSESSMENT);
-            writtenFeedbackFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.FEEDBACK.getTitle()));
-            writtenFeedbackFormInput.setQuestion(question);
             writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
             writtenFeedbackFormInput.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows())));
-            writtenFeedbackFormInput.setCompetition(question.getCompetition());
-            if (questionFormInput != null) {
-                writtenFeedbackFormInput.setPriority(questionFormInput.getPriority() + 1);
-            } else {
-                writtenFeedbackFormInput.setPriority(0);
-            }
-            formInputRepository.save(writtenFeedbackFormInput);
-        } else if (writtenFeedbackFormInput != null) {
-            formInputRepository.delete(writtenFeedbackFormInput);
         }
     }
 

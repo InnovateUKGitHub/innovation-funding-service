@@ -68,9 +68,6 @@ public class FormInput {
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
 
-    @OneToMany(mappedBy = "formInput")
-    private List<GuidanceRow> guidanceRows;
-
     private boolean active = true;
     @OneToMany(mappedBy = "formInput",cascade = CascadeType.ALL, orphanRemoval=true)
     private List<GuidanceRow> guidanceRows = new ArrayList<>();
