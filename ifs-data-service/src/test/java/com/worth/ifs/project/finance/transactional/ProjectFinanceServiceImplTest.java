@@ -447,7 +447,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         table.setMonthlyCostsPerCategoryMap(Collections.emptyMap());
 
         ValidationMessages validationMessages = new ValidationMessages();
-        validationMessages.setErrors(Arrays.asList(mockedError));
+        validationMessages.setErrors(Collections.singletonList(mockedError));
 
         when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Arrays.asList(validationMessages));
 

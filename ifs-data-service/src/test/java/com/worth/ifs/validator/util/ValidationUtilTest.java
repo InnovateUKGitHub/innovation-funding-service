@@ -16,8 +16,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link ValidationUtil}
- *
- * Created by xiaonan.zhang on 21/11/2016.
  */
 
 public class ValidationUtilTest extends BaseUnitTestMocksTest {

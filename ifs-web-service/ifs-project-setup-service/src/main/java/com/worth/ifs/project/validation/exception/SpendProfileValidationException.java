@@ -7,8 +7,6 @@ import java.util.Collections;
 
 /**
  * generic exception for validating Spend Profile
- *
- * Created by xiaonan.zhang on 23/11/2016.
  */
 public class SpendProfileValidationException extends IFSRuntimeException {
 

@@ -305,10 +305,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         List<ValidationMessages> validationMessages = validationUtil.validateSpendProfileTableResource(table);
 
-        List<Error> incorrectCosts = validationMessages.stream()
-                .map(ValidationMessages::getErrors)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        List<Error> incorrectCosts = flattenLists(simpleMap(validationMessages, ValidationMessages::getErrors));
 
         if (incorrectCosts.isEmpty()) {
             return serviceSuccess();
