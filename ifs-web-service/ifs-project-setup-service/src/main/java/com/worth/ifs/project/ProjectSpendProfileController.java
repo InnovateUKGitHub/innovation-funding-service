@@ -133,18 +133,16 @@ public class ProjectSpendProfileController {
         String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
-        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
-        if (customValidationHandler.hasErrors()) {
-            return failureView;
-        }
 
-        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+        return validationHandler.failNowOrSucceedWith(() -> failureView, () -> {
+            SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+            spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+            ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
 
-        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
+        });
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
