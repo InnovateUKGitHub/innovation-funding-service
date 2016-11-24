@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +13,10 @@ import org.mockito.Mock;
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -96,5 +99,19 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).acceptInvitation(assessmentId);
+    }
+
+    @Test
+    public void submitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+
+        when(assessmentRestService.submitAssessments(assessmentSubmissions)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.submitAssessments(asList(1L, 2L));
+
+        assertTrue(response.isSuccess());
+        verify(assessmentRestService, only()).submitAssessments(assessmentSubmissions);
     }
 }
