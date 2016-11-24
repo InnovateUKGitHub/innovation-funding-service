@@ -29,7 +29,7 @@ Partners should not be able to submit the Grant Offer
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]
+    [Tags]      HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
