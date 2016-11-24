@@ -1,7 +1,8 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;

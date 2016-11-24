@@ -1,25 +1,29 @@
 package com.worth.ifs.competition.transactional;
 
-import com.worth.ifs.*;
-import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.repository.*;
-import com.worth.ifs.assessment.resource.*;
-import com.worth.ifs.commons.service.*;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.form.domain.*;
-import com.worth.ifs.form.mapper.*;
-import com.worth.ifs.form.repository.*;
-import com.worth.ifs.form.resource.*;
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.GuidanceRow;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.assessment.resource.AssessorFormInputType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.ApplicantFormInputType;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.mapper.GuidanceRowMapper;
+import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.form.repository.FormInputTypeRepository;
+import com.worth.ifs.form.resource.FormInputScope;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.application.builder.GuidanceRowBuilder.*;
-import static com.worth.ifs.application.builder.QuestionBuilder.*;
-import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
-import static com.worth.ifs.form.builder.FormInputBuilder.*;
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -165,8 +169,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.save(resource);
 
-        verify(formInputRepository).delete(appendixFormInput);
-
+        assertTrue(result.isSuccess());
         assertNotEquals(question.getQuestionNumber(), number);
         assertEquals(question.getDescription(), subTitle);
         assertEquals(question.getShortName(), shortTitle);
@@ -174,5 +177,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getGuidanceQuestion(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
+        assertEquals(appendixFormInput.getActive(), false);
     }
 }
