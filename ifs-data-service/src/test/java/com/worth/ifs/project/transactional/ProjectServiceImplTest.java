@@ -239,6 +239,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
 
+        verify(financeCheckRepositoryMock).save(createFinanceCheckExpectations(newFinanceCheck));
+        verify(projectFinanceRepositoryMock).save(createNewProjectFinanceExpectations(expectedProjectFinance));
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);

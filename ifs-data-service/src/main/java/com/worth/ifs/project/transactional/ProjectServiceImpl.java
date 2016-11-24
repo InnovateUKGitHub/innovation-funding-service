@@ -988,7 +988,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
-        FinanceCheck savedFinanceCheck = financeCheckRepository.save(financeCheck);
 
         ProjectFinance projectFinanceForOrganisation =
                 projectFinanceRepository.save(new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject));
@@ -1013,7 +1012,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         copiedFinanceFigures.forEach(projectFinanceRowRepository::save);
 
-        return savedFinanceCheck;
+        return financeCheck;
     }
 
     private FinanceRowMetaValue copyFinanceRowMetaValue(ProjectFinanceRow row, FinanceRowMetaValue costValue) {
