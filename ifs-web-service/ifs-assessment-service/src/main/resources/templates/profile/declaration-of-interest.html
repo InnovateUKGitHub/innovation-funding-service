@@ -327,8 +327,9 @@
                         </label>
                         <textarea class="form-control width-full" cols="30" rows="3"
                                   th:field="*{familyFinancialInterests}" th:errorclass="field-error"
+                                  th:required="*{hasFamilyFinancialInterests}"
                                   data-required-errormessage="Please enter your family's financial interests."></textarea>
-                    </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')}? error">
