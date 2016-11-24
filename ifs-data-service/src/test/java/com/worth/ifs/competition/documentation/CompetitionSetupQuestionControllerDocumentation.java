@@ -1,18 +1,19 @@
 package com.worth.ifs.competition.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.*;
-import com.worth.ifs.competition.controller.*;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competition.transactional.*;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.competition.controller.CompetitionSetupQuestionController;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.documentation.CompetitionSetupQuestionResourceDocs.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceBuilder;
+import static com.worth.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
