@@ -2,15 +2,18 @@ package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
+import com.worth.ifs.commons.validation.constraints.FutureLocalDate;
+import com.worth.ifs.commons.validation.constraints.ValidLocalDate;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -22,6 +25,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+@FieldRequiredIf(required = "resubmission", argument = "previousApplicationNumber", predicate = false, message = "{validation.application.previous.application.number.required}")
+@FieldRequiredIf(required = "resubmission", argument = "previousApplicationTitle", predicate = false, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
     private static final String ID_PATTERN = "#00000000";
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
@@ -36,11 +41,15 @@ public class ApplicationResource {
 
     @NotBlank(message ="{validation.project.name.must.not.be.empty}")
     private String name;
+
+    @ValidLocalDate(message = "{validation.project.start.date.is.valid.date}")
+    @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
     private LocalDateTime submittedDate;
 
     @Min(value=1, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=31, message ="{validation.application.details.duration.in.months.max.digits}")
+    @NotNull(message = "{validation.project.duration.value.invalid}")
     private Long durationInMonths;
 
     private Long applicationStatus;
@@ -51,6 +60,8 @@ public class ApplicationResource {
     private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
+
+    @NotNull(message="{validation.eligibilityform.resubmission.required}")
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;

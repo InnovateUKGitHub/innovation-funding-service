@@ -9,7 +9,6 @@ import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
-import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
@@ -46,7 +45,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +64,8 @@ import java.util.*;
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.error.ErrorConverterFactory.toField;
-import static com.worth.ifs.commons.rest.ValidationMessages.*;
+import static com.worth.ifs.commons.rest.ValidationMessages.collectValidationMessages;
+import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
@@ -296,8 +295,6 @@ public class ApplicationFormController {
 
             ValidationMessages errors = new ValidationMessages();
 
-            new ApplicationStartDateValidator().validate(request, bindingResult);
-
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
@@ -308,7 +305,7 @@ public class ApplicationFormController {
 
             /* End save action */
 
-            if ((validationHandler.hasErrors() || errors.hasErrors()) && isMarkQuestionRequest(params)) {
+            if (errors.hasErrors() && isMarkQuestionRequest(params)) {
 
                 validationHandler.addAnyErrors(errors);
 
@@ -317,9 +314,6 @@ public class ApplicationFormController {
                 List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
                 // Add any validated fields back in invalid entries are displayed on re-render
-                application.setDurationInMonths(form.getApplication().getDurationInMonths());
-                application.setStartDate(form.getApplication().getStartDate());
-                application.setName(form.getApplication().getName());
 
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
@@ -434,7 +428,6 @@ public class ApplicationFormController {
             }
         }
 
-        errors.addAll(validationApplicationStartDate(request));
         setApplicationDetails(application, form.getApplication());
 
         if(applicationModelPopulator.userIsLeadApplicant(application, user.getId())) {
@@ -472,11 +465,6 @@ public class ApplicationFormController {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
     }
 
-    private ValidationMessages validationApplicationStartDate(HttpServletRequest request) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(request, "");
-        new ApplicationStartDateValidator().validate(request, bindingResult);
-        return fromBindingResult(bindingResult);
-    }
 
     private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
 
