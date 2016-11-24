@@ -16,14 +16,16 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private String displayLabel;
     private String leadOrganisation;
     private AssessmentStates state;
+    private int overallScore;
     private boolean recommended;
 
-    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, boolean recommended) {
+    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, int overallScore, boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.displayLabel = displayLabel;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
+        this.overallScore = overallScore;
         this.recommended = recommended;
     }
 
@@ -67,6 +69,22 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         this.state = state;
     }
 
+    public int getOverallScore() {
+        return overallScore;
+    }
+
+    public void setOverallScore(int overallScore) {
+        this.overallScore = overallScore;
+    }
+
+    public boolean isRecommended() {
+        return recommended;
+    }
+
+    public void setRecommended(boolean recommended) {
+        this.recommended = recommended;
+    }
+
     public boolean isPending() {
         return isState(PENDING);
     }
@@ -91,14 +109,6 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return state == this.state;
     }
 
-    public boolean getRecommended() {
-        return recommended;
-    }
-
-    public void setRecommended(boolean recommended) {
-        this.recommended = recommended;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -112,12 +122,13 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         AssessorCompetitionDashboardApplicationViewModel that = (AssessorCompetitionDashboardApplicationViewModel) o;
 
         return new EqualsBuilder()
+                .append(recommended, that.recommended)
                 .append(applicationId, that.applicationId)
                 .append(assessmentId, that.assessmentId)
                 .append(displayLabel, that.displayLabel)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
-                .append(recommended, that.recommended)
+                .append(overallScore, that.overallScore)
                 .isEquals();
     }
 
@@ -129,6 +140,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                 .append(displayLabel)
                 .append(leadOrganisation)
                 .append(state)
+                .append(overallScore)
                 .append(recommended)
                 .toHashCode();
     }

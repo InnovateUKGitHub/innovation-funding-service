@@ -8,6 +8,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.testdata.builders.data.CompetitionData;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName) {
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive) {
 
         return asCompAdmin(data -> {
 
@@ -71,6 +72,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setCompetitionType(competitionType.getId());
+                competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
+                competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
             });
         });
     }
@@ -172,7 +175,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            Stream.of(MilestoneType.values()).forEach(type -> {
+            Stream.of(MilestoneType.presetValues()).forEach(type -> {
                 milestoneService.create(type, data.getCompetition().getId());
             });
         });
@@ -198,15 +201,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
+    public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
+    }
+
     public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_DEADLINE);
     }
 
+    public CompetitionDataBuilder withAssessmentClosedDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+    }
+
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
+
+        if (date == null) {
+            return this;
+        }
+
         return asCompAdmin(data -> {
 
             MilestoneResource milestone =
                     milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+
+            if (milestone.getId() == null) {
+                milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            }
+
             milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
 

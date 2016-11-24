@@ -145,7 +145,7 @@ public class ValidationUtil {
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> APPLICATION.equals(formInput.getScope()));
+        List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> formInput.getActive() && APPLICATION.equals(formInput.getScope()));
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
