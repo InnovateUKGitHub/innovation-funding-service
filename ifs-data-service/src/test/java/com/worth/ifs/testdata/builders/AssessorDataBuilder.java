@@ -3,12 +3,12 @@ package com.worth.ifs.testdata.builders;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.testdata.builders.data.AssessorData;
 import com.worth.ifs.user.domain.Ethnicity;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
@@ -57,8 +57,24 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         }));
     }
 
-    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash) {
-        return with(data -> newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash).build());
+    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser) {
+        return with(data -> {
+            newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash, existingUser).build();
+            data.setEmail(emailAddress);
+        });
+    }
+
+
+    public AssessorDataBuilder addAssessorRole() {
+        return with(data -> {
+            User user = userRepository.findByEmail(data.getEmail()).get();
+            Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+            if (!user.getRoles().contains(assessorRole)) {
+                user.getRoles().add(assessorRole);
+                userRepository.save(user);
+            }
+        });
     }
 
     public AssessorDataBuilder acceptInvite(String hash) {
@@ -88,6 +104,4 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     protected AssessorData createInitial() {
         return new AssessorData();
     }
-
-
 }

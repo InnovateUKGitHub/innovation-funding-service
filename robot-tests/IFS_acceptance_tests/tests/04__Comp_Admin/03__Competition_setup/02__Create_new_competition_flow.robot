@@ -302,8 +302,42 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
+    [Tags]    Failing
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+
+Assessor: Contain the correct options
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Assessors
+    And the user should see the text in the page    How many assessors are required for each application?
+    Then the user should see the element    jQuery=label:contains(1)
+    When the user should see the element    jQuery=label:contains(3)
+    And the user should see the element    jQuery=label:contains(5)
+    And the user should see the text in the page    How much do assessors receive per application
+    And the user should see the element    id=assessorPay
+
+Assesor: Mark as Done then Edit again
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    Given the user selects the checkbox    id=assessors-62
+    And the user enters text to a text field    id=assessorPay    100
+    And the user moves focus and waits for autosave
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page    3
+    And the user should see the text in the page    100
+    When the user clicks the button/link    link=Competition setup
+    When the user clicks the button/link    link=Assessors
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user clicks the button/link    jQuery=.button:contains("Done")
+
+Assesor: Should have a Green Check
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    When The user clicks the button/link    link=Competition setup
+    Then the user should see the element    css=li:nth-child(6) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Application: Application process Page
@@ -366,17 +400,16 @@ Application: Project Summary
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Finances Form
-    [Documentation]    INFUND-5640
+    [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
-    And the user should see the element       jQuery=h1:contains("Application finances")
-    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    And the user should see the element    jQuery=h1:contains("Application finances")
+    And the user should see the text in the page    Each partner is required to complete the following finance sections
     When The user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
     And The user clicks the button/link    jQuery=button:contains("Save and close")
     And the user clicks the button/link    link=Finances
-    And The user clicks the button/link    jQuery=a:contains("Edit this question")
-    Then the Radio Button selections should be correct
+    Then the finance information should be correct
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Mark as done and the Edit again
@@ -523,6 +556,6 @@ The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
 
-The Radio Button selections should be correct
-    Radio Button Should Be Set To    fullApplicationFinance    false
-    Radio Button Should Be Set To    includeGrowthTable    false
+The finance information should be correct
+    the user should see the text in the page    Light finances
+    the user should see the text in the page    No
