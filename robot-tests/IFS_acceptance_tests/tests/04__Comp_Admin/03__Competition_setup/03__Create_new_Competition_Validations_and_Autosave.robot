@@ -64,7 +64,7 @@ Initial details: client-side validations
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select a Innovation Lead
+    Then the user should not see the error any more    Please select an Innovation Lead
     When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
