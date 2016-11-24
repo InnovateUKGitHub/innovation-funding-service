@@ -185,6 +185,19 @@ Lead partner marks spend profile as complete
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
+
 
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
 

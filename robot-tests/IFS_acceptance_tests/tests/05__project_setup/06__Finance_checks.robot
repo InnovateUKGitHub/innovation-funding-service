@@ -117,6 +117,19 @@ Project Finance user to view Je-S Download form and then approve finances
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
     And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
 
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
+
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath

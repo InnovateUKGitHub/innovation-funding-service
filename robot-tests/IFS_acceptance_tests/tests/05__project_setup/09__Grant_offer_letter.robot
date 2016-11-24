@@ -6,13 +6,26 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Partners should not be able to submit the Grant Offer
-    [Documentation]    INFUND-4851, INFUND-4428
+    [Documentation]    INFUND-4851
     [Tags]
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
     And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should see the element    link= Spend profile
+    And the user should see the element    link = Grant offer letter
 
 
 PM should not be able to upload big Grant Offer files
