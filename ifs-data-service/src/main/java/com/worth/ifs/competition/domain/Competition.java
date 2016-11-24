@@ -111,6 +111,8 @@ public class Competition implements ProcessActivity {
 
     private Boolean setupComplete;
 
+    private boolean useResubmissionQuestion = true;
+
     private boolean template = false;
 
     public Competition() {
@@ -560,6 +562,15 @@ public class Competition implements ProcessActivity {
     public void setTemplate(boolean template) {
         this.template = template;
     }
+
+    public boolean isUseResubmissionQuestion() {
+        return useResubmissionQuestion;
+    }
+
+    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+        this.useResubmissionQuestion = useResubmissionQuestion;
+    }
+
 
     public void notifyAssessors(LocalDateTime date) {
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {

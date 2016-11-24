@@ -37,10 +37,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                                                      "</ul>";
     private static String APPENDIX_DESCRIPTION = "Appendix";
 
-    public static String SCOPE_IDENTIFIER = "Scope";
-    private static String PROJECT_SUMMARY_IDENTIFIER = "Project summary";
-    private static String PUBLIC_DESCRIPTION_IDENTIFIER = "Public description";
-
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -79,24 +75,12 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
-        setupResource.setType(typeFromQuestion(question));
+        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
         setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
 
         return ServiceResult.serviceSuccess(setupResource);
     }
 
-    //TODO INFUND-6282 Remove this type and replace with an active, inactive, null checks on UI.
-    private CompetitionSetupQuestionType typeFromQuestion(Question question) {
-        if (question.getShortName().equals(SCOPE_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.SCOPE;
-        } else if (question.getShortName().equals(PROJECT_SUMMARY_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.PROJECT_SUMMARY;
-        } else if (question.getShortName().equals(PUBLIC_DESCRIPTION_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.PUBLIC_DESCRIPTION;
-        } else {
-            return CompetitionSetupQuestionType.ASSESSED_QUESTION;
-        }
-    }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (ApplicantFormInputType.FILE_UPLOAD.getTitle().equals(formInput.getFormInputType().getTitle())) {
@@ -128,7 +112,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        if (isShortNameEditable(typeFromQuestion(question))) {
+        if (isShortNameEditable(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()))) {
             question.setShortName(competitionSetupQuestionResource.getShortTitle());
         }
 
