@@ -45,7 +45,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private static Integer assessmentMaxWords = 2;
     private static Integer scoreTotal = 10;
 
-
     @Mock
     private QuestionRepository questionRepository;
 
@@ -134,6 +133,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getTitle(), title);
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
+        assertEquals(resource.getShortTitleEditable(), false);
 
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
