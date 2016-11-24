@@ -7,3 +7,7 @@ JOIN project p ON p.application_id = a.id
 JOIN project_finance pf ON pf.project_id = p.id AND pf.organisation_id = af.organisation_id
 WHERE fr.row_type = 'ApplicationFinanceRow'
 AND NOT EXISTS(SELECT 1 FROM finance_row where target_id = pf.id);
+
+INSERT INTO finance_row_meta_value (finance_row_id, finance_row_meta_field_id, value)
+SELECT pfr.id, afrmv.finance_row_meta_field_id, afrmv.value
+FROM 
