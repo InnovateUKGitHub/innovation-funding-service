@@ -4,10 +4,10 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.error.exception.FileAwaitingVirusScanException;
+import com.worth.ifs.commons.error.exception.FileQuarantinedException;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.project.grantofferletter.send.form.ProjectGrantOfferLetterSendForm;
@@ -18,6 +18,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static java.util.Collections.singletonList;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
@@ -52,9 +53,6 @@ public class ProjectGrantOfferLetterSendController {
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
 
-    @Autowired
-    private CompetitionService competitionService;
-
     private static final String FORM_ATTR = "form";
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -68,7 +66,6 @@ public class ProjectGrantOfferLetterSendController {
     @RequestMapping(value = "/send", method = POST)
     public String sendGrantOfferLetter(@PathVariable Long projectId,
                                        @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                        Model model,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
@@ -83,12 +80,11 @@ public class ProjectGrantOfferLetterSendController {
     @RequestMapping(value = "/receivedByPost", method = POST)
     public String grantOfferLetterReceivedByPost(@PathVariable Long projectId,
                                                  @ModelAttribute ProjectGrantOfferLetterSendForm form,
-                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                  Model model,
                                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                                  ValidationHandler validationHandler) {
         // TODO - set to ready to approve???
-        return redirectToCompetitionSummaryPage(projectId);
+        return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
     private String doViewGrantOfferLetterSend(Long projectId, Model model, ProjectGrantOfferLetterSendForm form) {
@@ -101,7 +97,7 @@ public class ProjectGrantOfferLetterSendController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @RequestMapping(params = "uploadAnnexClicked", method = POST)
+    @RequestMapping(params = "uploadAnnexClicked", value = "/upload-annex", method = POST)
     public String uploadAnnexFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
@@ -110,12 +106,31 @@ public class ProjectGrantOfferLetterSendController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
+        /*Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
         MultipartFile file = form.getAnnex();
         ServiceResult<FileEntryResource> generateResult = projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> { return doViewGrantOfferLetterSend(projectId, model, form);}
-        );
+        );*/
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
+
+            MultipartFile file = form.getAnnex();
+
+            return projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
+        });
+    }
+
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, ProjectGrantOfferLetterSendForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+
+        Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
+
+        return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
+    }
+
+    private String redirectToGrantOfferLetterPage(Long projectId) {
+        return "redirect:/project/" + projectId + "/grant-offer-letter/send";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -128,7 +143,7 @@ public class ProjectGrantOfferLetterSendController {
         final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getAdditionalContractFileDetails(projectId);
 
-        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails, "Annex");
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -141,7 +156,7 @@ public class ProjectGrantOfferLetterSendController {
         final Optional<ByteArrayResource> content = projectService.getGeneratedGrantOfferFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
 
-        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails, "Grant Offer Letter");
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
     private ProjectGrantOfferLetterSendViewModel populateGrantOfferLetterSendViewModel(Long projectId) {
@@ -149,36 +164,42 @@ public class ProjectGrantOfferLetterSendController {
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
 
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails;
+        try {
+            grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        } catch (FileAwaitingVirusScanException e1) {
+            grantOfferFileDetails = null;
+        } catch (FileQuarantinedException e2) {
+            grantOfferFileDetails = null;
+        }
 
-        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
+        Optional<FileEntryResource> additionalContractFile;
+        try {
+            additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
+        } catch (FileAwaitingVirusScanException e1) {
+            additionalContractFile = null;
+        } catch (FileQuarantinedException e2) {
+            additionalContractFile = null;
+        }
 
         Boolean sendOfferLetterAllowed = projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject();
 
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
-                                                        grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
-                                                        additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
+                                                        grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                                                        additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                                                         sendOfferLetterAllowed,
                                                         projectId,
                                                         project.getName(),
                                                         application.getId(),
-                                                        projectService.getAdditionalContractFile(projectId).isPresent(),
-                                                        projectService.getGeneratedGrantOfferFile(projectId).isPresent());
+                                                        grantOfferFileDetails != null ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
+                                                        additionalContractFile != null ? additionalContractFile.isPresent() : Boolean.FALSE);
     }
 
-    private String redirectToCompetitionSummaryPage(Long projectId) {
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
-        return "redirect:/competition/" + competition.getId() + "/status";
-    }
-
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails, String fileType) {
+    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
         } else {
-            throw new ObjectNotFoundException("Could not find " + fileType + " for project " + projectId, singletonList(projectId));
+            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
         }
     }
 

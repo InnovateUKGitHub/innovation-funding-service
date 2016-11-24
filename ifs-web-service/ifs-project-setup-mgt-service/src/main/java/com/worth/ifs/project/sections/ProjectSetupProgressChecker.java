@@ -1,6 +1,12 @@
 package com.worth.ifs.project.sections;
 
+import com.worth.ifs.application.finance.model.UserRole;
+import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
+import com.worth.ifs.user.resource.UserRoleType;
+
+import java.util.Map;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 
@@ -60,18 +66,15 @@ class ProjectSetupProgressChecker {
         return COMPLETE.equals(projectStatus.getFinanceChecksStatus());
     }
 
+    public ProjectActivityStates getGrantOfferLetterState() {
+        return projectStatus.getGrantOfferLetterStatus();
+    }
+
+    public Map<UserRoleType, ProjectActivityStates> getRoleSpecificActivityState() {
+        return projectStatus.getRoleSpecificGrantOfferLetterState();
+    }
+
     public boolean isGrantOfferLetterSent() {
-        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
-        //return SENT.equals(projectStatus.getGrantOfferLetterStatus());
-    }
-
-    public boolean isGrantOfferLetterReadyToApprove() {
-        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
-        //return READY_TO_APPROVE.equals(projectStatus.getGrantOfferLetterStatus());
-    }
-
-    public boolean isGrantOfferLetterApproved() {
-        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
-        //return APPROVED.equals(projectStatus.getGrantOfferLetterStatus());
+        return projectStatus.getGrantOfferLetterSent();
     }
 }

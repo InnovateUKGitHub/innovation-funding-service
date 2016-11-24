@@ -1068,8 +1068,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
-        if(project == null) {
-            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        if (project == null) {
+            return serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
         }
         if (project.getGrantOfferLetter() == null) {
             return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SEND);
@@ -1085,38 +1085,42 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
         ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
 
-        /*if(notificationResult.isSuccess() == serviceSuccess().isSuccess() && notificationResult.getSuccessObject() == serviceSuccess().getSuccessObject() &&
-                notificationResult.isFailure() == serviceSuccess().isFailure()) {
-            golWorkflowHandler.grantOfferLetterSent(project);
-        }*/
-        notificationResult.andOnSuccess(success -> {
-                    if(golWorkflowHandler.grantOfferLetterSent(project))
-                        return serviceSuccess();
-                    else
-                    {
-                        LOG.error(String.format("Send Grant Offer Letter failed for project %s, to project manager%s", projectId, pmTarget.getEmailAddress()));
-                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                    }
-        });
-        return notificationResult;
+        if(!notificationResult.isSuccess()) {
+            return serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
+        }
+        return sendGrantOfferLetterSuccess(project);
+    }
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+        if (golWorkflowHandler.grantOfferLetterSent(project)) {
+            return serviceSuccess();
+        } else {
+            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
     }
 
     @Override
     public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(this::doIsSendAllowed);
+
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
     }
 
     @Override
     public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(this::doIsAlreadySent);
-    }
-
-    private boolean doIsSendAllowed(Project project) {
-        return golWorkflowHandler.isSendAllowed(project);
-    }
-
-    private boolean doIsAlreadySent(Project project) {
-        return golWorkflowHandler.isAlreadySent(project);
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
     }
 
 }

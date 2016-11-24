@@ -55,7 +55,7 @@
         </th:block>
         <th:block th:unless="${model.additionalContractFile}">
             <div class="upload-section unstyled-view">
-                <form th:action="@{/project/{id}/grant-offer-letter(id=${model.projectId})}"
+                <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                       th:object="${form}" method="post" enctype="multipart/form-data">
                     <p>Any additional supporting materials should be uploaded to the Annex.</p>
 

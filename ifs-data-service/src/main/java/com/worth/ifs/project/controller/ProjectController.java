@@ -284,7 +284,7 @@ public class ProjectController {
         return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
     }
     @RequestMapping(value = "/{projectId}/grant-offer/send", method = POST)
-    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") Long projectId) {
+    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
         return projectService.sendGrantOfferLetter(projectId).toPostResponse();
     }
 

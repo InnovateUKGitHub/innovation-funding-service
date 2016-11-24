@@ -1,11 +1,13 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -96,24 +98,11 @@ public class ProjectSetupSectionInternalUser {
 
     public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
         if(userResource.hasRole(COMP_ADMIN)) {
-            if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
-                if(projectSetupProgressChecker.isGrantOfferLetterApproved()) {
-                    return ProjectActivityStates.COMPLETE;
-                } else {
-                    if(projectSetupProgressChecker.isGrantOfferLetterReadyToApprove()) {
-                        return ProjectActivityStates.ACTION_REQUIRED;
-                    } else {
-                        if(projectSetupProgressChecker.isGrantOfferLetterSent()) {
-                            return ProjectActivityStates.PENDING;
-                        } else {
-                            return ProjectActivityStates.ACTION_REQUIRED;
-                        }
-                    }
-                }
-            }
-            return ProjectActivityStates.NOT_REQUIRED;
+            return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
+        } else {
+            return projectSetupProgressChecker.getGrantOfferLetterState();
         }
-        return ProjectActivityStates.NOT_REQUIRED;
+
     }
 
 

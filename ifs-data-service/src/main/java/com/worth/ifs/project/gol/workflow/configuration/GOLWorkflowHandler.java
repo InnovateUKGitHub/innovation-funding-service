@@ -80,6 +80,22 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return process != null && !GOLState.PENDING.equals(process.getActivityState());
     }
 
+    public boolean isApproved(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.APPROVED.equals(process.getActivityState());
+    }
+
+    public boolean isReadyToApprove(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.READY_TO_APPROVE.equals(process.getActivityState());
+    }
+
+    public boolean isSent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.SENT.equals(process.getActivityState());
+    }
+
+
     public boolean grantOfferLetterSent(Project project) {
         GOLProcess process = getCurrentProcess(project);
         if(process == null)
