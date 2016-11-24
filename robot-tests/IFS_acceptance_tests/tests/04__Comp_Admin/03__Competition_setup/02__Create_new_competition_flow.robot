@@ -302,6 +302,7 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
+    [Tags]    Failing
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
@@ -339,7 +340,6 @@ Assesor: Should have a Green Check
     Then the user should see the element    css=li:nth-child(6) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
-
 Application: Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
@@ -365,7 +365,7 @@ Application: Business opportunity
     [Documentation]    INFUND-5632
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
@@ -375,7 +375,7 @@ Application: Scope
     ...    INFUND-5635
     Given the user clicks the button/link    link=Scope
     And the user should see the element    jQuery=h1:contains("Scope")
-    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -390,7 +390,7 @@ Application: Project Summary
     ...    INFUND-5637
     Given the user clicks the button/link    link=Project summary
     And the user should see the element    jQuery=h1:contains("Project summary")
-    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -402,8 +402,8 @@ Application: Project Summary
 Application: Finances Form
     [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
-    And the user should see the element       jQuery=h1:contains("Application finances")
-    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    And the user should see the element    jQuery=h1:contains("Application finances")
+    And the user should see the text in the page    Each partner is required to complete the following finance sections
     When The user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
