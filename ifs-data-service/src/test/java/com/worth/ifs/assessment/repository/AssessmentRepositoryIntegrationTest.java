@@ -210,16 +210,23 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         // Create form input responses for each of the score form inputs, tracking the total score given
         LongAccumulator scoreGivenAccumulator = new LongAccumulator((x, y) -> x + y, 0);
-        assessorFormInputResponseRepository.save(competition.getQuestions().stream().flatMap(question -> question.getFormInputs().stream().filter(formInput -> scoreType.equals(formInput.getFormInputType())).map(formInput -> {
-            int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
-            scoreGivenAccumulator.accumulate(randomScore);
-            return newAssessorFormInputResponse()
-                    .withAssessment(assessment)
-                    .withFormInput(formInput)
-                    .withValue(String.valueOf(randomScore))
-                    .withUpdatedDate(LocalDateTime.now())
-                    .build();
-        })).collect(toList()));
+        assessorFormInputResponseRepository.save(
+                competition.getQuestions().stream().flatMap(question ->
+                        question.getFormInputs().stream().filter(formInput ->
+                                scoreType.equals(formInput.getFormInputType())
+                        ).map(formInput -> {
+                                    int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
+                                    scoreGivenAccumulator.accumulate(randomScore);
+                                    return newAssessorFormInputResponse()
+                                            .withAssessment(assessment)
+                                            .withFormInput(formInput)
+                                            .withValue(String.valueOf(randomScore))
+                                            .withUpdatedDate(LocalDateTime.now())
+                                            .build();
+                                }
+                        )
+                ).collect(toList())
+        );
 
         AssessmentTotalScoreResource assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
         assertEquals(scoreGivenAccumulator.intValue(), assessmentTotalScoreAfter.getTotalScoreGiven());

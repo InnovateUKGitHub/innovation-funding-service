@@ -19,8 +19,9 @@ import static com.worth.ifs.assessment.documentation.ApplicationRejectionDocs.ap
 import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceBuilder;
 import static com.worth.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceFields;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
-import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
+import static com.worth.ifs.documentation.AssessmentDocs.*;
+import static com.worth.ifs.documentation.AssessmentTotalScoreResourceDocs.assessmentTotalScoreResourceBuilder;
+import static com.worth.ifs.documentation.AssessmentTotalScoreResourceDocs.assessmentTotalScoreResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;

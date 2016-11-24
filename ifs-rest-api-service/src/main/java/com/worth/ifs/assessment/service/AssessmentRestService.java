@@ -1,8 +1,6 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 
 import java.util.List;
