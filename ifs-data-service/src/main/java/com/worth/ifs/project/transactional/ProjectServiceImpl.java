@@ -76,7 +76,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -691,7 +690,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 userId -> simpleFindFirst(project.getProjectUsers(),
                         pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
 
-        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        List<Organisation> allPartnerOrganisations = project.getOrganisations();
         List<Organisation> partnerOrganisationsToInclude =
                 simpleFilter(allPartnerOrganisations, partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
@@ -964,15 +963,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
-        List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
+        List<Organisation> organisations = newProject.getOrganisations();
 
-        organisations.forEach(organisation -> costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
+        List<ServiceResult<FinanceCheck>> financeCheckResults = simpleMap(organisations, organisation ->
+                costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
                 andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
                 andOnSuccessReturn(this::populateFinanceCheck));
-        return serviceSuccess();
+
+        return processAnyFailuresOrSucceed(financeCheckResults);
     }
 
     private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
+
         List<Cost> costs = new ArrayList<>();
         List<CostCategory> costCategories = costCategoryType.getCostCategories();
         CostGroup costGroup = new CostGroup("finance-check", costs);
@@ -987,7 +989,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
         FinanceCheck savedFinanceCheck = financeCheckRepository.save(financeCheck);
-
 
         ProjectFinance projectFinanceForOrganisation =
                 projectFinanceRepository.save(new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject));
@@ -1078,25 +1079,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
-    }
-
-    private List<Organisation> getPartnerOrganisations(Long projectId) {
-        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
-        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
-        return getPartnerOrganisations(projectRoles);
-    }
-
-    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
-        final Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-
-        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
-
-        return new ArrayList<>(organisationSet);
     }
 }

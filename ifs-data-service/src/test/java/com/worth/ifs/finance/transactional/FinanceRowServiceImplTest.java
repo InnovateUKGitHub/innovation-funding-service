@@ -172,7 +172,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
 
-        when(financeRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(asList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance,null)));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(asList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance,null)));
 
         ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
 

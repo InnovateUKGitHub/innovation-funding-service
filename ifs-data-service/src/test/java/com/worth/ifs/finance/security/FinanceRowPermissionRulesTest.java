@@ -72,7 +72,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-            when(financeRowRepositoryMock.findOne(cost.getId())).thenReturn(cost);
+            when(applicationFinanceRowRepositoryMock.findOne(cost.getId())).thenReturn(cost);
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
         }

@@ -5,7 +5,6 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
@@ -14,31 +13,41 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.ProjectFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
+import com.worth.ifs.project.finance.domain.FinanceCheck;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -48,7 +57,6 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -63,6 +71,11 @@ import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInvit
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
+import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -74,6 +87,7 @@ import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -93,6 +107,9 @@ import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
+    @Mock
+    private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -111,7 +128,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Before
     public void setUp() {
 
-        organisation = newOrganisation().build();
+        organisation = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
 
         leadApplicantRole = newRole(LEADAPPLICANT).build();
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
@@ -172,7 +192,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withLeadOrganisation(true).
                 build();
 
-        Project savedProject = newProject().withApplication(application).
+        Project savedProject = newProject().
+                withId(newProjectResource.getId()).
+                withApplication(application).
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
@@ -182,10 +204,35 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
+        ApplicationFinance applicationFinance = newApplicationFinance().build();
+
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(
+                savedProject.getApplication().getId(), organisation.getId())).thenReturn(applicationFinance);
+
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
+
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        FinanceCheck newFinanceCheck = newFinanceCheck().
+                withId().
+                withProject(savedProject).
+                withOrganisation(organisation).
+                withCostGroup(newCostGroup().withDescription("finance-check").build()).
+                build();
+
+        when(financeCheckRepositoryMock.save(createFinanceCheckExpectations(newFinanceCheck))).thenReturn(newFinanceCheck);
+
+        ProjectFinance expectedProjectFinance = new ProjectFinance(organisation, organisation.getOrganisationSize(), savedProject);
+        when(projectFinanceRepositoryMock.save(createNewProjectFinanceExpectations(expectedProjectFinance))).thenReturn(expectedProjectFinance);
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
@@ -194,6 +241,26 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
+        verify(projectMapperMock).mapToResource(savedProject);
+    }
+
+    private FinanceCheck createFinanceCheckExpectations(FinanceCheck expectedFinanceCheck) {
+        return createLambdaMatcher(actual -> {
+            assertEquals(expectedFinanceCheck.getId(), actual.getId());
+            assertEquals(expectedFinanceCheck.getOrganisation(), actual.getOrganisation());
+            assertEquals(expectedFinanceCheck.getProject(), actual.getProject());
+            assertEquals(expectedFinanceCheck.getCostGroup().getDescription(), actual.getCostGroup().getDescription());
+        });
+    }
+
+    private ProjectFinance createNewProjectFinanceExpectations(ProjectFinance expectedProjectFinance) {
+        return createLambdaMatcher(actual -> {
+            assertEquals(expectedProjectFinance.getId(),actual.getId());
+            assertEquals(expectedProjectFinance.getProject(),actual.getProject());
+            assertEquals(expectedProjectFinance.getOrganisation(),actual.getOrganisation());
+            assertEquals(expectedProjectFinance.getOrganisationSize(),actual.getOrganisationSize());
+        });
     }
 
     @Test
@@ -665,7 +732,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateProjectAddressToNewProjectAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(1L).build();
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress().build();
         AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
