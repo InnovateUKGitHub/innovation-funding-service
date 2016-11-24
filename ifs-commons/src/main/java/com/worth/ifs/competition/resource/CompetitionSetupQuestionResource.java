@@ -12,6 +12,7 @@ public class CompetitionSetupQuestionResource {
 
     private String number;
     private String shortTitle;
+    private Boolean shortTitleEditable;
     @NotBlank
     private String title;
     private String subTitle;
@@ -144,6 +145,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public Boolean getShortTitleEditable() {
+        return shortTitleEditable;
+    }
+
+    public void setShortTitleEditable(Boolean shortTitleEditable) {
+        this.shortTitleEditable = shortTitleEditable;
     }
 
     public String getShortTitle() {
