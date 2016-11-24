@@ -302,11 +302,12 @@ table{
 .dashboard-internal{
   .dashboard-actions{
     .button{
-      padding: em(10) em(15) em(5) em(15);
-      min-height: 80px;
+      //padding: em(10) em(15) em(5) em(15);
+      //min-height: 80px;
+      text-align: center;
       display: block;
       width: 100%;
-      margin-bottom: 30px;
+      //margin-bottom: 30px;
 
       @include media-down(mobile) {
         min-height: auto;
