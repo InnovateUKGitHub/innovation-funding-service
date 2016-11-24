@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ActivityState;
@@ -134,6 +135,76 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         EnumSet.allOf(AssessmentStates.class).forEach(state ->
                 assertFalse("other users should not able to update assessments",
                         rules.userCanUpdateAssessment(assessments.get(state), otherUser)));
+    }
+
+    @Test
+    public void ownersCanSubmitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+        ProcessRole processRole = newProcessRole()
+                .withUser(newUser().with(id(assessorUser.getId())).build())
+                .build();
+        Assessment assessment1 = newAssessment()
+                .withParticipant(processRole)
+                .build();
+        Assessment assessment2 = newAssessment()
+                .withParticipant(processRole)
+                .build();
+
+        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+
+        assertTrue("the owner of a list of assessments can submit them", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
+    }
+
+    @Test
+    public void otherUsersCannotPartiallySubmitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+        Assessment assessment1 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(assessorUser.getId())).build())
+                                .build()
+                )
+                .build();
+        Assessment assessment2 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(10L)).build())
+                                .build()
+                )
+                .build();
+
+        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+
+        assertFalse("other users cannot partially submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
+    }
+
+    @Test
+    public void otherUsersCannotSubmitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+        Assessment assessment1 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(10L)).build())
+                                .build()
+                )
+                .build();
+        Assessment assessment2 = newAssessment()
+                .withParticipant(
+                        newProcessRole()
+                                .withUser(newUser().with(id(10L)).build())
+                                .build()
+                )
+                .build();
+
+        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+
+        assertFalse("other users cannot submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
 
     private AssessmentResource setupAssessment(ProcessRole participant, AssessmentStates state) {

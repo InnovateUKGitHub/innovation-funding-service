@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.commons.rest.RestResult;
 
 import java.util.List;
@@ -25,4 +24,5 @@ public interface AssessmentRestService {
 
     RestResult<Void> acceptInvitation(Long id);
 
+    RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
 }

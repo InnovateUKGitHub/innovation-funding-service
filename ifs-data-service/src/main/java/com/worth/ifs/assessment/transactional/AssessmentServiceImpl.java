@@ -6,7 +6,6 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -81,5 +80,33 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
+        List<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
+        List<Error> failures = new ArrayList<>();
+        Set<Long> foundAssessmentIds = new HashSet<>();
+
+        assessments.forEach(assessment -> {
+            foundAssessmentIds.add(assessment.getId());
+
+            if (!assessmentWorkflowHandler.submit(assessment) || !assessment.isInState(AssessmentStates.SUBMITTED)) {
+                failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId(), assessment.getTarget().getName()));
+            }
+        });
+
+        failures.addAll(
+                assessmentSubmissionsResource.getAssessmentIds().stream()
+                        .filter(assessmentId -> !foundAssessmentIds.contains(assessmentId))
+                        .map(assessmentId -> notFoundError(Assessment.class, assessmentId))
+                        .collect(toList())
+        );
+
+        if (!failures.isEmpty()) {
+            return serviceFailure(failures);
+        }
+
+        return serviceSuccess();
     }
 }

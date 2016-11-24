@@ -295,13 +295,14 @@ Milestones: Page should contain the correct fields
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user fills the milestones with valid data
     When the user clicks the button/link    jQuery=button:contains(Done)
     Then the weekdays should be correct
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
+    [Tags]    Failing
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
@@ -338,7 +339,6 @@ Assesor: Should have a Green Check
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(6) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
-
 
 Application: Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -402,8 +402,8 @@ Application: Project Summary
 Application: Finances Form
     [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
-    And the user should see the element       jQuery=h1:contains("Application finances")
-    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    And the user should see the element    jQuery=h1:contains("Application finances")
+    And the user should see the text in the page    Each partner is required to complete the following finance sections
     When The user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
