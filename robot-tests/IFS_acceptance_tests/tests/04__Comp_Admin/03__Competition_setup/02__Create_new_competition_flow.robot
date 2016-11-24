@@ -295,7 +295,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user fills the milestones with valid data
     When the user clicks the button/link    jQuery=button:contains(Done)
     Then the weekdays should be correct
@@ -365,7 +365,7 @@ Application: Business opportunity
     [Documentation]    INFUND-5632
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
@@ -375,7 +375,7 @@ Application: Scope
     ...    INFUND-5635
     Given the user clicks the button/link    link=Scope
     And the user should see the element    jQuery=h1:contains("Scope")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -390,7 +390,7 @@ Application: Project Summary
     ...    INFUND-5637
     Given the user clicks the button/link    link=Project summary
     And the user should see the element    jQuery=h1:contains("Project summary")
-    And the user should see the text in the page    You can edit this question and the guidance text for assessors.
+    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
