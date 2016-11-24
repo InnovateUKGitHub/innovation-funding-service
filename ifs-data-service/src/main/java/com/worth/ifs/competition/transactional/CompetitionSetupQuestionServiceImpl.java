@@ -134,7 +134,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             if (appendixFormInput == null) {
                 appendixFormInput = new FormInput();
                 appendixFormInput.setScope(FormInputScope.APPLICATION);
-                appendixFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(ApplicantFormInputType.FILE_UPLOAD.getTitle()));
+                appendixFormInput.setFormInputType(formInputTypeRepository.findByTitle(ApplicantFormInputType.FILE_UPLOAD.getTitle()));
                 appendixFormInput.setQuestion(question);
                 appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_QUESTION);
                 appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_ANSWER);
