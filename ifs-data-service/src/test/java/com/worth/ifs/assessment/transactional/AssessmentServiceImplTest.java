@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentTotalScore;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
@@ -81,7 +80,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withTotalScorePossible(100)
                 .build();
 
-        when(assessmentRepositoryMock.getTotalScore(assessmentId)).thenReturn(new AssessmentTotalScore(55, 100));
+        when(assessmentRepositoryMock.getTotalScore(assessmentId)).thenReturn(new AssessmentTotalScoreResource(55, 100));
 
         assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccessObject());
 

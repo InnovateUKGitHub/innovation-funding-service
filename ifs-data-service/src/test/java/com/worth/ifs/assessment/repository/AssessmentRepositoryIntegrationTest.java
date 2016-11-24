@@ -4,9 +4,9 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentTotalScore;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
@@ -18,7 +18,6 @@ import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -185,7 +184,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertFalse(repository.isFeedbackComplete(assessment.getId()));
     }
 
-    @Ignore("TODO INFUND-3725")
     @Test
     public void getTotalScore() {
         Application application = applicationRepository.findOne(1L);
@@ -206,7 +204,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withApplication(application)
                 .build());
 
-        AssessmentTotalScore assessmentTotalScoreBefore = repository.getTotalScore(assessment.getId());
+        AssessmentTotalScoreResource assessmentTotalScoreBefore = repository.getTotalScore(assessment.getId());
         assertEquals(0, assessmentTotalScoreBefore.getTotalScoreGiven());
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreBefore.getTotalScorePossible());
 
@@ -223,7 +221,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                     .build();
         })).collect(toList()));
 
-        AssessmentTotalScore assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
+        AssessmentTotalScoreResource assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
         assertEquals(scoreGivenAccumulator.intValue(), assessmentTotalScoreAfter.getTotalScoreGiven());
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreAfter.getTotalScorePossible());
     }

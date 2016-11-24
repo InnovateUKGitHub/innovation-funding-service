@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentTotalScore;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -49,14 +49,15 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "      AND p.id = :id", nativeQuery = true)
     boolean isFeedbackComplete(@Param("id") Long id);
 
-    @Query(value = "SELECT new com.worth.ifs.assessment.domain.AssessmentTotalScore(" +
-            "  CAST(SUM(afir.value) AS int)," +
+    @Query(value = "SELECT NEW com.worth.ifs.assessment.resource.AssessmentTotalScoreResource(" +
+            "  CAST(COALESCE(SUM(afir.value),0) AS int)," +
             "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
             "FROM Assessment a" +
             "  JOIN a.target.competition.questions q" +
             "  JOIN q.formInputs fi" +
-            "  LEFT JOIN a.responses afir " +
+            "  LEFT JOIN a.responses afir" +
+            "    ON afir.formInput.id = fi " +
             "WHERE fi.formInputType.title = 'assessor_score'" +
             "  AND a.id = :id")
-    AssessmentTotalScore getTotalScore(@Param("id") Long id);
+    AssessmentTotalScoreResource getTotalScore(@Param("id") Long id);
 }

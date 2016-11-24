@@ -12,6 +12,9 @@ public class AssessmentTotalScoreResource {
     private int totalScoreGiven;
     private int totalScorePossible;
 
+    public AssessmentTotalScoreResource() {
+    }
+
     public AssessmentTotalScoreResource(int totalScoreGiven, int totalScorePossible) {
         this.totalScoreGiven = totalScoreGiven;
         this.totalScorePossible = totalScorePossible;

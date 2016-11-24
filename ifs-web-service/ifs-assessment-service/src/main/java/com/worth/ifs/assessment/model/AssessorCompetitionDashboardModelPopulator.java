@@ -115,8 +115,14 @@ public class AssessorCompetitionDashboardModelPopulator {
     }
 
     private int getOverallScore(AssessmentResource assessmentResource) {
-        AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getId());
-        return assessmentTotalScore.getTotalScorePercentage();
+        switch (assessmentResource.getAssessmentState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getId());
+                return assessmentTotalScore.getTotalScorePercentage();
+            default:
+                return 0;
+        }
     }
 
     private boolean getRecommended(AssessmentResource assessmentResource) {

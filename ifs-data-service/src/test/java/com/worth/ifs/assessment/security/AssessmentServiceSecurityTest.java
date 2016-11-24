@@ -68,7 +68,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
                 () -> classUnderTest.getTotalScore(assessmentId),
-                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 

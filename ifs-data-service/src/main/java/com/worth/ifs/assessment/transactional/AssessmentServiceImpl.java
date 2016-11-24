@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.AssessmentTotalScore;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
@@ -51,8 +50,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
-        AssessmentTotalScore assessmentTotalScore = assessmentRepository.getTotalScore(assessmentId);
-        return serviceSuccess(new AssessmentTotalScoreResource(assessmentTotalScore.getTotalScoreGiven(), assessmentTotalScore.getTotalScorePossible()));
+        return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
     }
 
     @Override

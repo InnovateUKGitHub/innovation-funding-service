@@ -5,7 +5,6 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -79,11 +78,12 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(4, assessmentResources.size());
     }
 
-    @Ignore("TODO INFUND-3725")
     @Test
     public void getTotalScore() throws Exception {
+        loginPaulPlum();
+
         AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccessObjectOrThrowException();
-        assertEquals(10, result.getTotalScoreGiven());
+        assertEquals(72, result.getTotalScoreGiven());
         assertEquals(100, result.getTotalScorePossible());
     }
 
