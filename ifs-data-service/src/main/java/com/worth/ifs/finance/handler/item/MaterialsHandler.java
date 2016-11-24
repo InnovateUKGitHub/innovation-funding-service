@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Materials;
 import org.apache.commons.logging.Log;
@@ -33,7 +34,7 @@ public class MaterialsHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
     }
 }

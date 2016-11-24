@@ -21,14 +21,13 @@ import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import com.worth.ifs.finance.mapper.FinanceRowMetaFieldMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
-import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
+import com.worth.ifs.finance.mapper.ProjectFinanceMapper;
+import com.worth.ifs.finance.repository.*;
 import com.worth.ifs.finance.resource.*;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,8 +68,13 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
+
+    @Autowired
+    private ProjectFinanceMapper projectFinanceMapper;
+
     @Autowired
     private ApplicationFinanceRowMapper applicationFinanceRowMapper;
+
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -85,6 +89,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -274,13 +281,28 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
              find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                dbFinance.merge(applicationFinance);
+                dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
                 Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                 dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                 dbFinance = applicationFinanceRepository.save(dbFinance);
                 return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
             })
         );
+    }
+
+    @Override
+    public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
+        return getProject(projectFinance.getProject()).andOnSuccess(project ->
+                find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
+                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
+                    dbFinance = projectFinanceRepository.save(dbFinance);
+                    return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
+                })
+        );
+    }
+
+    private ServiceResult<Project> getProject(Long projectId) {
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
@@ -402,7 +424,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {
-        return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(projectFinanceResourceId));
+        return serviceSuccess(applicationFinanceHandler.getProjectOrganisationFinances(projectFinanceResourceId));
     }
 
     private FinanceRow addCostItem(ApplicationFinance applicationFinance, Question question, FinanceRowItem newCostItem) {
@@ -478,8 +500,16 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return () -> getApplicationFinance(applicationFinanceId);
     }
 
+    private Supplier<ServiceResult<ProjectFinance>> projectFinance(Long projectFinanceId) {
+        return () -> getProjectFinance(projectFinanceId);
+    }
+
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
+    }
+
+    private ServiceResult<ProjectFinance> getProjectFinance(Long projectFinanceId) {
+        return find(projectFinanceRepository.findOne(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.resource;
 
+import com.worth.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -14,6 +15,18 @@ public class ProjectFinanceResource extends BaseFinanceResource {
 
     public void setProject(Long target) {
         super.setTarget(target);
+    }
+
+    public ProjectFinanceResource(Long id, Long organisation, Long projectId, OrganisationSize organisationSize) {
+        super(id, organisation, projectId, organisationSize);
+    }
+
+    public ProjectFinanceResource(BaseFinanceResource originalFinance) {
+        super(originalFinance);
+    }
+
+    // for mapstruct
+    public ProjectFinanceResource() {
     }
 
     @Override

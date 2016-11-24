@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.validator.GrantClaimValidator;
@@ -44,7 +45,7 @@ public class GrantClaimHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.category.OverheadCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
@@ -47,7 +48,7 @@ public class OverheadsHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
         return new Overhead(cost.getId(), type, cost.getQuantity());
     }

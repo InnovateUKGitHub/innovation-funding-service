@@ -1,12 +1,12 @@
 package com.worth.ifs.finance.mapper;
 
-import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.file.mapper.FileEntryMapper;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.domain.ProjectFinance;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
+import com.worth.ifs.project.mapper.ProjectMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -15,22 +15,22 @@ import org.mapstruct.Mappings;
     config = GlobalMapperConfig.class,
     uses = {
             OrganisationMapper.class,
-            ApplicationMapper.class,
+            ProjectMapper.class,
             FileEntryMapper.class
     }
 )
-public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {
+public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, ProjectFinanceResource, Long> {
 
     @Mappings({
         @Mapping(target = "financeOrganisationDetails", ignore = true ),
-        @Mapping(source = "application", target = "target")
+        @Mapping(source = "project", target = "target")
     })
-    
+
     @Override
-    public abstract ApplicationFinanceResource mapToResource(ApplicationFinance domain);
+    public abstract ProjectFinanceResource mapToResource(ProjectFinance domain);
 
 
-    public Long mapApplicationFinanceToId(ApplicationFinance object) {
+    public Long mapProjectFinanceToId(ProjectFinance object) {
         if (object == null) {
             return null;
         }

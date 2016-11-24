@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
@@ -23,7 +24,7 @@ public class SubContractingCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         String country = "";
         for(FinanceRowMetaValue costValue : ((ApplicationFinanceRow)cost).getCostValues()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {

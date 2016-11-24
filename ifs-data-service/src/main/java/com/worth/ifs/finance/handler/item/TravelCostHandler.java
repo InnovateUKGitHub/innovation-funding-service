@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.TravelCost;
@@ -28,7 +29,7 @@ public class TravelCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity());
     }
 }

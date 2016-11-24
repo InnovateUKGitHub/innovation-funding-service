@@ -20,6 +20,10 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         }
     }
 
+    // for mapstruct
+    public ApplicationFinanceResource() {
+    }
+
     public ApplicationFinanceResource(Long financeFileEntry) {
         this.financeFileEntry = financeFileEntry;
     }

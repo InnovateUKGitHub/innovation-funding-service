@@ -1,10 +1,12 @@
 package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.ProjectFinance;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
+import com.worth.ifs.finance.mapper.ProjectFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.finance.repository.ProjectFinanceRepository;
+import com.worth.ifs.finance.resource.*;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.user.domain.Organisation;
@@ -29,6 +31,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Autowired
@@ -37,18 +42,35 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
 
+    @Autowired
+    private ProjectFinanceMapper projectFinanceMapper;
+
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
         ApplicationFinanceResource applicationFinanceResource = null;
 
-        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setFinanceDetails.  We should find a better way to handle this.
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
         if(applicationFinance!=null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setFinanceDetails(applicationFinanceResource);
+            setApplicationFinanceDetails(applicationFinanceResource);
         }
         return applicationFinanceResource;
+    }
+
+    @Override
+    public ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(
+                projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());
+        ProjectFinanceResource projectFinanceResource = null;
+
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
+        if(projectFinance!=null) {
+            projectFinanceResource = projectFinanceMapper.mapToResource(projectFinance);
+            setProjectFinanceDetails(projectFinanceResource);
+        }
+        return projectFinanceResource;
     }
 
     @Override
@@ -91,10 +113,17 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+    private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
+    }
+
+    private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource) {
+        Organisation organisation = organisationRepository.findOne(projectFinanceResource.getOrganisation());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
+        projectFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

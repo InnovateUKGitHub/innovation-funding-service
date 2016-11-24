@@ -966,9 +966,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<Organisation> organisations = newProject.getOrganisations();
 
         List<ServiceResult<FinanceCheck>> financeCheckResults = simpleMap(organisations, organisation ->
+                copyFinanceChecksFromApplicationFinances(newProject, organisation).andOnSuccess(() ->
                 costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
                 andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
-                andOnSuccessReturn(this::populateFinanceCheck));
+                andOnSuccessReturn(this::populateFinanceCheck)
+            ));
 
         return processAnyFailuresOrSucceed(financeCheckResults);
     }
@@ -988,6 +990,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
+
+        return financeCheck;
+    }
+
+    private ServiceResult<Void> copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
 
         ApplicationFinance applicationFinanceForOrganisation =
                 applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
@@ -1011,8 +1018,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
 
         copiedFinanceFigures.forEach(projectFinanceRowRepository::save);
-
-        return financeCheck;
+        return serviceSuccess();
     }
 
     private FinanceRowMetaValue copyFinanceRowMetaValue(ProjectFinanceRow row, FinanceRowMetaValue costValue) {

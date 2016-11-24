@@ -1,14 +1,12 @@
 package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.ApplicationFinanceRow;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.domain.*;
 import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.handler.item.JESCostHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import com.worth.ifs.finance.repository.ProjectFinanceRowRepository;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.GrantClaimCategory;
@@ -29,7 +27,10 @@ import java.util.stream.Collectors;
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
     
     @Autowired
-    private ApplicationFinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
@@ -41,7 +42,16 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId) {
-        List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetId(applicationFinanceId);
+        List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
+        costCategories = addCostsToCategories(costCategories, costs);
+        costCategories = calculateTotals(costCategories);
+        return costCategories;
+    }
+
+    @Override
+    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId) {
+        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
@@ -109,7 +119,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
+    public FinanceRow costItemToCost(FinanceRowItem costItem) {
         FinanceRowHandler financeRowHandler = new JESCostHandler();
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
@@ -133,7 +143,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
+    public List<FinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
         return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
     }
 }
