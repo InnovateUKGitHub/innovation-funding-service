@@ -373,7 +373,7 @@
                         <input th:class="${#fields.hasErrors('question.assessmentMaxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
                                type="number"
                                id="question.assessmentMaxWords"
-                               min="1"
+                               min="0"
                                required="required"
                                th:name="question.assessmentMaxWords"
                                th:value="${question.assessmentMaxWords}"/>

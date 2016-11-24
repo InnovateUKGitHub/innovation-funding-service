@@ -134,6 +134,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 break;
             case "question.assessmentMaxWords" :
                 question.setAssessmentMaxWords(Integer.parseInt(value));
+                break;
             case "removeGuidanceRow":
                 int index = Integer.valueOf(value);
                 //If the index is out of range then ignore it, The UI will add rows without them being persisted yet.

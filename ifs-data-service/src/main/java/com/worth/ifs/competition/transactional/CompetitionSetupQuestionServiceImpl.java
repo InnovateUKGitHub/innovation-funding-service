@@ -173,13 +173,13 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void createOrDeleteScoredFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, AssessorFormInputType.SCORE.getTitle());
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.SCORE.getTitle());
 
         if (competitionSetupQuestionResource.getScored()) {
             if (scoredFormInput == null) {
                 scoredFormInput = new FormInput();
             }
-            scoredFormInput.setScope(FormInputScope.APPLICATION);
+            scoredFormInput.setScope(FormInputScope.ASSESSMENT);
             scoredFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.SCORE.getTitle()));
             scoredFormInput.setQuestion(question);
             scoredFormInput.setCompetition(question.getCompetition());
@@ -198,14 +198,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void createOrDeleteWrittenFeedbackFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, AssessorFormInputType.FEEDBACK.getTitle());
+        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.FEEDBACK.getTitle());
 
         if (competitionSetupQuestionResource.getWrittenFeedback()) {
             if (writtenFeedbackFormInput == null) {
 
                 writtenFeedbackFormInput = new FormInput();
             }
-            writtenFeedbackFormInput.setScope(FormInputScope.APPLICATION);
+            writtenFeedbackFormInput.setScope(FormInputScope.ASSESSMENT);
             writtenFeedbackFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.FEEDBACK.getTitle()));
             writtenFeedbackFormInput.setQuestion(question);
             writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
