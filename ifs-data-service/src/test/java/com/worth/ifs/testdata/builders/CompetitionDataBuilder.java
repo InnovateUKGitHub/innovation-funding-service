@@ -175,7 +175,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            Stream.of(MilestoneType.values()).forEach(type -> {
+            Stream.of(MilestoneType.presetValues()).forEach(type -> {
                 milestoneService.create(type, data.getCompetition().getId());
             });
         });
@@ -214,10 +214,20 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
+
+        if (date == null) {
+            return this;
+        }
+
         return asCompAdmin(data -> {
 
             MilestoneResource milestone =
                     milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+
+            if (milestone.getId() == null) {
+                milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            }
+
             milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
 
