@@ -37,10 +37,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                                                      "</ul>";
     private static String APPENDIX_DESCRIPTION = "Appendix";
 
-    public static String SCOPE_IDENTIFIER = "Scope";
-    private static String PROJECT_SUMMARY_IDENTIFIER = "Project summary";
-    private static String PUBLIC_DESCRIPTION_IDENTIFIER = "Public description";
-
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -79,23 +75,11 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
-        setupResource.setType(typeFromQuestion(question));
+        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
 
         return ServiceResult.serviceSuccess(setupResource);
     }
 
-    //TODO INFUND-6282 Remove this type and replace with an active, inactive, null checks on UI.
-    private CompetitionSetupQuestionType typeFromQuestion(Question question) {
-        if (question.getShortName().equals(SCOPE_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.SCOPE;
-        } else if (question.getShortName().equals(PROJECT_SUMMARY_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.PROJECT_SUMMARY;
-        } else if (question.getShortName().equals(PUBLIC_DESCRIPTION_IDENTIFIER)) {
-            return CompetitionSetupQuestionType.PUBLIC_DESCRIPTION;
-        } else {
-            return CompetitionSetupQuestionType.ASSESSED_QUESTION;
-        }
-    }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         if (ApplicantFormInputType.FILE_UPLOAD.getTitle().equals(formInput.getFormInputType().getTitle())) {
@@ -150,7 +134,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             if (appendixFormInput == null) {
                 appendixFormInput = new FormInput();
                 appendixFormInput.setScope(FormInputScope.APPLICATION);
-                appendixFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(ApplicantFormInputType.FILE_UPLOAD.getTitle()));
+                appendixFormInput.setFormInputType(formInputTypeRepository.findByTitle(ApplicantFormInputType.FILE_UPLOAD.getTitle()));
                 appendixFormInput.setQuestion(question);
                 appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_QUESTION);
                 appendixFormInput.setGuidanceQuestion(APPENDIX_GUIDANCE_ANSWER);
