@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.project.validation.ValidatorTestUtil.verifyError;
+import static com.worth.ifs.project.validation.ValidatorTestUtil.verifyFieldError;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SpendProfileCostValidatorTest {
 
+    private static final String FIELD_NAME_TEMPLATE = "monthlyCostsPerCategoryMap[%d][%d]";
     private Validator validator;
     private SpendProfileTableResource table;
 
@@ -52,16 +53,14 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(4, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 2L, 3);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 2L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
     public void testCostsAreFractional() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
 
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
@@ -72,9 +71,9 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
@@ -88,9 +87,9 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 0, 1L, 3);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
@@ -104,9 +103,9 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, 3L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 1);
     }
 
     @Test
@@ -120,9 +119,9 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 0, 1L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 1, 2L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
 }

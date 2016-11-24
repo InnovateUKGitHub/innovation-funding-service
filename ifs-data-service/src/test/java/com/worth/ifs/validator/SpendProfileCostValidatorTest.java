@@ -1,42 +1,38 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 
 import static com.worth.ifs.util.MapFunctions.asMap;
-import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
-import static com.worth.ifs.validator.ValidatorTestUtil.verifyError;
+import static com.worth.ifs.validator.ValidatorTestUtil.verifyFieldError;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SpendProfileCostValidatorTest {
-    
-	private Validator validator;
-	
-	private FormInputResponse formInputResponse;
-	private BindingResult bindingResult;
-	
-	@Before
-	public void setUp() {
+
+    private static final String FIELD_NAME_TEMPLATE = "monthlyCostsPerCategoryMap[%d][%d]";
+    private Validator validator;
+    private SpendProfileTableResource table;
+
+    private BindingResult bindingResult;
+
+    @Before
+    public void setUp() {
+        table = new SpendProfileTableResource();
         validator = new SpendProfileCostValidator();
-        
-        formInputResponse = new FormInputResponse();
-        bindingResult = getBindingResult(formInputResponse);
+        bindingResult = new DataBinder(table).getBindingResult();
     }
 
     @Test
     public void testSuccessWhenAllCostsAreCorrect() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
                 2L, asList(new BigDecimal("70"), new BigDecimal("30"), new BigDecimal("60")),
@@ -48,9 +44,6 @@ public class SpendProfileCostValidatorTest {
 
     @Test
     public void testCostsAreFractionalLessThanZeroOrGreaterThanMillionOrNull() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
                 2L, asList(new BigDecimal("70"), new BigDecimal("-30"), null),
@@ -60,16 +53,14 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(4, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 2L, 3);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 2L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
     public void testCostsAreFractional() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
 
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
@@ -80,15 +71,13 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
     public void testCostsAreLessThanZero() {
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("0"), new BigDecimal("00"), new BigDecimal("-1")),
                 2L, asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
@@ -98,16 +87,13 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 0, 1L, 3);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
     @Test
     public void testCostsAreMoreThanMaxAllowed() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
                 2L, asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
@@ -117,16 +103,13 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, 1L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, 2L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, 3L, 2);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 1);
     }
 
     @Test
     public void testCostsAreNull() {
-
-        SpendProfileTableResource table = new SpendProfileTableResource();
-
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("1000"), null, new BigDecimal("40")),
                 2L, asList(null, new BigDecimal("101"), new BigDecimal("60")),
@@ -136,8 +119,8 @@ public class SpendProfileCostValidatorTest {
         assertTrue(bindingResult.hasErrors());
         Assert.assertEquals(3, bindingResult.getErrorCount());
 
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 0, 1L, 2);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 1, 2L, 1);
-        verifyError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, 3L, 3);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 1);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 0);
+        verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 }

@@ -26,6 +26,7 @@ public class SpendProfileCostValidator implements Validator {
 
     private static final BigDecimal COST_UPPER_LIMIT = new BigDecimal("1000000");
     private static final int COMPARE_LESS_THAN = -1;
+    private static final String FIELD_NAME_TEMPLATE = "monthlyCostsPerCategoryMap[%d][%d]";
 
     @Override
     public void validate(Object target, Errors errors) {
@@ -42,7 +43,8 @@ public class SpendProfileCostValidator implements Validator {
                     isValid(monthlyCosts.get(index), category, index);
                 } catch (SpendProfileValidationException ex) {
 
-                    ValidationMessages.reject(errors, ex.getSpendProfileValidationError().getErrorKey(), ex.getCategory(), ex.getPosition());
+                    String bindFieldName = String.format(FIELD_NAME_TEMPLATE, ex.getCategory(), ex.getPosition());
+                    ValidationMessages.rejectValue(errors, bindFieldName, ex.getSpendProfileValidationError().getErrorKey());
 
                     if (LOG.isDebugEnabled()) {
                         LOG.debug(ex.getMessage());
@@ -54,26 +56,24 @@ public class SpendProfileCostValidator implements Validator {
 
     private void isValid(BigDecimal cost, Long category, int index) throws SpendProfileValidationException {
 
-        int positionInError = index + 1;
-
         // cost should not be null
         if (null == cost) {
-            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL, category, positionInError);
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL, category, index);
         }
 
         // cost should not be fractional
         if (cost.scale() > 0) {
-            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL, category, positionInError);
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL, category, index);
         }
 
         // cost should not be less than zero
         if (COMPARE_LESS_THAN == cost.compareTo(BigDecimal.ZERO)) {
-            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO, category, positionInError);
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO, category, index);
         }
 
         // cost should be within the upper limit
         if (COMPARE_LESS_THAN != cost.compareTo(COST_UPPER_LIMIT)) {
-            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT, category, positionInError);
+            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT, category, index);
         }
     }
 
