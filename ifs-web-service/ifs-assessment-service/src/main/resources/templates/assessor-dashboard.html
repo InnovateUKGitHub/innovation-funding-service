@@ -65,7 +65,7 @@
                         <div class="grid-row">
                             <div class="column-assessment-details">
                                 <h3 class="heading-medium">
-                                <a href="#" th:text="${upcomingCompetition.displayLabel}"/>
+                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}" th:text="${upcomingCompetition.displayLabel}"/>
                                 </h3>
                                 <p class="form-hint">Upcoming competition</p>
                             </div>
