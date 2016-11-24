@@ -1,16 +1,14 @@
 package com.worth.ifs.testdata.builders;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.testdata.builders.data.CompetitionData;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
@@ -55,7 +53,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName) {
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive) {
 
         return asCompAdmin(data -> {
 
@@ -74,6 +72,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setCompetitionType(competitionType.getId());
+                competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
+                competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
             });
         });
     }
@@ -102,35 +102,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
                     getSuccessObjectOrThrowException();
-
-//          // TODO DW - temporary fix for copying over Assessor Form Inputs (currently not supported in Comp Setup services)
-            {
-                List<Question> newQuestions = questionRepository.findByCompetitionId(competition.getId());
-                newQuestions.forEach(q -> {
-                    Question originalQuestion = questionRepository.findByNameAndCompetitionIdAndSectionName(q.getName(), 1L, q.getSection().getName());
-                    originalQuestion.getFormInputs().forEach(fi -> {
-                        if (fi.getScope().equals(FormInputScope.ASSESSMENT)) {
-                            FormInput newFormInput = new FormInput();
-                            newFormInput.setPriority(fi.getPriority());
-                            newFormInput.setCompetition(retrieveCompetitionByName(competition.getName()));
-                            newFormInput.setDescription(fi.getDescription());
-                            newFormInput.setFormInputType(fi.getFormInputType());
-                            newFormInput.setGuidanceAnswer(!isBlank(fi.getGuidanceAnswer()) ? fi.getGuidanceAnswer() : "Some guidance answer for assessor");
-                            newFormInput.setGuidanceQuestion(!isBlank(fi.getGuidanceQuestion()) ? fi.getGuidanceQuestion() : "Some guidance question for assessor");
-                            newFormInput.setIncludedInApplicationSummary(fi.isIncludedInApplicationSummary());
-                            newFormInput.setQuestion(q);
-                            newFormInput.setScope(fi.getScope());
-                            newFormInput.setWordCount(fi.getWordCount());
-                            q.getFormInputs().add(newFormInput);
-
-                            formInputRepository.save(newFormInput);
-                        }
-                    });
-                    q.setMultipleStatuses(originalQuestion.getMultipleStatuses());
-                    q.setType(originalQuestion.getType());
-                    questionRepository.save(q);
-                });
-            }
 
             updateCompetitionInCompetitionData(data, competition.getId());
         });
@@ -204,7 +175,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            Stream.of(MilestoneType.values()).forEach(type -> {
+            Stream.of(MilestoneType.presetValues()).forEach(type -> {
                 milestoneService.create(type, data.getCompetition().getId());
             });
         });
@@ -230,15 +201,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
+    public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
+    }
+
     public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_DEADLINE);
     }
 
+    public CompetitionDataBuilder withAssessmentClosedDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+    }
+
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
+
+        if (date == null) {
+            return this;
+        }
+
         return asCompAdmin(data -> {
 
             MilestoneResource milestone =
                     milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+
+            if (milestone.getId() == null) {
+                milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            }
+
             milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
 

@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.service;
 import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ParameterizedTypeReferences;
@@ -51,5 +52,10 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<Void> acceptInvitation(Long id) {
         return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions) {
+        return putWithRestResult(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, Void.class);
     }
 }

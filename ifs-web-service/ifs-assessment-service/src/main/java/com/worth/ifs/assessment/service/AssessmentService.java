@@ -20,4 +20,5 @@ public interface AssessmentService {
 
     ServiceResult<Void> acceptInvitation(Long assessmentId);
 
+    ServiceResult<Void> submitAssessments(List<Long> assessmentIds);
 }

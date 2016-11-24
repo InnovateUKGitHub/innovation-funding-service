@@ -4,6 +4,7 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.user.builder.ProfileBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,16 +19,8 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
         super(newMultiActions);
     }
 
-    public static MilestoneBuilder newCompetition() {
-        return new MilestoneBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Milestone"));
-    }
-
-    public MilestoneBuilder withId(Long... ids) {
-        return withArray((id, object) -> setField("id", id, object), ids);
-    }
-
-    public MilestoneBuilder withName(MilestoneType type) {
-        return with(milestone -> setField("type", type, milestone));
+    public static MilestoneBuilder newMilestone() {
+        return new MilestoneBuilder(emptyList()).with(uniqueIds());
     }
 
     public MilestoneBuilder withDate(LocalDateTime date) {
@@ -45,9 +38,11 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
 
     @Override
     protected Milestone createInitial() {
-        return new Milestone();
+        return createDefault(Milestone.class);
     }
 
 
-
+    public MilestoneBuilder withType(MilestoneType... types) {
+        return withArray((type, milestone) -> setField("type", type, milestone), types);
+    }
 }

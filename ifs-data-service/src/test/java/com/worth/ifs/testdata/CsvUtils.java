@@ -8,8 +8,8 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -70,11 +70,80 @@ class CsvUtils {
     }
 
     static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
-        // TODO DW - workaround for dodgy csv export - refine query to remove file uploads and assessor answers
-        List<ApplicationQuestionResponseLine> uniqueLines = removeDuplicates(simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new));
-        List<ApplicationQuestionResponseLine> withoutFileUploads = simpleFilterNot(new ArrayList<>(uniqueLines), line -> !isBlank(line.fileUpload));
-        List<ApplicationQuestionResponseLine> withoutAssessorAnswers = simpleFilterNot(withoutFileUploads, line -> "score".equals(line.value));
-        return withoutAssessorAnswers;
+        return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
+    }
+
+    static List<ProjectLine> readProjects() {
+        return simpleMap(readCsvLines("projects"), ProjectLine::new);
+    }
+
+    static class ProjectLine {
+
+        String name;
+        LocalDate startDate;
+        String projectManager;
+        boolean projectAddressAdded;
+        boolean projectDetailsSubmitted;
+        List<Pair<String, String>> financeContactsForOrganisations;
+        String moFirstName;
+        String moLastName;
+        String moEmail;
+        String moPhoneNumber;
+        List<Triple<String, String, String>> bankDetailsForOrganisations;
+        List<String> organisationsWithApprovedFinanceChecks;
+
+        private ProjectLine(List<String> line) {
+            int i = 0;
+            name = line.get(i++);
+            startDate = nullableDate(line.get(i++));
+            projectManager = line.get(i++);
+            projectAddressAdded = nullableBoolean(line.get(i++));
+            projectDetailsSubmitted = nullableBoolean(line.get(i++));
+
+            String financeContactsLine = line.get(i++);
+
+            if (!isBlank(financeContactsLine)) {
+                List<String> financeContactLines = asList(financeContactsLine.split("\n"));
+
+                financeContactsForOrganisations = simpleMap(financeContactLines, fcLine -> {
+                    String[] split = fcLine.split(":");
+                    String organisationName = split[0].trim();
+                    String financeContactEmail = split[1].trim();
+                    return Pair.of(organisationName, financeContactEmail);
+                });
+            } else {
+                financeContactsForOrganisations = emptyList();
+            }
+
+            moFirstName = nullable(line.get(i++));
+            moLastName = nullable(line.get(i++));
+            moEmail = nullable(line.get(i++));
+            moPhoneNumber = nullable(line.get(i++));
+
+            String bankDetailsLine = line.get(i++);
+
+            if (!isBlank(bankDetailsLine)) {
+                bankDetailsForOrganisations = simpleMap(bankDetailsLine.split("\n"), bdLine -> {
+                    String[] split = bdLine.split(":");
+                    String organisationName = split[0].trim();
+                    String bankDetailsPart = split[1].trim();
+                    String[] bankDetailsParts = bankDetailsPart.split("/");
+                    String accountNumber = bankDetailsParts[0].trim();
+                    String sortCode = bankDetailsParts[1].trim();
+                    return Triple.of(organisationName, accountNumber, sortCode);
+                });
+            } else {
+                bankDetailsForOrganisations = emptyList() ;
+            }
+
+            String financeChecksLine = line.get(i++);
+
+            if (!isBlank(financeChecksLine)) {
+                organisationsWithApprovedFinanceChecks = simpleMap(asList(financeChecksLine.split("\n")), String::trim);
+            } else {
+                organisationsWithApprovedFinanceChecks = emptyList();
+            }
+        }
     }
 
     static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
@@ -200,7 +269,7 @@ class CsvUtils {
         String applicationName;
         String questionName;
         String value;
-        String fileUpload;
+        List<String> filesUploaded;
         String answeredBy;
         String assignedTo;
         boolean markedAsComplete;
@@ -212,34 +281,11 @@ class CsvUtils {
             applicationName = line.get(i++);
             questionName = line.get(i++);
             value = nullable(line.get(i++));
-            fileUpload = nullable(line.get(i++));
+            String filesUploadedLine = line.get(i++);
+            filesUploaded = !isBlank(filesUploadedLine) ? asList(filesUploadedLine.split(",")) : emptyList();
             answeredBy = nullable(line.get(i++));
             assignedTo = nullable(line.get(i++));
             markedAsComplete = nullableBoolean(line.get(i++));
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ApplicationQuestionResponseLine that = (ApplicationQuestionResponseLine) o;
-
-            return new EqualsBuilder()
-                    .append(competitionName, that.competitionName)
-                    .append(applicationName, that.applicationName)
-                    .append(questionName, that.questionName)
-                    .isEquals();
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder(17, 37)
-                    .append(competitionName)
-                    .append(applicationName)
-                    .append(questionName)
-                    .toHashCode();
         }
     }
 
@@ -296,7 +342,11 @@ class CsvUtils {
         LocalDateTime fundersPanelDate;
         LocalDateTime fundersPanelEndDate;
         LocalDateTime assessorAcceptsDate;
+        LocalDateTime assessorsNotifiedDate;
         LocalDateTime assessorEndDate;
+        LocalDateTime assessmentClosedDate;
+        String leadTechnologist;
+        String compExecutive;
         boolean setupComplete;
 
         private CompetitionLine(List<String> line) {
@@ -304,7 +354,6 @@ class CsvUtils {
             int i = 0;
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
-            ;
             type = line.get(i++);
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
@@ -313,8 +362,12 @@ class CsvUtils {
             submissionDate = nullableDateTime(line.get(i++));
             fundersPanelDate = nullableDateTime(line.get(i++));
             fundersPanelEndDate = nullableDateTime(line.get(i++));
+            assessorsNotifiedDate = nullableDateTime(line.get(i++));
             assessorAcceptsDate = nullableDateTime(line.get(i++));
             assessorEndDate = nullableDateTime(line.get(i++));
+            assessmentClosedDate = nullableDateTime(line.get(i++));
+            leadTechnologist = nullable((line.get(i++)));
+            compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
         }
     }
@@ -350,7 +403,7 @@ class CsvUtils {
         String town;
         String postcode;
         String county;
-        OrganisationAddressType addressType;
+        List<OrganisationAddressType> addressType;
         String companyRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
@@ -366,7 +419,8 @@ class CsvUtils {
             county = nullable(line.get(i++));
             String addressTypeLine = nullable(line.get(i++));
             addressType = addressTypeLine != null ?
-                    OrganisationAddressType.valueOf(addressTypeLine) : null;
+                    simpleMap(asList(addressTypeLine.split(",")), OrganisationAddressType::valueOf) :
+                emptyList();
             companyRegistrationNumber = nullable(line.get(i++));
         }
     }
@@ -468,6 +522,10 @@ class CsvUtils {
         }
 
         if ("1".equals(s)) {
+            return true;
+        }
+
+        if ("yes".equals(s.toLowerCase())) {
             return true;
         }
 
