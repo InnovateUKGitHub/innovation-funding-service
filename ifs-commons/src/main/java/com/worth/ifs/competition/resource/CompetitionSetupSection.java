@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
-import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.PROJECT_DETAILS;
-import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.QUESTIONS;
+import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -20,7 +18,7 @@ public enum CompetitionSetupSection {
 	ADDITIONAL_INFO("additional", "Funding Information", emptyList()),
 	ELIGIBILITY("eligibility", "Eligibility", emptyList()),
 	MILESTONES("milestones", "Milestones", emptyList()),
-	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES)),
+	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS)),
 	ASSESSORS("assessors", "Assessors", emptyList());
 	
 	private String path;
