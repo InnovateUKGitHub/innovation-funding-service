@@ -26,7 +26,7 @@ public enum UserRoleType {
     IFS_ADMIN("ifs_admin", "IFS Administrator")
     ;
 
-    private final String name;
+    private String name;
     private String displayName;
 
     UserRoleType(String name, String displayName) {
