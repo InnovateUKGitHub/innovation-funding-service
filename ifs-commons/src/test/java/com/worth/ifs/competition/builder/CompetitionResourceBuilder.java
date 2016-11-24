@@ -157,6 +157,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(milestonesList, (milestones, object) -> object.setMilestones(milestonesList));
     }
 
+    public CompetitionResourceBuilder withUseResubmissionQuestion(Boolean useResubmissionQuestion) {
+        return with(competition -> competition.setUseResubmissionQuestion(useResubmissionQuestion));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArray((id, object) -> setField("assessorCount", id, object), assessorCount);
     }

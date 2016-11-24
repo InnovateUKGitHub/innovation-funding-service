@@ -349,7 +349,7 @@ The user should see an error
 
 The user should see a field error
     [Arguments]    ${ERROR_TEXT}
-    wait until page contains element    jQuery=.error-message:contains('${ERROR_TEXT}')    5s
+    wait until page contains element    jQuery=.error-message:contains("${ERROR_TEXT}")    5s
 
 The user should see a summary error
     [Arguments]    ${ERROR_TEXT}

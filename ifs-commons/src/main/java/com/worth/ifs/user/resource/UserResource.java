@@ -1,6 +1,7 @@
 package com.worth.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.stream.Collectors.toList;
 
 /**
  * User Data Transfer Object
@@ -166,6 +168,10 @@ public class UserResource {
 
     public boolean hasRole(UserRoleType role) {
         return simpleMap(roles, RoleResource::getName).contains(role.getName());
+    }
+
+    public boolean hasRoles(UserRoleType... acceptedRoles) {
+        return roles.stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList()).containsAll(Sets.newHashSet(acceptedRoles));
     }
 
     public Gender getGender() {

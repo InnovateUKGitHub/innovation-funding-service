@@ -17,12 +17,13 @@ Resource          ../../resources/defaultResources.robot
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
 
 *** Test Cases ***
+
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user should see the text in the page    Innovate UK will assign the project a Monitoring Officer
+    And the user should see the text in the page    We will assign the project a Monitoring Officer.
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
@@ -187,6 +188,14 @@ MO details accessible/seen by all partners
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+
+Partner can access MO link once MO is assigned
+    [Documentation]    INFUND-4428
+    [Tags]             Pending
+    [Setup]    Log in as a different user    &{collaborator2_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}
+    then the user clicks the button/link      link= Monitoring Officer
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
