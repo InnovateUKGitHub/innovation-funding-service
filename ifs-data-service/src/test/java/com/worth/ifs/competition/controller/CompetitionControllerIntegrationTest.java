@@ -13,8 +13,6 @@ import com.worth.ifs.util.fixtures.CompetitionCoFundersResourceFixture;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -553,11 +551,13 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(competition, notNullValue());
         assertThat(competition.getName(), is(EXISTING_COMPETITION_NAME));
         assertThat(competition.getCompetitionStatus(), is(CompetitionStatus.OPEN));
+        assertThat(competition.isUseResubmissionQuestion(), is(true));
     }
 
     private void checkNewCompetition(CompetitionResource competition) {
         assertThat(competition, notNullValue());
         assertThat(competition.getName(), isEmptyOrNullString());
         assertThat(competition.getCompetitionStatus(), is(CompetitionStatus.COMPETITION_SETUP));
+        assertThat(competition.isUseResubmissionQuestion(), is(true));
     }
 }
