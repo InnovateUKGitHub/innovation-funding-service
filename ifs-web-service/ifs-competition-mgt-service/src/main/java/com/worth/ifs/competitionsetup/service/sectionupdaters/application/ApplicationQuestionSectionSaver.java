@@ -120,6 +120,20 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
             case "question.appendix" :
                 question.setAppendix(textToBoolean(value));
                 break;
+            case "question.assessmentGuidance" :
+                question.setAssessmentGuidance(value);
+                break;
+            case "question.scored" :
+                question.setScored(Boolean.parseBoolean(value));
+                break;
+            case "question.scoreTotal" :
+                question.setScoreTotal(Integer.parseInt(value));
+                break;
+            case "question.writtenFeedback" :
+                question.setWrittenFeedback(Boolean.parseBoolean(value));
+                break;
+            case "question.assessmentMaxWords" :
+                question.setAssessmentMaxWords(Integer.parseInt(value));
             case "removeGuidanceRow":
                 int index = Integer.valueOf(value);
                 //If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
