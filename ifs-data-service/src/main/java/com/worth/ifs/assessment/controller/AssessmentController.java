@@ -4,6 +4,7 @@ import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
 import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class AssessmentController {
     @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
     public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") Long userId, @PathVariable("competitionId") Long competitionId ) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{id}/score", method = GET)
+    public RestResult<AssessmentTotalScoreResource> getTotalScore(@PathVariable("id") Long id) {
+        return assessmentService.getTotalScore(id).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/recommend", method = PUT)
