@@ -16,7 +16,9 @@ services:
       - project-setup-mgt-service
       - project-setup-service
     networks:
-      - ifs
+      ifs:
+        aliases:
+          - iuk-auth-localdev
 
   application-service:
     image: worth/application-service:1.0-SNAPSHOT
