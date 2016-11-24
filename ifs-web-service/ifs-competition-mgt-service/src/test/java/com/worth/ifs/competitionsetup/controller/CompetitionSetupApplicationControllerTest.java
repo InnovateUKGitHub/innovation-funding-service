@@ -211,4 +211,17 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertThat(argument.getValue().isUseResubmissionQuestion(), equalTo(useResubmissionQuestion));
     }
 
+    @Test
+    public void testPostCompetitionApplicationDetailsWithError() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/detail/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("useResubmissionQuestion", String.valueOf("Invalid")))
+                .andExpect(view().name("competition/application-details"));
+
+    }
+
 }
