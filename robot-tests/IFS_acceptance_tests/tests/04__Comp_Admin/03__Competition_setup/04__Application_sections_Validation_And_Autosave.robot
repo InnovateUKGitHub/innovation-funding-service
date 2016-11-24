@@ -39,8 +39,7 @@ Business opportunity: Autosave
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]    Pending
-    #TO DO pending due to INFUND-6242
+    [Tags]
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
@@ -99,7 +98,7 @@ User creates a new competition for Application tests
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     And the user clicks the button/link    jQuery=.button:contains("Done")
     And the user clicks the button/link    link=Competition setup

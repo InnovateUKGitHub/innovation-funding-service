@@ -38,6 +38,10 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
         return withArray((id, object) -> BaseBuilderAmendFunctions.setField("id", id, object), ids);
     }
 
+    public MilestoneResourceBuilder withType(MilestoneType... types) {
+        return withArray((type, milestone) -> BaseBuilderAmendFunctions.setField("type", type, milestone), types);
+    }
+
     @Override
     protected MilestoneResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, MilestoneResource>> actions) {
         return new MilestoneResourceBuilder(actions);

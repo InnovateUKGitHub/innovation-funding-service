@@ -13,8 +13,8 @@ Status and applications are correct
     [Tags]    HappyPath
     When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     Then the user should see the text in the page    Assessor Feedback
-    And the user should see the text in the page    Cheese is great
-    And the user should see the text in the page    Cheese is good
+    And the user should see the text in the page    Wireless remote collection of data from multiple in-field sensors
+    And the user should see the text in the page    Connected batteries step change - battery management in the off-grid energy sector
 
 Number of submitted and funded applications is correct
     When the user should see the text in the page    2 Applications submitted

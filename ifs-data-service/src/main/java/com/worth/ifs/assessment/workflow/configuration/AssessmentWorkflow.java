@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.actions.FundingDecisionAction;
 import com.worth.ifs.assessment.workflow.actions.RejectAction;
 import com.worth.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
+import com.worth.ifs.assessment.workflow.guards.CompetitionInAssessmentGuard;
 import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
 
     @Autowired
     private AssessmentCompleteGuard assessmentCompleteGuard;
+
+    @Autowired
+    private CompetitionInAssessmentGuard competitionInAssessmentGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
@@ -100,11 +104,11 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
-                     .source(READY_TO_SUBMIT).target(REJECTED)
-                     .event(REJECT)
-                     .action(rejectAction)
-                     .guard(processOutcomeExistsGuard)
-                     .and()
+                    .source(READY_TO_SUBMIT).target(REJECTED)
+                    .event(REJECT)
+                    .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
+                    .and()
                 .withExternal()
                     .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FEEDBACK)
@@ -122,6 +126,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .and()
                 .withExternal()
                     .source(READY_TO_SUBMIT).target(SUBMITTED)
-                    .event(SUBMIT);
+                    .event(SUBMIT)
+                    .guard(competitionInAssessmentGuard);
     }
 }

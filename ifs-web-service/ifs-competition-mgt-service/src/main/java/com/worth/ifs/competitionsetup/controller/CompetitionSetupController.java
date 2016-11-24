@@ -2,7 +2,6 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
@@ -57,6 +56,7 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
+    public static final String COMPETITION_NAME_KEY = "competitionName";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -297,6 +297,16 @@ public class CompetitionSetupController {
                                                       Model model) {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
+    }
+
+
+    @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
+    public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
     }
 
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)

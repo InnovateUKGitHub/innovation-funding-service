@@ -3,7 +3,7 @@ package com.worth.ifs.application.security;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.security.BasePermissionRules;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
+import static com.worth.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
@@ -29,7 +29,7 @@ import static java.util.Collections.singletonList;
 @Component
 public class ApplicationPermissionRules extends BasePermissionRules {
 
-    public static final List<CompetitionResource.Status> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
+    public static final List<CompetitionStatus> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
 
     @Autowired
     private RoleRepository roleRepository;

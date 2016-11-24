@@ -8,6 +8,7 @@ import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.builder.FileEntryResourceBuilder;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -79,7 +80,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -115,7 +116,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -129,7 +130,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -167,7 +168,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -181,7 +182,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -309,7 +310,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
@@ -349,7 +350,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
 
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());

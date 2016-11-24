@@ -136,7 +136,7 @@ Status updates correctly for internal user's table
 
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010 , INFUND-4428
     [Tags]    HappyPath
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
@@ -167,7 +167,7 @@ Bank details for non-lead partner
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]    HappyPath
-    [Setup]  log in as a different user             project.finance1@innovateuk.test    Passw0rd
+    [Setup]  log in as a different user             lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page            ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details

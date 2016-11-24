@@ -40,8 +40,8 @@ ${external_spendprofile_summary}    ${la_fromage_overview}/partner-organisation/
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
-    [Setup]  log in as user                 project.finance1@innovateuk.test    Passw0rd
-    Given the project finance user moves La Fromage into project setup if it isn't already
+    [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
+    Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
     And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
@@ -112,31 +112,31 @@ Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
     [Tags]     #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the text box should be editable               css=#row-24-0
-    When the user enters text to a text field          css=#row-24-0    2899
-    And the user moves focus to the element            css=#row-24-2
+    Then the text box should be editable               css=#row-40-0
+    When the user enters text to a text field          css=#row-40-0    2899
+    And the user moves focus to the element            css=#row-40-2
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-24    £ 8,233
-    And the user should see the element                jQuery=.cell-error #row-total-24
+    Then the field has value                           css=#row-total-40    £ 8,233
+    And the user should see the element                jQuery=.cell-error #row-total-40
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page      Your spend profile has total costs higher than eligible project costs,
+    Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=#row-24-0    2666
-    And the user should not see the element            jQuery=.cell-error #row-total-24
-    When the user enters text to a text field          css=#row-26-2    -55
-    And the user moves focus to the element            css=#row-26-1
+    Then the user enters text to a text field          css=#row-40-0    2666
+    And the user should not see the element            jQuery=.cell-error #row-total-40
+    When the user enters text to a text field          css=#row-42-2    -55
+    And the user moves focus to the element            css=#row-42-1
     Then the user should see the text in the page      This field should be 0 or higher
-    When the user enters text to a text field          css=#row-24-2    35.25
-    And the user moves focus to the element            css=#row-27-2
-    Then the user should see the text in the page      This field should be a number
-    When the user enters text to a text field          css=#row-26-2    3333
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=#row-40-2    35.25
+    And the user moves focus to the element            css=#row-43-2
+    Then the user should see the text in the page      This field can only accept whole numbers
+    When the user enters text to a text field          css=#row-42-2    3333
+    And the user moves focus to the element            css=#row-42-1
     And the user should not see the text in the page   This field should be 0 or higher
-    When the user enters text to a text field          css=#row-26-2    2667
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=#row-42-2    2667
+    And the user moves focus to the element            css=#row-42-1
     Then the user should not see the text in the page  This field should be 0 or higher
-    And the user should not see the element            jQuery=.cell-error #row-total-24
+    And the user should not see the element            jQuery=.cell-error #row-total-40
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
 
@@ -146,17 +146,17 @@ Lead partner can edit his spend profile with valid values
     Given the user navigates to the page                 ${external_spendprofile_summary}
     When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
     And the user should not see the element              css=table a[type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                 css=#row-24-0
-    When the user enters text to a text field            css=#row-24-0    2000
-    And the user moves focus to the element              css=#row-24-1
-    Then the field has value                             css=#row-total-24    £ 7,334
+    Then the text box should be editable                 css=#row-40-0
+    When the user enters text to a text field            css=#row-40-0    2000
+    And the user moves focus to the element              css=#row-40-1
+    Then the field has value                             css=#row-total-40    £ 7,334
     And the user should not see the text in the page     Unable to save spend profile
-    When the user enters text to a text field            css=#row-29-1    0
-    And the user moves focus to the element              css=#row-29-2
-    Then the field has value                             css=#row-total-29    £ 6,667
+    When the user enters text to a text field            css=#row-45-1    0
+    And the user moves focus to the element              css=#row-45-2
+    Then the field has value                             css=#row-total-45    £ 6,667
     And the user should not see the text in the page     Unable to save spend profile
     Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
+    Then the user should not see the text in the page    You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
 
 Lead Partners Spend profile summary gets updated when edited
     [Documentation]    INFUND-3971
@@ -250,8 +250,8 @@ Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    -1
-    And the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3306
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[47][0]    -1
+    And the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    3306
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs
     And the user should see the text in the page    This field should be 0 or higher
@@ -259,10 +259,10 @@ Academic partner spend profile server side validations
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
     [Tags]
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[31][0]    3
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[47][0]    3
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    This field should be 0 or higher
-    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[32][2]    3
+    When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    5
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
@@ -274,7 +274,8 @@ Academic partner edits spend profile and this updates on the table
     # Pending due to ongoing work (Ewan Cormack)
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    And the user sees the text in the text field
+    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
+    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[2]/td[3]    5
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
@@ -358,16 +359,16 @@ Partners can see the Spend Profile section completed
     [Tags]
     Given Log in as a different user       worth.email.test+fundsuccess@gmail.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       jessica.doe@ludlow.co.uk    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user       pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element   jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
@@ -383,7 +384,7 @@ Status updates correctly for internal user's table
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
     [Tags]    HappyPath
-    [Setup]  Log in as a different user                     project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user                     lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page                    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
     And the user clicks the button/link                     jQuery=td:nth-child(6) a
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
@@ -441,7 +442,7 @@ Comp Admin can download the Spend Profile csv
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
     [Tags]
-    [Setup]  Log in as a different user            project.finance1@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user            lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page           ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
     And the user should see the element            jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link           jQuery=#content .button.button.button-warning.large:contains("Reject")
@@ -487,13 +488,13 @@ Project finance user cannot access internal users' spend profile page
 
 
 *** Keywords ***
-the project finance user moves La Fromage into project setup if it isn't already
-    log in as a different user    project.finance1@innovateuk.test    Passw0rd
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
+    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
-    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  La Fromage
-    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+    ${update_comp}  ${value}=  run keyword and ignore error    the user should not see the text in the page  ${FUNDERS_PANEL_COMPETITION_NAME}
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
-the project finance user moves La Fromage into project setup
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user selects the option from the drop-down menu    Yes    id=fund${FUNDERS_PANEL_APPLICATION_1}
     the user selects the option from the drop-down menu    No    id=fund${FUNDERS_PANEL_APPLICATION_2}
