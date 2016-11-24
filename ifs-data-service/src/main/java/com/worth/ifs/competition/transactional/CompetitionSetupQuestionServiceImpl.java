@@ -73,14 +73,13 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
-        setupResource.setType(typeFromQuestion(question));
 
-        if(setupResource.getType().equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
-            setupResource.setShortTitleEditable(true);
-        }
-        else {
-            setupResource.setShortTitleEditable(false);
-        }
+//        if(setupResource.getType().equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+//            setupResource.setShortTitleEditable(true);
+//        }
+//        else {
+//            setupResource.setShortTitleEditable(false);
+//        }
 
         return ServiceResult.serviceSuccess(setupResource);
     }
