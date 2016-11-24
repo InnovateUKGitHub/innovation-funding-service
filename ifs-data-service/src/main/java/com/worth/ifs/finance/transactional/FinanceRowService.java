@@ -9,6 +9,7 @@ import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;
@@ -72,6 +73,9 @@ public interface FinanceRowService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);

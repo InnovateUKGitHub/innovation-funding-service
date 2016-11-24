@@ -34,7 +34,7 @@ import static java.util.EnumSet.allOf;
  * to search for an existing CostCategoryType that supports its Cost Categories
  */
 @Component
-public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryTypeStrategy {
+public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeStrategy {
 
     @Autowired
     private OrganisationService organisationService;
@@ -54,7 +54,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
         return find(project(projectId), organisation(organisationId)).
                 andOnSuccess((project, organisation) ->
-                        find(applicationFinanceResource(project.getApplication(), organisation.getId())).
+                        find(projectFinanceResource(project.getApplication(), organisation.getId())).
                                 andOnSuccess((finances) -> {
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
                                     if (!isResearch(organisation.getOrganisationType())) {
@@ -106,8 +106,8 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         return () -> organisationService.findById(organisationId);
     }
 
-    private Supplier<ServiceResult<ApplicationFinanceResource>> applicationFinanceResource(Long applicationId, Long organisationId) {
-        return () -> financeRowService.financeDetails(applicationId, organisationId);
+    private Supplier<ServiceResult<ApplicationFinanceResource>> projectFinanceResource(Long projectId, Long organisationId) {
+        return () -> financeRowService.financeDetails(projectId, organisationId);
     }
 
 

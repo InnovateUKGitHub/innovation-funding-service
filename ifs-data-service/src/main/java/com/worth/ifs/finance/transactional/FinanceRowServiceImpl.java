@@ -25,9 +25,7 @@ import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.*;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
@@ -304,16 +302,21 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId) {
+        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(projectId, organisationId);
+        return getProjectFinanceForOrganisation(projectFinanceResourceId);
+    }
+
+    @Override
     public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
 
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
-        ApplicationFinanceResource applicationFinanceResource = null;
 
         //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setFinanceDetails.  We should find a better way to handle this.
         if(applicationFinance!=null) {
-            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             setFinanceDetails(applicationFinanceResource);
             return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0);
         } else {
@@ -396,6 +399,10 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
+    }
+
+    private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {
+        return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(projectFinanceResourceId));
     }
 
     private FinanceRow addCostItem(ApplicationFinance applicationFinance, Question question, FinanceRowItem newCostItem) {

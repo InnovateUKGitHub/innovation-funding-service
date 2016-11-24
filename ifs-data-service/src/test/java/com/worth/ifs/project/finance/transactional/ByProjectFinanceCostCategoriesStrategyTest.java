@@ -31,7 +31,7 @@ import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.finance.transactional.ByApplicationFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
+import static com.worth.ifs.project.finance.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByApplicationFinanceCostCategoriesStrategy> {
+public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
 
     @Test
     public void testIndustrialCreate() {
@@ -142,7 +142,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
     }
 
     @Override
-    protected ByApplicationFinanceCostCategoriesStrategy supplyServiceUnderTest() {
-        return new ByApplicationFinanceCostCategoriesStrategy();
+    protected ByProjectFinanceCostCategoriesStrategy supplyServiceUnderTest() {
+        return new ByProjectFinanceCostCategoriesStrategy();
     }
 }
