@@ -67,9 +67,8 @@ public class FormInput{
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
 
-    @OneToMany(mappedBy = "formInput")
+    @OneToMany(mappedBy = "formInput",cascade = {CascadeType.ALL})
     private List<GuidanceRow> guidanceRows;
-
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();

@@ -130,6 +130,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         question.setShortName(competitionSetupQuestionResource.getShortTitle());
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
+        question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
 
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle());
         questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
@@ -177,18 +178,19 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (competitionSetupQuestionResource.getScored()) {
             if (scoredFormInput == null) {
                 scoredFormInput = new FormInput();
-                scoredFormInput.setScope(FormInputScope.APPLICATION);
-                scoredFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.SCORE.getTitle()));
-                scoredFormInput.setQuestion(question);
-                scoredFormInput.setCompetition(question.getCompetition());
-
-                if (questionFormInput != null) {
-                    scoredFormInput.setPriority(questionFormInput.getPriority() + 1);
-                } else {
-                    scoredFormInput.setPriority(0);
-                }
-                formInputRepository.save(scoredFormInput);
             }
+            scoredFormInput.setScope(FormInputScope.APPLICATION);
+            scoredFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.SCORE.getTitle()));
+            scoredFormInput.setQuestion(question);
+            scoredFormInput.setCompetition(question.getCompetition());
+
+            if (questionFormInput != null) {
+                scoredFormInput.setPriority(questionFormInput.getPriority() + 1);
+            } else {
+                scoredFormInput.setPriority(0);
+            }
+            formInputRepository.save(scoredFormInput);
+
         } else if (scoredFormInput != null) {
             formInputRepository.delete(scoredFormInput);
         }
@@ -202,20 +204,20 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             if (writtenFeedbackFormInput == null) {
 
                 writtenFeedbackFormInput = new FormInput();
-                writtenFeedbackFormInput.setScope(FormInputScope.APPLICATION);
-                writtenFeedbackFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.FEEDBACK.getTitle()));
-                writtenFeedbackFormInput.setQuestion(question);
-                writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
-                writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
-                writtenFeedbackFormInput.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows())));
-                writtenFeedbackFormInput.setCompetition(question.getCompetition());
-                if (questionFormInput != null) {
-                    writtenFeedbackFormInput.setPriority(questionFormInput.getPriority() + 1);
-                } else {
-                    writtenFeedbackFormInput.setPriority(0);
-                }
-                formInputRepository.save(writtenFeedbackFormInput);
             }
+            writtenFeedbackFormInput.setScope(FormInputScope.APPLICATION);
+            writtenFeedbackFormInput.setFormInputType(formInputTypeRepository.findOneByTitle(AssessorFormInputType.FEEDBACK.getTitle()));
+            writtenFeedbackFormInput.setQuestion(question);
+            writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
+            writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+            writtenFeedbackFormInput.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows())));
+            writtenFeedbackFormInput.setCompetition(question.getCompetition());
+            if (questionFormInput != null) {
+                writtenFeedbackFormInput.setPriority(questionFormInput.getPriority() + 1);
+            } else {
+                writtenFeedbackFormInput.setPriority(0);
+            }
+            formInputRepository.save(writtenFeedbackFormInput);
         } else if (writtenFeedbackFormInput != null) {
             formInputRepository.delete(writtenFeedbackFormInput);
         }
