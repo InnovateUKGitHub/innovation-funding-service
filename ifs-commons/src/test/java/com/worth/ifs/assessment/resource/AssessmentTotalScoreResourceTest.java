@@ -13,17 +13,17 @@ public class AssessmentTotalScoreResourceTest {
 
     @Test
     public void getTotalScorePercentage_roundDown() throws Exception {
-        assertEquals("Expected 49.4% to be rounded down to 49%", 49, getTotalScorePercentage(247, 500));
+        assertEquals("Expected 50.4% to be rounded down to 50%", 50, getTotalScorePercentage(126, 250));
     }
 
     @Test
     public void getTotalScorePercentage_halfWayRoundUp() throws Exception {
-        assertEquals("Expected 49.5% to be rounded up to 50%", 50, getTotalScorePercentage(99, 200));
+        assertEquals("Expected 50.5% to be rounded up to 51%", 51, getTotalScorePercentage(101, 200));
     }
 
     @Test
     public void getTotalScorePercentage_roundUp() throws Exception {
-        assertEquals("Expected 49.6% to be rounded up to 50%", 50, getTotalScorePercentage(62, 125));
+        assertEquals("Expected 50.6% to be rounded up to 51%", 51, getTotalScorePercentage(253, 500));
     }
 
     @Test
