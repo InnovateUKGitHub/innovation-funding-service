@@ -1,9 +1,6 @@
 package com.worth.ifs.competition.resource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This enum defines the milestones type for the competition
@@ -14,8 +11,10 @@ public enum MilestoneType {
     SUBMISSION_DATE("3. Submission date"),
     ALLOCATE_ASSESSORS("4. Allocate accessors"),
     ASSESSOR_BRIEFING("5. Assessor briefing"),
+    ASSESSORS_NOTIFIED("Assessors notified", false),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),
     ASSESSOR_DEADLINE("7. Assessor deadline"),
+    ASSESSMENT_CLOSED("Assessment closed", false),
     LINE_DRAW("8. Line draw"),
     ASSESSMENT_PANEL("9. Assessment panel"),
     PANEL_DATE("10. Panel date"),
@@ -24,13 +23,27 @@ public enum MilestoneType {
     RELEASE_FEEDBACK("13. Release feedback");
 
     private String milestoneDescription;
+    private boolean presetDate;
 
     MilestoneType(String milestoneDescription) {
+        this(milestoneDescription, true);
+    }
+
+    MilestoneType(String milestoneDescription, boolean presetDate) {
         this.milestoneDescription = milestoneDescription;
+        this.presetDate = presetDate;
     }
 
     public String getMilestoneDescription() {
         return milestoneDescription;
+    }
+
+    public boolean isPresetDate() {
+        return presetDate;
+    }
+
+    public static MilestoneType[] presetValues() {
+        return Stream.of(values()).filter(MilestoneType::isPresetDate).toArray(length -> new MilestoneType[length]);
     }
 }
 

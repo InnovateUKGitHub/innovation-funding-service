@@ -6,7 +6,7 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
 ...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
-Suite Setup       Moving La Fromage into project setup
+Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -99,21 +99,19 @@ Approve Eligibility: Academic partner organisation
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance user can export bank details
-
     [Documentation]    INFUND-5852
-
-    [Tags]      Pending
+    [Tags]    Pending
     #TODO Pending due to INFUND-6187
-    Given The user navigates to the page   ${server}/project-setup-management/competition/3/status
-
-    Then The user should see the text in the page    Export all bank details
-    And The user clicks the button/link          link = Export all bank details
+    Given the user navigates to the page   ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+    Then the user should see the text in the page    Export all bank details
+    And the user clicks the button/link          link = Export all bank details
     And the Project finance user downloads the excel
 
-#TODO :Please note this test needs test data to be created [INFUND-5879]
+
 Project Finance user to view Je-S Download form and then approve finances
     [Documentation]     INFUND-5220
     [Tags]    HappyPath    Pending
+    # TODO Pending due to INFUND-5879
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
@@ -135,17 +133,17 @@ the table row has expected values
     the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 3,702
     the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
 
-Moving La Fromage into project setup
-    the project finance user moves La Fromage into project setup if it isn't already
+Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     the users fill out project details
 
-the project finance user moves La Fromage into project setup if it isn't already
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${server}/management/dashboard/projectSetup
-    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    La Fromage
-    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves La Fromage into project setup
+    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
+    run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
-the project finance user moves La Fromage into project setup
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
     the user selects the option from the drop-down menu    Yes    id=fund24
     the user selects the option from the drop-down menu    No    id=fund25
@@ -217,7 +215,7 @@ Download should be done
     [Documentation]    Verifies that the directory has only one folder
     ...    Returns path to the file
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
-    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details_*.csv   msg= "bank export success"
+    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details.csv
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
     Log    File was successfully downloaded to ${file}
     [Return]    ${file}
@@ -225,7 +223,7 @@ Download should be done
 Download File
     [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
     log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${FILENAME}
 
 the Project finance user downloads the excel
     ${ALL_COOKIES} =    Get Cookies

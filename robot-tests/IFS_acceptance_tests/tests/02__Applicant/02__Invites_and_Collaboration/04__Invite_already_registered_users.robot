@@ -18,7 +18,7 @@ The invited user should not follow the registration flow again
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
+    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
     Then the user should see the text in the page    We've found an existing user account with the invited email address
 
 The user clicks the login link
@@ -56,7 +56,7 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    to participate in their project
+    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    to participate in their project
 
 *** Keywords ***
 the user enters profile details

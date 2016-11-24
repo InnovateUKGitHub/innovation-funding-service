@@ -12,15 +12,15 @@ Back to the dashboard link
     [Documentation]    INFUND-3715
     ...
     ...    INFUND-5432
-    Given The user should see the element    link=your declaration of interest    #his checks the alert message on the top od the page
-    When the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
+    Given The user should see the element    link=your declaration of interest    #his checks the alert message on the top of the page
+    When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     And the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
+    Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
@@ -56,8 +56,8 @@ Client-side validations
     Then The user should not see the text in the page    Please enter a principal employer.
     And The user should not see the text in the page    Please enter your role with your principal employer.
     # TODO uncomment the following lines after INFUND-6315 is fixed.
-   # And The user should not see the text in the page    Please enter your financial interests.
-   # And The user should not see the text in the page    Please enter your family financial interests.
+    # And The user should not see the text in the page    Please enter your financial interests.
+    # And The user should not see the text in the page    Please enter your family financial interests.
     And The user should not see the text in the page    Please tell us if any of your close family members have any appointments, directorships or consultancies.
     And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
@@ -69,8 +69,8 @@ Successful save for the Declaration form
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    link=your declaration of interest    #his checks the alert message on the top od the page
-    And the user clicks the button/link    jQuery=a:contains("Your declaration of interest")
+    And The user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
+    And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     And the user should see the correct inputs in the declaration form
 
 *** Keywords ***
