@@ -35,7 +35,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         return new CompetitionSetupQuestionServiceImpl();
     }
     private static String number = "number";
-    private static String shortTitle = CompetitionSetupQuestionType.SCOPE.getName();
+    private static String shortTitle = CompetitionSetupQuestionType.SCOPE.getShortName();
+    private static String newShortTitle = "CannotBeSet";
     private static String title = "title";
     private static String subTitle = "subTitle";
     private static String guidanceTitle = "guidanceTitle";
@@ -149,12 +150,13 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withMaxWords(maxWords)
                 .withNumber(number)
                 .withTitle(title)
-                .withShortTitle(shortTitle)
+                .withShortTitle(newShortTitle)
                 .withSubTitle(subTitle)
                 .withQuestionId(questionId)
                 .build();
 
-        Question question = newQuestion().build();
+        Question question = newQuestion().
+                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
@@ -169,10 +171,12 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         assertNotEquals(question.getQuestionNumber(), number);
         assertEquals(question.getDescription(), subTitle);
-        assertEquals(question.getShortName(), shortTitle);
         assertEquals(question.getName(), title);
         assertEquals(questionFormInput.getGuidanceQuestion(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
+        //Short name shouldn't be set on SCOPE question.
+        assertNotEquals(question.getShortName(), newShortTitle);
+        assertEquals(question.getShortName(), shortTitle);
     }
 }
