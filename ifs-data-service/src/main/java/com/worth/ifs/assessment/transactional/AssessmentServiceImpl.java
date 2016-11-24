@@ -50,6 +50,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+        return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
+    }
+
+    @Override
     public ServiceResult<Void> recommend(Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {

@@ -1,11 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
-import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +12,7 @@ import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuild
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
+import static com.worth.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -44,9 +41,8 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
         Long assessmentId = 1L;
 
-        setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected, OK);
-        AssessmentResource response = service.getById(assessmentId).getSuccessObject();
-        assertSame(expected, response);
+        setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected);
+        assertSame(expected, service.getById(assessmentId).getSuccessObject());
     }
 
     @Test
@@ -56,9 +52,18 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long userId = 1L;
         Long competitionId = 2L;
 
-        setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceListType(), expected, OK);
-        List<AssessmentResource> response = service.getByUserAndCompetition(userId, competitionId).getSuccessObject();
-        assertSame(expected, response);
+        setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceListType(), expected);
+        assertSame(expected, service.getByUserAndCompetition(userId, competitionId).getSuccessObject());
+    }
+
+    @Test
+    public void getTotalScore() throws Exception {
+        AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
+
+        Long assessmentId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/score", assessmentRestURL, assessmentId), AssessmentTotalScoreResource.class, expected);
+        assertSame(expected, service.getTotalScore(assessmentId).getSuccessObject());
     }
 
     @Test
