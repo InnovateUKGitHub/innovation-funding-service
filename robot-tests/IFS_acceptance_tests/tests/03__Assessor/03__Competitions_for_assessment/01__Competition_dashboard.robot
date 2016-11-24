@@ -5,7 +5,13 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-1180 As an Assessor I want to accept or decline an assignment of an application to assess so that the competitions team can manage the assessment process.
 ...
-...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to.
+...               INFUND-4128 As an assessor I want the status of pending assignments to assess to update when I accept them so that I can see what I have committed to
+...
+...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
+...
+...               INFUND-6040 As an assessor I want to see applications sorted by status in my competition dashboard so that I can clearly see applications that are pending, open and assessed
+...
+...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -16,7 +22,7 @@ Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
     [Setup]
-    When The user clicks the button/link    link=Juggling Craziness
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
@@ -31,42 +37,49 @@ Details of the competition are visible
     And the user should see the text in the page    12:00am Tuesday 12 January 2016
     And the user should see the text in the page    12:00am Saturday 28 January 2017
 
+Applications should show with the correct order
+    [Documentation]    INFUND-6040
+    ...
+    ...    INFUND-3724
+    Then the order of the applications should be correct according to the status
+
 Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
-    ...              INFUND-4128
+    ...    INFUND-4128
     [Tags]
-    Then the user should see the text in the page    Pending
-    And the user should see the element    jQuery=a:contains("accept / reject assessment")
-    When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
-    Then the user should see the text in the page    Accept application
+    Given the user should see the text in the page    Pending
+    When The user clicks the button/link    jQuery=li:nth-child(1) a:contains("accept / reject assessment")
+    And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
-    Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
+    Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
     And the status should update as Open
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
     ...
-    ...               INFUND-4128
+    ...    INFUND-4128
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
-    Given The user clicks the button/link    link=Juggling Craziness
-    Then the user should see the text in the page    Pending
-    And the user should see the element    jQuery=a:contains("accept / reject assessment")
-    When The user clicks the button/link    link=Juggling is fun
-    Then the user should see the text in the page    Accept application
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the text in the page    Pending
+    When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     Then the user should see an error    Please enter a reason
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=.button:contains("Reject")
-    Then the application for assessment should be removed
+    And the application for assessment should be removed
 
 Assessor can only make selection once
     [Documentation]    INFUND-1180
     [Tags]
     Then The user should not see the element    jQuery=a:contains("accept / reject assessment")
-    [Teardown]    Logout as user
+
+Applications should not have a check-box when the status is Open
+    [Documentation]    INFUND-3726
+    Then The user should not see the element    css=.assessment-submit-checkbox
 
 *** Keywords ***
 the status should update as Open
@@ -82,3 +95,9 @@ the assessor fills all fields with valid inputs
 
 the application for assessment should be removed
     The user should not see the element    link=Juggling is fun
+
+The order of the applications should be correct according to the status
+    element should contain    css=li:nth-child(1) .grid-row    Pending
+    element should contain    css=.boxed-list li:nth-child(2)    Open
+    element should contain    css=.boxed-list li:nth-child(3)    Open
+    element should contain    css=.boxed-list li:nth-child(4)    Open

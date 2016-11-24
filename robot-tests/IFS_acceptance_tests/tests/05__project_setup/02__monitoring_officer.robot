@@ -17,6 +17,7 @@ Resource          ../../resources/defaultResources.robot
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
 
 *** Test Cases ***
+
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
@@ -51,9 +52,9 @@ Comp admin can view the Supporting information details on MO page
 
 
 Project finance user can view MO page, and go on to assign MO
-    [Documentation]    INFUND-5666
+    [Documentation]    INFUND-5666, INFUND-5507
     [Tags]    HappyPath
-    Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    Given log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
@@ -67,11 +68,13 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
+    [Teardown]  the user clicks the button/link     link=Competition dashboard
 
 
 MO server-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
@@ -124,7 +127,7 @@ MO details(email step)
     [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-2630, INFUND-2621
@@ -156,7 +159,7 @@ MO details edit(email step)
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
@@ -185,6 +188,14 @@ MO details accessible/seen by all partners
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+
+Partner can access MO link once MO is assigned
+    [Documentation]    INFUND-4428
+    [Tags]             Pending
+    [Setup]    Log in as a different user    &{collaborator2_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}
+    then the user clicks the button/link      link= Monitoring Officer
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049

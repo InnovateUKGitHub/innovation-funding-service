@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -10,8 +11,15 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.notifications.service.senders.NotificationSender;
 import com.worth.ifs.notifications.service.senders.email.EmailNotificationSender;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
+import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.SILBankDetails;
+import com.worth.ifs.sil.experian.resource.ValidationResult;
+import com.worth.ifs.sil.experian.resource.VerificationResult;
+import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.testdata.builders.*;
 import com.worth.ifs.testdata.builders.data.BaseUserData;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
@@ -36,6 +44,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +63,7 @@ import static com.worth.ifs.testdata.builders.CompetitionDataBuilder.newCompetit
 import static com.worth.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static com.worth.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static com.worth.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
+import static com.worth.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
@@ -109,6 +119,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private NotificationSender emailNotificationSender;
 
+    @Autowired
+    private BankDetailsService bankDetailsService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
@@ -116,6 +129,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
     private AssessmentDataBuilder assessmentDataBuilder;
+    private ProjectDataBuilder projectDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -172,9 +186,11 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private static List<AssessmentLine> assessmentLines;
 
+    private static List<ProjectLine> projectLines;
+
     @Before
     public void setup() throws Exception {
-        freshDb();
+         freshDb();
     }
 
     @BeforeClass
@@ -189,6 +205,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
         assessmentLines = readAssessments();
+        projectLines = readProjects();
     }
 
     @PostConstruct
@@ -196,6 +213,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         IdentityProviderService idpServiceMock = mock(IdentityProviderService.class);
         EmailService emailServiceMock = mock(EmailService.class);
+        SilExperianEndpoint silExperianEndpointMock = mock(SilExperianEndpoint.class);
 
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
@@ -203,11 +221,17 @@ public class GenerateTestData extends BaseIntegrationTest {
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
 
+        when(silExperianEndpointMock.validate(isA(SILBankDetails.class))).thenReturn(serviceSuccess(new ValidationResult(true, "", emptyList())));
+        when(silExperianEndpointMock.verify(isA(AccountDetails.class))).thenReturn(serviceSuccess(new VerificationResult("10", "10", "10", "10", emptyList())));
+
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
 
         EmailNotificationSender notificationSenderUnwrapped = (EmailNotificationSender) unwrapProxy(emailNotificationSender);
         ReflectionTestUtils.setField(notificationSenderUnwrapped, "emailService", emailServiceMock);
+
+        BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
+        ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
     }
 
     @PostConstruct
@@ -222,10 +246,11 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
+        projectDataBuilder = newProjectData(serviceLocator);
     }
 
     @Test
-    public void generateTestData() {
+    public void generateTestData() throws IOException {
 
         long before = System.currentTimeMillis();
 
@@ -235,11 +260,78 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
+        createProjects();
+
+//        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
+//        questionResponseLines.forEach(line -> writer.writeNext(new String[] {line.competitionName, line.applicationName, line.questionName, line.value, "", line.answeredBy, line.assignedTo, line.markedAsComplete ? "Yes" : "No"}));
+//        writer.flush();
+//        writer.close();
 
         long after = System.currentTimeMillis();
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private void createProjects() {
+        projectLines.forEach(this::createProject);
+    }
+
+    private void createProject(ProjectLine line) {
+
+        ProjectDataBuilder baseBuilder = this.projectDataBuilder.
+                withExistingProject(line.name).
+                withStartDate(line.startDate);
+
+        UnaryOperator<ProjectDataBuilder> assignProjectManagerIfNecessary =
+                builder -> !isBlank(line.projectManager) ? builder.withProjectManager(line.projectManager) : builder;
+
+        UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
+                builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
+
+        UnaryOperator<ProjectDataBuilder> submitProjectDetailsIfNecessary =
+                builder -> line.projectDetailsSubmitted ? builder.submitProjectDetails() : builder;
+
+        UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
+                builder -> !isBlank(line.moFirstName) ?
+                        builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
+
+        UnaryOperator<ProjectDataBuilder> selectFinanceContactsIfNecessary = builder -> {
+
+            ProjectDataBuilder currentBuilder = builder;
+
+            for (Pair<String, String> fc : line.financeContactsForOrganisations) {
+                currentBuilder = currentBuilder.withFinanceContact(fc.getLeft(), fc.getRight());
+            }
+
+            return currentBuilder;
+        };
+
+        UnaryOperator<ProjectDataBuilder> submitBankDetailsIfNecessary = builder -> {
+
+            ProjectDataBuilder currentBuilder = builder;
+
+            for (Triple<String, String, String> bd : line.bankDetailsForOrganisations) {
+                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight());
+            }
+
+            return currentBuilder;
+        };
+
+        UnaryOperator<ProjectDataBuilder> approveFinanceChecksIfNecessary =
+                builder -> !line.organisationsWithApprovedFinanceChecks.isEmpty() ?
+                        builder.withApprovedFinanceChecks(line.organisationsWithApprovedFinanceChecks) : builder;
+
+        assignProjectManagerIfNecessary.
+            andThen(setProjectAddressIfNecessary).
+            andThen(submitProjectDetailsIfNecessary).
+            andThen(setMonitoringOfficerIfNecessary).
+            andThen(selectFinanceContactsIfNecessary).
+            andThen(submitBankDetailsIfNecessary).
+            andThen(approveFinanceChecksIfNecessary).
+                apply(baseBuilder).
+                build();
+
     }
 
     private void createExternalUsers() {
@@ -308,7 +400,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         List<UnaryOperator<ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
                 applicationLine -> builder ->
                         createApplicationFromCsv(builder, applicationLine).
-                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title)));
+                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title, applicationLine.leadApplicant)));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
@@ -331,18 +423,25 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName) {
+    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName, String leadApplicant) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
 
         return simpleMap(responsesForApplication, line -> baseBuilder -> {
 
+            String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
+
             UnaryOperator<ResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
 
             UnaryOperator<ResponseDataBuilder> answerIfNecessary = builder ->
-                    !isBlank(line.value) ? builder.withAssignee(line.answeredBy).withAnswer(line.value, line.answeredBy)
+                    !isBlank(line.value) ? builder.withAssignee(answeringUser).withAnswer(line.value, answeringUser)
                             : builder;
+
+            UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
+                !line.filesUploaded.isEmpty() ?
+                    builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
+                    builder;
 
             UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
@@ -350,7 +449,11 @@ public class GenerateTestData extends BaseIntegrationTest {
             UnaryOperator<ResponseDataBuilder> markAsCompleteIfNecessary = builder ->
                     line.markedAsComplete ? builder.markAsComplete() : builder;
 
-            return withQuestion.andThen(answerIfNecessary).andThen(assignIfNecessary).andThen(markAsCompleteIfNecessary).
+            return withQuestion.
+                    andThen(answerIfNecessary).
+                    andThen(uploadFilesIfNecessary).
+                    andThen(assignIfNecessary).
+                    andThen(markAsCompleteIfNecessary).
                     apply(baseBuilder);
         });
     }
@@ -507,14 +610,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withDirectlyAllocatedOtherCosts(bd("66")).
                         withIndirectCosts(bd("77")).
                         withExceptionsStaff(bd("88")).
-                        withExceptionsOtherCosts(bd("99")));
+                        withExceptionsOtherCosts(bd("99")).
+                        withUploadedJesForm());
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances) {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withTsbReference("My REF"));
+                withAcademicCosts(costs -> costs.withTsbReference("My REF").withUploadedJesForm());
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
@@ -522,10 +626,12 @@ public class GenerateTestData extends BaseIntegrationTest {
         CompetitionDataBuilder basicInformation =
                 existingCompetitionId.map(id -> competitionDataBuilder.
                         withExistingCompetition(1L).
-                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory)
+                        withBasicData(line.name, line.description, line.type, line.innovationArea,
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive)
                 ).orElse(competitionDataBuilder.
                         createCompetition().
-                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
+                        withBasicData(line.name, line.description, line.type, line.innovationArea,
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
                 withOpenDate(line.openDate).
@@ -533,7 +639,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorEndDate(line.assessorEndDate);
+                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                withAssessorEndDate(line.assessorEndDate).
+                withAssessmentClosedDate(line.assessmentClosedDate);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
@@ -624,27 +732,35 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         AssessorDataBuilder builder = assessorUserBuilder;
 
+        Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash);
+                    invite.name, invite.hash, existingUser);
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
 
-        AssessorDataBuilder builderWithUserRegistration = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash).
-                registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                        line.ethnicity, line.gender, line.disability, inviteHash);
+        AssessorDataBuilder baseBuilder = builder.
+                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser);
+
+        if (!existingUser.isPresent()) {
+            baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
+                    line.ethnicity, line.gender, line.disability, inviteHash);
+        } else {
+            baseBuilder = baseBuilder.addAssessorRole();
+        }
 
         if (InviteStatus.OPENED.equals(line.inviteStatus)) {
-            builderWithUserRegistration.acceptInvite(inviteHash).build();
+            baseBuilder.acceptInvite(inviteHash).build();
         } else {
-            builderWithUserRegistration.build();
+            baseBuilder.build();
         }
     }
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
-        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash).build();
+        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
+                userRepository.findByEmail(line.email)).build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
@@ -662,8 +778,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             OrganisationDataBuilder organisation = organisationBuilder.
                     createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
 
-            if (matchingOrganisationDetails.addressType != null) {
-                organisation = organisation.withAddress(matchingOrganisationDetails.addressType,
+            for (OrganisationAddressType organisationType : matchingOrganisationDetails.addressType) {
+                organisation = organisation.withAddress(organisationType,
                         matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
                         matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,
                         matchingOrganisationDetails.postcode, matchingOrganisationDetails.county);

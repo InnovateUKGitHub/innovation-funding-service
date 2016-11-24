@@ -4,9 +4,11 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -17,7 +19,7 @@ import static java.util.Collections.emptyList;
  */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
 
-    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash) {
+    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
@@ -29,6 +31,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     withStatus(InviteStatus.SENT).
                     withHash(inviteHash).
                     withName(name).
+                    withUser(existingUser.orElse(null)).
                     build();
 
             CompetitionInvite savedInvite = competitionInviteRepository.save(invite);

@@ -2,32 +2,34 @@ package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
 
 /**
  * Integration test for testing the rest services of the milestone controller
  */
-@Rollback
-@Transactional
 public class MilestoneControllerIntegrationTest extends BaseControllerIntegrationTest<MilestoneController> {
 
     private static final Long COMPETITION_ID_VALID = 1L;
-    private static final Long COMPETITION_ID_NEW_MILESTONES = 2L;
     private static final Long COMPETITION_ID_UPDATE = 7L;
     private static final Long COMPETITION_ID_INVALID = 8L;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
 
     @Override
     @Autowired
@@ -40,17 +42,15 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         loginCompAdmin();
     }
 
-    @Rollback
     @Test
     public void testGetAllMilestonesByCompetitionId() throws Exception {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
         assertNotNull(milestone);
-        assertEquals(13, milestone.size());
+        assertEquals(15, milestone.size());
     }
 
-    @Rollback
     @Test
     public void testEmptyGetAllMilestonesByCompetitionId() throws Exception {
         List<MilestoneResource> milestone = getMilestonesForCompetition(COMPETITION_ID_INVALID);
@@ -58,7 +58,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertNotNull(milestone);
     }
 
-    @Rollback
     @Test
     public void testGetDateByTypeAndCompetitionId() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_VALID);
@@ -68,7 +67,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertEquals(LocalDateTime.of(2036, 3, 15, 9, 0), milestone.getDate());
     }
 
-    @Rollback
     @Test
     public void testGetNullDateByTypeAndCompetitionId() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_VALID);
@@ -77,32 +75,33 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertNull(milestone.getDate());
     }
 
-    @Rollback
     @Test
     public void testCreateSingleMilestone() throws Exception {
-        List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_NEW_MILESTONES);
+        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
 
+        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
         assertNotNull(milestones);
         assertTrue(milestones.isEmpty());
 
-        MilestoneResource newMilestone = createNewMilestone(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_NEW_MILESTONES);
+        MilestoneResource newMilestone = createNewMilestone(MilestoneType.BRIEFING_EVENT, newCompetition.getId());
 
         assertNotNull(newMilestone.getId());
-        assertTrue(newMilestone.getType().equals(MilestoneType.BRIEFING_EVENT));
+        assertEquals(MilestoneType.BRIEFING_EVENT, newMilestone.getType());
         assertNull(newMilestone.getDate());
     }
 
-    @Rollback
     @Test
     public void testCreateMilestones() throws Exception {
-        List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_NEW_MILESTONES);
+        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
+
+        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
 
         assertNotNull(milestones);
         assertTrue(milestones.isEmpty());
 
-        List<MilestoneResource> newMilestones = createNewMilestones(COMPETITION_ID_NEW_MILESTONES);
+        List<MilestoneResource> newMilestones = createNewMilestones(newCompetition.getId());
 
-        assertTrue(newMilestones.size() == 13);
+        assertEquals(MilestoneType.values().length, newMilestones.size());
 
         newMilestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
@@ -112,7 +111,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         });
     }
 
-    @Rollback
+    @Ignore
     @Test
     public void testUpdateMilestones() throws Exception {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);
@@ -146,12 +145,11 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertTrue(milestoneResult.getErrors().isEmpty());
     }
 
-    @Rollback
     @Test
     public void testUpdateMilestonesWithValidDateOrder() throws Exception {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_UPDATE);
 
-        assertTrue(!milestones.isEmpty() && milestones.size() == 13);
+        assertTrue(!milestones.isEmpty() && milestones.size() == 15);
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
@@ -166,7 +164,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    @Rollback
     public void testUpdateSingleMilestone() throws Exception {
         MilestoneResource milestone = getMilestoneByCompetitionByType(COMPETITION_ID_UPDATE, MilestoneType.BRIEFING_EVENT);
 

@@ -25,14 +25,9 @@ import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.project.bankdetails.domain.BankDetails;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
-import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionFunderResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
@@ -43,6 +38,10 @@ import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -141,7 +140,10 @@ public class POJOTest {
             ProfileContractResource.class,
             ProfileSkillsResource.class,
             UserProfileResource.class,
-            UserProfileStatusResource.class
+            UserProfileStatusResource.class,
+            AssessorCountOptionResource.class,
+            CompetitionSetupQuestionResource.class,
+            GuidanceRowResource.class
     );
 
     @Before
