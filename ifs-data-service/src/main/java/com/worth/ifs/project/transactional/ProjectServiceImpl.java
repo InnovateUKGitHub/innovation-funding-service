@@ -989,11 +989,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
 
-        ProjectFinance projectFinanceForOrganisation =
-                projectFinanceRepository.save(new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject));
-
         ApplicationFinance applicationFinanceForOrganisation =
                 applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
+
+        ProjectFinance projectFinanceForOrganisation =
+                projectFinanceRepository.save(new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject));
 
         List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
 
