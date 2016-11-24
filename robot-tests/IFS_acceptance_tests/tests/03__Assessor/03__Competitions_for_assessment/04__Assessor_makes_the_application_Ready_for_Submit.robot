@@ -14,6 +14,8 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-5712 As an Assessor I can review the recommended for funding status of applications that I have assessed so that I can track my work
 ...
 ...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
+...
+...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -69,7 +71,9 @@ Summary: Questions should show without score
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
-    Given the user adds score and feedback for every question
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Given The user clicks the button/link    link=Juggling is very fun
+    And the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
@@ -213,6 +217,8 @@ User Saves the Assessment as Recommended
     ...    INFUND-3726
     ...
     ...    INFUND-6040
+    ...
+    ...    INFUND-3724
     [Tags]
     Given the user enters text to a text field    id=feedback    ${EMPTY}
     And the user selects the radio button    fundingConfirmation    true
@@ -221,6 +227,7 @@ User Saves the Assessment as Recommended
     And The user should see the text in the page    Assessed
     And the user should see the element    css=li:nth-child(4) .recommend.yes
     And the user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
+    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712
@@ -228,6 +235,9 @@ User Saves the Assessment as Not Recommended
     ...    INFUND-3726
     ...
     ...    INFUND-6040
+    ...
+    ...    INFUND-3724
+    [Setup]
     Given The user clicks the button/link    link=Juggling is not fun
     And the user adds score and feedback for every question
     And the user clicks the button/link    jQuery=.button:contains("Review assessment")
@@ -236,6 +246,8 @@ User Saves the Assessment as Not Recommended
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     And The user should see the element    css=li:nth-child(4) .recommend.no
     And The user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
+    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
+    And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
 
 *** Keywords ***
 the collapsible button should contain
@@ -243,8 +255,6 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
-    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    The user clicks the button/link    link=Juggling is very fun
     The user clicks the button/link    link=Scope
     The user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     The user clicks the button/link    jQuery=label:contains(Yes)
@@ -363,3 +373,7 @@ The user accepts the juggling is word that sound funny application
 the status of the status of the application should be correct
     [Arguments]    ${ELEMENT}    ${STATUS}
     Element should contain    ${ELEMENT}    ${STATUS}
+
+the application should have the correct status
+    [Arguments]    ${APPLICATION}    ${STATUS}
+    element should contain    ${APPLICATION}    ${STATUS}
