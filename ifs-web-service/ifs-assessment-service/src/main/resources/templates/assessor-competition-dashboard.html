@@ -56,7 +56,12 @@
                                                 <a th:href="${assignmentUrl}">accept / reject assessment</a>
                                             </p>
                                         </div>
-                                        <div th:if="${application.accepted or application.open}" class="application-status open empty">
+
+                                        <div th:if="${application.accepted}" class="application-status open empty">
+                                            <p>Accepted</p>
+                                        </div>
+
+                                        <div th:if="${application.open}" class="application-status open empty">
                                             <p>In progress</p>
                                         </div>
 
