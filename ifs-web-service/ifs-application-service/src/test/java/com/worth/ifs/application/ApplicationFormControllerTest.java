@@ -494,7 +494,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Your project should last between 1 and 36 months\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -523,7 +523,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String questionId = "cost-subcontracting-13-subcontractingCost";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "bobbins")
                         .param("value", value)
@@ -543,7 +543,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "financePosition.organisationSize";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -565,7 +565,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.startDate";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -588,7 +588,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.startDate";
 
         mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -596,7 +596,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                         .accept(MediaType.APPLICATION_JSON)
 
         ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}"));
+                .andExpect(content().json("{\"success\":\"false\"}"));
     }
 
     @Test
@@ -678,7 +678,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a future date\"]}"));
+                .andExpect(content().json("{\"success\":\"true\"}"));
     }
 
     @Test
@@ -688,7 +688,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.resubmission";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -710,7 +710,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.previousApplicationNumber";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -732,7 +732,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.previousApplicationTitle";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
