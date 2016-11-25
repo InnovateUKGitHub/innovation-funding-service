@@ -1,4 +1,4 @@
-package com.worth.ifs.login;
+package com.worth.ifs.login.form;
 
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.NotEmpty;

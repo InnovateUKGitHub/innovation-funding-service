@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionType;
@@ -11,17 +12,7 @@ import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.form.repository.FormInputRepository;
-
-import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.commons.service.*;
-import com.worth.ifs.competition.domain.*;
-import com.worth.ifs.competition.repository.*;
-import com.worth.ifs.form.repository.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,19 +24,13 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
-import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-
-import static com.worth.ifs.application.builder.GuidanceRowBuilder.*;
-import static com.worth.ifs.application.builder.QuestionBuilder.*;
-import static com.worth.ifs.application.builder.SectionBuilder.*;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.*;
-import static com.worth.ifs.form.builder.FormInputBuilder.*;
-
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;

@@ -41,7 +41,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
-            @Mapping(target = "activityState", source = "assessmentState", ignore = true)
+            @Mapping(target = "activityState", source = "assessmentState", ignore = true),
+            @Mapping(target = "responses", ignore = true)
     })
     @Override
     public abstract Assessment mapToDomain(AssessmentResource resource);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Prototype index page  =========================== --> 
+<!-- ===========================Prototype index page  =========================== -->
 
 <div th:fragment="prototype-add-users(addUserType)">
     <table class="extra-margin" th:id="${addUserType+'-table'}" style="display: none">
@@ -21,14 +21,14 @@
                     <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value=""  />
                 </td>
                 <td class="alignright">
-                    <button class="buttonlink no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button> 
+                    <button class="buttonlink no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<!-- ===========================Project setup select address=========================== --> 
+<!-- ===========================Project setup select address=========================== -->
 
 <div th:fragment="prototype-select-address">
     <fieldset>
@@ -51,7 +51,7 @@
                 Enter an alternative address
             </label>
         </div>
-    </fieldset> 
+    </fieldset>
 
 
     <div id="selected-address" class="boxed extra-margin" style="display: none;">
@@ -93,7 +93,7 @@
     </div>
 
     <div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:remove="tag" />
-  
+
 </div>
 
 <!-- ===========================Bank account details=========================== -->
@@ -140,12 +140,12 @@
 </div>
 
 
-<!-- ===========================Bank account details=========================== --> 
+<!-- ===========================Bank account details=========================== -->
 
 <div th:fragment="prototype-bank-details">
 
     <fieldset th:unless="${user == null}">
-        
+
         <h2 class="heading-medium no-margin-bottom">Company details</h2>
 
         <legend class="visuallyhidden">Company details</legend>
@@ -156,7 +156,7 @@
             </label>
             <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
         </div>
-        
+
         <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
             <div class="form-group">
                 <label class="form-label" for="companies-house-number">
@@ -174,7 +174,7 @@
 
         <legend class="visuallyhidden">Account details</legend>
 
-        <p class="form-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use during the project.</p>
+        <p class="form-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use to receive the grant.</p>
 
         <p class="form-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
 
@@ -204,15 +204,15 @@
 </div>
 
 
-<!-- ===========================Spend profile rows readonly=========================== --> 
+<!-- ===========================Spend profile rows readonly=========================== -->
 
 <div th:fragment="prototype-spend-row">
     <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        
+
         <th:block th:if="${type == null}">
             <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">HEADER HERE</th>
         </th:block>
-        
+
         <th:block th:if="${type != null}">
             <th scope="row" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">
                 <span th:text="${header}">HEADER HERE</span>
@@ -265,7 +265,7 @@
     </tr>
 </div>
 
-<!-- ===========================Spend profile rows inputs=========================== --> 
+<!-- ===========================Spend profile rows inputs=========================== -->
 
 <div th:fragment="prototype-spend-row-edit">
     <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
@@ -316,11 +316,11 @@
 </div>
 
 
-<!-- ===========================Spend profile ACADEMIC rows readonly=========================== --> 
+<!-- ===========================Spend profile ACADEMIC rows readonly=========================== -->
 
 <div th:fragment="prototype-spend-academic-row">
     <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th th:text="${section}" class="fix-left1">Directly Incurred</th>
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -367,11 +367,11 @@
     </tr>
 </div>
 
-<!-- ===========================Spend profile academic rows inputs=========================== --> 
+<!-- ===========================Spend profile academic rows inputs=========================== -->
 
 <div th:fragment="prototype-spend-academic-row-edit">
     <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th th:text="${section}" class="fix-left1">Directly Incurred</th>
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
         <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
         <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
@@ -418,12 +418,12 @@
     </tr>
 </div>
 
-<!-- ===========================Messages / Queries  / notes=========================== --> 
+<!-- ===========================Messages / Queries  / notes=========================== -->
 
 <div th:fragment="prototype-post-query(queryType, user)">
-    
-    <!-- <fieldset th:unless="${queryType == 'note' or user == 'partner'}"> 
-        
+
+    <!-- <fieldset th:unless="${queryType == 'note' or user == 'partner'}">
+
         <div class="form-group alignright">
             <label for="querySection">Query section</label>
             <select class="form-control">
@@ -439,15 +439,15 @@
     <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
 
     <th:block th:if="${param.action != null and param.action[0] == 'newQuery'}" th:unless="${user == 'partner'}" >
-    
+
         <form class="extra-margin" th:action="@{${#httpServletRequest.requestURI}}" method="get">
 
             <fieldset>
-                
+
                 <th:block th:if="${queryType == 'query'}">
 
                     <legend class="heading-medium">Post new query</legend>
-                    
+
                     <div class="form-group">
                         <label for="queryTitle" class="form-label-bold">Title</label>
                         <input name="queryTitle" id="queryTitle"  class="width-full" required="required" />
@@ -476,7 +476,7 @@
 
 
                 <th:block th:if="${queryType == 'note'}">
-                    
+
                     <legend class="heading-medium">New note</legend>
 
                     <div class="form-group">
@@ -503,7 +503,7 @@
             <fieldset>
                 <div class="upload-section unstyled-view">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                   
+
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
                 </div>
@@ -518,7 +518,7 @@
             <div class="grid-row">
                 <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
                 <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
-                
+
             </div>
         </form>
 
@@ -528,11 +528,11 @@
 
     <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${user == 'partner'}" >
         <th:block th:if="${queryType == 'query'}">
-            
+
             <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
             <h3 class="heading-small no-margin" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h3>
-            
+
             <p class="heading-small no-margin-top">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
 
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY
@@ -555,7 +555,7 @@
 
                 <h4 class="heading-small">Supporting document</h4>
                 <p><a href="#">Report1.doc</a></p>
-            </div> 
+            </div>
         </th:block> -->
 
     </th:block>
@@ -563,7 +563,7 @@
 
 
   <!--  <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse'}" th:unless="${user == 'partner'}">
-        
+
         <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
 
         <h2 class="heading-medium no-margin-bottom" th:unless="${param.noteTitle != null}">Administrative support costs</h2>
@@ -573,7 +573,7 @@
         <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
         <p th:unless="${param.noteDetails != null}">Need to look into why the admin support costs are so high, surely they could be lower for a company of this type.</p>
-        
+
 
     </th:block> -->
 
@@ -602,7 +602,7 @@
     <th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response'}">
 
         <div class="panel-indent" th:if="${param.action != null and param.action[0] == 'postResponse'}">
-            
+
             <th:block th:if="${user == 'admin'}">
                 <p class="no-margin"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
             </th:block>
@@ -630,11 +630,11 @@
 
 
     <th:block th:if="${param.action != null and param.action[0] == 'newResponse'}">
-    
+
         <form class="extra-margin" th:action="@{${#httpServletRequest.requestURI}}" method="get">
 
             <fieldset>
-                
+
                 <legend class="heading-medium" th:text="${(queryType == 'query' ? 'Respond to query' : 'Comment')}">RESPOND TITLE</legend>
 
                 <div class="form-group">
@@ -653,7 +653,7 @@
             <fieldset>
                 <div class="upload-section unstyled-view">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                
+
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
                 </div>
@@ -664,19 +664,19 @@
                 <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
                 <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
             </th:block>
-            
+
             <th:block th:if="${queryType == 'note'}">
                 <input type="hidden" id="noteTitle" name="noteTitle" th:value="${#httpServletRequest.getParameter('noteTitle')}" />
                 <input type="hidden" id="noteDetails" name="noteDetails" th:value="${#httpServletRequest.getParameter('noteDetails')}" />
             </th:block>
 
 
-            <input type="hidden" id="action" name="action" value="postResponse" />  
+            <input type="hidden" id="action" name="action" value="postResponse" />
 
             <div class="grid-row extra-margin">
                 <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
                 <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
-                
+
             </div>
         </form>
 

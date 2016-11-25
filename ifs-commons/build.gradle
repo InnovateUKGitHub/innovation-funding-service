@@ -8,6 +8,7 @@ dependencies {
     compile "org.javassist:javassist:3.18.1-GA"
     compile project(":ifs-resources")
 
+
     testCompile project(":ifs-resources").sourceSets.test.output
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
