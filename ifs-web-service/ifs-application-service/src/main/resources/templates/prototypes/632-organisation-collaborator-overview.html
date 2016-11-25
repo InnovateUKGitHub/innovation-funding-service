@@ -30,20 +30,63 @@
     <h2 class="heading-medium">Acme Ltd. <small>(Lead organisation)</small></h2>
     <ul class="list-bullet">
         <li><a href="mailto:robwaite@acme.org.uk">Rob Waite</a> <small>(Lead applicant)</small></li>
-        <li><a href="mailto:rogeraxe@acme.org.uk">Roger Axe</a> <small>(pending)</small></li>
-        <li><a href="mailto:ssmiths@acme.org.uk">Steven Smiths</a></li>
+        <li><a href="mailto:rogeraxe@acme.org.uk">Roger Axe</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
+        <li><a href="mailto:ssmiths@acme.org.uk">Steven Smiths</a> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
     </ul>
     <h2 class="heading-medium">Worth Systems</h2>
     <ul class="list-bullet">
-        <li><a href="mailto:efurcic@worth.systems">Elvis Furcic</a> <small>(pending)</small></li>
-        <li><a href="mailto:chris@worth.systems">Christopher Johnson</a></li>
+        <li><a href="mailto:efurcic@worth.systems">Elvis Furcic</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
+        <li><a href="mailto:chris@worth.systems">Christopher Johnson</a> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
     </ul>
-    <h2 class="heading-medium">IO systems <small>(pending)</small></h2>
+    <h2 class="heading-medium">IO systems <small>(pending)</small> <small><a href="#" data-js-modal="modal-submit-remove-organisation">Remove organisation</a></small></h2>
     <ul class="list-bullet">
-        <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small></li>
+        <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
     </ul>
 
     <p><a href="./633-application-invite.html" class="button">Invite new contributors</a></p>
+
+
+    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+        <h2 class="heading-medium no-margin">Removing collaborator</h2>
+        <p>Are you sure you wish to remove this collaborator from this application.</p>
+        <p>This step cannot be undone.</p>
+        <hr />
+        <div class="grid-row extra-margin">
+            <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
+                <input type="hidden" value="6" name="applicationInviteId" />
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
+                </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+        <h2 class="heading-medium no-margin">Remove organisation and collaborator</h2>
+        <p>Are you sure you wish to remove this organisation from this application?</p>
+        <p>This will remove all collaborators and delete the organisations financial details.</p>
+        <hr />
+        <div class="grid-row extra-margin">
+            <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
+                <input type="hidden" value="6" name="applicationInviteId" />
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
+                </div>
+          </form>
+        </div>
+    </div>
+
+
+
+
   	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
