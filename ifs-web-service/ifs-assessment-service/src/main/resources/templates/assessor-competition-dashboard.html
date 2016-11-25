@@ -57,7 +57,7 @@
                                             </p>
                                         </div>
                                         <div th:if="${application.accepted or application.open}" class="application-status open empty">
-                                            <p>Open</p>
+                                            <p>In progress</p>
                                         </div>
 
                                         <div th:if="${application.readyToSubmit}" class="application-status assessed" th:classappend="${application.recommended} ? 'yes' : 'no'">
