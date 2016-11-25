@@ -13,6 +13,7 @@ public class CompetitionSetupQuestionResource {
     private CompetitionSetupQuestionType type;
 
     private String number;
+    @NotBlank
     private String shortTitle;
     private Boolean shortTitleEditable;
     @NotBlank
