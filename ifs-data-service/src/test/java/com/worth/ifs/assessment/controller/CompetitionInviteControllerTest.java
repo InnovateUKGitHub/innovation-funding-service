@@ -64,7 +64,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionInviteService.openInvite("hash")).thenReturn(serviceSuccess(resource));
         mockMvc.perform(post("/competitioninvite/openInvite/{inviteHash}", "hash").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
 
         verify(competitionInviteService, times(1)).openInvite("hash");
     }

@@ -369,6 +369,19 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * creating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
+     *
+     * This is an appropriate response for a POST that is creating data and needs to return a response body.
+     * To update data, consider using a PUT.
+     */
+    public static <T> RestResult<T> toPostWithBodyResponse(T body) {
+        return restSuccess(body, OK);
+    }
+
+    /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
      * updating data.
      *
