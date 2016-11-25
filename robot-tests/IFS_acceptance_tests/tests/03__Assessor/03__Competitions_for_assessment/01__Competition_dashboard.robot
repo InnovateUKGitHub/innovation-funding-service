@@ -99,6 +99,6 @@ the application for assessment should be removed
 
 The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(2)    Open
-    element should contain    css=.boxed-list li:nth-child(3)    Open
-    element should contain    css=.boxed-list li:nth-child(4)    Open
+    element should contain    css=.boxed-list li:nth-child(2)    Accepted
+    element should contain    css=.boxed-list li:nth-child(3)    Accepted
+    element should contain    css=.boxed-list li:nth-child(4)    Accepted
