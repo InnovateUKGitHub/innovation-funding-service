@@ -316,12 +316,32 @@
                                            data-required-errormessage="Please enter a justification" />
                                 </td>
                                 <td>
+                                    <input type="hidden" name="removeGuidanceRow" />
+                                    <input type="hidden" name="guidanceRowsCount" id="guidance-row-count" th:value="${competitionSetupForm.guidanceRowsCount}" />
+
                                     <button class="buttonlink alignright" data-remove-row="guidance" type="button" name="remove-guidance-row" th:value="${iteration.index}" th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>
                                 </td>
                             </tr>
                         </th:block>
                     </tbody>
                 </table>
+
+                <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="question.assessmentMaxWords">
+                        <span class="form-label-bold">Max word count</span>
+                        <span th:if="${#fields.hasErrors('question.assessmentMaxWords')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentMaxWords')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input th:class="${#fields.hasErrors('question.assessmentMaxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                           type="number"
+                           id="question.assessmentMaxWords"
+                           min="0"
+                           required="required"
+                           th:name="question.assessmentMaxWords"
+                           th:value="${question.assessmentMaxWords}"/>
+                </div>
+
                 <div class="alignright extra-margin">
                     <button class="buttonlink" data-add-row="guidance">+Add guidance row</button>
                 </div>
