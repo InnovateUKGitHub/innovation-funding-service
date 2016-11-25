@@ -41,6 +41,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5637 As a Competitions team member I want to be able to edit setup questions in the Project Summary section of Competition Setup so that I can amend the defaults if required for the competition
 ...
 ...               INFUND-5635 As a Competitions team member I want to be able to edit questions in the Scope section of Competition Setup so that I can amend the defaults if required for the competition
+...
+...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -319,21 +321,18 @@ Assessor: Contain the correct options
     And the user should see the text in the page    How much do assessors receive per application
     And the user should see the element    id=assessorPay
 
-Assesor: Mark as Done then Edit again
+Assessor: Mark as Done then Edit again
     [Documentation]    INFUND-5641
     [Tags]    HappyPath
-    Given the user selects the checkbox    id=assessors-62
+    When the user selects the checkbox    id=assessors-62
     And the user enters text to a text field    id=assessorPay    100
-    And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    3
     And the user should see the text in the page    100
-    When the user clicks the button/link    link=Competition setup
-    When the user clicks the button/link    link=Assessors
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Then the user clicks the button/link    jQuery=.button:contains("Done")
 
-Assesor: Should have a Green Check
+Assessor: Should have a Green Check
     [Documentation]    INFUND-5641
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
