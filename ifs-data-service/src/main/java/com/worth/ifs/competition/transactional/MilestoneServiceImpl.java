@@ -86,7 +86,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {
-
         ValidationMessages vm = new ValidationMessages();
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
@@ -100,10 +99,17 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         		vm.addError(error);
         	}
         });
-        
-        for (int i = 1; i < milestones.size(); i++) {
-        	MilestoneResource previous = milestones.get(i - 1);
-        	MilestoneResource current = milestones.get(i);
+
+        // preset milestones must be in the correct order
+        List<MilestoneResource> presetMilestones = milestones
+                .stream()
+                .filter(milestoneResource -> milestoneResource.getType().isPresetDate())
+                .collect(Collectors.toList());
+
+
+        for (int i = 1; i < presetMilestones.size(); i++) {
+        	MilestoneResource previous = presetMilestones.get(i - 1);
+        	MilestoneResource current = presetMilestones.get(i);
         	
         	if(current.getDate() != null && previous.getDate() != null) {
         		if(previous.getDate().isAfter(current.getDate())) {
