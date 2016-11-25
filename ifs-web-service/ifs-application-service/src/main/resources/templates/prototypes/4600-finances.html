@@ -29,7 +29,7 @@
     <li class="section-status assigned-to-me">
       <div class="grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/5094-finances">Your finances</a></h3>
+          <h3 class="heading-small"><a href="/prototypes/4600-your-finances">Your finances</a></h3>
         </div>
         <div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
       </div>
@@ -37,7 +37,7 @@
     <li class="assigned-to-me">
       <div class="grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="631-finances-overview">Finances overview</a></h3>
+          <h3 class="heading-small"><a href="/prototypes/4600-your-org">Your organisation</a></h3>
         </div>
         <div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
       </div>
@@ -95,22 +95,38 @@
 	</div> -->
 
 <fieldset>
-		<div class="form-group extra-margin">
-			<label class="form-label" for="other-funding">
-				<span class="heading-medium">Funding level</span>
-				<span class="form-hint">Please enter the funding level that you would like to apply for in this application</span>
-			</label>
-			<details>
-			    <summary><span class="summary">What funding level should I enter?</span></summary>
-			    <div class="panel-indent">
-			    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
-			    </div>
-			</details>
-			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="50" /> %
-		</div>
-	</fieldset>
+	<div class="form-group extra-margin">
+		<label class="form-label" for="other-funding">
+			<span class="heading-medium">Funding level</span>
+			<span class="form-hint">Please enter the funding level that you would like to apply for in this application</span>
+		</label>
+		<details>
+		    <summary><span class="summary">What funding level should I enter?</span></summary>
+		    <div class="panel-indent">
+		    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
+		    </div>
+		</details>
+		<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="50" /> %
+	</div>
+</fieldset>
 
-	<div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
+
+<div class="form-group">
+  <fieldset>
+    <label for="agree-terms" class="block-label">
+      <input id="agree-terms" value="agree-terms" type="checkbox" />
+      As a member of this consortium I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.
+    </label>
+    <label for="confirm-costs" class="block-label">
+      <input id="confirm-costs" value="confirm-costs" type="checkbox" />
+      I confirm that my costs are eligible for state aid funding.
+    </label>
+  </fieldset>
+</div>
+
+
+
+	<!-- <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" /> -->
 
 	<div class="alignright-button extra-margin">
 		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
@@ -136,62 +152,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script type="text/javascript">
 
-	jQuery('input#funding-yes').on('click',function(e){
-		//e.preventDefault();
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#finance-other-funding").show();
-		}else{
-			jQuery("#finance-other-funding").hide();
-		}
-	});
-
-	jQuery('input#funding-no').on('click',function(e){
-		//e.preventDefault();
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#finance-other-funding").hide();
-		}else{
-			jQuery("#finance-other-funding").show();
-		}
-	});
-
-	jQuery('input#admin-support-radio-1').on('click',function(e){
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#admin-support-1").show();
-			jQuery("#admin-support-2").hide();
-			jQuery("#admin-support-3").hide();
-			jQuery("#admin-support-4").hide();
-		}
-	});
-
-	jQuery('input#admin-support-radio-2').on('click',function(e){
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#admin-support-1").hide();
-			jQuery("#admin-support-2").show();
-			jQuery("#admin-support-3").hide();
-			jQuery("#admin-support-4").hide();
-		}
-	});
-
-	jQuery('input#admin-support-radio-3').on('click',function(e){
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#admin-support-1").hide();
-			jQuery("#admin-support-2").hide();
-			jQuery("#admin-support-3").show();
-			jQuery("#admin-support-4").hide();
-		}
-	});
-
-	jQuery('input#admin-support-radio-4').on('click',function(e){
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#admin-support-1").hide();
-			jQuery("#admin-support-2").hide();
-			jQuery("#admin-support-3").hide();
-			jQuery("#admin-support-4").show();
-		}
-	});
-
-</script>
 </body>
 </html>
