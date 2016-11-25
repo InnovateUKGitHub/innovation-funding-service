@@ -164,23 +164,9 @@ public class ProjectGrantOfferLetterSendController {
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
 
-        Optional<FileEntryResource> grantOfferFileDetails;
-        try {
-            grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
-        } catch (FileAwaitingVirusScanException e1) {
-            grantOfferFileDetails = null;
-        } catch (FileQuarantinedException e2) {
-            grantOfferFileDetails = null;
-        }
+        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
 
-        Optional<FileEntryResource> additionalContractFile;
-        try {
-            additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
-        } catch (FileAwaitingVirusScanException e1) {
-            additionalContractFile = null;
-        } catch (FileQuarantinedException e2) {
-            additionalContractFile = null;
-        }
+        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
         Boolean sendOfferLetterAllowed = projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject();
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.user.builder.RoleResourceBuilder;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -9,7 +10,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
@@ -167,12 +170,31 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
 
+        Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
         List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
 
         verifyInteractions(mock -> mock.isOtherDocumentsApproved(),
-                           mock -> mock.isSpendProfileApproved());
+                           mock -> mock.isSpendProfileApproved(),
+                           mock -> mock.getRoleSpecificActivityState());
+    }
+
+    @Test
+    public void testCheckFinanceUserGetsCompAdminActivityStates() {
+        Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(PROJECT_FINANCE).build(1);
+        UserResource financeUser = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(financeUser));
+
+        verifyInteractions(mock -> mock.getRoleSpecificActivityState());
     }
 
     @Test

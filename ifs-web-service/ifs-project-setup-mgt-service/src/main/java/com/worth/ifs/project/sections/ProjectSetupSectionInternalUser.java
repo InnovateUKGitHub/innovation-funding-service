@@ -85,7 +85,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if(userResource.hasRole(COMP_ADMIN) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+        if((userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
         }
 
@@ -97,7 +97,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
-        if(userResource.hasRole(COMP_ADMIN)) {
+        if(userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) {
             return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
         } else {
             return projectSetupProgressChecker.getGrantOfferLetterState();

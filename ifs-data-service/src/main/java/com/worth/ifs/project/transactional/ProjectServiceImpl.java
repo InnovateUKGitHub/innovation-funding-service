@@ -59,8 +59,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.transactional.UserServiceImpl;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1064,28 +1062,26 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
-        Project project = projectRepository.findOne(projectId);
-        if (project == null) {
-            return serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
-        }
-        if (project.getGrantOfferLetter() == null) {
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_GENERATED_BEFORE_SEND);
-        }
+        return getProject(projectId).andOnSuccess( project -> {
+            if (project.getGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
+            }
 
-        NotificationSource from = systemNotificationSource;
-        User projectManager = getExistingProjectManager(project).get().getUser();
-        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+            NotificationSource from = systemNotificationSource;
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("dashboardUrl", webBaseUrl);
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl);
 
-        Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
-        ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+            Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
 
-        if(!notificationResult.isSuccess()) {
-            return serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
-        }
-        return sendGrantOfferLetterSuccess(project);
+            if (!notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            return sendGrantOfferLetterSuccess(project);
+        });
     }
 
     private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
