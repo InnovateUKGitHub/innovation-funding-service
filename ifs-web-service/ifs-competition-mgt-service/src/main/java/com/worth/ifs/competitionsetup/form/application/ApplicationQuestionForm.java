@@ -22,5 +22,4 @@ public class ApplicationQuestionForm extends CompetitionSetupForm {
     public void setQuestion(CompetitionSetupQuestionResource question) {
         this.question = question;
     }
-
 }

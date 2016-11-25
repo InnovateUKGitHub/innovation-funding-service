@@ -24,10 +24,10 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     public void testSuccessfulMethodUpdatesDatabaseSuccessfully() {
 //
 //        testService.successfulMethod();
-//        assertEquals("Successful", getUser().getShortName());
+//        assertEquals("Successful", getUser().getName());
 //
 //        testService.restoreSuccessfulMethod();
-//        assertEquals("Steve Smith", getUser().getShortName());
+//        assertEquals("Steve Smith", getUser().getName());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
 //        assertTrue(result.isFailure());
 //        assertTrue(result.getFailure().is(notFoundError(User.class, "Failure")));
 //
-//        assertEquals("Steve Smith", getUser().getShortName());
+//        assertEquals("Steve Smith", getUser().getName());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
 //        assertTrue(result.isFailure());
 //        assertTrue(result.getFailure().is(internalServerErrorError()));
 //
-//        assertEquals("Steve Smith", getUser().getShortName());
+//        assertEquals("Steve Smith", getUser().getName());
     }
 
     private User getUser() {
