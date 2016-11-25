@@ -1,5 +1,6 @@
 package com.worth.ifs.project.validation;
 
+import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,8 +19,9 @@ import static org.junit.Assert.assertTrue;
 
 public class SpendProfileCostValidatorTest {
 
-    private static final String FIELD_NAME_TEMPLATE = "monthlyCostsPerCategoryMap[%d][%d]";
+    private static final String FIELD_NAME_TEMPLATE = "table.monthlyCostsPerCategoryMap[%d][%d]";
     private Validator validator;
+    private SpendProfileForm spendProfileForm;
     private SpendProfileTableResource table;
 
     private BindingResult bindingResult;
@@ -27,8 +29,10 @@ public class SpendProfileCostValidatorTest {
     @Before
     public void setUp() {
         table = new SpendProfileTableResource();
+        spendProfileForm = new SpendProfileForm();
+        spendProfileForm.setTable(table);
         validator = new SpendProfileCostValidator();
-        bindingResult = new DataBinder(table).getBindingResult();
+        bindingResult = new DataBinder(spendProfileForm).getBindingResult();
     }
 
     @Test

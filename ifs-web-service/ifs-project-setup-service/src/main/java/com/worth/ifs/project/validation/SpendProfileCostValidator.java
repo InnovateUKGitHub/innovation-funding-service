@@ -26,7 +26,7 @@ public class SpendProfileCostValidator implements Validator {
 
     private static final BigDecimal COST_UPPER_LIMIT = new BigDecimal("1000000");
     private static final int COMPARE_LESS_THAN = -1;
-    private static final String FIELD_NAME_TEMPLATE = "monthlyCostsPerCategoryMap[%d][%d]";
+    private static final String FIELD_NAME_TEMPLATE = "table.monthlyCostsPerCategoryMap[%d][%d]";
 
     @Override
     public void validate(Object target, Errors errors) {
