@@ -22,7 +22,7 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Summary:All the sections are present
+All the sections are present in the summary
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -34,13 +34,13 @@ Summary:All the sections are present
     And The user should see the element    id=form-input-feedback
     And The user should see the element    id=form-input-comments
 
-Summary:Number of days remaining until assessment submission
+Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2017-01-28
 
-Summary shows questions as incomplete
+Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
@@ -54,7 +54,7 @@ Summary shows questions as incomplete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
-Summary: Questions should show without score
+Questions should show without score
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
@@ -68,7 +68,7 @@ Summary: Questions should show without score
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
-Summary:Questions should show as complete
+Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
@@ -87,7 +87,7 @@ Summary:Questions should show as complete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
-Summary:Questions should show the scores
+Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
@@ -104,13 +104,13 @@ Summary:Questions should show the scores
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
 
-Summary:Overall scores section
+Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
     And the total scores should be correct
 
-Summary:Feedback should show in each section
+Feedback should show in each section
     [Documentation]    INFUND-550
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
     Then The user should see the text in the page    Testing Business opportunity feedback text
@@ -135,7 +135,7 @@ Summary:Feedback should show in each section
     When The user clicks the button/link    jQuery=button:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
-Summary:Assessor should be able to re-edit before submit
+Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
     and The user should see the text in the page    What is the business opportunity that your project addresses?
@@ -147,7 +147,7 @@ Summary:Assessor should be able to re-edit before submit
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
-Summary:Feedback validations
+Feedback validations
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -167,7 +167,7 @@ Summary:Feedback validations
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
-Summary:Word count check(Your feedback)
+Word count check: Your feedback
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -190,7 +190,7 @@ Summary:Word count check(Your feedback)
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-Summary:Word count check(Comments for InnovateUK)
+Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -220,9 +220,9 @@ User Saves the Assessment as Recommended
     ...
     ...    INFUND-3724
     [Tags]
-    Given the user enters text to a text field    id=feedback    ${EMPTY}
-    And the user selects the radio button    fundingConfirmation    true
-    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    When the user enters text to a text field    id=feedback    ${EMPTY}
+    When the user selects the radio button    fundingConfirmation    true
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
     And the user should see the element    css=li:nth-child(4) .recommend.yes
@@ -362,6 +362,7 @@ the word count should be correct
 the total scores should be correct
     Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 100/100
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
+
 
 The user accepts the juggling is word that sound funny application
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
