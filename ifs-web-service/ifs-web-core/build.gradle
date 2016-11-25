@@ -20,9 +20,11 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
 
     // inter-project dependencies
-    compile project(":ifs-commons")
+    compile project(":ifs-resources")
+    testCompile project(':ifs-resources').sourceSets.test.output
     compile project(':ifs-rest-api-service')
-    testCompile project(':ifs-commons').sourceSets.test.output
+    compile project(":ifs-commons")
+    testCompile project(":ifs-commons").sourceSets.test.output
 
     testCompile 'junit:junit:4.11'
     testCompile "com.openpojo:openpojo:0.8.3"
