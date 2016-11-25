@@ -5,9 +5,9 @@
             <legend class="visuallyhidden">Application question</legend>
             <h2 class="heading-medium extra-margin">Application question</h2>
 
-            <dl class="application-question-list grid-row">
+            <dl class="application-question-list grid-row" th:with="noQuestionTitle=#{ifs.competition.question.no_title}">
                 <dt class="column-third">Question heading</dt>
-                <dd class="column-two-thirds" th:text="${question.shortTitle}"></dd>
+                <dd class="column-two-thirds" th:text="${#strings.isEmpty(question.shortTitle) ? noQuestionTitle : question.shortTitle}"></dd>
                 <dt class="column-third">Question title</dt>
                 <dd class="column-two-thirds" th:text="${question.title}"></dd>
                 <dt class="column-third">Question subtitle</dt>

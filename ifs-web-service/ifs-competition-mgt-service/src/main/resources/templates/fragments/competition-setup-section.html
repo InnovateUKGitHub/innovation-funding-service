@@ -801,8 +801,8 @@
         <div class="column-half">
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Assessed questions</h3>
-                <ol class="list-number">
-                    <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
+                <ol class="list-number"  th:with="noQuestionTitle=#{ifs.competition.question.no_title}">
+                    <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${#strings.isEmpty(question.shortName) ? noQuestionTitle : question.shortName}">Question Title</a></li><!--<th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/> -->
                 </ol>
             </div>
         </div>
