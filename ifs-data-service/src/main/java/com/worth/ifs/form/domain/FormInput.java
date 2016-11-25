@@ -8,7 +8,6 @@ import com.worth.ifs.form.resource.FormInputScope;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,9 +67,10 @@ public class FormInput {
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
 
+    @OneToMany(mappedBy = "formInput")
+    private List<GuidanceRow> guidanceRows;
+
     private boolean active = true;
-    @OneToMany(mappedBy = "formInput",cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<GuidanceRow> guidanceRows = new ArrayList<>();
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -204,8 +204,7 @@ public class FormInput {
     }
 
     public void setGuidanceRows(List<GuidanceRow> guidanceRows) {
-        this.guidanceRows.clear();
-        this.guidanceRows.addAll(guidanceRows);
+        this.guidanceRows = guidanceRows;
     }
 
     public boolean getActive() {

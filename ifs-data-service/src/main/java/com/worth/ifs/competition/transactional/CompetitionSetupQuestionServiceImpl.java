@@ -1,7 +1,9 @@
 package com.worth.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -18,6 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -38,6 +42,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private GuidanceRowMapper guidanceRowMapper;
+
+    @Autowired
+    private GuidanceRowRepository guidanceRowRepository;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -104,8 +111,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        createOrDeleteScoredFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        createOrDeleteWrittenFeedbackFormInput(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
@@ -117,7 +124,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private void createOrDeleteScoredFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
         FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.SCORE.getTitle());
 
@@ -126,7 +133,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private void createOrDeleteWrittenFeedbackFormInput(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
         FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.FEEDBACK.getTitle());
 
@@ -135,7 +142,12 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
             writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
-            writtenFeedbackFormInput.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows())));
+
+            // Delete all existing guidance rows and replace with new list
+            List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
+            guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
+            guidanceRowRepository.save(newRows);
+            writtenFeedbackFormInput.setGuidanceRows(newRows);
         }
     }
 
