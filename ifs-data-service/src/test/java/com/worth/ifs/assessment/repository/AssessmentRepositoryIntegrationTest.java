@@ -194,7 +194,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
 
         int expectedTotalScorePossible = competition.getQuestions().stream()
-                .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> scoreType.equals(formInput.getFormInputType())))
+                .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && scoreType.equals(formInput.getFormInputType())))
                 .mapToInt(question -> ofNullable(question.getAssessorMaximumScore()).orElse(0))
                 .sum();
 
@@ -213,7 +213,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.save(
                 competition.getQuestions().stream().flatMap(question ->
                         question.getFormInputs().stream().filter(formInput ->
-                                scoreType.equals(formInput.getFormInputType())
+                                formInput.getActive() && scoreType.equals(formInput.getFormInputType())
                         ).map(formInput -> {
                                     int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
                                     scoreGivenAccumulator.accumulate(randomScore);

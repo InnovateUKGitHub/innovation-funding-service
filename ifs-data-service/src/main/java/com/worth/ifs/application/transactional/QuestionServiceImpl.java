@@ -14,6 +14,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -35,6 +36,7 @@ import java.util.stream.Stream;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -276,9 +278,17 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-        return getFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> {
+        return getFormInputTypeByTitle(formInputTypeTitle).andOnSuccess(inputType -> {
             List<Question> questions = questionRepository.findByCompetitionId(competitionId);
-            return simpleFindFirst(questions, q -> inputType.getId().equals(q.getFormInputs().get(0).getFormInputType().getId())).get();
+            Optional<Question> question = simpleFindFirst(questions, q -> {
+                List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
+                return !activeFormInputs.isEmpty() && inputType.getId().equals(activeFormInputs.get(0).getFormInputType().getId());
+            });
+            if (question.isPresent()) {
+                return serviceSuccess(question.get());
+            } else {
+                return serviceFailure(notFoundError(Question.class, competitionId, formInputTypeTitle));
+            }
         });
     }
 

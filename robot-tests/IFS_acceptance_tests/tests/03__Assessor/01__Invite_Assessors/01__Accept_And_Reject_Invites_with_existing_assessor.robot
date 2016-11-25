@@ -25,6 +25,7 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
+${Correct_date}    12 January to 28 January
 
 *** Test Cases ***
 Assessor dashboard should be empty
@@ -82,12 +83,14 @@ Upcoming competition should be visible
     ...
     ...             INFUND-5001
     [Tags]
-    # Development work is not complete
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
     Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
-   # And the user should see the text in the page    Photonics for health
+    And the user should see the text in the page    Photonics for health
     And The user should see the text in the page    Assessment period:
+    And the assessor should see the correct date
+    Then The user clicks the button/link    link=Photonics for health
+    And The user clicks the button/link    link=Back to your assessor dashboard
 
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
@@ -154,3 +157,7 @@ the assessor shouldn't be able to reject the accepted competition
 The assessor is unable to see the invitation
     The user should see the text in the page    This invitation is now closed
     The user should see the text in the page    You have already accepted or rejected this invitation.
+
+the assessor should see the correct date
+    ${Assessment_period}=    Get Text    css=.invite-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
+    Should Be Equal    ${Assessment_period}    ${Correct_date}

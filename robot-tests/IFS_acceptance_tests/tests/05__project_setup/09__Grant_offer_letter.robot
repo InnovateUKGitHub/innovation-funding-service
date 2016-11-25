@@ -31,7 +31,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
+    Given the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer

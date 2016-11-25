@@ -1,15 +1,13 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.BuilderAmendFunctions;
-import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.domain.GuidanceRow;
-import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputScope;
-import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;
 import java.util.Set;
@@ -56,6 +54,9 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return with(formInput -> formInput.setFormInputType(formInputType));
     }
 
+    public FormInputBuilder withActive(Boolean active) {
+        return with(formInput -> formInput.setActive(active));
+    }
 
     public FormInputBuilder withFormInputType(String title) {
         FormInputType type = new FormInputType();
