@@ -8,12 +8,8 @@ IFS.competitionManagement.setup = (function() {
     init: function() {
       s = this.settings;
       IFS.competitionManagement.setup.handleCompetitionCode();
-
-      IFS.competitionManagement.setup.handleAddCoFunder();
-      IFS.competitionManagement.setup.handleRemoveCoFunder();
-
-      IFS.competitionManagement.setup.handleAddGuidanceRow();
-      IFS.competitionManagement.setup.handleRemoveGuidanceRow();
+      IFS.competitionManagement.setup.handleAddRow();
+      IFS.competitionManagement.setup.handleRemoveRow();
 
       jQuery("body.competition-management.competition-setup").on('change', '#competitionTypeId', function() {
         IFS.competitionManagement.setup.handleStateAid();
@@ -106,115 +102,117 @@ IFS.competitionManagement.setup = (function() {
       }
       jQuery('#stateAid').attr('aria-hidden', 'false').find('p').html('<span class="'+stateAid+'">'+stateAid+'</span>');
     },
-    handleAddCoFunder: function() {
-      jQuery(document).on('click', '#add-cofunder', function() {
-        var count = parseInt(jQuery('#co-funder-count').val(), 10);
-        jQuery('<div class="grid-row funder-row" id="funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""></div></div>' +
-        '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
-        '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'+ count +'">Remove</button></div></div></div>')
-        .insertBefore('#dynamic-row-pointer');
-
-        jQuery('#co-funder-count').val(count + 1);
+    // Add row
+    handleAddRow : function() {
+      jQuery(document).on('click', '[data-add-row]', function() {
+        var type = jQuery(this).attr('data-add-row');
+        switch(type){
+          case 'cofunder':
+            IFS.competitionManagement.setup.addCoFunder();
+            break;
+          case 'guidance':
+            IFS.competitionManagement.setup.addGuidanceRow();
+            break;
+        }
         return false;
       });
     },
-    handleRemoveCoFunder: function() {
-      jQuery(document).on('click', '.remove-funder', function() {
-        var $this = jQuery(this),
-        index = $this.val(),
-        funderRow = $this.closest('.funder-row'),
-        count = parseInt(jQuery('#co-funder-count').val(), 10);
+    addCoFunder: function() {
+      var count = parseInt(jQuery('.funder-row').length, 10); //name attribute has to be 0,1,2,3
+      //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+      var idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10)+1;
+      var html = '<div class="grid-row funder-row" id="funder-row-'+ idCount +'">'+
+                    '<div class="column-half">'+
+                      '<div class="form-group">'+
+                        '<input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + idCount +'-funder" name="funders['+ count +'].funder" value="">'+
+                      '</div>'+
+                    '</div>' +
+                    '<div class="column-half">'+
+                      '<div class="form-group">'+
+                        '<input type="number" min="0" class="form-control width-x-large" id="' + idCount +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="' + idCount +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
+                        '<button class="buttonlink" name="remove-funder" value="'+ count +'" data-remove-row="cofunder">Remove</button>'+
+                      '</div>'+
+                    '</div>'+
+                  '</div>';
+      jQuery('.funder-row').last().after(html);
+    },
+    addGuidanceRow : function() {
+      var table = jQuery('#guidance-table');
+      var isAssessed = table.hasClass('assessed-guidance');
+      var tableBody = table.find('tbody tr');
 
-        jQuery('[name="removeFunder"]').val(index);
-        IFS.core.autoSave.fieldChanged('[name="removeFunder"]');
-        funderRow.remove();
-        jQuery('#co-funder-count').val(count - 1);
-        IFS.competitionManagement.setup.reindexFunderRows();
-        //Force recalculation of the total.
-        jQuery('body').trigger('recalculateAllFinances');
-        return false;
+      var count = parseInt(tableBody.length, 10); //name attribute has to be 0,1,2,3
+      //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+      var idCount = parseInt(jQuery('.form-group-row[id^=guidance-]').last().attr('id').split('guidance-')[1], 10)+1;
+
+      var html = '<tr class="form-group-row" id="guidance-'+idCount+'">';
+      if(isAssessed){
+        html+='<td>'+
+                '<label class="form-label" for="guidancerow-'+idCount+'-scorefrom"><span class="visuallyhidden">Score from</span></label>'+
+                '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scorefrom" name="guidanceRows['+count+'].scoreFrom" value="">'+
+              '</td>'+
+              '<td>'+
+                '<label class="form-label" for="guidancerow-'+idCount+'-scoreto"><span class="visuallyhidden">Score to</span></label>'+
+                '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scoreto" name="guidanceRows['+count+'].scoreTo" value="">'+
+              '</td>';
+      }
+      else {
+        html+='<td>'+
+                '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
+                '<input required="required" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+idCount+'-justification" name="guidanceRows['+count+'].justification" value="">'+
+              '</td>';
+      }
+      html+='<td>'+
+              '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
+              '<input required="required" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="guidanceRows['+count+'].justification" value="">'+
+            '</td>'+
+            '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="'+count+'">Remove</button></td>';
+      html+='</tr>';
+      tableBody.parent().append(html);
+    },
+    // remove row
+    handleRemoveRow : function() {
+      jQuery(document).on('click', '[data-remove-row]', function() {
+        var inst = jQuery(this);
+        var type = inst.attr('data-remove-row');
+        switch(type){
+          case 'cofunder':
+            jQuery('[name="removeFunder"]').val(inst.val());
+            IFS.core.autoSave.fieldChanged('[name="removeFunder"]');
+
+            inst.closest('.funder-row').remove();
+            IFS.competitionManagement.setup.reindexRows('.funder-row');
+            jQuery('body').trigger('recalculateAllFinances');
+            break;
+          case 'guidance':
+            jQuery('[name="removeGuidanceRow"]').val(inst.val());
+            IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]');
+            inst.closest('tr').remove();
+            IFS.competitionManagement.setup.reindexRows('.form-group-row.guidance');
+            break;
+        }
+
       });
     },
-    reindexFunderRows: function() {
-      jQuery('[name*="funders"]').each(function() {
-        var $this = jQuery(this),
-        thisIndex = $this.closest('.funder-row').index('.funder-row'),
-        oldAttr = $this.attr('name'),
-        newAttr = oldAttr.replace(/funders\[\d\]/, 'funders[' +thisIndex+ ']');
+    reindexRows : function(rowSelector) {
 
-        $this.attr('name', newAttr);
-      });
-      jQuery('button.remove-funder').each(function() {
-        var $this = jQuery(this),
-        thisIndex = $this.closest('.funder-row').index('.funder-row');
+      jQuery(rowSelector+' [name]').each(function() {
+        var inst = jQuery(this);
+        var thisIndex = inst.closest(rowSelector).index(rowSelector);
 
-        $this.val(thisIndex);
+        var oldAttr = inst.attr('name');
+        var oldAttrName = oldAttr.split('[')[0];
+        var oldAttrElement = oldAttr.split(']')[1];
+        inst.attr('name', oldAttrName+'['+thisIndex+']'+oldAttrElement);
       });
+
+      jQuery(rowSelector+' [data-remove-row]').each(function() {
+        var inst = jQuery(this);
+        var thisIndex = inst.closest(rowSelector).index(rowSelector);
+        inst.val(thisIndex);
+      });
+
     },
-
-    handleAddGuidanceRow: function() {
-      jQuery(document).on('click', '#add-guidance-row', function() {
-        var count = parseInt(jQuery('#guidance-row-count').val(), 10);
-        jQuery(
-          '<hr/>' +
-          '<div class="grid-row guidance-row" id="guidance-row-' + count + '">' +
-           '<div class="column-quarter">' +
-           '<div class="form-group">' +
-           '<input type="number" min="0" data-required-errormessage="Please enter a from score" data-min-errormessage="Please enter a valid number" class="form-control width-x-large" id="' + count +'-scoreFrom" name="guidanceRows['+ count +'].scoreFrom" value="">' +
-           '</div>' +
-           '</div>' +
-           '<div class="column-quarter">' +
-           '<div class="form-group">' +
-           '<input type="number" min="0" data-required-errormessage="Please enter a from to" data-min-errormessage="Please enter a valid number" class="form-control width-x-large" id="' + count +'-scoreTo" name="guidanceRows['+ count +'].scoreTo" value="">' +
-           '</div>' +
-           '</div>' +
-           '<div class="column-half">' +
-           '<div class="form-group">' +
-           '<input type="text" data-required-errormessage="Please enter a value" class="form-control width-x-large" id="' + count +'-justification" name="guidanceRows['+ count +'].justification" value="">' +
-           '<button class="buttonlink remove-guidance-row" name="remove-guidance-row" value="'+ count +'" id="remove-guidance-row-' + count +'">Remove</button>' +
-           '</div>' +
-           '</div>' +
-          '</div>')
-          .insertBefore('#dynamic-row-pointer');
-
-        jQuery('#guidance-row-count').val(count + 1);
-        return false;
-      });
-    },
-
-
-    handleRemoveGuidanceRow: function() {
-      jQuery(document).on('click', '.remove-guidance-row', function() {
-        var $this = jQuery(this),
-          index = $this.val(),
-          guidanceRow = $this.closest('.guidance-row'),
-          count = parseInt(jQuery('#guidance-row-count').val(), 10);
-
-        jQuery('[name="removeGuidanceRow"]').val(index);
-        IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]');
-        guidanceRow.remove();
-        jQuery('#guidance-row-count').val(count - 1);
-        IFS.competitionManagement.setup.reindexGuidanceRows();
-        return false;
-      });
-    },
-    reindexGuidanceRows: function() {
-      jQuery('[name*="guidanceRows"]').each(function() {
-        var $this = jQuery(this),
-          thisIndex = $this.closest('.guidance-row').index('.guidance-row'),
-          oldAttr = $this.attr('name'),
-          newAttr = oldAttr.replace(/guidanceRows\[\d\]/, 'guidanceRows[' +thisIndex+ ']');
-
-        $this.attr('name', newAttr);
-      });
-      jQuery('button.remove-funder').each(function() {
-        var $this = jQuery(this),
-          thisIndex = $this.closest('.guidance-row').index('.guidance-row');
-
-        $this.val(thisIndex);
-      });
-    },
-
     milestonesExtraValidation : function() {
       //some extra javascript to hide the server side messages when the field is valid
       var fieldErrors = jQuery(s.milestonesForm+' .field-error');
