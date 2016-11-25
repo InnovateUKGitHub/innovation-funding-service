@@ -368,6 +368,19 @@ Application: Business opportunity
     And the user should see the element    jQuery=a:contains("Edit this question")
     [Teardown]    The user clicks the button/link    link=Application
 
+Application: Application details
+    [Documentation]    INFUND-5633
+    Given the user clicks the button/link    link=Application details
+    And the user should see the element    jQuery=h1:contains("Application details")
+    And the user should see the text in the page    These are the default questions included in the application details section.
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    useResubmissionQuestion    false
+    And The user clicks the button/link    jQuery=button:contains("Save and close")
+    And the user clicks the button/link    link=Application details
+    Then The user should see the text in the page    Application details
+    And the user should see the text in the page    No
+    [Teardown]    The user clicks the button/link    link=Application
+
 Application: Scope
     [Documentation]    INFUND-5634
     ...
