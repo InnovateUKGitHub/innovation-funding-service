@@ -1,8 +1,6 @@
 package com.worth.ifs.util;
 
-import org.springframework.core.ParameterizedTypeReference;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
