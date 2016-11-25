@@ -2,7 +2,6 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
@@ -13,7 +12,6 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -58,6 +56,7 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
+    public static final String COMPETITION_NAME_KEY = "competitionName";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;

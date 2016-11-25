@@ -32,6 +32,7 @@ Details of the competition are visible
     [Documentation]    INFUND-3723
     Then the user should see the text in the page    Competition
     And the user should see the text in the page    Innovation Lead
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
     And the user should see the text in the page    12:00am Tuesday 12 January 2016

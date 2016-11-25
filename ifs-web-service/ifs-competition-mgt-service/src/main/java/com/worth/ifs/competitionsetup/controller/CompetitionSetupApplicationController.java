@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
@@ -158,6 +160,53 @@ public class CompetitionSetupApplicationController {
         }
     }
 
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                        Model model) {
+
+        return getDetailsPage(model, competitionId, false);
+    }
+
+    @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
+    public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
+        return getDetailsPage(model, competitionId, true);
+    }
+
+    @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
+    public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+
+        Supplier<String> failureView = () -> getDetailsPage(model, competitionId, true);
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        CompetitionResource resource = competitionService.getById(competitionId);
+        resource.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
+        competitionService.update(resource);
+
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
+    private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition,
+                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.empty());
+
+        ApplicationDetailsForm competitionSetupForm = (ApplicationDetailsForm) competitionSetupService.getSubsectionFormData(
+                competition,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSubsection.APPLICATION_DETAILS,
+                null);
+
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+        model.addAttribute("editable", isEditable);
+        return "competition/application-details";
+    }
+
+
     private void setupQuestionToModel(final CompetitionResource competition, final Long questionId, Model model) {
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
 
@@ -170,7 +219,7 @@ public class CompetitionSetupApplicationController {
                         CompetitionSetupSubsection.QUESTIONS,
                         Optional.of(questionId));
 
-        model.addAttribute("competitionName", competition.getName());
+        model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
     }
 }
