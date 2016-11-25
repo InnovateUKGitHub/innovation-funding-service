@@ -2,19 +2,24 @@
 
 <#macro page1>
 <div class="textcenter">
-  <img src="./innovateuk-logo.png" alt="Innovate UK" />
+  <!-- todo; figure out how we can make this a local url, relative paths don't work so would maybe sending the current environemnt url would work? -->
+  <img width="200" src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" />
+
 </div>
-<p>${LeadContact}<br/>
-  ${LeadOrgName}<br/>
-  ${Address1}<br/>
-  ${Address2}<br/>
-  ${Address3}<br/>
-  ${TownCity}<br/>
-  ${PostCode}<br/>
+<p>
+  <#if LeadContact?has_content>${LeadContact}<br/></#if>
+  <#if LeadOrgName?has_content>${LeadOrgName}<br/></#if>
+  <#if Address1?has_content>${Address1}<br/></#if>
+  <#if Address2?has_content>${Address2}<br/></#if>
+  <#if Address3?has_content>${Address3}<br/></#if>
+  <#if TownCity?has_content>${TownCity}<br/></#if>
+  <#if PostCode?has_content>${PostCode}<br/></#if>
 </p>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}
+
+  <#assign sendDate = .now>
+  Date: ${sendDate?string["MM/dd/yyyy"]}
 </p>
 <p class="bold">
   Dear ${LeadContact},
@@ -67,7 +72,12 @@
   Head of Post-Award<br/>
   On behalf of Innovate UK
 </p>
-<p>
+<p class="textcenter"><br/>
+  Innovate UK is the trading name of the Technology Strategy Board <br/>
+  Innovate UK, North Star House, North Star Avenue, Swindon SN2 1UE <br/>
+  Tel:+44 (0)1793 442 700 <br/>
+  Email: support@innovateuk.org <br/>
+  www.innovateuk.gov.uk <br/>
 </p>
 </#macro>
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
@@ -76,7 +86,7 @@
 <h1>Eligible cost and grant allocations</h1>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}<br/>
+  Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
   ${CompetitionName}<br/>
   Project Title: ${ProjectTitle}
 </p>
@@ -172,7 +182,7 @@
 <h1>Acceptance of award</h1>
 <p class="bold">
   Application number: ${ApplicationNumber}<br/>
-  Date: ${Date}<br/>
+  Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
   Innovate UK: ${CompetitionName}<br/>
   Project Title: ${ProjectTitle}
 </p>
@@ -182,7 +192,7 @@
 <ol>
   <li>For the purposes of the offer:
       <ol>
-        <li>Project Start Date   ${ProjectStartDate}</li>
+        <li>Project Start Date ${ProjectStartDate}</li>
         <li>Project Length  ${ProjectLength} months</li>
       </ol>
   </li>
