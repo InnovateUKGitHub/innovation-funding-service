@@ -5,6 +5,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -16,8 +17,15 @@ import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.service.GOLTemplateRenderer;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.gol.YearlyGOLProfileTable;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.util.DateUtil;
+import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,16 +42,21 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.io.File.separator;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
@@ -57,6 +70,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -173,6 +189,77 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                     andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
+
+    private List<YearlyGOLProfileTable> createSpendProfileSummaryYears(Project project, List<OrganisationResource> organisations, SpendProfileTableResource table){
+        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
+        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
+
+        Map<Long, SpendProfileTableResource> organisationSpendProfiles = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId, organisation -> {
+
+            ProjectOrganisationCompositeId organisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
+            return projectFinanceService.getSpendProfileTable(organisationCompositeId).getSuccessObject();
+        }));
+
+        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
+            return calculateMonthlyTotals(tableResource.getMonthlyCostsPerCategoryMap(), tableResource.getMonths().size());
+        });
+
+        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
+            return calculateTotalOfAllEligibleTotals(tableResource.getEligibleCostPerCategoryMap());
+        });
+
+        BigDecimal totalOfAllActualTotals = calculateTotalOfAllActualTotals(monthlyCostsPerOrganisationMap);
+
+        BigDecimal totalOfAllEligibleTotals = calculateTotalOfAllEligibleTotals(eligibleCostPerOrganisationMap);
+        return IntStream.range(startYear, endYear + 1).
+                mapToObj(
+                        year -> {
+                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
+                            BigDecimal totalForYear = BigDecimal.ZERO;
+
+                            for(Long key : keys){
+                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
+                                for(int i = 0; i < values.size(); i++){
+                                    LocalDateResource month = table.getMonths().get(i);
+                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
+                                    if(year == financialYearDate.getFiscalYear()){
+                                        totalForYear = totalForYear.add(values.get(i));
+                                    }
+                                }
+                            }
+                            return new YearlyGOLProfileTable(year, totalForYear.toPlainString(),null,null, null, null );
+                        }
+
+                ).collect(toList());
+    }
+
+    public BigDecimal calculateTotalOfAllActualTotals(Map<Long, List<BigDecimal>> tableData) {
+        return tableData.values()
+                .stream()
+                .map(list -> {
+                    return list.stream()
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+    public BigDecimal calculateTotalOfAllEligibleTotals(Map<Long, BigDecimal> eligibleCostData) {
+        return eligibleCostData
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<BigDecimal> calculateMonthlyTotals(Map<Long, List<BigDecimal>> tableData, int numberOfMonths) {
+        return IntStream.range(0, numberOfMonths).mapToObj(index -> {
+            return tableData.values()
+                    .stream()
+                    .map(list -> list.get(index))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }).collect(toList());
+    }
+
 
     private Map<String, Object> getTemplateData(Project project) {
         Map<String, Object> templateReplacements = new HashMap<>();
