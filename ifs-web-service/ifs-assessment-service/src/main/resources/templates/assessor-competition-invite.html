@@ -45,8 +45,9 @@
 
             <form th:action="@{/invite/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}" method="POST">
                 <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                <button class="button large extra-margin" type="submit">Accept</button>
-                <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">Reject</a>
+                <p>If you are available you will be taken through the account creation process.</p>
+                <button class="button large extra-margin" type="submit">Yes, create account</button>
+                <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
