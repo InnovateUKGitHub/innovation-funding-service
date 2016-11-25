@@ -19,9 +19,7 @@
     <div class="panel-indent">
         Each partner is required to complete the following finance sections, selected by the template for this competition.
     </div>
-
-
-    <form data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
+    <form th:if="${editable}" data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
           data-th-attr="data-competition=${competitionId}" data-section="application" data-subsection="finance">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
@@ -73,10 +71,24 @@
         </div>
 
 
-        <button type="submit" class="button">Done</button>
+        <button type="submit" class="button">Save and close</button>
 
 
     </form>
+    <th:block th:unless="${editable}">
+        <dl class="application-question-list grid-row">
+            <dt class="column-third">Full application finances</dt>
+            <dd class="column-two-thirds" th:text="${competitionSetupForm.fullApplicationFinance ? 'Full application finances' :  'Light finances'}" />
+            <dt class="column-third">Include Project Growth Table</dt>
+            <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+        </dl>
+        <div class="extra-margin">
+            <a class="button" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${competition.id})}">Edit this question</a>
+        </div>
+        <div class="extra-margin">
+            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
+        </div>
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

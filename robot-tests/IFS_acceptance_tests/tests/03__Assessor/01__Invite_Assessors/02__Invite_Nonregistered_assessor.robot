@@ -19,7 +19,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 
 *** Test Cases ***
 Registered user should not allowed to accept other assessor invite
@@ -37,8 +37,8 @@ Non-registered assessor: Accept invitation
     ...    INFUND-4145
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    And the user should see the text in the page    Invitation to assess 'Juggling Craziness'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
+    And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     When the user clicks the button/link    jQuery=.button:contains("Accept")
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
@@ -114,9 +114,9 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element    link=Juggling Craziness
-    And the user clicks the button/link    link=Juggling Craziness
-    And The user should see the text in the page    Juggling Craziness
+    Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
@@ -128,7 +128,7 @@ Non-registered assessor: Reject invitation
     [Tags]
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
 
-    Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
+    Then the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     When the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see an error    The reason cannot be blank
@@ -136,15 +136,13 @@ Non-registered assessor: Reject invitation
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
-#    # TODO due to INFUND-5566
-    # And the assessor shouldn't be able to accept the rejected competition
+    And the assessor shouldn't be able to accept the rejected competition
     [Teardown]    The user closes the browser
 
 Assessor attempts to accept/reject an invitation which is already accepted
     [Documentation]    INFUND-5165
     [Tags]    Pending
     [Setup]    The guest user opens the browser
-    # TODO INFUND-5566
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 

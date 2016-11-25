@@ -65,7 +65,7 @@
                         <div class="grid-row">
                             <div class="column-assessment-details">
                                 <h3 class="heading-medium">
-                                <a href="#" th:text="${upcomingCompetition.displayLabel}"/>
+                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}" th:text="${upcomingCompetition.displayLabel}"/>
                                 </h3>
                                 <p class="form-hint">Upcoming competition</p>
                             </div>
@@ -87,16 +87,16 @@
             <h2 class="heading-medium">Your profile</h2>
             <ul class="list-bullet">
                 <li>
-                    <a th:href="@{/profile/details}">Your details</a>
+                    <a th:href="@{/profile/details}">your details</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/skills}">Your skills</a>
+                    <a th:href="@{/profile/skills}">your skills</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/declaration}">Your declaration of interest</a>
+                    <a th:href="@{/profile/declaration}">your declaration of interest</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/terms}">Your contract</a>
+                    <a th:href="@{/profile/terms}">your contract</a>
                 </li>
             </ul>
 

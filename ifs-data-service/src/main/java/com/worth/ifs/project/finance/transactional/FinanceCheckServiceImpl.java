@@ -270,8 +270,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     /*
     //TODO: INFUND-5508 - totals need to be switched to look at updated FC costs
-    //List<FinanceCheck> financeChecks = financeCheckRepository.findByProjectId(projectId);
-    public BigDecimal getTotal(List<FinanceCheck> financeChecks) {
+    //List<FinanceCheckURIs> financeChecks = financeCheckRepository.findByProjectId(projectId);
+    public BigDecimal getTotal(List<FinanceCheckURIs> financeChecks) {
         if (financeChecks == null) {
             return BigDecimal.ZERO;
         }

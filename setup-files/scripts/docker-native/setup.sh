@@ -44,11 +44,15 @@ fi
 
 # Check there is a Shibboleth image that can be used
 echo
-coloredEcho "Making sure Shibboleth image is loaded into Docker..." green
+coloredEcho "=> Making sure Shibboleth image is loaded into Docker..." green
 echo
 ./scripts/_install-or-upgrade.sh
 
 wait
+
+echo
+coloredEcho "=> Spinning up Docker containers..." green
+echo
 
 # Start up the Docker containers
 docker-compose -p ifs up -d --force-recreate
@@ -56,11 +60,17 @@ docker-compose -p ifs up -d --force-recreate
 wait
 sleep 5
 
+echo
+coloredEcho "=> Creating MySQL databases..." green
+echo
+
 docker-compose -p ifs exec mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ifs_test"'
 docker-compose -p ifs exec mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ifs"'
 
 wait
 sleep 3
+
+coloredEcho "=> Performing Flyway migrations..." green
 
 cd ../../../
 ./gradlew -Pprofile=docker flywayClean flywayMigrate

@@ -40,19 +40,19 @@
         </th:block>
 
         <th:block th:if="${model.leadPartner}">
-            <p>The grant offer letter is provided by innovate UK. It has been created using the information provided by your organisation and partners during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
+            <p>The grant offer letter is provided by Innovate UK. It has been created using the information provided by your organisation and partners during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
 
               <h2 class="heading-medium">Grant offer letter</h2>
               <p>The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
               <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
               <h2 class="heading-medium">Annex</h2>
-              <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+              <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
               <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
             <div th:unless="${model.submitted}" class="upload-section">
                 <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
-                The project manager is required to provide a signed copy of the grant offer letter.
+                The Project Manager is required to provide a signed copy of the grant offer letter.
                 <details>
                     <summary><span class="summary">What are the requirements for upload?</span></summary>
                     <div class="panel-indent">

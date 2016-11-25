@@ -47,4 +47,5 @@ public interface CompetitionSetupService {
 	void setCompetitionAsReadyToOpen(Long competitionId);
 
 	void setCompetitionAsCompetitionSetup(Long competitionId);
+
 }

@@ -8,7 +8,6 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
-${INVITE_LINK_2}    ${SERVER}/accept-invite/1d92a6ace9030f2d992f47ea60529028fd49542dffd6b179f68fae072b4f1cc61f12a419b79a5267
 
 *** Test Cases ***
 
@@ -117,9 +116,8 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    An organisation name is required
     When the user enters text to a text field    name=organisationName    Digital Catapult
-    #    Following disabled temporarily.    See INFUND-4497 TODO
-    #    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    #    And the user should see the text in the page    Please enter a UK postcode
+    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user should see the text in the page    Please enter a UK postcode
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Use selected address")

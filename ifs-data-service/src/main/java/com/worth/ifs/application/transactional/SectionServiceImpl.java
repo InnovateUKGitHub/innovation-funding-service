@@ -186,7 +186,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
             List<Question> questions = section.fetchAllChildQuestions();
             for (Question question : questions) {
-                List<FormInput> formInputs = simpleFilter(question.getFormInputs(), input -> FormInputScope.APPLICATION.equals(input.getScope()));
+                List<FormInput> formInputs = simpleFilter(question.getFormInputs(), input -> input.getActive() && FormInputScope.APPLICATION.equals(input.getScope()));
                 if (formInputs.stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
                     sectionIncomplete = formInputs.stream().anyMatch(input -> {

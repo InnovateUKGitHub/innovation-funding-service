@@ -3,7 +3,6 @@ package com.worth.ifs.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.FinanceRowService;
@@ -12,8 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
-import com.worth.ifs.application.model.ApplicationNavigationPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
@@ -433,7 +430,7 @@ public class ApplicationFormController {
 
         if(!isMarkSectionAsIncompleteRequest(params)) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId));
+            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -873,11 +870,12 @@ public class ApplicationFormController {
      * This method is for supporting ajax saving from the application form.
      */
     @ProfileExecution
-    @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
+    @RequestMapping(value = "/{competitionId}/saveFormElement", method = RequestMethod.POST)
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                                   @RequestParam("value") String value,
                                                   @PathVariable(APPLICATION_ID) Long applicationId,
+                                                  @PathVariable("competitionId") Long competitionId,
                                                   HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
         Long fieldId = null;
@@ -886,20 +884,16 @@ public class ApplicationFormController {
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value);
 
-            errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
 
-            if (!errors.isEmpty()) {
-                return this.createJsonObjectNode(false, errors, fieldId);
-            } else {
-                return this.createJsonObjectNode(true, null, fieldId);
-            }
+            return this.createJsonObjectNode(true, fieldId);
+
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, errors, fieldId);
+            return this.createJsonObjectNode(false, fieldId);
         }
     }
 
@@ -915,7 +909,7 @@ public class ApplicationFormController {
         }
     }
 
-    private StoreFieldResult storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
@@ -926,7 +920,7 @@ public class ApplicationFormController {
             financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
+            ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
             
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
@@ -958,18 +952,13 @@ public class ApplicationFormController {
         return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
+    private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
-        
+
         if(fieldId != null) {
-        	node.set("field_id", new LongNode(fieldId));
+        	node.set("fieldId", new LongNode(fieldId));
         }
         return node;
     }

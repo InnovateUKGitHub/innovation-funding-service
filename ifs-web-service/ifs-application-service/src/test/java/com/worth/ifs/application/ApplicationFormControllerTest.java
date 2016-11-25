@@ -6,7 +6,7 @@ import com.worth.ifs.application.model.*;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Materials;
@@ -25,10 +25,10 @@ import org.springframework.ui.Model;
 
 import java.util.HashSet;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
@@ -133,7 +133,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build());
+        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         // just check if these pages are not throwing errors.
@@ -376,7 +376,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "Form Input "+formInputId+" Response";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput["+formInputId+"]")
                         .param("value", value)
@@ -391,7 +391,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -407,7 +407,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -416,7 +416,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -426,7 +426,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application/"+application.getId().toString()+"/form/saveFormElement")
+                post("/application/"+application.getId().toString()+"/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -435,7 +435,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
+        String jsonExpectedContent = "{\"success\":\"true\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -445,7 +445,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -465,7 +465,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -474,7 +474,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid value\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -485,7 +485,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.durationInMonths";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -504,7 +504,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String questionId = "cost-subcontracting-13-subcontractingCost";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", "subcontracting_costs-cost-13")
                         .param("value", value)
@@ -606,7 +606,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String fieldName = "application.startDate.dayOfMonth";
 
         MvcResult result = mockMvc.perform(
-                post("/application/1/form/saveFormElement")
+                post("/application/1/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -629,14 +629,14 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "35";
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-        		.andExpect(content().json("{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}"));
+        		.andExpect(content().json("{\"success\":\"false\"}"));
     }
 
     @Test
@@ -646,7 +646,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String value = "13";
 
         MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -657,7 +657,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         String content = result.getResponse().getContentAsString();
         log.info("Response : "+ content);
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter a valid date.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\"}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -671,7 +671,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         when(sectionService.getById(anyLong())).thenReturn(null);
 
         mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", questionId)
                         .param("fieldName", fieldName)
                         .param("value", value)
