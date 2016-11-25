@@ -68,7 +68,7 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
         when(competitionInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
         mockMvc.perform(post("/competitioninvite/openInvite/{hash}", hash))
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being opened")
