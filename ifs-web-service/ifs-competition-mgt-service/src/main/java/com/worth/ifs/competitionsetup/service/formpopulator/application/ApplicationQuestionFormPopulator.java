@@ -47,7 +47,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
             competitionSetupForm.setQuestion(initQuestionForForm(questionResource));
 
 			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
-				GuidanceRowViewModel grvm = new GuidanceRowViewModel(competitionSetupForm.getQuestion().getType(), guidanceRowResource);
+				GuidanceRowViewModel grvm = new GuidanceRowViewModel(guidanceRowResource);
 				competitionSetupForm.getGuidanceRows().add(grvm);
 			});
 

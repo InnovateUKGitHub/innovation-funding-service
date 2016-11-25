@@ -4,11 +4,13 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competition.resource.GuidanceRowResource;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowViewModel;
 import com.worth.ifs.controller.ValidationHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -147,8 +150,16 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-
         if(!bindingResult.hasErrors()) {
+
+            competitionSetupForm.getGuidanceRows().forEach(guidanceRowViewModel ->  {
+                GuidanceRowResource grr = new GuidanceRowResource();
+                grr.setSubject(guidanceRowViewModel.getScoreFrom() + ":" + guidanceRowViewModel.getScoreTo());
+                grr.setJustification(guidanceRowViewModel.getJustification());
+                competitionSetupForm.getQuestion().getGuidanceRows().clear();
+                competitionSetupForm.getQuestion().getGuidanceRows().add(grr);
+            });
+
             competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {

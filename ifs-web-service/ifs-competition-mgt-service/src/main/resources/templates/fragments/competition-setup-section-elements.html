@@ -258,7 +258,7 @@
                                maxlength="255"/>
                     </div>
 
-                    <fieldset>
+                    <fieldset th:if="${competitionSetupForm instanceof T(com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm)}">
                         <h3 class="heading-small">Guidance table</h3>
                         <div class="grid-row">
                             <div class="column-third">
@@ -284,7 +284,7 @@
 
                             <hr/>
 
-                            <div class="column-quarter" th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                            <div class="column-quarter">
                                 <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}? 'form-group error':'form-group'">
                                     <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreFrom">
                                         <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
@@ -301,7 +301,7 @@
                                 </div>
                             </div>
 
-                            <div class="column-quarter" th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                            <div class="column-quarter">
                                 <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}? 'form-group error':'form-group'">
                                     <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreTo">
                                         <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
@@ -315,26 +315,6 @@
                                            th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}" value=""
                                            data-required-errormessage="Please enter a to score"
                                            data-min-errormessage="Please enter a valid number"/>
-
-                                    <input required="required" type="hidden"
-                                           th:id="${iteration.index}+'-subject'"
-                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].subject}"/>
-                                </div>
-                            </div>
-
-                            <div class="column-half" th:unless="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
-                                <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')}? 'form-group error':'form-group'">
-                                    <label class="form-label" th:for="guidanceRows[__${iteration.index}__].subject">
-                                        <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')}">
-                                            <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
-                                        </th:block>
-                                    </label>
-                                    <input required="required"
-                                           th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')
-                                           ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                           th:id="${iteration.index}+'-subject'"
-                                           th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].subject}" value=""
-                                           data-required-errormessage="Please enter a value"/>
                                 </div>
                             </div>
 
@@ -342,7 +322,7 @@
                                 <div th:class="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}? 'form-group error':'form-group'">
                                     <label class="form-label" th:for="guidanceRows[__${iteration.index}__].justification">
                                         <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                                            <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}" th:text="${err}" />
                                         </th:block>
                                     </label>
                                     <input required="required" class="form-control width-x-large"

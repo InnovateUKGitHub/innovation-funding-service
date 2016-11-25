@@ -15,9 +15,6 @@ public class GuidanceRowViewModel {
     @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
     private String justification;
 
-    @NotEmpty(message = "{validation.applicationquestionform.subject.required}")
-    private String subject;
-
     @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}")
     @NotNull(message = "{validation.applicationquestionform.scorefrom.required}")
     private Integer scoreFrom;
@@ -29,21 +26,12 @@ public class GuidanceRowViewModel {
     public GuidanceRowViewModel() {
     }
 
-    public GuidanceRowViewModel(CompetitionSetupQuestionType questionType, GuidanceRowResource guidanceRowResource) {
+    public GuidanceRowViewModel(GuidanceRowResource guidanceRowResource) {
 
         this.setJustification(guidanceRowResource.getJustification());
-
-        if (questionType.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
-            String[] score = guidanceRowResource.getSubject().split(",");
-            this.setScoreFrom(Integer.parseInt(score[0]));
-            this.setScoreTo(Integer.parseInt(score[1]));
-            this.setSubject("dummy value");
-        } else {
-            this.setSubject(guidanceRowResource.getSubject());
-            // Dummy score values so validation passes
-            this.setScoreFrom(1);
-            this.setScoreTo(10);
-        }
+        String[] score = guidanceRowResource.getSubject().split(",");
+        this.setScoreFrom(Integer.parseInt(score[0]));
+        this.setScoreTo(Integer.parseInt(score[1]));
     }
 
     public String getJustification() {
@@ -68,13 +56,5 @@ public class GuidanceRowViewModel {
 
     public void setScoreTo(Integer scoreTo) {
         this.scoreTo = scoreTo;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 }
