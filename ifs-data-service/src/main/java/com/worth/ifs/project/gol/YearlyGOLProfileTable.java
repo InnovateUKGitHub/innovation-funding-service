@@ -1,69 +1,71 @@
 package com.worth.ifs.project.gol;
 
-import com.worth.ifs.project.resource.SpendProfileTableResource;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  **/
 public class YearlyGOLProfileTable {
-    private int year;
-    private String yearTotalAmount;
+
+    private Map<String, Integer> organisationAndGrantPercentageMap;
+    private Map<String, List<String>> organisationYearsMap;
+    private Map<String, BigDecimal> organisationEligibleCostTotal;
+    private Map<String, BigDecimal> organisationGrantAllocationTotal;
+    private Map<String, BigDecimal> yearEligibleCostTotal;
+    private Map<String, BigDecimal> yearGrantAllocationTotal;
     private Map<Long, BigDecimal> eligibleCostPerOrganisationMap;
-    private Map<Long, SpendProfileTableResource> organisationSpendProfiles;
-    private BigDecimal totalOfAllEligibleTotals;
-    private BigDecimal totalOfAllActualTotals;
 
-    public YearlyGOLProfileTable(final int year, final String yearTotalAmount, Map<Long, BigDecimal> eligibleCostPerOrganisationMap, Map<Long, SpendProfileTableResource> organisationSpendProfiles, BigDecimal totalOfAllEligibleTotals, BigDecimal totalOfAllActualTotals) {
-        this.year = year;
-        this.yearTotalAmount = yearTotalAmount;
+    public YearlyGOLProfileTable(Map<String, Integer> organisationAndGrantPercentageMap,
+                                 Map<String, List<String>> organisationYearsMap,
+                                 Map<String, BigDecimal> organisationEligibleCostTotal,
+                                 Map<String, BigDecimal> organisationGrantAllocationTotal,
+                                 Map<String, BigDecimal> yearEligibleCostTotal,
+                                 Map<String, BigDecimal> yearGrantAllocationTotal,
+                                 Map<Long, BigDecimal> eligibleCostPerOrganisationMap) {
+        this.organisationAndGrantPercentageMap = organisationAndGrantPercentageMap;
+        this.organisationYearsMap = organisationYearsMap;
+        this.organisationEligibleCostTotal = organisationEligibleCostTotal;
+        this.organisationGrantAllocationTotal = organisationGrantAllocationTotal;
+        this.yearEligibleCostTotal = yearEligibleCostTotal;
+        this.yearGrantAllocationTotal = yearGrantAllocationTotal;
         this.eligibleCostPerOrganisationMap = eligibleCostPerOrganisationMap;
-        this.organisationSpendProfiles = organisationSpendProfiles;
-        this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
-        this.totalOfAllActualTotals = totalOfAllActualTotals;
     }
 
-    public int getYear() {
-        return year;
+    public int getNumberOfColHeader() {
+        return yearEligibleCostTotal.size() + 1;
     }
 
-    public String getYearTotalAmount() {
-        return yearTotalAmount;
+    public int getNumberOfCols() {
+        return (getNumberOfColHeader() + 1) * 2;
     }
 
-    @Override public boolean equals(final Object o) {
-        if (this == o)
-            return true;
-
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        final YearlyGOLProfileTable that = (YearlyGOLProfileTable) o;
-
-        return new EqualsBuilder()
-                .append(year, that.year)
-                .append(yearTotalAmount, that.yearTotalAmount)
-                .isEquals();
+    public Map<String, Integer> getOrganisationAndGrantPercentageMap() {
+        return organisationAndGrantPercentageMap;
     }
 
-    @Override public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(year)
-                .append(yearTotalAmount)
-                .toHashCode();
+    public Map<String, List<String>> getOrganisationYearsMap() {
+        return organisationYearsMap;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("year", year)
-                .append("yearTotalAmount", yearTotalAmount)
-                .toString();
+    public Map<String, BigDecimal> getOrganisationEligibleCostTotal() {
+        return organisationEligibleCostTotal;
     }
 
+    public Map<String, BigDecimal> getOrganisationGrantAllocationTotal() {
+        return organisationGrantAllocationTotal;
+    }
+
+    public Map<String, BigDecimal> getYearEligibleCostTotal() {
+        return yearEligibleCostTotal;
+    }
+
+    public Map<String, BigDecimal> getYearGrantAllocationTotal() {
+        return yearGrantAllocationTotal;
+    }
+
+    public Map<Long, BigDecimal> getEligibleCostPerOrganisationMap() {
+        return eligibleCostPerOrganisationMap;
+    }
 }

@@ -190,50 +190,12 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
-    private List<YearlyGOLProfileTable> createSpendProfileSummaryYears(Project project, List<OrganisationResource> organisations, SpendProfileTableResource table){
-        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
-        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
-
-        Map<Long, SpendProfileTableResource> organisationSpendProfiles = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId, organisation -> {
-
-            ProjectOrganisationCompositeId organisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
-            return projectFinanceService.getSpendProfileTable(organisationCompositeId).getSuccessObject();
-        }));
-
-        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
-            return calculateMonthlyTotals(tableResource.getMonthlyCostsPerCategoryMap(), tableResource.getMonths().size());
-        });
-
-        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
-            return calculateTotalOfAllEligibleTotals(tableResource.getEligibleCostPerCategoryMap());
-        });
-
-        BigDecimal totalOfAllActualTotals = calculateTotalOfAllActualTotals(monthlyCostsPerOrganisationMap);
-
-        BigDecimal totalOfAllEligibleTotals = calculateTotalOfAllEligibleTotals(eligibleCostPerOrganisationMap);
-        return IntStream.range(startYear, endYear + 1).
-                mapToObj(
-                        year -> {
-                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
-                            BigDecimal totalForYear = BigDecimal.ZERO;
-
-                            for(Long key : keys){
-                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
-                                for(int i = 0; i < values.size(); i++){
-                                    LocalDateResource month = table.getMonths().get(i);
-                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
-                                    if(year == financialYearDate.getFiscalYear()){
-                                        totalForYear = totalForYear.add(values.get(i));
-                                    }
-                                }
-                            }
-                            return new YearlyGOLProfileTable(year, totalForYear.toPlainString(),null,null, null, null );
-                        }
-
-                ).collect(toList());
+    private List<String> getYearsAsStrings(Map<String, SpendProfileTableResource> organisationSpendProfiles) {
+        return null;
     }
 
-    public BigDecimal calculateTotalOfAllActualTotals(Map<Long, List<BigDecimal>> tableData) {
+
+    private BigDecimal calculateTotalOfAllActualTotals(Map<String, List<BigDecimal>> tableData) {
         return tableData.values()
                 .stream()
                 .map(list -> {
@@ -244,14 +206,22 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
 
-    public BigDecimal calculateTotalOfAllEligibleTotals(Map<Long, BigDecimal> eligibleCostData) {
+    private BigDecimal calculateTotalOfAllEligibleTotals(Map<Long, BigDecimal> eligibleCostData) {
         return eligibleCostData
                 .values()
                 .stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<BigDecimal> calculateMonthlyTotals(Map<Long, List<BigDecimal>> tableData, int numberOfMonths) {
+    private BigDecimal calculateTotalOfAllEligibleTotalsString(Map<String, BigDecimal> eligibleCostData) {
+        return eligibleCostData
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+    private List<BigDecimal> calculateMonthlyTotals(Map<Long, List<BigDecimal>> tableData, int numberOfMonths) {
         return IntStream.range(0, numberOfMonths).mapToObj(index -> {
             return tableData.values()
                     .stream()
