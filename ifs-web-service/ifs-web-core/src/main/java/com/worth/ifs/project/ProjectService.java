@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -112,4 +113,13 @@ public interface ProjectService {
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
+
+    ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
+
+    ServiceResult<Void> sendGrantOfferLetter(Long projectId);
+
+    ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
+
 }
