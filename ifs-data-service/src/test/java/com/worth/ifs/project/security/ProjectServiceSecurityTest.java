@@ -14,6 +14,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -498,7 +499,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+        public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
         }
 

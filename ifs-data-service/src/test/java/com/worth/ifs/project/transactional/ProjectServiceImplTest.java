@@ -730,7 +730,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withPhoneNumber("078323455")
                 .build();
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
     }
@@ -744,7 +744,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         assertTrue(result.getFailure().is(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
     }
@@ -769,7 +769,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         // Assert that the MO in DB is updated with the correct values from MO Resource
         Assert.assertEquals("First name of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getFirstName(), monitoringOfficerResource.getFirstName());
@@ -777,6 +777,37 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Assert.assertEquals("Email of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getEmail(), monitoringOfficerResource.getEmail());
         Assert.assertEquals("Phone number of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getPhoneNumber(), monitoringOfficerResource.getPhoneNumber());
 
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertTrue(successResult.get().isMonitoringOfficerSaved());
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveMOWhenMODetailsRemainsTheSame() {
+
+        Long projectId = 1L;
+
+        // The details for the MO is set to the same as in resource
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+
+        Project projectInDB = newProject().withId(1L).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
+
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertFalse(successResult.get().isMonitoringOfficerSaved());
         assertTrue(result.isSuccess());
     }
 
@@ -791,8 +822,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertTrue(successResult.get().isMonitoringOfficerSaved());
         assertTrue(result.isSuccess());
     }
 
