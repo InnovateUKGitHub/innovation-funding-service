@@ -33,6 +33,10 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
+    public ApplicationFinanceResource(Long id, Long organisation, Long application, OrganisationSize organisationSize) {
+        super(id, organisation, application, organisationSize);
+    }
+
     public Long getFinanceFileEntry() {
         return financeFileEntry;
     }

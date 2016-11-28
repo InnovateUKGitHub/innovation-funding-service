@@ -22,6 +22,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * OrganisationFinanceDefaultHandler maintains the finances from
  * an organisation's perspective and calculates the totals
@@ -149,7 +151,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public FinanceRow costItemToCost(FinanceRowItem costItem) {
+    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
         FinanceRowHandler financeRowHandler = getCostHandler(costItem.getCostType());
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
@@ -172,11 +174,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public List<FinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
-        List<FinanceRow> costs = new ArrayList<>();
-        costItems.stream()
-                .forEach(costItem -> costs.add(costItemToCost(costItem)));
-        return costs;
+    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
+        return simpleMap(costItems, this::costItemToCost);
     }
 
     private boolean costTypeSupportedByHandler(FinanceRowType costType) {

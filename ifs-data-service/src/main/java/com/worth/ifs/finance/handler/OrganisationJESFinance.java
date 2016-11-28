@@ -119,7 +119,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public FinanceRow costItemToCost(FinanceRowItem costItem) {
+    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
         FinanceRowHandler financeRowHandler = new JESCostHandler();
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
@@ -143,7 +143,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public List<FinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
+    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
         return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
     }
 }

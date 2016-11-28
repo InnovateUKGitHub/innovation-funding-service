@@ -21,7 +21,7 @@ public abstract class FinanceRowHandler {
     private static final Log LOG = LogFactory.getLog(FinanceRowHandler.class);
     Map<String, FinanceRowMetaField> costFields = new HashMap<>();
 
-    public abstract FinanceRow toCost(FinanceRowItem costItem);
+    public abstract ApplicationFinanceRow toCost(FinanceRowItem costItem);
 
     public abstract FinanceRowItem toCostItem(FinanceRow cost);
 

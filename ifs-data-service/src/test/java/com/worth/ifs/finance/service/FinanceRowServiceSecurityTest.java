@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.service;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
@@ -14,6 +13,7 @@ import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newFinanceRow;
@@ -468,6 +469,15 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
             return null;
         }
 
+        @Override
+        public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId) {
+            return null;
+        }
     }
 }
 
