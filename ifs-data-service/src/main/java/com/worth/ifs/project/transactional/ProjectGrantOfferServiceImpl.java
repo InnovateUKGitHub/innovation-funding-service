@@ -5,7 +5,6 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -20,12 +19,8 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.gol.YearlyGOLProfileTable;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
-import com.worth.ifs.project.util.DateUtil;
-import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,14 +41,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.io.File.separator;
 import static java.util.stream.Collectors.toList;
@@ -79,6 +72,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private GOLTemplateRenderer golTemplateRenderer;
+
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -248,6 +242,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 project.getTargetStartDate().toString() : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
+        templateReplacements.put("TableData", getYearlyGOLProfileTable());
         return templateReplacements;
     }
 
@@ -353,5 +348,57 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private String getTemplatePath() {
         return GOL_TEMPLATES_PATH;
+    }
+
+    private YearlyGOLProfileTable getYearlyGOLProfileTable() {
+
+        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap();
+        Map<String, List<String>> organisationYearsMap = new LinkedHashMap();
+        List<String> years = new LinkedList<>();
+        Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap();
+        List<BigDecimal> eligibleCostPerYear = new LinkedList<>();
+        Map<String, List<BigDecimal>> organisationGrantAllocationTotal = new HashMap();
+        List<BigDecimal> grantPerYear = new LinkedList<>();
+        Map<String, BigDecimal> yearEligibleCostTotal = new HashMap();
+        Map<String, BigDecimal> yearGrantAllocationTotal = new HashMap();
+        BigDecimal grandTotal = BigDecimal.valueOf(10000);
+
+        organisationAndGrantPercentageMap.put("Empire Ltd", 20);
+        organisationAndGrantPercentageMap.put("Ludlow", 30);
+        organisationAndGrantPercentageMap.put("EGGS", 50);
+
+
+        years.add(0, "2016/2017");
+        years.add(1, "2017/2018");
+        years.add(2, "2018/2019");
+        organisationYearsMap.put("Empire Ltd", years);
+        organisationYearsMap.put("Ludlow", years);
+        organisationYearsMap.put("EGGS", years);
+
+        eligibleCostPerYear.add(0, BigDecimal.valueOf(1000));
+        eligibleCostPerYear.add(1, BigDecimal.valueOf(1200));
+        eligibleCostPerYear.add(2, BigDecimal.valueOf(1100));
+        grantPerYear.add(0, BigDecimal.valueOf(1000));
+        grantPerYear.add(1, BigDecimal.valueOf(1200));
+        grantPerYear.add(2, BigDecimal.valueOf(1100));
+        organisationEligibleCostTotal.put("Empire Ltd", eligibleCostPerYear);
+        organisationEligibleCostTotal.put("Ludlow", eligibleCostPerYear);
+        organisationEligibleCostTotal.put("EGGS", eligibleCostPerYear);
+
+        organisationGrantAllocationTotal.put("Empire Ltd", grantPerYear);
+        organisationGrantAllocationTotal.put("Ludlow", grantPerYear);
+        organisationGrantAllocationTotal.put("EGGS", grantPerYear);
+
+        yearEligibleCostTotal.put(years.get(0), BigDecimal.valueOf(3000));
+        yearEligibleCostTotal.put(years.get(1), BigDecimal.valueOf(2600));
+        yearEligibleCostTotal.put(years.get(2), BigDecimal.valueOf(2300));
+
+        yearGrantAllocationTotal.put(years.get(0), BigDecimal.valueOf(3000));
+        yearGrantAllocationTotal.put(years.get(1), BigDecimal.valueOf(2600));
+        yearGrantAllocationTotal.put(years.get(2), BigDecimal.valueOf(2300));
+
+        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
+                organisationEligibleCostTotal, organisationGrantAllocationTotal,
+                yearEligibleCostTotal, yearGrantAllocationTotal, grandTotal );
     }
 }
