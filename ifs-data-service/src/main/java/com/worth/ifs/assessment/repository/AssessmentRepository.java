@@ -50,7 +50,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "          AND p.id = :id" +
             ")" +
             "      AND fi.scope = 'ASSESSMENT'" +
-            "      AND p.id = :id", nativeQuery = true)
+            "      AND p.id = :id" +
+            "      AND fi.active = TRUE", nativeQuery = true)
     boolean isFeedbackComplete(@Param("id") Long id);
 
     @Query(value = "SELECT NEW com.worth.ifs.assessment.resource.AssessmentTotalScoreResource(" +
@@ -62,6 +63,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "  LEFT JOIN a.responses afir" +
             "    ON afir.formInput.id = fi " +
             "WHERE fi.formInputType.title = 'assessor_score'" +
-            "  AND a.id = :id")
+            "  AND a.id = :id" +
+            "  AND fi.active = TRUE")
     AssessmentTotalScoreResource getTotalScore(@Param("id") Long id);
 }
