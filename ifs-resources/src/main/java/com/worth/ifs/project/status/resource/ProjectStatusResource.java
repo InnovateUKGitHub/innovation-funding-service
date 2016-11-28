@@ -1,9 +1,12 @@
 package com.worth.ifs.project.status.resource;
 
 import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Map;
 
 public class ProjectStatusResource {
     private String projectTitle;
@@ -21,8 +24,10 @@ public class ProjectStatusResource {
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
+    private Map<UserRoleType, ProjectActivityStates> roleSpecificGrantOfferLetterState;
+    private boolean grantOfferLetterSent;
 
-    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber, Long applicationNumber, String formattedApplicationNumber, Integer numberOfPartners, String projectLeadOrganisationName, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber, Long applicationNumber, String formattedApplicationNumber, Integer numberOfPartners, String projectLeadOrganisationName, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, Map<UserRoleType, ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
         this.formattedProjectNumber = formattedProjectNumber;
@@ -37,6 +42,8 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
+        this.grantOfferLetterSent = grantOfferLetterSent;
     }
 
     // Required for JSON mapping
@@ -126,6 +133,18 @@ public class ProjectStatusResource {
     public void setGrantOfferLetterStatus(ProjectActivityStates grantOfferLetterStatus) {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
+
+    public Map<UserRoleType, ProjectActivityStates> getRoleSpecificGrantOfferLetterState() {
+        return roleSpecificGrantOfferLetterState;
+    }
+
+    public void setRoleSpecificGrantOfferLetterState(Map<UserRoleType, ProjectActivityStates>  roleSpecificGrantOfferLetterState) {
+        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
+    }
+
+    public boolean getGrantOfferLetterSent() { return grantOfferLetterSent; }
+
+    public void setGrantOfferLetterSent(boolean grantOfferLetterSent) { this.grantOfferLetterSent = grantOfferLetterSent; }
 
     public void setProjectNumber(Long projectNumber) {
         this.projectNumber = projectNumber;
