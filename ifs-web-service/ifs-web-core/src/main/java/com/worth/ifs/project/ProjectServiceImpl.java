@@ -268,11 +268,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return projectRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
-    }
-
-    @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }
