@@ -16,6 +16,8 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
 ...
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
+...
+...               INFUND-5739 As an Assessor I can submit all the applications that I have selected so that my assessment work is completed
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -249,6 +251,14 @@ User Saves the Assessment as Not Recommended
     And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
     And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
 
+Submit Assessments
+    [Documentation]    INFUND-5739
+    #Given the submit button is disabled    #TODO: Waiting infund-6386
+    When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
+    And the user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
+    Then the user should see the element     css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+
 *** Keywords ***
 the collapsible button should contain
     [Arguments]    ${BUTTON}    ${TEXT}
@@ -377,3 +387,6 @@ the status of the status of the application should be correct
 the application should have the correct status
     [Arguments]    ${APPLICATION}    ${STATUS}
     element should contain    ${APPLICATION}    ${STATUS}
+
+the submit button is disabled
+    Element Should Be Enabled    jQuery=button:contains("Submit assessments")
