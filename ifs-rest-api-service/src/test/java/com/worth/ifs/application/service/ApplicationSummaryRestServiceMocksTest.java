@@ -26,7 +26,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), null, null, null);
+        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(123L, null, null, null);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());

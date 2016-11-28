@@ -5,7 +5,6 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 
 /**
