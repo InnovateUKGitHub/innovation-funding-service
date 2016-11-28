@@ -57,9 +57,9 @@ PS projects title and lead
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element    jQuery=tr:nth-child(2) th:contains("better riffs")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Office Chair for Life")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
-    And the user should see the element    jQuery=tr:nth-child(3) th:contains("awesome riffs")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Elbow grease")
     And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
 
 PS projects status
