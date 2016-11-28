@@ -25,7 +25,7 @@ public class ProjectDocs {
             fieldWithPath("collaborationAgreement").description("Id of the File Entry that contains the Collaboration Agreement of the partner organisations"),
             fieldWithPath("exploitationPlan").description("Id of the File Entry that contains the Exploitation Plan of the partner organisations"),
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
-            fieldWithPath("additionalContractFile").description("Id of the File Entry that contains tadditional contract file"),
+            fieldWithPath("additionalContractFile").description("Id of the File Entry that contains the additional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
             fieldWithPath("offerRejected").description("Flag to indicate if grant offer has been rejected"),
             fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
@@ -46,7 +46,9 @@ public class ProjectDocs {
             fieldWithPath("spendProfileStatus").description("Status of the spend profile"),
             fieldWithPath("monitoringOfficerStatus").description("Status of the monitoring officer"),
             fieldWithPath("otherDocumentsStatus").description("Status of the other documents"),
-            fieldWithPath("grantOfferLetterStatus").description("Status of the grant offer letter status"),
+            fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
+            fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
+            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the the Grant Offer Letter notification has been sent")
     };
 
     public static final FieldDescriptor[] projectUserResourceFields = {

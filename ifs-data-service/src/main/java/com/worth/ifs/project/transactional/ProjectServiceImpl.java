@@ -9,7 +9,8 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -67,7 +68,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -185,7 +186,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         MONITORING_OFFICER_ASSIGNED,
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER
+        INVITE_PROJECT_MANAGER,
+        GRANT_OFFER_LETTER_PROJECT_MANAGER
     }
 
     @Override
@@ -1075,4 +1077,62 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return new ArrayList<>(organisationSet);
     }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if (project.getGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
+            }
+
+            NotificationSource from = systemNotificationSource;
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl);
+
+            Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+
+            if (!notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            return sendGrantOfferLetterSuccess(project);
+        });
+    }
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+        if (golWorkflowHandler.grantOfferLetterSent(project)) {
+            return serviceSuccess();
+        } else {
+            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
 }

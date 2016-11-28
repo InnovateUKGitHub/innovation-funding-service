@@ -3,6 +3,8 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
@@ -530,6 +532,39 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                         "this user is a partner in")
                         ),
                         responseFields(projectTeamStatusResourceFields)));
+    }
+
+    @Test
+    public void sendGrantOfferLetter() throws Exception {
+        when(projectServiceMock.sendGrantOfferLetter(123L)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )));
+    }
+
+    @Test
+    public void isSendGrantOfferLetterAllowed() throws Exception {
+        when(projectServiceMock.isSendGrantOfferLetterAllowed(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
+        mockMvc.perform(get("/project/{projectId}/isSendGrantOfferLetterAllowed", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )));
+    }
+
+    @Test
+    public void isGrantOfferLetterAlreadySent() throws Exception {
+        when(projectServiceMock.isGrantOfferLetterAlreadySent(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
+        mockMvc.perform(get("/project/{projectId}/isGrantOfferLetterAlreadySent", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )));
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){

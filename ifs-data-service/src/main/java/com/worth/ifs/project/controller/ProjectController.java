@@ -277,12 +277,26 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/team-status", method = GET)
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
-                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
     @RequestMapping(value = "/{projectId}/status", method = GET)
-    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId){
+    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/isSendGrantOfferLetterAllowed", method = GET)
+    public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
+        return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
+    }
+    @RequestMapping(value = "/{projectId}/grant-offer/send", method = POST)
+    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
+        return projectService.sendGrantOfferLetter(projectId).toPostResponse();
+    }
+
+    @RequestMapping(value= "/{projectId}/isGrantOfferLetterAlreadySent", method = GET)
+    public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
+        return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 }

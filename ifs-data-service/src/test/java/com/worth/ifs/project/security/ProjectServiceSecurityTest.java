@@ -19,6 +19,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+import com.worth.ifs.util.BooleanFunctions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -414,6 +415,39 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testSendGrantOfferLetter(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.sendGrantOfferLetter(123L), () -> {
+            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.isSendGrantOfferLetterAllowed(123L), () -> {
+            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAlreadySent(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
+            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -592,6 +626,15 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
+        @Override
+        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
+
     }
 }
 
