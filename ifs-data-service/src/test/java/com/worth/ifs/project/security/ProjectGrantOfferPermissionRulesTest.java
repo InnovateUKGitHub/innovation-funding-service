@@ -103,6 +103,94 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
+    public void testCompAdminsCanDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.internalUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testNonCompAdminsCannotDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.internalUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testCompAdminsCanViewGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.internalUsersCanViewGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testNonCompAdminsCannotViewGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.internalUsersCanViewGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testProjectFinanceCanDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testNonProjectFinanceCannotDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testProjectFinanceCanViewGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanViewGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testNonProjectFinanceCannotViewGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanViewGrantOfferLetter(project, user));
+    }
+
+    @Test
     public void testProjectManagerCanSubmitOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -121,6 +209,28 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
         setUpUserNotAsProjectManager(user);
 
         assertFalse(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+    }
+
+    @Test
+    public void testCompAdminsCanSendGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
+    }
+
+    @Test
+    public void testNonCompAdminsCannotSendGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
     }
 
     @Override

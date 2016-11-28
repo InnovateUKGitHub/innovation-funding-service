@@ -27,11 +27,9 @@
 
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
 
-	<h2 class="heading-medium">Your details</h2>
-
 	<form>
-		<fieldset>
-			<legend class="visuallyhidden">Your details</legend>
+		<fieldset th:unless="${param.edit != null and param.edit[0] == 'address'}">
+			<legend class="heading-medium">Your details</legend>
 			<div class="form-group">
 				<label class="form-label" for="title">
 					<span class="form-label-bold">Title</span>
@@ -86,49 +84,6 @@
 				</select>
 			</div>
 
-
-			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
-				<legend class="visuallyhidden">Address details</legend>
-				<div class="form-group">
-					<label class="form-label" for="street">
-						<span class="form-label-bold">Street</span>
-					</label>
-					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
-				</div>
-				<div class="form-group">
-					<label class="form-label visuallyhidden" for="street-2">
-						<span class="form-label-bold">Street line 2</span>
-					</label>
-					<input class="form-control" id="street-2" name="street-2" type="text" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="street-2">
-						<span class="form-label-bold visuallyhidden">Street line 3</span>
-					</label>
-					<input class="form-control" id="street-3" name="street-2" type="text" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="town">
-						<span class="form-label-bold">Town</span>
-					</label>
-					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="county">
-						<span class="form-label-bold">County</span>
-					</label>
-					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="postcode">
-						<span class="form-label-bold">Postcode</span>
-					</label>
-					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
-				</div>
-			</fieldset>
-
-
-
 			<div class="form-group extra-margin">
 				<label class="form-label" for="phone-number">
 					<span class="form-label-bold">Phone number</span>
@@ -175,6 +130,48 @@
 
 		</fieldset>
 
+    <th:block th:if="${param.edit != null}">
+      <fieldset id="address-details" class="extra-margin" style="display: block;">
+        <legend class="heading-medium">Your address</legend>
+        <div class="form-group">
+          <label class="form-label" for="street">
+            <span class="form-label-bold">Street</span>
+          </label>
+          <input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label visuallyhidden" for="street-2">
+            <span class="form-label-bold">Street line 2</span>
+          </label>
+          <input class="form-control" id="street-2" name="street-2" type="text" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="street-2">
+            <span class="form-label-bold visuallyhidden">Street line 3</span>
+          </label>
+          <input class="form-control" id="street-3" name="street-2" type="text" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="town">
+            <span class="form-label-bold">Town</span>
+          </label>
+          <input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="county">
+            <span class="form-label-bold">County</span>
+          </label>
+          <input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="postcode">
+            <span class="form-label-bold">Postcode</span>
+          </label>
+          <input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+        </div>
+      </fieldset>
+    </th:block>
+
 		<div th:if="${param.edit == null}" th:remove="tag">
 
 			<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
@@ -183,7 +180,7 @@
 			</th:block>
 
 			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
-			  <button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
+  <button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
 
 		</div>
 

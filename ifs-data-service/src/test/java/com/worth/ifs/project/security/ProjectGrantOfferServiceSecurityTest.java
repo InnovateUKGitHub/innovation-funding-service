@@ -39,7 +39,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -55,7 +57,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -72,7 +76,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -102,7 +108,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -118,7 +126,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -134,7 +144,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).compAdminCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -216,5 +228,6 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
             return null;
         }
+
     }
 }

@@ -129,7 +129,7 @@ Lead partner can edit his spend profile with invalid values
     Then the user should see the text in the page      This field should be 0 or higher
     When the user enters text to a text field          css=#row-40-2    35.25
     And the user moves focus to the element            css=#row-43-2
-    Then the user should see the text in the page      This field should be a number
+    Then the user should see the text in the page      This field can only accept whole numbers
     When the user enters text to a text field          css=#row-42-2    3333
     And the user moves focus to the element            css=#row-42-1
     And the user should not see the text in the page   This field should be 0 or higher
@@ -265,11 +265,13 @@ Academic partner spend profile client side validations
     When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    5
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
 
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
-    [Tags]
+    [Tags]    Pending
+    # Pending due to ongoing work (Ewan Cormack)
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3

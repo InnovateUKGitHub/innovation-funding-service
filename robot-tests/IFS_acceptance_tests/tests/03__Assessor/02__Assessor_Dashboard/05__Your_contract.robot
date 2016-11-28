@@ -17,7 +17,7 @@ Server-side validations
     ...
     ...    INFUND-5432
     [Tags]
-    Given The user should see the element    link=your contract    #his checks the alert message on the top od the page
+    Given The user should see the element    link=your contract    #his checks the alert message on the top of the page
     And the user clicks the button/link    jQuery=a:contains("your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see an error    Please agree to the terms and conditions
