@@ -545,3 +545,42 @@ include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in
 
 ===== Exception thrown when generating the Spend Profile CSV
 include::{snippets}/project/get-spend-profile-csv-when-io-exception/http-response.adoc[]
+
+
+=== Send Grant Offer Letter notification
+==== Success
+===== Request
+include::{snippets}/project/send-grant-offer-letter/http-request.adoc[]
+include::{snippets}/project/send-grant-offer-letter/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/send-grant-offer-letter/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/send-grant-offer-letter/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification already sent
+==== Success
+===== Request
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-request.adoc[]
+include::{snippets}/project/is-grant-offer-letter-already-sent/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-grant-offer-letter-already-sent/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification allowed
+==== Success
+===== Request
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-request.adoc[]
+include::{snippets}/project/is-send-grant-offer-letter-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]

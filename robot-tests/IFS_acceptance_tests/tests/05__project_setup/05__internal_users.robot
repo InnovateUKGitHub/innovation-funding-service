@@ -75,8 +75,8 @@ Project Finance has a dashboard and can see projects in PS
     And the user should see the element     jQuery=tr:nth-child(1) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("3 partners")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element     jQuery=tr:nth-child(2) th:contains("better riffs")
-    And the user should see the element     jQuery=tr:nth-child(3) th:contains("awesome riffs")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("Office Chair for Life")
+    And the user should see the element     jQuery=tr:nth-child(3) th:contains("Elbow grease")
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}
     Then the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
     And the user should not see an error in the page
