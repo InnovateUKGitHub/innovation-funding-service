@@ -20,7 +20,7 @@ Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
     Given The user clicks the button/link    link=Sustainable living models for the future
-    And the user clicks the button/link    link=Juggling is not fun
+    And the user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=Application details
     Then the user should see the text in the page    Application details
     And the user clicks next and goes to the page    Project summary
@@ -42,7 +42,7 @@ Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    Economic benefit
     And the user clicks previous and goes to the page    Project exploitation
@@ -109,7 +109,7 @@ Choosing 'not in scope' should update on the overview page
     [Documentation]    INFUND-1483
     [Tags]
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
     And the user clicks the button/link    link=Scope
     When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
@@ -122,7 +122,7 @@ Scope: Autosave
     ...    INFUND-3780
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
     And the user clicks the button/link    link=Scope
     When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
@@ -174,7 +174,7 @@ Question 1: Autosave
     [Documentation]    INFUND-3780
     [Tags]
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
     And the user clicks the button/link    link=1. Business opportunity
     When the user selects the option from the drop-down menu    9    id=assessor-question-score
     And the user enters text to a text field    css=.editor    This is to test the feedback entry.
@@ -194,7 +194,7 @@ Finance overview
     [Documentation]    INFUND-3394
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
     And the user should not see the element    css=input
@@ -227,7 +227,7 @@ I should not see validation message above the feedback form text field
     the user should not see the text in the page    ${error_message}
 
 I am on the assessor assessment overview page
-    Given the user clicks the button/link    link=Juggling is not fun
+    Given the user clicks the button/link    link=Products and Services Personalised
 
 I open one of the application questions
     [Arguments]    ${application_question}
