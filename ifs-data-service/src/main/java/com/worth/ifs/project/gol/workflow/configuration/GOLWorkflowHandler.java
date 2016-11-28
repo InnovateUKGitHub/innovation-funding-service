@@ -1,6 +1,7 @@
 package com.worth.ifs.project.gol.workflow.configuration;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.gol.domain.GOLProcess;
 import com.worth.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
@@ -8,6 +9,7 @@ import com.worth.ifs.project.gol.resource.GOLOutcomes;
 import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.repository.ProcessRepository;
@@ -68,6 +70,41 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, GOL_APPROVED), project);
     }
 
+    public boolean isSendAllowed(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.PENDING.equals(process.getActivityState());
+    }
+
+    public boolean isAlreadySent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && !GOLState.PENDING.equals(process.getActivityState());
+    }
+
+    public boolean isApproved(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.APPROVED.equals(process.getActivityState());
+    }
+
+    public boolean isReadyToApprove(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.READY_TO_APPROVE.equals(process.getActivityState());
+    }
+
+    public boolean isSent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GOLState.SENT.equals(process.getActivityState());
+    }
+
+
+    public boolean grantOfferLetterSent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        if(process == null)
+            return false;
+        ProjectUser projectUser = process.getParticipant();
+        if(projectUser == null)
+            return false;
+        return grantOfferLetterSent(project, projectUser);
+    }
     @Override
     protected GOLProcess createNewProcess(Project target, ProjectUser participant) {
         return new GOLProcess(participant, target, null);

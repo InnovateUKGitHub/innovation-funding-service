@@ -14,7 +14,7 @@
 <main id="content">
 	
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', ${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
