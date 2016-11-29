@@ -317,7 +317,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         List<BigDecimal> grantPerYear = new LinkedList<>();
         Map<String, BigDecimal> yearEligibleCostTotal = new HashMap();
         Map<String, BigDecimal> yearGrantAllocationTotal = new HashMap();
-        BigDecimal grandTotal = BigDecimal.valueOf(10000);
+        BigDecimal eligibleCostGrandTotal = BigDecimal.valueOf(10000);
+        BigDecimal grantAllocationGrandTotal = BigDecimal.valueOf(10000);
 
         organisationAndGrantPercentageMap.put("Empire Ltd", 20);
         organisationAndGrantPercentageMap.put("Ludlow", 30);
@@ -355,6 +356,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearGrantAllocationTotal, grandTotal );
+                yearEligibleCostTotal, yearGrantAllocationTotal, eligibleCostGrandTotal, grantAllocationGrandTotal);
     }
 }
