@@ -5,6 +5,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -25,6 +26,7 @@ import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -382,13 +384,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(0)
                 .withFormInputType(1L)
+                .withFormInputTypeTitle(AssessorFormInputType.RESEARCH_CATEGORY.toString())
                 .build();
 
-        FormInputType formInputType = new FormInputType(1L, "title");
-        CategoryResource categoryResource = new CategoryResource(2L, "name", CategoryType.RESEARCH_CATEGORY, null, null);
+        CategoryResource categoryResource = newCategoryResource()
+                .withId(2L)
+                .withName("name")
+                .withType(CategoryType.RESEARCH_CATEGORY)
+                .build();
 
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
-        when(formInputTypeServiceMock.findByTitle("assessor_research_category")).thenReturn(Collections.singletonList(formInputType));
         when(categoryServiceMock.getByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(serviceSuccess(Collections.singletonList(categoryResource)));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
