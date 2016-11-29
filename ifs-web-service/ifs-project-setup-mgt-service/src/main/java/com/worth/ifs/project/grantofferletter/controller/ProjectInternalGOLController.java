@@ -88,7 +88,8 @@ public class ProjectInternalGOLController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-
+    //TODO Endpoint to be removed as GOL will be generated when Finance Checks or Other documents are approved.
+    //TODO - INFUND-5998
     @RequestMapping(value = "/generate", method = GET)
     public ResponseEntity<FileEntryResource> generatedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
