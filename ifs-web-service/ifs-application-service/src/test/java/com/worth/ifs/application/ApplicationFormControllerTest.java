@@ -6,7 +6,6 @@ import com.worth.ifs.application.model.*;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
@@ -24,14 +23,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.ui.Model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
@@ -356,8 +355,8 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 2))
-                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"));
+                .andExpect(model().attributeErrorCount("form", 1))
+                .andExpect(model().hasErrors());
     }
 
     @Test
