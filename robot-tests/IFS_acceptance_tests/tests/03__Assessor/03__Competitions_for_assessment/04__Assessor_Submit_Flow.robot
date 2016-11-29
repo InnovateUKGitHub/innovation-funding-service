@@ -28,7 +28,7 @@ Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    and The user clicks the button/link    link=Juggling is very fun
+    and The user clicks the button/link    link=Intelligent Building
     and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
@@ -74,7 +74,7 @@ Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given The user clicks the button/link    link=Juggling is very fun
+    Given The user clicks the button/link    link=Intelligent Building
     And the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
@@ -179,7 +179,7 @@ Summary:Word count check(Your feedback)
     ...    INFUND-5179
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given The user clicks the button/link    link=Juggling is very fun
+    Given The user clicks the button/link    link=Intelligent Building
     and The user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
@@ -240,16 +240,16 @@ User Saves the Assessment as Not Recommended
     ...
     ...    INFUND-3724
     [Setup]
-    Given The user clicks the button/link    link=Juggling is not fun
+    Given The user clicks the button/link    link=Park living
     And the user adds score and feedback for every question
     And the user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see the element    css=li:nth-child(4) .recommend.no
-    And The user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
-    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
+    And The user should see the element    css=li:nth-child(3) .recommend.no
+    And The user should see the element    css=li:nth-child(3) .assessment-submit-checkbox
     And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
+    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
 
 Submit Assessments
     [Documentation]    INFUND-5739
@@ -257,7 +257,7 @@ Submit Assessments
     When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
-    Then the user should see the element     css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+    Then the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
 
 *** Keywords ***
 the collapsible button should contain
