@@ -72,7 +72,7 @@ Existing assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}
     And the assessor shouldn't be able to accept the accepted competition
@@ -120,7 +120,7 @@ Existing assessor shouldn't be able to accept other assessor's invitation
     ...    INFUND-304
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    jQuery=button:contains(Accept)
+    when the user clicks the button/link    jQuery=button:contains("Yes, create account")
     Then The user should see permissions error message
 
 *** Keywords ***
