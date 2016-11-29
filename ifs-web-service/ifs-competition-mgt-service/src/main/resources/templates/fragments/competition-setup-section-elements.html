@@ -192,7 +192,6 @@
                     </label>
                 </fieldset>
             </div>
-            <span th:text="${competitionSetupForm.question.type}"></span>
 
             <th:block th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or
 competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
@@ -348,35 +347,35 @@ competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.Compe
                             </tr>
                             </thead>
                             <tbody>
-                                <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
-                                    <tr class="form-group-row" th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('guidanceRows[__${iteration.index}__].subject') || #fields.hasErrors('guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
+                                <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
+                                    <tr class="form-group-row" th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject') || #fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
                                         <td>
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-subject'}">
                                                 <span class="visuallyhidden">Subject</span>
-                                                <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].subject')}">
-                                                    <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
+                                                <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
+                                                    <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}" th:text="${err}" />
                                                 </th:block>
                                             </label>
                                             <input required="required"
                                                    class="form-control width-small"
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
-                                                   th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].subject}"
+                                                   th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                    data-maxlength-errormessage="Subject has a maximum length of 255 characters"
                                                    data-required-errormessage="Please enter a subject"/>
                                         </td>
                                         <td>
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
                                                 <span class="visuallyhidden">Justification</span>
-                                                <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}" th:text="${err}" />
+                                                <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
+                                                    <span class="error-message" th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].justification')}" th:text="${err}" />
                                                 </th:block>
                                             </label>
                                             <input required="required"
                                                    class="form-control width-full"
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-justification'}"
-                                                   th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
+                                                   th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                    data-maxlength-errormessage="Justification has a maximum length of 255 characters"
                                                    data-required-errormessage="Please enter a justification" />
                                         </td>

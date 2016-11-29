@@ -31,5 +31,4 @@ public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
     public int getGuidanceRowsCount() {
         return guidanceRows.size();
     }
-
 }

@@ -175,7 +175,14 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             guidanceRow = question.getGuidanceRows().get(index);
 
-            if(fieldName.endsWith("justification")) {
+            if(fieldName.endsWith("subject")) {
+
+                if (StringUtils.isBlank(value)) {
+                    return asList(new Error("validation.applicationquestionform.subject.required", HttpStatus.BAD_REQUEST));
+                }
+                guidanceRow.setSubject(value);
+
+            } if(fieldName.endsWith("justification")) {
 
                 if (StringUtils.isBlank(value)) {
                     return asList(new Error("validation.applicationquestionform.justification.required", HttpStatus.BAD_REQUEST));
