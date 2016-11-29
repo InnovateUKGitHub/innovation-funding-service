@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class CompetitionSetupQuestionResource {
@@ -25,6 +26,7 @@ public class CompetitionSetupQuestionResource {
     private String guidance;
 
     @Min(1)
+    @NotNull(message="{validation.field.must.not.be.blank}")
     private Integer maxWords;
     private Boolean appendix;
 
