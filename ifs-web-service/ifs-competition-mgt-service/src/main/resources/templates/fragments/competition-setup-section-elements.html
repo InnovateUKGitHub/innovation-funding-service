@@ -282,6 +282,7 @@ competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.Compe
                             </thead>
                             <tbody>
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
+
                                     <tr class="form-group-row" th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom') || #fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo') || #fields.hasErrors('guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
                                         <td>
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scorefrom'}">
@@ -348,6 +349,9 @@ competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.Compe
                             </thead>
                             <tbody>
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
+
+                                    <input type="hidden" th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].formInput}"/>
+
                                     <tr class="form-group-row" th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject') || #fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
                                         <td>
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-subject'}">
