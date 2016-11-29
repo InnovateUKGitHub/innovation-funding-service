@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	
+
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level2')})" th:remove="tag" />
 
 
@@ -54,7 +54,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
-		
+
 		<div class="success-alert extra-margin-bottom">
 			<p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
 		</div>
@@ -63,11 +63,11 @@
 	</th:block>
 
 	<h2 class="heading-medium">Grant offer letter</h2>
-	
+
 	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">This document is awaiting signature by the Project Manager.</p>
 
 	<!--<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>-->
-	
+
 	<p><a href="#">Grant offer letter 2016-07-28a.PDF</a></p>
 
 	<h2 class="heading-medium">Annex</h2>
@@ -118,20 +118,20 @@
 			<div class="extra-margin">
 				<a href="#" data-js-modal="modal-send" class="button large">Submit</a>
 			</div>
-			
+
 			<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
 					<h2 class="heading-medium no-margin">Confirm submission</h2>
 
-					<p>After your submission of the signed Grant offer letter Innovate UK will review signed document</p>
+					<p>Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
 
 					<hr />
 
 		        	<div class="alignright-button">
-						
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 		        		<a th:href="@{'?status=GOLSent&#38;user=nonLead'}" class="button">Confirm submission</a>
 		        	</div>
@@ -141,9 +141,9 @@
 
 		</div>
 	</th:block>
-	
-	
-	
+
+
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -155,7 +155,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>
