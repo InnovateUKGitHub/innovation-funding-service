@@ -71,7 +71,7 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    Empire Ltd - Spend profile
 
 
@@ -195,7 +195,7 @@ Non-lead partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    Ludlow - Spend profile
 
 Non-lead partner can see correct project start date and duration
@@ -229,7 +229,7 @@ Academic partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    EGGS - Spend profile
 
 Academic partner can see correct project start date and duration
