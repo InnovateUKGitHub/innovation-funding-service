@@ -17,7 +17,6 @@ import java.util.List;
 public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
 
     @Valid
-    @NotEmpty(message = "Please enter a guidance row")
     private List<GuidanceRowViewModel> guidanceRows = new ArrayList<>();
 
     public List<GuidanceRowViewModel> getGuidanceRows() {

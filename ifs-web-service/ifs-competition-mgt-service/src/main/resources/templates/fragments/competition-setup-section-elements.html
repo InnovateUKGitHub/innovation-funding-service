@@ -198,7 +198,7 @@ competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.Compe
 
                 <input type="hidden" name="competitionSetupForm.question.type" th:value="${T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
 
-                <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+                <h2 class="heading-medium extra-margin" th:if="${question.scored != null or question.writtenFeedback != null}">Assessment of this question</h2>
 
                 <th:block th:if="${question.scored != null}">
 
