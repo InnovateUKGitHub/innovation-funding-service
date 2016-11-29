@@ -24,13 +24,6 @@ import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.*;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-
-import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
-import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
-import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
-import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
-import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
@@ -54,6 +47,7 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.mapper.*;
 import com.worth.ifs.invite.repository.*;
@@ -459,6 +453,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected GOLTemplateRenderer rendererMock;
 
+    @Mock
     protected AssessorCountOptionMapper assessorCountOptionMapperMock;
 
     @Mock
