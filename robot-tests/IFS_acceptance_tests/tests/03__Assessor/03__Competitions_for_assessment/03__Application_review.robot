@@ -189,15 +189,13 @@ Question 1: Word count
     Then the user should see the text in the page    Words remaining: -1
     When the user enters text to a text field    css=.editor    Test text
     Then the user should see the text in the page    Words remaining: 98
+    [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Finance overview
     [Documentation]    INFUND-3394
     [Tags]    HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
-    And the user should not see the element    css=input
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     And the user clicks the button/link    link=Back to your assessment overview

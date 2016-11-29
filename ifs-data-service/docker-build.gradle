@@ -44,6 +44,6 @@ ext.ifsFileStorageLocation="/tmp/uploads"
 
 ext.ifsWebBaseURL="https://ifs-local-dev"
 
-ext.serverPort=8090
+ext.serverPort=8080
 ext.activeProfile="local"
 ext.tomcatWebAppsDir="build/war"
