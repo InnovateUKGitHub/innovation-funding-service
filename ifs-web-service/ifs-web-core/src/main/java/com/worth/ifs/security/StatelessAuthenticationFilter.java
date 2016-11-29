@@ -48,7 +48,8 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
             uri.contains("/images/") ||
             uri.contains("/favicon.ico") ||
             uri.contains("/prototypes") ||
-            uri.contains("/error")
+            uri.contains("/error") ||
+            uri.contains("/jolokia/")
         );
     }
 }
