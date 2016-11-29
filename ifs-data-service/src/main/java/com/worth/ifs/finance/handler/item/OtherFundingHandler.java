@@ -39,7 +39,7 @@ public class OtherFundingHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
     }
 

@@ -43,7 +43,7 @@ public class LabourCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
     }
 

@@ -45,7 +45,7 @@ public class GrantClaimHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 

@@ -23,7 +23,7 @@ public class OtherCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new OtherCost(cost.getId(),cost.getDescription(), cost.getCost());
     }
 }

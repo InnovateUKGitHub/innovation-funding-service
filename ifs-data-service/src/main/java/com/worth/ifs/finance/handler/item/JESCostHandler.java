@@ -33,7 +33,7 @@ public class JESCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
     }
 }

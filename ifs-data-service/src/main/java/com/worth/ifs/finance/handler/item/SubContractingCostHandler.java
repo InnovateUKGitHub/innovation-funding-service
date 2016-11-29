@@ -24,9 +24,9 @@ public class SubContractingCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         String country = "";
-        for(FinanceRowMetaValue costValue : ((ApplicationFinanceRow)cost).getCostValues()) {
+        for(FinanceRowMetaValue costValue : cost.getCostValues()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {
                 country = costValue.getValue();
             }

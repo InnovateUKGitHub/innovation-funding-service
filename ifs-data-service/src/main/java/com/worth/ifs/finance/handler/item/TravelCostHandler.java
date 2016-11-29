@@ -29,7 +29,7 @@ public class TravelCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity());
     }
 }

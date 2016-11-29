@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.ApplicationFinanceRow;
-import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
@@ -29,12 +28,12 @@ public class CapitalUsageHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         String existing = "";
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
-        for (FinanceRowMetaValue costValue : ((ApplicationFinanceRow)cost).getCostValues()) {
+        for (FinanceRowMetaValue costValue : cost.getCostValues()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
                 String title = costValue.getFinanceRowMetaField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {

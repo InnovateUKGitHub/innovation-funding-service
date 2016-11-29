@@ -34,7 +34,7 @@ public class MaterialsHandler extends FinanceRowHandler {
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
     }
 }

@@ -5,6 +5,7 @@ import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.*;
 import com.worth.ifs.finance.handler.item.*;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.ProjectFinanceRowRepository;
@@ -46,6 +47,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Autowired
     private AutowireCapableBeanFactory beanFactory;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
@@ -91,9 +95,22 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        costCategories = addCostsToCategories(costCategories, costs);
+        costCategories = addCostsToCategories(costCategories, toApplicationFinanceRows(costs));
         costCategories = calculateTotals(costCategories);
         return costCategories;
+    }
+
+    private List<ApplicationFinanceRow> toApplicationFinanceRows(List<ProjectFinanceRow> costs) {
+        return simpleMap(costs, cost -> {
+
+            Long applicationId = cost.getTarget().getProject().getApplication().getId();
+            Long organisationId = cost.getTarget().getOrganisation().getId();
+            ApplicationFinance applicationFinance =
+                    applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+
+            return new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+                    cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+        });
     }
 
     @Override
@@ -111,7 +128,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<? extends FinanceRow> costs) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<ApplicationFinanceRow> costs) {
         costs.stream().forEach(c -> addCostToCategory(costCategories, c));
         return costCategories;
     }
@@ -121,7 +138,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      * are added to a specific Category (e.g. labour).
      * @param cost ApplicationFinanceRow to be added
      */
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, ApplicationFinanceRow cost) {
         FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
