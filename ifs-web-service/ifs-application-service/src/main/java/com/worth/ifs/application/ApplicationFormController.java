@@ -298,7 +298,7 @@ public class ApplicationFormController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult));
+                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
             }
 
             model.addAttribute("form", form);
@@ -395,7 +395,7 @@ public class ApplicationFormController {
                                       ApplicationForm form,
                                       Long applicationId, Long sectionId, QuestionResource question,
                                       HttpServletRequest request,
-                                      HttpServletResponse response, BindingResult bindingResult) {
+                                      HttpServletResponse response) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -440,7 +440,7 @@ public class ApplicationFormController {
         }
 
         if(isMarkQuestionRequest(params)) {
-            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors, bindingResult));
+            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors));
 
         } else if(isMarkSectionRequest(params)){
             errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, response, processRole, errors));
@@ -466,23 +466,16 @@ public class ApplicationFormController {
     }
 
 
-    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar, BindingResult bindingResult) {
-
-        if (errorsSoFar.hasErrors() || bindingResult.hasErrors()) {
-            return new ValidationMessages(fieldError("formInput[application]", "", "application.validation.MarkAsCompleteFailed"));
-        } else {
-
-            ValidationMessages messages = new ValidationMessages();
-
+    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
+        ValidationMessages messages = new ValidationMessages();
+        if (!errorsSoFar.hasErrors()) {
             List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errorsSoFar);
 
             if (collectValidationMessages(applicationMessages).hasErrors()) {
-                messages.addError(fieldError("formInput[application]", "", "application.validation.MarkAsCompleteFailed"));
                 messages.addAll(handleApplicationDetailsValidationMessages(applicationMessages, application));
             }
-
-            return messages;
         }
+        return messages;
     }
 
     private ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> applicationMessages, ApplicationResource application) {
@@ -649,7 +642,7 @@ public class ApplicationFormController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
