@@ -10,7 +10,7 @@ import java.util.Collections;
  */
 public class SpendProfileValidationException extends IFSRuntimeException {
 
-    private static final String MESSAGE = "Spend Profile cost is failed to validate. ErrorKey: %s, Category: %d, Position: %d";
+    private static final String MESSAGE = "Spend Profile cost has failed to validate. ErrorKey: %s, Category: %d, Position: %d";
 
     private SpendProfileValidationError spendProfileValidationError;
     private Long category;
