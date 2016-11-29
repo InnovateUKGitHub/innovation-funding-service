@@ -19,7 +19,7 @@
                 <dd class="column-two-thirds" ifs:utext="${question.guidance}"></dd>
                 <dt class="column-third">Max word count</dt>
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
-                <th:block th:if="${question.appendix != null}">
+                <th:block th:if="${usingAppendix and question.appendix != null}">
                     <dt class="column-third">Appendix</dt>
                     <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
                     <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
@@ -181,7 +181,7 @@
                            th:name="question.maxWords"
                            th:value="${question.maxWords}"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:if="${usingAppendix}">
                     <fieldset class="inline">
                         <legend class="form-label-bold">Appendix</legend>
                         <label class="block-label">
