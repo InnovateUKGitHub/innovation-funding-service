@@ -25,6 +25,7 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
+${Correct_date}    12 January to 28 January
 
 *** Test Cases ***
 Assessor dashboard should be empty
@@ -80,14 +81,15 @@ Existing assessor: Accept invitation
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
     ...
-    ...             INFUND-5001
+    ...    INFUND-5001
     [Tags]
-    # Development work is not complete
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
-    Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
-   # And the user should see the text in the page    Photonics for health
-    And The user should see the text in the page    Assessment period:
+    And the assessor should see the correct date
+    When The user clicks the button/link    link=Photonics for health
+    And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
+    And The user clicks the button/link    link=Back to your assessor dashboard
+    Then The user should see the text in the page    Upcoming competitions to assess
 
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
@@ -95,7 +97,6 @@ When the assessment period starts the comp moves to the comp for assessment
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
-
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
@@ -154,3 +155,7 @@ the assessor shouldn't be able to reject the accepted competition
 The assessor is unable to see the invitation
     The user should see the text in the page    This invitation is now closed
     The user should see the text in the page    You have already accepted or rejected this invitation.
+
+the assessor should see the correct date
+    ${Assessment_period}=    Get Text    css=.invite-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
+    Should Be Equal    ${Assessment_period}    ${Correct_date}
