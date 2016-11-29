@@ -545,7 +545,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void isSendGrantOfferLetterAllowed() throws Exception {
         when(projectServiceMock.isSendGrantOfferLetterAllowed(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/isSendGrantOfferLetterAllowed", 123L))
+        mockMvc.perform(get("/project/{projectId}/is-send-grant-offer-letter-allowed", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -556,7 +556,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void isGrantOfferLetterAlreadySent() throws Exception {
         when(projectServiceMock.isGrantOfferLetterAlreadySent(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/isGrantOfferLetterAlreadySent", 123L))
+        mockMvc.perform(get("/project/{projectId}/is-grant-offer-letter-already-sent", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
