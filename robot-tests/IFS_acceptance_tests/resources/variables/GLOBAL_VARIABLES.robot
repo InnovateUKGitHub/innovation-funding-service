@@ -51,11 +51,11 @@ ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
 ${FUNDERS_PANEL_APPLICATION_1}    24
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000024
-${FUNDERS_PANEL_APPLICATION_1_TITLE}    Connected batteries step change - battery management in the off-grid energy sector
+${FUNDERS_PANEL_APPLICATION_1_TITLE}    Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1_HEADER}    ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${FUNDERS_PANEL_APPLICATION_2}    25
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}    00000025
-${FUNDERS_PANEL_APPLICATION_2_TITLE}    Wireless remote collection of data from multiple in-field sensors
+${FUNDERS_PANEL_APPLICATION_2_TITLE}    Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_HEADER}    ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
 ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION}    ${EMPIRE_LTD_ID}
@@ -67,7 +67,7 @@ ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    32
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    00000032
-${PROJECT_SETUP_APPLICATION_1_TITLE}    best riffs
+${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
 ${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}: ${PROJECT_SETUP_APPLICATION_1_TITLE}
 ${PROJECT_SETUP_APPLICATION_1_PROJECT}    3
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
@@ -81,7 +81,7 @@ ${IN_ASSESSMENT_COMPETITION}    4
 ${IN_ASSESSMENT_COMPETITION_NAME}    Sustainable living models for the future
 ${IN_ASSESSMENT_APPLICATION_1}    22
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}    00000022
-${IN_ASSESSMENT_APPLICATION_1_TITLE}    Spherical interactions in hyperdimensional space
+${IN_ASSESSMENT_APPLICATION_1_TITLE}    3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_HEADER}    ${IN_ASSESSMENT_APPLICATION_1_NUMBER}: ${IN_ASSESSMENT_APPLICATION_1_TITLE}
 ${IN_ASSESSMENT_APPLICATION_2}    16
 ${IN_ASSESSMENT_APPLICATION_3}    20
@@ -155,7 +155,7 @@ ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLI
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-${404_error_message}    Page Not Found
+${404_error_message}    Page not found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
 ${too_large_pdf_validation_error}    the size of file or request being submitted is too large
@@ -222,4 +222,3 @@ ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
-

@@ -1,19 +1,22 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
+import static com.worth.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -41,10 +44,33 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         when(assessmentRestService.getById(assessmentId)).thenReturn(restSuccess(expected));
 
-        AssessmentResource response = service.getById(assessmentId);
-
-        assertSame(expected, response);
+        assertSame(expected, service.getById(assessmentId));
         verify(assessmentRestService, only()).getById(assessmentId);
+    }
+
+    @Test
+    public void getByUserAndCompetition() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
+
+        Long userId = 1L;
+        Long competitionId = 2L;
+
+        when(assessmentRestService.getByUserAndCompetition(userId, competitionId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getByUserAndCompetition(userId, competitionId));
+        verify(assessmentRestService, only()).getByUserAndCompetition(userId, competitionId);
+    }
+
+    @Test
+    public void getTotalScore() throws Exception {
+        AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
+
+        Long assessmentId = 1L;
+
+        when(assessmentRestService.getTotalScore(assessmentId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getTotalScore(assessmentId));
+        verify(assessmentRestService, only()).getTotalScore(assessmentId);
     }
 
     @Test
@@ -96,5 +122,19 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).acceptInvitation(assessmentId);
+    }
+
+    @Test
+    public void submitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
+
+        when(assessmentRestService.submitAssessments(assessmentSubmissions)).thenReturn(restSuccess());
+
+        ServiceResult<Void> response = service.submitAssessments(asList(1L, 2L));
+
+        assertTrue(response.isSuccess());
+        verify(assessmentRestService, only()).submitAssessments(assessmentSubmissions);
     }
 }

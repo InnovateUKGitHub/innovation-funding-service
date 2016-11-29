@@ -41,6 +41,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5637 As a Competitions team member I want to be able to edit setup questions in the Project Summary section of Competition Setup so that I can amend the defaults if required for the competition
 ...
 ...               INFUND-5635 As a Competitions team member I want to be able to edit questions in the Scope section of Competition Setup so that I can amend the defaults if required for the competition
+...
+...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
+...
+...               INFUND-5633 As a Competitions team member I want to be able to set up questions in the Application Details section of Competition Setup so that I can amend the defaults if necessary for the competitions
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -302,43 +306,10 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
+    [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
-
-Assessor: Contain the correct options
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Assessors
-    And the user should see the text in the page    How many assessors are required for each application?
-    Then the user should see the element    jQuery=label:contains(1)
-    When the user should see the element    jQuery=label:contains(3)
-    And the user should see the element    jQuery=label:contains(5)
-    And the user should see the text in the page    How much do assessors receive per application
-    And the user should see the element    id=assessorPay
-
-Assesor: Mark as Done then Edit again
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    Given the user selects the checkbox    id=assessors-62
-    And the user enters text to a text field    id=assessorPay    100
-    And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    3
-    And the user should see the text in the page    100
-    When the user clicks the button/link    link=Competition setup
-    When the user clicks the button/link    link=Assessors
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-
-Assesor: Should have a Green Check
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(6) .section-status
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
-
 
 Application: Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -367,6 +338,19 @@ Application: Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     And the user should see the element    jQuery=a:contains("Edit this question")
+    [Teardown]    The user clicks the button/link    link=Application
+
+Application: Application details
+    [Documentation]    INFUND-5633
+    Given the user clicks the button/link    link=Application details
+    And the user should see the element    jQuery=h1:contains("Application details")
+    And the user should see the text in the page    These are the default questions included in the application details section.
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    useResubmissionQuestion    false
+    And The user clicks the button/link    jQuery=button:contains("Save and close")
+    And the user clicks the button/link    link=Application details
+    Then The user should see the text in the page    Application details
+    And the user should see the text in the page    No
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Scope
@@ -402,8 +386,8 @@ Application: Project Summary
 Application: Finances Form
     [Documentation]    INFUND-5640 INFUND-6039
     Given the user clicks the button/link    link=Finances
-    And the user should see the element       jQuery=h1:contains("Application finances")
-    And the user should see the text in the page  Each partner is required to complete the following finance sections
+    And the user should see the element    jQuery=h1:contains("Application finances")
+    And the user should see the text in the page    Each partner is required to complete the following finance sections
     When The user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user clicks the button/link    jQuery=label:contains("Light finances")
     And The user clicks the button/link    jQuery=label:contains("No")
@@ -432,6 +416,36 @@ Application: should have a green check
     When The user clicks the button/link    jQuery=a:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+
+Assessor: Contain the correct options
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Assessors
+    And the user should see the text in the page    How many assessors are required for each application?
+    Then the user should see the element    jQuery=label:contains(1)
+    When the user should see the element    jQuery=label:contains(3)
+    And the user should see the element    jQuery=label:contains(5)
+    And the user should see the text in the page    How much do assessors receive per application
+    And the user should see the element    id=assessorPay
+
+Assessor: Mark as Done then Edit again
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    When the user selects the checkbox    id=assessors-62
+    And the user enters text to a text field    id=assessorPay    100
+    And the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page    3
+    And the user should see the text in the page    100
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Then the user clicks the button/link    jQuery=.button:contains("Done")
+
+Assessor: Should have a Green Check
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    When The user clicks the button/link    link=Competition setup
+    Then the user should see the element    css=li:nth-child(6) .section-status
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468

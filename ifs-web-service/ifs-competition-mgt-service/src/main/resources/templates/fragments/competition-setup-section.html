@@ -528,7 +528,7 @@
 	                    </span>
 	                </legend>
 
-		            <label class="block-label selected" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
+		            <label class="block-label" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
@@ -810,6 +810,7 @@
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Application details</h3>
                 <ol class="list-number">
+                    <li><a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application details</a></li>
                     <li th:each="question : ${projectDetails}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
                 </ol>
             </div>
@@ -874,11 +875,12 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
                     </span>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
 
                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-required-errormessage="Please enter how much assessors will be paid"
                        data-min-errormessage="Please enter how much assessors will be paid"
+                       data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid}"
                        th:errorclass="field-error"/>
             </div>
 
@@ -909,4 +911,3 @@
         </li>
     </ul>
 </th:block>
-

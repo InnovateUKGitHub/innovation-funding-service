@@ -33,7 +33,7 @@ public class CompetitionInviteController {
 
     @RequestMapping(value = "/openInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<CompetitionInviteResource> openInvite(@PathVariable String inviteHash) {
-        return competitionInviteService.openInvite(inviteHash).toGetResponse();
+        return competitionInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 
     @RequestMapping(value = "/acceptInvite/{inviteHash}", method = RequestMethod.POST)

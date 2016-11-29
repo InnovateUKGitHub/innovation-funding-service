@@ -234,3 +234,11 @@ select.form-control{
 .cell-align-top{
   vertical-align: top;
 }
+
+
+/*----- Disabled select elements ----*/
+select[disabled]{
+  background: #f8f8f8 none repeat scroll 0 0;
+  border: 1px solid #bfc1c3;
+  color: #0b0c0c;
+}

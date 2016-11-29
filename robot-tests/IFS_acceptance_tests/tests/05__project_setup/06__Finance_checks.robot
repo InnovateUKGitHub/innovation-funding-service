@@ -37,7 +37,7 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
@@ -62,8 +62,6 @@ Finance checks client-side validations
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
@@ -116,6 +114,19 @@ Project Finance user to view Je-S Download form and then approve finances
     And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
     Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
     And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821

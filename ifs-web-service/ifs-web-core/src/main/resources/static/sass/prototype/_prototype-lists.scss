@@ -163,6 +163,20 @@ dl.standard-definition-list{
       margin-left: 250px;
     }
   }
+
+  &.reduced-width{
+
+    margin-top: 0.5em;
+
+    dt{
+      width: 25%;
+      margin-bottom: 0.3em;
+    }
+    dd{
+      margin-bottom: 0.3em
+    }
+  }
+
   &.column-definition-list {
     dt {
       width: 33%;

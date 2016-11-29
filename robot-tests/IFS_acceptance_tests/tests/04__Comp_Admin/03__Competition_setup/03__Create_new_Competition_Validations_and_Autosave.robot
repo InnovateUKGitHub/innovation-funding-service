@@ -18,6 +18,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
+...
+...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -201,6 +203,23 @@ Milestones: Autosave
     When the user clicks the button/link    link=Competition setup
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
+
+Assessor: Server-side validation
+    [Documentation]    INFUND-5641
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link    link=Assessors
+    And The user enters text to a text field    id=assessorPay    ${EMPTY}
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see an error    Please enter how much assessors will be paid.
+
+Assessor: Client-side validation
+    [Documentation]    INFUND-5641
+    When The user enters text to a text field    id=assessorPay    1.1
+    And the user selects the checkbox    id=assessors-62
+    Then the user should see an error    This field can only accept whole numbers
+    When The user enters text to a text field    id=assessorPay    120
+    And the user selects the checkbox    id=assessors-62
+    Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***
 the user moves focus and waits for autosave

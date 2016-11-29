@@ -32,6 +32,7 @@ Details of the competition are visible
     [Documentation]    INFUND-3723
     Then the user should see the text in the page    Competition
     And the user should see the text in the page    Innovation Lead
+    And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
     And the user should see the text in the page    12:00am Tuesday 12 January 2016
@@ -94,10 +95,10 @@ the assessor fills all fields with valid inputs
     The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
-    The user should not see the element    link=Juggling is fun
+    The user should not see the element    link=Park living
 
 The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(2)    Open
-    element should contain    css=.boxed-list li:nth-child(3)    Open
-    element should contain    css=.boxed-list li:nth-child(4)    Open
+    element should contain    css=.boxed-list li:nth-child(2)    Accepted
+    element should contain    css=.boxed-list li:nth-child(3)    Accepted
+    element should contain    css=.boxed-list li:nth-child(4)    Accepted
