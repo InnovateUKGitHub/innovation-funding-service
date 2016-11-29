@@ -185,7 +185,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
-        templateReplacements.put("LeadOrgName", project.getApplication().getLeadApplicant().getName());
+        templateReplacements.put("LeadOrgName", project.getApplication().getLeadOrganisation().getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() == 0 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() == 0 ? "" : addresses.get(2));
