@@ -64,7 +64,7 @@
 	</div>
 
 	<div class="extra-margin">
-		<a role="button" tabindex="0" class="button" href="/prototypes/2469-comp-setup">Done</a>
+		<a role="button" tabindex="0" class="button" th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}">Done</a>
 	</div>
 
 	<ul class="pagination">
@@ -83,7 +83,7 @@
 	</ul>
 
 	<div class="extra-margin">
-		<a href="/prototypes/2469-comp-setup" class="button-secondary">Return to setup overview</a>
+		<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}" class="button-secondary">Return to setup overview</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
