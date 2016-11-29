@@ -19,9 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<ProcessOutcomeController> {
 
-    @Mock
-    ProcessOutcomeService processOutcomeService;
-
     @Override
     protected ProcessOutcomeController supplyControllerUnderTest() {
         return new ProcessOutcomeController();
@@ -35,14 +32,14 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
                 .with(id(processOutcomeId))
                 .build();
-        when(processOutcomeService.findOne(processOutcomeId)).thenReturn(serviceSuccess(processOutcome));
+        when(processOutcomeServiceMock.findOne(processOutcomeId)).thenReturn(serviceSuccess(processOutcome));
 
 
         mockMvc.perform(get("/processoutcome/{id}", processOutcomeId))
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(processOutcome)))
                 .andExpect(status().isOk());
 
-        verify(processOutcomeService, only()).findOne(processOutcomeId);
+        verify(processOutcomeServiceMock, only()).findOne(processOutcomeId);
     }
 
     @Test
@@ -51,12 +48,12 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
 
         Long assessmentId = 1L;
 
-        when(processOutcomeService.findLatestByProcess(assessmentId)).thenReturn(serviceSuccess(expected));
+        when(processOutcomeServiceMock.findLatestByProcess(assessmentId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
-        verify(processOutcomeService, only()).findLatestByProcess(assessmentId);
+        verify(processOutcomeServiceMock, only()).findLatestByProcess(assessmentId);
     }
 
     @Test
@@ -66,12 +63,12 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
         Long assessmentId = 1L;
         String processType =  AssessmentOutcomes.FEEDBACK.getType();
 
-        when(processOutcomeService.findLatestByProcessAndOutcomeType(assessmentId, processType)).thenReturn(serviceSuccess(expected));
+        when(processOutcomeServiceMock.findLatestByProcessAndOutcomeType(assessmentId, processType)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}/type/{type}", assessmentId, processType))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
-        verify(processOutcomeService, only()).findLatestByProcessAndOutcomeType(assessmentId,processType);
+        verify(processOutcomeServiceMock, only()).findLatestByProcessAndOutcomeType(assessmentId,processType);
     }
 
 }
