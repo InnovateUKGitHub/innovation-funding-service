@@ -81,16 +81,15 @@ Existing assessor: Accept invitation
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
     ...
-    ...             INFUND-5001
+    ...    INFUND-5001
     [Tags]
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
-    Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
-    And the user should see the text in the page    Photonics for health
-    And The user should see the text in the page    Assessment period:
     And the assessor should see the correct date
-    Then The user clicks the button/link    link=Photonics for health
+    When The user clicks the button/link    link=Photonics for health
+    And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
     And The user clicks the button/link    link=Back to your assessor dashboard
+    Then The user should see the text in the page    Upcoming competitions to assess
 
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
@@ -98,7 +97,6 @@ When the assessment period starts the comp moves to the comp for assessment
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
-
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
