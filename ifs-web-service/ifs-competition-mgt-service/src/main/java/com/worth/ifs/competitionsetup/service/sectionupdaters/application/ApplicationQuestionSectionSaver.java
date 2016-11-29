@@ -1,11 +1,14 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competitionsetup.form.*;
-import com.worth.ifs.competitionsetup.service.*;
-import com.worth.ifs.competitionsetup.service.sectionupdaters.*;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.Error.*;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.*;
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
@@ -56,7 +59,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            return makeErrorList("question.maxWords");
+            return makeErrorList();
         }
 
         return Collections.emptyList();
@@ -80,11 +83,16 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 question.setGuidance(value);
                 break;
             case "question.maxWords" :
+                Integer maxWords;
                 try {
-                    question.setMaxWords(Integer.parseInt(value));
+                    maxWords = Integer.parseInt(value);
                 } catch(NumberFormatException e) {
                     return makeErrorList("question.maxWords");
                 }
+                if (maxWords < 1) {
+                    return makeErrorList("question.maxWords", "javax.validation.constraints.Min.message", value);
+                }
+                question.setMaxWords(maxWords);
                 break;
             case "question.appendix" :
                 question.setAppendix(textToBoolean(value));
@@ -96,12 +104,20 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         return Collections.emptyList();
     }
 
-	private List<Error> makeErrorList() {
-        return asList(fieldError("", null, "Unable to save question"));
+    private List<Error> makeErrorList() {
+        return makeErrorList(null);
     }
 
     private List<Error> makeErrorList(String fieldName) {
-        return asList(fieldError("", fieldName, "Unable to save question"));
+        return makeErrorList(fieldName, "Unable to save question");
+    }
+
+    private List<Error> makeErrorList(String fieldName, String error) {
+        return makeErrorList(fieldName, error, "");
+    }
+
+    private List<Error> makeErrorList(String fieldName, String error, String rejectedValue) {
+        return asList(fieldError(fieldName, rejectedValue, error));
     }
 
 	@Override

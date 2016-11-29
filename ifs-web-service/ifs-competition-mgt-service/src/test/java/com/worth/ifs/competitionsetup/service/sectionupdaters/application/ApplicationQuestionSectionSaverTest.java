@@ -65,6 +65,21 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
+    public void testAutoSaveWordCount() {
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setMilestones(asList(10L));
+
+        List<Error> errors = service.autoSaveSectionField(competition, "question.maxWords", "-1", Optional.of(1L));
+
+        assertFalse(errors.isEmpty());
+        assertEquals(errors.get(0).getErrorKey(), "javax.validation.constraints.Min.message");
+        verify(competitionSetupQuestionService).getQuestion(1L);
+        verifyNoMoreInteractions(competitionSetupQuestionService);
+    }
+
+    @Test
     public void testAutoSaveCompetitionSetupSectionErrors() {
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setMaxWords(400);
