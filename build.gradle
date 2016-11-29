@@ -39,7 +39,6 @@ subprojects {
             compile "org.springframework.boot:spring-boot-starter-actuator"
             compile "org.springframework.boot:spring-boot-actuator-docs"
             compile "org.springframework.boot:spring-boot-devtools"
-            compile 'org.jolokia:jolokia-core'
         }
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
