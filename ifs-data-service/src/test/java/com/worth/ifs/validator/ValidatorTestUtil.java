@@ -1,18 +1,11 @@
 package com.worth.ifs.validator;
 
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.form.domain.FormInputResponse;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
-import com.worth.ifs.finance.resource.cost.FinanceRowItem;
-import com.worth.ifs.form.domain.FormInputResponse;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
 public final class ValidatorTestUtil {
-
 	private ValidatorTestUtil(){}
 	
     public static BindingResult getBindingResult(FormInputResponse formInputResponse) {
@@ -22,5 +15,4 @@ public final class ValidatorTestUtil {
     public static BindingResult getBindingResult(FinanceRowItem costItem) {
         return new DataBinder(costItem).getBindingResult();
     }
-
 }
