@@ -165,6 +165,8 @@ public class CompetitionSetupApplicationController {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
                     Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
+
+            competitionSetupForm.getQuestion().setType(CompetitionSetupQuestionType.ASSESSED_QUESTION);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }
@@ -183,6 +185,8 @@ public class CompetitionSetupApplicationController {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.PROJECT_DETAILS,
                     Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
+
+            competitionSetupForm.getQuestion().setType(CompetitionSetupQuestionType.SCOPE);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }
