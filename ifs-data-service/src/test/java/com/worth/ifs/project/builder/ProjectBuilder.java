@@ -57,8 +57,12 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
-    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+    public ProjectBuilder withSignedGrantOfferLetter(FileEntry grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
     }
 
     public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {
