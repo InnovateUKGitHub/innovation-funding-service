@@ -131,7 +131,7 @@
                                 <legend>
                                     <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
                                     <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:remove="tag" />
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-resubmissione')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" th:remove="tag" />
                                 </legend>
 
                                 <label th:class="${'block-label'  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
@@ -142,7 +142,7 @@
                                            th:field="*{__application.resubmission__}"
                                            value="true"
                                            required="required"
-                                           th:disabled="${readonly}"
+                                           th:readonly="${readonly}"
                                            th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
                                     />
                                     Yes
@@ -152,7 +152,7 @@
                                     <input type="radio"
                                            th:id="resubmission-no"
                                            th:field="*{__application.resubmission__}"
-                                           th:disabled="${readonly}"
+                                           th:readonly="${readonly}"
                                            value="false"
                                            required="required"
                                            th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
@@ -167,7 +167,7 @@
                             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationnumber">
                                     <span>Previous application number</span>
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationnumber')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')" th:remove="tag" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -176,12 +176,13 @@
                                        th:field="*{__application.previousApplicationNumber__}"
                                        required="required"
                                        th:errorclass="field-error"
+                                       th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}"
                                 />
                             </div>
                             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationtitle">
                                     <span>Previous application title</span>
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationtitle')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" th:remove="tag" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -189,6 +190,8 @@
                                        id="application_details-previousapplicationtitle"
                                        th:field="*{__application.previousApplicationTitle__}"
                                        required="required"
+                                       th:errorclass="field-error"
+                                       th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}"
                                 />
                             </div>
                         </div>

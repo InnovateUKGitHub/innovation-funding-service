@@ -25,8 +25,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-@FieldRequiredIf(required = "resubmission", argument = "previousApplicationNumber", predicate = false, message = "{validation.application.previous.application.number.required}")
-@FieldRequiredIf(required = "resubmission", argument = "previousApplicationTitle", predicate = false, message = "{validation.application.previous.application.title.required}")
+@FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
+@FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
     private static final String ID_PATTERN = "#00000000";
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
