@@ -59,6 +59,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
         setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+        setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
 
         return ServiceResult.serviceSuccess(setupResource);
     }
@@ -93,7 +94,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        question.setShortName(competitionSetupQuestionResource.getShortTitle());
+        if (isShortNameEditable(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()))) {
+            question.setShortName(competitionSetupQuestionResource.getShortTitle());
+        }
+
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
 
@@ -122,5 +126,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         } else {
             return 400;
         }
+    }
+
+    private boolean isShortNameEditable(CompetitionSetupQuestionType type) {
+        return CompetitionSetupQuestionType.ASSESSED_QUESTION.equals(type);
     }
 }
