@@ -618,3 +618,22 @@ The user checks the question fields
     The user should see the text in the page    Guidance text test
     The user should see the text in the page    150
     The user should see the text in the page    No
+
+The user should see the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    wait until element contains    ${element}    ${text}
+    Page Should Not Contain    Error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong
+
+
+The user should not see the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    wait until element does not contain    ${element}    ${text}
+    Page Should Not Contain    Error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong
