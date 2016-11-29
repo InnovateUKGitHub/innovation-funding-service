@@ -155,7 +155,7 @@ ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLI
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-${404_error_message}    Page Not Found
+${404_error_message}    Page not found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
 ${too_large_pdf_validation_error}    the size of file or request being submitted is too large
@@ -222,4 +222,3 @@ ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
-

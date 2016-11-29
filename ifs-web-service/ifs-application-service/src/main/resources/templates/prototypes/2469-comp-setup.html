@@ -39,7 +39,7 @@
 
 		<div class="extra-margin" th:if="${param.section != null}">
 			<!--<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>-->
-			<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;status=done' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
+			<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
 		</div>
 
 
@@ -131,8 +131,6 @@
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
 
-				jQuery('.section-'+i+'-done').show();
-				jQuery('.section-'+i+'-edit').show();
 				jQuery('#section-'+i+'-done').show();
 				jQuery('#section-'+i+'-edit').hide();
 
@@ -140,15 +138,9 @@
 
 			}else{
 				jQuery('#section-'+i).removeClass('marked-as-complete');
-				if(user == 'compExec' && i != 4) {
-					jQuery('#section-'+i+'-done').show();
-					jQuery('#section-'+i+'-edit').show();
-					jQuery('.section-'+i+'-done').hide();
-					jQuery('.section-'+i+'-edit').hide();
-				} else {
-					jQuery('#section-'+i+'-done').hide();
-					jQuery('#section-'+i+'-edit').show();
-				}
+
+				jQuery('#section-'+i+'-done').hide();
+				jQuery('#section-'+i+'-edit').show();
 
 
 			}
