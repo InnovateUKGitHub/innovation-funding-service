@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -39,9 +38,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Autowired
     private FormInputService formInputService;
-
-    @Autowired
-    private AssessmentRepository assessmentRepository;
 
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
