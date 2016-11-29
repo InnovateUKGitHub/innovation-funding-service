@@ -38,9 +38,9 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus bankDetailsSectionStatus(final ProjectActivityStates bankDetails) {
         if (bankDetails != null) {
-            if (bankDetails.equals(ProjectActivityStates.PENDING)) {
+            if (PENDING.equals(bankDetails)) {
                 return HOURGLASS;
-            } else if (bankDetails.equals(COMPLETE)) {
+            } else if (COMPLETE.equals(bankDetails)) {
                 return TICK;
             }
             return FLAG;
@@ -61,11 +61,11 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState,
                                                    final boolean spendProfileApproved) {
-        if (spendProfileState.equals(ProjectActivityStates.PENDING)) {
-                return HOURGLASS;
-            } else if (spendProfileState.equals(ProjectActivityStates.ACTION_REQUIRED)) {
-                return FLAG;
-            } else if (spendProfileState.equals(ProjectActivityStates.COMPLETE)) {
+        if (PENDING.equals(spendProfileState)) {
+            return HOURGLASS;
+        } else if (ACTION_REQUIRED.equals(spendProfileState)) {
+            return FLAG;
+        } else if (COMPLETE.equals(spendProfileState)) {
             if (spendProfileApproved) {
                 return TICK;
             }
