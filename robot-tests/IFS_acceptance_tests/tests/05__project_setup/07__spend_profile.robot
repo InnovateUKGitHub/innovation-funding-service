@@ -278,7 +278,7 @@ Academic partner spend profile client side validations
     When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    5
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
-    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+
 
 
 Academic partner edits spend profile and this updates on the table
