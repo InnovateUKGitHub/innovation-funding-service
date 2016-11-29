@@ -30,6 +30,8 @@ public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsec
     @Autowired
     public SectionService sectionService;
 
+    private static final String PROJECT_DETAILS_KEY = "Project details";
+
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
         objectId.ifPresent(objectIdLong ->
@@ -47,6 +49,6 @@ public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsec
 	private Boolean checkUsingAppendix(QuestionResource questionResource) {
         SectionResource sectionToCheck = getSectionToCheck(questionResource.getSection());
 
-    	return !sectionToCheck.getName().equals("Project details");
+    	return !sectionToCheck.getName().equals(PROJECT_DETAILS_KEY);
 	}
 }
