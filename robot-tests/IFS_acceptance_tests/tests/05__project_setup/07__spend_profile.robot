@@ -283,8 +283,7 @@ Academic partner spend profile client side validations
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
-    [Tags]    Pending
-    # Pending due to ongoing work (Ewan Cormack)
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
