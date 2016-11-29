@@ -420,7 +420,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.sendGrantOfferLetter(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -431,7 +431,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSendGrantOfferLetterAllowed(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -442,7 +442,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
