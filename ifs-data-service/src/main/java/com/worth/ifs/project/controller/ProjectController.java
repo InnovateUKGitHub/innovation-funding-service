@@ -4,7 +4,6 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -279,7 +278,7 @@ public class ProjectController {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/isSendGrantOfferLetterAllowed", method = GET)
+    @RequestMapping(value = "/{projectId}/is-send-grant-offer-letter-allowed", method = GET)
     public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
         return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
     }
@@ -288,7 +287,7 @@ public class ProjectController {
         return projectService.sendGrantOfferLetter(projectId).toPostResponse();
     }
 
-    @RequestMapping(value= "/{projectId}/isGrantOfferLetterAlreadySent", method = GET)
+    @RequestMapping(value= "/{projectId}/is-grant-offer-letter-already-sent", method = GET)
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
         return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }

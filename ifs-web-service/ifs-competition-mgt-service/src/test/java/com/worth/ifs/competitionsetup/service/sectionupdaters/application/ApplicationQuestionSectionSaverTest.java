@@ -65,6 +65,22 @@ public class ApplicationQuestionSectionSaverTest {
     }
 
     @Test
+    public void testAutoSaveShortTitleValidation() {
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setMilestones(asList(10L));
+
+        List<Error> errors = service.autoSaveSectionField(competition, "question.shortTitle", "", Optional.of(1L));
+
+        assertFalse(errors.isEmpty());
+        assertEquals(errors.get(0).getFieldRejectedValue(), "question.shortTitle");
+        assertEquals(errors.get(0).getErrorKey(), "This field cannot be left blank");
+        verify(competitionSetupQuestionService).getQuestion(1L);
+        verifyNoMoreInteractions(competitionSetupQuestionService);
+    }
+
+    @Test
     public void testAutoSaveCompetitionSetupSectionErrors() {
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setMaxWords(400);
