@@ -23,13 +23,4 @@ public final class ValidatorTestUtil {
         return new DataBinder(costItem).getBindingResult();
     }
 
-    public static void verifyFieldError(BindingResult bindingResult, String errorCode, int errorIndex, String fieldName, Object... expectedArguments) {
-        FieldError actualError = (FieldError)bindingResult.getAllErrors().get(errorIndex);
-
-        String expectedFieldName = String.format(fieldName, expectedArguments);
-
-        assertEquals(errorCode, actualError.getCode());
-        assertEquals(errorCode, actualError.getDefaultMessage());
-        assertEquals(expectedFieldName, actualError.getField());
-    }
 }
