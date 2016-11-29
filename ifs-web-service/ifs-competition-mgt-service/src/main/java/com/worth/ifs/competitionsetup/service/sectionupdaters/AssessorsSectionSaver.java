@@ -83,7 +83,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	private boolean assessorPayInRange(String value) {
 		BigDecimal pay = new BigDecimal(value);
-		return (new BigDecimal(MAX_ASSESSOR_PAY).compareTo(pay) > 0 && BigDecimal.ZERO.compareTo(pay) < 0 && pay.scale() == 0) ? true : false;
+		return (new BigDecimal(MAX_ASSESSOR_PAY).compareTo(pay) > 0 && BigDecimal.ZERO.compareTo(pay) < 0 && pay.scale() == 0);
 	}
 
 	private List<Error> validateAssessorPay(String value) {
