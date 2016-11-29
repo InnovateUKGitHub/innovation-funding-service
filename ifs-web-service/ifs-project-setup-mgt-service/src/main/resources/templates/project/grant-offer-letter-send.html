@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Send Grant Offer Letter'" th:remove="tag" />
+</head>
+<body th:with="context='project-management'" class="project-management grant-offer-letter">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-accept-send-gol" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge">Grant Offer Letter</h1>
+            </div>
+        </div>
+    </div>
+    <hr/>
+
+    <th:block th:if="${!model.isSentToProjectTeam()}">
+        <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+    </th:block>
+    <th:block th:if="${model.isSentToProjectTeam()}">
+        <p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
+    </th:block>
+
+    <h2 th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+
+    <h2 class="heading-medium">Grant offer letter</h2>
+    <th:block th:if="${model.getGrantOfferLetterFileContentAvailable()}">
+        <p><a th:href="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+    </th:block>
+    <th:block th:unless="${model.getGrantOfferLetterFileContentAvailable()}">
+        <p th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</p>
+    </th:block>
+    <h2 class="heading-medium no-margin">Annex</h2>
+    <th:block th:if="${!model.isSentToProjectTeam()}">
+
+       <th:block th:if="${model.additionalContractFile}">
+            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+            <th:block th:if="${model.getAdditionalContractFileContentAvailable()}">
+                <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
+           <th:block th:unless="${model.getAdditionalContractFileContentAvailable()}">
+               <p th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</p>
+           </th:block>
+        </th:block>
+        <th:block th:unless="${model.additionalContractFile}">
+            <div class="upload-section unstyled-view">
+                <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
+                      th:object="${form}" method="post" enctype="multipart/form-data">
+                    <p>Any additional supporting materials should be uploaded to the Annex.</p>
+
+                    <div th:classappend="${#fields.hasErrors('annex') ? 'error' : ''}">
+                        <th:block th:if="${#fields.hasErrors('annex')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('annex')}"
+                                  th:text="${err}"/>
+                        </th:block>
+                        <input th:field="*{annex}" type="file" id="annex" class="inputfile"/>
+                        <label for="annex" class="button-secondary extra-margin">+ Upload</label>
+                        <button name="uploadAnnexClicked" class="button-secondary" type="submit"
+                                data-for-file-upload="annex">Save
+                        </button>
+                        <p>The Annex should:</p>
+                        <ul class="list-bullet">
+                            <li>be in a portable document format (.pdf)</li>
+                            <li>be less than 1mb in size</li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${!model.isSentToProjectTeam()}">
+        <th:block th:if="${model.additionalContractFile != null}">
+            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        </th:block>
+        <th:block th:unless="${model.additionalContractFile != null}">
+            No Annex is specified.
+        </th:block>
+    </th:block>
+
+    <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
+        <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
+            Send to project team
+        </button>
+    </div>
+
+    <th:block th:if="${model.isSentToProjectTeam()}">
+        <!-- TODO DRS prototype uses javascript to enable button once checkbox ticked - need to have a HTML only option for this -->
+        <h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
+        <p>If the grant offer letter has been received by post, please tick the box below.</p>
+
+        <div class="form-group">
+            <label class="block-label" for="gol-by-post">
+                <input id="gol-by-post" value="gol-by-post" type="checkbox" />
+                The grant offer letter has been received by post
+            </label>
+        </div>
+
+        <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+
+        <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+            <button class="js-close close" aria-label="Close Popup">X</button>
+            <div>
+                <h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
+                <p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
+                <hr />
+                <div class="alignright-button">
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a> <!-- TODO DRS connect this up -->
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
