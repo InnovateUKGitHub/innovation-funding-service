@@ -154,6 +154,16 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that has updated
+     * data though not at the location POSTED to.
+     *
+     * This will be a RestResult with a "200 - OK" response and includes a body.
+     */
+    public RestResult<T> toPostWithBodyResponse() {
+        return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPostWithBodyResponse);
+    }
+
+    /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
      * updating data.
      * <p>
