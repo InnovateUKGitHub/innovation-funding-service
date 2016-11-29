@@ -14,6 +14,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -42,22 +43,22 @@
 						</label>
 					</fieldset>
 				</div>
-				<div th:unless="${(param.user != null and param.user[0] == 'compExec' and param.status != null and param.status[0] == 'edit')}" class="form-group">
+				<div class="form-group">
 					<label class="form-label" for="remittance">
 						<span class="form-label-bold">Assessor payment per application</span>
 						<span class="form-hint">This information will be distributed in the assessor invites.</span>
 					</label>
-					<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" />
+					<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 
 
 			</fieldset>
 		</form>
 	</th:block>
-	<th:block th:if="${param.status == null or param.status[0] == 'edit' and param.user != null and param.user[0] == 'compExec'}">
+	<th:block th:unless="${param.status != null and param.status[0] == 'edit'}">
 		<dl class="application-question-list grid-row">
-			<dt th:unless="${(param.user != null and param.user[0] == 'compExec' and param.status != null and param.status[0] == 'edit')}" class="column-third">Assessors required per application</dt>
-			<dd th:unless="${(param.user != null and param.user[0] == 'compExec' and param.status != null and param.status[0] == 'edit')}" class="column-two-thirds">5</dd>
+			<dt class="column-third">Assessors required per application</dt>
+			<dd class="column-two-thirds">5</dd>
 			<dt class="column-third">Assessor payment per application</dt>
 			<dd class="column-two-thirds">£100</dd>
 		</dl>
@@ -79,7 +80,7 @@
 	</ul>
 
 	<div class="extra-margin">
-		<a href="/prototypes/2469-comp-setup" class="button-secondary">Return to setup overview</a>
+		<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}" class="button-secondary">Return to setup overview</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

@@ -61,19 +61,19 @@
 					<label class="form-label" for="question-heading">
 						<span class="form-label-bold">Question heading</span>
 					</label>
-					<input class="form-control" id="question-heading" name="question-heading" value="Business opportunity" type="text" />
+					<input class="form-control" id="question-heading" name="question-heading" value="Business opportunity" type="text" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="question-title">
 						<span class="form-label-bold">Question title</span>
 					</label>
-					<input class="form-control" id="question-title" name="question-title" value="What is the business opportunity this project addresses?" type="text" />
+					<input class="form-control" id="question-title" name="question-title" value="What is the business opportunity this project addresses?" type="text" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="question-subtitle">
 						<span class="form-label-bold">Question subtitle</span>
 					</label>
-					<input class="form-control" id="question-subtitle" name="question-subtitle" type="text" />
+					<input class="form-control" id="question-subtitle" name="question-subtitle" type="text" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="guidance-title">
@@ -95,18 +95,18 @@
 					<label class="form-label" for="word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" />
+					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="heading-small">Appendix</h3>
 						<legend class="visuallyhidden">Appendix</legend>
 						<label class="block-label" for="appendix-yes">
-							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" />
+							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							Yes
 						</label>
 						<label class="block-label" for="appendix-no">
-							<input id="appendix-no" name="appendix-group" value="No" type="radio" checked="checked" />
+							<input id="appendix-no" name="appendix-group" value="No" type="radio" checked="checked" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							No
 						</label>
 					</fieldset>
@@ -150,11 +150,11 @@
 						<h3 class="heading-small">Scored</h3>
 						<legend class="visuallyhidden">Scored</legend>
 						<label class="block-label" for="scored-yes">
-							<input id="scored-yes" name="scored-group" value="Yes" type="radio" checked="checked" />
+							<input id="scored-yes" name="scored-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							Yes
 						</label>
 						<label class="block-label" for="scored-no">
-							<input id="scored-no" name="scored-group" value="No" type="radio" />
+							<input id="scored-no" name="scored-group" value="No" type="radio" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							No
 						</label>
 					</fieldset>
@@ -163,18 +163,18 @@
 					<label class="form-label" for="out-of">
 						<span class="form-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" />
+					<input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="heading-small">Written feedback</h3>
 						<legend class="visuallyhidden">Written feedback</legend>
 						<label class="block-label" for="feedback-yes">
-							<input id="feedback-yes" name="feedback-group" value="Yes" type="radio" checked="checked" />
+							<input id="feedback-yes" name="feedback-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							Yes
 						</label>
 						<label class="block-label" for="feedback-no">
-							<input id="feedback-no" name="feedback-group" value="No" type="radio" />
+							<input id="feedback-no" name="feedback-group" value="No" type="radio" th:disabled="${(param.user != null and param.user[0] == 'compExec')}" />
 							No
 						</label>
 					</fieldset>
@@ -212,16 +212,17 @@
 					<label class="form-label" for="max-word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" />
+					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
 				</div>
 			</th:block>
 		</fieldset>
 		<div class="extra-margin">
-			<a th:if="${param.status == null}" role="button" tabindex="0" class="button" href="/prototypes/5154-question-details?status=edit">Edit this question</a>
-			<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Save and close</a>
+			<a th:unless="${(param.user != null and param.user[0] == 'compExec')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process' : '/prototypes/5154-question-details?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+			<a th:if="${(param.user != null and param.user[0] == 'compExec')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5154-question-details?status=edit&amp;user=compExec')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+
 		</div>
 		<div th:if="${param.status == null}" class="extra-margin">
-			<a href="/prototypes/5085-application-process" class="button-secondary">Return to application questions</a>
+			<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process')}" class="button-secondary">Return to application questions</a>
 		</div>
 	</form>
 
