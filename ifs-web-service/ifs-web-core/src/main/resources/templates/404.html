@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag"  th:with="pageTitle='Page Not Found'"></div>
+    <div th:include="fragments/layout :: head" th:remove="tag"  th:with="pageTitle='Page not found'"></div>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-    <h1 class="heading-large">Page Not Found</h1>
+    <h1 class="heading-large">Page not found</h1>
 
     <p th:if="${url}">
         <b>Page:</b> <span th:text="${url}">Page URL</span>
