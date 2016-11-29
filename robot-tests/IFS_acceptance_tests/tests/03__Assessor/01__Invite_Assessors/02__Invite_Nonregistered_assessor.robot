@@ -27,7 +27,7 @@ Registered user should not allowed to accept other assessor invite
     [Tags]
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    When the user clicks the button/link    jQuery=.button:contains("Accept")
+    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then The user should see permissions error message
     [Teardown]    logout as user
 
@@ -39,7 +39,7 @@ Non-registered assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
-    When the user clicks the button/link    jQuery=.button:contains("Accept")
+    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
 
