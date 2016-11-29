@@ -1,13 +1,11 @@
 package com.worth.ifs.competitionsetup.controller;
 
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competition.resource.GuidanceRowResource;
-import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.form.application.*;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowViewModel;
@@ -144,7 +142,7 @@ public class CompetitionSetupApplicationController {
         return questionView;
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST)
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "ASSESSED_QUESTION")
     public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
@@ -152,11 +150,12 @@ public class CompetitionSetupApplicationController {
 
         if(!bindingResult.hasErrors()) {
 
-            competitionSetupForm.getGuidanceRows().forEach(guidanceRowViewModel ->  {
+            competitionSetupForm.getQuestion().getGuidanceRows().clear();
+
+            competitionSetupForm.getGuidanceRows().forEach(guidanceRowViewModel -> {
                 GuidanceRowResource grr = new GuidanceRowResource();
                 grr.setSubject(guidanceRowViewModel.getScoreFrom() + ":" + guidanceRowViewModel.getScoreTo());
                 grr.setJustification(guidanceRowViewModel.getJustification());
-                competitionSetupForm.getQuestion().getGuidanceRows().clear();
                 competitionSetupForm.getQuestion().getGuidanceRows().add(grr);
             });
 
@@ -165,6 +164,24 @@ public class CompetitionSetupApplicationController {
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
                     competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
+                    Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
+            model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+            return questionView;
+        }
+    }
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "SCOPE")
+    public String submitApplicationProjectDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                            BindingResult bindingResult,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+
+        if(!bindingResult.hasErrors()) {
+            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
+            return "redirect:/competition/setup/" + competitionId + "/section/application";
+        } else {
+            competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
+                    competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.PROJECT_DETAILS,
                     Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
@@ -217,17 +234,31 @@ public class CompetitionSetupApplicationController {
         return "competition/application-details";
     }
 
-
     private void setupQuestionToModel(final CompetitionResource competition, final Long questionId, Model model) {
+
+        ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
+
+        CompetitionSetupQuestionType type = questionResource.getSuccessObject().getType();
+
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        CompetitionSetupForm competitionSetupForm;
+        CompetitionSetupSubsection setupSubsection;
+
+        if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+            setupSubsection =  CompetitionSetupSubsection.QUESTIONS;
+
+        } else {
+            setupSubsection =  CompetitionSetupSubsection.PROJECT_DETAILS;
+        }
 
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
-                CompetitionSetupSubsection.QUESTIONS, Optional.of(questionId));
-        ApplicationQuestionForm competitionSetupForm =
-                (ApplicationQuestionForm) competitionSetupService.getSubsectionFormData(
+                setupSubsection, Optional.of(questionId));
+
+        competitionSetupForm =
+                competitionSetupService.getSubsectionFormData(
                         competition,
                         section,
-                        CompetitionSetupSubsection.QUESTIONS,
+                        setupSubsection,
                         Optional.of(questionId));
 
         model.addAttribute(COMPETITION_NAME_KEY, competition.getName());

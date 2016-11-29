@@ -14,22 +14,11 @@ import java.util.List;
 /**
  * Form for the application question form competition setup section.
  */
-public class ApplicationQuestionForm extends CompetitionSetupForm {
-    @Valid
-    @NotNull
-    private CompetitionSetupQuestionResource question;
+public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
 
     @Valid
     @NotEmpty(message = "Please enter a guidance row")
     private List<GuidanceRowViewModel> guidanceRows = new ArrayList<>();
-
-    public CompetitionSetupQuestionResource getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(CompetitionSetupQuestionResource question) {
-        this.question = question;
-    }
 
     public List<GuidanceRowViewModel> getGuidanceRows() {
         return guidanceRows;

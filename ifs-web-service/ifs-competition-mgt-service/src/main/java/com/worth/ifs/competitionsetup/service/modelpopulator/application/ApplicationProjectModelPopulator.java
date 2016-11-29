@@ -12,11 +12,11 @@ import java.util.Optional;
  * populates the model for the initial details competition setup section.
  */
 @Service
-public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsectionModelPopulator {
+public class ApplicationProjectModelPopulator implements CompetitionSetupSubsectionModelPopulator {
 
     @Override
 	public CompetitionSetupSubsection sectionToPopulateModel() {
-		return CompetitionSetupSubsection.PROJECT_DETAILS;
+		return CompetitionSetupSubsection.QUESTIONS;
 	}
 
 	@Override
