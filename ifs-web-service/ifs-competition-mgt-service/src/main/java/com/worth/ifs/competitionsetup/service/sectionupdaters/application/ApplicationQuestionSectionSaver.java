@@ -68,7 +68,11 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 	private List<Error> updateQuestionWithValueByFieldname(CompetitionSetupQuestionResource question, String fieldName, String value) {
         switch (fieldName) {
             case "question.shortTitle" :
-                question.setShortTitle(value);
+                if (!value.isEmpty()) {
+                    question.setShortTitle(value);
+                } else {
+                    return makeErrorList("question.shortTitle", "This field cannot be left blank");
+                }
                 break;
             case "question.title" :
                 question.setTitle(value);
@@ -105,22 +109,24 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
     }
 
     private List<Error> makeErrorList() {
-        return makeErrorList(null);
+        return makeErrorList("");
     }
 
     private List<Error> makeErrorList(String fieldName) {
-        return makeErrorList(fieldName, "Unable to save question");
+        return makeErrorList(fieldName, "Unable to save question", "");
     }
 
     private List<Error> makeErrorList(String fieldName, String error) {
-        return makeErrorList(fieldName, error, "");
+        return asList(fieldError(fieldName, "", error));
     }
 
     private List<Error> makeErrorList(String fieldName, String error, String rejectedValue) {
         return asList(fieldError(fieldName, rejectedValue, error));
     }
 
-	@Override
+
+
+    @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return ApplicationFormForm.class.equals(clazz);
 	}
