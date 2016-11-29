@@ -13,6 +13,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,6 +57,7 @@ public class AssessorProfileDeclarationController {
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Autowired
+    @Qualifier("mvcValidator")
     private Validator validator;
 
     private static final String FORM_ATTR_NAME = "form";

@@ -1,9 +1,9 @@
-package com.worth.ifs.project.validation;
+package com.worth.ifs.commons.validation;
 
 
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.validation.exception.SpendProfileValidationException;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
-import com.worth.ifs.project.validation.exception.SpendProfileValidationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -34,21 +34,23 @@ public class SpendProfileCostValidator implements Validator {
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
         for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            Long category = entry.getKey();
-            List<BigDecimal> monthlyCosts = entry.getValue();
+            validateMonthlyCosts(entry.getValue(), entry.getKey(), errors);
+        }
+    }
 
-            int numberOfMonthlyCosts = monthlyCosts.size();
-            for (int index = 0; index < numberOfMonthlyCosts; index++) {
-                try {
-                    isValid(monthlyCosts.get(index), category, index);
-                } catch (SpendProfileValidationException ex) {
+    private void validateMonthlyCosts(List<BigDecimal> monthlyCosts, Long category, Errors errors) {
+        int numberOfMonthlyCosts = monthlyCosts.size();
 
-                    String bindFieldName = String.format(FIELD_NAME_TEMPLATE, ex.getCategory(), ex.getPosition());
-                    ValidationMessages.rejectValue(errors, bindFieldName, ex.getSpendProfileValidationError().getErrorKey());
+        for (int index = 0; index < numberOfMonthlyCosts; index++) {
+            try {
+                isValid(monthlyCosts.get(index), category, index);
+            } catch (SpendProfileValidationException ex) {
 
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(ex.getMessage());
-                    } // else do nothing
+                String bindFieldName = String.format(FIELD_NAME_TEMPLATE, ex.getCategory(), ex.getPosition());
+                ValidationMessages.rejectValue(errors, bindFieldName, ex.getSpendProfileValidationError().getErrorKey());
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(ex.getMessage());
                 }
             }
         }
@@ -56,22 +58,18 @@ public class SpendProfileCostValidator implements Validator {
 
     private void isValid(BigDecimal cost, Long category, int index) throws SpendProfileValidationException {
 
-        // cost should not be null
         if (null == cost) {
             throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL, category, index);
         }
 
-        // cost should not be fractional
         if (cost.scale() > 0) {
             throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL, category, index);
         }
 
-        // cost should not be less than zero
         if (COMPARE_LESS_THAN == cost.compareTo(BigDecimal.ZERO)) {
             throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO, category, index);
         }
 
-        // cost should be within the upper limit
         if (COMPARE_LESS_THAN != cost.compareTo(COST_UPPER_LIMIT)) {
             throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT, category, index);
         }

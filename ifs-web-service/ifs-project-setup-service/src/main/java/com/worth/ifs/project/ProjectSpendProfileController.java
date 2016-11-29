@@ -13,7 +13,7 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
-import com.worth.ifs.project.validation.SpendProfileCostValidator;
+import com.worth.ifs.commons.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;

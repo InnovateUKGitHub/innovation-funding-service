@@ -1,14 +1,12 @@
 package com.worth.ifs.validator.util;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
-import com.worth.ifs.validator.SpendProfileCostValidator;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;

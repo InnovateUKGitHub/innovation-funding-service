@@ -1,43 +1,26 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
-import com.worth.ifs.project.validation.SpendProfileCostValidator;
+import com.worth.ifs.commons.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.builder.OrganisationResourceBuilder;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.asMap;

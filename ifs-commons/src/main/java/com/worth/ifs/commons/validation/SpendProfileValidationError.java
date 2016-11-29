@@ -1,4 +1,4 @@
-package com.worth.ifs.validator;
+package com.worth.ifs.commons.validation;
 
 /**
  * Enum for listing all Spend Profile related error keys
