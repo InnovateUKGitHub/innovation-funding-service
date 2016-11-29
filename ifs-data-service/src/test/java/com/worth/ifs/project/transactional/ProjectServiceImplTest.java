@@ -1239,7 +1239,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
-                withGrantOfferStatus(NOT_STARTED).
+                withGrantOfferStatus(NOT_REQUIRED).
                 build();
 
         List<ProjectPartnerStatusResource> expectedFullPartnerStatuses = newProjectPartnerStatusResource().

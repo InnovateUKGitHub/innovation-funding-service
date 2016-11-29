@@ -709,7 +709,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(spendProfileStatus, otherDocumentsStatus, project);
 
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
@@ -745,13 +745,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
 
         return projectPartnerStatusResource;
-    }
-
-    private ProjectActivityStates createGrantOfferLetterStatus(Project project) {
-        if(project.getOfferSubmittedDate() != null) {
-            return COMPLETE;
-        }
-        return NOT_STARTED;
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

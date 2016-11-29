@@ -293,12 +293,30 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved()
+                mock -> mock.isOtherDocumentsApproved(),
+                mock -> mock.isGrantOfferLetterAvailable()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionNotAvailable() {
+
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isSpendProfileApproved(),
+                mock -> mock.isOtherDocumentsApproved(),
+                mock -> mock.isGrantOfferLetterAvailable()
         );
     }
 

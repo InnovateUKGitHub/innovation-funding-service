@@ -13,6 +13,7 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
@@ -170,6 +171,24 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
             }
         }
         return NOT_STARTED;
+    }
+
+    protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates spendProfileState,
+                                                    final ProjectActivityStates otherDocumentsState,
+                                                    final Project project) {
+        if(COMPLETE.equals(spendProfileState) && COMPLETE.equals(otherDocumentsState)) {
+            if(project.getGrantOfferLetter() != null) {
+                if(project.getSignedGrantOfferLetter() != null) {
+                    if (project.getOfferSubmittedDate() != null) {
+                        return COMPLETE;
+                    }
+                    return PENDING;
+                }
+                return ACTION_REQUIRED;
+            }
+            return NOT_STARTED;
+        }
+        return NOT_REQUIRED;
     }
 
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {
