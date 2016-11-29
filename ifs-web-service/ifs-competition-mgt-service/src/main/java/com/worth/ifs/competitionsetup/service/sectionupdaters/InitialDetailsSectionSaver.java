@@ -13,6 +13,7 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import com.worth.ifs.controller.ValidationHandler;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,9 +99,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
 		competitionService.update(competition);
-        competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
-
-        return Collections.emptyList();
+        return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId()).getErrors();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
@@ -19,7 +20,7 @@ import java.util.Set;
  * for example, collaborative Application Forms
  */
 @Entity
-public class FormInput{
+public class FormInput {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -65,6 +66,11 @@ public class FormInput{
     @NotNull
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
+
+    @OneToMany(mappedBy = "formInput")
+    private List<GuidanceRow> guidanceRows;
+
+    private boolean active = true;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -191,5 +197,21 @@ public class FormInput{
 
     public void setScope(FormInputScope scope) {
         this.scope = scope;
+    }
+
+    public List<GuidanceRow> getGuidanceRows() {
+        return guidanceRows;
+    }
+
+    public void setGuidanceRows(List<GuidanceRow> guidanceRows) {
+        this.guidanceRows = guidanceRows;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

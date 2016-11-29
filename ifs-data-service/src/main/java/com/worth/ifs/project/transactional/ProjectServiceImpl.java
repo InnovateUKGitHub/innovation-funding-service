@@ -9,6 +9,8 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -29,10 +31,6 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -47,6 +45,7 @@ import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -65,6 +64,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -155,6 +155,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
+
+    @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
@@ -179,7 +182,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         MONITORING_OFFICER_ASSIGNED,
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER
+        INVITE_PROJECT_MANAGER,
+        GRANT_OFFER_LETTER_PROJECT_MANAGER
     }
 
     @Override
@@ -649,12 +653,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
-
         project.addProjectUser(newFinanceContact);
-
-        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
-            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
-            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        return serviceSuccess();
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -716,6 +716,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
         if (partnerOrganisation.equals(leadOrganisation)) {
+            ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
             projectPartnerStatusResource = new ProjectLeadStatusResource(
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
@@ -724,7 +725,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus,
+                    leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
                     financeContactStatus);
@@ -920,8 +921,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -936,6 +938,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+        }
+    }
+
+    private ServiceResult<Void> createGOLProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
+        if (golWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
@@ -1048,4 +1058,62 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return new ArrayList<>(organisationSet);
     }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if (project.getGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
+            }
+
+            NotificationSource from = systemNotificationSource;
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl);
+
+            Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+
+            if (!notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            return sendGrantOfferLetterSuccess(project);
+        });
+    }
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+        if (golWorkflowHandler.grantOfferLetterSent(project)) {
+            return serviceSuccess();
+        } else {
+            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
 }

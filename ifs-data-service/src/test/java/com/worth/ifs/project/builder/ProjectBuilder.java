@@ -12,8 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class
@@ -57,8 +57,12 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
-    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+    public ProjectBuilder withSignedGrantOfferLetter(FileEntry grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
     }
 
     public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {

@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to competition dashboard'}, ${'/prototypes/871-assessor-comp-dashboard'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to competition dashboard'}, ${'/prototypes/871-assessor-comp-dashboard?status=accept'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -65,7 +65,7 @@
 				</div>
 			</li>
 		</ul>
-		
+
 		<h2 class="heading-medium no-margin-bottom">Application questions</h2>
 		<p class="form-hint">Each question should be given a score out of 10. Written feedback should also be given.</p>
 		<ul class="list-overview">
@@ -189,7 +189,7 @@
 			<a role="button" tabindex="0" href="#" data-js-modal="modal-reject-assessment">Reject this application</a>
 		</div>
 	</details>
-	
+
 	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
 
 

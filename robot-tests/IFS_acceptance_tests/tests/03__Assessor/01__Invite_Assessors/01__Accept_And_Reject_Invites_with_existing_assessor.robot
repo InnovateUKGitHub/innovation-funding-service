@@ -12,6 +12,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-3718 As an Assessor I can see all the upcoming competitions that I have accepted to assess so that I can make informed decisions about other invitations
 ...
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
+...
+...               INFUND-5001 As an assessor I want to see information about competitions that I have accepted to assess so that I can remind myself of the subject matter.
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -44,8 +46,8 @@ Existing assessor: Reject invitation
     ...    INFUND-5165
     [Tags]
     Given the user navigates to the page    ${Invitation_existing_assessor1}
-    and the user should see the text in the page    Invitation to assess 'Juggling Craziness'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'
+    and the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
@@ -67,19 +69,24 @@ Existing assessor: Accept invitation
     ...    INFUND-5165
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Sarcasm Stupendousness'.
-    And the user should see the text in the page    Invitation to assess 'Sarcasm Stupendousness'
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
+    And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
+    And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then The user should see the text in the page    Assessor dashboard
-    And the user should see the element    link=Sarcasm Stupendousness
+    And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}
     And the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
+    ...
+    ...             INFUND-5001
+    [Tags]
+    # Development work is not complete
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
     Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
+   # And the user should see the text in the page    Photonics for health
     And The user should see the text in the page    Assessment period:
 
 When the assessment period starts the comp moves to the comp for assessment
@@ -87,6 +94,8 @@ When the assessment period starts the comp moves to the comp for assessment
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
@@ -110,7 +119,7 @@ Existing assessor shouldn't be able to accept other assessor's invitation
     ...    INFUND-304
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    jQuery=button:contains(Accept)
+    when the user clicks the button/link    jQuery=button:contains("Yes, create account")
     Then The user should see permissions error message
 
 *** Keywords ***
