@@ -13,7 +13,6 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
-import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
