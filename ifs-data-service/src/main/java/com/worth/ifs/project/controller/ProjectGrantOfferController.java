@@ -100,7 +100,8 @@ public class ProjectGrantOfferController {
                 projectGrantOfferService.createGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
-
+    //TODO Endpoint to be removed as GOL will be generated when Finance Checks or Other documents are approved.
+    //TODO - INFUND-5998
     @RequestMapping(value = "/{projectId}/grant-offer/generate", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> generateOfferLetterFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,

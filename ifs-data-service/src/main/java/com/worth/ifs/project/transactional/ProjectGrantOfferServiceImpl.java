@@ -163,7 +163,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FileEntryResource>  createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)));
@@ -229,7 +229,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return pdfSupplier;
     }
 
-
     private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource)
             throws IOException, DocumentException {
 
@@ -263,8 +262,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return fileEntryMapper.mapToResource(fileEntry);
     }
 
-
-
     @Override
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
@@ -278,7 +275,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
-
     }
 
     @Override
