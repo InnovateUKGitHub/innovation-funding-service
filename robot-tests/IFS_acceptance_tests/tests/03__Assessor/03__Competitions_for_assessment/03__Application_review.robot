@@ -151,6 +151,7 @@ Scope: on click guidance section should expand and collapse
 
 Scope: Status in the overview
     [Documentation]    INFUND-1483
+    [Tags]    HappyPath
     When the user selects the index from the drop-down menu    1    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")

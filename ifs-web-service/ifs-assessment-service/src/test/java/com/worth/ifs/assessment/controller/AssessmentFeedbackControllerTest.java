@@ -563,11 +563,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     private List<CategoryResource> setupResearchCategories() {
-        CategoryResource category = newCategoryResource()
+        List<CategoryResource> categories = newCategoryResource()
                 .withName("Research category")
                 .withType(CategoryType.RESEARCH_CATEGORY)
-                .build();
-        List<CategoryResource> categories = singletonList(category);
+                .build(1);
 
         when(categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(categories);
 
