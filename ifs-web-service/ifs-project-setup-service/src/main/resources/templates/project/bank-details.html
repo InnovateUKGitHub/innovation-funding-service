@@ -37,7 +37,6 @@
 
   <th:block th:if="${bankDetails == null}">
     <p class="extra-margin">In order for us to pay your grant we need your bank account details. We will then verify the bank account to the lead organisation.</p>
-
     <p>The bank account must belong to the organisation listed.</p>
   </th:block>
 
@@ -79,14 +78,14 @@
       </div>
 
       <div class="form-group">
-          <fieldset>
-              <h2 class="heading-medium">Billing address</h2>
-              <legend>
-                <span class="visuallyhidden">Billing address</span>
-              </legend>
-              <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
-              <div th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
-          </fieldset>
+        <fieldset>
+            <h2 class="heading-medium">Billing address</h2>
+            <legend>
+              <span class="visuallyhidden">Billing address</span>
+            </legend>
+            <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+            <div th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
+        </fieldset>
       </div>
 
       <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
@@ -110,8 +109,8 @@
         </dd>
     	</dl>
 
-          <h2 class="heading-medium no-margin-bottom">Billing address</h2>
-          <p th:if="${bankDetails?.organisationAddress.address == null}" class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+      <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+      <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
       <p class="extra-margin" th:if="${bankDetails?.organisationAddress.address}" >
         <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
