@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import com.google.common.collect.Lists;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -303,9 +304,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
 
-        List<ValidationMessages> validationMessages = validationUtil.validateSpendProfileTableResource(table);
-
-        List<Error> incorrectCosts = flattenLists(simpleMap(validationMessages, ValidationMessages::getErrors));
+        Optional<ValidationMessages> validationMessages = validationUtil.validateSpendProfileTableResource(table);
+        final List<Error> incorrectCosts = Lists.newArrayList();
+        validationMessages.ifPresent(v -> incorrectCosts.addAll(v.getErrors()));
 
         if (incorrectCosts.isEmpty()) {
             return serviceSuccess();

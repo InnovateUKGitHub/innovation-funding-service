@@ -449,7 +449,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.setErrors(Collections.singletonList(mockedError));
 
-        when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Arrays.asList(validationMessages));
+        when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Optional.of(validationMessages));
 
         ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
@@ -482,6 +482,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         SpendProfile spendProfileInDB = new SpendProfile(null, newProject().build(), null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Optional.empty());
+
 
         // Before the call (ie before the SpendProfile is updated), ensure that the values are set to 1
         assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 0, BigDecimal.ONE);

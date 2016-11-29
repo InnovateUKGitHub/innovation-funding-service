@@ -227,16 +227,16 @@ public class ValidationUtil {
         return results;
     }
 
-    public List<ValidationMessages> validateSpendProfileTableResource(SpendProfileTableResource tableResource) {
+    public Optional<ValidationMessages> validateSpendProfileTableResource(SpendProfileTableResource tableResource) {
 
-        List<ValidationMessages> result = new ArrayList<>();
+        Optional<ValidationMessages> result = Optional.empty();
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableResource, "spendProfileTable");
         ValidationUtils.invokeValidator(spendProfileCostValidator, tableResource, bindingResult);
 
         if (bindingResult.hasErrors()) {
             ValidationMessages messages = new ValidationMessages(bindingResult);
-            result.add(messages);
+            result = Optional.of(messages);
         }
 
         return result;
