@@ -8,17 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
  **/
 public class ProjectInternalGOLForm extends BaseBindingResultTarget {
 
-    private MultipartFile grantOfferLetter;
     private MultipartFile additionalContract;
-
-
-    public MultipartFile getGrantOfferLetter() {
-        return grantOfferLetter;
-    }
-
-    public void setGrantOfferLetter(MultipartFile grantOfferLetter) {
-        this.grantOfferLetter = grantOfferLetter;
-    }
 
     public MultipartFile getAdditionalContract() {
         return additionalContract;

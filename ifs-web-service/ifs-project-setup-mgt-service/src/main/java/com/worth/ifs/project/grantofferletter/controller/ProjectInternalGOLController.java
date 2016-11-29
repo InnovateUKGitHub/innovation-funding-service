@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,7 +51,6 @@ public class ProjectInternalGOLController {
     @Autowired
     private ProjectService projectService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(method = GET)
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -61,7 +59,6 @@ public class ProjectInternalGOLController {
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadAnnexFileClicked", method = POST)
     public String uploadAnnexFile(
             @PathVariable("projectId") final Long projectId,
@@ -81,7 +78,6 @@ public class ProjectInternalGOLController {
     }
 
     @RequestMapping(value = "/grant-offer-letter", method = GET)
-
     @ResponseBody
     public ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
@@ -92,16 +88,12 @@ public class ProjectInternalGOLController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-   // @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+
     @RequestMapping(value = "/generate", method = GET)
     public ResponseEntity<FileEntryResource> generatedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) throws IOException {
 
-       // response.setContentType(CONTENT_TYPE);
-      //  response.setHeader(HEADER_CONTENT_DISPOSITION, getHeaderAttachment("grant-offer-letter"));
-       // response.getOutputStream().print(projectService.addGeneratedGrantOfferLetter(projectId, CONTENT_TYPE, 1024, "grant-offer-letter", new byte[1024] ));
-      //  response.getOutputStream().flush();
         return new ResponseEntity<>(projectService.addGeneratedGrantOfferLetter(projectId, CONTENT_TYPE, 26845, "grant-offer-letter", new byte[26845]).getSuccessObject(), HttpStatus.OK);
     }
 
@@ -109,7 +101,7 @@ public class ProjectInternalGOLController {
         return new StringBuffer().append(ATTACHMENT_HEADER).append(fileName).toString();
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+
     @RequestMapping(value = "/annex-file", method = GET)
     public
     @ResponseBody

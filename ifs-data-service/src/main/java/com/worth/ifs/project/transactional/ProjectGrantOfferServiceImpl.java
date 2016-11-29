@@ -19,7 +19,6 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.gol.YearlyGOLProfileTable;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -41,7 +40,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
@@ -49,7 +47,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.io.File.separator;
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
@@ -183,47 +180,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                     andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
-
-    private List<String> getYearsAsStrings(Map<String, SpendProfileTableResource> organisationSpendProfiles) {
-        return null;
-    }
-
-
-    private BigDecimal calculateTotalOfAllActualTotals(Map<String, List<BigDecimal>> tableData) {
-        return tableData.values()
-                .stream()
-                .map(list -> {
-                    return list.stream()
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-
-    private BigDecimal calculateTotalOfAllEligibleTotals(Map<Long, BigDecimal> eligibleCostData) {
-        return eligibleCostData
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private BigDecimal calculateTotalOfAllEligibleTotalsString(Map<String, BigDecimal> eligibleCostData) {
-        return eligibleCostData
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-
-    private List<BigDecimal> calculateMonthlyTotals(Map<Long, List<BigDecimal>> tableData, int numberOfMonths) {
-        return IntStream.range(0, numberOfMonths).mapToObj(index -> {
-            return tableData.values()
-                    .stream()
-                    .map(list -> list.get(index))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-        }).collect(toList());
-    }
-
 
     private Map<String, Object> getTemplateData(Project project) {
         Map<String, Object> templateReplacements = new HashMap<>();
