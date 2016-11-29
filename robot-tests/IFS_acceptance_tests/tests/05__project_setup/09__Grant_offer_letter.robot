@@ -69,7 +69,7 @@ PM Submits the Grant Offer letter
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
     And the user clicks the button/link    jQuery=button:contains("Confirm Submission")
-    Then the user should see the element    css=li.action    # Note that this will change with work in Sprint 19
+    Then the user should not see an error in the page
 
 PM's dashboard should be updated
     [Documentation]    INFUND-4851
