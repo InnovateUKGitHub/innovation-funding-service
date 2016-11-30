@@ -7,12 +7,14 @@
     <div class="form-group extra-margin">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
         </label>
         <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>
-            <option value="Technical feasibility studies">Technical feasibility studies</option>
-            <option value="Industrial research">Industrial research</option>
-            <option value="Experimental development">Experimental development</option>
+            <option th:each="category : ${model.researchCategories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    value="1">Not available</option>
         </select>
     </div>
 </div>
