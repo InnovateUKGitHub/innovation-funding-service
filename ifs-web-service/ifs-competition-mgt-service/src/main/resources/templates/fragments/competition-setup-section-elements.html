@@ -185,7 +185,7 @@
                            th:name="question.maxWords"
                            th:value="${question.maxWords}"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:if="${question.appendix != null}">
                     <fieldset class="inline">
                         <legend class="form-label-bold">Appendix</legend>
                         <label class="block-label">
