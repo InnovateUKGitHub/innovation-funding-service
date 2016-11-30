@@ -253,7 +253,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads" th:remove="tag">
         <p ifs:utext="${question.getDescription()}" />
-        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.formInput.type.nameLower}">
+        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
             <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
