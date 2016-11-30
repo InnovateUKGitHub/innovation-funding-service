@@ -15,7 +15,8 @@ public class YearlyGOLProfileTable {
     private Map<String, List<BigDecimal>> organisationGrantAllocationTotal;
     private Map<String, BigDecimal> yearEligibleCostTotal;
     private Map<String, BigDecimal> yearGrantAllocationTotal;
-    BigDecimal grandTotal;
+    private BigDecimal eligibleCostGrandTotal;
+    private BigDecimal grantAllocationGrandTotal;
 
     public YearlyGOLProfileTable(Map<String, Integer> organisationAndGrantPercentageMap,
                                  Map<String, List<String>> organisationYearsMap,
@@ -23,14 +24,16 @@ public class YearlyGOLProfileTable {
                                  Map<String, List<BigDecimal>> organisationGrantAllocationTotal,
                                  Map<String, BigDecimal> yearEligibleCostTotal,
                                  Map<String, BigDecimal> yearGrantAllocationTotal,
-                                 BigDecimal grandTotal) {
+                                 BigDecimal eligibleCostGrandTotal,
+                                 BigDecimal grantAllocationGrandTotal) {
         this.organisationAndGrantPercentageMap = organisationAndGrantPercentageMap;
         this.organisationYearsMap = organisationYearsMap;
         this.organisationEligibleCostTotal = organisationEligibleCostTotal;
         this.organisationGrantAllocationTotal = organisationGrantAllocationTotal;
         this.yearEligibleCostTotal = yearEligibleCostTotal;
         this.yearGrantAllocationTotal = yearGrantAllocationTotal;
-        this.grandTotal = grandTotal;
+        this.eligibleCostGrandTotal = eligibleCostGrandTotal;
+        this.grantAllocationGrandTotal = grantAllocationGrandTotal;
     }
 
     public int getNumberOfColHeader() {
@@ -65,7 +68,11 @@ public class YearlyGOLProfileTable {
         return yearGrantAllocationTotal;
     }
 
-    public BigDecimal getGrandTotal() {
-        return grandTotal;
+    public BigDecimal getEligibleCostGrandTotal() {
+        return eligibleCostGrandTotal;
+    }
+
+    public BigDecimal getGrantAllocationGrandTotal() {
+        return grantAllocationGrandTotal;
     }
 }

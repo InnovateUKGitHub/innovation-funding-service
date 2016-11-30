@@ -1,11 +1,15 @@
 apply plugin: 'war'
+configurations {
+    providedRuntime
+}
 
 war {
     baseName = 'assessment'
 }
 
-configurations {
-    providedRuntime
+
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
 }
 
 dependencies {
@@ -43,6 +47,24 @@ task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'assessment.war'
+}
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'assessment-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {

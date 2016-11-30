@@ -2,8 +2,13 @@ apply plugin: 'war'
 
 war {
     baseName = 'project-setup-management'
-    version = '0.0.1-SNAPSHOT'
 }
+
+
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
+}
+
 configurations {
     providedRuntime
 }
@@ -57,6 +62,24 @@ task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'project-setup-management.war'
+}
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'project-setup-management-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {
