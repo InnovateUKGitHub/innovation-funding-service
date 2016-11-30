@@ -3,7 +3,6 @@ package com.worth.ifs.form.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -15,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedDescriptions;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
@@ -44,63 +44,63 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
                 .with(idBasedDescriptions("Description "));
     }
 
-    public FormInputBuilder withId(Long... ids) {
-        return withArray(BaseBuilderAmendFunctions::setId, ids);
+    public FormInputBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
     }
 
-    public FormInputBuilder withWordCount(Integer... wordCounts) {
-        return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
-    }
-
-    public FormInputBuilder withActive(Boolean... active) {
-        return withArraySetFieldByReflection("active", active);
-    }
-
-    public FormInputBuilder withCompetition(Competition... value) {
-        return withArraySetFieldByReflection("competition", value);
+    public FormInputBuilder withWordCount(Integer... value) {
+        return withArraySetFieldByReflection("wordCount", value);
     }
 
     public FormInputBuilder withType(FormInputType... value) {
         return withArraySetFieldByReflection("type", value);
     }
 
-    public FormInputBuilder withQuestion(Question... questions) {
-        return withArray((question, formInput) -> setField("question", question, formInput), questions);
-    }
-
-    public FormInputBuilder withPriority(Integer... priorities) {
-        return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
-    }
-
     public FormInputBuilder withResponses(List<FormInputResponse>... value) {
         return withArraySetFieldByReflection("responses", value);
     }
 
-    public FormInputBuilder withScope(FormInputScope... scopes) {
-        return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
+    public FormInputBuilder withQuestion(Question... value) {
+        return withArraySetFieldByReflection("question", value);
     }
 
-    public FormInputBuilder withDescription(String... value) {
-        return withArraySetFieldByReflection("description", value);
+    public FormInputBuilder withCompetition(Competition... value) {
+        return withArraySetFieldByReflection("competition", value);
     }
 
-    public FormInputBuilder withGuidanceAnswer(String... value) {
-        return withArraySetFieldByReflection("guidanceAnswer", value);
+    public FormInputBuilder withInputValidators(Set<FormValidator>... value) {
+        return withArraySetFieldByReflection("inputValidators", value);
     }
 
     public FormInputBuilder withGuidanceQuestion(String... value) {
         return withArraySetFieldByReflection("guidanceQuestion", value);
     }
 
+    public FormInputBuilder withGuidanceAnswer(String... value) {
+        return withArraySetFieldByReflection("guidanceAnswer", value);
+    }
+
+    public FormInputBuilder withDescription(String... value) {
+        return withArraySetFieldByReflection("description", value);
+    }
+
     public FormInputBuilder withIncludedInApplicationSummary(Boolean... value) {
         return withArraySetFieldByReflection("includedInApplicationSummary", value);
     }
 
-    public FormInputBuilder withInputValidators(Set<FormValidator>... inputValidators) {
-        return withArraySetFieldByReflection("inputValidators", inputValidators);
+    public FormInputBuilder withPriority(Integer... value) {
+        return withArraySetFieldByReflection("priority", value);
+    }
+
+    public FormInputBuilder withScope(FormInputScope... value) {
+        return withArraySetFieldByReflection("scope", value);
     }
 
     public FormInputBuilder withGuidanceRows(List<GuidanceRow>... value) {
         return withArraySetFieldByReflection("guidanceRows", value);
+    }
+
+    public FormInputBuilder withActive(Boolean... active) {
+        return withArraySetFieldByReflection("active", active);
     }
 }
