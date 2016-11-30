@@ -157,11 +157,66 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void submitSectionApplicationAssessedQuestionWithGuidanceRowErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("question.type", "")
+                .param("guidanceRows[0].scoreFrom", "")
+                .param("guidanceRows[0].scoreTo", "")
+                .param("guidanceRows[0].justification", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
+    public void submitSectionApplicationScopeQuestionWithGuidanceRowErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("question.type", "Scope")
+                .param("guidanceRows[0].subject", "")
+                .param("guidanceRows[0].justification", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
     public void submitSectionApplicationAssessedQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
 
         mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
-                .param("question.id", questionId.toString())
+                .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
@@ -186,7 +241,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
 
         mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
-                .param("question.id", questionId.toString())
+                .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
