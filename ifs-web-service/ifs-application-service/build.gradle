@@ -12,6 +12,10 @@ war {
     baseName = 'ifs-application-service'
 }
 
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
+}
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
@@ -81,6 +85,26 @@ processTestResources {
     filesMatching("*.properties") {
         expand project.properties
     }
+}
+
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = war.baseName.replaceAll(/ifs-/, "")
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn build
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {

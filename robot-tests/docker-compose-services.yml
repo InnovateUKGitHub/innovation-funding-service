@@ -2,7 +2,7 @@ version: '2'
 services:
   hub:
     container_name: hub
-    image: selenium/hub:3.0.0-dubnium
+    image: selenium/hub:3.0.1-aluminum
     environment:
       - GRID_BROWSER_TIMEOUT=90000
       - GRID_TIMEOUT=100000
@@ -14,7 +14,7 @@ services:
         aliases:
           - hub
   chrome:
-    image: selenium/node-chrome-debug:3.0.0-dubnium
+    image: selenium/node-chrome:3.0.1-aluminum
     environment:
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20
@@ -29,14 +29,14 @@ services:
     links:
       - "hub:hub"
     external_links:
-      - ifs-local-dev
+      - innovationfundingservice_shib_1:ifs-local-dev
     depends_on:
       - hub
     networks:
       - selenium-network
-      - ifs_front-tier
+      - innovationfundingservice_ifs
 networks:
   selenium-network:
     driver: bridge
-  ifs_front-tier:
+  innovationfundingservice_ifs:
     external: true
