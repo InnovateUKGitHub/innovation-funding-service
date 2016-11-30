@@ -13,7 +13,7 @@ public class ProcessOutcomeDocs {
             fieldWithPath("outcome").description("the value of the outcome"),
             fieldWithPath("description").description("description of the outcome"),
             fieldWithPath("comment").description("comment associated with the process outcome"),
-            fieldWithPath("outcomeType").description("the type fo the process outcome")
+            fieldWithPath("outcomeType").description("the type of the process outcome")
     };
 
     public static final ProcessOutcomeResourceBuilder processOutcomeResourceBuilder = newProcessOutcomeResource()
