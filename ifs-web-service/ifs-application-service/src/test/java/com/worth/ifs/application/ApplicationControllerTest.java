@@ -447,6 +447,29 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void testApplicationTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        mockMvc.perform(get("/application/1/track"))
+                .andExpect(view().name("application-track"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+
+    }
+
+    @Test
+    public void testTeesAndCees() throws Exception {
+        ApplicationResource app = applications.get(0);
+
+        mockMvc.perform(get("/application/terms-and-conditions"))
+                .andExpect(view().name("application-terms-and-conditions"));
+
+    }
+
+    @Test
      public void testApplicationCreateWithoutApplicationName() throws Exception {
         ApplicationResource application = new ApplicationResource();
         application.setName("application");

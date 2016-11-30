@@ -127,7 +127,7 @@ public class ApplicationFormController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
+    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -903,7 +903,7 @@ public class ApplicationFormController {
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         }else{
-            LOG.error("Got a exception on autosave : "+ e.getMessage());
+            LOG.error("Got an exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
             errors.add(ex.getErrorMessage());
         }

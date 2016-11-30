@@ -58,6 +58,10 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     @InjectMocks
     private OpenSectionModelPopulator openSectionModel;
 
+    @Spy
+    @InjectMocks
+    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
 
@@ -128,6 +132,24 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     }
 
     @Test
+    public void testApplicationFormWithOpenFinanceSection() throws Exception {
+
+        Long currentSectionId = sectionResources.get(6).getId();
+
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+        mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attribute("currentApplication", application))
+                .andExpect(model().attribute("userIsLeadApplicant", true))
+                .andExpect(model().attribute("leadApplicant", users.get(0)))
+                .andExpect(model().attribute("currentSectionId", currentSectionId))
+                .andExpect(model().attribute("hasFinanceSection", true))
+                .andExpect(model().attribute("financeSectionId", currentSectionId))
+                .andExpect(model().attribute("allReadOnly", false));
+
+    }
+
+    @Test
     public void testQuestionPage() throws Exception {
         ApplicationResource application = applications.get(0);
 
@@ -157,6 +179,19 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    public void testQuestionSubmitEdit() throws Exception {
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        mockMvc.perform(
+                post("/application/1/form/question/1")
+                        .param(ApplicationFormController.EDIT_QUESTION, "1_2")
+        )
+                .andExpect(view().name("application-form"));
+    }
+
 
     @Test
     public void testQuestionSubmitAssign() throws Exception {
@@ -284,6 +319,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(ApplicationFormController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
+
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
