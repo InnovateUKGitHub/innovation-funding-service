@@ -40,9 +40,14 @@ public class ApplicationQuestionSectionSaverTest {
     @Test
     public void testSaveCompetitionSetupSection() {
         ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(1L);
+        competitionSetupForm.setQuestion(question);
 
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
+
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
 
         service.saveSection(competition, competitionSetupForm);
     }

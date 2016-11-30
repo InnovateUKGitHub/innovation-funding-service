@@ -167,6 +167,10 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         Integer index;
         GuidanceRowResource guidanceRow;
 
+        if (!fieldName.contains("guidanceRow")) {
+            return makeErrorList();
+        }
+
         try {
             index = getGuidanceRowsIndex(fieldName);
             if(index >= question.getGuidanceRows().size()) {
