@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     -INFUND-46: As a lead applicant and I am on the application form on an open application, I can review & submit the application, so I can see an overview of the application and the status of each section.
+Documentation     -INFUND-46: As a lead applicant and I am on the application form on an open application, I can review and submit the application, so I can see an overview of the application and the status of each section.
 ...               -INFUND-3954 :Applicant shouldn't be able to mark as complete with empty questions
 ...               -INFUND-1075: As an Applicant I want to see the Application Summary page redesigned so that they meet the agreed style
 Suite Setup       log in and create new application if there is not one already
