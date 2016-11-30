@@ -19,9 +19,9 @@
 	<h1 class="heading-xlarge">Your dashboard</h1>
 
 	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
-	
+
 		<div th:if="${param.status != null and param.status[0] == 'successful' or param.status != null and param.status[0] == 'successfulFeedback'}" th:remove="tag">
-		
+
 			<h2 class="heading-large">Projects in setup</h2>
 
 			<ul class="boxed-list">
@@ -35,7 +35,7 @@
 			            <div class="column-assessment-status navigation-right">
 			                <div class="awaiting-assessment">
 			                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-			                    <p>Project in set-up</p> 
+			                    <p>Project in set-up</p>
 			                </div>
 			            </div>
 			        </div>
@@ -50,13 +50,13 @@
 			            <div class="column-assessment-status navigation-right">
 			                <div class="awaiting-assessment">
 			                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-			                    <p>Project in set-up</p> 
+			                    <p>Project in set-up</p>
 			                </div>
 			            </div>
 			        </div>
 			    </li>
 			</ul>
-		
+
 		</div>
 
 		<h2 class="heading-large">Previous applications</h2>
@@ -81,9 +81,9 @@
 		            </div>
 		            <div class="column-assessment-status navigation-right">
 		                <div class="yes application-status assessed">
-		                    
+
 		                    <h3 class="results-status">Successful</h3>
-		            
+
 		                </div>
 		            </div>
 		        </div>
@@ -112,7 +112,7 @@
 		            </div>
 		        </div>
 		    </li>
-			
+
 			<div th:if="${param.status != null and param.status[0] == 'notSubmitted'}" th:remove="tag">
 				<li>
 			        <div class="grid-row">
@@ -155,12 +155,15 @@
 
 
 
-	<h2 class="heading-large">Your profile</h2> 
-	
+	<h2 class="heading-large">Your profile</h2>
+
 
 	<ul class="list-bullet">
 		<li>
-			<a href="/prototypes/675-profile-details">view and edit your profile details</a>
+			<a href="/prototypes/6291-applicant-details">your details</a>
+		</li>
+    <li>
+			<a href="/prototypes/6292-applicant-org">your organisation</a>
 		</li>
 		<li>
 			<a href="/prototypes/675-change-password">change your password</a>
@@ -169,7 +172,7 @@
 			<a href="/info/terms-and-conditions">read the terms and conditions</a>
 		</li>
 	</ul>
-		
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -179,8 +182,8 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	
-	jQuery('input#address-same').on('click',function(e){ 
+
+	jQuery('input#address-same').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#manual-company-input").hide();
@@ -190,20 +193,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
 		jQuery("#org-results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -213,7 +216,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

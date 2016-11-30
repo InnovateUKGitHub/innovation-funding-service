@@ -243,6 +243,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
+                .param("question.shortTitle", "Title")
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")

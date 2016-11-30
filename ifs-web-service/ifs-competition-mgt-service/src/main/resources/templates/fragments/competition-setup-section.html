@@ -527,7 +527,7 @@
 	                    </span>
 	                </legend>
 
-		            <label class="block-label selected" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
+		            <label class="block-label" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
@@ -874,11 +874,12 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
                     </span>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
 
                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
-                       data-required-errormessage="Please enter how much assessors will be paid"
-                       data-min-errormessage="Please enter how much assessors will be paid"
+                       data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+                                     data-min-errormessage=#{validation.assessorsform.assessorPay.min},
+                                     data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
                        th:errorclass="field-error"/>
             </div>
 

@@ -529,4 +529,42 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void testSendGrantOfferLetter() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/send";
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed";
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.FALSE, OK);
+
+        RestResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.FALSE, result.getSuccessObject());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySent() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent";
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
+
+        RestResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+    }
+
 }

@@ -44,7 +44,7 @@
             <h3 class="heading-medium">Finance contact</h3>
             <p>
                 <th:block th:text="${model.financeContactName}">Dave Norman</th:block> <br />
-                <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
+                <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">dave@norman.com</a>
             </p>
             <h3 class="heading-medium">Project costs</h3>
             <p>Please enter final project costs below</p>
