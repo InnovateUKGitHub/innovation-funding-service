@@ -3,7 +3,11 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.builder.CostResourceBuilder;
-import com.worth.ifs.project.finance.resource.*;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
+import com.worth.ifs.project.finance.resource.CostCategoryGroupResource;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
+import com.worth.ifs.project.finance.resource.CostResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 
@@ -13,7 +17,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.CostCategoryGroupResourceBuilder.newCostCategoryGroupResource;
 import static com.worth.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
-import static com.worth.ifs.project.builder.CostCategoryTypeResourceBuilder.newCostCategoryTypeResource;
+import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
@@ -35,7 +39,7 @@ public class ByFinanceCheckCostCategorySummaryStrategyTest extends BaseServiceUn
         BigDecimal costInCat2 = new BigDecimal("200");
         ProjectResource p = newProjectResource().withDuration(durationInMonths).build();
         CostCategoryGroupResource  ccgr = newCostCategoryGroupResource().build();
-        CostCategoryTypeResource cctr = newCostCategoryTypeResource().build();
+        CostCategoryType cct = newCostCategoryType().build();
         CostCategoryResource[] costCategoryResources = newCostCategoryResource().withName("cat 1", "cat 2").withCostCategoryGroup(ccgr).buildArray(2, CostCategoryResource.class);
         List<CostResource> crs = CostResourceBuilder.newCostResource().withValue(costInCat1, costInCat2).withCostCategory(costCategoryResources).build(2);
         FinanceCheckResource fcr = newFinanceCheckResource().
@@ -48,12 +52,12 @@ public class ByFinanceCheckCostCategorySummaryStrategyTest extends BaseServiceUn
         // Mocks
         when(financeCheckServiceMock.getByProjectAndOrganisation(id(fcr.getProject(), fcr.getOrganisation()))).thenReturn(serviceSuccess(fcr));
         when(projectServiceMock.getProjectById(p.getId())).thenReturn(serviceSuccess(p));
-        when(projectFinanceServiceMock.findByCostCategoryGroupId(ccgr.getId())).thenReturn(serviceSuccess(cctr));
+        when(costCategoryTypeRepositoryMock.findByCostCategoryGroupId(ccgr.getId())).thenReturn(cct);
         // Method under test
         ServiceResult<SpendProfileCostCategorySummaries> costCategorySummaries = service.getCostCategorySummaries(fcr.getProject(), fcr.getOrganisation());
         // Assertions
         assertTrue(costCategorySummaries.isSuccess());
-        assertEquals(cctr, costCategorySummaries.getSuccessObject().getCostCategoryType());
+        assertEquals(cct, costCategorySummaries.getSuccessObject().getCostCategoryType());
         assertEquals(2, costCategorySummaries.getSuccessObject().getCosts().size());
         assertTrue(containsAll(costCategorySummaries.getSuccessObject().getCosts(), asList(costCategoryResources), (apccs, ccr) -> apccs.getCategory().equals(ccr)));
         assertEquals(crs.get(0).getValue(), costCategorySummaries.getSuccessObject().getCosts().get(0).getTotal());

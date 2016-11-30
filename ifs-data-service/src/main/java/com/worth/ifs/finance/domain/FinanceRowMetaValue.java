@@ -18,7 +18,7 @@ public class FinanceRowMetaValue {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="finance_row_id")
-    private FinanceRow financeRow;
+    private Long financeRow;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

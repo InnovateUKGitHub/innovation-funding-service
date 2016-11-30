@@ -19,10 +19,7 @@ import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.*;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
-import com.worth.ifs.finance.repository.ProjectFinanceRepository;
-import com.worth.ifs.finance.repository.ProjectFinanceRowRepository;
+import com.worth.ifs.finance.repository.*;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -170,6 +167,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectFinanceRowRepository projectFinanceRowRepository;
+
+    @Autowired
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+    @Autowired
+    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
@@ -1008,7 +1011,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
             newRow.setApplicationRowId(original.getId());
             newRow.setCost(original.getCost());
-            newRow.setCostValues(simpleMap(original.getCostValues(), costValue -> copyFinanceRowMetaValue(newRow, costValue)));
+            List<FinanceRowMetaValue> metaValues = simpleMap(original.getCostValues(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
+            newRow.setCostValues(metaValues);
             newRow.setDescription(original.getDescription());
             newRow.setItem(original.getItem());
             newRow.setName(original.getName());
@@ -1018,6 +1022,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
 
         copiedFinanceFigures.forEach(projectFinanceRowRepository::save);
+        copiedFinanceFigures.forEach(figure -> figure.getCostValues().forEach(metaValue -> {
+            metaValue.setFinanceRowMetaField(financeRowMetaFieldRepository.findOne(metaValue.getFinanceRowMetaField().getId()));
+            financeRowMetaValueRepository.save(metaValue);
+        }));
         return serviceSuccess();
     }
 

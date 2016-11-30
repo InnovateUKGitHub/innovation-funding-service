@@ -1,24 +1,29 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.OrganisationJESFinance;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.CostCategoryType;
-import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
-import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.transactional.ProjectService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.util.CollectionFunctions.*;
-import static com.worth.ifs.util.MapFunctions.toMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Implementation of SpendProfileCostCategorySummaryStrategy that looks to the Application Finances in order to generate
@@ -37,37 +42,89 @@ public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendPro
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
-    private CostCategoryMapper costCategoryMapper;
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    private CostCategoryTypeMapper costCategoryTypeMapper;
+    private OrganisationService organisationService;
 
     @Override
     public ServiceResult<SpendProfileCostCategorySummaries> getCostCategorySummaries(Long projectId, Long organisationId) {
 
         return projectService.getProjectById(projectId).andOnSuccess(project ->
-                financeRowService.financeDetails(project.getApplication(), organisationId).andOnSuccess(finances -> {
+               organisationService.findById(organisationId).andOnSuccess(organisation ->
+               financeRowService.financeChecksDetails(project.getId(), organisationId).andOnSuccess(finances -> {
 
-                    return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(costCategoryType -> {
+                   OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationTypeName());
+
+                   boolean academicFinances = OrganisationJESFinance.class.isAssignableFrom(organisationFinanceHandler.getClass());
+
+                   return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(costCategoryType -> {
 
                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
 
                         Map<FinanceRowType, FinanceRowCostCategory> spendRows =
                                 simpleFilter(financeOrganisationDetails, (category, costs) -> category.isSpendCostCategory());
 
-                        List<Pair<CostCategoryResource, FinanceRowCostCategory>> spendRowsAgainstCategories =
-                                simpleMap(spendRows, (category, costs) -> Pair.of(findCategoryForFinanceRowType(category, costCategoryType), costs));
+                       Map<CostCategory, BigDecimal> valuesPerCostCategory = academicFinances ?
+                               getAcademicValuesPerCostCategory(costCategoryType, spendRows) :
+                               getIndustrialValuesPerCostCategory(costCategoryType, spendRows);
 
-                        List<SpendProfileCostCategorySummary> costCategorySummaries = simpleMap(toMap(spendRowsAgainstCategories), (category, costs) ->
-                                new SpendProfileCostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
+//                        List<Pair<CostCategory, FinanceRowCostCategory>> spendRowsAgainstCategories =
+//                                simpleMap(spendRows, (category, costs) -> Pair.of(findCategoryForFinanceRowType(category, costCategoryType), costs));
 
-                        return new SpendProfileCostCategorySummaries(costCategorySummaries, costCategoryTypeMapper.mapToResource(costCategoryType));
+                        List<SpendProfileCostCategorySummary> costCategorySummaries = new ArrayList<>();
+                        valuesPerCostCategory.forEach((cc, total) -> costCategorySummaries.add(new SpendProfileCostCategorySummary(cc, total, project.getDurationInMonths())));
+
+//                                simpleMap(toMap(spendRowsAgainstCategories), (category, costs) ->
+//                                new SpendProfileCostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
+
+                        return new SpendProfileCostCategorySummaries(costCategorySummaries, costCategoryType);
                     });
-                }));
+                })));
     }
 
-    private CostCategoryResource findCategoryForFinanceRowType(FinanceRowType category, CostCategoryType costCategoryType) {
-        CostCategory costCategory = simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(category.getName())).get();
-        return costCategoryMapper.mapToResource(costCategory);
+    private Map<CostCategory, BigDecimal> getIndustrialValuesPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
+
+        Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
+
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> costCategoryDetails : spendRows.entrySet()) {
+
+            CostCategory costCategory = findIndustrialCostCategoryForName(costCategoryType, costCategoryDetails.getKey().getName());
+
+            valuesPerCostCategory.put(costCategory, costCategoryDetails.getValue().getTotal());
+        }
+
+        return valuesPerCostCategory;
+    }
+
+    private Map<CostCategory, BigDecimal> getAcademicValuesPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
+
+        Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
+        costCategoryType.getCostCategories().forEach(cc -> valuesPerCostCategory.put(cc, BigDecimal.ZERO));
+
+        for (FinanceRowCostCategory costCategoryDetails : spendRows.values()) {
+
+            List<FinanceRowItem> costs = costCategoryDetails.getCosts();
+
+            for (FinanceRowItem cost : costs) {
+
+                String costCategoryName = cost.getName();
+                CostCategory costCategory = findAcademicCostCategoryForName(costCategoryType, costCategoryName);
+                BigDecimal value = cost.getTotal();
+
+                BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
+                valuesPerCostCategory.put(costCategory, currentValue.add(value));
+            }
+        }
+        return valuesPerCostCategory;
+    }
+
+    private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {
+        AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
+        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(academicCostCategoryMatch.getName())).get();
+    }
+
+    private CostCategory findIndustrialCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {
+        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(costCategoryName)).get();
     }
 }

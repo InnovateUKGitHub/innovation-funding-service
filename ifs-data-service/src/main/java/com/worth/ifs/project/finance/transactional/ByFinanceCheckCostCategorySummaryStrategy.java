@@ -1,8 +1,11 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.finance.resource.CostCategoryGroupResource;
-import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.domain.CostCategory;
+import com.worth.ifs.project.finance.domain.CostCategoryGroup;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
+import com.worth.ifs.project.finance.repository.CostCategoryRepository;
+import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.finance.resource.CostResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.CollectionFunctions.unique;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -30,7 +34,11 @@ public class ByFinanceCheckCostCategorySummaryStrategy implements SpendProfileCo
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private CostCategoryTypeRepository costCategoryTypeRepository;
+
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+
 
 
     @Override
@@ -38,16 +46,20 @@ public class ByFinanceCheckCostCategorySummaryStrategy implements SpendProfileCo
         return find(financeCheck(projectId, organisationId), project(projectId)).
                 andOnSuccess((financeCheck, project) -> {
                     List<CostResource> costs = financeCheck.getCostGroup().getCosts();
-                    List<SpendProfileCostCategorySummary> spendProfileCostCategorySummaries = simpleMap(costs, cost -> new SpendProfileCostCategorySummary(cost.getCostCategory(), cost.getValue(), project.getDurationInMonths()));
-                    ServiceResult<CostCategoryTypeResource> costCategoryType = from(spendProfileCostCategorySummaries);
+                    List<SpendProfileCostCategorySummary> spendProfileCostCategorySummaries = simpleMap(costs, cost -> {
+                        CostCategory costCategory = costCategoryRepository.findOne(cost.getCostCategory().getId());
+                        return new SpendProfileCostCategorySummary(costCategory, cost.getValue(), project.getDurationInMonths());
+                    });
+                    ServiceResult<CostCategoryType> costCategoryType = from(spendProfileCostCategorySummaries);
                     return costCategoryType.andOnSuccessReturn(cct -> new SpendProfileCostCategorySummaries(spendProfileCostCategorySummaries, cct));
                 }
         );
     }
 
-    private ServiceResult<CostCategoryTypeResource> from(List<SpendProfileCostCategorySummary> summaries){
-        CostCategoryGroupResource costCategoryGroup = unique(summaries, item -> item.getCategory().getCostCategoryGroup());
-        return projectFinanceService.findByCostCategoryGroupId(costCategoryGroup.getId());
+    private ServiceResult<CostCategoryType> from(List<SpendProfileCostCategorySummary> summaries){
+        CostCategoryGroup costCategoryGroup = unique(summaries, item -> item.getCategory().getCostCategoryGroup());
+        return find(costCategoryTypeRepository.findByCostCategoryGroupId(costCategoryGroup.getId()),
+                notFoundError(CostCategoryType.class, costCategoryGroup.getId()));
     }
 
     private Supplier<ServiceResult<ProjectResource>> project(Long projectId) {
