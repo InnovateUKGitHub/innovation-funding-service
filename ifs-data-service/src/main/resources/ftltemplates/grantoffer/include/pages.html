@@ -93,88 +93,53 @@
 <table>
   <thead>
     <tr>
-      <th colspan="2" scope="col" class="no-border"></th>
-      <th colspan="2" scope="col">2016/2017 <br/>April - March</th>
-      <th colspan="2" scope="col">2017/2018 <br/>April - March</th>
-      <th colspan="2" scope="col">2018/2019 <br/>April - March</th>
-      <th colspan="2" scope="col">2019/2020 <br/>April - March</th>
-      <th colspan="2" scope="col">Total</th>
+        <th colspan="2" scope="col" class="no-border"></th>
+        <#list TableData.yearEligibleCostTotal?keys as year>
+            <th colspan="2">${year}</th>
+        </#list>
+        <th colspan="2" scope="col">Total</th>
     </tr>
     <tr>
       <th scope="col">Organisation</th>
       <th scope="col">% Grant</th>
+      <#list TableData.yearEligibleCostTotal?keys as year>
+        <th scope="col">Eligible Cost (&#163;)</th>
+        <th scope="col">Grant available (&#163;)</th>
+      </#list>
+      <!--  for the totals -->
       <th scope="col">Eligible Cost (&#163;)</th>
       <th scope="col">Grant available (&#163;)</th>
-      <th scope="col">Eligible Cost (&#163;)</th>
-      <th scope="col">Grant available (&#163;)</th>
-      <th scope="col">Eligible Cost (&#163;)</th>
-      <th scope="col">Grant available (&#163;)</th>
-      <th scope="col">Eligible Cost (&#163;)</th>
-      <th scope="col">Grant available (&#163;)</th>
-      <th scope="col">Eligible Cost (&#163;)</th>
-      <th scope="col">Grant available (&#163;)</th>
+
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">Organisation1</th>
-      <td></td>
-      <td>1,564,256</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <th scope="row">Organisation2</th>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <th scope="row">Organisation3</th>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
+  <#assign keys = TableData.organisationGrantAllocationTotal?keys>
+  <#list keys as org>
+  <tr>
+    <td>${org}</td>
+    <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
+
+    <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
+    <#list 0..costLength as i>
+      <td>${TableData.organisationEligibleCostTotal[org][i]}</td>
+      <td>${TableData.organisationGrantAllocationTotal[org][i]}</td>
+    </#list>
+    <td></td>
+    <td></td>
+  </tr>
+  </#list>
+  <tr>
+      <th>Total (per annum)</th>
+      <th></th>
+      <#assign years = TableData.yearEligibleCostTotal?keys>
+      <#list years as year>
+        <th>${TableData.yearGrantAllocationTotal[year]}</th>
+        <th>${TableData.yearEligibleCostTotal[year]}</th>
+      </#list>
+      <th></th>
+      <th></th>
+  </tr>
   </tbody>
-  <tfoot>
-    <tr>
-      <th scope="row">Total (per Annum)</th>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tfoot>
 </table>
 </#macro>
 <!-- ====================== Page 3 of the Grant offer letter  ======================  -->
