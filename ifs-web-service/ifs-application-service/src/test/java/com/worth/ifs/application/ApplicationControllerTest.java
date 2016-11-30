@@ -462,7 +462,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void testTeesAndCees() throws Exception {
-        ApplicationResource app = applications.get(0);
 
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));
