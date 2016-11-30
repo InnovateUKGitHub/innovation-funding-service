@@ -104,9 +104,6 @@ public class ProjectSetupSectionStatus {
                 if (asList(PENDING, NOT_STARTED).contains(grantOfferLetterState)) {
                     return HOURGLASS;
                 }
-                if (NOT_STARTED.equals(grantOfferLetterState)) {
-                    return HOURGLASS;
-                }
                 return EMPTY;
             } else if (!NOT_REQUIRED.equals(grantOfferLetterState)) {
                 return HOURGLASS;
