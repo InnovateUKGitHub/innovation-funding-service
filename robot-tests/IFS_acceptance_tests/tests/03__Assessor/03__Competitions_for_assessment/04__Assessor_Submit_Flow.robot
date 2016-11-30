@@ -18,6 +18,9 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 ...
 ...               INFUND-5739 As an Assessor I can submit all the applications that I have selected so that my assessment work is completed
+...
+...
+...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -253,11 +256,15 @@ User Saves the Assessment as Not Recommended
 
 Submit Assessments
     [Documentation]    INFUND-5739
-    #Given the submit button is disabled    #TODO: Waiting infund-6386
+    ...
+    ...    INFUND-3743
     When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
     Then the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+    And The user should see the text in the page    Intelligent Building
+    And The user should see the text in the page    98
+    And The user should not see the element    link=Intelligent Building
 
 *** Keywords ***
 the collapsible button should contain
