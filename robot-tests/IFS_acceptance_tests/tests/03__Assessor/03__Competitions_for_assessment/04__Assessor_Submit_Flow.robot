@@ -253,10 +253,9 @@ User Saves the Assessment as Not Recommended
 
 Submit Assessments
     [Documentation]    INFUND-5739
-    #Given the submit button is disabled    #TODO: Waiting infund-6386
     When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
-    And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
+    And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
     Then the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
 
 *** Keywords ***
@@ -387,6 +386,3 @@ the status of the status of the application should be correct
 the application should have the correct status
     [Arguments]    ${APPLICATION}    ${STATUS}
     element should contain    ${APPLICATION}    ${STATUS}
-
-the submit button is disabled
-    Element Should Be Enabled    jQuery=button:contains("Submit assessments")
