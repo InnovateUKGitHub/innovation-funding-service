@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.worth.ifs.form.resource.FormInputType;
+
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
@@ -30,19 +32,23 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         this.name = name;
     }
 
-    public static FinanceRowType fromString(String type) {
-        if(type!=null) {
-            for(FinanceRowType costType : FinanceRowType.values()) {
-                if(type.equalsIgnoreCase(costType.type)) {
+    public static FinanceRowType fromType(FormInputType formInputType) {
+        if (formInputType != null) {
+            for (FinanceRowType costType : values()) {
+                if (formInputType == FormInputType.findByName(costType.getType())) {
                     return costType;
                 }
             }
         }
-        throw new IllegalArgumentException("Not a valid FinanceType : " + type);
+        throw new IllegalArgumentException("No valid FinanceRowType found for FormInputType: " + formInputType);
     }
 
     public String getType() {
         return type;
+    }
+
+    public FormInputType getFormInputType() {
+        return FormInputType.findByName(getType());
     }
 
     public boolean isSpendCostCategory() {
