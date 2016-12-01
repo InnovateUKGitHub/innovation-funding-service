@@ -83,6 +83,7 @@ import com.worth.ifs.user.mapper.*;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
+import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -249,6 +250,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
+
+    @Mock
+    protected ProcessOutcomeService processOutcomeServiceMock;
 
     @Mock
     protected ProcessOutcomeMapper processOutcomeMapperMock;
