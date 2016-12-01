@@ -40,7 +40,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851, INFUND-4972
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Grant offer letter
