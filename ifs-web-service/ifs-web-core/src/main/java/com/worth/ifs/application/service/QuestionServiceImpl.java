@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,7 +120,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputType) {
+    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
         return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType);
     }
 

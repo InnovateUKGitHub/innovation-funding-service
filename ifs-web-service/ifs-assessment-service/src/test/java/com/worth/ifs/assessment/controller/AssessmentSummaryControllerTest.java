@@ -12,6 +12,7 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -27,13 +28,12 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
-import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -84,7 +84,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assessmentId = 2L;
         competitionId = 3L;
 
-        String anotherTypeOfFormInputTitle = RESEARCH_CATEGORY.getTitle();
+        FormInputType anotherTypeOfFormInput = FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
                 .with(id(assessmentId))
@@ -112,14 +112,14 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         // The second question will have 'application in scope' type amongst the form inputs meaning that the AssessmentSummaryQuestionViewModel.applicationInScope should get populated with any response to this input
         List<FormInputResource> formInputsForQuestion2 = newFormInputResource()
                 .withId(1L, 2L)
-                .withFormInputTypeTitle(anotherTypeOfFormInputTitle, APPLICATION_IN_SCOPE.getTitle())
+                .withType(anotherTypeOfFormInput, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
                 .withQuestion(2L, 2L)
                 .build(2);
 
         // The third question will have 'feedback' and 'score' types amongst the form inputs meaning that the AssessmentSummaryQuestionViewModel.feedback and .scoreGiven should get populated with any response to this input
         List<FormInputResource> formInputsForQuestion3 = newFormInputResource()
                 .withId(3L, 4L, 5L)
-                .withFormInputTypeTitle(anotherTypeOfFormInputTitle, SCORE.getTitle(), FEEDBACK.getTitle())
+                .withType(anotherTypeOfFormInput, FormInputType.ASSESSOR_SCORE, FormInputType.TEXTAREA)
                 .withQuestion(3L, 3L, 3L)
                 .build(3);
         when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(concat(concat(formInputsForQuestion1.stream(), formInputsForQuestion2.stream()), formInputsForQuestion3.stream()).collect(toList()));
@@ -127,7 +127,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         // The fourth question will have form inputs without a complete set of responses meaning that it should be incomplete
         List<FormInputResource> formInputsForQuestion4 = newFormInputResource()
                 .withId(6L, 7L)
-                .withFormInputTypeTitle(anotherTypeOfFormInputTitle, FEEDBACK.getTitle())
+                .withType(anotherTypeOfFormInput, FormInputType.TEXTAREA)
                 .withQuestion(4L, 4L)
                 .build(2);
         when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(concat(concat(concat(formInputsForQuestion1.stream(), formInputsForQuestion2.stream()), formInputsForQuestion3.stream()), formInputsForQuestion4.stream()).collect(toList()));

@@ -3,6 +3,7 @@ package com.worth.ifs.form.repository;
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +37,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         FormInput input = repository.findOne(1L);
         assertEquals(Long.valueOf(1), input.getId());
         assertEquals(Integer.valueOf(400), input.getWordCount());
-        assertEquals("textarea", input.getFormInputType().getTitle());
+        assertEquals(FormInputType.TEXTAREA, input.getType());
         assertEquals(Long.valueOf(1L), ((Competition) getField(input, "competition")).getId());
         assertTrue(input.isIncludedInApplicationSummary());
         assertEquals("1. What is the business opportunity that your project addresses?", input.getDescription());
