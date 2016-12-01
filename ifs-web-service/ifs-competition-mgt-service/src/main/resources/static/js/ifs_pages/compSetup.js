@@ -158,8 +158,8 @@ IFS.competitionManagement.setup = (function() {
       }
       else {
         html+='<td>'+
-                '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
-                '<input required="required" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+idCount+'-justification" name="guidanceRows['+count+'].justification" value="">'+
+                '<label class="form-label" for="guidancerow-'+idCount+'-subject"><span class="visuallyhidden">Subject</span></label>'+
+                '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters" data-required-errormessage="Please enter a subject" id="guidancerow-'+idCount+'-subject" name="guidanceRows['+count+'].subject" value="">'+
               '</td>';
       }
       html+='<td>'+
