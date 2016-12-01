@@ -273,7 +273,7 @@
                         <input type="hidden" name="removeGuidanceRow" />
 
                         <h3 class="heading-small">Guidance table</h3>
-                        <table id="guidance-table" th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                        <table id="guidance-table" class="assessed-guidance" th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
                             <thead>
                                 <tr>
                                     <th scope="col">Score <span class="visuallyhidden"> from</span></th>
@@ -392,6 +392,9 @@
                                 </th:block>
                             </tbody>
                         </table>
+                        <div class="alignright extra-margin">
+                            <button class="buttonlink" data-add-row="guidance">+Add guidance row</button>
+                        </div>
 
                         <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">
                             <label class="form-label" for="question.assessmentMaxWords">
@@ -408,14 +411,9 @@
                                    th:name="question.assessmentMaxWords"
                                    th:value="${question.assessmentMaxWords}"/>
                         </div>
-
-                        <div class="alignright extra-margin">
-                            <button class="buttonlink" data-add-row="guidance">+Add guidance row</button>
-                        </div>
                     </div>
                 </th:block>
              </th:block>
         </div>
     </th:block>
 </div>
-
