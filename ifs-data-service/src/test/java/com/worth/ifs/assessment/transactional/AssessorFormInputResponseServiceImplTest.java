@@ -1,17 +1,13 @@
 package com.worth.ifs.assessment.transactional;
 
-import com.google.common.collect.Lists;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -22,15 +18,16 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
@@ -383,8 +380,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         FormInputResource formInput = newFormInputResource()
                 .withId(formInputId)
                 .withWordCount(0)
-                .withFormInputType(1L)
-                .withFormInputTypeTitle(AssessorFormInputType.RESEARCH_CATEGORY.toString())
+                .withType(ASSESSOR_RESEARCH_CATEGORY)
                 .build();
 
         CategoryResource categoryResource = newCategoryResource()
