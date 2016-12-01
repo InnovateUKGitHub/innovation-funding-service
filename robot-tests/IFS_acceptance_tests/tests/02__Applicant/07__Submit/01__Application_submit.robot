@@ -27,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Email    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Review & submit")
+    When the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
     [Teardown]    the applicant marks the first section as complete
 
@@ -39,7 +39,7 @@ Submit button disabled when finance section is incomplete
     Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user clicks the button/link    link= Application Overview
-    And the user clicks the button/link    jQuery=.button:contains("Review & submit")
+    And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
     [Teardown]    The user marks the finances as complete
 
@@ -56,7 +56,7 @@ Submit flow (complete application)
     Given log in as a different user    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
-    When the user clicks the button/link    link=Review & submit
+    When the user clicks the button/link    link=Review and submit
     And the user should be redirected to the correct page    summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
