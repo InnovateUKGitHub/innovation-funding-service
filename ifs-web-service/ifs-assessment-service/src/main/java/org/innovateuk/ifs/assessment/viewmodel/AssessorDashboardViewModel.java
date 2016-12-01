@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
+import com.worth.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 
 import java.util.List;
@@ -11,13 +12,19 @@ public class AssessorDashboardViewModel {
 
     private List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions;
     private List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions;
+    private List<AssessorDashboardPendingInviteViewModel> pendingInvites;
     private AssessorProfileStatusViewModel profileStatus;
 
-
-    public AssessorDashboardViewModel(AssessorProfileStatusViewModel profileStatus, List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions, List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
+    public AssessorDashboardViewModel(
+            AssessorProfileStatusViewModel profileStatus,
+            List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions,
+            List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions,
+            List<AssessorDashboardPendingInviteViewModel> pendingInvites
+    ) {
         this.profileStatus = profileStatus;
         this.activeCompetitions = activeCompetitions;
         this.upcomingCompetitions = upcomingCompetitions;
+        this.pendingInvites = pendingInvites;
     }
 
     public List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
@@ -38,5 +45,9 @@ public class AssessorDashboardViewModel {
 
     public AssessorProfileStatusViewModel getProfileStatus() {
         return profileStatus;
+    }
+
+    public List<AssessorDashboardPendingInviteViewModel> getPendingInvites() {
+        return pendingInvites;
     }
 }
