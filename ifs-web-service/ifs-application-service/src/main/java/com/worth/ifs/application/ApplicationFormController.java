@@ -25,6 +25,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
@@ -69,6 +70,7 @@ import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
@@ -363,16 +365,16 @@ public class ApplicationFormController {
                              @PathVariable(QUESTION_ID) final Long questionId,
                              HttpServletRequest request) {
         FinanceRowItem costItem = addCost(applicationId, questionId, request);
-        String type = costItem.getCostType().getType();
+        FinanceRowType costType = costItem.getCostType();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", type);
+        return String.format("finance/finance :: %s_row", costType.getType());
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
@@ -731,7 +733,7 @@ public class ApplicationFormController {
                             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
                             formInputs
                                     .stream()
-                                    .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputTypeTitle()))
+                                    .filter(formInput1 -> FILEUPLOAD != formInput1.getType())
                                     .forEach(formInput -> {
 
                                         String formInputKey = "formInput[" + formInput.getId() + "]";
@@ -757,7 +759,7 @@ public class ApplicationFormController {
                     List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
                     formInputs
                             .stream()
-                            .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
+                            .filter(formInput1 -> FILEUPLOAD == formInput1.getType() && request instanceof StandardMultipartHttpServletRequest)
                             .forEach(formInput ->
                                 allErrors.addAll(processFormInput(formInput.getId(), params, applicationId, processRoleId, request))
                             );

@@ -1,18 +1,12 @@
 package com.worth.ifs.competitionsetup.utils;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Test;
-
-import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.resource.CompetitionStatus.*;
-import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -52,16 +46,5 @@ public class CompetitionUtilsTest {
         assertEquals(TRUE, CompetitionUtils.isSendToDashboard(competitionResource));
         competitionResource = newCompetitionResource().with((integer, competitionResource1) -> competitionResource1.setCompetitionStatus(null)).build();
         assertEquals(TRUE, CompetitionUtils.isSendToDashboard(competitionResource));
-    }
-
-    @Test
-    public void testInputsTypeMatching() {
-        List<FormInputResource> formInputs = asList(newFormInputResource().withFormInputType(123L).build());
-
-        assertEquals(FALSE, CompetitionUtils.inputsTypeMatching(formInputs, 321L));
-        assertEquals(FALSE, CompetitionUtils.inputsTypeMatching(formInputs, null));
-        assertEquals(FALSE, CompetitionUtils.inputsTypeMatching(emptyList(), null));
-        assertEquals(FALSE, CompetitionUtils.inputsTypeMatching(null, null));
-        assertEquals(TRUE, CompetitionUtils.inputsTypeMatching(formInputs, 123L));
     }
 }

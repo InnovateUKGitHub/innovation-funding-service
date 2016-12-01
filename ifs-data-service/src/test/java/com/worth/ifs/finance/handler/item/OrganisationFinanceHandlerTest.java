@@ -16,7 +16,6 @@ import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.*;
 import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -71,7 +70,9 @@ public class OrganisationFinanceHandlerTest {
         costTypeQuestion = new HashMap<FinanceRowType, Question>();
 
         for (FinanceRowType costType : FinanceRowType.values()) {
-            setUpCostTypeQuestions(competition, costType);
+            if (FinanceRowType.ACADEMIC != costType) {
+                setUpCostTypeQuestions(competition, costType);
+            }
         }
 
         List<FinanceRow> costs = new ArrayList<>();
@@ -128,13 +129,13 @@ public class OrganisationFinanceHandlerTest {
     }
 
     private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
-        FormInputType formInputType = new FormInputType(null, costType.getType());
-        FormInput formInput = newFormInput().build();
-        formInput.setFormInputType(formInputType);
+        FormInput formInput = newFormInput()
+                .withType(costType.getFormInputType())
+                .build();
         Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getType()))).thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));
     }
 
     @Test

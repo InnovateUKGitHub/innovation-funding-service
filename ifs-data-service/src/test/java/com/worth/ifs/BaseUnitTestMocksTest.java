@@ -26,8 +26,6 @@ import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -85,6 +83,7 @@ import com.worth.ifs.user.mapper.*;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
+import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -172,9 +171,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FormInputRepository formInputRepositoryMock;
 
     @Mock
-    protected FormInputTypeRepository formInputTypeRepositoryMock;
-
-    @Mock
     protected SectionMapper sectionMapperMock;
 
     @Mock
@@ -254,6 +250,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
+
+    @Mock
+    protected ProcessOutcomeService processOutcomeServiceMock;
 
     @Mock
     protected ProcessOutcomeMapper processOutcomeMapperMock;

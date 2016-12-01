@@ -10,6 +10,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -17,8 +19,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 public class AssessmentOverviewRowViewModel {
 
-    private static final String SCOPE_INPUT_TYPE = "assessor_application_in_scope";
-    private static final String SCORE_INPUT_TYPE = "assessor_score";
     private static final String TRUE = "true";
     private static final String YES = "Yes";
     private static final String NO = "No";
@@ -52,13 +52,13 @@ public class AssessmentOverviewRowViewModel {
 
         formInputs.forEach(input -> {
             if (formInputResponseMap.get(input.getId()) != null) {
-                if (input.getFormInputTypeTitle().equals(SCOPE_INPUT_TYPE)) {
+                if (ASSESSOR_APPLICATION_IN_SCOPE == input.getType()) {
                     this.hasScope = true;
                     if (!isBlank(formInputResponseMap.get(input.getId()).getValue())) {
                         this.scopeResponse = formInputResponseMap.get(input.getId()).getValue().equals(TRUE) ? YES : NO;
                     }
-                } else if (input.getFormInputTypeTitle().equals(SCORE_INPUT_TYPE)) {
-                     this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
+                } else if (ASSESSOR_SCORE == input.getType()) {
+                    this.assessedScore = formInputResponseMap.get(input.getId()).getValue();
                 }
             }
         });
@@ -66,7 +66,7 @@ public class AssessmentOverviewRowViewModel {
         this.hasBeenCompleted = true;
         formInputs.forEach(input -> {
             if (formInputResponseMap.get(input.getId()) == null ||
-                    isBlank(formInputResponseMap.get(input.getId()).getValue()) ) {
+                    isBlank(formInputResponseMap.get(input.getId()).getValue())) {
                 this.hasBeenCompleted = false;
             }
         });
@@ -96,13 +96,19 @@ public class AssessmentOverviewRowViewModel {
         return maximumScore;
     }
 
-    public String getScopeResponse() { return scopeResponse; }
+    public String getScopeResponse() {
+        return scopeResponse;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AssessmentOverviewRowViewModel that = (AssessmentOverviewRowViewModel) o;
 

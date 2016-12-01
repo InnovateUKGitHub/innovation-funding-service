@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.commons.util.enums.Identifiable;
+import com.worth.ifs.util.enums.Identifiable;
 
 /**
  * The status of a {@link Participant}.
