@@ -46,7 +46,7 @@ public class ApplicationResource {
     private LocalDateTime submittedDate;
 
     @Min(value=1, message ="{validation.application.details.duration.in.months.max.digits}")
-    @Max(value=31, message ="{validation.application.details.duration.in.months.max.digits}")
+    @Max(value=36, message ="{validation.application.details.duration.in.months.max.digits}")
     @NotNull(message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
