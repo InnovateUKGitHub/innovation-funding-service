@@ -10,6 +10,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseCommand;
 import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -48,7 +49,7 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
             UserResource updateUser = retrieveUserByEmail(uploadedBy);
             doAs(updateUser, () -> {
                 List<FormInputResource> formInputs = getFormInputsForQuestion(data.getQuestionName(), data);
-                List<FormInputResource> fileUploadInputs = simpleFilter(formInputs, fi -> "fileupload".equals(fi.getFormInputTypeTitle()));
+                List<FormInputResource> fileUploadInputs = simpleFilter(formInputs, fi -> FormInputType.FILEUPLOAD == fi.getType());
 
                 zip(fileUploadInputs, fileUploads, (input, filename) -> {
 
