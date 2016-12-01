@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -33,7 +32,6 @@ import static java.lang.String.format;
  * Controller to manage Invites to a Competition.
  */
 @Controller
-@RequestMapping("/invite")
 public class CompetitionInviteController extends BaseController {
 
     @Autowired
@@ -48,7 +46,7 @@ public class CompetitionInviteController extends BaseController {
     @Autowired
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
-    @RequestMapping(value = "competition/{inviteHash}", method = RequestMethod.GET)
+    @RequestMapping(value = "/invite/competition/{inviteHash}", method = RequestMethod.GET)
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
                              @ModelAttribute("form") RejectCompetitionForm form,
                              Model model) {
@@ -56,25 +54,38 @@ public class CompetitionInviteController extends BaseController {
         return "assessor-competition-invite";
     }
 
-    @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
+    @RequestMapping(value = "/invite/competition/{inviteHash}/accept", method = RequestMethod.POST)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
+
         if (userIsLoggedIn) {
             return format("redirect:/invite-accept/competition/%s/accept", inviteHash);
-        } else {
-            return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
-                if (userExists) {
-                    return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
-                } else {
-                    return format("redirect:/registration/%s/start", inviteHash);
-                }
-            }).getSuccessObject();
         }
+
+        return inviteRestService.checkExistingUser(inviteHash)
+                .andOnSuccessReturn(userExists -> {
+                    if (userExists) {
+                        return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
+                    } else {
+                        return format("redirect:/registration/%s/start", inviteHash);
+                    }
+                })
+                .getSuccessObject();
     }
 
-    @RequestMapping(value = "competition/{inviteHash}/reject", method = RequestMethod.POST)
+    /**
+     * Unlike the other endpoints, this requires authentication through Shibboleth.
+     * The /invite/ endpoints will not be authenticated and will not trigger a sign in screen.
+     */
+    @RequestMapping(value = "/invite-accept/competition/{inviteHash}/accept", method = RequestMethod.GET)
+    public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
+        inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
+        return "redirect:/assessor/dashboard";
+    }
+
+    @RequestMapping(value = "/invite/competition/{inviteHash}/reject", method = RequestMethod.POST)
     public String rejectInvite(Model model,
                                @PathVariable("inviteHash") String inviteHash,
                                @Valid @ModelAttribute("form") RejectCompetitionForm form,
@@ -91,14 +102,14 @@ public class CompetitionInviteController extends BaseController {
         });
     }
 
-    @RequestMapping(value = "competition/{inviteHash}/reject/confirm", method = RequestMethod.GET)
+    @RequestMapping(value = "/invite/competition/{inviteHash}/reject/confirm", method = RequestMethod.GET)
     public String rejectInviteConfirm(Model model,
                                       @ModelAttribute("form") RejectCompetitionForm form,
                                       @PathVariable("inviteHash") String inviteHash) {
         return doViewRejectInvitationConfirm(model, inviteHash);
     }
 
-    @RequestMapping(value = "competition/{inviteHash}/reject/thank-you", method = RequestMethod.GET)
+    @RequestMapping(value = "/invite/competition/{inviteHash}/reject/thank-you", method = RequestMethod.GET)
     public String rejectThankYou(@PathVariable("inviteHash") String inviteHash) {
         return "assessor-competition-reject";
     }

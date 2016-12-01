@@ -358,7 +358,6 @@ Non lead partner nominates finance contact
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
-
 Option to invite a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
