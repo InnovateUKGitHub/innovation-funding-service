@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
@@ -63,9 +63,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		LeadApplicantType type = LeadApplicantType.fromCode(eligibilityForm.getLeadApplicantType());
 		competition.setLeadApplicantType(type);
 		
-		competitionService.update(competition);
-		
-        return Collections.emptyList();
+		return competitionService.update(competition);
 	}
 
 	@Override

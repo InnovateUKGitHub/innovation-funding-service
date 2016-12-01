@@ -2,10 +2,11 @@ package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -157,8 +160,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
 	@Override
-	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-			CompetitionResource competitionResource, CompetitionSetupSection section) {
+	public ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+														   CompetitionResource competitionResource, CompetitionSetupSection section) {
 		
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
@@ -166,13 +169,12 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 		
-		List<Error> errors = saver.saveSection(competitionResource, competitionSetupForm);
-		
-		if(errors.isEmpty() && competitionSetupForm.isMarkAsCompleteAction()) {
-			competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
-		}
-		
-		return errors;
+		return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
+			if (competitionSetupForm.isMarkAsCompleteAction()) {
+				return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+			}
+			return serviceSuccess();
+		});
 	}
 
     @Override
@@ -223,6 +225,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	public void setCompetitionAsCompetitionSetup(Long competitionId) {
 		competitionService.returnToSetup(competitionId);
 	}
+
+
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
 		List<CompetitionSetupSection> requiredSections = new ArrayList<>();

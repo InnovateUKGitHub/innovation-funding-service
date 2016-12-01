@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -15,13 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
@@ -41,7 +42,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 		competition.setActivityCode(additionalInfoForm.getActivityCode());
 		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
@@ -58,13 +59,13 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		});
 
 		try {
-			competitionService.update(competition);
+			competitionService.update(competition).getSuccessObjectOrThrowException();
 		} catch (RuntimeException e) {
 			LOG.error("Competition object not available");
-			return asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST));
+			return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));
 		}
 
-		return Collections.emptyList();
+		return serviceSuccess();
 	}
 
 	@Override

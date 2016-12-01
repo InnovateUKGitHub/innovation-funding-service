@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
@@ -25,9 +26,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.*;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
@@ -55,13 +54,25 @@ public class CompetitionSetupApplicationController {
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, CompetitionSetupSection.APPLICATION_FORM);
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
 
-    @RequestMapping(value = "/mark-as-complete", method = RequestMethod.GET)
-    public String setApplicationProcessAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
-        competitionService.setSetupSectionMarkedAsComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM);
-        return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+    @RequestMapping(value = "/landing-page", method = RequestMethod.POST)
+    public String setApplicationProcessAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm form, BindingResult bindingResult, ValidationHandler validationHandler) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+
+        Supplier<String> failureView = () -> {
+            LOG.debug("Form errors");
+            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, CompetitionSetupSection.APPLICATION_FORM);
+            model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
+            return "competition/setup";
+        };
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () ->
+                competitionSetupQuestionService.validateApplicationQuestions(competitionResource, form, bindingResult));
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
@@ -94,14 +105,22 @@ public class CompetitionSetupApplicationController {
         CompetitionResource resource = competitionService.getById(competitionId);
         resource.setFullApplicationFinance(form.isFullApplicationFinance());
         resource.setIncludeGrowthTable(form.isIncludeGrowthTable());
-        competitionService.update(resource);
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionService.update(resource));
 
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     private String getFinancePage(Model model, Long competitionId) {
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
+        CompetitionResource competition = competitionService.getById(competitionId);
+        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition,
                 CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
+
+        ApplicationDetailsForm competitionSetupForm = (ApplicationDetailsForm) competitionSetupService.getSubsectionFormData(
+                competition,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSubsection.FINANCES,
+                null);
+
         return "competition/finances";
     }
 
@@ -185,9 +204,9 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource resource = competitionService.getById(competitionId);
         resource.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-        competitionService.update(resource);
 
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionService.update(resource));
     }
 
     private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {

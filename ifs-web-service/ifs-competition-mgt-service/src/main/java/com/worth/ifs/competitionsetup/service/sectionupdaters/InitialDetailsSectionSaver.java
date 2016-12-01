@@ -5,15 +5,15 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -59,7 +60,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 
@@ -73,13 +74,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
             List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId());
             if(!errors.isEmpty()) {
-                return errors;
+                return serviceFailure(errors);
             }
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 
-            return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
+            return serviceFailure(asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save")));
 		}
 
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
@@ -91,16 +92,16 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		List<CategoryResource> matchingChild =
 				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
 		if (matchingChild.isEmpty()) {
-			return asList(fieldError("innovationAreaCategoryId",
+			return serviceFailure(asList(fieldError("innovationAreaCategoryId",
 					initialDetailsForm.getInnovationAreaCategoryId(),
 					"competition.setup.innovation.area.must.be.selected",
-                    singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
+                    singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
 		}
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
-		competitionService.update(competition);
-        return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId()).getErrors();
-	}
+		return competitionService.update(competition).andOnSuccess(() ->
+                competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId()));
+   }
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {

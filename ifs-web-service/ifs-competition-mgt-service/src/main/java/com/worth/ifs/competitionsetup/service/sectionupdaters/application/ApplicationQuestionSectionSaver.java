@@ -5,7 +5,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
+import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
@@ -68,11 +68,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 	private List<Error> updateQuestionWithValueByFieldname(CompetitionSetupQuestionResource question, String fieldName, String value) {
         switch (fieldName) {
             case "question.shortTitle" :
-                if (!value.isEmpty()) {
-                    question.setShortTitle(value);
-                } else {
-                    return makeErrorList("question.shortTitle", "This field cannot be left blank");
-                }
+                question.setShortTitle(value);
                 break;
             case "question.title" :
                 question.setTitle(value);
@@ -128,6 +124,6 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return ApplicationFormForm.class.equals(clazz);
+		return LandingPageForm.class.equals(clazz);
 	}
 }

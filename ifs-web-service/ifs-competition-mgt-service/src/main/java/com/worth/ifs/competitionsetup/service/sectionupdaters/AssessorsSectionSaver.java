@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,16 +38,14 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 	private static final String MAX_ASSESSOR_PAY = "99999999.99";
 
 	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 		
 		competition.setAssessorCount(assessorsForm.getAssessorCount());
 		competition.setAssessorPay(assessorsForm.getAssessorPay());
 
-		competitionService.update(competition);
-		
-        return Collections.emptyList();
+        return competitionService.update(competition);
 	}
 
 	@Override
