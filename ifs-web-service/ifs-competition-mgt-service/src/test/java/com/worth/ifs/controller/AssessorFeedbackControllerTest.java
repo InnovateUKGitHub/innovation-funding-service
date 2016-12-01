@@ -37,9 +37,9 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 		when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 		
     	mockMvc.perform(
-    				post("/competition/" + COMPETITION_ID + "/assessorfeedbacksubmit")
+    				post("/competition/{competitionId}/assessorfeedbacksubmit", COMPETITION_ID)
     			)
-                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID));
+                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/applications"));
     	
     	verify(assessorFeedbackService, never()).submitAssessorFeedback(any(Long.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("feedbackNotUploadedForAllApplications"));
@@ -51,7 +51,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     	when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(true);
     	
 		mockMvc.perform(
-    				post("/competition/" + COMPETITION_ID + "/assessorfeedbacksubmit")
+    				post("/competition/{competitionId}/assessorfeedbacksubmit", COMPETITION_ID)
     			)
                 .andExpect(redirectedUrl("http://localhost:80/project-setup-management/competition/" + COMPETITION_ID + "/status/"));
     	
@@ -66,9 +66,9 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
 		when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 		
     	mockMvc.perform(
-    				post("/competition/" + COMPETITION_ID + "/assessorfeedback")
+    				post("/competition/{competitionId}/assessorfeedback", COMPETITION_ID)
     			)
-                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID));
+                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/applications"));
     	
     	verify(assessorFeedbackService, never()).submitAssessorFeedback(any(Long.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("feedbackNotUploadedForAllApplications"));
@@ -80,7 +80,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     	when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(true);
 		
     	mockMvc.perform(
-    				post("/competition/" + COMPETITION_ID + "/assessorfeedback")
+    				post("/competition/{competitionId}/assessorfeedback", COMPETITION_ID)
     			)
     			.andExpect(view().name("assessor-feedback-confirmation"))
     			.andExpect(model().attribute("competitionId", 123L));
