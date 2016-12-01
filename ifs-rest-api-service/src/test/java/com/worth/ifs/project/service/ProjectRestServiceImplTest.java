@@ -530,10 +530,10 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testSendGrantOfferLetter() {
+    public void testSendGrantOfferLetter() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/send";
+        String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/send";
         setupPostWithRestResultExpectations(expectedUrl, OK);
 
         RestResult<Void> result = service.sendGrantOfferLetter(projectId);
@@ -542,10 +542,10 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testIsSendGrantOfferLetterAllowed() {
+    public void testIsSendGrantOfferLetterAllowed() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/isSendGrantOfferLetterAllowed";
+        String expectedUrl = projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed";
         setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.FALSE, OK);
 
         RestResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
@@ -555,10 +555,10 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testIsGrantOfferLetterAlreadySent() {
+    public void testIsGrantOfferLetterAlreadySent() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/isGrantOfferLetterAlreadySent";
+        String expectedUrl = projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent";
         setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
 
         RestResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);

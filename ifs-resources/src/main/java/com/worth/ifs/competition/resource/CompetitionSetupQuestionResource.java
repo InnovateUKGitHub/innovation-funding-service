@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class CompetitionSetupQuestionResource {
@@ -13,7 +14,9 @@ public class CompetitionSetupQuestionResource {
     private CompetitionSetupQuestionType type;
 
     private String number;
+    @NotBlank
     private String shortTitle;
+    private Boolean shortTitleEditable;
     @NotBlank
     private String title;
     private String subTitle;
@@ -25,6 +28,7 @@ public class CompetitionSetupQuestionResource {
     private String guidance;
 
     @Min(1)
+    @NotNull(message="{validation.field.must.not.be.blank}")
     private Integer maxWords;
     private Boolean appendix;
 
@@ -150,6 +154,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public Boolean getShortTitleEditable() {
+        return shortTitleEditable;
+    }
+
+    public void setShortTitleEditable(Boolean shortTitleEditable) {
+        this.shortTitleEditable = shortTitleEditable;
     }
 
     public String getShortTitle() {

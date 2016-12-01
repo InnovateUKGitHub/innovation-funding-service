@@ -16,13 +16,15 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3726 As an Assessor I can select one or more assessments to submit so that I can work in my preferred way
 ...
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
+...
+...               INFUND-5739 As an Assessor I can submit all the applications that I have selected so that my assessment work is completed
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-All the sections are present in the summary
+Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -34,13 +36,13 @@ All the sections are present in the summary
     And The user should see the element    id=form-input-feedback
     And The user should see the element    id=form-input-comments
 
-Number of days remaining until assessment submission
+Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2017-01-28
 
-Assessment summary shows questions as incomplete
+Summary shows questions as incomplete
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
@@ -54,7 +56,7 @@ Assessment summary shows questions as incomplete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
-Questions should show without score
+Summary: Questions should show without score
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
@@ -68,7 +70,7 @@ Questions should show without score
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
-Questions should show as complete
+Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
@@ -87,7 +89,7 @@ Questions should show as complete
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
-Questions should show the scores
+Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
@@ -104,13 +106,13 @@ Questions should show the scores
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
 
-Overall scores section
+Summary:Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
     And the total scores should be correct
 
-Feedback should show in each section
+Summary:Feedback should show in each section
     [Documentation]    INFUND-550
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
     Then The user should see the text in the page    Testing Business opportunity feedback text
@@ -135,7 +137,7 @@ Feedback should show in each section
     When The user clicks the button/link    jQuery=button:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
-Assessor should be able to re-edit before submit
+Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
     and The user should see the text in the page    What is the business opportunity that your project addresses?
@@ -147,7 +149,7 @@ Assessor should be able to re-edit before submit
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
-Feedback validations
+Summary:Feedback validations
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -167,7 +169,7 @@ Feedback validations
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
-Word count check: Your feedback
+Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -190,7 +192,7 @@ Word count check: Your feedback
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
-Word count check: Comments for InnovateUK
+Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
@@ -220,9 +222,9 @@ User Saves the Assessment as Recommended
     ...
     ...    INFUND-3724
     [Tags]
-    When the user enters text to a text field    id=feedback    ${EMPTY}
-    When the user selects the radio button    fundingConfirmation    true
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Given the user enters text to a text field    id=feedback    ${EMPTY}
+    And the user selects the radio button    fundingConfirmation    true
+    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
     And the user should see the element    css=li:nth-child(4) .recommend.yes
@@ -238,16 +240,23 @@ User Saves the Assessment as Not Recommended
     ...
     ...    INFUND-3724
     [Setup]
-    Given The user clicks the button/link    link=Products and Services Personalised
+    Given The user clicks the button/link    link=Park living
     And the user adds score and feedback for every question
     And the user clicks the button/link    jQuery=.button:contains("Review assessment")
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see the element    css=li:nth-child(4) .recommend.no
-    And The user should see the element    css=li:nth-child(4) .assessment-submit-checkbox
-    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
+    And The user should see the element    css=li:nth-child(3) .recommend.no
+    And The user should see the element    css=li:nth-child(3) .assessment-submit-checkbox
     And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
+    And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
+
+Submit Assessments
+    [Documentation]    INFUND-5739
+    When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
+    And the user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
+    Then the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
 
 *** Keywords ***
 the collapsible button should contain
@@ -256,7 +265,7 @@ the collapsible button should contain
 
 the user adds score and feedback for every question
     The user clicks the button/link    link=Scope
-    The user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    The user selects the index from the drop-down menu    1    id=research-category
     The user clicks the button/link    jQuery=label:contains(Yes)
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
@@ -362,7 +371,6 @@ the word count should be correct
 the total scores should be correct
     Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 100/100
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-
 
 The user accepts the juggling is word that sound funny application
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}

@@ -182,6 +182,20 @@ the user selects the option from the drop-down menu
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+the user selects the index from the drop-down menu
+    [Arguments]    ${option}    ${drop-down}
+    wait until element is visible    ${drop-down}
+    Select From List By Index   ${drop-down}    ${option}
+    mouse out    ${drop-down}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
 the user moves focus to the element
     [Arguments]    ${element}
     # Error checking
@@ -618,3 +632,22 @@ The user checks the question fields
     The user should see the text in the page    Guidance text test
     The user should see the text in the page    150
     The user should see the text in the page    No
+
+The user should see the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    wait until element contains    ${element}    ${text}
+    Page Should Not Contain    Error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong
+
+
+The user should not see the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    wait until element does not contain    ${element}    ${text}
+    Page Should Not Contain    Error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong

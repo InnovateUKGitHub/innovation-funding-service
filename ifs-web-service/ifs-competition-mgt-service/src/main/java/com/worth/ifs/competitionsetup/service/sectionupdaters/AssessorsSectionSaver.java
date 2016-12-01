@@ -8,7 +8,6 @@ import com.worth.ifs.competitionsetup.form.AssessorsForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -84,7 +83,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	private boolean assessorPayInRange(String value) {
 		BigDecimal pay = new BigDecimal(value);
-		return (new BigDecimal(MAX_ASSESSOR_PAY).compareTo(pay) > 0 && pay.scale() == 0) ? true : false;
+		return (new BigDecimal(MAX_ASSESSOR_PAY).compareTo(pay) > 0 && BigDecimal.ZERO.compareTo(pay) < 0 && pay.scale() == 0);
 	}
 
 	private List<Error> validateAssessorPay(String value) {

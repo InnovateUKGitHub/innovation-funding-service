@@ -57,7 +57,7 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Project details")).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource ->  section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> !questionResource.getShortName().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS.getName()))
+                .filter(questionResource -> !questionResource.getShortName().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName()))
                 .collect(Collectors.toList())
                 : new ArrayList<>();
     }
