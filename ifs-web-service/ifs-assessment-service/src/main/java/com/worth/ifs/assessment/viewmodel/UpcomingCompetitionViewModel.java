@@ -61,6 +61,22 @@ public class UpcomingCompetitionViewModel {
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
+    public LocalDateTime getAssessorBriefingDate() {
+        return assessorBriefingDate;
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
