@@ -4,13 +4,13 @@ import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.lang3.StringUtils;
@@ -115,7 +115,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         String value = response.getValue();
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
 
-        if (!StringUtils.isEmpty(value) && AssessorFormInputType.RESEARCH_CATEGORY.toString().equals(formInputResource.getFormInputTypeTitle())) {
+        if (!StringUtils.isEmpty(value) && FormInputType.ASSESSOR_RESEARCH_CATEGORY == formInputResource.getType()) {
             List<CategoryResource> categoryResources = categoryService.getByType(CategoryType.RESEARCH_CATEGORY).getSuccessObject();
             if (categoryResources.stream().filter(category -> category.getId().equals(Long.parseLong(value))).count() == 0) {
                 return serviceFailure(fieldError("value", value, "com.worth.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value));
