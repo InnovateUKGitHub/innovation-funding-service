@@ -15,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
@@ -94,6 +97,11 @@ public class FileControllerUtils {
                 fileAttributes -> uploadFileActionFn.apply(fileAttributes, inputStreamSupplier(request)));
     }
 
+    private static <T> ServiceResult<T> handleFileConversionWithServiceCall( HttpServletResponse response, Function<Supplier<OutputStream>, ServiceResult<T>> convertFileActionFn) {
+        return convertFileActionFn.apply(outputStreamSupplier(response));
+    }
+
+
     private static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> {
             try {
@@ -104,4 +112,17 @@ public class FileControllerUtils {
             }
         };
     }
+
+    private static Supplier<OutputStream> outputStreamSupplier(HttpServletResponse response) {
+        return () -> {
+            try {
+                return response.getOutputStream();
+            } catch (IOException e) {
+                LOG.error("Unable to open an output stream from response", e);
+                throw new RuntimeException("Unable to open an output stream from response", e);
+            }
+        };
+    }
+
+
 }
