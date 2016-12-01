@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -32,8 +31,6 @@ import static org.mockito.Mockito.*;
  *
  */
 public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocksTest {
-
-    static final String GOL_TEMPLATES_PATH = "grantoffer" + separator + "grant_offer_letter.html";
 
     @InjectMocks
     protected ServiceType service = supplyServiceUnderTest();

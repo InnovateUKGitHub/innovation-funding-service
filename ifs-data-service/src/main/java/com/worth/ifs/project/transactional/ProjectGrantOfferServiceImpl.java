@@ -51,7 +51,7 @@ import static java.io.File.separator;
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
 
-    static final String GOL_TEMPLATES_PATH = "grantoffer" + separator + "grant_offer_letter.html";
+    static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
@@ -188,9 +188,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("LeadOrgName", project.getApplication().getLeadOrganisation().getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() == 0 ? "" : addresses.get(1));
-        templateReplacements.put("Address3", addresses.size() == 0 ? "" : addresses.get(2));
-        templateReplacements.put("TownCity", addresses.size() == 0 ? "" : addresses.get(3));
-        templateReplacements.put("PostCode", addresses.size() == 0 ? "" : addresses.get(4));
+        templateReplacements.put("Address3", addresses.size() < 2 ? "" : addresses.get(2));
+        templateReplacements.put("TownCity", addresses.size() < 3 ? "" : addresses.get(3));
+        templateReplacements.put("PostCode", addresses.size() < 4 ? "" : addresses.get(4));
         templateReplacements.put("Date", LocalDateTime.now().toString());
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
