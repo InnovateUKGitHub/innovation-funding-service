@@ -143,7 +143,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "ASSESSED_QUESTION")
-    public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
+    public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
@@ -173,7 +173,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "SCOPE")
-    public String submitApplicationProjectDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+    public String submitScopeQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
@@ -190,6 +190,26 @@ public class CompetitionSetupApplicationController {
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
             return questionView;
         }
+    }
+
+    // TODO - treat the following 2 types as per a scoped question until further analysis has been done
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PUBLIC_DESCRIPTION")
+    public String submitPublicDescriptionQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return submitScopeQuestion(competitionSetupForm, bindingResult, competitionId, model);
+    }
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PROJECT_SUMMARY")
+    public String submitProjectSummary(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return submitScopeQuestion(competitionSetupForm, bindingResult, competitionId, model);
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
