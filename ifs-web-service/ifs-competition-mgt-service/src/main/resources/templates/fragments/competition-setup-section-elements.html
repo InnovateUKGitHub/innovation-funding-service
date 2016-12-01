@@ -26,7 +26,7 @@
                 </th:block>
             </dl>
         </fieldset>
-        <fieldset>
+        <fieldset th:unless="question.scored == null && question.writtenFeedback=null && question.researchCategoryQuestion == null && question.scope == null">
             <legend class="visuallyhidden">Assessment of this question</legend>
             <h2 class="heading-medium extra-margin">Assessment of this question</h2>
 
@@ -39,7 +39,6 @@
                         <dd class="column-two-thirds" th:text="${question.scoreTotal}"></dd>
                     </th:block>
                 </th:block>
-
 
                 <th:block th:if="${question.writtenFeedback != null}">
                     <dt class="column-third">Written feedback</dt>
@@ -60,15 +59,13 @@
                     </th:block>
                 </th:block>
 
-                <th:block th:if="${question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                    <th:block th:if="${question.researchCategoryQuestion != null}">
-                        <dt class="column-third">Research category question</dt>
-                        <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
-                    </th:block>
-                    <th:block th:if="${question.scope != null}">
-                        <dt class="column-third">Scope 'Y/N' question</dt>
-                        <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
-                    </th:block>
+                <th:block th:if="${question.researchCategoryQuestion != null}">
+                    <dt class="column-third">Research category question</dt>
+                    <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                </th:block>
+                <th:block th:if="${question.scope != null}">
+                    <dt class="column-third">Scope 'Y/N' question</dt>
+                    <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
                 </th:block>
             </dl>
         </fieldset>

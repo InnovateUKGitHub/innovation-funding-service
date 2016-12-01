@@ -212,7 +212,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 }
                 guidanceRow.setSubject(value);
 
-            } if(fieldName.endsWith("justification")) {
+            } else if(fieldName.endsWith("justification")) {
 
                 if (StringUtils.isBlank(value)) {
                     return asList(new Error("validation.applicationquestionform.justification.required", HttpStatus.BAD_REQUEST));
@@ -233,7 +233,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 }
                 guidanceRow.setSubject(modifySubject(question, guidanceRow.getSubject(), null, value));
 
-            }else {
+            } else {
 
                 return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
             }
