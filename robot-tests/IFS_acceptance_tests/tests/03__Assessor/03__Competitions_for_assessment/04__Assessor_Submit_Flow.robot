@@ -254,27 +254,27 @@ User Saves the Assessment as Not Recommended
     And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
     And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
 
-Submit Assessments
+Submit Validation
     [Documentation]    INFUND-5739
-    ...
-    ...    INFUND-3743
-    [Tags]    Pending
-    #Pending due to the problem with running test in docker
     When The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
     Then The user should see the text in the page    There was a problem submitting some of your assessments.
     And The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
-    And the user clicks the button/link    jQuery=button:contains("Submit assessments")
-    Then The user clicks the button/link    jQuery=button:contains("Cancel")
-    And The user clicks the button/link    jQuery=button:contains("Submit assessments")
+
+Submit Assessments
+    [Documentation]    INFUND-5739
+    ...
+    ...    INFUND-3743
+    [Tags]
+    Given the user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And The user clicks the button/link    jQuery=button:contains("Cancel")
+    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
-    And The user should see the text in the page    Submitted assessment
     Then the assessor should see correct status for submitted assessments
     And the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
     And The user should see the text in the page    Intelligent Building
     And The user should see the text in the page    98
     And The user should not see the element    link=Intelligent Building
-
 
 *** Keywords ***
 the collapsible button should contain
