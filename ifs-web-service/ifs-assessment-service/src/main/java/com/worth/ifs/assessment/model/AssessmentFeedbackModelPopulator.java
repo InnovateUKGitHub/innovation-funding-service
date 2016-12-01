@@ -3,11 +3,14 @@ package com.worth.ifs.assessment.model;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -52,6 +55,9 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     public AssessmentFeedbackViewModel populateModel(Long assessmentId, QuestionResource question) {
         AssessmentResource assessment = getAssessment(assessmentId);
         ApplicationResource application = getApplication(assessment.getApplication());
@@ -65,6 +71,7 @@ public class AssessmentFeedbackModelPopulator {
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, FILEUPLOAD);
         boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE);
         boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE);
+        List<CategoryResource> researchCategories = scopeFormInputExists ? categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY) : null;
 
         if (appendixFormInputExists) {
             FormInputResource appendixFormInput = applicationFormInputs.get(1);
@@ -72,11 +79,11 @@ public class AssessmentFeedbackModelPopulator {
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
                 FileDetailsViewModel appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, true, appendixDetails);
+                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, true, appendixDetails, researchCategories);
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists);
+        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, researchCategories);
     }
 
     private AssessmentResource getAssessment(Long assessmentId) {
