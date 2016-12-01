@@ -20,13 +20,14 @@ import java.util.List;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static com.worth.ifs.form.resource.FormInputType.EMPTY;
+import static com.worth.ifs.form.resource.FormInputType.TEXTAREA;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
@@ -53,9 +54,8 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withCompetition(competition.getId()).build();
         childSection1 = newSectionResource().withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
-        formInputResource1 = newFormInputResource().withFormInputTypeTitle("empty").build();
-        formInputResource2 = newFormInputResource().withFormInputTypeTitle("textarea").build();
-
+        formInputResource1 = newFormInputResource().withType(EMPTY).build();
+        formInputResource2 = newFormInputResource().withType(TEXTAREA).build();
 
         parentSection.setChildSections(asList(childSection1.getId()));
 
@@ -87,7 +87,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testRemoveSectionsQuestionsWithType() throws Exception {
         assertEquals(2, childSection1.getQuestions().size());
-        service.removeSectionsQuestionsWithType(parentSection, "empty");
+        service.removeSectionsQuestionsWithType(parentSection, EMPTY);
         assertEquals(1, childSection1.getQuestions().size());
     }
     

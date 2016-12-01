@@ -12,9 +12,6 @@ import java.util.List;
 
 public interface FormInputService {
 
-    @NotSecured(value = "Anyone can see a form input type", mustBeSecuredByOtherServices = false)
-    ServiceResult<FormInputTypeResource> findFormInputType(Long id);
-
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
     ServiceResult<FormInputResource> findFormInput(Long id);
 

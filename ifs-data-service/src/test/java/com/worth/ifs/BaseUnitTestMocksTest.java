@@ -47,7 +47,6 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.mapper.*;
 import com.worth.ifs.invite.repository.*;
@@ -170,9 +169,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputRepository formInputRepositoryMock;
-
-    @Mock
-    protected FormInputTypeRepository formInputTypeRepositoryMock;
 
     @Mock
     protected SectionMapper sectionMapperMock;
