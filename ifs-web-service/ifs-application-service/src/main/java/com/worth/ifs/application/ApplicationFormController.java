@@ -259,8 +259,8 @@ public class ApplicationFormController {
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                     @SuppressWarnings("unused") BindingResult bindingResult,
-                                     @SuppressWarnings("unused") ValidationHandler validationHandler,
+                                     BindingResult bindingResult,
+                                     ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
@@ -304,7 +304,6 @@ public class ApplicationFormController {
             model.addAttribute("form", form);
 
             /* End save action */
-
             if ((errors.hasErrors() || bindingResult.hasErrors()) && isMarkQuestionRequest(params)) {
 
                 validationHandler.addAnyErrors(errors);

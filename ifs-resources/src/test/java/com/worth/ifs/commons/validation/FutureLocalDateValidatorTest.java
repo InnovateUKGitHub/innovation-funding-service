@@ -88,4 +88,19 @@ public class FutureLocalDateValidatorTest {
         assertTrue(!violations.isEmpty());
         assertEquals(first.getMessageTemplate(), "{validation.project.start.date.not.in.future}");
     }
+
+    @Test
+    public void testNullLocalDateIsInvalid() {
+        LocalDate minimumLocalDate = null;
+
+        TestLocalDateForm futureLocalDateForm = new TestLocalDateForm();
+        futureLocalDateForm.setLocalDate(minimumLocalDate);
+        Set<ConstraintViolation<TestLocalDateForm>> violations = validator.validate(futureLocalDateForm);
+
+        Iterator<ConstraintViolation<TestLocalDateForm>> iter = violations.iterator();
+        ConstraintViolation<TestLocalDateForm> first = iter.next();
+
+        assertTrue(!violations.isEmpty());
+        assertEquals(first.getMessageTemplate(), "{validation.project.start.date.not.in.future}");
+    }
 }
