@@ -19,7 +19,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -94,9 +94,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setUp() throws Exception {
         question = QuestionBuilder.newQuestion().build();
 
-        formInputType = new FormInputType(4L, "fileupload");
+        formInputType = FormInputType.FILEUPLOAD;
 
-        formInput = newFormInput().withFormInputType(formInputType).build();
+        formInput = newFormInput().withType(formInputType).build();
         formInput.setId(123L);
         formInput.setQuestion(question);
         question.setFormInputs(singletonList(formInput));
@@ -202,7 +202,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -357,7 +357,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -390,7 +390,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -469,7 +469,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -493,7 +493,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -525,7 +525,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -545,7 +545,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
