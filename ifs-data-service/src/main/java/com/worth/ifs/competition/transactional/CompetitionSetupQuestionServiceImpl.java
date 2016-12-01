@@ -117,6 +117,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
         markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
         markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
@@ -131,6 +133,24 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
         FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.SCORE.getTitle());
+
+        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
+            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
+        }
+    }
+
+    private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.RESEARCH_CATEGORY.getTitle());
+
+        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
+            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
+        }
+    }
+
+    private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle());
 
         if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
             scoredFormInput.setActive(competitionSetupQuestionResource.getScored());

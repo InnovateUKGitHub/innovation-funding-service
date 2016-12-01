@@ -26,7 +26,7 @@
                 </th:block>
             </dl>
         </fieldset>
-        <fieldset th:unless="question.scored == null && question.writtenFeedback=null && question.researchCategoryQuestion == null && question.scope == null">
+        <fieldset th:unless="${question.scored == null && question.writtenFeedback == null && question.researchCategoryQuestion == null && question.scope == null}">
             <legend class="visuallyhidden">Assessment of this question</legend>
             <h2 class="heading-medium extra-margin">Assessment of this question</h2>
 
@@ -194,11 +194,29 @@
                 </fieldset>
             </div>
 
-            <th:block th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+            <th:block th:if="${question.scored != null or question.writtenFeedback != null  question.scored != null or question.researchCategoryQuestion or question.scope != null}">
 
                 <input type="hidden" name="competitionSetupForm.question.type" th:value="${T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
 
-                <h2 class="heading-medium extra-margin" th:if="${question.scored != null or question.writtenFeedback != null}">Assessment of this question</h2>
+                <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+
+                <th:block th:if="${question.researchCategoryQuestion != null}">
+
+                    <div class="form-group">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Research category question</legend>
+                            <label class="block-label">
+                                <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == true}" value="1" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
+                                No
+                            </label>
+                        </fieldset>
+                    </div>
+
+                </th:block>
 
                 <th:block th:if="${question.scored != null}">
 
@@ -230,6 +248,24 @@
                                required="required"
                                th:name="question.scoreTotal"
                                th:value="${question.scoreTotal}"/>
+                    </div>
+
+                </th:block>
+
+                <th:block th:if="${question.scope != null}">
+
+                    <div class="form-group">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold">Scope 'Y/N' question</legend>
+                            <label class="block-label">
+                                <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
+                                No
+                            </label>
+                        </fieldset>
                     </div>
 
                 </th:block>
