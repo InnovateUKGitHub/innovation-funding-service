@@ -144,6 +144,20 @@ public class CompetitionParticipantResource {
         this.competitionStatus = competitionStatus;
     }
 
+    @JsonIgnore
+    public boolean isAccepted() {
+        return status == ParticipantStatusResource.ACCEPTED;
+    }
+
+    @JsonIgnore
+    public boolean isPending() {
+        return status == ParticipantStatusResource.PENDING;
+    }
+
+    @JsonIgnore
+    public boolean isRejected() {
+        return status == ParticipantStatusResource.REJECTED;
+    }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
