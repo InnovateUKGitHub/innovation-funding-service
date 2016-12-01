@@ -19,8 +19,9 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...
 ...               INFUND-5739 As an Assessor I can submit all the applications that I have selected so that my assessment work is completed
 ...
-...
 ...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
+...
+...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -256,26 +257,32 @@ User Saves the Assessment as Not Recommended
 
 Submit Validation
     [Documentation]    INFUND-5739
-    When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
-    And The user clicks the button/link    jQuery=button:contains("Submit assessments")
+    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
     Then The user should see the text in the page    There was a problem submitting some of your assessments.
-    And The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
 
 Submit Assessments
     [Documentation]    INFUND-5739
     ...
     ...    INFUND-3743
     [Tags]
-    Given the user clicks the button/link    jQuery=button:contains("Submit assessments")
+    Given The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
+    When the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
-    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
-    And The user clicks the button/link    jQuery=button:contains("Yes, I want to submit the assessments")
+    And The user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And The user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
     Then the assessor should see correct status for submitted assessments
     And the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
     And The user should see the text in the page    Intelligent Building
     And The user should see the text in the page    98
     And The user should not see the element    link=Intelligent Building
+
+Progress of the applications in Dashboard
+    [Documentation]    INFUND-3719
+    [Tags]    Pending
+    [Setup]    Count the applications
+    When The user navigates to the page    ${assessor_dashboard_url}
+    Then the progress of the applications should be correct
 
 *** Keywords ***
 the collapsible button should contain
@@ -408,3 +415,12 @@ the application should have the correct status
 
 the assessor should see correct status for submitted assessments
     Element Should Contain    css=.my-applications .submitted ul li:nth-child(1) .column-assessment-status.navigation-right > div > p    Submitted
+
+the progress of the applications should be correct
+    element should contain    css=.greentext span:nth-child(1)    1
+    ${TOTAL}=    Get text    css=.greentext span+ span    #gets the total number
+    Should Be Equal As Integers    ${TOTAL}    ${NUMBER_OF_APPLICATIONS}
+
+Count the applications
+    ${NUMBER_OF_APPLICATIONS}=    Get Matching Xpath Count    //*[@id="content"]/div[4]//ul/li
+    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
