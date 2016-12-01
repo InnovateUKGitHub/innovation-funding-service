@@ -77,7 +77,7 @@ public class CompetitionSetupServiceImplTest {
 						.withSectionType(SectionType.GENERAL)
 						.withQuestions(newQuestion()
 								.withFormInputs(newFormInput()
-										.withFormInputGuidanceRows(newFormInputGuidanceRow().build(2)
+										.withGuidanceRows(newFormInputGuidanceRow().build(2)
 										).build(2)
 							).build(2)
 					).build(2)

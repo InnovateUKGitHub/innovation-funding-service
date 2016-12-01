@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputType;
 
 /**
  * Interface for CRUD operations on {@link SectionResource} related data.
@@ -24,7 +24,7 @@ public interface SectionService {
     Boolean allSectionsMarkedAsComplete(Long applicationId);
     List<SectionResource> filterParentSections(List<SectionResource> sections);
     List<SectionResource> getAllByCompetitionId(Long competitionId);
-    void removeSectionsQuestionsWithType(SectionResource section, String name);
+    void removeSectionsQuestionsWithType(SectionResource section, FormInputType type);
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
     List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);

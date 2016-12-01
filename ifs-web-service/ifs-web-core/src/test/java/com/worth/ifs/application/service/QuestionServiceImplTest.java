@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -216,11 +217,10 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
     @Test
     public void testGetQuestionByFormInputType() throws Exception {
-        String formInputType = "formInputType";
         QuestionResource question = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndFormInputType(123L, formInputType)).thenReturn(restSuccess(question));
+        when(questionRestService.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA)).thenReturn(restSuccess(question));
 
-        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(123L, formInputType);
+        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
 
         assertTrue(result.isSuccess());
         assertEquals(question, result.getSuccessObject());

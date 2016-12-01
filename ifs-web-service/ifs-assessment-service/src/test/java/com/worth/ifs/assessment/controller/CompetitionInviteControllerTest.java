@@ -28,6 +28,7 @@ import java.util.List;
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -117,6 +118,27 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(redirectedUrl("/registration/hash/start"));
 
         verify(competitionInviteRestService).checkExistingUser("hash");
+    }
+
+    @Test
+    public void confirmAcceptInvite() throws Exception {
+        when(competitionInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "hash"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard"));
+
+        verify(competitionInviteRestService).acceptInvite("hash");
+    }
+
+    @Test
+    public void confirmAcceptInvite_hashNotExists() throws Exception {
+        when(competitionInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "notExistHash"))
+                .andExpect(status().isNotFound());
+
+        verify(competitionInviteRestService).acceptInvite("notExistHash");
     }
 
     @Test

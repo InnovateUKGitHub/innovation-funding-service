@@ -14,19 +14,12 @@ import org.mapstruct.Mappings;
     config = GlobalMapperConfig.class,
     uses = {
         CompetitionMapper.class,
-        FormInputTypeMapper.class,
         FormInputResponseMapper.class,
         FormValidatorMapper.class,
         QuestionMapper.class
     }
 )
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
-
-    @Mappings({
-            @Mapping(source = "formInputType.title", target = "formInputTypeTitle")
-    })
-    @Override
-    public abstract FormInputResource mapToResource(FormInput domain);
 
     @Mappings({
             @Mapping(target = "responses", ignore = true),

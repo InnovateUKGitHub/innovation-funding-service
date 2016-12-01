@@ -6,6 +6,7 @@ import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import java.util.Set;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.QuestionDocs.questionBuilder;
 import static com.worth.ifs.documentation.QuestionDocs.questionFields;
+import static com.worth.ifs.form.resource.FormInputType.TEXTAREA;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
@@ -238,7 +240,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
     @Test
     public void getQuestionByCompetitionIdAndFormInputType() throws Exception {
-        final String formInputType = "type";
+        FormInputType formInputType = TEXTAREA;
         Long competitionId = 123L;
 
         when(questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
