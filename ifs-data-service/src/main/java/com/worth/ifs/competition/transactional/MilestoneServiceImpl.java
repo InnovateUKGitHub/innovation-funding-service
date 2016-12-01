@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Comparator.comparing;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -88,7 +90,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private ValidationMessages validate(List<MilestoneResource> milestones) {
         ValidationMessages vm = new ValidationMessages();
 
-        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
+        milestones.sort(comparing(MilestoneResource::getType));
 
         milestones.forEach(m -> {
         	if(m.getDate() == null) {
@@ -101,11 +103,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         });
 
         // preset milestones must be in the correct order
-        List<MilestoneResource> presetMilestones = milestones
-                .stream()
-                .filter(milestoneResource -> milestoneResource.getType().isPresetDate())
-                .collect(Collectors.toList());
-
+        List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
 
         for (int i = 1; i < presetMilestones.size(); i++) {
         	MilestoneResource previous = presetMilestones.get(i - 1);
