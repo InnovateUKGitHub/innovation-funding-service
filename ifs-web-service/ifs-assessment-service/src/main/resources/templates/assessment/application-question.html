@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
-                    <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
+                    <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
                 </div>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}" />

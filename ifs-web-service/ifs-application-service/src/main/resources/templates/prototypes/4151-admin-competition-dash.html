@@ -25,8 +25,8 @@
 
 	 <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
-	<p th:if="${param.user != null and param.user[0] == 'compExec'}">
-		<a href="/prototypes/2469-comp-setup?user=compExec&amp;status=done">View and update competition setup</a>
+	<p>
+		<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}">View and update competition setup</a>
 	</p>
 
 	<div class="constrain-width-off">

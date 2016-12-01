@@ -1,8 +1,8 @@
 package com.worth.ifs.notifications.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.NotificationSource;
 import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.commons.service.ServiceResult;
 
 import java.util.Map;
 

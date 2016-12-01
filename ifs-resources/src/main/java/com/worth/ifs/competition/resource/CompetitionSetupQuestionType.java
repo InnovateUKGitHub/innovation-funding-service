@@ -18,7 +18,7 @@ public enum CompetitionSetupQuestionType {
         this.shortName = shortName;
     }
 
-    public String getName() {
+    public String getShortName() {
         return this.shortName;
     }
 

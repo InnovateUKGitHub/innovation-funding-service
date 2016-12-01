@@ -4,6 +4,8 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Before;
@@ -13,16 +15,19 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
@@ -351,6 +356,47 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         // The updated date should not have been touched since the value was the same
         assertEquals(oldUpdatedDate, saved.getUpdatedDate());
+    }
+
+    @Test
+    public void updateFormInputResponse_badCategory() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "1";
+        String oldValue = "1";
+        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
+        AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(oldValue)
+                .withUpdatedDate(oldUpdatedDate)
+                .build();
+        AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(0)
+                .withType(ASSESSOR_RESEARCH_CATEGORY)
+                .build();
+
+        CategoryResource categoryResource = newCategoryResource()
+                .withId(2L)
+                .withName("name")
+                .withType(CategoryType.RESEARCH_CATEGORY)
+                .build();
+
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(categoryServiceMock.getByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(serviceSuccess(Collections.singletonList(categoryResource)));
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
+        when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(updatedAssessorFormInputResponseResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(fieldError("value", value, "com.worth.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value)));
     }
 
 }

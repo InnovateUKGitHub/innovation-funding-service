@@ -24,7 +24,14 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return user.getName();
+        if(user != null) {
+            return user.getName();
+        } else {
+            //Spring boot actuator authorisation failures as audit events (authorizationAuditListener.onAuthorizationFailureEvent()
+            //the unit tests e.g. CompetitionServiceSecurityTest.testGetCompetitionById() was failing when supplied with a null user
+            // hence the addition of this else statement.
+            return null;
+        }
     }
 
     @Override

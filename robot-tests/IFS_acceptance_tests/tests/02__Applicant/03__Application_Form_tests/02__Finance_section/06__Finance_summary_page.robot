@@ -87,7 +87,7 @@ Alert shows If the academic research participation is too high
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Review & submit
+    And the user clicks the button/link    link=Review and submit
     And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     [Teardown]
@@ -101,7 +101,7 @@ Alert should not show If research participation is below the maximum level
     Then the user should see the text in the page    The participation levels of this project are within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Review & submit
+    And the user clicks the button/link    link=Review and submit
     And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
     [Teardown]

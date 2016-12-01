@@ -1,9 +1,12 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.user.domain.Organisation;
@@ -17,7 +20,10 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
+import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
@@ -48,14 +54,20 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private User user;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
+    private FileEntryResource fileEntryResource;
     private Project project;
-
-
 
     @Before
     public void setUp() {
 
         organisation = newOrganisation().build();
+
+        Competition competition = newCompetition().build();
+
+        Address address = newAddress().withAddressLine1("test1")
+                .withAddressLine2("test2")
+                .withPostcode("PST")
+                .withTown("town").build();
 
         leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
@@ -78,6 +90,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         application = newApplication().
                 withId(applicationId).
+                withCompetition(competition).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
@@ -86,9 +99,16 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         project = newProject().
                 withId(projectId).
+                withAddress(address).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
+        fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
     }
@@ -183,8 +203,15 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
-        Assert.assertTrue(result.isSuccess());
+        assertTrue(result.isSuccess());
         Assert.assertThat(project.getOfferSubmittedDate(), notNullValue());
+    }
+
+    @Test
+    public void testGenerateGrantOfferLetter() {
+        assertGenerateFile(
+                fileEntryResource ->
+                        service.generateGrantOfferLetter(123L, fileEntryResource));
     }
 
     @Test

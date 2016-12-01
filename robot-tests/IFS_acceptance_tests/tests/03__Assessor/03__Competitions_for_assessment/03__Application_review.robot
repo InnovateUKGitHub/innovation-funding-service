@@ -111,7 +111,7 @@ Choosing 'not in scope' should update on the overview page
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given the user clicks the button/link    link=Products and Services Personalised
     And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And the user clicks the button/link    link=Back to your assessment overview
     Then the user should see the text in the page    In scope? No
@@ -124,13 +124,13 @@ Scope: Autosave
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given the user clicks the button/link    link=Products and Services Personalised
     And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    When the user selects the index from the drop-down menu    0    id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And The user enters text to a text field    css=.editor    Testing feedback field when "No" is selected.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     Then the user should see the text in the page    In scope? No
     And the user clicks the button/link    link=Scope
-    And the user should see the text in the page    Technical feasibility studies
+    And the user should see the text in the page    Technical feasibility
     And the user should see the text in the page    Testing feedback field when "No" is selected.
 
 Scope: Word count
@@ -152,7 +152,8 @@ Scope: on click guidance section should expand and collapse
 Scope: Status in the overview
     [Documentation]    INFUND-1483
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=label:contains(Yes)
+    When the user selects the index from the drop-down menu    1    id=research-category
+    And the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page    In scope? Yes
     And the user should see the element    css=.column-third > img    #green flag
@@ -189,15 +190,13 @@ Question 1: Word count
     Then the user should see the text in the page    Words remaining: -1
     When the user enters text to a text field    css=.editor    Test text
     Then the user should see the text in the page    Words remaining: 98
+    [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Finance overview
     [Documentation]    INFUND-3394
     [Tags]    HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given the user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
-    And the user should not see the element    css=input
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     And the user clicks the button/link    link=Back to your assessment overview

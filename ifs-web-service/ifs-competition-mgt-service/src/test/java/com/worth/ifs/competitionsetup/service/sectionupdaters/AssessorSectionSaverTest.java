@@ -80,9 +80,18 @@ public class AssessorSectionSaverTest {
 	}
 
 	@Test
-	public void testAutoSaveAssessorPayInvalid_Range() {
+	public void testAutoSaveAssessorPayInvalid_RangeMax() {
 		CompetitionResource competition = newCompetitionResource().build();
 		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay", "9999999999999", null);
+		assertEquals(1, errors.size());
+		assertEquals("validation.assessorsform.assessorPay.max.amount.invalid", errors.get(0).getErrorKey());
+		verifyZeroInteractions(competitionService);
+	}
+
+	@Test
+	public void testAutoSaveAssessorPayInvalid_RangeMin() {
+		CompetitionResource competition = newCompetitionResource().build();
+		List<Error> errors = saver.autoSaveSectionField(competition, "assessorPay", "-1", null);
 		assertEquals(1, errors.size());
 		assertEquals("validation.assessorsform.assessorPay.max.amount.invalid", errors.get(0).getErrorKey());
 		verifyZeroInteractions(competitionService);

@@ -137,12 +137,6 @@ public class ProjectGrantOfferLetterSendController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        /*Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
-        MultipartFile file = form.getAnnex();
-        ServiceResult<FileEntryResource> generateResult = projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
-                file.getOriginalFilename(), getMultipartFileBytes(file));
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> { return doViewGrantOfferLetterSend(projectId, model, form);}
-        );*/
         return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
 
             MultipartFile file = form.getAnnex();
