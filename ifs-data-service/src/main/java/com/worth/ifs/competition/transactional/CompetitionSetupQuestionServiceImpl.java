@@ -135,7 +135,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.SCORE.getTitle());
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE);
 
         if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
             scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
@@ -144,7 +144,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.RESEARCH_CATEGORY.getTitle());
+        FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY);
 
         if (researchCategoryQuestionFormInput != null && competitionSetupQuestionResource.getResearchCategoryQuestion() != null) {
             researchCategoryQuestionFormInput.setActive(competitionSetupQuestionResource.getResearchCategoryQuestion());
@@ -153,7 +153,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle());
+        FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE);
 
         if (scopeFormInput != null && competitionSetupQuestionResource.getScope() != null) {
             scopeFormInput.setActive(competitionSetupQuestionResource.getScope());
@@ -162,7 +162,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.FEEDBACK.getTitle());
+        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA);
 
         if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
             writtenFeedbackFormInput.setActive(competitionSetupQuestionResource.getWrittenFeedback());
