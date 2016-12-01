@@ -189,12 +189,19 @@ MO details accessible/seen by all partners
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
-Partner can access MO link once MO is assigned
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]             Pending
-    [Setup]    Log in as a different user    &{collaborator2_credentials}
-    Given the user navigates to the page      ${project_in_setup_page}
-    then the user clicks the button/link      link= Monitoring Officer
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
 
 
 Status updates correctly for internal user's table

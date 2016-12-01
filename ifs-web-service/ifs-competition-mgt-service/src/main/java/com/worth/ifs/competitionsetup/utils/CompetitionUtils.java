@@ -29,12 +29,4 @@ public class CompetitionUtils {
                 (!COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
                         !READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
-
-    public static boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
-        return formInputs != null &&
-                formInputs
-                .stream()
-                .anyMatch(formInputResource -> formInputResource.getFormInputType() != null
-                        && formInputResource.getFormInputType().equals(typeId));
-    }
 }

@@ -3,20 +3,31 @@
 
 <!-- ===========================Your profile  =========================== -->
 <div th:fragment="prototype-assessor-profile">
+
+    <h2 class="heading-medium">Your contract</h2>
+
+    <ul class="list-bullet">
+      <li><a href="/prototypes/1177-assessor-skills?version=v2">your skills</a></li>
+      <li><a href="/prototypes/1247-assessor-doi?version=v2">your declaration of interest</a></li>
+      <li><a href="/prototypes/1176-assessor-contracts?version=v2">your contract</a></li>
+      <li><a href="/prototypes/5645-annex?page=b">travel and subsistence rates</a></li>
+    </ul>
+
     <h2 class="heading-medium">Your profile</h2>
     <ul class="list-bullet">
         <li>
             <a href="/prototypes/1178-assessor-profile-details">your details</a>
         </li>
         <li>
-            <a href="/prototypes/1178-assessor-profile-skills">your skills and CV</a>
-        </li>
-        <li>
-            <a href="/prototypes/1247-assessor-view-doi">your contract and declaration of interest</a>
-        </li>
-         <li>
             <a href="/prototypes/675-change-password?assessor">change your password</a>
         </li>
+        <li>
+          <a href="/info/terms-and-conditions">read terms and conditions</a>
+        </li>
+        <!-- <li>
+            <a href="/prototypes/1178-assessor-profile-skills">your skills and CV</a>
+        </li> -->
+
     </ul>
 </div>
 
@@ -645,17 +656,21 @@
         <ul class="boxed-list">
             <li>
                 <div class="grid-row">
-                    <div class="column-assessment-details">
+                    <div class="column-two-thirds">
                         <h3 class="heading-medium">
                         <a href="/prototypes/865-assessor-comp-invite">Technology inspired</a>
                         </h3>
                         <p>Please respond to the request for you to assess on this competition.</p>
                     </div>
-                    <div class="column-assessment-status navigation-right">
-                        <div class="application-status invite">
-                            <p class="subtitle no-margin">Assessment period:</p>
-                            <p class="heading-small no-margin">15 to 25 April</p>
-                        </div>
+                    <div class="column-third">
+                        <h3 class="heading-medium">Assessment period</h3>
+                        <dl class="standard-definition-list reduced-width">
+                          <dt>Begins</dt>
+                          <dd>15 November 2017</dd>
+
+                          <dt>Ends</dt>
+                          <dd>25 December 2017</dd>
+                        </dl>
                     </div>
                 </div>
             </li>
@@ -669,16 +684,20 @@
         <ul class="boxed-list">
             <li>
                 <div class="grid-row">
-                    <div class="column-assessment-details">
+                    <div class="column-two-thirds">
                         <h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>
                         <p class="form-hint">Upcoming competition</p>
                         <p class="no-margin">Applications allocated 15 April</p>
                     </div>
-                    <div class="column-assessment-status navigation-right">
-                        <div class="application-status invite">
-                            <h4 class="subtitle no-margin">Assessment period:</h4>
-                            <h5 class="heading-medium no-margin">15 to 25 April</h5>
-                        </div>
+                    <div class="column-third">
+                        <h3 class="heading-medium">Assessment period</h3>
+                        <dl class="standard-definition-list reduced-width">
+                          <dt>Begins</dt>
+                          <dd>15 April 2017</dd>
+
+                          <dt>Ends</dt>
+                          <dd>25 April2017</dd>
+                        </dl>
                     </div>
                 </div>
             </li>
@@ -691,14 +710,14 @@
     <ul class="boxed-list">
         <li>
             <div class="grid-row">
-                <div class="column-half">
+                <div class="column-two-thirds">
                     <h2 class="heading-medium">
                     <a href="/prototypes/871-assessor-comp-dashboard">Technology inspired</a>
                     </h2>
                     <p class="form-hint">Assessment progress:</p>
                     <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
                 </div>
-                <div class="column-half">
+                <div class="column-third">
 
                     <div class="competition-deadline">
                         <div class="day">
@@ -745,11 +764,11 @@
                     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
 
                         <button class="js-close close" aria-label="Close Popup">X</button>
-                        <h3 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h3>
-                        <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
+                        <h3 class="heading-medium no-margin">You are about to submit your assessments.</h3>
+                        <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
                         <div>
                             <input type="hidden" name="status" value="accept" />
-                            <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes, I want to submit the applications</button>
+                            <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes I want to submit the assessments</button>
                             <button class="js-close button buttonlink large">Cancel</button>
                         </div>
                     </div>

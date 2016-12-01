@@ -99,7 +99,7 @@ Non-lead partner can see the project setup page
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]
+    [Tags]      HappyPath
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -357,7 +357,6 @@ Non lead partner nominates finance contact
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
-
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579

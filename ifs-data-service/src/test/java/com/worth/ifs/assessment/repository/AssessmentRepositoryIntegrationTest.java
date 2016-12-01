@@ -8,8 +8,6 @@ import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -30,9 +28,9 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
-import static com.worth.ifs.assessment.resource.AssessorFormInputType.SCORE;
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -51,9 +49,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private FormInputTypeRepository formInputTypeRepository;
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -189,12 +184,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         Competition competition = application.getCompetition();
 
-        FormInputType scoreType = formInputTypeRepository.findByTitle(SCORE.getTitle());
-
         ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
 
         int expectedTotalScorePossible = competition.getQuestions().stream()
-                .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && scoreType.equals(formInput.getFormInputType())))
+                .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && ASSESSOR_SCORE == formInput.getType()))
                 .mapToInt(question -> ofNullable(question.getAssessorMaximumScore()).orElse(0))
                 .sum();
 
@@ -213,7 +206,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.save(
                 competition.getQuestions().stream().flatMap(question ->
                         question.getFormInputs().stream().filter(formInput ->
-                                formInput.getActive() && scoreType.equals(formInput.getFormInputType())
+                                formInput.getActive() && ASSESSOR_SCORE == formInput.getType()
                         ).map(formInput -> {
                                     int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
                                     scoreGivenAccumulator.accumulate(randomScore);

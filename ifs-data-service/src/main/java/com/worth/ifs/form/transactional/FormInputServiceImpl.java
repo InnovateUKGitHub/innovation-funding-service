@@ -4,13 +4,10 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.form.mapper.FormInputResponseMapper;
-import com.worth.ifs.form.mapper.FormInputTypeMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -34,13 +31,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private FormInputTypeRepository formInputTypeRepository;
-
-    @Autowired
     private FormInputResponseRepository formInputResponseRepository;
-
-    @Autowired
-    private FormInputTypeMapper formInputTypeMapper;
 
     @Autowired
     private FormInputMapper formInputMapper;
@@ -75,12 +66,6 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
         return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
-    }
-
-    @Override
-    public ServiceResult<FormInputTypeResource> findFormInputType(Long id) {
-        return find(formInputTypeRepository.findOne(id), notFoundError(FormInputType.class, id)).
-                andOnSuccessReturn(formInputTypeMapper::mapToResource);
     }
 
     @Override

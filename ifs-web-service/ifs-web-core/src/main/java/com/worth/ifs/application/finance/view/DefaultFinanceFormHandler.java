@@ -11,6 +11,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.util.Either;
 import org.apache.commons.lang3.NotImplementedException;
@@ -284,7 +285,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
 	private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
-        FinanceRowType costType = FinanceRowType.fromString(financeFormField.getKeyType());
+        FinanceRowType costType = FinanceRowType.fromType(FormInputType.findByName(financeFormField.getKeyType()));
         FinanceRowHandler financeRowHandler = getFinanceRowItemHandler(costType);
         Long costFormFieldId = 0L;
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
