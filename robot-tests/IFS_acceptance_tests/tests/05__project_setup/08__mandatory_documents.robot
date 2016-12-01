@@ -27,7 +27,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager of the consortium will need to upload the following documents
+    And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -273,8 +273,6 @@ Non-lead partner can still view both documents after submitting
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
-
-
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621
