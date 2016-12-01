@@ -149,6 +149,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
+            // Ensure form input set against newly added rows
+            newRows.stream().forEach(row -> row.setFormInput(writtenFeedbackFormInput));
             guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
             guidanceRowRepository.save(newRows);
             writtenFeedbackFormInput.setGuidanceRows(newRows);

@@ -154,7 +154,7 @@ public class CompetitionSetupApplicationController {
 
             competitionSetupForm.getGuidanceRows().forEach(guidanceRowViewModel -> {
                 GuidanceRowResource grr = new GuidanceRowResource();
-                grr.setSubject(guidanceRowViewModel.getScoreFrom() + ":" + guidanceRowViewModel.getScoreTo());
+                grr.setSubject(guidanceRowViewModel.getScoreFrom() + "," + guidanceRowViewModel.getScoreTo());
                 grr.setJustification(guidanceRowViewModel.getJustification());
                 competitionSetupForm.getQuestion().getGuidanceRows().add(grr);
             });
