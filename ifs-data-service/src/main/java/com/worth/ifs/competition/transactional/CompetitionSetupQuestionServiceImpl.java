@@ -68,7 +68,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (ApplicantFormInputType.FILE_UPLOAD.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setAppendix(formInput.getActive());
         } else if (ApplicantFormInputType.QUESTION.getTitle().equals(formInput.getFormInputType().getTitle())) {
-            setupResource.setGuidanceTitle(formInput.getGuidanceQuestion());
+            setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
             setupResource.setGuidance(formInput.getGuidanceAnswer());
             setupResource.setMaxWords(wordCountWithDefault(formInput.getWordCount()));
         }
@@ -78,7 +78,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (AssessorFormInputType.FEEDBACK.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setWrittenFeedback(formInput.getActive());
             setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
-            setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
+            setupResource.setAssessmentGuidance(formInput.getGuidanceTitle());
             setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
         } else if (AssessorFormInputType.SCORE.getTitle().equals(formInput.getFormInputType().getTitle())) {
             setupResource.setScored(formInput.getActive());
@@ -102,7 +102,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
 
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.APPLICATION, ApplicantFormInputType.QUESTION.getTitle());
-        questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
+        questionFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 

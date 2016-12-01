@@ -51,7 +51,7 @@ public class FormInput {
     private Set<FormValidator> inputValidators;
 
     @Column(length=5000)
-    private String guidanceQuestion;
+    private String guidanceTitle;
 
     @Column(length=5000)
     private String guidanceAnswer;
@@ -167,12 +167,12 @@ public class FormInput {
         this.question = question;
     }
 
-    public String getGuidanceQuestion() {
-        return guidanceQuestion;
+    public String getGuidanceTitle() {
+        return guidanceTitle;
     }
 
-    public void setGuidanceQuestion(final String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
+    public void setGuidanceTitle(final String guidanceTitle) {
+        this.guidanceTitle = guidanceTitle;
     }
 
     public String getGuidanceAnswer() {

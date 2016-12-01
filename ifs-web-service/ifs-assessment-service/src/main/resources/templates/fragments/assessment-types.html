@@ -28,9 +28,9 @@
             <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
         </label>
 
-        <details th:unless="${#strings.isEmpty(field.guidanceQuestion)}">
+        <details th:unless="${#strings.isEmpty(field.guidanceTitle)}">
             <summary>
-                <span class="summary" th:text="${field.guidanceQuestion}" />
+                <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
             <div class="panel-indent" ifs:utext="${field.guidanceAnswer}" />
         </details>

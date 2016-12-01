@@ -84,8 +84,8 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return with(formInput -> formInput.setGuidanceAnswer(guidanceAnswer));
     }
 
-    public FormInputBuilder withGuidanceQuestion(String guidanceQuestion) {
-        return with(formInput -> formInput.setGuidanceQuestion(guidanceQuestion));
+    public FormInputBuilder withGuidanceTitle(String getGuidanceTitle) {
+        return with(formInput -> formInput.setGuidanceTitle(getGuidanceTitle));
     }
 
     public FormInputBuilder withIncludedInApplicationSummary(boolean includedInApplicationSummary) {
