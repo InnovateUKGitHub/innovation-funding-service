@@ -26,6 +26,7 @@ import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
+import com.worth.ifs.form.transactional.FormInputTypeService;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
