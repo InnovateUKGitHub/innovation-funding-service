@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
 import com.worth.ifs.commons.validation.constraints.FutureLocalDate;
-import com.worth.ifs.commons.validation.constraints.ValidLocalDate;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -42,14 +41,13 @@ public class ApplicationResource {
     @NotBlank(message ="{validation.project.name.must.not.be.empty}")
     private String name;
 
-    @ValidLocalDate(message = "{validation.project.start.date.is.valid.date}")
     @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
     private LocalDateTime submittedDate;
 
     @Min(value=1, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=31, message ="{validation.application.details.duration.in.months.max.digits}")
-    @NotNull(message = "{validation.project.duration.value.invalid}")
+    @NotNull(message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     private Long applicationStatus;
@@ -61,7 +59,7 @@ public class ApplicationResource {
     private BigDecimal completion;
     private Boolean stateAidAgreed;
 
-    @NotNull(message="{validation.eligibilityform.resubmission.required}")
+    @NotNull(message="{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;

@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 /**
- * A validator that asserts that a required string contains less than or equal to a maximum number of allowed words.
+ * A validator that asserts that a LocalDate value is in the future.
  */
 public class FutureLocalDateValidator implements ConstraintValidator<FutureLocalDate, LocalDate> {
 
@@ -20,6 +20,8 @@ public class FutureLocalDateValidator implements ConstraintValidator<FutureLocal
 
     @Override
     public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
-        return value.isAfter(LocalDate.now());
+        LocalDate today = LocalDate.now();
+
+        return value.isEqual(today) || value.isAfter(today);
     }
 }

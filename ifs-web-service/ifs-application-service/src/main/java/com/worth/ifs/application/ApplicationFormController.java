@@ -298,7 +298,7 @@ public class ApplicationFormController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response));
+                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult));
             }
 
             model.addAttribute("form", form);
@@ -395,7 +395,7 @@ public class ApplicationFormController {
                                       ApplicationForm form,
                                       Long applicationId, Long sectionId, QuestionResource question,
                                       HttpServletRequest request,
-                                      HttpServletResponse response) {
+                                      HttpServletResponse response, BindingResult bindingResult) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -440,7 +440,7 @@ public class ApplicationFormController {
         }
 
         if(isMarkQuestionRequest(params)) {
-            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors));
+            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors, bindingResult));
 
         } else if(isMarkSectionRequest(params)){
             errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, response, processRole, errors));
@@ -466,9 +466,9 @@ public class ApplicationFormController {
     }
 
 
-    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
+    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar, BindingResult bindingResult) {
         ValidationMessages messages = new ValidationMessages();
-        if (!errorsSoFar.hasErrors()) {
+        if (!errorsSoFar.hasErrors() && !bindingResult.hasErrors()) {
             List<ValidationMessages> applicationMessages = markApplicationQuestions(application, processRole.getId(), request, response, errorsSoFar);
 
             if (collectValidationMessages(applicationMessages).hasErrors()) {
@@ -642,7 +642,7 @@ public class ApplicationFormController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {

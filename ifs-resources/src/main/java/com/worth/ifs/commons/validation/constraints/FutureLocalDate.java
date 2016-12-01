@@ -12,7 +12,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Validation annotation to assert that a required string contains less than or equal to a maximum number of allowed words.
+ * Validation annotation to assert that a LocalDate is in the future.
  */
 @Documented
 @Constraint(validatedBy = FutureLocalDateValidator.class)
@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface FutureLocalDate {
 
-    String message() default "{com.worth.ifs.validator.constraints.WordCount.message}";
+    String message() default "{validation.project.start.date.not.in.future}";
 
     Class<?>[] groups() default {};
 
