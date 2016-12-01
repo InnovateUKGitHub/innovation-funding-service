@@ -18,6 +18,7 @@ import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -159,7 +160,7 @@ public class AssessmentFinancesSummaryModelPopulator {
 
         SectionResource section = sections.get(0);
 
-        sectionService.removeSectionsQuestionsWithType(section, "empty");
+        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
         model.addAttribute("financeSection", section);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);

@@ -101,6 +101,20 @@ public class ProjectGrantOfferController {
         );
     }
 
+    @RequestMapping(value = "/{projectId}/grant-offer/generate", method = POST, produces = "application/json")
+    public RestResult<FileEntryResource> generateOfferLetterFile(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectGrantOfferService.generateGrantOfferLetter(projectId, fileAttributes.toFileEntryResource())
+        );
+    }
+
+
 
     @RequestMapping(value = "/{projectId}/additional-contract", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addAdditionalContractFile(

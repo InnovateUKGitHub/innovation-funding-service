@@ -13,6 +13,7 @@ import com.worth.ifs.form.builder.FormInputBuilder;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -84,8 +85,12 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     public void testGetQuestionByIdRemovesInactiveFormInputs() throws Exception {
         //Create an inactive form input for the question.
         Question question = questionRepository.findOne(questionId);
-        FormInputBuilder baseInput = newFormInput().withQuestion(question)
-                .withPriority(1).withScope(FormInputScope.APPLICATION).withQuestion(question);
+        FormInputBuilder baseInput = newFormInput()
+                .withQuestion(question)
+                .withPriority(1)
+                .withType(FormInputType.TEXTAREA)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question);
         FormInput inactiveFormInput = baseInput.withActive(false).build();
         FormInput activeFormInput = baseInput.withActive(true).build();
         formInputRepository.save(inactiveFormInput);
