@@ -93,7 +93,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
-        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );for CompetitionParticipantController endpoint changes:ifs-data-service/src/test/java/com/worth/ifs/assessment/repository/CompetitionParticipantRepositoryIntegrationTest.java
 
         flushAndClearSession();
 
@@ -163,10 +163,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(user, invite));
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRoleAndStatus(user.getId(),CompetitionParticipantRole.ASSESSOR, ParticipantStatus.PENDING );
+        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), CompetitionParticipantRole.ASSESSOR);
 
         assertNotNull(retrievedParticipants);
-        assertEquals(1,retrievedParticipants.size());
+        assertEquals(1, retrievedParticipants.size());
         assertEquals(savedParticipant, retrievedParticipants.get(0));
 
         assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipants.get(0).getRole());
@@ -176,6 +176,6 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(competition.getName(), retrievedCompetition.getName());
 
         User retrievedUser = retrievedParticipants.get(0).getUser();
-        assertEquals(user.getFirstName(),retrievedUser.getFirstName());
+        assertEquals(user.getFirstName(), retrievedUser.getFirstName());
     }
 }
