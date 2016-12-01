@@ -394,7 +394,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
-                        .param("application.durationInMonths", "32")
+                        .param("application.durationInMonths", "37")
         ).andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
