@@ -141,19 +141,19 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.RESEARCH_CATEGORY.getTitle());
+        FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.RESEARCH_CATEGORY.getTitle());
 
-        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
-            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
+        if (researchCategoryQuestionFormInput != null && competitionSetupQuestionResource.getResearchCategoryQuestion() != null) {
+            researchCategoryQuestionFormInput.setActive(competitionSetupQuestionResource.getResearchCategoryQuestion());
         }
     }
 
     private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
 
-        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle());
+        FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndFormInputTypeTitle(questionId, FormInputScope.ASSESSMENT, AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle());
 
-        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
-            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
+        if (scopeFormInput != null && competitionSetupQuestionResource.getScope() != null) {
+            scopeFormInput.setActive(competitionSetupQuestionResource.getScope());
         }
     }
 
