@@ -11,7 +11,4 @@ import javax.validation.constraints.NotNull;
  */
 public class ApplicationProjectForm extends AbstractApplicationQuestionForm {
 
-    public int getGuidanceRowsCount() {
-        return getQuestion().getGuidanceRows().size();
-    }
 }

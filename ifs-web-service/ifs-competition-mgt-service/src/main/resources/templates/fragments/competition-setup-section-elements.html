@@ -271,7 +271,6 @@
                     <div class="form-group">
 
                         <input type="hidden" name="removeGuidanceRow" />
-                        <input type="hidden" name="guidanceRowsCount" id="guidance-row-count" th:value="${competitionSetupForm.guidanceRowsCount}" />
 
                         <h3 class="heading-small">Guidance table</h3>
                         <table id="guidance-table" th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">

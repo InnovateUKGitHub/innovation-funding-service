@@ -26,8 +26,4 @@ public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
     public void setGuidanceRows(List<GuidanceRowViewModel> guidanceRows) {
         this.guidanceRows = guidanceRows;
     }
-
-    public int getGuidanceRowsCount() {
-        return guidanceRows.size();
-    }
 }
