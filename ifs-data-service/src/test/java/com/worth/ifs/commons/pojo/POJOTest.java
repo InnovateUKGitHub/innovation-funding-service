@@ -35,8 +35,8 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
-import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
@@ -68,7 +68,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 38;
+    private static final int EXPECTED_RESOURCES = 37;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";

@@ -15,6 +15,7 @@ import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -116,12 +117,12 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     		return null;
     	}
     	for(FormInputResource formInput: formInputs) {
-    		String formInputTypeName = formInput.getFormInputTypeTitle();
-        	if(StringUtils.isEmpty(formInputTypeName)){
+    		FormInputType formInputType = formInput.getType();
+        	if(StringUtils.isEmpty(formInputType)){
         		continue;
         	}
         	try {
-        		return FinanceRowType.fromString(formInputTypeName);
+        		return FinanceRowType.fromType(formInputType);
         	} catch(IllegalArgumentException e) {
         		continue;
         	}
@@ -130,14 +131,14 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	}
 
 	@Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, String costType) {
-        if (FinanceRowType.fromString(costType).equals(FinanceRowType.LABOUR)) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
+        if (FinanceRowType.LABOUR == costType) {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
             LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
             model.addAttribute("costCategory", costCategory);
         }
 
-        model.addAttribute("type", costType);
+        model.addAttribute("type", costType.getType());
         model.addAttribute("question", questionService.getById(questionId));
         model.addAttribute("cost", costItem);
     }

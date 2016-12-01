@@ -15,8 +15,6 @@ public class FormInputTest {
 
     @Test
     public void test_formInputTypeAddValidator() throws Exception {
-        Long id = 1L;
-        String title = "formInputTypeTitle";
         FormInput formInputType = new FormInput();
 
         String validatorTitle = "Email Validator";
@@ -41,8 +39,6 @@ public class FormInputTest {
 
     @Test
     public void test_formInputTypeAddValidatorSet() throws Exception {
-        Long id = 1L;
-        String title = "formInputTypeTitle";
         FormInput formInputType = new FormInput();
 
         String validatorTitle = "Email Validator";
