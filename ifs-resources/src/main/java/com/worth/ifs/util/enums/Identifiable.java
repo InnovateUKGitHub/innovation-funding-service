@@ -1,4 +1,4 @@
-package com.worth.ifs.commons.util.enums;
+package com.worth.ifs.util.enums;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public interface Identifiable {
 
     long getId();
 
-    static <T extends Identifiable> Map<Long, T> toIdMap(T [] values) {
+    static <T extends Identifiable> Map<Long, T> toIdMap(T[] values) {
         return stream(values).collect(toMap(Identifiable::getId, identity()));
     }
 }
