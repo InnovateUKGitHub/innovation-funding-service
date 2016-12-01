@@ -5,6 +5,7 @@ import com.worth.ifs.Builder;
 import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -50,6 +51,22 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
 
     public CompetitionInviteResourceBuilder withDeadlineDate(Builder<LocalDateTime, ?> deadlineDate) {
         return withDeadlineDate(deadlineDate.build());
+    }
+
+    public CompetitionInviteResourceBuilder withBriefingDate(LocalDateTime... briefingDates) {
+        return withArray((briefingDate, inviteResource) -> inviteResource.setBriefingDate(briefingDate), briefingDates);
+    }
+
+    public CompetitionInviteResourceBuilder withBriefingDate(Builder<LocalDateTime, ?> briefingDate) {
+        return withBriefingDate(briefingDate.build());
+    }
+
+    public CompetitionInviteResourceBuilder withAssessorPay(BigDecimal... assessorPays) {
+        return withArray((assessorPay, inviteResource) -> inviteResource.setAssessorPay(assessorPay), assessorPays);
+    }
+
+    public CompetitionInviteResourceBuilder withAssessorPay(Builder<BigDecimal, ?> assessorPay) {
+        return withAssessorPay(assessorPay.build());
     }
 
     public CompetitionInviteResourceBuilder withEmail(String... emails) {

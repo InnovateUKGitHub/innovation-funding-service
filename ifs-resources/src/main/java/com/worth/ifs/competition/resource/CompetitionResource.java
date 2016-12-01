@@ -32,6 +32,7 @@ public class CompetitionResource {
     private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
+    private LocalDateTime assessorBriefingDate;
     private CompetitionStatus competitionStatus;
     @Min(0)
     @Max(100)
@@ -192,6 +193,14 @@ public class CompetitionResource {
 
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
         this.assessorFeedbackDate = assessorFeedbackDate;
+    }
+
+    public LocalDateTime getAssessorBriefingDate() {
+        return assessorBriefingDate;
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        this.assessorBriefingDate = assessorBriefingDate;
     }
 
     @JsonIgnore
