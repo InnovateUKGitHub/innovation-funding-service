@@ -493,6 +493,18 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
+    public void testRemoveGeneratedGrantOfferLetter() {
+
+        Long projectId = 123L;
+
+        setupDeleteWithRestResultExpectations(projectRestURL + "/" + projectId + "/grant-offer");
+
+        RestResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testSubmitGrantOfferLetter() {
         long projectId = 123L;
         String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/submit";
@@ -530,7 +542,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testSendGrantOfferLetter() {
+    public void testSendGrantOfferLetter() {
         long projectId = 123L;
 
         String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/send";
@@ -542,7 +554,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testIsSendGrantOfferLetterAllowed() {
+    public void testIsSendGrantOfferLetterAllowed() {
         long projectId = 123L;
 
         String expectedUrl = projectRestURL + "/" + projectId + "/isSendGrantOfferLetterAllowed";
@@ -555,7 +567,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    void testIsGrantOfferLetterAlreadySent() {
+    public void testIsGrantOfferLetterAlreadySent() {
         long projectId = 123L;
 
         String expectedUrl = projectRestURL + "/" + projectId + "/isGrantOfferLetterAlreadySent";

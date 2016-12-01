@@ -18,6 +18,8 @@ import org.junit.Test;
 import java.time.LocalDate;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -26,6 +28,8 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -181,6 +185,21 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         Assert.assertTrue(result.isSuccess());
         Assert.assertThat(project.getOfferSubmittedDate(), notNullValue());
+    }
+
+    @Test
+    public void testRemoveGrantOfferLetterFileEntry() {
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isSuccess());
+        assertNull(project.getGrantOfferLetter());
+
     }
 
     @Override

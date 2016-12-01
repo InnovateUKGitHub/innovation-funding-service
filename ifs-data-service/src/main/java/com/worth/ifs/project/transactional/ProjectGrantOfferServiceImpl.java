@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
@@ -148,6 +147,26 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         }
 
         return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    @Override
+    public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeGrantOfferLetterFileFromProject(project))));
+    }
+
+    private ServiceResult<FileEntry> getGrantOfferLetterFileEntry(Project project) {
+        if (project.getGrantOfferLetter() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getGrantOfferLetter());
+        }
+    }
+
+    private void removeGrantOfferLetterFileFromProject(Project project) {
+        project.setGrantOfferLetter(null);
     }
 
     @Override

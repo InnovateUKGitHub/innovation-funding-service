@@ -101,6 +101,12 @@ public class ProjectGrantOfferController {
         );
     }
 
+    @RequestMapping(value = "/{projectId}/grant-offer", method = DELETE, produces = "application/json")
+    public RestResult<Void> removeGrantOfferLetterFile(@PathVariable(value = "projectId") long projectId) {
+
+        return projectGrantOfferService.removeGrantOfferLetterFileEntry(projectId).toDeleteResponse();
+    }
+
 
     @RequestMapping(value = "/{projectId}/additional-contract", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addAdditionalContractFile(

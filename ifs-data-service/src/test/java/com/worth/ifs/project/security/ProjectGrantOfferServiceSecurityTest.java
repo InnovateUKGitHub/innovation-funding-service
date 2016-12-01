@@ -198,6 +198,11 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }

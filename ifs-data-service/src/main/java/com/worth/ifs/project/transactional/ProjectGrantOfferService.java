@@ -41,6 +41,10 @@ public interface ProjectGrantOfferService {
     ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
+    ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a additional contract for Appendix 2 if any")
     ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
