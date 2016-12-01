@@ -7,6 +7,6 @@ import java.util.Map;
 /**
  *
  **/
-public interface GOLTemplateRenderer {
+public interface FileTemplateRenderer {
     ServiceResult<String> renderTemplate(String templatePath, Map<String, Object> templateReplacements);
 }

@@ -13,7 +13,7 @@ import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.file.service.GOLTemplateRenderer;
+import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
@@ -68,7 +68,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private GOLTemplateRenderer golTemplateRenderer;
+    private FileTemplateRenderer fileTemplateRenderer;
 
 
     @Override
@@ -174,7 +174,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
         return getProject(projectId).
-                andOnSuccess(project -> golTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
+                andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
                             andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
                                     fileEntryResource).
                                     andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).

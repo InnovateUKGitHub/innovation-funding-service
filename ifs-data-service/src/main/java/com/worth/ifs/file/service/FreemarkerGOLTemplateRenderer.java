@@ -23,7 +23,7 @@ import static com.worth.ifs.commons.service.ServiceResult.*;
  * on Freemarker
  */
 @Component
-public class FreemarkerGOLTemplateRenderer implements GOLTemplateRenderer {
+public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
 
     @Autowired
     private Configuration configuration;
