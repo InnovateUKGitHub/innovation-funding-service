@@ -279,7 +279,7 @@ Submit Assessments
 
 Progress of the applications in Dashboard
     [Documentation]    INFUND-3719
-    [Tags]    Pending
+    [Tags]
     [Setup]    Count the applications
     When The user navigates to the page    ${assessor_dashboard_url}
     Then the progress of the applications should be correct
@@ -422,5 +422,6 @@ the progress of the applications should be correct
     Should Be Equal As Integers    ${TOTAL}    ${NUMBER_OF_APPLICATIONS}
 
 Count the applications
-    ${NUMBER_OF_APPLICATIONS}=    Get Matching Xpath Count    //*[@id="content"]/div[4]//ul/li
-    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Pending
+    Run Keyword If    '${status}' == 'FAIL'    set test variable    ${NUMBER_OF_APPLICATIONS}    4
+    Run Keyword If    '${status}' == 'PASS'    set test variable    ${NUMBER_OF_APPLICATIONS}    3
