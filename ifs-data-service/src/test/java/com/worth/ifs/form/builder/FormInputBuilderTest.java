@@ -42,7 +42,7 @@ public class FormInputBuilderTest {
         Question expectedQuestion = newQuestion().build();
         Competition expectedCompetition = newCompetition().build();
         Set<FormValidator> expectedInputValidators = newFormValidator().buildSet(2);
-        String expectedGuidanceQuestion = "question";
+        String expectedGuidanceTitle = "question";
         String expectedGuidanceAnswer = "answer";
         String expectedDescription = "description";
         Boolean expectedIncludedInApplicationSummary = FALSE;
@@ -59,7 +59,7 @@ public class FormInputBuilderTest {
                 .withQuestion(expectedQuestion)
                 .withCompetition(expectedCompetition)
                 .withInputValidators(expectedInputValidators)
-                .withGuidanceQuestion(expectedGuidanceQuestion)
+                .withGuidanceQuestion(expectedGuidanceTitle)
                 .withGuidanceAnswer(expectedGuidanceAnswer)
                 .withDescription(expectedDescription)
                 .withIncludedInApplicationSummary(expectedIncludedInApplicationSummary)
@@ -76,7 +76,7 @@ public class FormInputBuilderTest {
         assertEquals(expectedQuestion, formInput.getQuestion());
         assertEquals(expectedCompetition, formInput.getCompetition());
         assertEquals(expectedInputValidators, formInput.getInputValidators());
-        assertEquals(expectedGuidanceQuestion, formInput.getGuidanceQuestion());
+        assertEquals(expectedGuidanceTitle, formInput.getGuidanceTitle());
         assertEquals(expectedGuidanceAnswer, formInput.getGuidanceAnswer());
         assertEquals(expectedDescription, formInput.getDescription());
         assertEquals(expectedIncludedInApplicationSummary, formInput.getIncludedInApplicationSummary());
@@ -95,7 +95,7 @@ public class FormInputBuilderTest {
         Question[] expectedQuestions = newQuestion().buildArray(2, Question.class);
         Competition[] expectedCompetitions = newCompetition().buildArray(2, Competition.class);
         List<Set<FormValidator>> expectedInputValidators = asList(newFormValidator().buildSet(2), newFormValidator().buildSet(2));
-        String[] expectedGuidanceQuestion = {"question 1", "question 2"};
+        String[] expectedGuidanceTitle = {"question 1", "question 2"};
         String[] expectedGuidanceAnswer = {"answer 1", "answer 2"};
         String[] expectedDescription = {"description 1", "description 2"};
         Boolean[] expectedIncludedInApplicationSummary = {FALSE, TRUE};
@@ -112,7 +112,7 @@ public class FormInputBuilderTest {
                 .withQuestion(expectedQuestions)
                 .withCompetition(expectedCompetitions)
                 .withInputValidators(expectedInputValidators.get(0), expectedInputValidators.get(1))
-                .withGuidanceQuestion(expectedGuidanceQuestion)
+                .withGuidanceQuestion(expectedGuidanceTitle)
                 .withGuidanceAnswer(expectedGuidanceAnswer)
                 .withDescription(expectedDescription)
                 .withIncludedInApplicationSummary(expectedIncludedInApplicationSummary)
@@ -130,7 +130,7 @@ public class FormInputBuilderTest {
         assertEquals(expectedQuestions[0], first.getQuestion());
         assertEquals(expectedCompetitions[0], first.getCompetition());
         assertEquals(expectedInputValidators.get(0), first.getInputValidators());
-        assertEquals(expectedGuidanceQuestion[0], first.getGuidanceQuestion());
+        assertEquals(expectedGuidanceTitle[0], first.getGuidanceTitle());
         assertEquals(expectedGuidanceAnswer[0], first.getGuidanceAnswer());
         assertEquals(expectedDescription[0], first.getDescription());
         assertEquals(expectedIncludedInApplicationSummary[0], first.getIncludedInApplicationSummary());
@@ -147,7 +147,7 @@ public class FormInputBuilderTest {
         assertEquals(expectedQuestions[1], second.getQuestion());
         assertEquals(expectedCompetitions[1], second.getCompetition());
         assertEquals(expectedInputValidators.get(1), second.getInputValidators());
-        assertEquals(expectedGuidanceQuestion[1], second.getGuidanceQuestion());
+        assertEquals(expectedGuidanceTitle[1], second.getGuidanceTitle());
         assertEquals(expectedGuidanceAnswer[1], second.getGuidanceAnswer());
         assertEquals(expectedDescription[1], second.getDescription());
         assertEquals(expectedIncludedInApplicationSummary[1], second.getIncludedInApplicationSummary());
