@@ -46,6 +46,8 @@ Applications should have correct status and order
     ...    INFUND-3724
     ...
     ...    INFUND-3725
+    ...
+    ...    INFUND-6358
     Then the order of the applications should be correct according to the status
     And The user should not see the text in the page    Overall score
 
@@ -59,12 +61,14 @@ Accept an application for assessment
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the status should update as Open
+    And The user should not see the text in the page    Pending
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
+    ...
+    ...    INFUND-6358
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -88,9 +92,6 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 *** Keywords ***
-the status should update as Open
-    the user should see the element    css=.my-applications li:nth-child(2) .column-assessment-status.navigation-right
-
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    Please enter a reason
