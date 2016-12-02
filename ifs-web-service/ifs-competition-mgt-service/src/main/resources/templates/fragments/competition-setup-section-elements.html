@@ -365,7 +365,7 @@
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                    data-maxlength-errormessage="Justification has a maximum length of 255 characters"
                                                    data-required-errormessage="Please enter a justification"
-                                                   row="3" />
+                                                   rows="3" />
                                         </td>
                                         <td>
                                            <button class="buttonlink alignright" data-remove-row="guidance" type="button" name="remove-guidance-row" th:value="${iteration.index}" th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>
