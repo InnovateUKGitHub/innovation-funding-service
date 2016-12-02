@@ -11,9 +11,11 @@ import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.registration.form.ResendEmailVerificationForm;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
@@ -27,7 +29,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,8 @@ public class RegistrationController {
     private OrganisationService organisationService;
     @Autowired
     private InviteRestService inviteRestService;
+    @Autowired
+    private EthnicityRestService ethnicityRestService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -129,6 +132,10 @@ public class RegistrationController {
         return destination;
     }
 
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
+
     private boolean processOrganisation(HttpServletRequest request, Model model) {
         boolean success = true;
 
@@ -147,6 +154,7 @@ public class RegistrationController {
         setOrganisationIdCookie(registrationForm, request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
     }
 
     /**
@@ -223,6 +231,8 @@ public class RegistrationController {
         } else {
             if (!processOrganisation(request, model)) {
                 destination = "redirect:/";
+            } else {
+                model.addAttribute("ethnicityOptions", getEthnicityOptions());
             }
         }
 
@@ -303,6 +313,9 @@ public class RegistrationController {
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
+                registrationForm.getGender(),
+                Long.parseLong(registrationForm.getEthnicity()),
+                registrationForm.getDisability(),
                 organisationId,
                 competitionId);
     }

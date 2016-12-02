@@ -33,8 +33,10 @@ public interface UserRestService {
     RestResult<Void> checkPasswordResetHash(String hash);
     RestResult<Void> resetPassword(String hash, String password);
 
-    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
-    RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
+                                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
+    RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
+                                                                String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
     RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
     RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills);

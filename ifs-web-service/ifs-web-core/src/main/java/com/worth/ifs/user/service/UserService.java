@@ -1,6 +1,5 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -30,7 +29,8 @@ public interface UserService {
     RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email);
     Set<UserResource> getAssignableUsers(ApplicationResource application);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
-    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
+    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
+                                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
     RestResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
     ProfileSkillsResource getProfileSkills(Long userId);
