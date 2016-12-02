@@ -9,8 +9,7 @@ import java.util.Set;
 public class FormInputResource {
     private Long id;
     private Integer wordCount;
-    private Long formInputType;
-    private String formInputTypeTitle;
+    private FormInputType type;
     private Long question;
     private Long competition;
     private Set<Long> inputValidators;
@@ -34,8 +33,8 @@ public class FormInputResource {
         return wordCount != null ? wordCount : 0;
     }
 
-    public Long getFormInputType() {
-        return formInputType;
+    public FormInputType getType() {
+        return type;
     }
 
     public Boolean isIncludedInApplicationSummary() {
@@ -66,12 +65,8 @@ public class FormInputResource {
         this.wordCount = wordCount;
     }
 
-    public void setFormInputType(Long formInputType) {
-        this.formInputType = formInputType;
-    }
-
-    public void setFormInputTypeTitle(String formInputTypeTitle) {
-        this.formInputTypeTitle = formInputTypeTitle;
+    public void setType(FormInputType type) {
+        this.type = type;
     }
 
     public Long getCompetition() {
@@ -84,10 +79,6 @@ public class FormInputResource {
 
     public Set<Long> getInputValidators() {
         return this.inputValidators;
-    }
-
-    public String getFormInputTypeTitle() {
-        return formInputTypeTitle;
     }
 
     public void setInputValidators(Set<Long> inputValidators) {

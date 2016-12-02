@@ -10,8 +10,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -51,9 +50,6 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     SectionService sectionService;
-
-    @Mock
-    FormInputTypeService formInputTypeService;
 
     @Test
     public void getNextQuestionTest() throws Exception {
@@ -375,21 +371,18 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testGetQuestionByCompetitionIdAndFormInputTypeSuccess() {
         long competitionId = 1L;
-        String typeTitle = "formInputType";
-        FormInputType type = new FormInputType();
-        type.setId(2L);
+
         Question matchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withFormInputType(type).build())
+                newFormInput().withType(FormInputType.TEXTAREA).build())
         ).build();
 
         Question notMatchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withActive(false).withFormInputType(type).build())
+                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
         ).build();
 
-        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(type);
         when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(matchingQuestion, notMatchingQuestion));
 
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, typeTitle);
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
 
         assertThat(question.isSuccess(), is(equalTo(true)));
         assertThat(question.getSuccessObject(), is(equalTo(matchingQuestion)));
@@ -398,18 +391,14 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testGetQuestionByCompetitionIdAndFormInputTypeFailure() {
         long competitionId = 1L;
-        String typeTitle = "formInputType";
-        FormInputType type = new FormInputType();
-        type.setId(2L);
 
         Question notMatchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withActive(false).withFormInputType(type).build())
+                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
         ).build();
 
-        when(formInputTypeService.findByTitle(typeTitle)).thenReturn(type);
         when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(notMatchingQuestion));
 
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, typeTitle);
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
 
         assertThat(question.isFailure(), is(equalTo(true)));
     }

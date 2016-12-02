@@ -21,6 +21,7 @@ import java.util.Map;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -163,7 +164,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
-    	when(formInputService.findApplicationInputsByQuestion(isA(Long.class))).thenReturn(asList(newFormInputResource().withFormInputTypeTitle("labour").build()));
+    	when(formInputService.findApplicationInputsByQuestion(isA(Long.class))).thenReturn(asList(newFormInputResource().withType(FormInputType.LABOUR).build()));
 
 		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);

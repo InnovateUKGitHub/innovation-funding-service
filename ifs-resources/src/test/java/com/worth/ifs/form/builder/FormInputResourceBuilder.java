@@ -3,6 +3,7 @@ package com.worth.ifs.form.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.form.resource.FormInputType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -44,12 +45,8 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((wordCount, formInput) -> setField("wordCount", wordCount, formInput), wordCounts);
     }
 
-    public FormInputResourceBuilder withFormInputType(Long formInputType) {
-        return with(formInput -> formInput.setFormInputType(formInputType));
-    }
-
-    public FormInputResourceBuilder withFormInputTypeTitle(String... formInputTypeTitles) {
-        return withArray((formInputTypeTitle, formInput) -> setField("formInputTypeTitle", formInputTypeTitle, formInput), formInputTypeTitles);
+    public FormInputResourceBuilder withType(FormInputType... value) {
+        return withArraySetFieldByReflection("type", value);
     }
 
     public FormInputResourceBuilder withQuestion(Long... questions) {

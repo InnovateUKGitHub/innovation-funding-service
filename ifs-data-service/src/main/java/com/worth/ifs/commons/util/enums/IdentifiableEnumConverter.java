@@ -1,6 +1,8 @@
 package com.worth.ifs.commons.util.enums;
 
 
+import com.worth.ifs.util.enums.Identifiable;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.util.Map;
