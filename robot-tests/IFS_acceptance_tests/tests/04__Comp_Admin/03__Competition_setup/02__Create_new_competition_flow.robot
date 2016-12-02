@@ -416,7 +416,7 @@ Application: should have a green check
     When The user clicks the button/link    jQuery=a:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And The user should see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Assessor: Contain the correct options
     [Documentation]    INFUND-5641
