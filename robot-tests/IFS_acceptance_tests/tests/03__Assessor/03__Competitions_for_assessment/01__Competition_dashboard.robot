@@ -40,21 +40,21 @@ Details of the competition are visible
     And the user should see the text in the page    12:00am Tuesday 12 January 2016
     And the user should see the text in the page    12:00am Saturday 28 January 2017
 
-Applications should show with the correct order
+Applications should have correct status and order
     [Documentation]    INFUND-6040
     ...
     ...    INFUND-3724
+    ...
+    ...    INFUND-3725
     Then the order of the applications should be correct according to the status
+    And The user should not see the text in the page    Overall score
 
 Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
-    ...
-    ...    INFUND-3725
     [Tags]
     Given the user should see the text in the page    Pending
-    And the assessor should not see the score
     When The user clicks the button/link    jQuery=li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
@@ -107,6 +107,3 @@ The order of the applications should be correct according to the status
     element should contain    css=.boxed-list li:nth-child(2)    Accepted
     element should contain    css=.boxed-list li:nth-child(3)    Accepted
     element should contain    css=.boxed-list li:nth-child(4)    Accepted
-
-the assessor should not see the score
-    Element Should Not Contain    jQuery=li:nth-child(1) a:contains("accept / reject assessment")    Overall score
