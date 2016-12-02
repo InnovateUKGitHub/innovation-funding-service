@@ -72,7 +72,7 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return withArraySetFieldByReflection("inputValidators", value);
     }
 
-    public FormInputBuilder withGuidanceQuestion(String... value) {
+    public FormInputBuilder withGuidanceTitle(String... value) {
         return withArraySetFieldByReflection("guidanceQuestion", value);
     }
 
