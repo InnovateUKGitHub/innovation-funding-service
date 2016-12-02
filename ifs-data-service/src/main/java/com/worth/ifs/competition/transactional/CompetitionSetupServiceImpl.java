@@ -42,6 +42,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -213,7 +214,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return copyFromCompetitionTemplate(competition, template);
 	}
 
-	private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
+    @Override
+    public ServiceResult<Void> closeAssessment(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.closeAssessment(LocalDateTime.now());
+        return serviceSuccess();
+    }
+
+
+    private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
         cleanUpCompetitionSections(competition);
 
         if(competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {

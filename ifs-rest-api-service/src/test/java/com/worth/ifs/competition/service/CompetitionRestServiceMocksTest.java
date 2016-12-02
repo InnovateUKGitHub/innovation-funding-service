@@ -179,4 +179,13 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         RestResult<Void> result = service.returnToSetup(competitionId);
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void test_closeAssessment() {
+        long competitiondId = 1L;
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitiondId + "/close-assessment", Void.class, null, null,HttpStatus.OK);
+
+        RestResult<Void> result = service.closeAssessment(competitiondId);
+        assertTrue(result.isSuccess());
+    }
 }

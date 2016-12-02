@@ -139,4 +139,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     public List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
         return assessorCountOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public void closeAssessment(Long competitionId) {
+        competitionsRestService.closeAssessment(competitionId);
+    }
 }

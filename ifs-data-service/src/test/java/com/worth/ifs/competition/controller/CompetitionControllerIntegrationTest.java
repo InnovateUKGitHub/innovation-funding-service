@@ -193,6 +193,16 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         checkUpdatedCompetitionCategories(savedCompetition);
     }
 
+    @Test
+    public void testCloseAssessment() throws Exception {
+        RestResult<Void> closeResult = controller.closeAssessment(COMPETITION_ID);
+        assertTrue("Assert close assessment is success", closeResult.isSuccess());
+        RestResult<CompetitionResource> getResult = controller.getCompetitionById(COMPETITION_ID);
+        assertTrue("Assert get is success", getResult.isSuccess());
+        CompetitionResource retrievedCompetition = getResult.getSuccessObject();
+        retrievedCompetition.getCompetitionStatus();
+    }
+
 
     @Test
     public void testUpdateCompetitionCoFunders() throws Exception {

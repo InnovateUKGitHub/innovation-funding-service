@@ -9,19 +9,24 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
@@ -30,10 +35,15 @@ import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
+import static com.worth.ifs.competition.resource.MilestoneType.ASSESSOR_DEADLINE;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -229,6 +239,27 @@ public class CompetitionSetupServiceImplTest {
 		assertTrue(result.isSuccess());
 		assertNull(competition.getAssessorCount());
 		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+	}
+
+
+	@Test
+	public void test_closeAssessment() throws Exception {
+		Long competitionId = 1L;
+		List<Milestone> milestones = newMilestone()
+				.withDate(LocalDateTime.now().minusDays(1))
+				.withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+		milestones.addAll(newMilestone()
+				.withDate(LocalDateTime.now().plusDays(1))
+				.withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+				.build(3));
+		Competition competition = newCompetition().withSetupComplete(true)
+				.withMilestones(milestones)
+				.build();
+		when(competitionRepository.findById(competitionId)).thenReturn(competition);
+
+		service.closeAssessment(competitionId);
+
+		assertEquals(CompetitionStatus.FUNDERS_PANEL,competition.getCompetitionStatus());
 	}
 
 }
