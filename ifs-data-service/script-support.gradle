@@ -45,7 +45,7 @@ task syncShib(type:Exec) {
     commandLine './syncShibServices.sh'
 }
 
-task upgradeShib(type:Exec) {
+task loadShib(type:Exec) {
     workingDir '../setup-files/scripts/docker'
-    commandLine './upgradeShib.sh'
+    commandLine './_load_shib.sh'
 }
