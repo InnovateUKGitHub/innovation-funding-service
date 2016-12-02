@@ -86,8 +86,8 @@ Application details server side
     [Documentation]    INFUND-2843
     ...
     ...    INFUND-4694
-    [Tags]    Pending    HappyPath
-    # TODO pending INFUND-3999
+    [Tags]  HappyPath
+
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes) input
     And the user enters text to a text field    id=application_details-title    ${EMPTY}
@@ -102,8 +102,8 @@ Application details server side
     And the user should see an error    Please enter the previous application number
     And the user should see an error    Please enter the previous application title
     And the user should see the element    css=.error-summary-list
-    [Teardown]    the user enters text to a text field    id=application_details-title    Robot test application
-
+    [Teardown]   Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+                     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
