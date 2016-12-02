@@ -81,10 +81,10 @@ public class ProjectSetupStatusController {
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
 
         ProjectActivityStates spendProfileState = ownOrganisation.getSpendProfileStatus();
+        ProjectActivityStates grantOfferLetterState = teamStatus.getLeadPartnerStatus().getGrantOfferLetterStatus();
 
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
-        boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
         boolean spendProfileApproved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
@@ -124,7 +124,7 @@ public class ProjectSetupStatusController {
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState, spendProfileApproved);
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
-        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferAccess.equals(ACCESSIBLE), leadPartner, grantOfferLetterSubmitted);
+        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
