@@ -1,7 +1,7 @@
 package com.worth.ifs.management.model;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.management.viewmodel.CompetitionInAssessmentViewModel;
+import com.worth.ifs.management.viewmodel.CompetitionClosedViewModel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompetitionClosedModelPopulator {
 
-    public CompetitionInAssessmentViewModel populateModel(CompetitionResource competition) {
-        return new CompetitionInAssessmentViewModel(competition.getId(), competition.getName());
+    public CompetitionClosedViewModel populateModel(CompetitionResource competition) {
+        return new CompetitionClosedViewModel(competition.getId(), competition.getName());
     }
 }
