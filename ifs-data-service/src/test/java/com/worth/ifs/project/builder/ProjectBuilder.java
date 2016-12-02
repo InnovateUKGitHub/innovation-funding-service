@@ -9,6 +9,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -92,6 +93,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withOtherDocumentsApproved(Boolean approved){
         return with (project -> project.setOtherDocumentsApproved(approved));
+    }
+
+    public ProjectBuilder withOtherDocumentsSubmittedDate(LocalDateTime date) {
+        return with (project -> project.setDocumentsSubmittedDate(date));
     }
 
     @Override
