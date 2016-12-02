@@ -221,7 +221,10 @@ task cleanDeploy() {
 }
 
 task cleanDeployServices() {
+
     buildDocker.mustRunAfter clean
+    // ensures test schema is created for unit tests
+    buildDocker.mustRunAfter createTestSchema
     flywayClean.mustRunAfter buildDocker
     flywayClean.mustRunAfter startMySql
     createTestSchema.mustRunAfter startMySql
