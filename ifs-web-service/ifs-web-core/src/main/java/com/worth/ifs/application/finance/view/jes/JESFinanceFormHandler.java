@@ -14,6 +14,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.form.resource.FormInputType;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,7 @@ import java.util.Map;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
+import static com.worth.ifs.form.resource.FormInputType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
@@ -138,34 +140,34 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         QuestionResource question;
         switch (costFieldName) {
             case "tsb_reference":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "your_finance").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, YOUR_FINANCE).getSuccessObject();
                 break;
             case "incurred_staff":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "incurred_travel_subsistence":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "travel").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, TRAVEL).getSuccessObject();
                 break;
             case "incurred_other_costs":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "materials").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, MATERIALS).getSuccessObject();
                 break;
             case "allocated_investigators":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "allocated_estates_costs":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             case "allocated_other_costs":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             case "indirect_costs":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "overheads").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OVERHEADS).getSuccessObject();
                 break;
             case "exceptions_staff":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "exceptions_other_costs":
-                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, "other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             default:
             	question = null;

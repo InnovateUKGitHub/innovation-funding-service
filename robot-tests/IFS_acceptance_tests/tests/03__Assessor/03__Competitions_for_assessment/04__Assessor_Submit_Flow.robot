@@ -18,6 +18,10 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 ...
 ...               INFUND-5739 As an Assessor I can submit all the applications that I have selected so that my assessment work is completed
+...
+...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
+...
+...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -251,13 +255,34 @@ User Saves the Assessment as Not Recommended
     And the application should have the correct status    css=.boxed-list li:nth-child(3)    Assessed
     And the application should have the correct status    css=.boxed-list li:nth-child(4)    Assessed
 
+Submit Validation
+    [Documentation]    INFUND-5739
+    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
+    Then The user should see the text in the page    There was a problem submitting some of your assessments.
+
 Submit Assessments
     [Documentation]    INFUND-5739
-    #Given the submit button is disabled    #TODO: Waiting infund-6386
-    When The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
-    And the user clicks the button/link    jQuery=button:contains("Submit assessments")
-    And the user clicks the button/link    jQuery=button:contains("Yes, I want to submit the applications")
-    Then the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+    ...
+    ...    INFUND-3743
+    [Tags]
+    Given The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
+    When the user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And The user clicks the button/link    jQuery=button:contains("Cancel")
+    And The user clicks the button/link    jQuery=button:contains("Submit assessments")
+    And The user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
+    Then the assessor should see correct status for submitted assessments
+    And the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+    And The user should see the text in the page    Intelligent Building
+    And The user should see the text in the page    98
+    And The user should not see the element    link=Intelligent Building
+
+Progress of the applications in Dashboard
+    [Documentation]    INFUND-3719
+    [Tags]
+    [Setup]    Count the applications
+    When The user navigates to the page    ${assessor_dashboard_url}
+    Then the progress of the applications should be correct
 
 *** Keywords ***
 the collapsible button should contain
@@ -388,5 +413,15 @@ the application should have the correct status
     [Arguments]    ${APPLICATION}    ${STATUS}
     element should contain    ${APPLICATION}    ${STATUS}
 
-the submit button is disabled
-    Element Should Be Enabled    jQuery=button:contains("Submit assessments")
+the assessor should see correct status for submitted assessments
+    Element Should Contain    css=.my-applications .submitted ul li:nth-child(1) .column-assessment-status.navigation-right > div > p    Submitted
+
+the progress of the applications should be correct
+    element should contain    css=.greentext span:nth-child(1)    1
+    ${TOTAL}=    Get text    css=.greentext span+ span    #gets the total number
+    Should Be Equal As Integers    ${TOTAL}    ${NUMBER_OF_APPLICATIONS}
+
+Count the applications
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Pending
+    Run Keyword If    '${status}' == 'FAIL'    set test variable    ${NUMBER_OF_APPLICATIONS}    4
+    Run Keyword If    '${status}' == 'PASS'    set test variable    ${NUMBER_OF_APPLICATIONS}    3

@@ -72,7 +72,7 @@
 
 	<ul class="pagination">
 		<li class="prev">
-			<a rel="next" title="Navigate to previous part" href="/prototypes/5085-application-process">
+			<a rel="next" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process'}">
 				<span class="pagination-label">Previous</span>
 				<span class="pagination-part-title">Application</span>
 			</a>

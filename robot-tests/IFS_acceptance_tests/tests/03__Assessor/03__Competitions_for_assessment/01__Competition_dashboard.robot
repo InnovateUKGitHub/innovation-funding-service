@@ -12,6 +12,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-6040 As an assessor I want to see applications sorted by status in my competition dashboard so that I can clearly see applications that are pending, open and assessed
 ...
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
+...
+...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -48,8 +50,11 @@ Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
+    ...
+    ...    INFUND-3725
     [Tags]
     Given the user should see the text in the page    Pending
+    And the assessor should not see the score
     When The user clicks the button/link    jQuery=li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
@@ -99,6 +104,9 @@ the application for assessment should be removed
 
 The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(2)    Open
-    element should contain    css=.boxed-list li:nth-child(3)    Open
-    element should contain    css=.boxed-list li:nth-child(4)    Open
+    element should contain    css=.boxed-list li:nth-child(2)    Accepted
+    element should contain    css=.boxed-list li:nth-child(3)    Accepted
+    element should contain    css=.boxed-list li:nth-child(4)    Accepted
+
+the assessor should not see the score
+    Element Should Not Contain    jQuery=li:nth-child(1) a:contains("accept / reject assessment")    Overall score
