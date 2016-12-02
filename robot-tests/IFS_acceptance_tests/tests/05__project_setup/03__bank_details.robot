@@ -126,16 +126,16 @@ Bank details for Academic
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
-    [Tags]      HappyPath   Pending
+    [Tags]      HappyPath
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.waiting  # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action   # Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status          # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(8).status          # GOL
 
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
