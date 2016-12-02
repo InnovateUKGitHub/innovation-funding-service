@@ -173,7 +173,7 @@ Assign the adding value section to Jessica Doe
     Time Until Page Contains    Question assigned successfully    Assigning a question
 
 the applicant goes to the summary page
-    click link    Review & submit
+    click link    Review and submit
     time until page contains    Please review your application before final submission    Loading the summary page
 
 the applicant adds in some labour costs

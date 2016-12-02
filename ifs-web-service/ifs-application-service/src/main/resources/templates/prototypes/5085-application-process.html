@@ -69,13 +69,13 @@
 
 	<ul class="pagination">
 		<li class="prev">
-			<a rel="next" title="Navigate to previous part" href="/prototypes/2469-comp-setup?section=milestones">
+			<a rel="next" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
 				<span class="pagination-label">Previous</span>
 				<span class="pagination-part-title">Milestones</span>
 			</a>
 		</li>
 	    <li class="next">
-	        <a rel="next" title="Navigate to next part" href="/prototypes/5090-assessors-required">
+	        <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5090-assessors-required?user=compExec&amp;section=eligibility' : '/prototypes/5090-assessors-required'}">
 	            <span class="pagination-label">Next</span>
 	            <span class="pagination-part-title">Assessors</span>
 	        </a>

@@ -44,9 +44,9 @@
                 <div th:each="question, status1 : ${sectionQuestions.get(financeSectionId)}" th:remove="tag">
                     <div class="question" th:each="formInput, status : ${questionFormInputs.get(question.id)}" th:id="'form-input-'+${formInput.getId()}"
                          th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                        <div th:replace="question-type/types :: ${formInput.getFormInputTypeTitle()}" />
-                        <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputTypeTitle()}" />
-                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputTypeTitle()}" />
+                        <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                        <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                        <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
                     </div>
                 </div>
             </div>
