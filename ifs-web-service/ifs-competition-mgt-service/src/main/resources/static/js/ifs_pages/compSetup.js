@@ -143,28 +143,28 @@ IFS.competitionManagement.setup = (function() {
 
       var count = parseInt(tableBody.length, 10); //name attribute has to be 0,1,2,3
       //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('.form-group-row[id^=guidance-]').last().attr('id').split('guidance-')[1], 10)+1;
+      var idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10)+1;
 
-      var html = '<tr class="form-group-row" id="guidance-'+idCount+'">';
+      var html = '<tr id="guidance-'+idCount+'">';
       if(isAssessed){
-        html+='<td>'+
+        html+='<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-scorefrom"><span class="visuallyhidden">Score from</span></label>'+
                 '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scorefrom" name="guidanceRows['+count+'].scoreFrom" value="">'+
               '</td>'+
-              '<td>'+
+              '<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-scoreto"><span class="visuallyhidden">Score to</span></label>'+
                 '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scoreto" name="guidanceRows['+count+'].scoreTo" value="">'+
               '</td>';
       }
       else {
-        html+='<td>'+
+        html+='<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-subject"><span class="visuallyhidden">Subject</span></label>'+
                 '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters" data-required-errormessage="Please enter a subject" id="guidancerow-'+idCount+'-subject" name="guidanceRows['+count+'].subject" value="">'+
               '</td>';
       }
-      html+='<td>'+
+      html+='<td class="form-group">'+
               '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
-              '<input required="required" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="guidanceRows['+count+'].justification" value="">'+
+              '<textarea required="required" row="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="guidanceRows['+count+'].justification"></textarea>'+
             '</td>'+
             '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="'+count+'">Remove</button></td>';
       html+='</tr>';

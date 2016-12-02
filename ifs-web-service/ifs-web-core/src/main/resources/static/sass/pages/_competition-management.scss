@@ -115,3 +115,10 @@
     margin-bottom: 15px;
   }
 }
+
+[id="guidance-table"] td {
+  vertical-align:top;
+  textarea {
+    margin:0 !important; //strange bug where resizing sets a big margin in FF
+  }
+}

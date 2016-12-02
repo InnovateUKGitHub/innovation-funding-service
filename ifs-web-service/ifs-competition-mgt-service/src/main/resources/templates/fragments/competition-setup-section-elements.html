@@ -318,8 +318,8 @@
                             <tbody>
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
-                                    <tr class="form-group-row" th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom') || #fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo') || #fields.hasErrors('guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
-                                        <td>
+                                    <tr th:id="${'guidance-'+iteration.index}" th:classappend="${(#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom') || #fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo') || #fields.hasErrors('guidanceRows[__${iteration.index}__].justification')) ? 'error' : ''}">
+                                        <td class="form-group">
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scorefrom'}">
                                                 <span class="visuallyhidden">Score from</span>
                                                 <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
@@ -336,7 +336,7 @@
                                                    data-required-errormessage="Please enter a from score"
                                                    data-min-errormessage="Please enter a valid number"/>
                                         </td>
-                                        <td>
+                                        <td class="form-group">
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scoreto'}">
                                                 <span class="visuallyhidden">Score to</span>
                                                 <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
@@ -351,20 +351,21 @@
                                                    data-required-errormessage="Please enter a to score"
                                                    data-min-errormessage="Please enter a valid number"/>
                                         </td>
-                                        <td>
+                                        <td class="form-group">
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
                                                 <span class="visuallyhidden">Justification</span>
                                                 <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
                                                     <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}" th:text="${err}" />
                                                 </th:block>
                                             </label>
-                                            <input required="required"
+                                            <textarea required="required"
                                                    class="form-control width-full"
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                    data-maxlength-errormessage="Justification has a maximum length of 255 characters"
-                                                   data-required-errormessage="Please enter a justification" />
+                                                   data-required-errormessage="Please enter a justification"
+                                                   row="3" />
                                         </td>
                                         <td>
                                            <button class="buttonlink alignright" data-remove-row="guidance" type="button" name="remove-guidance-row" th:value="${iteration.index}" th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>
@@ -426,7 +427,7 @@
                             </tbody>
                         </table>
                         <div class="alignright extra-margin">
-                            <button class="buttonlink" data-add-row="guidance">+Add guidance row</button>
+                            <button class="buttonlink" data-add-row="guidance" type="button">+Add guidance row</button>
                         </div>
 
                         <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">
