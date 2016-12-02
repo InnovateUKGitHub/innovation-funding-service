@@ -125,14 +125,18 @@ Bank details for Academic
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
-    [Tags]    Experian    Failing
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Documentation]    INFUND-4049, INFUND-5543
+    [Tags]      HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428

@@ -562,19 +562,23 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
 
-
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049, INFUND-5507
-    [Tags]
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Tags]      HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    When the user clicks the button/link    jQuery=#table-project-status td.status.ok a
-    Then the user should see the element    jQuery=h1:contains("Project details")
-    And the user clicks the button/link     link=Competition dashboard
-
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting     #Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status              #MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting      #Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action       #Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status              #Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting      #Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status              #GOL
+    #below code is not applciable here as its hour glass n no link for prj details - inernal user
+    #When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.action a
+    #Then the user should see the element    jQuery=h1:contains("Project details")
+    #And the user clicks the button/link     link=Competition dashboard
+    #And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
 
 Internal user can see the Project details as sumbmitted
     [Documentation]  INFUND-5856

@@ -18,6 +18,20 @@ ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/proj
 
 *** Test Cases ***
 
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Tags]      HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting  # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks-always action flag for private beta
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+
+
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
